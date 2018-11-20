@@ -1,0 +1,24 @@
+# Site settings
+title: Crossplane
+url: "http://crossplane.io" # the base hostname & protocol for your site, e.g. http://example.com
+
+# Build settings
+markdown: kramdown
+
+# plugins
+# NOTE: github pages ignores custom plugins and any other plugin which is not whitelisted
+# SEE: https://pages.github.com/versions/
+plugins:
+  - jekyll-relative-links
+  - jekyll-babel
+  - jekyll-readme-index
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
