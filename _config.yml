@@ -16,9 +16,19 @@ plugins:
 exclude:
   - Gemfile
   - Gemfile.lock
+  - vendor
+  - build
 
 defaults:
   - scope:
       path: ""
     values:
       layout: default
+  - scope:
+      path: "docs"
+    values:
+      layout: "docs"
+      github: "https://github.com/crossplaneio/crossplane/blob/master/docs/"
+
+sass:
+  sass_dir: ./_scss

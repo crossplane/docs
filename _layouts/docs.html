@@ -1,0 +1,139 @@
+{% include values.inc %}
+
+{% assign url = page.url | split: '/' %}
+{% assign currentVersion = url[2] %}
+{% assign currentVersionPath = '/docs/' | append: currentVersion | append: '/' %}
+{% assign latestVersion = site.data.versions[0].version %}
+
+{% include mkhash.inc title = 'Welcome' url = currentVersionPath %}
+{% assign documents = site.pages | where_exp: 'page', 'page.url contains currentVersionPath' | where: "toc", "true" | sort: 'weight' | unshift: h %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Crossplane Docs</title>
+
+    {% include favicon.html %}
+
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/docs.css" />
+
+  </head>
+
+  <body>
+    {% include header.html %}
+    <div id="docs-header">
+        <h1>Documentation</h1>
+        <div class="versions{% if currentVersion == latestVersion %} latest{% endif %}">
+            <select onchange="window.location.href = this.value">
+            {% for ver in site.data.versions %}
+                <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path}}">Crossplane {% if ver.version != "master" %}v{% endif %}{{ ver.version }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="page">
+        <div class="docs-menu">
+            <ul id="docs-ul"></ul>
+        </div>
+
+        <div class="docs-content">
+
+            <div class="docs-actions">
+
+            <a id="edit" href="{{ page.github }}{{ page.name }}"><img src="/images/github-teal.svg" />Edit on GitHub</a>
+
+            </div>
+
+            {% if currentVersion == "master" %}
+                <div class="alert master">
+                    <p>
+                        <b>PLEASE NOTE</b>: This document applies to an <b>unreleased</b> version of Crossplane. It is strongly recommended that you only use official releases of Crossplane, as unreleased versions are subject to changes and incompatibilities that will not be supported in the official releases.
+                    </p>
+                    <p>
+                        If you are using an official release version of Crossplane, you should refer to the documentation for your specific version.
+                    </p>
+                    <strong>
+                        Documentation for other releases can be found by using the version selector in the bottom left of any doc page.
+                    </strong>
+                </div>
+            {% else %}
+                {% if currentVersion != latestVersion %}
+                    <div class="alert old">
+                        <p>
+                            <b>PLEASE NOTE</b>: This document applies to {{ currentVersion }} version and not to the latest release {{ latestVersion }}
+                        </p>
+                        <strong>
+                            Documentation for other releases can be found by using the version selector in the left bottom of any doc page.
+                        </strong>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {{ content }}
+
+        </div>
+    </div>
+    {% include footer.html %}
+
+    <script>
+        var menu = [];
+
+        function add(name, url, isChild, current) {
+            var item = { name: name, url: url, current: current };
+            var container = menu;
+            if (isChild && menu.length > 0) {
+                menu[menu.length-1].children = menu[menu.length-1].children || [];
+                container = menu[menu.length-1].children;
+                if (current) {
+                    menu[menu.length-1].childCurrent = true;
+                }
+            }
+            container.push(item);
+        }
+
+    {% for document in documents %}
+        add({{ document.title | jsonify }}, {{document.url | jsonify }}, {% if document.indent == true %}true{% else %}false{% endif %}, {% if document.url == page.url %}true{% else %}false{% endif %});
+    {% endfor %}
+
+        console.log('menu', menu);
+
+        function getEntry(item) {
+            var itemDom = document.createElement('li');
+
+            if (item.current) {
+                itemDom.innerHTML = item.name;
+                itemDom.classList.add('current');
+            } else {
+                itemDom.innerHTML = '<a href="' + item.url + '">' + item.name + '</a>';
+            }
+
+            return itemDom;
+        }
+        
+        var menuDom = document.getElementById('docs-ul');
+        for (var i = 0; i < menu.length; i++) {
+            var item = menu[i];
+            var itemDom = getEntry(item);
+
+            if (item.childCurrent) {
+                itemDom.classList.add('childCurrent');
+            }
+            
+            if (item.children) {
+                itemDom.classList.add('children');
+                var children = document.createElement('ul');
+                for (var j = 0; j < item.children.length; j++) {
+                    children.appendChild(getEntry(item.children[j]));
+                }
+                itemDom.appendChild(children);
+            }
+            menuDom.appendChild(itemDom);
+        }
+    </script>
+</body>
+</html>

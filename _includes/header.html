@@ -1,0 +1,24 @@
+<div id="header">
+  <div>
+    <div class="logo">
+      <a href="/index2"><img src="/images/logo.svg"/></a>
+    </div>
+    <div
+      class="hamburger-controls"
+      onclick="if (document.body.classList.contains('menu-open')) { document.body.classList.remove('menu-open') } else { document.body.classList.add('menu-open') }; return false;"
+    >
+      <span></span> <span></span> <span></span>
+    </div>
+    <ul class="links">
+      <li>
+        <a href="{{githubLink}}"
+          ><img src="/images/quad-teal-small.svg" /><span class="md-hidden">Get Started on</span> GitHub</a
+        >
+      </li>
+      <li><a href="{{latestDocs}}">Documentation</a></li>
+      <li><a href="{{slackLink}}">Slack <span class="md-hidden">Channel</span></a></li>
+      <li><a href="{{blogLink}}">Blog</a></li>
+      <li><a href="{{twitterLink}}">Twitter</a></li>
+    </ul>
+  </div>
+</div>

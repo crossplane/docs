@@ -1,3 +1,5 @@
+{% include values.inc %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,10 +8,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <title>Crossplane</title>
+
+    {% include favicon.html %}
+
+    <link rel="stylesheet" href="/css/main.css" />
+  {% if page.stylesheet %}
+    <link rel="stylesheet" href="/css/{{page.stylesheet}}.css" />
+  {% endif %}
   </head>
 
   <body>
-    {{ content }}
+    {% include header.html %}
+    <div id="content">{{ content }}</div>
+    {% include footer.html %}
   </body>
-
 </html>
