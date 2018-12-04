@@ -6,6 +6,8 @@ $sm-width: map-get($gl-mq-list, "sm");
 $xs-width: map-get($gl-mq-list, "xs");
 
 $page-width: 1280px;
+$page-padding: 60px;
+$page-padding-small: 30px;
 $dark-background-color: #183d54;
 $light-background-color: #f3f5fa;
 $red: #f3807b;

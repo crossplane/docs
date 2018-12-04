@@ -101,17 +101,24 @@ pre > code {
 }
 
 .page {
-  max-width: 1199px;
+  max-width: $page-width;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 50px 30px;
+  padding: 0 $page-padding 30px;
   min-height: calc(100% - 374px);
   color: #505a72;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 
   @media (min-width: $md-width) {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+  }
+
+  @media (max-width: $sm-width) {
+    padding-left: $page-padding-small;
+    padding-right: $page-padding-small;
   }
 
   .menu-open & {
@@ -120,14 +127,29 @@ pre > code {
 }
 
 #docs-header {
-  padding: 37px 50px 38px;
   background-color: #f3f5fa;
   color: #505a72;
+
+  .menu-open & {
+    display: none;
+  }
+
+  & > div {
+    max-width: $page-width;
+    margin: 0 auto;
+    padding: 37px $page-padding 38px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    @media (max-width: $sm-width) {
+      padding-left: $page-padding-small;
+      padding-right: $page-padding-small;
+    }
+  }
 
   h1 {
     line-height: 40px;
     margin: 0;
-    margin-left: 10px;
     display: inline-block;
   }
 
@@ -135,26 +157,36 @@ pre > code {
     float: right;
     position: relative;
 
-    &.latest::after {
-      content: "Latest";
-      font-family: Avenir-Roman;
-      font-size: 14px;
-      line-height: 1.79;
-      color: #505a72;
-      border-radius: 12px;
-      background-color: #3bbdc4;
-      color: white;
+    @media (max-width: $sm-width) {
+      float: none;
+      margin-top: 20px;
+    }
+
+    &.latest > div {
       display: inline-block;
-      padding: 0 15px;
-      height: 24px;
-      right: 37px;
-      top: 8px;
-      position: absolute;
-      pointer-events: none;
+      position: relative;
+
+      & > div::after {
+        content: "Latest";
+        font-family: Avenir-Roman;
+        font-size: 14px;
+        line-height: 1.79;
+        color: #505a72;
+        border-radius: 12px;
+        background-color: #3bbdc4;
+        color: white;
+        display: inline-block;
+        padding: 0 15px;
+        height: 24px;
+        right: 37px;
+        top: 8px;
+        position: absolute;
+        pointer-events: none;
+      }
     }
 
     &.latest select {
-      padding-right: 107px;
+      padding-right: 95px;
     }
   }
 }
@@ -227,6 +259,10 @@ pre > code {
   line-height: 1.79;
   color: #3bbdc4;
   margin-top: 55px;
+
+  @media (max-width: $md-width) {
+    float: none;
+  }
 
   img {
     vertical-align: middle;

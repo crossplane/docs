@@ -95,11 +95,11 @@ body {
   & > div {
     max-width: $page-width;
     margin: 0 auto;
-    padding: 0 60px;
+    padding: 0 $page-padding;
     box-sizing: border-box;
 
     @media (max-width: $sm-width) {
-      padding: 0 30px;
+      padding: 0 $page-padding-small;
     }
   }
 }
