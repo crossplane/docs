@@ -4,6 +4,10 @@
 @import "minima";
 @import "vars";
 
+body {
+  font-size: 14px;
+}
+
 a:hover {
   text-decoration: none;
 }
@@ -79,7 +83,7 @@ p {
 }
 
 code {
-  font-family: Avenir-Roman;
+  font-family: monospace;
   font-size: 14px;
   color: #3bbdc4;
   background-color: #f3f5fa;
