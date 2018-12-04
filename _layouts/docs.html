@@ -31,7 +31,7 @@
         <div class="versions{% if currentVersion == latestVersion %} latest{% endif %}">
             <select onchange="window.location.href = this.value">
             {% for ver in site.data.versions %}
-                <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path}}">Crossplane {{ ver.version }}</option>
+                <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path | append: '/'}}">Crossplane {{ ver.version }}</option>
             {% endfor %}
             </select>
         </div>
