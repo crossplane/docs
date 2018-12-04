@@ -27,13 +27,15 @@
   <body>
     {% include header.html %}
     <div id="docs-header">
-        <h1>Documentation</h1>
-        <div class="versions{% if currentVersion == latestVersion %} latest{% endif %}">
-            <select onchange="window.location.href = this.value">
-            {% for ver in site.data.versions %}
-                <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path | append: '/'}}">Crossplane {{ ver.version }}</option>
-            {% endfor %}
-            </select>
+        <div>
+            <h1>Documentation</h1>
+            <div class="versions{% if currentVersion == latestVersion %} latest{% endif %}">
+                <div><div><select onchange="window.location.href = this.value">
+                {% for ver in site.data.versions %}
+                    <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path | append: '/'}}">Crossplane {{ ver.version }}</option>
+                {% endfor %}
+                </select></div></div>
+            </div>
         </div>
     </div>
     <div class="page">
