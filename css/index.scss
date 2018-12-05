@@ -24,7 +24,8 @@
     align-items: center;
 
     h1 {
-      line-height: 1.15;
+      line-height: 1.2;
+      font-weight: 900;
     }
 
     p {
@@ -54,6 +55,7 @@
 
   h2 {
     margin-top: 100px;
+    font-weight: 900;
   }
 
   a {
@@ -103,6 +105,7 @@
   h2 {
     margin-top: 55px;
     margin-bottom: 30px;
+    font-weight: 900;
   }
 
   img {
@@ -138,6 +141,7 @@
   h2 {
     margin-top: 100px;
     margin-bottom: 30px;
+    font-weight: 900;
   }
 
   p {
@@ -163,14 +167,6 @@
       line-height: 1.56;
       margin-bottom: 20px;
     }
-
-    // @media (max-width: $md-width) {
-    //   padding: 60px 40px 90px;
-    // }
-
-    // @media (max-width: $sm-width) {
-    //   padding: 60px 20px 60px;
-    // }
   }
 }
 
@@ -200,6 +196,7 @@
   h2 {
     margin-bottom: 35px;
     line-height: 1.25;
+    font-weight: 900;
   }
 
   p {
@@ -226,6 +223,7 @@
       line-height: 1.67;
       margin-top: 50px;
       margin-bottom: 35px;
+      font-weight: 900;
     }
 
     p {
@@ -261,6 +259,7 @@
     line-height: 1;
     margin-top: 100px;
     margin-bottom: 40px;
+    font-weight: 900;
   }
 
   p {

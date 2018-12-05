@@ -102,8 +102,6 @@
         add({{ document.title | jsonify }}, {{document.url | jsonify }}, {% if document.indent == true %}true{% else %}false{% endif %}, {% if document.url == page.url %}true{% else %}false{% endif %});
     {% endfor %}
 
-        console.log('menu', menu);
-
         function getEntry(item) {
             var itemDom = document.createElement('li');
 
@@ -116,6 +114,36 @@
 
             return itemDom;
         }
+
+        function addArrow(itemDom) {
+            var arrowDom = document.createElement('a');
+            arrowDom.classList.add('arrow');
+            arrowDom.onclick = function(itemDom) {
+                return function () {
+                    var fullHeight = 59 + 16 + itemDom.lastChild.clientHeight + 'px';
+                    itemDom.classList.toggle('open');
+                    if (itemDom.classList.contains('open')) {
+                        itemDom.style.height = fullHeight;
+                    } else {
+                        if (itemDom.style.height === 'auto') {
+                            itemDom.style.height = fullHeight;
+                        }
+                        setTimeout(function () { itemDom.style.height = '59px'; }, 10);
+                    }
+                    window.itemDom = itemDom;
+
+                    return false;
+                };
+            }(itemDom);
+            itemDom.appendChild(arrowDom);
+
+            if ((item.current && item.children) || item.childCurrent) {
+                itemDom.classList.add('open');
+                itemDom.style.height = 'auto';
+            } else {
+                itemDom.style.height = '59px';
+            }
+        }
         
         var menuDom = document.getElementById('docs-ul');
         for (var i = 0; i < menu.length; i++) {
@@ -127,6 +155,7 @@
             }
             
             if (item.children) {
+                addArrow(itemDom);
                 itemDom.classList.add('children');
                 var children = document.createElement('ul');
                 for (var j = 0; j < item.children.length; j++) {
