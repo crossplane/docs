@@ -29,12 +29,19 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: $header-font;
+  src: url("../fonts/Avenir-Heavy.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 h1,
 h2,
 h3,
 h4 {
   font-family: $header-font;
-  font-weight: 900;
+  font-weight: normal;
 }
 
 h1 {
@@ -108,7 +115,7 @@ body {
   background-color: $dark-background-color;
   clear: both;
   padding: 30px 0;
-  $header-height: 40px;
+  $header-height: 34px;
   height: $header-height;
 
   & > div {
@@ -119,6 +126,10 @@ body {
   .logo a,
   .logo a img {
     display: block;
+  }
+
+  .logo img {
+    height: $header-height;
   }
 
   .hamburger-controls {

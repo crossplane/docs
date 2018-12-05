@@ -12,20 +12,29 @@ a:hover {
   text-decoration: none;
 }
 
+ul {
+  list-style-type: square;
+
+  ul {
+    list-style-type: disc;
+  }
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: Avenir;
-  font-weight: 900;
+  font-family: $header-font;
+  font-weight: normal;
 }
 
 h1 {
   font-size: 32px;
-  line-height: 0.81;
+  line-height: 1.2;
   margin-top: 50px;
+  font-weight: 900;
 }
 
 h2 {
@@ -50,7 +59,7 @@ select {
   -moz-appearance: none;
   appearance: none;
   color: #505a72;
-  font-family: Avenir-Roman;
+  font-family: $body-font;
   font-size: 14px;
   background-image: url(/images/arrow-down.svg);
   background-repeat: no-repeat;
@@ -77,7 +86,7 @@ a {
 }
 
 p {
-  font-family: Avenir-Roman;
+  font-family: $body-font;
   font-size: 14px;
   line-height: 1.79;
 }
@@ -152,6 +161,7 @@ pre > code {
     line-height: 40px;
     margin: 0;
     display: inline-block;
+    font-weight: normal;
   }
 
   .versions {
@@ -169,7 +179,7 @@ pre > code {
 
       & > div::after {
         content: "Latest";
-        font-family: Avenir-Roman;
+        font-family: $body-font;
         font-size: 14px;
         line-height: 1.79;
         color: #505a72;
@@ -206,6 +216,11 @@ pre > code {
     position: sticky;
     padding-top: 30px;
     margin-bottom: 20px;
+
+    & > li {
+      transition: height 0.3s ease-in-out;
+      overflow: hidden;
+    }
   }
 
   ul {
@@ -215,7 +230,7 @@ pre > code {
 
     li {
       padding-left: 0px;
-      font-family: Avenir-Roman;
+      font-family: $body-font;
       font-size: 18px;
       line-height: 3.22;
       color: #505a72;
@@ -231,13 +246,30 @@ pre > code {
 
       a {
         color: #505a72;
-        display: block;
+        display: inline-block;
       }
 
-      &.children > a {
-        background-image: url(/images/arrow-up.svg);
+      & > a.arrow {
+        background-image: url(/images/arrow-down.svg);
         background-repeat: no-repeat;
-        background-position: right 15px center;
+        background-position: center;
+        width: 20px;
+        height: 20px;
+        float: right;
+        margin-top: 18px;
+        margin-right: 8px;
+        display: none;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      &.open > a.arrow {
+        // background-image: url(/images/arrow-up.svg);
+        transform: rotateX(180deg);
+      }
+
+      &.children > a.arrow {
+        display: inline-block;
       }
 
       ul {
@@ -255,7 +287,7 @@ pre > code {
 
 #edit {
   float: right;
-  font-family: Avenir-Roman;
+  font-family: $body-font;
   font-size: 14px;
   line-height: 1.79;
   color: #3bbdc4;
@@ -282,15 +314,18 @@ pre > code {
 
 .alert {
   padding: 20px;
-  color: white;
   margin-bottom: 15px;
   margin-top: 100px;
+  border-radius: 4px;
+  border: 1px solid #000;
 
   &.master {
-    background-color: #f44336;
+    border-color: #f44336;
+    color: #f44336;
   }
 
   &.old {
-    background-color: #2196f3;
+    border-color: #2196f3;
+    color: #2196f3;
   }
 }
