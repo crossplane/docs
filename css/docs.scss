@@ -114,7 +114,7 @@ pre > code {
   margin-left: auto;
   margin-right: auto;
   padding: 0 $page-padding 30px;
-  min-height: calc(100% - 374px);
+  min-height: calc(100% - 338px);
   color: #505a72;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -220,6 +220,11 @@ pre > code {
     & > li {
       transition: height 0.3s ease-in-out;
       overflow: hidden;
+      height: 59px;
+
+      &.open {
+        height: auto;
+      }
     }
   }
 
@@ -250,26 +255,25 @@ pre > code {
       }
 
       & > a.arrow {
-        background-image: url(/images/arrow-down.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-        width: 20px;
-        height: 20px;
         float: right;
         margin-top: 18px;
         margin-right: 8px;
-        display: none;
         cursor: pointer;
-        transition: transform 0.3s ease-in-out;
+        width: 20px;
+        height: 20px;
+
+        div {
+          background-image: url(/images/arrow-down.svg);
+          background-repeat: no-repeat;
+          background-position: center;
+          width: 20px;
+          height: 20px;
+          transition: transform 0.3s ease-in-out;
+        }
       }
 
-      &.open > a.arrow {
-        // background-image: url(/images/arrow-up.svg);
+      &.open > a.arrow div {
         transform: rotateX(180deg);
-      }
-
-      &.children > a.arrow {
-        display: inline-block;
       }
 
       ul {

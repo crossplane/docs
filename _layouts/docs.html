@@ -115,22 +115,39 @@
             return itemDom;
         }
 
+        // Flush css changes as explained in: https://stackoverflow.com/a/34726346
+        // and more completely: https://stackoverflow.com/a/6956049
+        function flushCss(element) {
+            element.offsetHeight;
+        }
+
         function addArrow(itemDom) {
             var arrowDom = document.createElement('a');
             arrowDom.classList.add('arrow');
+            arrowDom.innerHTML = '<div />';
             arrowDom.onclick = function(itemDom) {
                 return function () {
-                    var fullHeight = 59 + 16 + itemDom.lastChild.clientHeight + 'px';
+                    var MAIN_ITEM_HEIGHT = 59;
+                    var BOTTOM_PADDING = 16;
+
+                    // Calculated full height of the opened list
+                    var fullHeight = MAIN_ITEM_HEIGHT + BOTTOM_PADDING + itemDom.lastChild.clientHeight + 'px';
+
                     itemDom.classList.toggle('open');
+
                     if (itemDom.classList.contains('open')) {
                         itemDom.style.height = fullHeight;
                     } else {
+                        // If the list height is auto we have to set it to fullHeight
+                        // without tranistion before we shrink it to collapsed height
                         if (itemDom.style.height === 'auto') {
+                            itemDom.style.transition = 'none';
                             itemDom.style.height = fullHeight;
-                        }
-                        setTimeout(function () { itemDom.style.height = '59px'; }, 10);
+                            flushCss(itemDom);
+                            itemDom.style.transition = '';
+                        } 
+                        itemDom.style.height = '59px';
                     }
-                    window.itemDom = itemDom;
 
                     return false;
                 };
