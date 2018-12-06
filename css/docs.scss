@@ -218,6 +218,8 @@ pre > code {
     margin-bottom: 20px;
 
     & > li {
+      -webkit-transition: height 0.3s ease-in-out;
+      -o-transition: height 0.3s ease-in-out;
       transition: height 0.3s ease-in-out;
       overflow: hidden;
       height: 59px;
@@ -268,11 +270,17 @@ pre > code {
           background-position: center;
           width: 20px;
           height: 20px;
+          -webkit-transition: -webkit-transform 0.3s ease-in-out;
+          transition: -webkit-transform 0.3s ease-in-out;
+          -o-transition: transform 0.3s ease-in-out;
           transition: transform 0.3s ease-in-out;
+          transition: transform 0.3s ease-in-out,
+            -webkit-transform 0.3s ease-in-out;
         }
       }
 
       &.open > a.arrow div {
+        -webkit-transform: rotateX(180deg);
         transform: rotateX(180deg);
       }
 
