@@ -15,6 +15,28 @@
 /*** Vars ***/
 @import "vars";
 
+/* Add *-gt-hidden */
+@media (min-width: $lg-width) {
+  [class*="lg-gt-hidden"] {
+    display: none;
+  }
+}
+@media (min-width: $md-width) {
+  [class*="md-gt-hidden"] {
+    display: none;
+  }
+}
+@media (min-width: $sm-width) {
+  [class*="sm-gt-hidden"] {
+    display: none;
+  }
+}
+@media (min-width: $xs-width) {
+  [class*="xs-gt-hidden"] {
+    display: none;
+  }
+}
+
 @font-face {
   font-family: $body-font;
   src: url("../fonts/Avenir-Roman.woff") format("woff");
