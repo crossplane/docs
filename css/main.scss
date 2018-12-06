@@ -15,6 +15,28 @@
 /*** Vars ***/
 @import "vars";
 
+/* Add *-gt-hidden */
+@media (min-width: $lg-width) {
+  [class*="lg-gt-hidden"] {
+    display: none;
+  }
+}
+@media (min-width: $md-width) {
+  [class*="md-gt-hidden"] {
+    display: none;
+  }
+}
+@media (min-width: $sm-width) {
+  [class*="sm-gt-hidden"] {
+    display: none;
+  }
+}
+@media (min-width: $xs-width) {
+  [class*="xs-gt-hidden"] {
+    display: none;
+  }
+}
+
 @font-face {
   font-family: $body-font;
   src: url("../fonts/Avenir-Roman.woff") format("woff");
@@ -141,7 +163,11 @@ body {
 
     width: 16px;
     height: 16px;
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
     transform: rotate(0deg);
+    -webkit-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
     transition: 0.5s ease-in-out;
 
     span {
@@ -153,7 +179,11 @@ body {
       border-radius: 1px;
       opacity: 1;
       left: 0;
+      -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
       transform: rotate(0deg);
+      -webkit-transition: 0.25s ease-in-out;
+      -o-transition: 0.25s ease-in-out;
       transition: 0.25s ease-in-out;
       margin: 0 1px;
     }

@@ -133,12 +133,13 @@
   &[#{$gl-attributeName}*="-bottom"]{
     align-self: flex-end;
   }
-  &[#{$gl-attributeName}*="-first"]{
-    order: -1;
-  }
-  &[#{$gl-attributeName}*="-last"]{
-    order: 1;
-  }
+  // Commented out because this breaks ordering on col-*
+  // &[#{$gl-attributeName}*="-first"]{
+  //   order: -1;
+  // }
+  // &[#{$gl-attributeName}*="-last"]{
+  //   order: 1;
+  // }
 }
 /************************
     GRID BY NUMBER
