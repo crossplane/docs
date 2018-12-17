@@ -61,7 +61,7 @@ select {
   color: #505a72;
   font-family: $body-font;
   font-size: 14px;
-  background-image: url(/images/arrow-down.svg);
+  background-image: url({{"/images/arrow-down.svg"|relative_url}});
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 12px 6px;
@@ -265,7 +265,7 @@ pre > code {
         height: 20px;
 
         div {
-          background-image: url(/images/arrow-down.svg);
+          background-image: url({{"/images/arrow-down.svg"|relative_url}});
           background-repeat: no-repeat;
           background-position: center;
           width: 20px;

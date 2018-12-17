@@ -4,4 +4,4 @@
 {% assign forumLink = "https://groups.google.com/forum/#!forum/crossplane-dev" %}
 {% assign blogLink = "https://blog.upbound.io/" %}
 {% assign communityMeetingLink = "https://github.com/crossplaneio/crossplane/#community-meeting" %}
-{% assign latestDocs = site.data.versions[0].path | append: '/' %}
+{% assign latestDocs = site.data.versions[0].path | append: '/' | relative_url %}

@@ -18,9 +18,9 @@
 
     {% include favicon.html %}
 
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}" />
   {% if page.stylesheet %}
-    <link rel="stylesheet" href="/css/{{page.stylesheet}}.css" />
+    <link rel="stylesheet" href="{{ "/css/" | append: page.stylesheet | append: ".css" | relative_url }}" />
   {% endif %}
   </head>
 

@@ -21,8 +21,8 @@ stylesheet: index
       </div>
       <div class="col-7_md-12_md-first hero">
         <div>
-          <img class="img md-hidden" src="/images/hero.svg" />
-          <img class="img md-gt-hidden" src="/images/hero-mobile.svg" />
+          <img class="img md-hidden" src="{{ "/images/hero.svg" | relative_url }}" />
+          <img class="img md-gt-hidden" src="{{ "/images/hero-mobile.svg" | relative_url }}" />
         </div>
       </div>
     </div>
@@ -38,18 +38,18 @@ stylesheet: index
           Crossplane enables workload portability across clusters and cloud
           providers for the most common managed services.
         </p>
-        <p><img src="/images/pink.svg" /></p>
+        <p><img src="{{ "/images/pink.svg" | relative_url }}" /></p>
       </div>
       <div class="col-3_md-12 specific-kind">
-        <div class="img"><img src="/images/compute.svg" /></div>
+        <div class="img"><img src="{{ "/images/compute.svg" | relative_url }}" /></div>
         <h4>Compute</h4>
       </div>
       <div class="col-3_md-12 specific-kind">
-        <div class="img"><img src="/images/database.svg" /></div>
+        <div class="img"><img src="{{ "/images/database.svg" | relative_url }}" /></div>
         <h4>Databases</h4>
       </div>
       <div class="col-3_md-12 specific-kind">
-        <div class="img"><img src="/images/storage.svg" /></div>
+        <div class="img"><img src="{{ "/images/storage.svg" | relative_url }}" /></div>
         <h4>Storage</h4>
       </div>
       <div class="col-9_md-12 footer">
@@ -75,8 +75,8 @@ stylesheet: index
       support for other cloud providers coming soon.
     </p>
     <p>
-      <img src="/images/google-cloud.svg" /> <img src="/images/aws.svg" />
-      <img src="/images/microsoft-azure.svg" />
+      <img src="{{ "/images/google-cloud.svg" | relative_url }}" /> <img src="{{ "/images/aws.svg" | relative_url }}" />
+      <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" />
     </p>
   </div>
 </div>
@@ -91,7 +91,7 @@ stylesheet: index
           workloads across clouds and on-prem environments from one unified
           place.
         </p>
-        <p><img src="/images/teal.svg" /></p>
+        <p><img src="{{ "/images/teal.svg" | relative_url }}" /></p>
       </div>
       <div class="col-4_md-6_sm-12 feature">
         <h3>A strong separation of concerns.</h3>
@@ -154,9 +154,9 @@ stylesheet: index
   <div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img class="md-hidden" src="/images/feature-1.svg" /><img
+        <img class="md-hidden" src="{{ "/images/feature-1.svg" | relative_url }}" /><img
           class="md-gt-hidden"
-          src="/images/feature-1-mobile.svg"
+          src="{{ "/images/feature-1-mobile.svg" | relative_url }}"
         />
       </div>
       <div class="col-6_md-12">
@@ -165,7 +165,7 @@ stylesheet: index
           Schedule work across multiple regions and cloud providers at the same
           time. Use different regions of multiple cloud providers to improve
           availability, geographic presence, and reach.
-          <img src="/images/quad-white-medium.svg" />
+          <img src="{{ "/images/quad-white-medium.svg" | relative_url }}" />
         </p>
       </div>
     </div>
@@ -177,21 +177,21 @@ stylesheet: index
           clusters or clouds. As a single control-plane that spans multiple
           cloud providers, controllers work across clouds and use tried and
           tested methods for completing long running migration tasks.
-          <img src="/images/quad-white-medium.svg" />
+          <img src="{{ "/images/quad-white-medium.svg" | relative_url }}" />
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
-        <img class="md-hidden" src="/images/feature-2.svg" /><img
+        <img class="md-hidden" src="{{ "/images/feature-2.svg" | relative_url }}" /><img
           class="md-gt-hidden"
-          src="/images/feature-2-mobile.svg"
+          src="{{ "/images/feature-2-mobile.svg" | relative_url }}"
         />
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img class="md-hidden" src="/images/feature-3.svg" /><img
+        <img class="md-hidden" src="{{ "/images/feature-3.svg" | relative_url }}" /><img
           class="md-gt-hidden"
-          src="/images/feature-3-mobile.svg"
+          src="{{ "/images/feature-3-mobile.svg" | relative_url }}"
         />
       </div>
       <div class="col-6_md-12">
@@ -202,7 +202,7 @@ stylesheet: index
           across clouds. With a single control-plane that can span regions and
           cloud providers, and offers an extensibility model for writing custom
           controllers, Crossplane automates many of these tasks.
-          <img src="/images/quad-white-medium.svg" />
+          <img src="{{ "/images/quad-white-medium.svg" | relative_url }}" />
         </p>
       </div>
     </div>
@@ -227,7 +227,7 @@ stylesheet: index
         <div class="signature">
           <div class="name">Sid Sijbrandij</div>
           <div class="title">CEO and Co-Founder of GitLab</div>
-          <a href="https://gitlab.com"><img src="/images/gitlab.svg"/></a>
+          <a href="https://gitlab.com"><img src="{{ "/images/gitlab.svg" | relative_url }}"/></a>
         </div>
       </div>
       <div class="testimonial col-4_md-6_sm-12">
@@ -247,7 +247,7 @@ stylesheet: index
           <div class="name">Spencer Kimball</div>
           <div class="title">CEO and Founder of Cockroach Labs</div>
           <a href="https://www.cockroachlabs.com/"
-            ><img src="/images/cockroachlabs.svg"
+            ><img src="{{ "/images/cockroachlabs.svg" | relative_url }}"
           /></a>
         </div>
       </div>
@@ -266,7 +266,7 @@ stylesheet: index
         <div class="signature">
           <div class="name">Bassam Tabbara</div>
           <div class="title">CEO and Founder of Upbound</div>
-          <a href="https://upbound.io"><img src="/images/upbound.svg"/></a>
+          <a href="https://upbound.io"><img src="{{ "/images/upbound.svg" | relative_url }}"/></a>
         </div>
       </div>
     </div>
@@ -287,7 +287,7 @@ stylesheet: index
         <div class="slack">
           <div class="topbar"></div>
           <div class="content">
-            <img src="/images/slack.svg" />
+            <img src="{{ "/images/slack.svg" | relative_url }}" />
             <h3>Slack</h3>
             <p>
               Join the Crossplane team and community members in our Slack group.
@@ -305,7 +305,7 @@ stylesheet: index
         <div class="github">
           <div class="topbar"></div>
           <div class="content">
-            <img src="/images/github.svg" />
+            <img src="{{ "/images/github.svg" | relative_url }}" />
             <h3>GitHub</h3>
             <p>Watch and star Crossplane on Gitub and follow our progress.</p>
             <button
@@ -317,11 +317,11 @@ stylesheet: index
           </div>
         </div>
       </div>
-      <div class="col-4_md-6_xs-12 tile">
+      <div class="col-4_md-6_xs-12 tile"> 
         <div class="forum">
           <div class="topbar"></div>
           <div class="content">
-            <img src="/images/forum.svg" />
+            <img src="{{ "/images/forum.svg" | relative_url }}" />
             <h3>Forum</h3>
             <p>Chat about your use case with others on the Crossplane forum.</p>
             <button

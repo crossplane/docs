@@ -1,7 +1,7 @@
 <div id="header">
   <div>
     <div class="logo">
-      <a href="/"><img src="/images/logo.svg"/></a>
+      <a href="{{ "/" | relative_url }}"><img src="{{ "/images/logo.svg" | relative_url }}"/></a>
     </div>
     <div
       class="hamburger-controls"
@@ -12,7 +12,7 @@
     <ul class="links">
       <li>
         <a href="{{githubLink}}"
-          ><img src="/images/quad-teal-small.svg" /><span class="md-hidden">Get Started on</span> GitHub</a
+          ><img src="{{ "/images/quad-teal-small.svg" | relative_url }}" /><span class="md-hidden">Get Started on</span> GitHub</a
         >
       </li>
       <li><a href="{{latestDocs}}">Documentation</a></li>
