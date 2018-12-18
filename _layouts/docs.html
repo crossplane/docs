@@ -19,8 +19,8 @@
 
     {% include favicon.html %}
 
-    <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/docs.css" />
+    <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}" />
+    <link rel="stylesheet" href="{{ "/css/docs.css" | relative_url }}" />
 
   </head>
 
@@ -32,7 +32,7 @@
             <div class="versions{% if currentVersion == latestVersion %} latest{% endif %}">
                 <div><div><select onchange="window.location.href = this.value">
                 {% for ver in site.data.versions %}
-                    <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path | append: '/'}}">Crossplane {{ ver.version }}</option>
+                    <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path | append: '/' | relative_url }}">Crossplane {{ ver.version }}</option>
                 {% endfor %}
                 </select></div></div>
             </div>
@@ -47,7 +47,7 @@
 
             <div class="docs-actions">
 
-            <a id="edit" href="{{ page.github }}{{ page.name }}"><img src="/images/github-teal.svg" />Edit on GitHub</a>
+            <a id="edit" href="{{ page.github }}{{ page.name }}"><img src="{{ "/images/github-teal.svg" | relative_url }}" />Edit on GitHub</a>
 
             </div>
 
@@ -60,7 +60,7 @@
                         If you are using an official release version of Crossplane, you should refer to the documentation for your specific version.
                     </p>
                     <strong>
-                        Documentation for other releases can be found by using the version selector in the bottom left of any doc page.
+                        Documentation for other releases can be found by using the version selector in the top right of any doc page.
                     </strong>
                 </div>
             {% else %}
@@ -70,7 +70,7 @@
                             <b>PLEASE NOTE</b>: This document applies to {{ currentVersion }} version and not to the latest release {{ latestVersion }}
                         </p>
                         <strong>
-                            Documentation for other releases can be found by using the version selector in the left bottom of any doc page.
+                            Documentation for other releases can be found by using the version selector in the top right of any doc page.
                         </strong>
                     </div>
                 {% endif %}

@@ -39,21 +39,21 @@
 
 @font-face {
   font-family: $body-font;
-  src: url("../fonts/Avenir-Roman.woff") format("woff");
+  src: url({{"/fonts/Avenir-Roman.woff"|relative_url}}) format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: $header-font;
-  src: url("../fonts/Avenir-Black.woff") format("woff");
+  src: url({{"/fonts/Avenir-Black.woff"|relative_url}}) format("woff");
   font-weight: 900;
   font-style: normal;
 }
 
 @font-face {
   font-family: $header-font;
-  src: url("../fonts/Avenir-Heavy.woff") format("woff");
+  src: url({{"/fonts/Avenir-Heavy.woff"|relative_url}}) format("woff");
   font-weight: normal;
   font-style: normal;
 }
