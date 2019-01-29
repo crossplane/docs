@@ -4,6 +4,7 @@
 {% assign currentVersion = url[2] %}
 {% assign currentVersionPath = '/docs/' | append: currentVersion | append: '/' %}
 {% assign latestVersion = site.data.versions[0].version %}
+{% assign filepath = page.url | replace: currentVersionPath %}
 
 {% include mkhash.inc title = 'Welcome' url = currentVersionPath %}
 {% assign documents = site.pages | where_exp: 'page', 'page.url contains currentVersionPath' | where: "toc", "true" | sort: 'weight' | unshift: h %}
@@ -21,7 +22,6 @@
 
     <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}" />
     <link rel="stylesheet" href="{{ "/css/docs.css" | relative_url }}" />
-
   </head>
 
   <body>
@@ -30,7 +30,7 @@
         <div>
             <h1>Documentation</h1>
             <div class="versions{% if currentVersion == latestVersion %} latest{% endif %}">
-                <div><div><select onchange="window.location.href = this.value">
+                <div><div><select onchange='window.location.href = this.value + {{ filepath | jsonify }}''>
                 {% for ver in site.data.versions %}
                     <option {% if ver.version == currentVersion %}selected{% endif %} value="{{ver.path | append: '/' | relative_url }}">Crossplane {{ ver.version }}</option>
                 {% endfor %}
@@ -99,7 +99,7 @@
         }
 
     {% for document in documents %}
-        add({{ document.title | jsonify }}, {{document.url | jsonify }}, {% if document.indent == true %}true{% else %}false{% endif %}, {% if document.url == page.url %}true{% else %}false{% endif %});
+        add({{ document.title | jsonify }}, {{document.url | relative_url | jsonify }}, {% if document.indent == true %}true{% else %}false{% endif %}, {% if document.url == page.url %}true{% else %}false{% endif %});
     {% endfor %}
 
         function getEntry(item) {
