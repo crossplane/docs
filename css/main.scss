@@ -136,9 +136,12 @@ body {
 #header {
   background-color: $dark-background-color;
   clear: both;
-  padding: 30px 0;
+  $header-padding: 30px;
+  padding: $header-padding 0;
   $header-height: 34px;
   height: $header-height;
+  font-family: $body-font;
+  font-size: 16px;
 
   & > div {
     display: flex;
@@ -239,13 +242,21 @@ body {
   }
 
   .links {
-    line-height: $header-height;
     text-align: right;
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
     padding-left: 0;
     margin: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
 
     li {
       display: inline;
@@ -292,7 +303,7 @@ body {
       background-color: $dark-background-color;
       left: 0;
       right: 0;
-      top: 100px;
+      top: #{$header-padding + $header-padding + $header-height};
       bottom: 0;
       padding-left: 60px;
       text-align: left;
