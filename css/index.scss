@@ -96,39 +96,53 @@
       &:first-child {
         margin-top: 0;
       }
-    }
+    }    
   }
 }
 
 #providers {
+  padding-bottom: 90px;
+
   h2 {
     margin-top: 55px;
     margin-bottom: 30px;
-    font-weight: 900;
-  }
-
-  img {
-    vertical-align: middle;
-    margin-right: 70px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-
-    @media (max-width: $sm-width) {
-      margin: 40px auto 0;
-      display: block;
-
-      &:last-child {
-        margin: 20px auto;
-      }
-    }
+    font-weight: 900;    
   }
 
   p {
     margin-bottom: 50px;
+  }
+
+  .provider-wrap {
+    min-height: 65px;
+    position: relative;
+
+    @media (max-width: $md-width) {
+      margin: 15px 0;      
+    }
+
     &:last-child {
-      margin-bottom: 100px;
+      @media (max-width: $md-width) {
+        margin: 35px 0;      
+      }
+    }
+  }
+
+  .provider-image {
+    max-width: 90%;
+  }
+
+  .coming-soon {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    img {
+      margin-right: 5px;
+    }
+
+    span {
+      color: $red;
     }
   }
 }
@@ -306,8 +320,12 @@
         background-color: $red;
       }
 
-      &.forum .topbar {
+      &.youtube .topbar {
         background-color: $orange;
+      }
+
+      &.podcast .topbar {
+        background-color: $brown;
       }
 
       .content {

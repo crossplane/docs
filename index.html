@@ -39,28 +39,37 @@ stylesheet: index
           providers for the most common managed services.
         </p>
         <p><img src="{{ "/images/pink.svg" | relative_url }}" /></p>
-      </div>
-      <div class="col-3_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/compute.svg" | relative_url }}" /></div>
+      </div>      
+    </div>
+    <div class="grid-center">
+      <div class="col-2_md-12 specific-kind">
+        <div class="img"><img src="{{ "/images/compute.svg" | relative_url }}" alt="compute" /></div>
         <h4>Compute</h4>
       </div>
-      <div class="col-3_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/database.svg" | relative_url }}" /></div>
+      <div class="col-2_md-12 specific-kind">
+        <div class="img"><img src="{{ "/images/database.svg" | relative_url }}" alt="database" /></div>
         <h4>Databases</h4>
       </div>
-      <div class="col-3_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/storage.svg" | relative_url }}" /></div>
+      <div class="col-2_md-12 specific-kind">
+        <div class="img"><img src="{{ "/images/connectivity.svg" | relative_url }}" alt="connectivity" /></div>
+        <h4>Connectivity</h4>
+      </div>
+      <div class="col-2_md-12 specific-kind">
+        <div class="img"><img src="{{ "/images/security.svg" | relative_url }}" alt="security" /></div>
+        <h4>Security</h4>
+      </div>
+      <div class="col-2_md-12 specific-kind">
+        <div class="img"><img src="{{ "/images/storage.svg" | relative_url }}" alt="storage" /></div>
         <h4>Storage</h4>
       </div>
+      
       <div class="col-9_md-12 footer">
         <p>
           Additional managed services including serverless, analytics, big data,
           machine learning and others are coming soon.
         </p>
         <p>
-          <a href="{{githubLink}}"
-            >Help support these features and add new ones</a
-          >
+          <a href="{{githubLink}}">Help support these features and add new ones</a>
         </p>
       </div>
     </div>
@@ -74,10 +83,31 @@ stylesheet: index
       Mix and match services from cloud providers and on-prem. Additional
       support for other cloud providers coming soon.
     </p>
-    <p>
-      <img src="{{ "/images/google-cloud.svg" | relative_url }}" /> <img src="{{ "/images/aws.svg" | relative_url }}" />
-      <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" />
-    </p>
+    <div class="images grid-center">
+      <div class="col-2_md-12 provider-wrap">
+        <img src="{{ "/images/aws.svg" | relative_url }}" alt="aws" class="provider-image" />
+      </div>
+      <div class="col-2_md-12 provider-wrap">
+        <img src="{{ "/images/google-cloud.svg" | relative_url }}" alt="google cloud" class="provider-image" />
+      </div>
+      <div class="col-2_md-12 provider-wrap">
+        <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" alt="azure" class="provider-image" />
+      </div>
+      <div class="col-2_md-12 provider-wrap">
+        <img src="{{ "/images/digital-ocean.svg" | relative_url }}" alt="digital ocean" class="provider-image" />
+        <div class="coming-soon">
+          <img src="{{ "/images/tri-red-small.svg" | relative_url }}" />
+          <span class="caption">Coming Soon</span>
+        </div>
+      </div>
+      <div class="col-2_md-12 provider-wrap">
+        <img src="{{ "/images/alibaba-cloud.svg" | relative_url }}" alt="alibaba cloud" class="provider-image" />
+        <div class="coming-soon">
+          <img src="{{ "/images/tri-red-small.svg" | relative_url }}" />
+          <span class="caption">Coming Soon</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -283,11 +313,11 @@ stylesheet: index
         </p>
       </div>
 
-      <div class="col-4_md-6_xs-12 tile">
+      <div class="col-3_md-6_xs-12 tile">
         <div class="slack">
           <div class="topbar"></div>
           <div class="content">
-            <img src="{{ "/images/slack.svg" | relative_url }}" />
+            <img src="{{ "/images/slack.svg" | relative_url }}" alt="slack" />
             <h3>Slack</h3>
             <p>
               Join the Crossplane team and community members in our Slack group.
@@ -301,11 +331,11 @@ stylesheet: index
           </div>
         </div>
       </div>
-      <div class="col-4_md-6_xs-12 tile">
+      <div class="col-3_md-6_xs-12 tile">
         <div class="github">
           <div class="topbar"></div>
           <div class="content">
-            <img src="{{ "/images/github.svg" | relative_url }}" />
+            <img src="{{ "/images/github.svg" | relative_url }}" alt="github" />
             <h3>GitHub</h3>
             <p>Watch and star Crossplane on Gitub and follow our progress.</p>
             <button
@@ -317,18 +347,31 @@ stylesheet: index
           </div>
         </div>
       </div>
-      <div class="col-4_md-6_xs-12 tile"> 
-        <div class="forum">
+      <div class="col-3_md-6_xs-12 tile"> 
+        <div class="youtube">
           <div class="topbar"></div>
           <div class="content">
-            <img src="{{ "/images/forum.svg" | relative_url }}" />
-            <h3>Forum</h3>
-            <p>Chat about your use case with others on the Crossplane forum.</p>
+            <img src="{{ "/images/youtube.svg" | relative_url }}" alt="youtube" />
+            <h3>YouTube</h3>
+            <p>Join us discussing features and upcoming news for Crossplane.</p>
             <button
               class="grey"
-              onclick="window.location.href = '{{forumLink}}';"
+              onclick="window.location.href = '{{youtubeLink}}';"
             >
-              Visit Forum
+              Visit YouTube
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-3_md-6_xs-12 tile">
+        <div class="podcast">
+          <div class="topbar"></div>
+          <div class="content">
+            <img src="{{ "/images/podcast.svg" | relative_url }}" alt="podcast" />
+            <h3>Podcast</h3>
+            <p>Listen to the Crossplane podcast and learn about our roadmap.</p>
+            <button class="grey" onclick="window.location.href = '{{podcastLink}}';">
+              Visit Podcast
             </button>
           </div>
         </div>
