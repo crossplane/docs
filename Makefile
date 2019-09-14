@@ -1,4 +1,7 @@
 # Run jekyll in development mode
+
+LOCAL_DOCS_DIR := docs/local
+
 run: _data/versions.json
 	docker run --rm -it \
 		-p 4000:4000 -p 4001:4001 \
@@ -6,6 +9,16 @@ run: _data/versions.json
 		-v "$(PWD):/srv/jekyll" \
 		jekyll/jekyll -- \
 		jekyll serve --livereload --livereload-port 4001
+
+run_docs_local: local_docs_dir _data/versions.json
+	docker run --rm -it \
+		-p 4000:4000 -p 4001:4001 \
+		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
+		-v "$(PWD):/srv/jekyll" \
+		-v "$(GOPATH)/src/github.com/crossplaneio/crossplane/docs:/srv/jekyll/$(LOCAL_DOCS_DIR)" \
+		jekyll/jekyll -- \
+		jekyll serve --livereload --livereload-port 4001
+	rm -d $(LOCAL_DOCS_DIR)
 
 # Build (output is in _site)
 build: _data/versions.json
@@ -38,3 +51,8 @@ _data/versions.json: node_modules docs
 node_modules: package.json package-lock.json
 	npm install
 	@touch node_modules
+
+# Create the local docs dir needed before _data/versions.json in some cases
+local_docs_dir: 
+	mkdir -p $(LOCAL_DOCS_DIR)
+
