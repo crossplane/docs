@@ -322,6 +322,10 @@ pre > code {
   -ms-flex: 1;
   flex: 1;
   min-width: 0;
+
+   td {
+     padding: 5px;
+   }
 }
 
 .alert {
