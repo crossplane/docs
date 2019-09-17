@@ -113,6 +113,24 @@
     margin-bottom: 50px;
   }
 
+  img {
+    vertical-align: middle;
+    margin-right: 70px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    @media (max-width: $sm-width) {
+      margin: 40px auto 0;
+      display: block;
+
+      &:last-child {
+        margin: 20px auto;
+      }
+    }
+  }
+
   .provider-wrap {
     min-height: 65px;
     position: relative;
