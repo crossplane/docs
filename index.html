@@ -21,8 +21,7 @@ stylesheet: index
       </div>
       <div class="col-7_md-12_md-first hero">
         <div>
-          <img class="img md-hidden" src="{{ "/images/hero.svg" | relative_url }}" />
-          <img class="img md-gt-hidden" src="{{ "/images/hero-mobile.svg" | relative_url }}" />
+          <img class="img" srcset="./images/hero.png 1x, ./images/hero@2x.png 2x, ./images/hero@3x.png 3x" alt="Crossplane hero image" />
         </div>
       </div>
     </div>
@@ -33,10 +32,7 @@ stylesheet: index
   <div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img class="md-hidden" src="{{ "/images/feature-1.svg" | relative_url }}" /><img
-          class="md-gt-hidden"
-          src="{{ "/images/feature-1-mobile.svg" | relative_url }}"
-        />
+        <img srcset="./images/feature-1.png 1x, ./images/feature-1@2x.png 2x, ./images/feature-1@3x.png 3x" alt="Provision managed services" />
       </div>
       <div class="col-6_md-12">
         <h2>Provision the managed services your applications depend on using ‘kubectl.’</h2>
@@ -57,18 +53,14 @@ stylesheet: index
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
-        <img class="md-hidden" src="{{ "/images/feature-4.svg" | relative_url }}" /><img
-          class="md-gt-hidden"
-          src="{{ "/images/feature-4.svg" | relative_url }}"
-        />
+        <img srcset="./images/feature-4.png 1x, ./images/feature-4@2x.png 2x, ./images/feature-4@3x.png 3x"
+          alt="Extend Crossplane by adding your own Stack" />
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img class="md-hidden" src="{{ "/images/feature-2.svg" | relative_url }}" /><img
-          class="md-gt-hidden"
-          src="{{ "/images/feature-2-mobile.svg" | relative_url }}"
-        />
+        <img srcset="./images/feature-2.png 1x, ./images/feature-2@2x.png 2x, ./images/feature-2@3x.png 3x"
+          alt="Schedule workloads across clusters, regions and clouds" />
       </div>
       <div class="col-6_md-12">
         <h2>Schedule workloads across clusters, regions and clouds.</h2>
@@ -89,8 +81,8 @@ stylesheet: index
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
-        <img class="md-hidden" src="{{ "/images/feature-3.svg" | relative_url }}" /><img class="md-gt-hidden"
-          src="{{ "/images/feature-3-mobile.svg" | relative_url }}" />
+        <img srcset="./images/feature-3.png 1x, ./images/feature-3@2x.png 2x, ./images/feature-3@3x.png 3x"
+          alt="Manage multiple clusters from a single control plane" />
       </div>
     </div>
   </div>
@@ -202,8 +194,7 @@ stylesheet: index
       <div class="testimonial col-6_md-12">
         <h3>
           &ldquo;We share the vision of having truly cloud-agnostic managed
-          services and Crossplane is an important step forward in this
-          direction.&rdquo;
+          services.&rdquo;
         </h3>
         <p>
           &ldquo;Crossplane will make it possible for organizations to take
