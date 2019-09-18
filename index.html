@@ -11,8 +11,8 @@ stylesheet: index
         <div>
           <h1>The open source multicloud control plane.</h1>
           <p>
-            Workload portability across disparate environments, clusters,
-            regions and clouds. Choose your flavors of cloud!
+            Manage your cloud-native applications and infrastructure across 
+            environments, clusters, regions and clouds.
           </p>
           <button onclick="window.location.href='{{githubLink}}'">
             Get Started on GitHub
@@ -29,136 +29,6 @@ stylesheet: index
   </div>
 </div>
 
-<div id="kinds">
-  <div>
-    <div class="grid-center">
-      <div class="col-10_sm-12">
-        <h2>The many flavors of managed services we support</h2>
-        <p>
-          Crossplane enables workload portability across clusters and cloud
-          providers for the most common managed services.
-        </p>
-        <p><img src="{{ "/images/pink.svg" | relative_url }}" /></p>
-      </div>      
-    </div>
-    <div class="grid-center">
-      <div class="col-2_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/compute.svg" | relative_url }}" alt="compute" /></div>
-        <h4>Compute</h4>
-      </div>
-      <div class="col-2_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/database.svg" | relative_url }}" alt="database" /></div>
-        <h4>Databases</h4>
-      </div>
-      <div class="col-2_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/connectivity.svg" | relative_url }}" alt="connectivity" /></div>
-        <h4>Connectivity</h4>
-      </div>
-      <div class="col-2_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/security.svg" | relative_url }}" alt="security" /></div>
-        <h4>Security</h4>
-      </div>
-      <div class="col-2_md-12 specific-kind">
-        <div class="img"><img src="{{ "/images/storage.svg" | relative_url }}" alt="storage" /></div>
-        <h4>Storage</h4>
-      </div>
-      
-      <div class="col-9_md-12 footer">
-        <p>
-          Additional managed services including serverless, analytics, big data,
-          machine learning and others are coming soon.
-        </p>
-        <p>
-          <a href="{{githubLink}}">Help support these features and add new ones</a>
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="providers">
-  <div>
-    <h2>Supported cloud flavors</h2>
-    <p>
-      Mix and match services from cloud providers and on-prem. Additional
-      support for other cloud providers coming soon.
-    </p>
-    <p>
-      <img src="{{ "/images/google-cloud.svg" | relative_url }}" /> <img src="{{ "/images/aws.svg" | relative_url }}" />
-      <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" />
-    </p>
-  </div>
-</div>
-
-<div id="features">
-  <div>
-    <div class="grid-center">
-      <div class="col-10_sm-12 head">
-        <h2>Key Features of Crossplane</h2>
-        <p>
-          Crossplane provides a universal cloud computing API. Control your
-          workloads across clouds and on-prem environments from one unified
-          place.
-        </p>
-        <p><img src="{{ "/images/teal.svg" | relative_url }}" /></p>
-      </div>
-      <div class="col-4_md-6_sm-12 feature">
-        <h3>A strong separation of concerns.</h3>
-        <p>
-          Developers can define workloads without worrying about implementation
-          details, environment constraints, or policies. Administrators can
-          define environment specifics, and policies. Enable a higher degree of
-          reusability and reduce complexity.
-        </p>
-      </div>
-      <div class="col-4_md-6_sm-12 feature">
-        <h3>Workload portability across cloud providers.</h3>
-        <p>
-          As a multi-cloud workload and resource orchestrator, Crossplane
-          manages workloads (container, serverless, others) and resources they
-          consume (databases, message queues, buckets, data pipelines, and
-          others) across clouds and on-premise environments.
-        </p>
-      </div>
-      <div class="col-4_md-6_sm-12 feature">
-        <h3>Advanced workload scheduling.</h3>
-        <p>
-          Crossplane includes an extensible workload scheduler that can factor
-          availability, reliability, cost, and performance while deploying
-          workloads and their resources.
-        </p>
-      </div>
-      <div class="col-4_md-6_sm-12 feature">
-        <h3>Open source that doesn’t have an agenda.</h3>
-        <p>
-          Crossplane is open source software released under the Apache 2.0
-          license. Crossplane is a community driven effort to define a control
-          plane that can span multiple cloud providers, many regions and
-          offerings.
-        </p>
-      </div>
-      <div class="col-4_md-6_sm-12 feature">
-        <h3>Built with high levels of extensibility.</h3>
-        <p>
-          Leverages tried and tested Kubernetes machinery to provide a high
-          level of extensibility around APIs, resource controllers, schedulers
-          and other components. This empowers the community to build on-top of
-          it easily.
-        </p>
-      </div>
-      <div class="col-4_md-6_sm-12 feature">
-        <h3>Full lifecycle management of resources.</h3>
-        <p>
-          A resource controller is responsible for the entire lifecycle of a
-          resource. This resource is responsible for provisioning, health,
-          scaling, failover, and actively responding to external changes that
-          deviate from the desired configuration.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="use-cases">
   <div>
     <div class="grid">
@@ -169,98 +39,209 @@ stylesheet: index
         />
       </div>
       <div class="col-6_md-12">
-        <h2>Utilize multiple cloud providers at a single time.</h2>
+        <h2>Provision the managed services your applications depend on using ‘kubectl.’</h2>
         <p>
-          Schedule work across multiple regions and cloud providers at the same
-          time. Use different regions of multiple cloud providers to improve
-          availability, geographic presence, and reach.
-          <img src="{{ "/images/quad-white-medium.svg" | relative_url }}" />
+          Securely consume managed services such as PostgreSQL, Redis, Buckets and more, from 
+          your choice of cloud on-premises.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12">
-        <h2>Migrate managed services across multiple clouds.</h2>
+        <h2>Extend Crossplane by adding your own Stack.</h2>
         <p>
-          Take advantage of automated controllers to move data across regions,
-          clusters or clouds. As a single control-plane that spans multiple
-          cloud providers, controllers work across clouds and use tried and
-          tested methods for completing long running migration tasks.
-          <img src="{{ "/images/quad-white-medium.svg" | relative_url }}" />
+          Add new resources and controllers to Crossplane by extending existing Stacks
+          or building your own.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
-        <img class="md-hidden" src="{{ "/images/feature-2.svg" | relative_url }}" /><img
+        <img class="md-hidden" src="{{ "/images/feature-4.svg" | relative_url }}" /><img
           class="md-gt-hidden"
-          src="{{ "/images/feature-2-mobile.svg" | relative_url }}"
+          src="{{ "/images/feature-4.svg" | relative_url }}"
         />
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img class="md-hidden" src="{{ "/images/feature-3.svg" | relative_url }}" /><img
+        <img class="md-hidden" src="{{ "/images/feature-2.svg" | relative_url }}" /><img
           class="md-gt-hidden"
-          src="{{ "/images/feature-3-mobile.svg" | relative_url }}"
+          src="{{ "/images/feature-2-mobile.svg" | relative_url }}"
         />
       </div>
       <div class="col-6_md-12">
-        <h2>Automate all of your tasks across multiple clouds.</h2>
+        <h2>Schedule workloads across clusters, regions and clouds.</h2>
         <p>
-          Write custom controllers to automate such tasks as setting up
-          replication across databases, or setting up a data protection solution
-          across clouds. With a single control-plane that can span regions and
-          cloud providers, and offers an extensibility model for writing custom
-          controllers, Crossplane automates many of these tasks.
-          <img src="{{ "/images/quad-white-medium.svg" | relative_url }}" />
+          Define complete applications with managed service dependencies for scheduling across 
+          clusters and regions to balance reliability, cost, and performance.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-6_md-12">
+        <h2>Manage multiple clusters from a single control plane.</h2>
+        <p>
+          Provision and manage kubernetes clusters: bring your own clusters or generate on demand, 
+          with common configuration and policy.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
+        </p>
+      </div>
+      <div class="col-6_md-12_md-first img">
+        <img class="md-hidden" src="{{ "/images/feature-3.svg" | relative_url }}" /><img class="md-gt-hidden"
+          src="{{ "/images/feature-3-mobile.svg" | relative_url }}" />
       </div>
     </div>
   </div>
 </div>
+
+<div id="providers">
+  <div>
+    <h2>The many flavors of infrastructure we support</h2>
+    <p>
+      Crossplane supports your choice of infrastructure and enables anyone to add their own.
+    </p>
+    <p>
+      <img src="{{ "/images/google-cloud.svg" | relative_url }}" alt="google cloud" /> <img
+        src="{{ "/images/aws.svg" | relative_url }}" alt="aws" />
+      <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" alt="microsoft azure" /> <img
+        src="{{ "/images/comingsoon-pivotal.svg" | relative_url }}" alt="pivotal coming soon" />
+    </p>
+    <p>
+      <a href="{{githubLink}}">Help support these features and add new ones</a>
+    </p>
+  </div>
+</div>
+
+<div id="blueprint">
+  <div class="blueprint-header">
+    <h2>The Blueprint for the Open Cloud</h2>
+    <img src="{{ "/images/teal.svg" | relative_url }}" />
+  </div>
+  <div class="grid">
+    <div class="blueprint-items col-6_md-12 grid">
+      <div class="blueprint-bullet col-1">
+        <img src="{{ "/images/separation.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11">
+        <h3>A strong separation of concerns.</h3>
+        <p>Developers can define workloads without worrying about implementation details, 
+          environment constraints, or policies. Administrators can define environment specifics, 
+          and policies. Enable a higher degree of reusability and reduce complexity.</p>
+      </div>
+      <div class="blueprint-bullet col-1">
+        <img src="{{ "/images/portability.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11">
+        <h3>Workload portability across cloud providers.</h3>
+        <p>As a multicloud workload and resource orchestrator, Crossplane manages workloads
+           (container, serverless, others) and resources they consume (databases, message queues,
+            buckets, data pipelines, and others) across clouds and on-premise environments.</p>
+      </div>
+      <div class="blueprint-bullet col-1">
+        <img src="{{ "/images/agenda.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11">
+        <h3>Open source that doesn’t have an agenda.</h3>
+        <p>Crossplane is open source software released under the Apache 2.0 license. Crossplane is
+           a true community-driven effort to define a control plane that can span multiple cloud 
+           providers, many regions and offerings.</p>
+      </div>
+      <div class="blueprint-bullet col-1">
+        <img src="{{ "/images/extensibility.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11">
+        <h3>Built with high levels of extensibility.</h3>
+        <p>Leverages tried and tested Kubernetes machinery to provide a high level of extensibility
+           around APIs, resource controllers, schedulers and other components. This empowers the 
+           community to build on top of it easily.</p>
+      </div>
+      <div class="blueprint-bullet col-1">
+        <img src="{{ "/images/cycle.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11">
+        <h3>Full lifecycle management of resources.</h3>
+        <p>A resource controller is responsible for the entire lifecycle of a resource. This 
+          resource is responsible for provisioning, health, scaling, failover, and actively 
+          responding to external changes that deviate from the desired configuration.</p>
+      </div>
+    </div>
+    <div class="blueprint-img col-6_md-hidden">
+      <img src="{{ "/images/blueprint.png" | relative_url }}" alt="open cloud blueprint" />
+    </div>
+  </div>
+</div>
+
 <div id="testimonials">
   <div>
     <div class="grid-center">
-      <div class="testimonial col-4_md-6_sm-12">
+      <div class="testimonial col-6_md-12">
         <h3>
           &ldquo;Crossplane has an opportunity to change the cloud industry as
-          we know it&rdquo;
+          we know it.&rdquo;
         </h3>
         <p>
           &ldquo;Our customers are increasingly looking for a way to deploy
           their code across multiple cloud environments. The choices available
-          today are too complex and vendor driven but with Crossplane the
+          today are too complex and vendor-driven, but with Crossplane, the
           ability to orchestrate clouds becomes simple. We look forward to
           collaborating with them on this vision and as the first complex app
           running on Crossplane.&rdquo;
         </p>
         <div class="signature">
-          <div class="name">Sid Sijbrandij</div>
-          <div class="title">CEO and Co-Founder of GitLab</div>
-          <a href="https://gitlab.com"><img src="{{ "/images/gitlab.svg" | relative_url }}"/></a>
+          <div class="exec-img">
+            <img srcset="./images/sid.jpg 1x, ./images/sid@2x.jpg 2x, ./images/sid@3x.jpg 3x" alt="Sid Sijbrandij" />
+          </div>
+          <div class="exec-info">
+            <div class="name">Sid Sijbrandij</div>
+            <div class="title">CEO and Co-Founder of GitLab</div>
+          </div>          
         </div>
       </div>
-      <div class="testimonial col-4_md-6_sm-12">
+      <div class="testimonial col-6_md-12">
         <h3>
-          &ldquo;We share the vision of having truly cloud agnostic, managed
+          &ldquo;We share the vision of having truly cloud-agnostic managed
           services and Crossplane is an important step forward in this
-          direction&rdquo;
+          direction.&rdquo;
         </h3>
         <p>
           &ldquo;Crossplane will make it possible for organizations to take
           deeper ownership of where they want to run their services and how they
           manage their application data. Kudos to the Upbound team for
           architecting and delivering this critical, open source and community
-          driven component of the cloud neutral future.&rdquo;
+          driven component of the cloud-neutral future.&rdquo;
         </p>
         <div class="signature">
-          <div class="name">Spencer Kimball</div>
-          <div class="title">CEO and Founder of Cockroach Labs</div>
-          <a href="https://www.cockroachlabs.com/"
-            ><img src="{{ "/images/cockroachlabs.svg" | relative_url }}"
-          /></a>
+          <div class="exec-img">
+            <img srcset="./images/spencer.jpg 1x, ./images/spencer@2x.jpg 2x, ./images/spencer@3x.jpg 3x" alt="Spencer Kimball" />
+          </div>
+          <div class="exec-info">
+            <div class="name">Spencer Kimball</div>
+            <div class="title">CEO and Founder of Cockroach Labs</div>
+          </div>          
         </div>
       </div>
-      <div class="testimonial col-4_md-6_sm-12">
+      <div class="testimonial col-6_md-12">
+        <h3>
+          &ldquo;Crossplane has the ability to be at the heart of tomorrow’s multicloud deployments.&rdquo;
+        </h3>
+        <p>
+          &ldquo;It's exciting to see open cloud standards like Crossplane emerge, that will allow new multicloud technologies like
+          YugabyteDB to take advantage of the broader cloud ecosystem, on-premise and in-public cloud. Future work with
+          Crossplane.io and Rook.io is a natural fit with the Kubernetes ecosystem.&rdquo;
+        </p>
+        <div class="signature">
+          <div class="exec-img">
+            <img srcset="./images/karthik.jpg 1x, ./images/karthik@2x.jpg 2x, ./images/karthik@3x.jpg 3x" alt="Karthik Ranganathan" />
+          </div>
+          <div class="exec-info">
+            <div class="name">Karthik Ranganathan</div>
+            <div class="title">Co-Founder and CTO of Yugabyte</div>
+          </div>          
+        </div>
+      </div>
+      <div class="testimonial col-6_md-12">
         <h3>
           &ldquo;We created Crossplane to empower organizations to use the best
           of all the clouds.&rdquo;
@@ -273,14 +254,19 @@ stylesheet: index
           cost.&rdquo;
         </p>
         <div class="signature">
-          <div class="name">Bassam Tabbara</div>
-          <div class="title">CEO and Founder of Upbound</div>
-          <a href="https://upbound.io"><img src="{{ "/images/upbound.svg" | relative_url }}"/></a>
+          <div class="exec-img">
+            <img srcset="./images/bassam.jpg 1x, ./images/bassam@2x.jpg 2x, ./images/bassam@3x.jpg 3x" alt="Bassam Tabbara" />
+          </div>
+          <div class="exec-info">
+              <div class="name">Bassam Tabbara</div>
+              <div class="title">CEO and Founder of Upbound</div>
+          </div>          
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <div id="community">
   <div>
     <div class="grid-center">
