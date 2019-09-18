@@ -14,14 +14,14 @@ stylesheet: index
             Manage your cloud-native applications and infrastructure across 
             environments, clusters, regions and clouds.
           </p>
-          <button onclick="window.location.href='{{githubLink}}'">
+          <button onclick="window.location.href='{{ githubLink }}'">
             Get Started on GitHub
           </button>
         </div>
       </div>
       <div class="col-7_md-12_md-first hero">
         <div>
-          <img class="img" srcset="./images/hero.png 1x, ./images/hero@2x.png 2x, ./images/hero@3x.png 3x" alt="Crossplane hero image" />
+          <img class="img" src="{{ "/images/hero.png" | relative_url }}" srcset="./images/hero.png 1x, ./images/hero@2x.png 2x, ./images/hero@3x.png 3x" alt="Crossplane hero image" />
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@ stylesheet: index
   <div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img srcset="./images/feature-1.png 1x, ./images/feature-1@2x.png 2x, ./images/feature-1@3x.png 3x" alt="Provision managed services" />
+        <img src="{{ "/images/feature-1.png" | relative_url }}" srcset="./images/feature-1.png 1x, ./images/feature-1@2x.png 2x, ./images/feature-1@3x.png 3x" alt="Provision managed services" />
       </div>
       <div class="col-6_md-12">
         <h2>Provision the managed services your applications depend on using ‘kubectl.’</h2>
@@ -53,13 +53,13 @@ stylesheet: index
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
-        <img srcset="./images/feature-4.png 1x, ./images/feature-4@2x.png 2x, ./images/feature-4@3x.png 3x"
+        <img src="{{ "/images/feature-4.png" | relative_url }}" srcset="./images/feature-4.png 1x, ./images/feature-4@2x.png 2x, ./images/feature-4@3x.png 3x"
           alt="Extend Crossplane by adding your own Stack" />
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12 img">
-        <img srcset="./images/feature-2.png 1x, ./images/feature-2@2x.png 2x, ./images/feature-2@3x.png 3x"
+        <img src="{{ "/images/feature-2.png" | relative_url }}" srcset="./images/feature-2.png 1x, ./images/feature-2@2x.png 2x, ./images/feature-2@3x.png 3x"
           alt="Schedule workloads across clusters, regions and clouds" />
       </div>
       <div class="col-6_md-12">
@@ -81,7 +81,7 @@ stylesheet: index
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
-        <img srcset="./images/feature-3.png 1x, ./images/feature-3@2x.png 2x, ./images/feature-3@3x.png 3x"
+        <img src="{{ "/images/feature-3.png" | relative_url }}" srcset="./images/feature-3.png 1x, ./images/feature-3@2x.png 2x, ./images/feature-3@3x.png 3x"
           alt="Manage multiple clusters from a single control plane" />
       </div>
     </div>
@@ -101,7 +101,7 @@ stylesheet: index
         src="{{ "/images/comingsoon-pivotal.svg" | relative_url }}" alt="pivotal coming soon" />
     </p>
     <p>
-      <a href="{{githubLink}}">Help support these features and add new ones</a>
+      <a href="{{ githubLink }}">Help support these features and add new ones</a>
     </p>
   </div>
 </div>
@@ -183,7 +183,7 @@ stylesheet: index
         </p>
         <div class="signature">
           <div class="exec-img">
-            <img srcset="./images/sid.jpg 1x, ./images/sid@2x.jpg 2x, ./images/sid@3x.jpg 3x" alt="Sid Sijbrandij" />
+            <img src="{{ "/images/sid.jpg" | relative_url }}" srcset="./images/sid.jpg 1x, ./images/sid@2x.jpg 2x, ./images/sid@3x.jpg 3x" alt="Sid Sijbrandij" />
           </div>
           <div class="exec-info">
             <div class="name">Sid Sijbrandij</div>
@@ -205,7 +205,7 @@ stylesheet: index
         </p>
         <div class="signature">
           <div class="exec-img">
-            <img srcset="./images/spencer.jpg 1x, ./images/spencer@2x.jpg 2x, ./images/spencer@3x.jpg 3x" alt="Spencer Kimball" />
+            <img src="{{ "/images/spencer.jpg" | relative_url }}" srcset="./images/spencer.jpg 1x, ./images/spencer@2x.jpg 2x, ./images/spencer@3x.jpg 3x" alt="Spencer Kimball" />
           </div>
           <div class="exec-info">
             <div class="name">Spencer Kimball</div>
@@ -224,7 +224,7 @@ stylesheet: index
         </p>
         <div class="signature">
           <div class="exec-img">
-            <img srcset="./images/karthik.jpg 1x, ./images/karthik@2x.jpg 2x, ./images/karthik@3x.jpg 3x" alt="Karthik Ranganathan" />
+            <img src="{{ "/images/karthik.jpg" | relative_url }}" srcset="./images/karthik.jpg 1x, ./images/karthik@2x.jpg 2x, ./images/karthik@3x.jpg 3x" alt="Karthik Ranganathan" />
           </div>
           <div class="exec-info">
             <div class="name">Karthik Ranganathan</div>
@@ -246,7 +246,7 @@ stylesheet: index
         </p>
         <div class="signature">
           <div class="exec-img">
-            <img srcset="./images/bassam.jpg 1x, ./images/bassam@2x.jpg 2x, ./images/bassam@3x.jpg 3x" alt="Bassam Tabbara" />
+            <img src="{{ "/images/bassam.jpg" | relative_url }}" srcset="./images/bassam.jpg 1x, ./images/bassam@2x.jpg 2x, ./images/bassam@3x.jpg 3x" alt="Bassam Tabbara" />
           </div>
           <div class="exec-info">
               <div class="name">Bassam Tabbara</div>
@@ -280,7 +280,7 @@ stylesheet: index
             </p>
             <button
               class="grey"
-              onclick="window.location.href= '{{slackLink}}';"
+              onclick="window.location.href= '{{ slackLink }}';"
             >
               Join Slack
             </button>
@@ -296,7 +296,7 @@ stylesheet: index
             <p>Watch and star Crossplane on Gitub and follow our progress.</p>
             <button
               class="grey"
-              onclick="window.location.href = '{{githubLink}}';"
+              onclick="window.location.href = '{{ githubLink }}';"
             >
               Visit GitHub
             </button>
@@ -312,7 +312,7 @@ stylesheet: index
             <p>Join us discussing features and upcoming news for Crossplane.</p>
             <button
               class="grey"
-              onclick="window.location.href = '{{youtubeLink}}';"
+              onclick="window.location.href = '{{ youtubeLink }}';"
             >
               Visit YouTube
             </button>
@@ -326,7 +326,7 @@ stylesheet: index
             <img src="{{ "/images/podcast.svg" | relative_url }}" alt="podcast" />
             <h3>Podcast</h3>
             <p>Listen to the Crossplane podcast and learn about our roadmap.</p>
-            <button class="grey" onclick="window.location.href = '{{podcastLink}}';">
+            <button class="grey" onclick="window.location.href = '{{ podcastLink }}';">
               Visit Podcast
             </button>
           </div>
@@ -336,7 +336,7 @@ stylesheet: index
 
     <p class="join">
       You can also join us every other week for our
-      <a href="{{communityMeetingLink}}">community meeting</a> call to discuss
+      <a href="{{ communityMeetingLink }}">community meeting</a> call to discuss
       Crossplane
     </p>
   </div>
