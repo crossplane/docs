@@ -379,6 +379,10 @@ body {
       &:last-child {
         margin-right: 0;
       }
-    }
+
+      @media (max-width: $lg-width) {
+        margin-right: 20px;
+      }
+    }    
   }
 }

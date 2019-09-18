@@ -49,12 +49,18 @@
   }
 }
 
-#kinds {
-  text-align: center;
+#providers {
+  background-color: $darkish-background-color;
+  padding-bottom: 30px;
 
   h2 {
-    margin-top: 100px;
-    font-weight: 900;
+    margin-top: 55px;
+    margin-bottom: 30px;
+    font-weight: 900;    
+  }
+
+  p {
+    margin-bottom: 50px;
   }
 
   a {
@@ -67,46 +73,6 @@
     }
   }
 
-  p {
-    margin: 25px 0;
-  }
-
-  .img {
-    margin-top: 0;
-    height: 93px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
-  h4 {
-    margin-top: 40px;
-    margin-bottom: 20px;
-  }
-
-  .specific-kind {
-    margin-top: 10px;
-  }
-
-  .footer {
-    p {
-      font-size: 14px;
-      margin-bottom: 30px;
-
-      &:first-child {
-        margin-top: 0;
-      }
-    }
-  }
-}
-
-#providers {
-  h2 {
-    margin-top: 55px;
-    margin-bottom: 30px;
-    font-weight: 900;
-  }
-
   img {
     vertical-align: middle;
     margin-right: 70px;
@@ -115,7 +81,7 @@
       margin-right: 0;
     }
 
-    @media (max-width: $sm-width) {
+    @media (max-width: $md-width) {
       margin: 40px auto 0;
       display: block;
 
@@ -125,53 +91,87 @@
     }
   }
 
-  p {
-    margin-bottom: 50px;
+  .provider-wrap {
+    min-height: 65px;
+    position: relative;
+
+    @media (max-width: $md-width) {
+      margin: 15px 0;      
+    }
+
     &:last-child {
-      margin-bottom: 100px;
+      @media (max-width: $md-width) {
+        margin: 35px 0;      
+      }
+    }
+  }
+
+  .provider-image {
+    max-width: 90%;
+  }
+
+  .coming-soon {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    img {
+      margin-right: 5px;
+    }
+
+    span {
+      color: $red;
     }
   }
 }
 
-#features {
-  background-color: $light-background-color;
-  padding-bottom: 90px;
+#blueprint {
+  background: $dark-background-color;
+  color: $white;
+  padding: 45px 0;
 
-  h2 {
-    margin-top: 100px;
-    margin-bottom: 30px;
-    font-weight: 900;
+  .blueprint-header {
+    margin-bottom: 35px;
+  }
+  
+  .blueprint-item {
+    text-align: left;
+    padding-bottom: 25px;
   }
 
-  p {
-    font-size: 22px;
-    line-height: 34px;
-    margin: 25px 0;
+  .blueprint-bullet img {
+    margin-top: 5px;
   }
 
   h3 {
-    margin-top: 40px;
-    margin-bottom: 30px;
+    margin-top: 0;
   }
 
-  .feature {
-    padding: 0 45px;
+  p {
+    font-size: 16px;
+  }
 
-    @media (max-width: $sm-width) {
-      padding: 0;
+  .blueprint-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      max-width: 95%;
+      width: auto;
+      max-height: 720px;
+      height: auto;
     }
 
-    p {
-      font-size: 16px;
-      line-height: 1.56;
-      margin-bottom: 20px;
+    @media (max-width: $md-width) {
+      display: none;
     }
   }
 }
 
 #use-cases {
-  background-color: $red;
-  color: white;
+  background-color: $white;
+  color: $dark-blue-text;
   text-align: left;
   padding-top: 80px;
   padding-bottom: 65px;
@@ -207,20 +207,18 @@
 }
 
 #testimonials {
-  padding-top: 50px;
-  padding-bottom: 100px;
+  padding-top: 100px;
 
   .testimonial {
-    padding: 0 58px;
+    padding: 0 58px 100px;
     text-align: left;
 
     @media (max-width: $sm-width) {
-      padding: 0 38px;
+      padding: 0 38px 75px;
     }
 
     h3 {
       line-height: 1.67;
-      margin-top: 50px;
       margin-bottom: 35px;
       font-weight: 900;
     }
@@ -243,8 +241,14 @@
       font-family: $header-font;
     }
 
-    .signature img {
-      margin-top: 20px;
+    .exec-img {
+      display: inline-block;
+    }
+
+    .exec-info {
+      vertical-align: text-bottom;
+      display: inline-block;
+      margin-left: 15px;
     }
   }
 }
@@ -306,8 +310,12 @@
         background-color: $red;
       }
 
-      &.forum .topbar {
+      &.youtube .topbar {
         background-color: $orange;
+      }
+
+      &.podcast .topbar {
+        background-color: $brown;
       }
 
       .content {

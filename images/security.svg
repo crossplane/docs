@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88" viewBox="0 0 88 88">
+    <g fill="none" fill-rule="evenodd">
+        <path stroke="#505A72" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M26.146 70.297a11.645 11.645 0 0 0 5.138-9.664c0-6.437-5.218-11.654-11.654-11.654S7.977 54.196 7.977 60.633l.002.043A5.86 5.86 0 1 0 6.86 72.287h12.77c2.414 0 4.656-.734 6.516-1.99"/>
+        <path fill="#FFF" d="M48.39 83.024l-4.564 2.727-4.564-2.727a56.82 56.82 0 0 1-27.68-48.78V2c8.273 8.854 22.147 9.354 31.036 1.118L43.826 2l1.045.987c8.804 8.31 22.668 7.95 31.027-.808L76.07 2v32.244a56.82 56.82 0 0 1-27.68 48.78"/>
+        <path stroke="#505A72" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M48.39 83.024l-4.564 2.727-4.564-2.727a56.82 56.82 0 0 1-27.68-48.78V2c8.273 8.854 22.147 9.354 31.036 1.118L43.826 2l1.045.987c8.804 8.31 22.668 7.95 31.027-.808L76.07 2v32.244a56.82 56.82 0 0 1-27.68 48.78z"/>
+        <path fill="#FFF" d="M43.826 14.073l6.777-6.777"/>
+        <path stroke="#505A72" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M43.826 14.073l6.777-6.777"/>
+        <path fill="#FFF" d="M12.656 45.242l21.76-21.76"/>
+        <path stroke="#505A72" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M12.656 45.242l21.76-21.76"/>
+        <path fill="#FFF" d="M76.069 29.94L39.077 66.933"/>
+        <path stroke="#505A72" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M76.069 29.94L39.077 66.933"/>
+        <path fill="#FFF" d="M57.7 49.947a11.81 11.81 0 0 1-.62-3.76c0-6.531 5.294-11.825 11.824-11.825 5.879 0 10.743 4.296 11.656 9.917.057 0 .112-.008.168-.008a6.87 6.87 0 1 1 0 13.739H58.803a4.108 4.108 0 1 1-1.103-8.064"/>
+        <path stroke="#505A72" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M57.7 49.947a11.81 11.81 0 0 1-.62-3.76c0-6.531 5.294-11.825 11.824-11.825 5.879 0 10.743 4.296 11.656 9.917.057 0 .112-.008.168-.008a6.87 6.87 0 1 1 0 13.739H58.803a4.108 4.108 0 1 1-1.103-8.064z"/>
+    </g>
+</svg>
