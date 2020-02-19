@@ -15,7 +15,7 @@ make run
 Open http://localhost:4000 in your browser.
 
 ## To run locally with local crossplane docs
-Ensure `$(GOPATH)/src/github.com/crossplaneio/crossplane/docs` is present.
+Ensure `$(GOPATH)/src/github.com/crossplane/crossplane/docs` is present.
 
 ```
 brew install npm

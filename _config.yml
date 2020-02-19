@@ -28,7 +28,7 @@ defaults:
       path: "docs"
     values:
       layout: "docs"
-      github: "https://github.com/crossplaneio/crossplane/blob/master/docs/"
+      github: "https://github.com/crossplane/crossplane/blob/master/docs/"
 
 sass:
   sass_dir: ./_scss
