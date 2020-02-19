@@ -15,7 +15,7 @@ run_docs_local: local_docs_dir _data/versions.json
 		-p 4000:4000 -p 4001:4001 \
 		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
 		-v "$(PWD):/srv/jekyll" \
-		-v "$(GOPATH)/src/github.com/crossplaneio/crossplane/docs:/srv/jekyll/$(LOCAL_DOCS_DIR)" \
+		-v "$(GOPATH)/src/github.com/crossplane/crossplane/docs:/srv/jekyll/$(LOCAL_DOCS_DIR)" \
 		jekyll/jekyll -- \
 		jekyll serve --livereload --livereload-port 4001
 	rm -d $(LOCAL_DOCS_DIR)
@@ -39,7 +39,7 @@ publish: _data/versions.json
 		git -C "$(ROOT_DIR)" -c user.email="info@crossplane.io" -c user.name="Crossplane" commit --message="docs snapshot for crossplane version \`$(DOCS_VERSION)\`"; \
 		echo "pushing changes..."; \
 		git -C "$(ROOT_DIR)" push; \
-		echo "crossplaneio.github.io changes published"; \
+		echo "crossplane.github.io changes published"; \
 	fi
 
 # Generate versions.json
