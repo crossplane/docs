@@ -9,10 +9,10 @@ stylesheet: index
     <div class="grid">
       <div class="col-5_md-12 main">
         <div>
-          <h1>The open source multicloud control plane.</h1>
+          <h1>Manage your applications and infrastructure the Kubernetes way</h1>
           <p>
-            Manage your cloud-native applications and infrastructure across
-            environments, clusters, regions and clouds.
+            Standardize infrastructure and application management using the same API-centric, 
+            declarative configuration and automation approach pioneered by the Kubernetes community.
           </p>
           <button onclick="window.location.href='{{ githubLink }}'">
             Get Started on GitHub
@@ -31,58 +31,60 @@ stylesheet: index
 <div id="use-cases">
   <div>
     <div class="grid">
-      <div class="col-6_md-12 img">
-        <img src="{{ "/images/feature-1.png" | relative_url }}" srcset="{{ "/images/feature-1.png" | relative_url }} 1x, {{ "/images/feature-1@2x.png" | relative_url }} 2x, {{ "/images/feature-1@3x.png" | relative_url }} 3x" alt="Provision managed services" />
-      </div>
       <div class="col-6_md-12">
-        <h2>Provision the managed services your applications depend on using ‘kubectl.’</h2>
+        <h2>Standardize on a unified control plane</h2>
         <p>
-          Securely consume managed services such as PostgreSQL, Redis, Buckets and more, from
-          your choice of cloud on-premises.
-          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
-        </p>
-      </div>
-    </div>
-    <div class="grid">
-      <div class="col-6_md-12">
-        <h2>Extend Crossplane by adding your own Stack.</h2>
-        <p>
-          Add new resources and controllers to Crossplane by extending existing Stacks
-          or building your own.
+          Crossplane implements the same declarative configuration patterns pioneered by the Kubernetes community to 
+          applications and infrastructure. The result is a unified control plane that integrates seamlessly with existing 
+          tools and systems, and makes it easy to set policies, quotas, and track reports.
           <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
         <img src="{{ "/images/feature-4.png" | relative_url }}" srcset="{{ "/images/feature-4.png" | relative_url }} 1x, {{ "/images/feature-4@2x.png" | relative_url }} 2x, {{ "/images/feature-4@3x.png" | relative_url }} 3x"
-          alt="Extend Crossplane by adding your own Stack" />
+          alt="Standardize on a unified control plane" />
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12 img">
         <img src="{{ "/images/feature-2.png" | relative_url }}" srcset="{{ "/images/feature-2.png" | relative_url }} 1x, {{ "/images/feature-2@2x.png" | relative_url }} 2x, {{ "/images/feature-2@3x.png" | relative_url }} 3x"
-          alt="Schedule workloads across clusters, regions and clouds" />
+          alt="Infrastructure and application management the Kubernetes way" />
       </div>
       <div class="col-6_md-12">
-        <h2>Schedule workloads across clusters, regions and clouds.</h2>
+        <h2>Infrastructure and application management the Kubernetes way</h2>
         <p>
-          Define complete applications with managed service dependencies for scheduling across
-          clusters and regions to balance reliability, cost, and performance.
+          With Crossplane, every managed service and piece of infrastructure your application uses is just a controller managed by Kubernetes and provisioned directly from 'kubectl.' Leverage GitOps workflows to
+           manage infrastructure turning Kubernetes into the source of truth for environment state.
           <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
       </div>
     </div>
     <div class="grid">
       <div class="col-6_md-12">
-        <h2>Manage multiple clusters from a single control plane.</h2>
+        <h2>Support for your favorite infrastructure and the ability to define your own</h2>
         <p>
-          Provision and manage Kubernetes clusters: bring your own clusters or generate on demand,
-          with common configuration and policy.
+          Manage applications and infrastructure whether you use containers, VMs, or serverless in the cloud or on-premises. 
+          Each of these are managed as a Kubernetes resource which enables teams to clone and customize them to build their own abstractions.
+           Leverage a growing ecosystem of infrastructure and platform providers on Crossplane.
           <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
       </div>
       <div class="col-6_md-12_md-first img">
+        <img src="{{ "/images/feature-1.png" | relative_url }}" srcset="{{ "/images/feature-1.png" | relative_url }} 1x, {{ "/images/feature-1@2x.png" | relative_url }} 2x, {{ "/images/feature-1@3x.png" | relative_url }} 3x" alt="Support for your favorite infrastructure and the ability to define your own " />
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-6_md-12 img">
         <img src="{{ "/images/feature-3.png" | relative_url }}" srcset="{{ "/images/feature-3.png" | relative_url }} 1x, {{ "/images/feature-3@2x.png" | relative_url }} 2x, {{ "/images/feature-3@3x.png" | relative_url }} 3x"
-          alt="Manage multiple clusters from a single control plane" />
+          alt="We fully embrace open source and open governance" />
+      </div>
+      <div class="col-6_md-12">
+        <h2>We fully embrace open source and open governance</h2>
+        <p>
+          Crossplane is a community driven open source project that builds upon the vibrant Kubernetes community. The project is 
+          released under the Apache 2.0 license and remains committed to being vendor neutral. Read more about our commitment here.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
+        </p>
       </div>
     </div>
   </div>
@@ -90,7 +92,7 @@ stylesheet: index
 
 <div id="providers">
   <div>
-    <h2>The many flavors of infrastructure we support</h2>
+    <h2>The many flavors of infrastructure we support for your applications</h2>
     <p>
       Crossplane supports your choice of infrastructure and enables anyone to add their own.
     </p>
@@ -108,55 +110,52 @@ stylesheet: index
 
 <div id="blueprint">
   <div class="blueprint-header">
-    <h2>The Blueprint for the Open Cloud</h2>
+    <h2>The Kubernetes Way</h2>
     <img src="{{ "/images/teal.svg" | relative_url }}" />
   </div>
   <div class="grid">
     <div class="blueprint-items col-6_md-12 grid">
       <div class="blueprint-bullet col-1_xs-2">
-        <img src="{{ "/images/separation.svg" | relative_url }}" />
+        <img src="{{ "/images/declarative.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
-        <h3>A strong separation of concerns.</h3>
-        <p>Developers can define workloads without worrying about implementation details,
-          environment constraints, or policies. Administrators can define environment specifics,
-          and policies. Enable a higher degree of reusability and reduce complexity.</p>
+        <h3>Declarative infrastructure configuration</h3>
+        <p>Crossplane brings Kubernetes-styled declarative and API-driven configuration and management to any piece 
+          of infrastructure, on-premises and in the cloud. Through this approach, infrastructure managed through Crossplane 
+          is accessible via kubectl, configurable with YAML, and self-healing right out of the box.</p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
-        <img src="{{ "/images/portability.svg" | relative_url }}" />
+        <img src="{{ "/images/source.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
-        <h3>Workload portability across cloud providers.</h3>
-        <p>As a multicloud workload and resource orchestrator, Crossplane manages workloads
-           (container, serverless, others) and resources they consume (databases, message queues,
-            buckets, data pipelines, and others) across clouds and on-premise environments.</p>
-      </div>
-      <div class="blueprint-bullet col-1_xs-2">
-        <img src="{{ "/images/agenda.svg" | relative_url }}" />
-      </div>
-      <div class="blueprint-item col-11_xs-10">
-        <h3>Open source that doesn’t have an agenda.</h3>
-        <p>Crossplane is open source software released under the Apache 2.0 license. Crossplane is
-           a true community-driven effort to define a control plane that can span multiple cloud
-           providers, many regions and offerings.</p>
-      </div>
-      <div class="blueprint-bullet col-1_xs-2">
-        <img src="{{ "/images/extensibility.svg" | relative_url }}" />
-      </div>
-      <div class="blueprint-item col-11_xs-10">
-        <h3>Built with high levels of extensibility.</h3>
-        <p>Leverages tried and tested Kubernetes machinery to provide a high level of extensibility
-           around APIs, resource controllers, schedulers and other components. This empowers the
-           community to build on top of it easily.</p>
+        <h3>One source of truth for infrastructure configuration and setup</h3>
+        <p>Crossplane integrates with CI/CD pipelines so application infrastructure configuration is stored in a 
+          single control cluster.Teams can create, track, and approve changes using the best practices GitOps practices they're already using.</p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/cycle.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
-        <h3>Full lifecycle management of resources.</h3>
-        <p>A resource controller is responsible for the entire lifecycle of a resource. This
-          resource is responsible for provisioning, health, scaling, failover, and actively
-          responding to external changes that deviate from the desired configuration.</p>
+        <h3>Automate operational tasks with reconciling controllers</h3>
+        <p>A resource controller is responsible for the entire lifecycle of a resource. This resource is responsible for 
+          provisioning, health, scaling, failover, and actively responding to external changes that deviate from the desired
+           configuration.</p>
+      </div>
+      <div class="blueprint-bullet col-1_xs-2">
+        <img src="{{ "/images/extensibility.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11_xs-10">
+        <h3>Built with high levels of extensibility</h3>
+        <p>Crossplane leverages broadly accepted Kubernetes patterns, making it easily extensible by adding
+           your own APIs and controllers. Increase flexibility and security by baking policies, quotas, and permissions into a custom infrastructure definition.</p>
+      </div>
+      <div class="blueprint-bullet col-1_xs-2">
+        <img src="{{ "/images/separation.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11_xs-10">
+        <h3>A strong separation of concerns.</h3>
+        <p>Developers can define workloads without worrying about implementation details, environment constraints, or policies. Administrators can define 
+          environment specifics and policies. Enable a higher degree of reusability and reduce complexity.</p>
       </div>
     </div>
     <div class="blueprint-img col-6_md-hidden">
