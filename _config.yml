@@ -12,6 +12,7 @@ plugins:
   - jekyll-relative-links
   - jekyll-babel
   - jekyll-readme-index
+  - jekyll-redirect-from
 
 exclude:
   - Gemfile
