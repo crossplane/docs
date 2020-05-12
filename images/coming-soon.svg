@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="109" height="16" viewBox="0 0 109 16">
+    <g fill="#F3807B" fill-rule="evenodd">
+        <g fill-rule="nonzero">
+            <path d="M10 10H15V15H10zM0 0H5V5H0zM10 0H15V5H10z" transform="translate(0 -3) translate(0 4)"/>
+        </g>
+        <text font-family="Avenir-Black, Avenir" font-size="14" font-weight="700" transform="translate(0 -3)">
+            <tspan x="21" y="14">Coming Soon</tspan>
+        </text>
+    </g>
+</svg>
