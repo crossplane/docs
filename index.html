@@ -32,7 +32,8 @@ stylesheet: index
   <div>
     <div class="grid">
       <div class="col-12">
-        <img src="{{ "/images/community-day-logo.svg" | relative_url }}" alt="Community Day logo" />
+        <img src="{{ "/images/community-day-logo.png" | relative_url }}" srcset="{{ "/images/community-day-logo.png" | relative_url }} 1x, {{ "/images/community-day-logo@2x.png" | relative_url }} 2x, {{ "/images/community-day-logo@3x.png" | relative_url }} 3x"
+          alt="Community Day Logo" />
         <p>Join Us for the First Crossplane Community Day</p>
         <p>Learn how platform builders everywhere are extending Kubernetes with Crossplane to provision and manage applications and infrastructure from any provider. We’ll share some exciting community 
           news, action-packed demos and thoughts on the state of the industry.
@@ -83,7 +84,7 @@ stylesheet: index
           </div>
           <div class="provider-wrapper">
             <img src="{{ "/images/redhat.svg" | relative_url }}" alt="redhat" />
-            <img src="{{ "/images/coming-soon.svg" | relative_url }}" alt="coming soon" />
+            <img class="img" src="{{ "/images/coming-soon.png" | relative_url }}" srcset="{{ "/images/coming-soon.png" | relative_url }} 1x, {{ "/images/coming-soon@2x.png" | relative_url }} 2x, {{ "/images/coming-soon@3x.png" | relative_url }} 3x" alt="Coming Soon" />
           </div>
           <div class="provider-wrapper">
             <img src="{{ "/images/alibaba-cloud.svg" | relative_url }}" alt="alibaba cloud" />
