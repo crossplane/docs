@@ -9,10 +9,10 @@ stylesheet: index
     <div class="grid">
       <div class="col-5_md-12 main">
         <div>
-          <h1>Manage your applications and infrastructure the Kubernetes way</h1>
+          <h1>Manage any infrastructure your applications need directly from Kubernetes</h1>
           <p>
-            Standardize infrastructure and application management using the same API-centric, 
-            declarative configuration and automation approach pioneered by the Kubernetes community.
+            Crossplane is an open source Kubernetes add-on that supercharges your Kubernetes clusters enabling you to provision and manage 
+            infrastructure, services, and applications from kubectl.
           </p>
           <button onclick="window.location.href='{{ githubLink }}'">
             Get Started on GitHub
@@ -28,63 +28,36 @@ stylesheet: index
   </div>
 </div>
 
-<div id="use-cases">
+<div id="communityDay">
+  <div>
+    <div class="grid">
+      <div class="col-12">
+        <img src="{{ "/images/community-day-logo.svg" | relative_url }}" alt="Community Day logo" />
+        <p>Join Us for the First Crossplane Community Day</p>
+        <p>Learn how platform builders everywhere are extending Kubernetes with Crossplane to provision and manage applications and infrastructure from any provider. We’ll share some exciting community 
+          news, action-packed demos and thoughts on the state of the industry.
+        </p>
+        <button onclick="window.location.href='https://www.eventbrite.com/e/crossplane-community-day-tickets-104465284478'">Register Today</button>
+        <div class="bottom-border"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="useCases1" class="use-cases">
   <div>
     <div class="grid">
       <div class="col-6_md-12">
-        <h2>Standardize on a unified control plane</h2>
+        <h2>Provision and manage cloud infrastructure and services using kubectl</h2>
         <p>
-          Crossplane implements the same declarative configuration patterns pioneered by the Kubernetes community to 
-          applications and infrastructure. The result is a unified control plane that integrates seamlessly with existing 
-          tools and systems, and makes it easy to set policies, quotas, and track reports.
+          Crossplane extends your Kubernetes cluster, providing you with CRDs for any infrastructure or managed service. Define infrastructure configuration that can be versioned, managed, 
+          and deployed using your favorite tools and existing processes you've already integrated with your clusters.
           <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
         </p>
       </div>
-      <div class="col-6_md-12_md-first img">
+      <div class="col-6_md-12_md-first img abs-img-wrap">
         <img src="{{ "/images/feature-4.png" | relative_url }}" srcset="{{ "/images/feature-4.png" | relative_url }} 1x, {{ "/images/feature-4@2x.png" | relative_url }} 2x, {{ "/images/feature-4@3x.png" | relative_url }} 3x"
-          alt="Standardize on a unified control plane" />
-      </div>
-    </div>
-    <div class="grid">
-      <div class="col-6_md-12 img">
-        <img src="{{ "/images/feature-2.png" | relative_url }}" srcset="{{ "/images/feature-2.png" | relative_url }} 1x, {{ "/images/feature-2@2x.png" | relative_url }} 2x, {{ "/images/feature-2@3x.png" | relative_url }} 3x"
-          alt="Infrastructure and application management the Kubernetes way" />
-      </div>
-      <div class="col-6_md-12">
-        <h2>Infrastructure and application management the Kubernetes way</h2>
-        <p>
-          With Crossplane, every managed service and piece of infrastructure your application uses is just a controller managed by Kubernetes and provisioned directly from 'kubectl.' Leverage GitOps workflows to
-           manage infrastructure turning Kubernetes into the source of truth for environment state.
-          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
-        </p>
-      </div>
-    </div>
-    <div class="grid">
-      <div class="col-6_md-12">
-        <h2>Support for your favorite infrastructure and the ability to define your own</h2>
-        <p>
-          Manage applications and infrastructure whether you use containers, VMs, or serverless in the cloud or on-premises. 
-          Each of these are managed as a Kubernetes resource which enables teams to clone and customize them to build their own abstractions.
-           Leverage a growing ecosystem of infrastructure and platform providers on Crossplane.
-          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
-        </p>
-      </div>
-      <div class="col-6_md-12_md-first img">
-        <img src="{{ "/images/feature-1.png" | relative_url }}" srcset="{{ "/images/feature-1.png" | relative_url }} 1x, {{ "/images/feature-1@2x.png" | relative_url }} 2x, {{ "/images/feature-1@3x.png" | relative_url }} 3x" alt="Support for your favorite infrastructure and the ability to define your own " />
-      </div>
-    </div>
-    <div class="grid">
-      <div class="col-6_md-12 img">
-        <img src="{{ "/images/feature-3.png" | relative_url }}" srcset="{{ "/images/feature-3.png" | relative_url }} 1x, {{ "/images/feature-3@2x.png" | relative_url }} 2x, {{ "/images/feature-3@3x.png" | relative_url }} 3x"
-          alt="We fully embrace open source and open governance" />
-      </div>
-      <div class="col-6_md-12">
-        <h2>We fully embrace open source and open governance</h2>
-        <p>
-          Crossplane is a community driven open source project that builds upon the vibrant Kubernetes community. The project is 
-          released under the Apache 2.0 license and remains committed to being vendor neutral.
-          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
-        </p>
+          alt="Provision and manage cloud infrastructure" />
       </div>
     </div>
   </div>
@@ -92,24 +65,111 @@ stylesheet: index
 
 <div id="providers">
   <div>
-    <h2>The many flavors of infrastructure we support for your applications</h2>
-    <p>
-      Crossplane supports your choice of infrastructure and enables anyone to add their own.
-    </p>
-    <p>
-      <img src="{{ "/images/google-cloud.svg" | relative_url }}" alt="google cloud" /> <img
-        src="{{ "/images/aws.svg" | relative_url }}" alt="aws" />
-      <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" alt="microsoft azure" />
-    </p>
-    <p>
-      <a href="{{ githubLink }}">Help support these features and add new ones</a>
-    </p>
+    <div class="grid">
+      <div class="col-12">
+        <h2>Our community supports many flavors of infrastructure</h2>
+        <p>
+          Crossplane supports common infrastructure and enables anyone to easily add their own.
+        </p>
+        <div class="providers-row">
+          <div class="provider-wrapper">
+            <img src="{{ "/images/google-cloud.svg" | relative_url }}" alt="google cloud" />
+          </div>
+          <div class="provider-wrapper">
+            <img src="{{ "/images/aws.svg" | relative_url }}" alt="aws" />
+          </div>
+          <div class="provider-wrapper">
+            <img src="{{ "/images/microsoft-azure.svg" | relative_url }}" alt="microsoft azure" />
+          </div>
+          <div class="provider-wrapper">
+            <img src="{{ "/images/redhat.svg" | relative_url }}" alt="redhat" />
+            <img src="{{ "/images/coming-soon.svg" | relative_url }}" alt="coming soon" />
+          </div>
+          <div class="provider-wrapper">
+            <img src="{{ "/images/alibaba-cloud.svg" | relative_url }}" alt="alibaba cloud" />
+          </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div id="useCases2" class="use-cases">
+  <div>
+    <div class="grid">
+      <div class="col-6_md-12 img">
+        <img src="{{ "/images/feature-1.png" | relative_url }}" srcset="{{ "/images/feature-1.png" | relative_url }} 1x, {{ "/images/feature-1@2x.png" | relative_url }} 2x, {{ "/images/feature-1@3x.png" | relative_url }} 3x"
+          alt="Compose infrastructure for your applications" />
+      </div>
+      <div class="col-6_md-12">
+        <h2>Publish simplified infrastructure abstractions for your applications</h2>
+        <p>
+          Build your own internal infrastructure abstractions on top of the CRDs Crossplane provides. Your custom APIs can include policy guardrails, hiding
+           infrastructure complexity and making it safe for applications to consume.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
+        </p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-6_md-12">
+        <h2>Deploy applications using a team centric approach with OAM</h2>
+        <p>
+          Crossplane implements the Open Application Model to help unify application and infrastructure management around team-centric processes. With Crossplane and OAM, 
+          application and infrastructure config can co-exist and be deployed using the same tooling.
+        </p>
+        <p>
+          <a href="https://oam.dev">Learn More About OAM</a>
+        </p>
+        <p><img src="{{ "/images/quad-red-medium.svg" | relative_url }}" /></p>
+      </div>
+      <div class="col-6_md-12_md-first img">
+        <img src="{{ "/images/feature-2.png" | relative_url }}" srcset="{{ "/images/feature-2.png" | relative_url }} 1x, {{ "/images/feature-2@2x.png" | relative_url }} 2x, {{ "/images/feature-2@3x.png" | relative_url }} 3x" alt="Manage complete applications with the Open Application Model" />
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-6_md-12 img">
+        <img src="{{ "/images/feature-3.png" | relative_url }}" srcset="{{ "/images/feature-3.png" | relative_url }} 1x, {{ "/images/feature-3@2x.png" | relative_url }} 2x, {{ "/images/feature-3@3x.png" | relative_url }} 3x"
+          alt="Run Crossplane anywhere" />
+      </div>
+      <div class="col-6_md-12">
+        <h2>Run Crossplane anywhere</h2>
+        <p>
+          Whether you're using a single Kubernetes cluster in EKS, AKS, GKE, ACK, PKS or a multi-cluster manager like Rancher or Anthos, Crossplane integrates nicely with all of them. Crossplane installs into any existing cluster exposing CRDs and a standard API across 
+          infrastructure and service providers making provisioning and management a breeze.
+          <img src="{{ "/images/quad-red-medium.svg" | relative_url }}" />
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="nativeCommunity">
+  <div>
+    <div class="grid">
+      <div class="col-12">
+        <h2>Started by Upbound and adopted by the cloud native community</h2>
+        <div class="community-row">
+          <div class="logo-wrapper">
+            <img src="{{ "/images/alibaba.svg" | relative_url }}" alt="Alibaba Group" />
+          </div>
+          <div class="logo-wrapper">
+            <img src="{{ "/images/redhat-horizontal.svg" | relative_url }}" alt="Redhat" />
+          </div>
+          <div class="logo-wrapper">
+            <img src="{{ "/images/gitlab.svg" | relative_url }}" alt="GitLab" />
+          </div>
+          <div class="logo-wrapper">
+            <img src="{{ "/images/microsoft.svg" | relative_url }}" alt="Microsoft" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <div id="blueprint">
   <div class="blueprint-header">
-    <h2>The Kubernetes Way</h2>
+    <h2>Why use Crossplane to manage both applications and infrastructure?</h2>
     <img src="{{ "/images/teal.svg" | relative_url }}" />
   </div>
   <div class="grid">
@@ -122,6 +182,14 @@ stylesheet: index
         <p>Crossplane brings Kubernetes-styled declarative and API-driven configuration and management to any piece 
           of infrastructure, on-premises and in the cloud. Through this approach, infrastructure managed through Crossplane 
           is accessible via kubectl, configurable with YAML, and self-healing right out of the box.</p>
+      </div>
+      <div class="blueprint-bullet col-1_xs-2">
+        <img src="{{ "/images/unify.svg" | relative_url }}" />
+      </div>
+      <div class="blueprint-item col-11_xs-10">
+        <h3>Unify application and infrastructure configuration and deployment</h3>
+        <p>Crossplane enables application and infrastructure configuration to co-exist on the same Kubernetes cluster, reducing the
+           complexity of your toolchains and deployment pipelines.</p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/source.svg" | relative_url }}" />
@@ -163,94 +231,17 @@ stylesheet: index
   </div>
 </div>
 
-<div id="testimonials">
+<div id="openSource">
   <div>
-    <div class="grid-center">
-      <div class="testimonial col-6_md-12">
-        <h3>
-          &ldquo;Crossplane has an opportunity to change the cloud industry as
-          we know it.&rdquo;
-        </h3>
-        <p>
-          &ldquo;Our customers are increasingly looking for a way to deploy
-          their code across multiple cloud environments. The choices available
-          today are too complex and vendor-driven, but with Crossplane, the
-          ability to orchestrate clouds becomes simple. We look forward to
-          collaborating with them on this vision and as the first complex app
-          running on Crossplane.&rdquo;
-        </p>
-        <div class="signature">
-          <div class="exec-img">
-            <img src="{{ "/images/sid.jpg" | relative_url }}" srcset="{{ "/images/sid.jpg" | relative_url }} 1x, {{ "/images/sid@2x.jpg" | relative_url }} 2x, {{ "/images/sid@3x.jpg" | relative_url }} 3x" alt="Sid Sijbrandij" />
-          </div>
-          <div class="exec-info">
-            <div class="name">Sid Sijbrandij</div>
-            <div class="title">CEO and Co-Founder of GitLab</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial col-6_md-12">
-        <h3>
-          &ldquo;We share the vision of having truly cloud-agnostic managed
-          services.&rdquo;
-        </h3>
-        <p>
-          &ldquo;Crossplane will make it possible for organizations to take
-          deeper ownership of where they want to run their services and how they
-          manage their application data. Kudos to the Upbound team for
-          architecting and delivering this critical, open source and community
-          driven component of the cloud-neutral future.&rdquo;
-        </p>
-        <div class="signature">
-          <div class="exec-img">
-            <img src="{{ "/images/spencer.jpg" | relative_url }}" srcset="{{ "/images/spencer.jpg" | relative_url }} 1x, {{ "/images/spencer@2x.jpg" | relative_url }} 2x, {{ "/images/spencer@3x.jpg" | relative_url }} 3x" alt="Spencer Kimball" />
-          </div>
-          <div class="exec-info">
-            <div class="name">Spencer Kimball</div>
-            <div class="title">CEO and Founder of Cockroach Labs</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial col-6_md-12">
-        <h3>
-          &ldquo;Crossplane has the ability to be at the heart of tomorrow’s multicloud deployments.&rdquo;
-        </h3>
-        <p>
-          &ldquo;It's exciting to see open cloud standards like Crossplane emerge, that will allow new multicloud technologies like
-          YugabyteDB to take advantage of the broader cloud ecosystem, on-premise and in-public cloud. Future work with
-          Crossplane.io and Rook.io is a natural fit with the Kubernetes ecosystem.&rdquo;
-        </p>
-        <div class="signature">
-          <div class="exec-img">
-            <img src="{{ "/images/karthik.jpg" | relative_url }}" srcset="{{ "/images/karthik.jpg" | relative_url }} 1x, {{ "/images/karthik@2x.jpg" | relative_url }} 2x, {{ "/images/karthik@3x.jpg" | relative_url }} 3x" alt="Karthik Ranganathan" />
-          </div>
-          <div class="exec-info">
-            <div class="name">Karthik Ranganathan</div>
-            <div class="title">Co-Founder and CTO of Yugabyte</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial col-6_md-12">
-        <h3>
-          &ldquo;We created Crossplane to empower organizations to use the best
-          of all the clouds.&rdquo;
-        </h3>
-        <p>
-          &ldquo;Having a control plane that is able to schedule and orchestrate
-          portable workloads across cloud providers, regions, and on-premises
-          while still using best-of-breed managed services allows organizations
-          to improve availability, geographic presence, as well as optimize for
-          cost.&rdquo;
-        </p>
-        <div class="signature">
-          <div class="exec-img">
-            <img src="{{ "/images/bassam.jpg" | relative_url }}" srcset="{{ "/images/bassam.jpg" | relative_url }} 1x, {{ "/images/bassam@2x.jpg" | relative_url }} 2x, {{ "/images/bassam@3x.jpg" | relative_url }} 3x" />
-          </div>
-          <div class="exec-info">
-              <div class="name">Bassam Tabbara</div>
-              <div class="title">CEO and Founder of Upbound</div>
-          </div>
-        </div>
+    <div class="grid">
+      <div class="col-12">
+        <img src="{{ "/images/crossplane-truck.svg" | relative_url }}" alt="Crossplane truck" />
+        <h2>Crossplane is open source and community driven</h2>
+        <p>Crossplane is an open source add-on for Kubernetes supported by the cloud-native community. Crossplane has been endorsed by some of the world's best companies and is released under the Apache 2.0 license.
+          We remain committed to our community and will always be vendor neutral.</p>
+        <button onclick="window.location.href='{{ githubLink }}'">
+          Get Started with Crossplane Today
+        </button>
       </div>
     </div>
   </div>
@@ -322,7 +313,8 @@ stylesheet: index
           <div class="content">
             <img src="{{ "/images/podcast.svg" | relative_url }}" alt="podcast" />
             <h3>Podcast</h3>
-            <p>Listen to the Crossplane podcast and learn about our roadmap.</p>
+            <p>Listen to The Binding Status, a podcast from the Crossplane community, 
+              to learn more about the project and its users.</p>
             <button class="grey" onclick="window.location.href = '{{ podcastLink }}';">
               Visit Podcast
             </button>
