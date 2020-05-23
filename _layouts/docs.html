@@ -2,9 +2,11 @@
 
 {% assign url = page.url | split: '/' %}
 {% assign currentVersion = url[2] %}
+{% assign currentVersionBranch = currentVersion | replace: 'v', 'release-' %}
 {% assign currentVersionPath = '/docs/' | append: currentVersion | append: '/' %}
 {% assign latestVersion = site.data.versions[0].version %}
 {% assign filepath = page.url | replace: currentVersionPath %}
+{% assign repopath = 'docs/' | append: filepath | remove: '.html' | append: '.md' %}
 
 {% include mkhash.inc title = 'Welcome' url = currentVersionPath %}
 {% assign documents = site.pages | where_exp: 'page', 'page.url contains currentVersionPath' | where: "toc", "true" | sort: 'weight' | unshift: h %}
@@ -49,7 +51,7 @@
 
             <div class="docs-actions">
 
-            <a id="edit" href="{{ page.github }}{{ page.name }}"><img src="{{ "/images/github-teal.svg" | relative_url }}" />Edit on GitHub</a>
+            <a id="edit" href="{{ page.github }}/{{ currentVersionBranch }}/{{ repopath }}"><img src="{{ "/images/github-teal.svg" | relative_url }}" />Edit on GitHub</a>
 
             </div>
 
