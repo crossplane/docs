@@ -7,6 +7,7 @@
 {% assign latestVersion = site.data.versions[0].version %}
 {% assign filepath = page.url | replace: currentVersionPath %}
 {% assign repopath = 'docs/' | append: filepath | remove: '.html' | append: '.md' %}
+{% if repopath == 'docs/.md' %}{% assign repopath = 'docs/README.md' %}{% endif %}
 
 {% include mkhash.inc title = 'Welcome' url = currentVersionPath %}
 {% assign documents = site.pages | where_exp: 'page', 'page.url contains currentVersionPath' | where: "toc", "true" | sort: 'weight' | unshift: h %}
