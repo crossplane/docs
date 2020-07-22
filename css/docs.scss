@@ -52,7 +52,6 @@ h3 {
 select {
   border-radius: 5px;
   height: 40px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   border: 1px solid #dcdcde;
   -webkit-appearance: none;
@@ -116,11 +115,9 @@ pre > code {
   padding: 0 $page-padding 30px;
   min-height: calc(100% - 338px);
   color: #505a72;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 
   @media (min-width: $md-width) {
-    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
   }
@@ -147,7 +144,6 @@ pre > code {
     max-width: $page-width;
     margin: 0 auto;
     padding: 37px $page-padding 38px;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 
     @media (max-width: $sm-width) {
@@ -218,8 +214,6 @@ pre > code {
     margin-bottom: 20px;
 
     & > li {
-      -webkit-transition: height 0.3s ease-in-out;
-      -o-transition: height 0.3s ease-in-out;
       transition: height 0.3s ease-in-out;
       overflow: hidden;
       height: 59px;
@@ -270,10 +264,9 @@ pre > code {
           background-position: center;
           width: 20px;
           height: 20px;
-          -webkit-transition: -webkit-transform 0.3s ease-in-out;
           transition: -webkit-transform 0.3s ease-in-out;
-          -o-transition: transform 0.3s ease-in-out;
           transition: transform 0.3s ease-in-out;
+          transition: transform 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
           transition: transform 0.3s ease-in-out,
             -webkit-transform 0.3s ease-in-out;
         }
@@ -318,7 +311,6 @@ pre > code {
 }
 
 .docs-content {
-  -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
   min-width: 0;
