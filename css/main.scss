@@ -366,9 +366,18 @@ body {
 
   .lf-copyright {
     padding: 0 40px 50px !important;
-    line-height: 20px;
     text-align: center;
     max-width: 800px;
+
+    p {
+      font-size: 12px;
+      line-height: 18px;
+      margin: 10px 0 0 0;
+
+      &:first-of-type {
+        margin: 0;
+      }
+    }
 
     a {
       color: $blue;
