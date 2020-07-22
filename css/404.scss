@@ -7,11 +7,15 @@ h2, h3, #redirect {
 
 #content {
     #holder {
-        flex: 1;
+        -ms-flex: 1;
+            flex: 1;
     }
 
+    display: -ms-flexbox;
+
     display: flex;
-    align-items: center;
+    -ms-flex-align: center;
+        align-items: center;
     min-height: calc(100% - 223px);
 
     a {

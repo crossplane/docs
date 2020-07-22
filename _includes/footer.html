@@ -1,11 +1,20 @@
 <div id="footer">
-  <div>
+  <div class="footer-main">
     <div class="main">
       <div class="logo"><img src="{{ "/images/logo.svg" | relative_url }}" /></div>
     </div>
     <div class="links sm-hidden">
-      <a href="{{twitterLink}}">Twitter</a><a href="{{latestDocs}}">Documentation</a
-      ><a href="{{githubLink}}">GitHub</a><a href="{{slackLink}}">Slack Channel</a><a href="{{youtubeLink}}">YouTube</a><a href="{{forumLink}}">Forum</a>
+      <a href="{{twitterLink}}">Twitter</a>
+      <a href="{{latestDocs}}">Documentation</a>
+      <a href="{{githubLink}}">GitHub</a>
+      <a href="{{slackLink}}">Slack Channel</a>
+      <a href="{{youtubeLink}}">YouTube</a>
+      <a href="{{forumLink}}">Forum</a>
     </div>
+  </div>
+  <div class="lf-copyright">
+    &#169; {{ site.time | date: '%Y' }} The Linux Foundation. All rights reserved. The Linux Foundation has
+    registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our
+    <a href="https://www.linuxfoundation.org/trademark-usage/">Trademark Usage</a> page.
   </div>
 </div>

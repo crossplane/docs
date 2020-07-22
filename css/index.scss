@@ -16,10 +16,8 @@
   .main {
     padding-left: 30px;
     text-align: left;
-    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
 
@@ -44,10 +42,8 @@
   }
 
   .hero {
-    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
 
@@ -95,14 +91,12 @@
     -ms-flex-pack: justify;
     -webkit-justify-content: space-evenly;
     flex-direction: row;
-    -webkit-flex-direction: row;
     -moz-flex-direction: row;
     -ms-flex-direction: row;
     -o-flex-direction: row;
 
     @media (max-width: $md-width) {
       flex-direction: column;
-      -webkit-flex-direction: column;
       -moz-flex-direction: column;
       -ms-flex-direction: column;
       -o-flex-direction: column;
@@ -201,7 +195,8 @@
   .blueprint-img {
     display: flex;
     display: -ms-flexbox;
-    align-items: center;
+    -ms-flex-align: center;
+        align-items: center;
     justify-content: center;
     -ms-flex-pack: center;
     -webkit-justify-content: center;
@@ -231,7 +226,8 @@
   }
 
   .grid {
-    align-items: center;
+    -ms-flex-align: center;
+        align-items: center;
 
     & > div {
       padding-left: 16px;
@@ -300,7 +296,6 @@
     -ms-flex-pack: justify;
     -webkit-justify-content: space-evenly;
     flex-direction: row;
-    -webkit-flex-direction: row;
     -moz-flex-direction: row;
     -ms-flex-direction: row;
     -o-flex-direction: row;
@@ -313,7 +308,6 @@
 
     @media (max-width: $md-width) {
       flex-direction: column;
-      -webkit-flex-direction: column;
       -moz-flex-direction: column;
       -ms-flex-direction: column;
       -o-flex-direction: column;

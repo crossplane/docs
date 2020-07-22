@@ -1,6 +1,5 @@
 ---
 ---
-
 @import "normalize";
 
 /*** GRID ***/
@@ -143,6 +142,7 @@ body {
   font-size: 16px;
 
   & > div {
+    display: -ms-flexbox;
     display: flex;
   }
 
@@ -166,10 +166,7 @@ body {
     width: 16px;
     height: 16px;
     -webkit-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
     transform: rotate(0deg);
-    -webkit-transition: 0.5s ease-in-out;
-    -o-transition: 0.5s ease-in-out;
     transition: 0.5s ease-in-out;
 
     span {
@@ -182,10 +179,7 @@ body {
       opacity: 1;
       left: 0;
       -webkit-transform: rotate(0deg);
-      -ms-transform: rotate(0deg);
       transform: rotate(0deg);
-      -webkit-transition: 0.25s ease-in-out;
-      -o-transition: 0.25s ease-in-out;
       transition: 0.25s ease-in-out;
       margin: 0 1px;
     }
@@ -193,32 +187,24 @@ body {
     span:nth-child(1) {
       top: 1px;
       -webkit-transform-origin: left center;
-      -moz-transform-origin: left center;
-      -o-transform-origin: left center;
       transform-origin: left center;
     }
 
     span:nth-child(2) {
       top: 7px;
       -webkit-transform-origin: left center;
-      -moz-transform-origin: left center;
-      -o-transform-origin: left center;
       transform-origin: left center;
     }
 
     span:nth-child(3) {
       top: 13px;
       -webkit-transform-origin: left center;
-      -moz-transform-origin: left center;
-      -o-transform-origin: left center;
       transform-origin: left center;
     }
 
     body.menu-open & {
       span:nth-child(1) {
         -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        -o-transform: rotate(45deg);
         transform: rotate(45deg);
         top: 2px;
         left: 2px;
@@ -231,8 +217,6 @@ body {
 
       span:nth-child(3) {
         -webkit-transform: rotate(-45deg);
-        -moz-transform: rotate(-45deg);
-        -o-transform: rotate(-45deg);
         transform: rotate(-45deg);
         top: 12px;
         left: 2px;
@@ -242,18 +226,14 @@ body {
 
   .links {
     text-align: right;
-    -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
     padding-left: 0;
     margin: 0;
-    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
 
@@ -339,8 +319,7 @@ body {
     display: none;
   }
 
-  & > div {
-    display: -webkit-box;
+  .footer-main {
     display: -ms-flexbox;
     display: flex;
     padding: 50px 40px !important;
@@ -349,9 +328,9 @@ body {
 
   .main {
     line-height: 31px;
-    -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
+    
     .logo {
       line-height: 0;
       display: inline-block;
@@ -383,5 +362,26 @@ body {
         margin-right: 20px;
       }
     }    
+  }
+
+  .lf-copyright {
+    padding: 0 40px 50px !important;
+    line-height: 20px;
+    text-align: center;
+    max-width: 800px;
+
+    a {
+      color: $blue;
+
+      &:visited,
+      &:focus,
+      &:active  {
+        color: $blue;
+      }
+      
+      &:hover{
+        text-decoration: none;
+      }
+    }   
   }
 }
