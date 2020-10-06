@@ -23,4 +23,17 @@
       <a href="https://www.linuxfoundation.org/trademark-usage/">Trademark Usage</a> page.
     </p>
   </div>
+  {% if page.layout == 'docs' %}
+    <script src="{{ "./js/anchor.js" | relative_url }}"></script>
+    <script>
+      anchors.options = {
+        placement: 'right',
+        icon: '#',
+      }
+
+      document.addEventListener('DOMContentLoaded', function(event) {
+        anchors.add('.docs-content h1, .docs-content h2, .docs-content h3, .docs-content h4, .docs-content h5, .docs-content h6');
+      });
+    </script>
+  {% endif %}
 </div>
