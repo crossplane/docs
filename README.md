@@ -23,4 +23,11 @@ brew install npm
 make run_docs_local
 ```
 
+To run with --incremental for faster editing:
+```
+make run_docs_local_incremental
+```
+Note: `--incremental` is experimental, and sometimes gets stuck:
+https://jekyllrb.com/docs/configuration/incremental-regeneration/
+
 Open http://localhost:4000 in your browser.
