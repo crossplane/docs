@@ -6,6 +6,13 @@
 #content {
   text-align: center;
   color: $dark-text;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+  }
 }
 
 #jumbotron {
@@ -281,7 +288,7 @@
 }
 
 #nativeCommunity {
-  padding-bottom: 135px;
+  padding-bottom: 100px;
 
   h2 {
     font-size: 48px;
@@ -311,6 +318,16 @@
       -moz-flex-direction: column;
       -ms-flex-direction: column;
       -o-flex-direction: column;
+    }
+  }
+
+  .visit-upbound {
+    margin-top: 70px;
+
+    a {
+      color: #183d54;
+      font-size: 18px;
+      line-height: 30px;
     }
   }
 }
