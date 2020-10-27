@@ -43,9 +43,28 @@
     }
 
     button {
-      background-color: #3bbdc4;
-      border-color: #3bbdc4;
+      img {
+        vertical-align: text-bottom;
+        margin-right: 5px
+      }
+
+      @media (max-width: $sm-width) {
+        width: 100%;
+      }
     }
+
+    #getStarted {
+      border-color: #3bbdc4;
+      color: #3bbdc4;
+      margin-right: 15px;
+      margin-bottom: 15px;
+    }
+
+    #joinSlack {
+      border-color: #FFF;
+      color: #FFF;
+    }
+
   }
 
   .hero {
@@ -87,52 +106,42 @@
   }
 }
 
-#providers {
+#createdBy {
   background-color: $darkish-background-color;
+  padding-top: 90px;
   padding-bottom: 30px;
-
-  .providers-row {
-    display: flex;
-    display: -ms-flexbox;
-    justify-content: space-evenly;
-    -ms-flex-pack: justify;
-    -webkit-justify-content: space-evenly;
-    flex-direction: row;
-    -moz-flex-direction: row;
-    -ms-flex-direction: row;
-    -o-flex-direction: row;
-
-    @media (max-width: $md-width) {
-      flex-direction: column;
-      -moz-flex-direction: column;
-      -ms-flex-direction: column;
-      -o-flex-direction: column;
-    }
-  }
+  position: relative;
+  overflow: initial !important;
 
   h2 {
-    margin-top: 55px;
-    margin-bottom: 30px;
+    margin-top: 15px;
+    margin-bottom: 35px;
     font-weight: 900;    
   }
 
   p {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
   }
 
   a {
-    font-size: 14px;
-    color: $dark-blue;
-    text-decoration: none;
+    font-size: 16px;
+    color: $dark-text;
 
     &:visited {
-      color: $dark-blue;
+      color: $dark-text;
     }
+  }
+
+  #stacksImg {
+    position: absolute;
+    top: -10%;
+    margin: 0 0 0 -82px;
+    left: 50%;
   }
 
   img {
     display: block;
-    margin: 15px auto;
+    margin: 25px auto;
   }
 
   .provider-wrap {
@@ -229,7 +238,7 @@
   padding-bottom: 65px;
 
   a {
-    color: #3bbdc4;
+    color: #183d54;
   }
 
   .grid {
@@ -264,26 +273,11 @@
 }
 
 #useCases1 {
- padding-bottom: 0;
+ padding-bottom: 100px;
  overflow: initial;
 
- .abs-img-wrap {
-   position: relative;
-   height: 526px;
-
-   @media (max-width: $md-width) {
-     height: auto;
-   }
-
-   img {
-     position: absolute;
-     top: 40px;
-
-     @media (max-width: $md-width) {
-       position: static;
-       top: auto;
-     }
-   }
+ .grid > div > img {
+   width: 100%
  }
 }
 
@@ -291,7 +285,6 @@
   padding-bottom: 100px;
 
   h2 {
-    font-size: 48px;
     line-height: 55px;
     margin-bottom: 65px;
   }
