@@ -1,3 +1,4 @@
+{% assign upboundLink = "https://upbound.io/" %}
 {% assign slackLink = "https://slack.crossplane.io/" %}
 {% assign githubLink = "https://github.com/crossplane/crossplane" %}
 {% assign twitterLink = "https://twitter.com/crossplane_io" %}
