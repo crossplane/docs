@@ -65,7 +65,7 @@
 
       var ctaBtn = document.createElement('a');
       ctaBtn.classList.add('slack-popup-button', 'slack-popup-cta');
-      ctaBtn.href = 'https://slack.crossplane.io/';
+      ctaBtn.href = 'https://slack.crossplane.io/?utm_campaign=Slack%20Membership&utm_source=Crossplane%20Website%20Popup&utm_medium=popup&utm_content=popup';
       ctaBtn.innerHTML = '<img src="/images/slack-white.svg" /><span>Join Crossplane Slack</span>';
 
       var dismissBtn = document.createElement('a');

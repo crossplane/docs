@@ -395,3 +395,49 @@ body {
     }   
   }
 }
+
+/* Crossplane survey banner */
+#surveyBanner {
+  height: 75px;
+  display: flex;
+  display: -ms-flexbox;
+  justify-content: center;
+  -ms-flex-pack: center;
+  flex-direction: column;
+  -ms-flex-direction: column;
+  background: #96ffe0;
+
+  & > div {
+    text-align: center;
+    display: flex;
+    display: -ms-flexbox;
+    width: 100%;
+    justify-content: center;
+    -ms-flex-pack: center;
+    flex-direction: row;
+    -ms-flex-direction: row;
+  }
+
+  span {
+    font-weight: 900;
+  }
+
+  a {
+    margin-left: 15px;
+    color: #000;
+  }
+
+  @media (max-width: $md-width) {
+    height: 100px;
+    padding: 0 15px;
+
+    & > div {
+      flex-direction: column;
+      -ms-flex-direction: column;
+    }
+
+    span {
+      margin-bottom: 7px;
+    }
+  }
+}
