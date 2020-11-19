@@ -7,7 +7,15 @@
     return window.localStorage.getItem('dismissedSlackPopup') === 'true';
   }
 
+  function handleEscapeKey(e) {
+    if (e.key === 'Escape') {
+      hidePopup();
+    }
+  }
+
   function hidePopup() {
+    document.removeEventListener('keydown', handleEscapeKey);
+  
     // IE fix
     document.querySelector('.slack-popup-container').innerHTML = '';
   
@@ -90,6 +98,8 @@
       popup.appendChild(popupBody);
 
       document.querySelector('body').appendChild(popup);
+
+      document.addEventListener('keydown', handleEscapeKey);
     }
   }
 
