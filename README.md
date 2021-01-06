@@ -53,3 +53,9 @@ Note: `--incremental` is experimental, and sometimes gets stuck:
 https://jekyllrb.com/docs/configuration/incremental-regeneration/
 
 Open http://localhost:4000 in your browser.
+
+## License
+
+The source code in this repository is licensed under the [Apache 2.0](LICENSE) license.
+
+The documentation is distributed under [CC-BY-4.0](LICENSE-DOCS).
