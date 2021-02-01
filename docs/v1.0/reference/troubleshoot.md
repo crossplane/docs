@@ -94,8 +94,8 @@ unpause Crossplane simply by scaling its deployment back up:
 kubectl -n crossplane-system scale --replicas=1 deployment/crossplane
 ```
 
-Remember that much of Crossplane's functionality is provided by Stacks. You can
-use `kubectl scale` to pause Stack pods too, though Stacks may not run in the
+Remember that much of Crossplane's functionality is provided by Providers. You can
+use `kubectl scale` to pause Providers pods too, though Providers may not run in the
 `crossplane-system` namespace.
 
 ## Deleting a Resource Hangs
