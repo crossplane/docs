@@ -7,5 +7,5 @@
 {% assign podcastLink = "https://www.youtube.com/playlist?list=PL510POnNVaaYFuK-B_SIUrpIonCtLVOzT" %}
 {% assign blogLink = "https://blog.crossplane.io/" %}
 {% assign communityMeetingLink = "https://github.com/crossplane/crossplane/#get-involved" %}
-{% assign latestDocs = site.data.versions[0].path | append: '/' | relative_url %}
+{% assign latestDocs = "/docs/v1.0" | append: '/' | relative_url %}
 {% assign cncfLink = "https://www.cncf.io/" %}
