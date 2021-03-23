@@ -414,8 +414,13 @@ body {
     width: 100%;
     justify-content: center;
     -ms-flex-pack: center;
-    flex-direction: row;
-    -ms-flex-direction: row;
+    flex-direction: column;
+    -ms-flex-direction: column;
+  }
+
+  p {
+    font-size: 16px;
+    margin: 0;
   }
 
   span {
@@ -423,21 +428,19 @@ body {
   }
 
   a {
-    margin-left: 15px;
     color: #000;
   }
 
   @media (max-width: $md-width) {
     height: 100px;
-    padding: 0 15px;
-
-    & > div {
-      flex-direction: column;
-      -ms-flex-direction: column;
-    }
+    padding: 5px 15px;
 
     span {
-      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    p {
+      font-size: 14px;
     }
   }
 }
