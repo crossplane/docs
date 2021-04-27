@@ -4,7 +4,7 @@
 {% assign currentVersion = url[2] %}
 {% assign currentVersionBranch = currentVersion | replace: 'v', 'release-' %}
 {% assign currentVersionPath = '/docs/' | append: currentVersion | append: '/' %}
-{% assign latestVersion = "v1.1" %}
+{% assign latestVersion = "v1.2" %}
 {% assign filepath = page.url | replace: currentVersionPath %}
 {% assign repopath = 'docs/' | append: filepath | remove: '.html' | append: '.md' %}
 {% if repopath == 'docs/.md' %}{% assign repopath = 'docs/README.md' %}{% endif %}
