@@ -1,0 +1,56 @@
+---
+stylesheet: community
+---
+
+{% include values.inc %}
+
+<div id="commercial">
+  <div class="grid">
+    <div class="col-12">
+      <h1>Companies with Commercial Crossplane Offerings</h1>
+      <img src="{{ "/images/red-squares.svg" | relative_url }}" id="squares" />
+      <div class="company-card">
+        <div class="topbar"></div>
+        <div class="card-content">
+          <div class="company-logo">
+            <img src="{{ "/images/upbound-logo.svg" | relative_url }}" alt="Upbound" />
+          </div>
+          <div class="company-info">
+            <p>Upbound is the creator of open source Crossplane — the modern, cloud native 
+            alternative to Infrastructure as Code (IaC).</p>
+            <div class="company-links">
+              <a href="{{ upboundLink }}">Learn More</a>
+              <span>|</span>
+              <a href="{{ upboundGithubLink }}">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="let-us-know">
+        <p>Building on top of Crossplane or offering support?</p>
+        <p><a href="{{ infoMailToLink }}">Let us know</a> and we will add your logo to this page.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cncf">
+  <div class="grid">
+    <div class="col-12">
+      <h2>Crossplane is a <span>Cloud Native Computing Foundation</span> sandbox project</h2>
+      <a href="{{ cncfLink }}">
+        <img class="img" src="{{ "/images/cncf.png" | relative_url }}" srcset="{{ "/images/cncf.png" | relative_url }} 1x, {{ "/images/cncf@2x.png" | relative_url }} 2x, {{ "/images/cncf@3x.png" | relative_url }} 3x" alt="CNCF logo" />
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="production">
+  <div class="grid">
+    <div class="col-12">
+      <img src="{{ "/images/stacks.png" | relative_url }}" srcset="{{ "/images/stacks.png" | relative_url }} 1x, {{ "/images/stacks@2x.png" | relative_url }} 2x, {{ "/images/stacks@3x.png" | relative_url }} 3x" alt="Stacks" id="stacksImg" />
+      <h2>Are you using Crossplane in Production?</h2>
+      <a href="{{ prodFormLink }}">Share your success story & receive special Crossplane swag</a>
+    </div>
+  </div>
+</div>

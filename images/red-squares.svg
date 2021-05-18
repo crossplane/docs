@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="75" height="15" viewBox="0 0 75 15">
+    <g fill="none" fill-rule="evenodd">
+        <g fill="#F99" fill-rule="nonzero">
+            <g>
+                <path d="M0 10H5V15H0zM20 10H25V15H20zM10 10H15V15H10zM30 10H35V15H30zM40 10H45V15H40zM60 10H65V15H60zM50 10H55V15H50zM70 10H75V15H70zM0 0H5V5H0zM20 0H25V5H20zM10 0H15V5H10zM30 0H35V5H30zM40 0H45V5H40zM60 0H65V5H60zM50 0H55V5H50zM70 0H75V5H70z" transform="translate(-581 -300) translate(581 300)"/>
+            </g>
+        </g>
+    </g>
+</svg>

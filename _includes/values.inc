@@ -9,3 +9,6 @@
 {% assign communityMeetingLink = "https://github.com/crossplane/crossplane/#get-involved" %}
 {% assign latestDocs = "/docs/v1.2" | append: '/' | relative_url %}
 {% assign cncfLink = "https://www.cncf.io/" %}
+{% assign prodFormLink = "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform" %}
+{% assign infoMailToLink = "mailto:info@upbound.io" %}
+{% assign upboundGithubLink = "https://github.com/upbound" %}
