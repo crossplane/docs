@@ -16,6 +16,10 @@
     <meta name="twitter:description" content="Compose cloud infrastructure and services into custom platform APIs" />
     <meta name="twitter:image:src" content="https://crossplane.io/images/twitter-card_400x400.jpg" />
 
+  {% if currentVersion != latestVersion%}
+    <meta name="robots" content="noindex">
+  {% endif %}
+
     {% include favicon.html %}
 
     <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}" />
