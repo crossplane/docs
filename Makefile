@@ -38,6 +38,14 @@ build: _data/versions.json
 		jekyll/jekyll -- \
 		jekyll build
 
+# Build (output is in _site)
+bundle_update: _data/versions.json
+	docker run --rm -it \
+		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
+		-v "$(PWD):/srv/jekyll" \
+		jekyll/jekyll -- \
+		bundle update
+
 # Push new changes to the live site
 publish: _data/versions.json
 	$(eval ROOT_DIR = $(shell pwd -P))
