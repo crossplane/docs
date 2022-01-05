@@ -17,8 +17,8 @@ additional features or tooling around it that makes it easier to use in
 production environments. 
 
 <ul class="nav nav-tabs">
-<li class="active"><a href="#using-a-downstream-distro" data-toggle="tab">Hosted Crossplane</a></li>
-<li><a href="#using-upstream-crossplane" data-toggle="tab">Self-Hosted Crossplane</a></li>
+<li class="active"><a href="#using-a-downstream-distro" data-toggle="tab">Downstream Distribution</a></li>
+<li><a href="#using-upstream-crossplane" data-toggle="tab">Upstream Crossplane</a></li>
 </ul>
 <br>
 <div class="tab-content">
@@ -66,7 +66,6 @@ brew install helm
 
 kind create cluster --image kindest/node:v1.22.1 --wait 5m
 ```
-</div>
 
 <div class="tab-pane fade" id="setup-mac-linux" markdown="1">
 For macOS / Linux use the following:
@@ -180,6 +179,7 @@ the latest version from the release channel will be used.
 curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | CHANNEL=master VERSION=v1.0.0-rc.0.130.g94f34fd3 sh
 ```
 
+</div>
 </div>
 </div>
 
