@@ -5,44 +5,43 @@ weight: 2
 indent: true
 ---
 
-# Choosing Hosted or Self-Hosted Crossplane
+# Choosing Your Crossplane Distribution
 
 Users looking to use Crossplane for the first time have two options available to
-them today. The first way is to use a hosted Crossplane service like [Upbound
-Cloud][Upbound Cloud]. Alternatively, users looking for some more
-flexibility can install Crossplane into their own Kubernetes cluster.
+them today. The first way option to use the upstream distribution of Crossplane 
+which is maintained and released by the community. 
 
-Crossplane will be installed using the regularly published Helm chart. The Helm
-chart contains all the custom resources and controllers needed to deploy and
-configure Crossplane.
-
-Users choosing the self-hosted option can reference our [Install] and
-[Configure] docs for installing alternate versions and more detailed
-instructions.
+Your second option is to use a vendor supported Crossplane distribution. These 
+distributions are fully compatible with upstream Crossplane, but may include 
+additional features or tooling around it that makes it easier to use in 
+production environments. 
 
 <ul class="nav nav-tabs">
-<li class="active"><a href="#using-hosted-crossplane" data-toggle="tab">Hosted Crossplane</a></li>
-<li><a href="#using-self-hosted-crossplane" data-toggle="tab">Self-Hosted Crossplane</a></li>
+<li class="active"><a href="#using-a-downstream-distro" data-toggle="tab">Hosted Crossplane</a></li>
+<li><a href="#using-upstream-crossplane" data-toggle="tab">Self-Hosted Crossplane</a></li>
 </ul>
 <br>
 <div class="tab-content">
-<div class="tab-pane fade in active" id="using-hosted-crossplane" markdown="1">
+<div class="tab-pane fade in active" id="using-a-downstream-distro" markdown="1">
 
-## Start with a Hosted Crossplane
+## Start with a Downstream Distribution
 
-Upbound, the founders of Crossplane, offers a free service for community members
-which makes getting started with Crossplane easy. [Create an account] to get
-started. Once logged in, create a new hosted control plane and connect to it via
-the [up] CLI. See the [Upbound documentation] for more information.
+Upbound, the founders of Crossplane, maintains a free and open source downstream
+distribution of Crossplane which makes getting started with Crossplane easy. 
+Universal Crossplane, or UXP for short, connects to Upbound's hosted management 
+console and Registry to make it easier to develop, debug, and manage Provider
+and Configuration packages.
+
+[Get started with Universal Crossplane] on the Upbound Documentation site.
 
 <i>Want see another hosted Crossplane service listed? Please [reach out on
 Slack][Slack] and our community will highlight it here!</i>
 
 </div>
 
-<div class="tab-pane fade" id="using-self-hosted-crossplane" markdown="1">
+<div class="tab-pane fade" id="using-upstream-crossplane" markdown="1">
 
-## Start with a Self-Hosted Crossplane
+## Start with Upstream Crossplane
 
 Installing Crossplane into an existing Kubernetes cluster will require a bit
 more setup, but can provide more flexibility for users who need it.
@@ -480,7 +479,7 @@ See [Uninstall] docs for cleaning up resources, packages, and Crossplane itself.
 [Kind]: https://kind.sigs.k8s.io/docs/user/quick-start/
 [Crossplane packages]: ../concepts/packages.md
 [Slack]: http://slack.crossplane.io/
-[Upbound Cloud]: https://upbound.io
-[Create an account]: https://cloud.upbound.io/register
 [up]: https://github.com/upbound/up
 [Upbound documentation]: https://cloud.upbound.io/docs
+[Universal Crossplane]: https://cloud.upbound.io/docs/uxp
+[Get started with Universal Crossplane]: https://cloud.upbound.io/docs/getting-started/
