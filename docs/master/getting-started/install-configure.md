@@ -181,7 +181,6 @@ curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.
 
 </div>
 </div>
-</div>
 
 ## Select a Getting Started Configuration
 
@@ -450,6 +449,7 @@ spec:
 kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/configure/azure/providerconfig.yaml
 ```
 
+</div>
 </div>
 </div>
 
