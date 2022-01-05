@@ -16,31 +16,15 @@ distributions are fully compatible with upstream Crossplane, but may include
 additional features or tooling around it that makes it easier to use in 
 production environments. 
 
-<ul class="nav nav-tabs">
-<li class="active"><a href="#using-a-downstream-distro" data-toggle="tab">Downstream Distribution</a></li>
-<li><a href="#using-upstream-crossplane" data-toggle="tab">Upstream Crossplane</a></li>
+<ul class="nav nav-tabs"> 
+<li class="active"><a href="#using-upstream-crossplane" data-toggle="tab">Upstream Crossplane</a></li>
+<li><a href="#using-a-downstream-distro" data-toggle="tab">Downstream Distribution</a></li>
 </ul>
 <br>
-<div class="tab-content">
-<div class="tab-pane fade in active" id="using-a-downstream-distro" markdown="1">
-
-## Start with a Downstream Distribution
-
-Upbound, the founders of Crossplane, maintains a free and open source downstream
-distribution of Crossplane which makes getting started with Crossplane easy. 
-Universal Crossplane, or UXP for short, connects to Upbound's hosted management 
-console and Registry to make it easier to develop, debug, and manage Provider
-and Configuration packages.
-
-[Get started with Universal Crossplane] on the Upbound Documentation site.
-
-<i>Want see another hosted Crossplane service listed? Please [reach out on
-Slack][Slack] and our community will highlight it here!</i>
-
-</div>
-
-<div class="tab-pane fade" id="using-upstream-crossplane" markdown="1">
-
+<!-- Begin Distro Tabs -->
+<div class="tab-content"> 
+<!-- Begin Upstream Tab -->
+<div class="tab-pane fade in active" id="using-upstream-crossplane" markdown="1">
 ## Start with Upstream Crossplane
 
 Installing Crossplane into an existing Kubernetes cluster will require a bit
@@ -54,7 +38,9 @@ more setup, but can provide more flexibility for users who need it.
 <li><a href="#setup-windows" data-toggle="tab">Windows</a></li>
 </ul>
 <br>
+<!-- Begin Get Cluster Tabs -->
 <div class="tab-content">
+<!-- Begin MacOS Tab -->
 <div class="tab-pane fade in active" id="setup-mac-brew" markdown="1">
 For macOS via Homebrew use the following:
 
@@ -66,7 +52,10 @@ brew install helm
 
 kind create cluster --image kindest/node:v1.22.1 --wait 5m
 ```
+</div>
+<!-- End MacOS Tab -->
 
+<!-- Begin Linux Tab -->
 <div class="tab-pane fade" id="setup-mac-linux" markdown="1">
 For macOS / Linux use the following:
 
@@ -78,6 +67,9 @@ For macOS / Linux use the following:
 * [Helm], minimum version `v3.0.0+`.
 
 </div>
+<!-- End Linux Tab -->
+
+<!-- Begin Windows Tab -->
 <div class="tab-pane fade" id="setup-windows" markdown="1">
 For Windows use the following:
 
@@ -89,7 +81,9 @@ For Windows use the following:
 * [Helm], minimum version `v3.0.0+`.
 
 </div>
+<!-- End Windows Tab -->
 </div>
+<!-- End Get Cluster Tabs -->
 
 ### Install Crossplane
 
@@ -98,7 +92,10 @@ For Windows use the following:
 <li><a href="#install-tab-helm3-latest" data-toggle="tab">Helm 3 (latest)</a></li>
 </ul>
 <br>
+<!-- Begin Helm Tabs -->
 <div class="tab-content">
+
+<!-- Begin Stable Tab -->
 <div class="tab-pane fade in active" id="install-tab-helm3" markdown="1">
 Use Helm 3 to install the latest official `stable` release of Crossplane, suitable for community use and testing:
 
@@ -112,6 +109,9 @@ helm install crossplane --namespace crossplane-system crossplane-stable/crosspla
 ```
 
 </div>
+<!-- End Stable Tab -->
+
+<!-- Begin Latest Tab -->
 <div class="tab-pane fade" id="install-tab-helm3-latest" markdown="1">
 Use Helm 3 to install the latest pre-release version of Crossplane:
 
@@ -134,7 +134,10 @@ helm install crossplane --namespace crossplane-system crossplane-master/crosspla
 ```
 
 </div>
+<!-- End Latest Tab -->
+
 </div>
+<!-- End Helm Tabs -->
 
 ### Check Crossplane Status
 
@@ -143,9 +146,6 @@ helm list -n crossplane-system
 
 kubectl get all -n crossplane-system
 ```
-
-</div>
-</div>
 
 ## Install Crossplane CLI
 
@@ -157,7 +157,11 @@ install [Crossplane packages]:
 <li><a href="#install-tab-cli-latest" data-toggle="tab">Latest</a></li>
 </ul>
 <br>
+
+<!-- Begin CLI Tabs -->
 <div class="tab-content">
+
+<!-- Begin CLI Stable Tab -->
 <div class="tab-pane fade in active" id="install-tab-cli" markdown="1">
 
 ```console
@@ -165,6 +169,9 @@ curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.
 ```
 
 </div>
+<!-- End CLI Stable Tab -->
+
+<!-- Begin CLI Latest Tab -->
 <div class="tab-pane fade" id="install-tab-cli-latest" markdown="1">
 
 ```console
@@ -180,7 +187,10 @@ curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.
 ```
 
 </div>
+<!-- End CLI Latest Tab -->
+
 </div>
+<!-- End CLI tabs -->
 
 ## Select a Getting Started Configuration
 
@@ -218,7 +228,11 @@ provider that can satisfy a `PostgreSQLInstance`. Let's get started!
 <li><a href="#azure-tab-1" data-toggle="tab">Azure</a></li>
 </ul>
 <br>
+
+<!-- Begin Cloud Provider Tabs -->
 <div class="tab-content">
+
+<!-- Begin AWS Default VPC Tab -->
 <div class="tab-pane fade in active" id="aws-tab-1" markdown="1">
 
 ### Install Configuration Package
@@ -273,6 +287,9 @@ kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/
 ```
 
 </div>
+<!-- End AWS Default VPC Tab -->
+
+<!-- Begin AWS New VPC Tab -->
 <div class="tab-pane fade" id="aws-new-tab-1" markdown="1">
 
 ### Install Configuration Package
@@ -327,6 +344,9 @@ kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/
 ```
 
 </div>
+<!-- End AWS New VPC Tab -->
+
+<!-- Begin GCP Tab -->
 <div class="tab-pane fade" id="gcp-tab-1" markdown="1">
 
 ### Install Configuration Package
@@ -397,6 +417,9 @@ spec:
 ```
 
 </div>
+<!-- End GCP Tab -->
+
+<!-- Begin Azure Tab -->
 <div class="tab-pane fade" id="azure-tab-1" markdown="1">
 
 ### Install Configuration Package
@@ -445,13 +468,41 @@ spec:
       name: azure-creds
       key: creds
 ```
+
 ```console
 kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/configure/azure/providerconfig.yaml
 ```
 
 </div>
+<!-- End Azure Tab -->
+
 </div>
+<!-- End Cloud Provider Tabs -->
+
 </div>
+<!-- End Upstream Tab -->
+
+<!-- Begin Downstream Tab -->
+<div class="tab-pane fade" id="using-a-downstream-distro" markdown="1">
+
+## Start with a Downstream Distribution
+
+Upbound, the founders of Crossplane, maintains a free and open source downstream
+distribution of Crossplane which makes getting started with Crossplane easy. 
+Universal Crossplane, or UXP for short, connects to Upbound's hosted management 
+console and Registry to make it easier to develop, debug, and manage Provider
+and Configuration packages.
+
+[Get started with Universal Crossplane] on the Upbound Documentation site.
+
+<i>Want see another hosted Crossplane service listed? Please [reach out on
+Slack][Slack] and our community will highlight it here!</i>
+
+</div>
+<!-- End Downstream Tab -->
+
+</div>
+<!-- End Distro Tabs -->
 
 ## Next Steps
 
