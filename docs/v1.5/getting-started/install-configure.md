@@ -32,7 +32,7 @@ instructions.
 
 Upbound, the founders of Crossplane, offers a free service for community members
 which makes getting started with Crossplane easy. [Create an account] to get
-started. Once logged in, create a new hosted control plane and connect to it via
+started. Once logged in, create a new hosted control plane and [connect to it] via
 the [up] CLI. See the [Upbound documentation] for more information.
 
 <i>Want see another hosted Crossplane service listed? Please [reach out on
@@ -482,5 +482,6 @@ See [Uninstall] docs for cleaning up resources, packages, and Crossplane itself.
 [Slack]: http://slack.crossplane.io/
 [Upbound Cloud]: https://upbound.io
 [Create an account]: https://cloud.upbound.io/register
+[connect to it]: https://cloud.upbound.io/docs/upbound-cloud/connecting-to-control-planes
 [up]: https://github.com/upbound/up
 [Upbound documentation]: https://cloud.upbound.io/docs

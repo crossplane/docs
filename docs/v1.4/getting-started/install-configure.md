@@ -479,9 +479,9 @@ See [Uninstall] docs for cleaning up resources, packages, and Crossplane itself.
 [Helm]:https://docs.helm.sh/using_helm/
 [Kind]: https://kind.sigs.k8s.io/docs/user/quick-start/
 [Crossplane packages]: ../concepts/packages.md
-[connect to it]: https://cloud.upbound.io/docs/upbound-cloud/connecting-to-control-planes
 [Slack]: http://slack.crossplane.io/
 [Upbound Cloud]: https://upbound.io
 [Create an account]: https://cloud.upbound.io/register
+[connect to it]: https://cloud.upbound.io/docs/upbound-cloud/connecting-to-control-planes
 [up]: https://github.com/upbound/up
 [Upbound documentation]: https://cloud.upbound.io/docs
