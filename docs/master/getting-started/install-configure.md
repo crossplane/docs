@@ -494,8 +494,11 @@ you can [provision infrastructure].
 ## Start with a Downstream Distribution
 
 Upbound, the founders of Crossplane, maintains a free and open source downstream
-distribution of Crossplane which makes getting started with Crossplane easy. 
-Universal Crossplane, or UXP for short, connects to Upbound's hosted management 
+distribution of Crossplane which makes getting started with Crossplane easy.
+[Create an account] to get
+started. Once logged in, create a new hosted control plane and [connect to it] via
+the [up] CLI.
+Universal Crossplane, or UXP for short, connects to Upbound's hosted management
 console and Registry to make it easier to develop, debug, and manage Provider
 and Configuration packages.
 
@@ -535,6 +538,8 @@ Slack][Slack] and our community will highlight it here!</i>
 [Kind]: https://kind.sigs.k8s.io/docs/user/quick-start/
 [Crossplane packages]: ../concepts/packages.md
 [Slack]: http://slack.crossplane.io/
+[Create an account]: https://cloud.upbound.io/register
+[connect to it]: https://cloud.upbound.io/docs/upbound-cloud/connecting-to-control-planes
 [up]: https://github.com/upbound/up
 [Upbound documentation]: https://cloud.upbound.io/docs
 [Providers]: ../concepts/providers.md
