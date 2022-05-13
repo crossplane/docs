@@ -190,7 +190,7 @@ stylesheet: index
 
 <div id="blueprint">
   <div class="blueprint-header">
-    <h2>Why use Crossplane to manage both applications and infrastructure?</h2>
+    <h2>Why use Crossplane to build control planes?</h2>
     <img src="{{ "/images/teal.svg" | relative_url }}" />
   </div>
   <div class="grid">
@@ -199,51 +199,71 @@ stylesheet: index
         <img src="{{ "/images/declarative.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
-        <h3>Declarative infrastructure configuration</h3>
-        <p>Crossplane brings Kubernetes-styled declarative and API-driven configuration and management to any piece
-          of infrastructure, on-premises and in the cloud. Through this approach, infrastructure managed through Crossplane
-          is accessible via kubectl, configurable with YAML, and self-healing right out of the box.</p>
+        <h3>Declarative configuration</h3>
+        <p>
+          Crossplane lets you build a control plane with Kubernetes-style
+          declarative and API-driven configuration and management for anything.
+          Through this approach, applications and infrastructure managed through
+          your control plane are self-healing right out of the box.
+        </p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/unify.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
         <h3>Unify application and infrastructure configuration and deployment</h3>
-        <p>Crossplane enables application and infrastructure configuration to co-exist on the same Kubernetes cluster, reducing the
-           complexity of your toolchains and deployment pipelines.</p>
+        <p>
+          Crossplane enables application and infrastructure configuration to
+          co-exist in the same control plane, reducing the complexity of
+          your toolchains and deployment pipelines.
+          </p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/source.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
         <h3>One source of truth for infrastructure configuration and setup</h3>
-        <p>Crossplane integrates with CI/CD pipelines so application infrastructure configuration is
-          stored in a single control cluster. Teams can create, track, and approve changes using GitOps best practices already in use.</p>
+        <p>
+          Control planes built with Crossplane integrate with CI/CD pipelines,
+          so teams can create, track, and approve changes using GitOps best
+          practices.
+        </p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/cycle.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
         <h3>Automate operational tasks with reconciling controllers</h3>
-        <p>A resource controller is responsible for the entire lifecycle of a resource. This resource is responsible for
-          provisioning, health, scaling, failover, and actively responding to external changes that deviate from the desired
-           configuration.</p>
+        <p>
+          Your control planes are made up of several controllers, which are
+          responsible for the entire lifecycle of a resource. Each resource is
+          responsible for provisioning, health, scaling, failover, and actively
+          responding to external changes that deviate from the desired
+          configuration.
+        </p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/extensibility.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
         <h3>Built with high levels of extensibility</h3>
-        <p>Crossplane leverages broadly accepted Kubernetes patterns, making it easily extensible by adding
-           your own APIs and controllers. Increase flexibility and security by baking policies, quotas, and permissions into a custom infrastructure definition.</p>
+        <p>
+          Control planes built with Crossplane leverage broadly accepted
+          Kubernetes patterns, making it easily extensible by adding your own
+          APIs and controllers. Increase flexibility and security by baking
+          policies, quotas, and permissions into a custom definition.
+          </p>
       </div>
       <div class="blueprint-bullet col-1_xs-2">
         <img src="{{ "/images/separation.svg" | relative_url }}" />
       </div>
       <div class="blueprint-item col-11_xs-10">
         <h3>A strong separation of concerns.</h3>
-        <p>Developers can define workloads without worrying about implementation details, environment constraints, or policies. Administrators can define
-          environment specifics and policies. Enable a higher degree of reusability and reduce complexity.</p>
+        <p>
+          Crossplane lets you bake in organisational concepts and policy at the
+          API level, allowing your customers the freedom to self-service within
+          the bounds of the control plane APIs you've defined.
+        </p>
       </div>
     </div>
     <div class="blueprint-img col-6_md-hidden">
@@ -258,8 +278,13 @@ stylesheet: index
       <div class="col-12">
         <img src="{{ "/images/crossplane-truck.svg" | relative_url }}" alt="Crossplane truck" />
         <h2>Crossplane is open source and community driven</h2>
-        <p>Crossplane is an open source add-on for Kubernetes supported by the cloud-native community. Crossplane has been endorsed by some of the world's best companies and is released under the Apache 2.0 license.
-          We remain committed to our community and will always be vendor neutral.</p>
+        <p>
+          Crossplane is an open source control plane framework supported by the
+          cloud-native community. Crossplane has been endorsed by some of the
+          world's best companies and is released under the Apache 2.0 license.
+          We remain committed to our community and will always be vendor
+          neutral.
+        </p>
         <button onclick="window.location.href='{{ githubLink }}'">
           Get Started with Crossplane Today
         </button>
