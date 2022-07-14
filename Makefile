@@ -7,7 +7,7 @@ run: _data/versions.json
 		-p 4000:4000 -p 4001:4001 \
 		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
 		-v "$(PWD):/srv/jekyll" \
-		jekyll/jekyll -- \
+		jekyll/jekyll:3 -- \
 		jekyll serve --livereload --livereload-port 4001
 
 run_docs_local: local_docs_dir _data/versions.json
@@ -16,7 +16,7 @@ run_docs_local: local_docs_dir _data/versions.json
 		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
 		-v "$(PWD):/srv/jekyll" \
 		-v "$(GOPATH)/src/github.com/crossplane/crossplane/docs:/srv/jekyll/$(LOCAL_DOCS_DIR)" \
-		jekyll/jekyll -- \
+		jekyll/jekyll:3 -- \
 		jekyll serve --livereload --livereload-port 4001
 	rm -d $(LOCAL_DOCS_DIR)
 
@@ -26,7 +26,7 @@ run_docs_local_incremental: local_docs_dir _data/versions.json
 		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
 		-v "$(PWD):/srv/jekyll" \
 		-v "$(GOPATH)/src/github.com/crossplane/crossplane/docs:/srv/jekyll/$(LOCAL_DOCS_DIR)" \
-		jekyll/jekyll -- \
+		jekyll/jekyll:3 -- \
 		jekyll serve --incremental --livereload --livereload-port 4001
 	rm -d $(LOCAL_DOCS_DIR)
 
@@ -35,7 +35,7 @@ build: _data/versions.json
 	docker run --rm -it \
 		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
 		-v "$(PWD):/srv/jekyll" \
-		jekyll/jekyll -- \
+		jekyll/jekyll:3 -- \
 		jekyll build
 
 # Build (output is in _site)
@@ -43,7 +43,7 @@ bundle_update: _data/versions.json
 	docker run --rm -it \
 		-v="$(PWD)/vendor/bundle:/usr/local/bundle" \
 		-v "$(PWD):/srv/jekyll" \
-		jekyll/jekyll -- \
+		jekyll/jekyll:3 -- \
 		bundle update
 
 # Push new changes to the live site
