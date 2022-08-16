@@ -54,8 +54,8 @@
     }
 
     #getStarted {
-      border-color: #3bbdc4;
-      color: #3bbdc4;
+      border-color: #193d54;
+      color: #193d54;
       margin-right: 15px;
       margin-bottom: 15px;
     }
@@ -116,7 +116,7 @@
   h2 {
     margin-top: 15px;
     margin-bottom: 35px;
-    font-weight: 900;    
+    font-weight: 900;
   }
 
   p {
@@ -149,12 +149,12 @@
     position: relative;
 
     @media (max-width: $md-width) {
-      margin: 15px 0;      
+      margin: 15px 0;
     }
 
     &:last-child {
       @media (max-width: $md-width) {
-        margin: 35px 0;      
+        margin: 35px 0;
       }
     }
   }
@@ -185,12 +185,12 @@
 
   @media (max-width: $md-width) {
     padding: 45px 0 220px;
-  }  
+  }
 
   .blueprint-header {
     margin-bottom: 35px;
   }
-  
+
   .blueprint-item {
     text-align: left;
     padding-bottom: 25px;
