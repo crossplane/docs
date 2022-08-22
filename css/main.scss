@@ -41,6 +41,7 @@
   src: url({{"/fonts/Avenir-Roman.woff"|relative_url}}) format("woff");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -48,6 +49,7 @@
   src: url({{"/fonts/Avenir-Black.woff"|relative_url}}) format("woff");
   font-weight: 900;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -55,6 +57,7 @@
   src: url({{"/fonts/Avenir-Heavy.woff"|relative_url}}) format("woff");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 h1,
@@ -331,7 +334,7 @@ body {
     line-height: 31px;
     -ms-flex: 1;
     flex: 1;
-    
+
     .logo {
       line-height: 0;
       display: inline-block;
@@ -362,7 +365,7 @@ body {
       @media (max-width: $lg-width) {
         margin-right: 20px;
       }
-    }    
+    }
   }
 
   .lf-copyright {
@@ -388,11 +391,11 @@ body {
       &:active  {
         color: $blue;
       }
-      
+
       &:hover{
         text-decoration: none;
       }
-    }   
+    }
   }
 }
 
