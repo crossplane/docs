@@ -5,7 +5,7 @@ weight: 270
 indent: true  
 ---  
 
-# Overview of Crossplane for Registry with Self-Signed CA Certificate  
+
 
 > ! Using self-signed certificates is not advised in production, it is 
 recommended to only use self-signed certificates for testing.
@@ -15,7 +15,7 @@ registries, it must be configured to trust the CA and Intermediate certs.
 
 Crossplane needs to be installed via the Helm chart with the 
 `registryCaBundleConfig.name` and `registryCaBundleConfig.key` parameters 
-defined. See [Install Crossplane].
+defined. See [Install Crossplane]({{<ref "../getting-started/install-configure" >}}).
 
 ## Configure
 
@@ -51,6 +51,3 @@ in an `override.yaml` file would look like this:
     name: ca-bundle-config
     key: ca-bundle
 ```
-
-
-[Install Crossplane]: ../reference/install.md

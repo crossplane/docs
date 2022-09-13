@@ -1,8 +1,6 @@
 ---
 title: Multi-Tenant Crossplane
-toc: true
 weight: 240
-indent: true
 ---
 
 # Multi-Tenant Crossplane
@@ -321,19 +319,19 @@ found under [vshn/application-catalog-demo].
 This way even a tight integration of Crossplane in to [Cloudfoundry] is possible.
 
 <!-- Named Links -->
-[managed resources]: ../concepts/managed-resources.md
+[managed resources]: {{<ref "../concepts/managed-resources" >}}
 [RBAC]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
-[Composition]: ../concepts/composition.md
+[Composition]: {{<ref "../concepts/composition" >}}
 [CustomResourceDefinitions]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 [Open Policy Agent]: https://www.openpolicyagent.org/
 [Rego]: https://www.openpolicyagent.org/docs/latest/policy-language/
 [Gatekeeper]: https://open-policy-agent.github.io/gatekeeper/website/docs/
 [here]: https://youtu.be/TaF0_syejXc
 [Multiple Source Field patching]: https://github.com/crossplane/crossplane/pull/2093
-[Configuration packages]: ../concepts/packages.md
+[Configuration packages]: {{<ref "../concepts/packages" >}}
 [OCI images]: https://github.com/opencontainers/image-spec
 [EKS Cluster]: https://doc.crds.dev/github.com/crossplane/provider-aws/eks.aws.crossplane.io/Cluster/v1beta1@v0.17.0
-[provider-aws]: https://github.com/crossplane/provider-aws
+[provider-aws]: https://github.com/crossplane-contrib/provider-aws
 [provider-helm]: https://github.com/crossplane-contrib/provider-helm
 [Open Service Broker API]: https://github.com/openservicebrokerapi/servicebroker
 [Crossplane Service Broker]: https://github.com/vshn/crossplane-service-broker
