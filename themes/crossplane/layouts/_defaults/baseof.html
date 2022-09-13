@@ -1,36 +1,55 @@
-{% include values.inc %}
+{{ partialCached "head/doctype-meta.html" . }}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description"
-    content="Crossplane is a framework for building cloud native control planes without needing to write code. It has a highly extensible backend that enables you to build a control plane that can orchestrate applications and infrastructure no matter where they run, and a highly configurable frontend that puts you in control of the schema of the declarative API it offers.">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+{{- block "no-robots" . -}}
+  {{- if ne .Page.Params.version .Site.Params.latest -}}
+    <!-- Do not index old documentation -->
+    <meta name="robots" content="noindex">
+  {{- end -}}
+{{- end -}}
 
-    <title>Crossplane</title>
+<title>
+    {{- block "title" . -}}
+      {{- .Page.Title -}} | Crossplane Documentation
+    {{- end -}}
+</title>
 
-    <!-- Twitter Cards -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="https://crossplane.io" />
-    <meta name="twitter:title" content="Crossplane" />
-    <meta name="twitter:description" content="The cloud-native control plane framework" />
-    <meta name="twitter:image:src" content="https://crossplane.io/images/twitter-card_400x400.jpg" />
+{{- partialCached "head/twitter.html" . -}}
 
-    {% include favicon.html %}
+{{- partialCached "head/favicon.html" . -}}
 
-    <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}" />
-  {% if page.stylesheet %}
-    <link rel="stylesheet" href="{{ "/css/" | append: page.stylesheet | append: ".css" | relative_url }}" />
-  {% endif %}
-  </head>
+{{- partialCached "head/css-common.html" . -}}
+
+{{- block "page-style" . -}}
+  {{- partialCached "head/docs-style-js.html" . -}}
+{{- end -}}
+
+</head>
 
   <body>
-    {% include header.html %}
-    <div id="content">{{ content }}</div>
-    {% include footer.html %}
-    {% include google-analytics.html %}
-    {% include hubspot.html %}
+    {{ partialCached "top-nav.html" .  }}
+
+    {{- block "content" . -}}
+    {{- end -}}
+
+    {{ if .Page.Params.Version -}}
+      {{ partial "docs/js-footer.html" . }}
+      <script src="{{ "/js/anchor.js" | absURL }}"></script>
+      <script>
+        anchors.options = {
+          placement: 'right',
+          icon: '#',
+        }
+
+        document.addEventListener('DOMContentLoaded', function(event) {
+          anchors.add('.docs-content h1, .docs-content h2, .docs-content h3, .docs-content h4, .docs-content h5, .docs-content h6');
+        });
+      </script>
+    {{ end }}
+
+    {{ partialCached "footer.html" .}}
+
+    {{ partialCached "google-analytics.html" . }}
+    {{ partialCached "hubspot.html" . }}
+
   </body>
 </html>
