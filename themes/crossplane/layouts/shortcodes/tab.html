@@ -1,0 +1,13 @@
+{{ if .Parent }}
+
+    {{ $tab_name := .Get 0 }}
+    {{ $group := printf "tabs-%s" (.Parent.Get 0) }}
+    {{ if not (.Parent.Scratch.Get $group) }}
+        {{ .Parent.Scratch.Set $group slice }}
+    {{ end }}
+
+{{ .Parent.Scratch.Add $group (dict "Name" $tab_name "Content" (.Inner | htmlUnescape | safeHTML) ) }}
+
+{{ else }}
+    {{ errorf "%q: 'tab' shortcode must be inside 'tabs' shortcode" .Page.File.Path }}
+{{ end }}
