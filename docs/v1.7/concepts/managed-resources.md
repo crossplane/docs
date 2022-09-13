@@ -1,11 +1,9 @@
 ---
 title: Managed Resources
-toc: true
 weight: 102
-indent: true
 ---
 
-# Managed Resources
+
 
 ## Overview
 
@@ -437,13 +435,13 @@ fields are there and those are enough to import a resource. The tool you're
 using needs to store `annotations` and `spec` fields, which most tools do
 including Velero.
 
-[term-xrm]: terminology.md#crossplane-resource-model
+[term-xrm]: {{<ref "terminology" >}}#crossplane-resource-model
 [rds]: https://aws.amazon.com/rds/
 [cloudsql]: https://cloud.google.com/sql
-[composition]: composition.md
-[api-versioning]: https://kubernetes.io/docs/reference/using-api/api-overview/#api-versioning
+[composition]: {{<ref "composition" >}}
+[api-versioning]: https://kubernetes.io/docs/reference/using-api/#api-versioning#api-versioning
 [velero]: https://velero.io/
-[api-reference]: ../api-docs/overview.md
-[provider]: providers.md
+[api-reference]: {{<ref "../api-docs" >}}
+[provider]: {{<ref "providers" >}}
 [issue-727]: https://github.com/crossplane/crossplane/issues/727
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143

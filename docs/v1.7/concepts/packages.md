@@ -1,11 +1,9 @@
 ---
 title: Packages
-toc: true
 weight: 104
-indent: true
 ---
 
-# Crossplane Packages
+
 
 Crossplane packages are opinionated [OCI images] that contain a stream of YAML
 that can be parsed by the Crossplane package manager. Crossplane packages come
@@ -482,13 +480,13 @@ by [pre-pulling images] onto nodes in the cluster.
 <!-- Named Links -->
 
 [OCI images]: https://github.com/opencontainers/image-spec
-[Providers]: providers.md
+[Providers]: {{<ref "providers" >}}
 [provider-docs]: https://doc.crds.dev/github.com/crossplane/crossplane/meta.pkg.crossplane.io/Provider/v1
 [configuration-docs]: https://doc.crds.dev/github.com/crossplane/crossplane/meta.pkg.crossplane.io/Configuration/v1
 [lock-api]: https://doc.crds.dev/github.com/crossplane/crossplane/pkg.crossplane.io/Lock/v1beta1
 [getting-started-with-gcp]: https://github.com/crossplane/crossplane/tree/release-1.7/docs/snippets/package/gcp
 [specification]: https://github.com/Masterminds/semver#basic-comparisons
-[composition]: composition.md
+[composition]: {{<ref "composition" >}}
 [IAM Roles for Service Accounts]: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
 [controller-config-docs]: https://doc.crds.dev/github.com/crossplane/crossplane/pkg.crossplane.io/ControllerConfig/v1alpha1
 [package format]: https://github.com/crossplane/crossplane/blob/1aa83092172bdf0d2ed64754d33517c612ff7368/design/one-pager-package-format-v2.md

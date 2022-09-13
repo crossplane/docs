@@ -1,8 +1,6 @@
 ---
 title: Terminology
-toc: true
 weight: 110
-indent: true
 ---
 
 # Terminology

@@ -1,11 +1,9 @@
 ---
 title: Observability Developer Guide
-toc: true
 weight: 1002
-indent: true
 ---
 
-# Observability Developer Guide
+
 
 ## Introduction
 
