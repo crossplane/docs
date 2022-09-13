@@ -1,0 +1,15 @@
+{{- define "content" -}}
+{{ partial "docs/versions-dropdown-selector.html" . }}
+<div class="page">
+    <div class="docs-menu">
+        <ul id="docs-ul"></ul>
+    </div>
+
+    <div class="docs-content">
+        {{- partial "docs/github-edit.html" . -}}
+        {{- partialCached "docs/version-alert.html" . .Section -}}
+        <h1>{{.Title }}</h1>
+        {{ .Content }}
+    </div>
+  </div>
+{{- end -}}
