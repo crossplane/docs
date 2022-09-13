@@ -1,0 +1,36 @@
+baseURL: "/"
+enableRobotsTXT: True
+languageCode: "en-us"
+title: "Crossplane"
+theme: "crossplane"
+disableKinds:
+  - taxonomy
+  - term
+  - RSS
+
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    CodeFences: true
+
+
+
+params:
+  upboundLink: "https://www.upbound.io/"
+  slackLink: "https://slack.crossplane.io/"
+  githubLink: "https://github.com/crossplane/crossplane"
+  twitterLink: "https://twitter.com/crossplane_io"
+  forumLink: "https://groups.google.com/forum/#!forum/crossplane-dev"
+  youtubeLink: "https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw"
+  podcastLink: "https://www.youtube.com/playlist?list=PL510POnNVaaYFuK-B_SIUrpIonCtLVOzT"
+  blogLink: "https://blog.crossplane.io/"
+  communityMeetingLink: "https://github.com/crossplane/crossplane/#get-involved"
+  cncfLink: "https://www.cncf.io/"
+  prodFormLink: "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform"
+  infoMailToLink: "mailto:info@crossplane.io"
+  upboundGithubLink: "https://github.com/upbound"
+  latest: 1.9
+  repoLink: "https://github.com/crossplane/crossplane"
