@@ -47,7 +47,7 @@ into a package.
 ## Create CompositeResourceDefinition
 
 First we'll create a `CompositeResourceDefinition` (XRD) to define the schema of
-our `XPostgreSQLInstance` and its `PostgreSQLInstance` resource claim.
+our `XPostgreSQLInstance` and its `PostgreSQLInstance` resource claim. 
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1

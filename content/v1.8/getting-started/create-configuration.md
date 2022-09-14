@@ -29,7 +29,7 @@ contain one XRD and one composition - it could include only an XRD, only a
 composition, several compositions, or any combination thereof.
 
 Before we go any further, we must create a directory in which to build our
-configuration:
+configuration: 
 
 ```console
 mkdir crossplane-config

@@ -27,7 +27,7 @@ in production environments.
 ## Start with Upstream Crossplane
 
 Installing Crossplane into an existing Kubernetes cluster will require a bit
-more setup, but can provide more flexibility for users who need it.
+more setup, but can provide more flexibility for users who need it. 
 
 ### Get a Kubernetes Cluster
 
