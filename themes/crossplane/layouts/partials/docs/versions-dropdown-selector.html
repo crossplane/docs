@@ -40,7 +40,7 @@
             <div class="versions">
         {{ end }}
         <div><div><select onchange="window.location.href = this.value">
-            {{ $master_url := replace (replace .Page.RelPermalink .Page.Params.version "master") "v" "" }}
+            {{ $master_url := replaceRE "v[0-9].[0-9]" "master" .Permalink }}
             {{ if $master_ver }}
                 {{ if eq .Page.Params.version $cur_ver }}
                     <option selected="" value="{{ $master_url | absURL }}">Crossplane master</option>
