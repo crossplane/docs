@@ -2,6 +2,8 @@
 title: "Overview"
 weight: 1
 toc_include: false
+aliases:
+    - /docs
 cascade:
     version: 1.9
 ---
