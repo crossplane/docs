@@ -1,10 +1,12 @@
+{{- .Scratch.Set "current" . -}}
+
 <script>
     var menu = [];
 
   {{- $version_pages := where .Site.Pages "Params.version" .Page.Params.version -}}
-  {{- $current := . -}}
 
-  {{- $version_sections := slice -}}
+    {{ $current := .}}
+    {{- $version_sections := slice -}}
 
   {{- range $version_pages.GroupBy "CurrentSection" -}}
     {{- if ne .Key .Key.FirstSection -}}
@@ -23,11 +25,14 @@
 
 
     {{- range $version_pages -}}
+    {{ if not .Params.toc_hide  }}
+
       {{- $page_section := index $page_map .CurrentSection.Permalink -}}
       {{- if ne .Permalink .CurrentSection.Permalink -}}
         {{- $page_section = $page_section | append . -}}
         {{- $page_map = merge $page_map (dict .CurrentSection.Permalink $page_section) -}}
       {{- end -}}
+    {{- end -}}
     {{- end -}}
 
     {{- range $version_sections -}}
