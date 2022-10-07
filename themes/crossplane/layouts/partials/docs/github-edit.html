@@ -1,0 +1,7 @@
+<div class="docs-actions">
+    {{- if eq .Page.Params.version "master" -}}
+        <a id="edit" href="{{ .Site.Params.repoLink }}/tree/master/docs/{{ .File.LogicalName }}"><img src="{{ "/images/github-teal.svg" | absURL }}" />Edit on GitHub</a>
+    {{- else -}}
+        <a id="edit" href="{{ .Site.Params.repoLink }}/tree/release-{{string .Page.Params.version}}/docs/{{ .File.LogicalName }}"><img src="{{ "/images/github-teal.svg" | absURL }}" />Edit on GitHub</a>
+    {{- end -}}
+</div>

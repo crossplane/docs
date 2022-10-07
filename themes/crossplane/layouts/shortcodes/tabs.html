@@ -1,0 +1,25 @@
+{{- if .Inner -}}{{ end -}}
+{{- $id := .Get 0 -}}
+{{- $group := printf "tabs-%s" $id -}}
+
+
+<ul class="nav nav-tabs">
+{{- range $index, $tab :=  .Scratch.Get $group -}}
+{{- $expand := true -}}
+{{- if $index -}}
+{{- $expand := false -}}
+{{- end -}}
+<li class="{{ if not $index -}}active{{end}}">
+<a href="#{{$tab.Name | anchorize}}" data-toggle="tab" aria-expanded="{{$expand}}">{{$tab.Name}}</a>
+</li>
+{{- end -}}
+</ul>
+<br />
+<div class="tab-content">
+{{- range $index, $tab :=  .Scratch.Get $group -}}
+<div class="tab-pane fade {{ if not $index}}active in{{end}}" id="{{$tab.Name | anchorize}}">
+{{- .Content | safeHTML | $.Page.RenderString -}}
+</div>
+{{- end -}}
+</div>
+<p><br /></p>

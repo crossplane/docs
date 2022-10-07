@@ -1,0 +1,27 @@
+<div id="footer">
+  <div class="footer-main">
+    <div class="main">
+      <div class="logo"><img src="{{ "/images/logo.svg" | absURL }}" alt="Crossplane Logo" /></div>
+    </div>
+    <div class="links sm-hidden">
+      <a href='{{ .Site.Params.twitterLink }}'>Twitter</a>
+      <a href="{{ (printf "/v%s/" (string .Site.Params.latest)) | absURL }}">Documentation</a>
+      <a href='{{ .Site.Params.githubLink }}'>GitHub</a>
+      <a href='{{ .Site.Params.slackLink }}'>Slack Channel</a>
+      <a href='{{ .Site.Params.youtubeLink }}'>YouTube</a>
+      <a href='{{ .Site.Params.forumLink }}'>Forum</a>
+    </div>
+  </div>
+  <div class="lf-copyright">
+    <p>
+      &#169; Crossplane Authors {{ now.Format "2006"}}. Documentation distributed under
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a>.
+    </p>
+    <p>
+      &#169; {{ now.Format "2006"}} The Linux Foundation. All rights reserved. The Linux Foundation has
+      registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our
+      <a href="https://www.linuxfoundation.org/trademark-usage/">Trademark Usage</a> page.
+    </p>
+  </div>
+  <script src="{{ "/js/slack-popup.js" | absURL }}"></script>
+</div>

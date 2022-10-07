@@ -1,0 +1,15 @@
+{{- define "no-robots" -}}
+{{- end -}}
+
+{{- define "title" -}}
+    {{- .Site.Title -}}
+{{- end -}}
+
+{{- define "page-style" -}}
+<link rel="stylesheet" href="{{ "/css/index.css" | absURL }}" />
+<link rel="stylesheet" href="{{ "/css/community.css" | absURL }}" />
+{{- end -}}
+
+{{- define "content" -}}
+    {{- partialCached "community.html" . -}}
+{{- end -}}

@@ -1,0 +1,51 @@
+
+<div id="commercial">
+  <div class="grid">
+    <div class="col-12">
+      <h1>Companies with Commercial Crossplane Offerings</h1>
+      <img src="{{ "/images/red-squares.svg" | absURL }}" id="squares" />
+      <div class="company-card">
+        <div class="topbar"></div>
+        <div class="card-content">
+          <div class="company-logo">
+            <img src="{{ "/images/upbound-logo.svg" | absURL }}" alt="Upbound" />
+          </div>
+          <div class="company-info">
+            <p>Upbound is the creator of open source Crossplane — the modern, cloud native
+            alternative to Infrastructure as Code (IaC).</p>
+            <div class="company-links">
+              <a href="{{ .Site.Params.upboundLink }}">Learn More</a>
+              <span>|</span>
+              <a href="{{ .Site.Params.upboundGithubLink }}">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="let-us-know">
+        <p>Building on top of Crossplane or offering support?</p>
+        <p><a href="{{ .Site.Params.infoMailToLink }}">Let us know</a> and we will add your logo to this page.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cncf">
+  <div class="grid">
+    <div class="col-12">
+      <h2>Crossplane is a <span>Cloud Native Computing Foundation</span> project</h2>
+      <a href="{{ .Site.Params.cncfLink }}">
+        <img class="img" src="{{ "/images/cncf.webp" | absURL }}" srcset="{{ "/images/cncf.webp" | absURL }} 1x, {{ "/images/cncf@2x.webp" | absURL }} 2x, {{ "/images/cncf@3x.webp" | absURL }} 3x" alt="CNCF logo" />
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="production">
+  <div class="grid">
+    <div class="col-12">
+      <img src="{{ "/images/stacks.webp" | absURL }}" srcset="{{ "/images/stacks.webp" | absURL }} 1x, {{ "/images/stacks@2x.webp" | absURL }} 2x, {{ "/images/stacks@3x.webp" | absURL }} 3x" alt="Stacks" id="stacksImg" />
+      <h2>Are you using Crossplane in Production?</h2>
+      <a href="{{ .Site.Params.prodFormLink }}">Share your success story & receive special Crossplane swag</a>
+    </div>
+  </div>
+</div>
