@@ -4,6 +4,7 @@ weight: 1
 toc_include: false
 aliases:
     - /docs
+    - /docs/v1.9
 cascade:
     version: 1.9
 ---
