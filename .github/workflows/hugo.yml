@@ -51,7 +51,7 @@ jobs:
         run: |
           hugo \
             --minify \
-            --baseURL "${{ crossplane.io }}/"
+            --baseURL "crossplane.io/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
