@@ -7,7 +7,7 @@
 
     <div class="docs-content">
         {{- partial "docs/github-edit.html" . -}}
-        {{- partialCached "docs/version-alert.html" . .Section -}}
+        {{- partial "docs/version-alert.html"  -}}
         <h1>{{.Title }}</h1>
         {{ .Content }}
     </div>

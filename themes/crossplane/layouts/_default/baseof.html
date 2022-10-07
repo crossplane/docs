@@ -32,6 +32,7 @@
     {{- end -}}
 
     {{ if .Page.Params.Version -}}
+
       {{ partial "docs/js-footer.html" . }}
       <script src="{{ "/js/anchor.js" | absURL }}"></script>
       <script>
