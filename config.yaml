@@ -3,6 +3,7 @@ enableRobotsTXT: True
 languageCode: "en-us"
 title: "Crossplane"
 theme: "crossplane"
+uglyurls: true
 disableKinds:
   - taxonomy
   - term

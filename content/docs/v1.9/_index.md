@@ -3,12 +3,12 @@ title: "Overview"
 weight: -1
 toc_include: false
 aliases:
-    - /docs
+    - /docs/v1.9/index.html
 cascade:
     version: 1.9
 ---
 
-![Crossplane](media/banner.png)
+![Crossplane](/docs/v1.9/media/banner.png)
 
 Crossplane is an open source Kubernetes add-on that transforms your cluster into
 a **universal control plane**. Crossplane enables platform teams to assemble
