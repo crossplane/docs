@@ -3,8 +3,6 @@ title: Create a Configuration
 weight: 4
 ---
 
-
-
 In the [previous section] we were able to create a PostgreSQL database because
 we had installed a configuration package that defined the `PostgreSQLInstance`
 type and a `Composition` of managed resources that mapped to it. Crossplane
@@ -47,7 +45,7 @@ into a package.
 ## Create CompositeResourceDefinition
 
 First we'll create a `CompositeResourceDefinition` (XRD) to define the schema of
-our `XPostgreSQLInstance` and its `PostgreSQLInstance` resource claim. 
+our `XPostgreSQLInstance` and its `PostgreSQLInstance` resource claim.
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1

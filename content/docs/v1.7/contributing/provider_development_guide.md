@@ -3,8 +3,6 @@ title: Provider Development Guide
 weight: 1001
 ---
 
-
-
 Crossplane allows you to manage infrastructure directly from Kubernetes. Each
 infrastructure API resource that Crossplane orchestrates is known as a "managed
 resource". This guide will walk through the process of adding support for a new

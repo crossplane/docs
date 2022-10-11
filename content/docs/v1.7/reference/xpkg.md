@@ -3,8 +3,6 @@ title: xpkg Specification
 weight: 305
 ---
 
-# Overview
-
 Crossplane supports two types of [packages]: Providers and Configurations. These
 packages are distributed as generic [OCI images], which contain [YAML] content
 informing the Crossplane package manager how to alter the state of a cluster by

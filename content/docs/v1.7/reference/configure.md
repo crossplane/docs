@@ -3,8 +3,6 @@ title: Configure Your Cloud Provider Account
 weight: 302
 ---
 
-
-
 In order for Crossplane to be able to manage resources in a specific cloud
 provider, you will need to create an account for Crossplane to use. Use the
 links below for cloud-specific instructions to create an account that can be

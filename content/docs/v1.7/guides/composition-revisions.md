@@ -1,9 +1,6 @@
 ---
 title: Composition Revisions
-weight: 260
 ---
-
-
 
 This guide discusses the use of "Composition Revisions" to safely make and roll
 back changes to a Crossplane [`Composition`][composition-type]. It assumes

@@ -4,7 +4,6 @@ weight: 230
 ---
 
 
-
 > This guide is adapted from the [Vault on Minikube] and [Vault Kubernetes
 > Sidecar] guides.
 
@@ -314,7 +313,8 @@ kubectl get cloudsqlinstance -w
 [Vault Kubernetes Sidecar]: https://learn.hashicorp.com/tutorials/vault/kubernetes-sidecar
 [Vault]: https://www.vaultproject.io/
 [Vault Kubernetes Sidecar]: https://www.vaultproject.io/docs/platform/k8s/injector
-[provider-gcp]: https://github.com/crossplane/provider-gcp
+[provider-gcp]: https://github.com/crossplane-contrib/provider-gcp
+[provider-aws]: https://github.com/crossplane-contrib/provider-aws
 [AWS]: https://www.vaultproject.io/docs/secrets/aws
 [Azure]: https://www.vaultproject.io/docs/secrets/azure
 [GCP]: https://www.vaultproject.io/docs/secrets/gcp 

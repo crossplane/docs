@@ -3,8 +3,6 @@ title: Learn More
 weight: 307
 ---
 
-
-
 If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us]!
 
 ***Learn more about using Crossplane***

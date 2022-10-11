@@ -3,8 +3,6 @@ title: Release Process
 weight: 1003
 ---
 
-
-
 This document is meant to be a complete end-to-end guide for how to release new
 versions of software for Crossplane and its related projects.
 

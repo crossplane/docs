@@ -3,8 +3,6 @@ title: Provision Infrastructure
 weight: 3
 ---
 
-
-
 Composite resources (XRs) are always cluster scoped - they exist outside of any
 namespace. This allows an XR to represent infrastructure that might be consumed
 from several different namespaces. This is often true for VPC networks - an

@@ -3,8 +3,6 @@ title: Contributing
 weight: 1000
 ---
 
-# Contributing
-
 The best place to start if you're thinking about contributing to Crossplane is
 our [`CONTRIBUTING.md`] file. The following documents supplement that guide.
 

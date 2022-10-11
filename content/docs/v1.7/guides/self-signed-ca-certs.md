@@ -1,13 +1,9 @@
 ---  
-title: Self-Signed CA Certs 
-toc: true  
-weight: 270  
-indent: true  
+title: Self-Signed CA Certs
+weight: 270   
 ---  
 
-
-
-> ! Using self-signed certificates is not advised in production, it is 
+>  Using self-signed certificates is not advised in production, it is 
 recommended to only use self-signed certificates for testing.
 
 When Crossplane loads Configuration and Provider Packages from private 

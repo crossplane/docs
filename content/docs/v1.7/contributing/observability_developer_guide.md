@@ -3,8 +3,6 @@ title: Observability Developer Guide
 weight: 1002
 ---
 
-
-
 ## Introduction
 
 Observability is crucial to Crossplane users; both those operating Crossplane

@@ -3,8 +3,6 @@ title: Multi-Tenant Crossplane
 weight: 240
 ---
 
-# Multi-Tenant Crossplane
-
 This guide describes how to use Crossplane effectively in multi-tenant
 environments by utilizing Kubernetes primitives and compatible policy
 enforcement projects in the cloud-native ecosystem.
@@ -23,14 +21,15 @@ those with more complex environments, may choose to incorporate third-party
 policy engines, or scale to multiple Crossplane clusters. The following sections
 describe each of these scenarios in greater detail.
 
+- [TL;DR](#tldr)
 - [Background](#background)
-    - [Cluster Scoped Managed Resources](#cluster-scoped-managed-resources)
-    - [Namespace Scoped Claims](#namespace-scoped-claims)
-- [Single Cluster Multi Tenancy](#single-cluster-multi-tenancy)
+  - [Cluster-Scoped Managed Resources](#cluster-scoped-managed-resources)
+  - [Namespace Scoped Claims](#namespace-scoped-claims)
+- [Single Cluster Multi-Tenancy](#single-cluster-multi-tenancy)
   - [Composition as an Isolation Mechanism](#composition-as-an-isolation-mechanism)
   - [Namespaces as an Isolation Mechanism](#namespaces-as-an-isolation-mechanism)
   - [Policy Enforcement with Open Policy Agent](#policy-enforcement-with-open-policy-agent)
-- [Multi Cluster Multi Tenancy](#multi-cluster-multi-tenancy)
+- [Multi-Cluster Multi-Tenancy](#multi-cluster-multi-tenancy)
   - [Reproducible Platforms with Configuration Packages](#reproducible-platforms-with-configuration-packages)
   - [Control Plane of Control Planes](#control-plane-of-control-planes)
   - [Service Provisioning using Open Service Broker API](#service-provisioning-using-open-service-broker-api)
@@ -221,7 +220,7 @@ spec:
       key: creds
 ```
 
-2. Define a `Composition` that patches the name of the Claim reference in the XR
+2. Define a `Composition` that patches the namespace of the Claim reference in the XR
    to the `providerConfigRef` of the `RDSInstance`.
 
 ```yaml

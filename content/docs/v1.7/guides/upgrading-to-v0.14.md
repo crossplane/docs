@@ -3,8 +3,6 @@ title: Upgrading to v0.14
 weight: 210
 ---
 
-
-
 Crossplane made a small handful of breaking changes in v0.14. The most broadly
 impactful change was updating the `CompositeResourceDefinition` (XRD) schema to
 support defining multiple versions of a composite resource (XR) at once. This

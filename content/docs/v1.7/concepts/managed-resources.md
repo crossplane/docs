@@ -4,9 +4,6 @@ weight: 102
 ---
 
 
-
-## Overview
-
 A Managed Resource (MR) is Crossplane's representation of a resource in an external
 system - most commonly a cloud provider. Managed Resources are opinionated,
 Crossplane Resource Model ([XRM][term-xrm]) compliant Kubernetes Custom
@@ -445,3 +442,4 @@ including Velero.
 [provider]: {{<ref "providers" >}}
 [issue-727]: https://github.com/crossplane/crossplane/issues/727
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143
+[managed-api-patterns]: https://github.com/crossplane/crossplane/blob/master/design/one-pager-managed-resource-api-design.md

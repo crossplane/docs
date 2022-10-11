@@ -3,8 +3,6 @@ title: FAQ
 weight: 1200
 ---
 
-
-
 ### Where did the name Crossplane come from?
 
 Crossplane is the fusing of cross-cloud control plane. We wanted to use a noun

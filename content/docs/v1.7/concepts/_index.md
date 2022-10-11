@@ -3,8 +3,6 @@ title: Concepts
 weight: 100
 ---
 
-# Overview
-
 Crossplane introduces multiple building blocks that enable you to provision,
 compose, and consume infrastructure using the Kubernetes API. These individual
 concepts work together to allow for powerful separation of concern between

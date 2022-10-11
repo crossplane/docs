@@ -3,8 +3,6 @@ title: API Documentation
 weight: 400
 ---
 
-
-
 The Crossplane ecosystem contains many CRDs that map to API types represented by
 external infrastructure providers. The documentation for these CRDs are
 auto-generated on [doc.crds.dev]. To find the CRDs available for providers

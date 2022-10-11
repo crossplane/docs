@@ -1,6 +1,5 @@
 ---
-title: crossplane
-weight: 401
+title: Crossplane
 layout: redirect
-to: https://doc.crds.dev/github.com/crossplane/crossplane
+to: "https://doc.crds.dev/github.com/crossplane/crossplane"
 ---

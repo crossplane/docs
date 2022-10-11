@@ -3,8 +3,6 @@ title: Troubleshoot
 weight: 306
 ---
 
-# Troubleshooting
-
 * [Requested Resource Not Found]
 * [Resource Status and Conditions]
 * [Resource Events]
