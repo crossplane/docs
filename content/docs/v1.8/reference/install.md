@@ -1,7 +1,9 @@
 ---
-title: Install
+title: Install Crossplane
 weight: 301
 ---
+
+
 
 # Install Crossplane
 
@@ -160,5 +162,5 @@ imagePullSecrets:
 <!-- Named Links -->
 
 [Kubernetes cluster]: https://kubernetes.io/docs/setup/
-[Minikube]: https://minikube.sigs.k8s.io/docs/start/
-[Helm]: https://helm.sh/docs/intro/using_helm/
+[Minikube]: https://kubernetes.io/docs/tasks/tools/install-minikube/
+[Helm]: https://docs.helm.sh/using_helm/
