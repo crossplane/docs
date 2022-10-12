@@ -1,5 +1,10 @@
 
-# Push new changes to the live site
+# TODO(hasheddan): manage hugo install to ensure proper version.
+run:
+	hugo server
+
+# Push new changes to the live site.
+
 publish:
 	$(eval ROOT_DIR = $(shell pwd -P))
 	git -C "$(ROOT_DIR)" add -A
