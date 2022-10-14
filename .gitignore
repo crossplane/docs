@@ -51,6 +51,7 @@ resources/*
 resources/_gen/assets/*
 public/*
 hugo
+hugo-*
 .hugo_build.lock
 
 # From original Upbound Crossplane .gitignore #
