@@ -1,32 +1,29 @@
 {{ $versionList := slice }}
-{{ $master_ver := false }}
+
+
+{{ $majordict := dict }}
+{{ $majorlist := slice }}
+{{ $sorted_list := slice }}
 
 <!-- get all the versions and break out semver order -->
 {{ range (.GetPage "docs").Sections }}
     {{ if eq .Page.Params.version "master" }}
-        <!-- note that master is a version but don't try to sort it -->
-        {{ $master_ver = true }}
+        {{$sorted_list = $sorted_list | append  "master" }}
     {{ else if ne .Page.Params.version nil }}
-        {{/* Semver slicing from https://discourse.gohugo.io/t/sort-strings-based-on-semver/14425 */}}
-        {{- $ver_major_minor := (float (replaceRE "([0-9]+\\.[0-9]+).*" "${1}" .Page.Params.version)) -}}
-        {{- $ver_micro_str := (replaceRE "[0-9]+\\.[0-9]+(.*)" "${1}" .Page.Params.version | replaceRE "-DEV" "-0.01") -}}
-        {{- $ver_micro := (div (float (or $ver_micro_str "0")) 100.00) -}}
-        {{- $ver_float := (add $ver_major_minor $ver_micro) -}}
-        {{- $versionList = $versionList | append $ver_float -}}
+        {{ $splitver := split .Page.Params.version "." }}
+        {{ if eq (len $splitver) 2 }}
+                {{ $verlist := (index $majordict (index $splitver 0)) }}
+                {{ $verlist = $verlist | append (index $splitver 1) }}
+                {{ $majordict = merge $majordict (dict (index $splitver 0) $verlist) }}
+                {{ $majorlist = $majorlist | append (index $splitver 0) }}
+        {{ end }}
     {{ end }}
 {{ end }}
 
-<!-- throw each semver into a dict so it can be sorted -->
-{{ $version_dict := slice }}
-{{ range (uniq $versionList) }}
-    {{ $version_dict = $version_dict | append (dict "ver" .)}}
-{{ end }}
-
-<!-- sort the semver dict from latest to oldest -->
-{{ $sorted_list := slice }}
-{{ range sort $version_dict "ver" "desc" }}
-    {{ range $k, $v := . }}
-        {{ $sorted_list = $sorted_list | append $v }}
+{{ range sort ($majorlist | uniq) "value" "desc" }}
+    {{ $majorver := . }}
+    {{ range sort (index $majordict .) "value" "desc"  }}
+        {{$sorted_list = $sorted_list | append  (printf "%s.%s" $majorver .) }}
     {{ end }}
 {{ end }}
 
@@ -34,26 +31,25 @@
 <div id="docs-header">
     <div>
         <h1>Documentation</h1>
-        {{ if eq .Site.Params.latest $cur_ver }}
+        {{ if eq (string $.Site.Params.latest) (string $cur_ver) }}
             <div class="versions latest">
         {{ else }}
             <div class="versions">
         {{ end }}
         <div><div><select onchange="window.location.href = this.value">
             {{ $master_url := replaceRE "v[0-9].[0-9]" "master" .Permalink }}
-            {{ if $master_ver }}
-                {{ if eq .Page.Params.version $cur_ver }}
-                    <option selected="" value="{{ $master_url | absURL }}">Crossplane master</option>
-                {{ else }}
-                    <option value="{{ .Permalink }}">Crossplane master</option>
-                {{ end }}
-            {{ end }}
             {{ range $sorted_list }}
                 {{ range where (where $.Site.Pages "Title" $.Title) ".Page.Params.version" . }}
-                    {{ if eq .Page.Params.version $cur_ver }}
-                        <option selected="" value="{{ .Permalink }}">Crossplane v{{.Page.Params.version}}</option>
+                    {{ $label := "" }}
+                    {{ if eq .Page.Params.version "master" }}
+                        {{ $label = "master" }}
                     {{ else }}
-                        <option value="{{ .Permalink }}">Crossplane v{{.Page.Params.version}}</option>
+                        {{ $label = (printf "v%s" .Page.Params.version) }}
+                    {{ end }}
+                    {{ if eq .Page.Params.version $cur_ver }}
+                        <option selected="" value="{{ .Permalink }}">Crossplane {{ $label }}</option>
+                    {{ else }}
+                        <option value="{{ .Permalink }}">Crossplane {{ $label }}</option>
                     {{ end }}
                 {{ end }}
             {{ end }}
