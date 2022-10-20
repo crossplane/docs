@@ -1,6 +1,6 @@
 # crossplane.io
 
-This is the repository for [crossplane.io](crossplane.io) including the [Crossplane documentation](https://crossplane.io/docs).
+This is the repository for [crossplane.io](https://crossplane.io/) including the [Crossplane documentation](https://crossplane.io/docs).
 
 Crossplane.io is built using [Hugo](https://gohugo.io/).
 
