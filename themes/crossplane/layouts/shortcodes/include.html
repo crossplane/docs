@@ -4,6 +4,11 @@
 {{ $language := .Get "language" }}
 {{ $options :=.Get "options" }}
 
+{{ if eq $type "page" }}
+  {{ if not $page }}
+    {{ errorf "Couldn't find include file %s in page %s" $file .Position }}
+  {{ end }}
+{{ end }}
 
 <div class="gdoc-include">
   {{- if (.Get "language") -}}
