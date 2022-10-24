@@ -1,0 +1,34 @@
+[build]
+  base = "/"
+  publish = "public/"
+  command = "hugo --environment development -D"
+  environment = { NODE_VERSION = "14.15.3" }
+
+[build.processing]
+  skip_processing = false
+
+[build.processing.images]
+  compress = true
+
+[[plugins]]
+  # Installs the Lighthouse Build Plugin for all deploy contexts
+  package = "@netlify/plugin-lighthouse"
+
+[[redirects]]
+  from = "/docs/latest/*"
+  to = "/docs/v1.9/:splat"
+  status = 200
+  force = true
+
+
+[context.production]
+  command = "hugo --minify"
+  environment = { NODE_VERSION = "14.15.3" }
+
+# Use [dev] to set configuration overrides for local
+# development environments run using Netlify Dev - except
+# for environment variables. Environment variables for Netlify
+# Dev should be set under [context.dev.environment] instead.
+[dev]
+  command = "hugo server"
+  port = 8888

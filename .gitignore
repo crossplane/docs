@@ -65,3 +65,5 @@ docs/.DS_Store
 # jekyll_files
 ######################
 jekyll_files/*
+# Local Netlify folder
+.netlify
