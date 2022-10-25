@@ -2,7 +2,6 @@
   base = "/"
   publish = "public/"
   command = "hugo --environment development -D"
-  environment = { NODE_VERSION = "14.15.3" }
 
 [build.processing]
   skip_processing = false
