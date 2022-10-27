@@ -33,5 +33,5 @@ params:
   prodFormLink: "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform"
   infoMailToLink: "mailto:info@crossplane.io"
   upboundGithubLink: "https://github.com/upbound"
-  latest: 1.9
+  latest: "1.10"
   repoLink: "https://github.com/crossplane/crossplane"
