@@ -10,7 +10,7 @@
         Documentation for other releases can be found by using the version selector in the top right of any doc page.
     </strong>
 </div>
-{{- else if lt .Page.Params.version .Site.Params.latest -}}
+{{- else if ne .Page.Params.version .Site.Params.latest -}}
 <div class="alert old">
     <p>
         <b>PLEASE NOTE</b>: This document applies to version {{ .Page.Params.version }} and not to the latest release {{.Site.Params.latest}}
