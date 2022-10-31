@@ -519,7 +519,7 @@ pre > code {
   pointer-events: none;
 }
 #docs-header .versions.latest select {
-  padding-right: 95px;
+  padding-right: 105px;
 }
 .docs-menu {
   min-width: 260px;
