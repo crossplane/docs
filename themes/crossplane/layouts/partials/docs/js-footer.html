@@ -25,7 +25,7 @@
 
 
     {{- range $version_pages -}}
-    {{ if not .Params.toc_hide  }}
+    {{ if not .Params.GeekdocHidden  }}
 
       {{- $page_section := index $page_map .CurrentSection.Permalink -}}
       {{- if ne .Permalink .CurrentSection.Permalink -}}
