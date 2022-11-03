@@ -1,0 +1,55 @@
+{{ $versionList := slice }}
+{{ $majordict := dict }}
+{{ $majorlist := slice }}
+{{ $sorted_list := slice }}
+{{ $cur_ver := .Page.Params.version }}
+
+<!-- get all the versions and break out semver order -->
+{{ range .Site.Sections }}
+    {{ if eq .Page.Params.version "master" }}
+        {{$sorted_list = $sorted_list | append  "master" }}
+    {{ else if ne .Page.Params.version nil }}
+        {{ $splitver := split .Page.Params.version "." }}
+        {{ if eq (len $splitver) 2 }}
+                {{ $verlist := (index $majordict (index $splitver 0)) }}
+                {{ $verlist = $verlist | append (index $splitver 1) }}
+                {{ $majordict = merge $majordict (dict (index $splitver 0) $verlist) }}
+                {{ $majorlist = $majorlist | append (index $splitver 0) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{ range sort ($majorlist | uniq) "value" "desc" }}
+    {{ $majorver := . }}
+    {{ range sort (index $majordict .) "value" "desc"  }}
+        {{$sorted_list = $sorted_list | append  (printf "%s.%s" $majorver .) }}
+    {{ end }}
+{{ end }}
+
+<div class="dropdown float-end">
+    <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ .Page.Params.version }}
+        {{ if eq .Page.Params.version .Site.Params.latest }}
+        <div class="badge rounded-pill latest">Latest</div>
+        {{ end }}
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        {{ $master_url := replaceRE "v[0-9].[0-9]" "master" .Permalink }}
+            {{ range $sorted_list }}
+                {{ range where (where $.Site.Pages "Title" $.Title) ".Page.Params.version" . }}
+                    <a class="dropdown-item {{- if eq .Page.Params.version $cur_ver }} active {{- end}}" aria-current="true" href="{{ .Permalink }}">
+                        {{ if eq .Page.Params.version "master" }}
+                            master
+                        {{ else }}
+                            {{ (printf "v%s" .Page.Params.version) }}
+                        {{ end }}
+                        {{ if eq .Page.Params.version .Site.Params.latest }}
+                        <div class="badge rounded-pill latest">Latest</div>
+                        {{ end }}
+                    </a>
+                {{ end }}
+            {{ end }}
+    </div>
+</div>
+

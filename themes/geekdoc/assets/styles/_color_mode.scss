@@ -1,0 +1,117 @@
+@mixin color_theme_light {
+  --header-background: #{$main-color};
+  --header-font-color: rgba(255,255,255,.85);
+
+  --body-background: #{$body-background};
+  --body-font-color: #{$body-font-color};
+
+  --mark-color: #{$mark-color};
+
+  --button-background: #{lighten($main-color, 2)};
+  --button-border-color: #{$main-color};
+
+  --link-color: #{$link-color};
+  --link-color-visited: #{$link-color-visited};
+
+  --accent-color: #{$gray-200};
+  --accent-color-lite: #{$gray-100};
+
+  --control-icons: #{lighten($body-font-color, 50)};
+
+  --footer-background: #{$second-color};
+  --footer-font-color: #{$white};
+  --footer-link-color: #{$link-color-footer};
+  --footer-link-color-visited: #{$link-color-footer};
+
+  .dark-mode-dim .gdoc-markdown {
+    img {
+      filter: none;
+    }
+  }
+
+  .gdoc-markdown {
+    .gdoc-hint,
+    .gdoc-props__tag,
+    .admonitionblock {
+      filter: none;
+    }
+
+    .gdoc-hint__title,
+    .admonitionblock table td:first-child {
+      background-color: scale-color($gray-600, $alpha: -95%);
+    }
+  }
+}
+
+@mixin color_theme_dark {
+  --header-background: #{$main-color};
+  --header-font-color: #{$white};
+
+  --body-background: #{$body-background-dark};
+  --body-font-color: #{lighten($body-background-dark, 60)};
+
+  --mark-color: #{$mark-color};
+
+  --button-background: #{lighten($main-color, 2)};
+  --button-border-color: #{$main-color};
+
+  --link-color: #{$link-color-dark};
+  --link-color-visited: #{$link-color-visited-dark};
+
+  --accent-color: #{darken($body-background-dark, 4)};
+  --accent-color-lite: #{darken($body-background-dark, 2)};
+
+  --control-icons: #{lighten($body-font-color, 50)};
+
+  --footer-background: #{$second-color};
+  --footer-font-color: #{$white};
+  --footer-link-color: #{$link-color-footer};
+  --footer-link-color-visited: #{$link-color-footer};
+
+  .dark-mode-dim {
+    .gdoc-markdown img {
+      filter: brightness(0.75) grayscale(0.2);
+    }
+  }
+
+  .gdoc-markdown {
+    .gdoc-hint,
+    .gdoc-props__tag,
+    .admonitionblock {
+      filter: saturate(2.5) brightness(0.85);
+    }
+
+    .gdoc-hint__title,
+    .admonitionblock table td:first-child {
+      background-color: scale-color($gray-600, $alpha: -85%);
+    }
+  }
+}
+
+@mixin code_theme_dark {
+  @include chroma_dark;
+
+  --code-background: #{$code-background-dark};
+  --code-accent-color: #{darken($code-background-dark, 4)};
+  --code-accent-color-lite: #{darken($code-background-dark, 2)};
+  --code-font-color: #{$code-font-color-dark};
+
+  --code-copy-background: #{$body-background-dark};
+  --code-copy-font-color: #{lighten($body-font-color, 24)};
+  --code-copy-border-color: #{lighten($body-font-color, 24)};
+  //--code-copy-success-color: #{scale-color(map.get($hint-colors, "ok"), $alpha: -55%)};
+}
+
+@mixin code_theme_light {
+  @include chroma_github;
+
+  --code-background: #{$code-background};
+  --code-accent-color: #{darken($code-background, 6)};
+  --code-accent-color-lite: #{darken($code-background, 2)};
+  --code-font-color: #{$code-font-color};
+
+  --code-copy-background: #{$code-background};
+  --code-copy-font-color: #{lighten($body-font-color, 24)};
+  --code-copy-border-color: #{lighten($body-font-color, 48)};
+  //--code-copy-success-color: #{map.get($hint-colors, "ok")};
+}

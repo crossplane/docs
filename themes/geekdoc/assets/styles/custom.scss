@@ -1,0 +1,26 @@
+@use "sass:map";
+
+@import "_defaults";
+
+// Bootstrap element style overrides
+
+.dropdown-item.active {
+    background-color: rgba(80,90,114,0.1);
+    color: #212529;
+}
+
+.badge.rounded-pill.latest {
+    background-color: $froly;
+}
+
+a.dropdown-item {
+    text-decoration: none;
+    &:visited {
+        color: #212529;
+    }
+}
+
+.btn:hover{
+    text-decoration: none;
+}
+
