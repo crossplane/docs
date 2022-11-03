@@ -1,3 +1,6 @@
+---
+GeekdocHidden: true 
+---
 # Overview
 
 ![Crossplane](media/banner.png)

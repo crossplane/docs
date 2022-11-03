@@ -1,6 +1,6 @@
 ---
 title: Adding Google Cloud Platform (GCP) to Crossplane
-toc_hide: true
+GeekdocHidden: true
 ---
 
 

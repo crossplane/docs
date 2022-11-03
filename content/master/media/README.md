@@ -1,5 +1,5 @@
 ---
-toc_hide: true 
+GeekdocHidden: true 
 ---
 # Crossplane Documentation Media
 

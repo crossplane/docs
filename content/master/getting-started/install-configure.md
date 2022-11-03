@@ -192,7 +192,7 @@ provider that can satisfy a `PostgreSQLInstance`. Let's get started!
 > section.
 
 ```bash
-kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws:latest
+kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws:v1.10.1
 ```
 
 Wait until all packages become healthy:
@@ -233,7 +233,7 @@ spec:
       key: creds
 ```
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/configure/aws/providerconfig.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/configure/aws/providerconfig.yaml
 ```
 <!-- close "AWS (Default VPC)" -->
 {{% /tab %}}
@@ -288,7 +288,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/configure/aws/providerconfig.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/configure/aws/providerconfig.yaml
 ```
 <!-- close "AWS (New VPC)" -->
 {{% /tab %}}
@@ -414,7 +414,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/configure/azure/providerconfig.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/configure/azure/providerconfig.yaml
 ```
 <!-- close "Azure" -->
 {{% /tab %}}
@@ -437,7 +437,7 @@ Universal Crossplane, or UXP for short, connects to Upbound's hosted management
 console and Registry to make it easier to develop, debug, and manage Provider
 and Configuration packages.
 
-[Get started with Universal Crossplane] on the Upbound Documentation site.
+[Get started with Universal Crossplane](https://docs.upbound.io/uxp/install) on the Upbound Documentation site.
 
 <i>Want see another hosted Crossplane service listed? Please [reach out on
 Slack][Slack] and our community will highlight it here!</i>
@@ -477,6 +477,5 @@ Slack][Slack] and our community will highlight it here!</i>
 [Upbound documentation]: https://https://docs.upbound.io//docs
 [Providers]: {{<ref "../concepts/providers" >}}
 [Universal Crossplane]: https://https://docs.upbound.io/uxp/
-[Get started with Universal Crossplane]: https://docs.upbound.io/uxp/install
 [certified by the CNCF]: https://github.com/cncf/crossplane-conformance
 [Crossplane GitHub]: https://github.com/crossplane/crossplane
