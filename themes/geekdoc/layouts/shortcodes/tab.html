@@ -1,12 +1,11 @@
-{{ if .Parent }}
-  {{ $name := .Get 0 }}
-  {{ $group := printf "tabs-%s" (.Parent.Get 0) }}
+<!-- 2000 is the maxium Hugo seq length -->
+{{ $id := index (seq 2000 | shuffle) 0 }}
+{{ .Parent.Scratch.Add "ids" (slice $id) }}
+{{ .Parent.Scratch.Add "names" (slice (.Get 0)) }}
 
-  {{ if not (.Parent.Scratch.Get $group) }}
-    {{ .Parent.Scratch.Set $group slice }}
-  {{ end }}
-
-  {{ .Parent.Scratch.Add $group (dict "Name" $name "Content" .Inner) }}
-{{ else }}
-  {{ errorf "%q: 'tab' shortcode must be inside 'tabs' shortcode" .Page.Path }}
-{{ end }}
+<div
+class="tab-pane fade {{if eq .Ordinal 0 }}active{{end}}"
+id="tab-pane-{{$id}}"
+role="tabpanel"
+aria-labelledby="tab-{{$id}}"
+tabindex="0">{{ .Inner | markdownify }}</div>
