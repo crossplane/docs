@@ -40,6 +40,7 @@ module:
       - "**/**.gif"
 
 params:
+  latest: "1.10"
   upboundLink: "https://www.upbound.io/"
   slackLink: "https://slack.crossplane.io/"
   githubLink: "https://github.com/crossplane/crossplane"
@@ -53,7 +54,7 @@ params:
   prodFormLink: "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform"
   infoMailToLink: "mailto:info@crossplane.io"
   upboundGithubLink: "https://github.com/upbound"
-  latest: "1.9"
+
   repoLink: "https://github.com/crossplane/crossplane"
 
   geekdocToC: 3
