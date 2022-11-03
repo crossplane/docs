@@ -126,9 +126,6 @@ a {
     text-decoration: underline;
   }
 
-  &:visited {
-    color: var(--link-color-visited);
-  }
 }
 
 i.gdoc-icon {
@@ -370,10 +367,6 @@ svg.gdoc-icon {
         text-decoration: none;
       }
     }
-
-    &:visited {
-      color: var(--body-font-color);
-    }
   }
 
 }
@@ -386,9 +379,6 @@ svg.gdoc-icon {
   flex: 1;
   color: $body-font-color;
 
-  &:visited {
-    color: var(--body-font-color);
-  }
 }
 
 .gdoc-search__list,
@@ -448,6 +438,7 @@ svg.gdoc-icon {
   }
 
   &__anchorwrap {
+    padding-top: 20px;
     &:hover .gdoc-page__anchor svg.gdoc-icon {
       color: var(--control-icons);
     }
@@ -552,6 +543,7 @@ svg.gdoc-icon {
   &__codecontainer {
     position: relative;
 
+
     &:hover > .gdoc-post__codecopy {
       visibility: visible;
     }
@@ -609,9 +601,6 @@ svg.gdoc-icon {
   &__link {
     color: var(--footer-link-color);
 
-    &:visited {
-      color: var(--footer-link-color-visited);
-    }
   }
 }
 
@@ -793,4 +782,8 @@ svg.gdoc-icon {
   li {
     display: inline;
   }
+}
+
+.tab-pane > p{
+  padding-top: 20px;
 }

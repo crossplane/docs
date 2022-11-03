@@ -24,3 +24,12 @@ a.dropdown-item {
     text-decoration: none;
 }
 
+.nav-link {
+    color: var(--body-font-color);
+}
+
+.nav-link:not(:active){
+    isolation: isolate;
+    border-color: var(--bs-nav-tabs-link-hover-border-color);
+}
+
