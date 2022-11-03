@@ -28,8 +28,15 @@ a.dropdown-item {
     color: var(--body-font-color);
 }
 
+.nav-link.active{
+    color: $froly !important;
+}
+
 .nav-link:not(:active){
     isolation: isolate;
     border-color: var(--bs-nav-tabs-link-hover-border-color);
+    &:hover{
+        color: $aquarius;
+    }
 }
 
