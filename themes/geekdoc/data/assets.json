@@ -1,12 +1,12 @@
 {
   "main.js": {
-    "src": "js/main-0cd9f9c4.bundle.min.js"
+    "src": "js/main-8b99a260.bundle.min.js"
   },
   "lightbox.js": {
     "src": "js/lightbox-e5fd125f.bundle.min.js"
   },
-  "main-0cd9f9c4.bundle.min.js.map": {
-    "src": "js/main-0cd9f9c4.bundle.min.js.map"
+  "main-8b99a260.bundle.min.js.map": {
+    "src": "js/main-8b99a260.bundle.min.js.map"
   },
   "lightbox-e5fd125f.bundle.min.js.map": {
     "src": "js/lightbox-e5fd125f.bundle.min.js.map"

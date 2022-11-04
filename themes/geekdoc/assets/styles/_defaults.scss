@@ -51,10 +51,11 @@ $body-font-weight: normal !default;
 $body-min-width: 20rem !default;
 
 $code-font-color: rgba(95, 95, 95, 1) !default;
-$code-font-color-dark: rgba(185, 185, 185, 1) !default;
+$code-font-color-dark: rgb(234, 217, 190) !default;
 
-$body-background-dark: $gray-800 !default;
-$body-font-color-dark: $gray-100 !default;
+$body-background-dark: #1F2937 !default; //$gray-800 !default;  //#343a40
+$body-font-color-dark: #FAFAFA !default; //gray-100 !default;  //#f8f9fa
+
 
 $container-max-width: 80rem !default;
 
@@ -63,11 +64,11 @@ $second-color: rgba(47, 51, 62, 1) !default;
 $mark-color: rgba(255, 171, 0, 1) !default;
 
 $body-background-dark: mix(invert($body-background, 75%), $second-color) !default;
-$link-color-dark: rgba(110, 168, 212, 1) !default;
+$link-color-dark: #8bcbe6 !default;
 $link-color-visited-dark: rgb(186, 142, 240) !default;
 
 $code-background: lighten($gray-200, 4) !default;
-$code-background-dark: darken($body-background-dark, 2) !default;
+$code-background-dark: #46494f !default; //#31353b; //darken($body-background-dark, 2) !default;
 
 $header-height: 3.5rem !default;
 $menu-width: 16rem !default;

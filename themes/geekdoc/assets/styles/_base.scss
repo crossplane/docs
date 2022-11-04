@@ -37,11 +37,7 @@ html {
 
   &.color-toggle-hidden {
     #gdoc-color-theme {
-      .gdoc_brightness_auto,
-      .gdoc_brightness_dark,
-      .gdoc_brightness_light {
-        display: none;
-      }
+      display: none;
     }
   }
 
@@ -188,7 +184,6 @@ svg.gdoc-icon {
     font-size: 17px;
     font-weight: 400;
     text-align: center;
-    color: #fff;
     opacity: .85;
     letter-spacing: 1.1px;
     padding-left: 16px;
@@ -339,7 +334,7 @@ svg.gdoc-icon {
 
 .gdoc-nav__list > li > label.nav-label{
   flex: 1;
-  color: $body-font-color;
+  color: var(--body-font-color);
 
   padding-left: 10px;
   border-left-width: 3px;
@@ -350,17 +345,17 @@ svg.gdoc-icon {
   &:hover,
   &.nav-active{
     flex: 1;
-    color: $body-font-color;
+    color: var(--body-font-color);
     padding-left: 10px;
     border-left-width: 3px;
     border-left-style: solid;
-    border-left-color: $brightSun;
-    background-color: rgba($slate, .1);
+    border-left-color: var(--nav-left-color);
+    background-color: var(--nav-highlight-color);
 
     & a {
       background-color: transparent;
       border-left-color: transparent;
-      color: $body-font-color;
+      color: var(--body-font-color);
 
       &:hover {
         text-decoration: none;
@@ -376,7 +371,7 @@ svg.gdoc-icon {
 .gdoc-search__entry,
 .gdoc-language__entry {
   flex: 1;
-  color: $body-font-color;
+  color: var(--body-font-color);
 
 }
 
