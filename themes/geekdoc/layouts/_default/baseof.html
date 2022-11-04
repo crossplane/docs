@@ -24,9 +24,6 @@
   </head>
 
   <body itemscope itemtype="https://schema.org/WebPage">
-    {{ partial "svg-icon-symbols" . }}
-
-
     <div
       class="wrapper {{ if default false .Site.Params.GeekdocDarkModeDim }}dark-mode-dim{{ end }}"
     >
@@ -58,6 +55,7 @@
     </div>
 
     {{ partial "foot" . }}
+    {{ partial "svg-icon-symbols" . }}
     <script src="/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
