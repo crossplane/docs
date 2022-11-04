@@ -15,7 +15,7 @@
 
 [[redirects]]
 from = "/latest"
-to = "/1.10"
+to = "/v1.10"
 status: 302
 
 [context.production]
