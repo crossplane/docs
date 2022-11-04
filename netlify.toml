@@ -16,7 +16,7 @@
 [[redirects]]
 from = "/latest"
 to = "/v1.10"
-status: 302
+status = 302
 
 [context.production]
     command = "hugo --minify"
