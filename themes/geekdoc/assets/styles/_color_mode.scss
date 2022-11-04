@@ -99,7 +99,7 @@
   --code-copy-background: #{$body-background-dark};
   --code-copy-font-color: #{lighten($body-font-color, 24)};
   --code-copy-border-color: #{lighten($body-font-color, 24)};
-  //--code-copy-success-color: #{scale-color(map.get($hint-colors, "ok"), $alpha: -55%)};
+  --code-copy-success-color: rgba(0, 200, 83, .5); //#{scale-color(map.get($hint-colors, "ok"), $alpha: -55%)};
 }
 
 @mixin code_theme_light {
@@ -113,5 +113,5 @@
   --code-copy-background: #{$code-background};
   --code-copy-font-color: #{lighten($body-font-color, 24)};
   --code-copy-border-color: #{lighten($body-font-color, 48)};
-  //--code-copy-success-color: #{map.get($hint-colors, "ok")};
+  --code-copy-success-color: rgba(0, 200, 83, 1); //#{map.get($hint-colors, "ok")};
 }
