@@ -13,6 +13,10 @@
     # Installs the Lighthouse Build Plugin for all deploy contexts
     package = "@netlify/plugin-lighthouse"
 
+[[redirects]]
+from = "/latest"
+to = "/1.10"
+status: 302
 
 [context.production]
     command = "hugo --minify"
