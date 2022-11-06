@@ -1,6 +1,5 @@
 <header class="gdoc-header">
   <div class="container flex align-center justify-between">
-    {{ if .MenuEnabled }}
       <label for="menu-control" class="gdoc-nav__control" tabindex="0">
         <svg class="gdoc-icon gdoc_menu" viewBox="-7.27 -7.27 46.55 46.55" id="gdoc_menu" xmlns="http://www.w3.org/2000/svg"><path d="M.001 5.334h31.998v3.583H.001V5.334zm0 12.416v-3.5h31.998v3.5H.001zm0 8.916v-3.583h31.998v3.583H.001z"/>
           <title>{{ i18n "button_nav_open" }}</title>
@@ -9,7 +8,6 @@
           <title>{{ i18n "button_nav_close" }}</title>
         </svg>
       </label>
-    {{ end }}
     <div class="flex">
       <a class="gdoc-brand gdoc-header__link" href="{{ .Root.Site.BaseURL }}">
         <span class="align-center">
@@ -28,54 +26,21 @@
       </a>
     </div>
 
-    <div class="block">
+    <div class="flex header-links">
       <a class="gdoc-header__link" target="_self" href="/why-control-planes">Why Control Planes?</a>
       <a class="gdoc-header__link" target="_self" href="https://crossplane.io/docs">Documentation</a>
       <a class="gdoc-header__link" target="_self" href="/community">Community</a>
       <a class="gdoc-header__link" target="_blank" href="https://blog.crossplane.io/">Blog</a>
   </div>
 
-    <div class="gdoc-menu-header">
-
-      <span class="gdoc-menu-header__items">
-        {{ if .Root.Site.Data.menu.extra.header }}
-          {{ partial "menu-extra" (dict "current" .Root "source" .Root.Site.Data.menu.extra.header "target" "header") }}
-        {{ end }}
-
-
-        <span id="gdoc-color-theme">
-          <svg class="gdoc-icon gdoc_brightness_dark">
-            <title>{{ i18n "button_toggle_dark" }}</title>
-            <use xlink:href="#gdoc_brightness_dark"></use>
-          </svg>
-          <svg class="gdoc-icon gdoc_brightness_light">
-            <title>{{ i18n "button_toggle_dark" }}</title>
-            <use xlink:href="#gdoc_brightness_light"></use>
-          </svg>
-          <svg class="gdoc-icon gdoc_brightness_auto">
-            <title>{{ i18n "button_toggle_dark" }}</title>
-            <use xlink:href="#gdoc_brightness_auto"></use>
-          </svg>
-        </span>
-
-        {{ partial "language" .Root }}
-
-
-        <span class="gdoc-menu-header__control">
-          <label for="menu-header-control">
-            <svg class="gdoc-icon gdoc_keyboard_arrow_right">
-              <use xlink:href="#gdoc_keyboard_arrow_right"></use>
-              <title>{{ i18n "button_menu_close" }}</title>
-            </svg>
-          </label>
-        </span>
-      </span>
-      <label for="menu-header-control" class="gdoc-menu-header__control">
-        <svg class="gdoc-icon gdoc_keyboard_arrow_left">
-          <use xlink:href="#gdoc_keyboard_arrow_left"></use>
-          <title>{{ i18n "button_menu_open" }}</title>
-        </svg>
-      </label>
+  <div class="flex color-switcher">
+    <div class=" form-check form-switch" >
+      <input type="checkbox" class="form-check-input" id="darkSwitch" />
+      <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
     </div>
   </div>
+  {{ $colorMode := resources.Get (index .Root.Site.Data.assets "colorMode.js" "src") }}
+  <script src="{{ $colorMode.Permalink }}"></script>
+
+
 </header>

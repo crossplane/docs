@@ -4,5 +4,9 @@
 {{- $searchConfig.Publish -}}
 
 <script defer src="{{ $search.Permalink }}" ></script>
+
 {{- $mainmap := resources.Get (printf "%s.map" (index (index .Site.Data.assets "main.js") "src")) -}}
 {{- $mainmap.Publish -}}
+
+{{- $colorModemap := resources.Get (printf "%s.map" (index (index .Site.Data.assets "colorMode.js") "src")) -}}
+{{- $colorModemap.Publish -}}

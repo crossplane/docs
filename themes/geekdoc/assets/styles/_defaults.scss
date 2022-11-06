@@ -63,12 +63,11 @@ $main-color: rgba(24, 61, 84, 1) !default;
 $second-color: rgba(47, 51, 62, 1) !default;
 $mark-color: rgba(255, 171, 0, 1) !default;
 
-$body-background-dark: mix(invert($body-background, 75%), $second-color) !default;
 $link-color-dark: #8bcbe6 !default;
 $link-color-visited-dark: rgb(186, 142, 240) !default;
 
 $code-background: lighten($gray-200, 4) !default;
-$code-background-dark: #46494f !default; //#31353b; //darken($body-background-dark, 2) !default;
+$code-background-dark: #1c2431 !default; //#31353b; //darken($body-background-dark, 2) !default;
 
 $header-height: 3.5rem !default;
 $menu-width: 16rem !default;

@@ -600,11 +600,15 @@ svg.gdoc-icon {
 
 .gdoc-search {
   position: relative;
+  box-shadow: 0.2px 0.3px 0.3px hsl(0deg, 0%, 0% / 0.50);
+  &:hover{
+    box-shadow: 0.5px 1.0px 1.0px hsl(0deg, 0%, 0% / 0.49);
+  }
 
   svg.gdoc-icon {
     position: absolute;
     left: $padding-8;
-    color: var(--control-icons);
+    color: $gray-700;
     width: $font-size-16;
     height: $font-size-16;
   }

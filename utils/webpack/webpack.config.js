@@ -8,6 +8,7 @@ const config = {
     main: [path.resolve("src", "js", "app.js"),
     path.resolve("src", "js", "search.js")
     ],
+    colorMode: [path.resolve("src", "js", "colorMode.js")],
     lightbox: [path.resolve("src", "js", "lightbox.js")]
   },
   output: {
