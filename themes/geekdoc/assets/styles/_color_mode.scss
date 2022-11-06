@@ -131,6 +131,11 @@
   --code-copy-font-color: #{lighten($body-font-color, 24)};
   --code-copy-border-color: #{lighten($body-font-color, 24)};
   --code-copy-success-color: rgba(0, 200, 83, .5); //#{scale-color(map.get($hint-colors, "ok"), $alpha: -55%)};
+  code:not(pre>code), p > code{
+
+    background-color: #3D4856; //var(--nav-highlight-color);
+    color: #{$gray-100};
+  }
 }
 
 @mixin code_theme_light {
