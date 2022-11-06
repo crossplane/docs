@@ -5,9 +5,12 @@
 
 // Bootstrap element style overrides
 
-// Color of the "Latest" tag in the dropdown menu
+// Settings of the "Latest" tag in the dropdown menu
 .badge.rounded-pill.latest {
     background-color: var(--latest-background);
+    color: #141414;
+    letter-spacing: .7px;
+    font-weight: 500;
 }
 
 // Elements in the version dropdown
