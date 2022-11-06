@@ -139,14 +139,14 @@
   --code-background: #{$code-background-dark};
   --code-accent-color: #{darken($code-background-dark, 4)};
   --code-accent-color-lite: #{darken($code-background-dark, 2)};
-  --code-font-color: #414E5D;
+  --code-font-color: #{$slate};
 
   --code-copy-background: #{$body-background-dark};
   --code-copy-font-color: #{lighten($body-font-color, 24)};
   --code-copy-border-color: #{lighten($body-font-color, 24)};
   --code-copy-success-color: rgba(0, 200, 83, .5);
 
-  code:not(pre>code){
+  code:not(pre>code), p > code{
     background-color: #{$gray-200};
     color: #{$slate};
   }

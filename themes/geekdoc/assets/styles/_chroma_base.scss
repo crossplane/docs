@@ -1,6 +1,6 @@
 @mixin chroma_base {
   .chroma {
-    color: var(--code-font-color);
+    color: #{$gray-100};;
   }
   .chroma .lntable td:nth-child(2) code .hl {
     width: auto;
