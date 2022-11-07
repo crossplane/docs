@@ -601,6 +601,16 @@ svg.gdoc-icon {
 .gdoc-search {
   position: relative;
   box-shadow: 0.2px 0.3px 0.3px hsl(0deg, 0%, 0% / 0.50);
+
+  input, ::placeholder{
+    background-color: #{$gray-700};
+    color: #bcbcba;
+  }
+
+  svg{
+    filter: brightness(4);
+  }
+
   &:hover{
     box-shadow: 0.5px 1.0px 1.0px hsl(0deg, 0%, 0% / 0.49);
   }
