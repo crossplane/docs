@@ -1,0 +1,102 @@
+{{ $current := . }}
+{{ $version_section := (where .Site.Sections ".Page.Params.version" .Page.Params.version) }}
+
+
+
+<nav class="bd-links w-100 pt-3" aria-label="Docs navigation">
+
+  {{ partial "search" . }}
+
+  <ul class="bd-links-nav list-unstyled">
+    {{ template "tree-nav" dict "sect" $version_section "current" $current "root_page" (index $version_section 0)}}
+  </ul>
+</nav>
+
+<!-- templates -->
+{{ define "tree-nav" }}
+  {{ $current := .current }}
+  {{ $root_page := .root_page }}
+
+  {{ $sortBy := (default "title" .current.Site.Params.GeekdocFileTreeSortBy | lower) }}
+  {{ range .sect.GroupBy "Weight" }}
+    {{ $rangeBy := .ByTitle }}
+
+    {{ if eq $sortBy "title" }}
+      {{ $rangeBy = .ByTitle }}
+    {{ else if eq $sortBy "linktitle" }}
+      {{ $rangeBy = .ByLinkTitle }}
+    {{ else if eq $sortBy "date" }}
+      {{ $rangeBy = .ByDate }}
+    {{ else if eq $sortBy "publishdate" }}
+      {{ $rangeBy = .ByPublishDate }}
+    {{ else if eq $sortBy "expirydate" }}
+      {{ $rangeBy = .ByExpiryDate }}
+    {{ else if eq $sortBy "lastmod" }}
+      {{ $rangeBy = .ByLastmod }}
+    {{ else if eq $sortBy "title_reverse" }}
+      {{ $rangeBy = .ByTitle.Reverse }}
+    {{ else if eq $sortBy "linktitle_reverse" }}
+      {{ $rangeBy = .ByLinkTitle.Reverse }}
+    {{ else if eq $sortBy "date_reverse" }}
+      {{ $rangeBy = .ByDate.Reverse }}
+    {{ else if eq $sortBy "publishdate_reverse" }}
+      {{ $rangeBy = .ByPublishDate.Reverse }}
+    {{ else if eq $sortBy "expirydate_reverse" }}
+      {{ $rangeBy = .ByExpiryDate.Reverse }}
+    {{ else if eq $sortBy "lastmod_reverse" }}
+      {{ $rangeBy = .ByLastmod.Reverse }}
+    {{ end }}
+
+    {{ range $rangeBy }}
+      {{ if not .Params.GeekdocHidden  }}
+        {{ $numberOfPages := (add (len .Pages) (len .Sections)) }}
+        {{ $isParent := and (ne $numberOfPages 0) (not .Params.GeekdocFlatSection) }}
+        {{ $isCurrent := eq $current . }}
+        {{ $isAncestor := .IsAncestor $current }}
+        {{ $id := substr (sha1 .Permalink) 0 8 }}
+        {{ $doCollapse :=  $isParent }}
+
+        {{ if $isParent }}
+          <li class="bd-links-group nav-item">
+        {{ end }}
+            <input
+              type="checkbox"
+              class="bd-sidebar-toggle"
+              {{ if $doCollapse }}
+                id="{{ printf "navtree-%s" $id }}"
+                {{ if or $isCurrent $isAncestor }}checked{{ end }}
+              {{ else }}
+                class="hidden"
+              {{ end }}
+            />
+            <div class="pt-1"></div>
+            <label
+                for="{{ printf "navtree-%s" $id }}" class="d-flex nav-label {{- if eq . $current  }}
+                {{- printf " nav-active" }}
+                {{- else }}
+                {{- printf " nav-inactive" }}
+                {{- end }}"
+            >
+              <div class="w-100">
+                <a href="{{ .RelPermalink }}" class="bd-links-link flex">{{ .Title }}</a>
+              </div>
+              {{ if $doCollapse }}
+                <div class="flex-shrink-1 align-self-center bd-svg bi">
+                  <svg class="me-2 gdoc-icon toggle gdoc_keyboard_arrow_left" ><use xlink:href="#plus"></use></svg>
+                  <svg class="me-2 gdoc-icon toggle gdoc_keyboard_arrow_down"><use xlink:href="#x"></use></svg>
+                </div>
+              {{ end }}
+            </label>
+            {{ if $isParent }}
+            <ul class="list-unstyled flex-column ps-2">
+            {{ end }}
+              {{ template "tree-nav" dict "sect" .Pages "current" $current "root_page" $root_page}}
+            {{ if $isParent }}
+              </ul>
+            {{ end }}
+          </li>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+

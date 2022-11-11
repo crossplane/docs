@@ -1,0 +1,152 @@
+.bd-navbar {
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15), inset 0 -1px 0 rgba(0, 0, 0, .15);
+  height: 72px;
+  background: $navbar-background-color;
+
+  @media (min-width: 993px) and (max-width: 1090px){
+    // .vr {
+    //   visibility: hidden;
+    // }
+
+
+    .icons {
+      white-space: nowrap;
+      flex-direction: column;
+      padding-right: 0 !important;
+
+        .slack-icon,
+        .github-icon {
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+        }
+        // .form-check-input {
+        //   padding-bottom: 2px;
+        // }
+
+        // .form-check-label {
+        //   padding-right: 0px !important;
+        //   padding-left: 0px !important;
+        // }
+      }
+
+
+
+    .color-switcher {
+      .form-check {
+        white-space: nowrap;
+        flex-direction: column;
+        padding-right: 0 !important;
+
+        .form-check-input {
+          padding-bottom: 2px;
+        }
+
+        .form-check-label {
+          padding-right: 0px !important;
+          padding-left: 0px !important;
+        }
+      }
+    }
+  }
+
+
+  .form-check-input,
+  .form-switch,
+  .form-check{
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .container-xxl {
+    max-width: none;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .bd-navbar-toggle {
+    @include media-breakpoint-down(lg) {
+      width: 4.25rem;
+    }
+  }
+
+  .navbar-toggler {
+    padding: 0;
+    margin-right: -.5rem;
+    border: 0;
+
+    &:first-child {
+      margin-left: -.5rem;
+    }
+
+    .bi {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .navbar-brand {
+    transition: .2s ease-in-out transform; // stylelint-disable-line property-disallowed-list
+    padding: 16px;
+    img {
+      color:transparent;
+      width:152px;
+      height:auto;
+    }
+  }
+
+  .navbar-toggler,
+  .nav-link {
+    // padding-right: $spacer * .25;
+    // padding-left: $spacer * .25;
+    color: rgba($white, .85);
+
+    &:hover,
+    &:focus {
+      color: $white;
+    }
+
+    &.active {
+      font-weight: 600;
+      color: $white;
+    }
+  }
+
+  .navbar-nav-svg {
+    display: inline-block;
+    vertical-align: -.125rem;
+  }
+
+  .offcanvas-title {
+    color: $navbar-link-color;
+    font-size: 24px;
+  }
+
+  .offcanvas-lg {
+    border-left: 0;
+    background: $navbar-background-color;
+
+    @include media-breakpoint-down(lg) {
+      box-shadow: $box-shadow-lg;
+    }
+  }
+
+  .navbar-link {
+    color: $navbar-link-color;
+    font-size: $navbar-link-font-size;
+    opacity: .85;
+    letter-spacing: 1.1px;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 1.5;
+      text-decoration: none;
+      color: $navbar-link-color-hover;
+    }
+  }
+}

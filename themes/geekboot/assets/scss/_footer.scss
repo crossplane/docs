@@ -1,0 +1,42 @@
+//
+// Footer
+//
+
+.bd-footer {
+  background: $navbar-background-color;
+
+  p {
+    color: $footer-text-color;
+    margin-bottom: $footer-link-font-size;
+
+    a {
+      color: $turquoise;
+    }
+  }
+
+  .footer-link {
+    color: $footer-link-color;
+    font-size: $footer-link-font-size;
+    opacity: .85;
+    letter-spacing: 1.1px;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 1.5;
+      color: $footer-link-color;
+    }
+  }
+
+  .crossplane-footer {
+    color: transparent;
+    width: 152px;
+    height: auto;
+  }
+
+  .cncf-footer {
+    color: transparent;
+    width: 233px;
+    height: auto;
+    margin-bottom: 24px;
+  }
+}

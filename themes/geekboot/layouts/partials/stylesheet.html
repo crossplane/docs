@@ -1,0 +1,44 @@
+<script>
+(() => {
+  var darkThemeSelected =
+    localStorage.getItem("darkSwitch") !== null &&
+    localStorage.getItem("darkSwitch") === "dark";
+  darkThemeSelected
+    ? document.documentElement.setAttribute("color-theme", "dark")
+    : document.documentElement.removeAttribute("color-theme");
+})();
+</script>
+
+<!-- {{- $sassOptions := dict "outputStyle" "expanded" "precision" 6 -}}
+{{- $postcssOptions := dict "use" "autoprefixer" "noMap" true -}}
+{{- $colormode := resources.Get "scss/color-modes.scss" | toCSS $sassOptions | postCSS $postcssOptions }} -->
+
+<!-- <link rel="stylesheet" href="{{$colormode.Permalink}}" /> -->
+
+{{ if eq hugo.Environment "production" -}}
+  <link href="/dist/css/bootstrap.min.css" rel="stylesheet" {{ printf "integrity=%q" .Site.Params.cdn.css_hash | safeHTMLAttr }} crossorigin="anonymous">
+{{- else -}}
+  <link href="/dist/css/bootstrap.css" rel="stylesheet">
+{{- end }}
+
+
+{{- $targetDocsCssPath := "assets/css/docs.css" -}}
+
+
+{{ if eq hugo.Environment "production" -}}
+  {{- $sassOptions = merge $sassOptions (dict "outputStyle" "compressed") -}}
+{{- end -}}
+
+{{- $style := resources.Get "scss/docs.scss" | toCSS $sassOptions | postCSS $postcssOptions }}
+
+
+
+
+<!-- The main stylesheet -->
+<link rel="stylesheet" href="{{$style.Permalink}}" />
+
+
+
+
+
+

@@ -1,0 +1,14 @@
+{
+  "colorMode.js": {
+    "src": "js/colorMode-8e6ac1ad.bundle.min.js"
+  },
+  "lightbox.js": {
+    "src": "js/lightbox-e5fd125f.bundle.min.js"
+  },
+  "colorMode-8e6ac1ad.bundle.min.js.map": {
+    "src": "js/colorMode-8e6ac1ad.bundle.min.js.map"
+  },
+  "lightbox-e5fd125f.bundle.min.js.map": {
+    "src": "js/lightbox-e5fd125f.bundle.min.js.map"
+  }
+}

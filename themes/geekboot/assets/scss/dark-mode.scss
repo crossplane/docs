@@ -1,0 +1,32 @@
+@mixin dark-mode {
+    // body and content
+    --body-background: #1F2937;
+    --body-font-color: #FAFAFA;
+    --content-link-color: #8bcbe6;
+    --anchor-link-color: #{darken(#FAFAFA, 25)};
+
+    // Single code lines inside text. Code blocks are in _code_theme_dark.scss
+    --code-background: #3D4856;
+    --code-color: #f8f9fa;
+
+    //Tabs
+    --nav-tab-background-color: var(--body-background);
+    --active-tab-color: #ffcd3c;
+    --inactive-tab-hover-color: #37ccb7;
+
+    // Sidebar nav
+    --nav-highlight-color: #2e3d52;
+
+    //Version dropdown
+    --dropdown-highlight: var(--nav-highlight-color);
+    --dropdown-background: var(--body-background);
+    --latest-pill-background: #f3807b;
+    --latest-pill-color: #141414;
+    --dropdown-color: var(--body-font-color);
+    --dropdown-border-color: #{lighten(#FAFAFA, 50)};
+
+    //Right-side table of contents
+    --toc-font-color: #{darken(#FAFAFA, 15)};
+    --toc-mobile-menu-outline: #ffcd3c;
+    --toc-mobile-menu-background: #2e3d52;
+}

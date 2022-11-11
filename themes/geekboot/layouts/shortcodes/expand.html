@@ -1,0 +1,32 @@
+<!-- TODO -->
+
+
+<!--
+{{ $id := substr (sha1 .Inner) 0 8 }}
+
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button bd-accordion btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        {{ default "Expand" (.Get 0) }}
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        {{ .Inner | $.Page.RenderString }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ <div class="gdoc-expand">
+  <label class="gdoc-expand__head flex justify-between" for="{{ $id }}-{{ .Ordinal }}">
+    <span>{{ default "Expand" (.Get 0) }}</span>
+    <span>{{ default "↕" (.Get 1) }}</span>
+  </label>
+  <input id="{{ $id }}-{{ .Ordinal }}" type="checkbox" class="gdoc-expand__control hidden" />
+  <div class="gdoc-markdown--nested gdoc-expand__content">
+    {{ .Inner | $.Page.RenderString }}
+  </div>
+</div> -->

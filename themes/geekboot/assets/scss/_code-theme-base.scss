@@ -1,0 +1,47 @@
+@mixin code-theme-base {
+
+  //.chroma is applied to the entire code block div and the line number and
+  // code pre elements.
+  .chroma {
+    font-size: .95rem !important;
+    line-height: 1.45em;
+    margin-bottom: .5rem;
+
+    // Applied to the top-level table
+    .lntable {
+      border-spacing: 0;
+      width: 100%;
+      display: block;
+      overflow: auto;
+
+      // Apply to both line numbers and code lines
+      code {
+        display: block;
+        color: #f8f9fa;
+      }
+
+      // Line numbers
+      td:first-child {
+
+        a:hover{
+          text-decoration: none !important;
+        }
+
+        code {
+          padding-right: 0px;
+          margin-right: 5px;
+          background-color: var(--code-line-numbers-background-color);
+        }
+
+      }
+
+      td:nth-child(2) {
+        code {
+          background-color: var(--code-box-background-color);
+          padding-left: 1rem;
+        }
+      }
+    }
+  }
+}
+

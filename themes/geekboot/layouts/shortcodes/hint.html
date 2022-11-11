@@ -1,0 +1,14 @@
+{{- /*
+  Usage: `callout "type"`, where `type` is one of info (default), danger, or warning
+*/ -}}
+
+{{- $css_class := .Get 0 | default "info" -}}
+
+<div class="bd-callout bd-callout-info d-flex flex-column w-75">
+  <div class="bd-title fs-5 fw-bold border-bottom border-info w-25">
+    <svg class="bi flex-shrink-0" role="img" aria-label="Info:"><use xlink:href="#{{ $css_class }}"/></svg>
+  </div>
+  <div class="bd-content mt-3">
+    {{ .Inner}}
+  </div>
+</div>

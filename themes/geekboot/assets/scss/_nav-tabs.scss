@@ -1,0 +1,32 @@
+.nav-tabs {
+
+    padding-left: 2rem;
+
+    li {
+        margin-bottom: 0 !important;
+    }
+
+   .nav-link {
+        color: var(--body-font-color);
+    }
+
+    .nav-link.active {
+        background-color: var(--nav-tab-background-color) !important;
+        color: var(--active-tab-color) !important;
+        border-bottom-color: var(--body-background) !important;
+        text-align: left;
+        &:hover{
+            color: var(--active-tab-color) !important;
+        }
+    }
+
+    .nav-link:not(:active){
+        isolation: isolate;
+        // maintain the default border color
+        border-color: var(--bs-nav-tabs-link-hover-border-color);
+        &:hover{
+            color: var(--inactive-tab-hover-color);
+        }
+    }
+
+}

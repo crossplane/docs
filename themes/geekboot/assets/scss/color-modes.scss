@@ -1,0 +1,61 @@
+:root {
+  color-scheme: light dark;
+}
+
+:root[color-theme="light"] {
+  @import "code-theme-base";
+  @import "light-mode";
+  @import "code-theme-light";
+
+  @include code-theme-base;
+  @include light-mode;
+  @include code-theme-light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @import "code-theme-base";
+    @import "light-mode";
+    @import "code-theme-light";
+
+    @include code-theme-base;
+    @include light-mode;
+    @include code-theme-light
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @import "code-theme-base";
+    @import "dark-mode";
+    @import "code-theme-dark";
+
+    @include code-theme-base;
+    @include dark-mode;
+    @include code-theme-dark;
+  }
+}
+
+:root[color-theme="dark"] {
+    @import "code-theme-base";
+    @import "dark-mode";
+    @import "code-theme-dark";
+
+    @include code-theme-base;
+    @include dark-mode;
+    @include code-theme-dark;
+}
+
+
+body{
+  --duration: 0.5s;
+  --timing: ease;
+
+  background: var(--body-background);
+  color: var(--body-font-color);
+
+  transition: color var(--duration) var(--timing), background-color var(
+      --duration
+  ) var(--timing);
+}

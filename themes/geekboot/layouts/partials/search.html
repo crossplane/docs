@@ -1,0 +1,34 @@
+<!-- search is temporarily turned off -->
+<div class="container search invisible d-flex shadow mb-3">
+    <div class="bg-transparent">
+        <svg class="bi"><use xlink:href="#search"></use></svg>
+    </div>
+    <div class="bg-transparent">
+        <input
+            type="text"
+            id="gdoc-search-input"
+            class=""
+            placeholder="Search"
+            aria-label="Search"
+            maxlength="64"
+            data-site-base-url="{{ .Site.BaseURL }}"
+            data-site-lang="{{ .Site.Language.Lang }}"
+        />
+    </div>
+</div>
+
+<!-- <div class="gdoc-search flex align-center">
+    <svg class="gdoc-icon gdoc_search"><use xlink:href="#search"></use></svg>
+    <input
+      type="text"
+      id="gdoc-search-input"
+      class="gdoc-search__input"
+      placeholder="Search"
+      aria-label="Search"
+      maxlength="64"
+      data-site-base-url="{{ .Site.BaseURL }}"
+      data-site-lang="{{ .Site.Language.Lang }}"
+    />
+    <div class="gdoc-search__spinner spinner hidden"></div>
+    <ul id="gdoc-search-results" class="gdoc-search__list"></ul>
+  </div> -->
