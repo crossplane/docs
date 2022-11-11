@@ -4,34 +4,20 @@
   background: $navbar-background-color;
 
   @media (min-width: 993px) and (max-width: 1090px){
-    // .vr {
-    //   visibility: hidden;
-    // }
-
 
     .icons {
       white-space: nowrap;
       flex-direction: column;
       padding-right: 0 !important;
 
-        .slack-icon,
-        .github-icon {
-          padding-left: 0 !important;
-          padding-right: 0 !important;
-          padding-top: 0 !important;
-          padding-bottom: 0 !important;
-        }
-        // .form-check-input {
-        //   padding-bottom: 2px;
-        // }
-
-        // .form-check-label {
-        //   padding-right: 0px !important;
-        //   padding-left: 0px !important;
-        // }
+      .slack-icon,
+      .github-icon {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
       }
-
-
+    }
 
     .color-switcher {
       .form-check {
