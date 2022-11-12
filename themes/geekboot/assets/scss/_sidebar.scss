@@ -2,10 +2,6 @@
   @include media-breakpoint-up(lg) {
     position: sticky;
     top: 5rem;
-    // Override collapse behaviors
-    // stylelint-disable-next-line declaration-no-important
-    display: block !important;
-    height: subtract(100vh, 6rem);
   }
 
   .bd-svg{
