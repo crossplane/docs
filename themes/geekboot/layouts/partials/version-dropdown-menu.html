@@ -28,7 +28,7 @@
 
 <div class="dropdown float-end bd-dropdown">
     <a class="btn btn-outline-secondary dropdown-toggle bd-dropdown-item text-reset" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        v{{ .Page.Params.version }}
+        {{ if ne .Page.Params.version "master" }}v{{ end }}{{ .Page.Params.version }}
         {{ if eq .Page.Params.version .Site.Params.latest }}
         <div class="badge rounded-pill latest">Latest</div>
         {{ end }}
