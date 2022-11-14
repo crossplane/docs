@@ -54,6 +54,10 @@ hugo
 hugo-*
 .hugo_build.lock
 
+# Webpack related files #
+######################
+utils/webpack/node_modules
+
 # From original Upbound Crossplane .gitignore #
 ######################
 /_site
