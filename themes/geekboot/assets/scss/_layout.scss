@@ -2,10 +2,6 @@
   --bs-gutter-x: var(--bd-gutter-x);
 }
 
-.docs-container {
-  padding-left: 24px;
-}
-
 .bd-layout {
 
   @include media-breakpoint-up(lg) {
