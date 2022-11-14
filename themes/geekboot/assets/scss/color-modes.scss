@@ -49,13 +49,6 @@
 
 
 body{
-  --duration: 0.5s;
-  --timing: ease;
-
   background: var(--body-background);
   color: var(--body-font-color);
-
-  transition: color var(--duration) var(--timing), background-color var(
-      --duration
-  ) var(--timing);
 }
