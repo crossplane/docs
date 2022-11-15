@@ -19,7 +19,7 @@ to = "/v1.10"
 status = 302
 
 [context.production]
-    command = "hugo --minify"
+    command = "hugo --minify --environment development"
     environment = { NODE_VERSION = "14.15.3" }
 
 # Use [dev] to set configuration overrides for local
