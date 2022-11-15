@@ -2,12 +2,21 @@
   margin-top: 1rem;
   font-size: .875rem !important;
 
+  @include media-breakpoint-down(lg) {
+    margin-top: 0 !important;
+    font-size: 1rem !important;
+  }
+
   .nav-container, .bd-links {
     margin: 0.35rem 0;
     border-left-width: 3px;
     border-left-style: solid;
     border-left-color: transparent;
     padding-left: 10px;
+
+    @include media-breakpoint-down(lg) {
+      margin: .7rem 0 !important;
+    }
 
     a {
       text-decoration: none !important;

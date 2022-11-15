@@ -1,6 +1,7 @@
 {{ $current := . }}
 {{ $version_section := (where .Site.Sections ".Page.Params.version" .Page.Params.version) }}
 <nav class="bd-links-nav w-100 pt-3" aria-label="Docs navigation">
+
   <div class="bd-links-container">
     {{ range ((index $version_section 0).Pages).GroupBy "Weight" }}
         {{ range .Pages.ByWeight }}

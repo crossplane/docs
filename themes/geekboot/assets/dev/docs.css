@@ -12442,12 +12442,23 @@ body {
   margin-top: 1rem;
   font-size: 0.875rem !important;
 }
+@media (max-width: 991.98px) {
+  .bd-links-nav {
+    margin-top: 0 !important;
+    font-size: 1rem !important;
+  }
+}
 .bd-links-nav .nav-container, .bd-links-nav .bd-links {
   margin: 0.35rem 0;
   border-left-width: 3px;
   border-left-style: solid;
   border-left-color: transparent;
   padding-left: 10px;
+}
+@media (max-width: 991.98px) {
+  .bd-links-nav .nav-container, .bd-links-nav .bd-links {
+    margin: 0.7rem 0 !important;
+  }
 }
 .bd-links-nav .nav-container a, .bd-links-nav .bd-links a {
   text-decoration: none !important;
