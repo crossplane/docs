@@ -3,11 +3,6 @@
     publish = "public/"
     command = "hugo --environment development -D"
 
-[build.processing]
-    skip_processing = false
-
-[build.processing.images]
-    compress = true
 
 [[redirects]]
 from = "/latest"
