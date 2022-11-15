@@ -1,7 +1,9 @@
 {{ if eq hugo.Environment "production" -}}
-  <script src="/js/bootstrap.bundle.js"></script>
+  {{- $bootstrap := resources.Get "/js/bootstrap.bundle.js" }}
+  <script defer src="{{ $bootstrap.Permalink }}" ></script>
 {{ else -}}
-  <script src="/js/bootstrap.bundle.js"></script>
+{{- $bootstrap := resources.Get "js/bootstrap.bundle.js" }}
+<script defer src="{{ $bootstrap.Permalink }}" ></script>
 {{- end }}
 
 
