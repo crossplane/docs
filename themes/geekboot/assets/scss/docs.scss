@@ -23,9 +23,6 @@
 //
 // Happy Bootstrapping!
 
-// fusv-disable
-$enable-grid-classes: false; // stylelint-disable-line scss/dollar-variable-default
-$enable-cssgrid: true; // stylelint-disable-line scss/dollar-variable-default
 
 @import "bootstrap/bootstrap";
 // Load docs components
@@ -42,7 +39,7 @@ $enable-cssgrid: true; // stylelint-disable-line scss/dollar-variable-default
 @import "dropdown";
 @import "hints";
 @import "anchor";
-@import "search";
+// @import "search";
 @import "skippy";
 @import "clipboard-js";
 @import "fonts";
