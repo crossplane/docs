@@ -9,27 +9,6 @@
 [build.processing.images]
     compress = true
 
-[[plugins]]
-    # Installs the Lighthouse Build Plugin for all deploy contexts
-    package = "@netlify/plugin-lighthouse"
-
-[[plugins]]
-  package = "netlify-plugin-inline-critical-css"
-
-  [plugins.inputs]
-    fileFilter = ["*.html"]
-
-    # You can refer to `critical`’s documentation: https://github.com/addyosmani/critical for all options below.
-    # Whether to remove the inlined styles from any stylesheet referenced in the HTML. Use with caution. Removing the critical CSS per page results in a unique async loaded CSS file for every page, meaning you can’t rely on cache across multiple pages.
-    extract = false
-
-    # An array of objects containing `width` and `height` properties to deliver critical CSS for multiple screen resolutions.
-    # Stats: https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
-    dimensions = [
-      { width = 414, height = 896 },
-      { width = 1920, height = 1080 }
-    ]
-
 [[redirects]]
 from = "/latest"
 to = "/v1.10"
