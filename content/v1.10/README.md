@@ -1,5 +1,5 @@
 ---
-GeekdocHidden: true
+tocHidden: true
 ---
 # Overview
 

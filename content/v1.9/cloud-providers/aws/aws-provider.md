@@ -1,6 +1,6 @@
 ---
 title: Adding Amazon Web Services (AWS) to Crossplane
-GeekdocHidden: true
+tocHidden: true
 ---
 
 In this guide, we will walk through the steps necessary to configure your AWS
