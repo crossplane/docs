@@ -19,8 +19,7 @@ to = "/v1.10"
 status = 302
 
 [context.production]
-    command = "hugo --minify --environment development"
-    environment = { NODE_VERSION = "14.15.3" }
+    command = "hugo --environment development"
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
