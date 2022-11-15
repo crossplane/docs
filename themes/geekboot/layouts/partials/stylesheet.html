@@ -1,4 +1,5 @@
 <script>
+  // Try and ensure the color theme is applied as early as possible to prevent "flash of inaccurate color"
 (() => {
   var darkThemeSelected =
     localStorage.getItem("darkSwitch") !== null &&
@@ -9,36 +10,15 @@
 })();
 </script>
 
-<!-- {{- $sassOptions := dict "outputStyle" "expanded" "precision" 6 -}}
-{{- $postcssOptions := dict "use" "autoprefixer" "noMap" true -}}
-{{- $colormode := resources.Get "scss/color-modes.scss" | toCSS $sassOptions | postCSS $postcssOptions }} -->
-
-<!-- <link rel="stylesheet" href="{{$colormode.Permalink}}" /> -->
-
 {{ if eq hugo.Environment "production" -}}
-  <link href="/dist/css/bootstrap.min.css" rel="stylesheet" {{ printf "integrity=%q" .Site.Params.cdn.css_hash | safeHTMLAttr }} crossorigin="anonymous">
+
+<link href="/dist/css/bootstrap.min.css" rel="stylesheet" {{ printf "integrity=%q" .Site.Params.cdn.css_hash | safeHTMLAttr }} crossorigin="anonymous">
+
+  {{ $sassOptions := (dict "enableSourceMap" true) }} {{ $styles :=
+    resources.Get "css/style.scss" | toCSS $sassOptions | postCSS | minify }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
+
 {{- else -}}
-  <link href="/dist/css/bootstrap.css" rel="stylesheet">
+  {{- $docs := resources.Get "dev/docs.css"}}
+  <link href="{{ $docs.Permalink}}" rel="stylesheet">
 {{- end }}
-
-
-{{- $targetDocsCssPath := "assets/css/docs.css" -}}
-
-
-{{ if eq hugo.Environment "production" -}}
-  {{- $sassOptions = merge $sassOptions (dict "outputStyle" "compressed") -}}
-{{- end -}}
-
-{{- $style := resources.Get "scss/docs.scss" | toCSS $sassOptions | postCSS $postcssOptions }}
-
-
-
-
-<!-- The main stylesheet -->
-<link rel="stylesheet" href="{{$style.Permalink}}" />
-
-
-
-
-
-

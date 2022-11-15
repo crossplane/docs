@@ -1,14 +1,11 @@
 {{ if eq hugo.Environment "production" -}}
-  <script src="/dist/js/bootstrap.bundle.min.js" {{ printf "integrity=%q" .Site.Params.cdn.js_bundle_hash | safeHTMLAttr }} crossorigin="anonymous"></script>
+  <script src="/js/bootstrap.js"></script>
 {{ else -}}
-  <script src="/dist/js/bootstrap.bundle.js"></script>
+  {{- $bootstrapJS := resources.Get "js/bootstrap.js" }}
+  <script src="{{ $bootstrapJS.Permalink }}"></script>
 {{- end }}
 
 
-{{- $colormode := resources.Get (index (index .Site.Data.assets "colorMode.js") "src" | relURL) }}
+{{- $colormode := resources.Get "js/colorMode.js" | resources.Minify | resources.Fingerprint  }}
 <script defer src="{{ $colormode.Permalink }}" ></script>
 
-
-
-{{- $colorModemap := resources.Get (printf "%s.map" (index (index .Site.Data.assets "colorMode.js") "src")) -}}
-{{- $colorModemap.Publish -}}
