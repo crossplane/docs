@@ -27,8 +27,6 @@ markup:
 
 module:
   mounts:
-  - source:           dist
-    target:           static/dist
   - source: content
     target: content
   - source: assets
