@@ -12328,6 +12328,7 @@ body {
 }
 
 .bd-content {
+  font-size: 19px;
   line-height: 1.8em;
 }
 .bd-content code {
@@ -12440,7 +12441,7 @@ body {
 
 .bd-links-nav {
   margin-top: 1rem;
-  font-size: 0.875rem !important;
+  font-size: 0.95rem !important;
 }
 @media (max-width: 991.98px) {
   .bd-links-nav {
