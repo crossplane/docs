@@ -1,8 +1,7 @@
 {{ if eq hugo.Environment "production" -}}
-  <script src="/js/bootstrap.js"></script>
+  <script src="/js/bootstrap.bundle.js"></script>
 {{ else -}}
-  {{- $bootstrapJS := resources.Get "js/bootstrap.js" }}
-  <script src="{{ $bootstrapJS.Permalink }}"></script>
+  <script src="/js/bootstrap.bundle.js"></script>
 {{- end }}
 
 
