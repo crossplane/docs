@@ -1,3 +1,12 @@
+.bd-sidebar-container {
+  background-color: var(--body-background) !important;
+
+  .btn-close {
+    filter: var(--btn-close-color)!important;
+  }
+
+}
+
 .bd-links-nav {
   margin-top: 1rem;
   font-size: .95rem !important;

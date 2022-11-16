@@ -11478,6 +11478,7 @@ textarea.form-control-lg {
     --active-tab-color: #ffcd3c;
     --inactive-tab-hover-color: #37ccb7;
     --nav-highlight-color: #2e3d52;
+    --btn-close-color: invert(1) grayscale(100%) brightness(200%);
     --dropdown-highlight: var(--nav-highlight-color);
     --dropdown-background: var(--body-background);
     --latest-pill-background: #f3807b;
@@ -11818,6 +11819,7 @@ textarea.form-control-lg {
   --active-tab-color: #ffcd3c;
   --inactive-tab-hover-color: #37ccb7;
   --nav-highlight-color: #2e3d52;
+  --btn-close-color: invert(1) grayscale(100%) brightness(200%);
   --dropdown-highlight: var(--nav-highlight-color);
   --dropdown-background: var(--body-background);
   --latest-pill-background: #f3807b;
@@ -12437,6 +12439,13 @@ body {
   width: 1em;
   height: 1em;
   fill: currentcolor;
+}
+
+.bd-sidebar-container {
+  background-color: var(--body-background) !important;
+}
+.bd-sidebar-container .btn-close {
+  filter: var(--btn-close-color) !important;
 }
 
 .bd-links-nav {
