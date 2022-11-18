@@ -35,6 +35,11 @@
     @include dark-mode;
     @include code-theme-dark;
   }
+
+  img {
+    filter: brightness(.8) contrast(1.2);
+  }
+
 }
 
 :root[color-theme="dark"] {
@@ -45,6 +50,10 @@
     @include code-theme-base;
     @include dark-mode;
     @include code-theme-dark;
+
+    img {
+      filter: brightness(.8) contrast(1.2);
+    }
 }
 
 
