@@ -54,6 +54,7 @@ hugo
 hugo-*
 .hugo_build.lock
 package-lock.json
+hugo_stats.json
 
 # Webpack related files #
 ######################
