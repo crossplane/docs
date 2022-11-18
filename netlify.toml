@@ -1,7 +1,7 @@
 [build]
     base = "/"
     publish = "public/"
-    command = "hugo --environment development -D"
+    command = "hugo"
 
 
 [[redirects]]
@@ -10,7 +10,7 @@ to = "/v1.10"
 status = 302
 
 [context.production]
-    command = "hugo --environment development"
+    command = "hugo"
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
