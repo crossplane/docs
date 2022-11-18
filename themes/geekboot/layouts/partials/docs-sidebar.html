@@ -36,8 +36,8 @@
           <a class="" href="{{.thisPage.Permalink}}">{{.thisPage.Title}}</a>
         </div>
         <div class="d-flex flex-shrink-1 sidebar-control-container align-self-center">
-          <input type="checkbox" class="d-flex sidebar-checkbox" id="collapse-{{$id}}" {{if $expand}}checked{{ end }} />
-          <label for="collapse-{{$id}}" class="sidebar-label" data-bs-toggle="collapse" data-bs-target="#collapse-{{$id}}" aria-expanded="false" aria-controls="collapse-{{ $id }}">
+          <input type="checkbox" class="d-flex sidebar-checkbox" {{if $expand}}checked{{ end }} aria-label="Close or Expand {{.thisPage.Title}} Section" />
+          <label for="collapse-{{$id}}" class="sidebar-label" data-bs-toggle="collapse" data-bs-target="#collapse-{{$id}}" aria-expanded="false" aria-label="Close or Expand {{.thisPage.Title}} Section">
           <svg class="flex bi sidebar-icon plus" ><use xlink:href="#plus"></use></svg>
           <svg class="flex bi sidebar-icon x " ><use xlink:href="#x"></use></svg>
           </label>

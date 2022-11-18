@@ -2,8 +2,10 @@
 {{ $tab_names := .Scratch.Get "names" }}
 {{ $first_tab := true }}
 {{ $counter := 0 }}
+<!-- 2000 is the maxium Hugo seq length -->
+{{ $ariaId := index (seq 2000 | shuffle) 0 }}
 
-<ul class="nav nav-tabs" id="nav-tab" role="tablist">
+<ul class="nav nav-tabs" id="{{$ariaId}}" role="tablist">
 
   {{ range (seq (len $tab_names)) }}
   {{ $id := index $tab_ids $counter }}
@@ -21,6 +23,6 @@
   </li>
   {{ end }}
 </ul>
-<div class="tab-content" id="Content">
+<div class="tab-content" id="Content-{{$ariaId}}">
   {{ .Inner }}
 </div>
