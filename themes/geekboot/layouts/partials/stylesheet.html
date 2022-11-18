@@ -10,15 +10,13 @@
 })();
 </script>
 
+{{ $style := false }}
+{{ $sassOptions := (dict "outputStyle" "expanded" "precision" 6 "enableSourceMap" true ) }}
+
 {{ if eq hugo.Environment "production" -}}
+  {{ $style = resources.Get "scss/docs.scss" | toCSS $sassOptions | resources.PostCSS | resources.PostProcess }}
+{{ else }}
+  {{ $style = resources.Get "scss/docs.scss" | toCSS $sassOptions  }}
+{{ end }}
 
-<link href="/dist/css/bootstrap.min.css" rel="stylesheet" {{ printf "integrity=%q" .Site.Params.cdn.css_hash | safeHTMLAttr }} crossorigin="anonymous">
-
-  {{ $sassOptions := (dict "enableSourceMap" true) }} {{ $styles :=
-    resources.Get "css/style.scss" | toCSS $sassOptions | postCSS | minify }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
-
-{{- else -}}
-  {{- $docs := resources.Get "dev/docs.css"}}
-  <link href="{{ $docs.Permalink}}" rel="stylesheet">
-{{- end }}
+<link href="{{ $style.Permalink}}" rel="stylesheet">

@@ -11,18 +11,6 @@
 }
 
 @font-face {
-  font-family: 'Avenir';
-  src: url("/fonts/Avenir-Black.eot"); /* IE9 Compat Modes */
-  src: url("/fonts/Avenir-Black.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
-       url("/fonts/Avenir-Black.woff2") format("woff2"), /* Super Modern Browsers */
-       url("/fonts/Avenir-Black.woff") format("woff"), /* Pretty Modern Browsers */
-       url("/fonts/Avenir-Black.ttf") format("truetype"); /* Safari, Android, iOS */
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Consolas';
   src: url("/fonts/Consolas.eot"); /* IE9 Compat Modes */
   src: url("/fonts/Consolas.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
@@ -42,6 +30,6 @@ body {
 }
 
 code {
-  font-family: "Liberation Mono", monospace;
+  font-family: "Consolas", monospace;
   font-size: .95rem;
 }

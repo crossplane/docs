@@ -1,14 +1,8 @@
 {
-  "colorMode.js": {
-    "src": "js/colorMode-001fda8d.bundle.min.js"
+  "main.js": {
+    "src": "js/main-dbdb0d7d.bundle.min.js"
   },
-  "lightbox.js": {
-    "src": "js/lightbox-e5fd125f.bundle.min.js"
-  },
-  "colorMode-001fda8d.bundle.min.js.map": {
-    "src": "js/colorMode-001fda8d.bundle.min.js.map"
-  },
-  "lightbox-e5fd125f.bundle.min.js.map": {
-    "src": "js/lightbox-e5fd125f.bundle.min.js.map"
+  "main-dbdb0d7d.bundle.min.js.map": {
+    "src": "js/main-dbdb0d7d.bundle.min.js.map"
   }
 }

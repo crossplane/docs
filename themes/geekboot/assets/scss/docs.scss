@@ -25,9 +25,10 @@
 
 
 @import "bootstrap/bootstrap";
-// Load docs components
 @import "variables";
+/* purgecss start ignore */
 @import "color-modes";
+/* purgecss end ignore */
 @import "layout";
 @import "navbar";
 @import "content";

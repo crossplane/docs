@@ -1,4 +1,5 @@
 .bd-content {
+
   .anchor-link {
     padding: 0 .175rem;
     font-weight: 400;
@@ -11,10 +12,7 @@
       content: "#";
     }
 
-    &:focus,
-    &:hover,
-    :hover > &,
-    :target > & {
+    &:hover {
       color: var(--anchor-link-color);
       text-decoration: none;
       opacity: 1;
