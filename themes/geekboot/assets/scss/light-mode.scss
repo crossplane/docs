@@ -11,7 +11,7 @@
 
     //Tabs
     --nav-tab-background-color: var(--body-background);
-    --active-tab-color: #f3807b;
+    --active-tab-color: #f3807b; // Not an accessable color contrast on white.
     --inactive-tab-hover-color: #37ccb7;
 
     // Sidebar nav
@@ -26,7 +26,7 @@
     --dropdown-border-color: #{lighten(rgba(52, 58, 64, 1), 50)};
 
     //Right-side table of contents
-    --toc-font-color: #{lighten(rgba(52, 58, 64, 1), 30)};
+    --toc-font-color: #6b7884;
     --toc-mobile-menu-outline: #ffcd3c;
     --toc-mobile-menu-background: #f8f9fa;
 }
