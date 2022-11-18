@@ -61,3 +61,4 @@ params:
   anchors:
     min: 2
     max: 5
+  description: "Crossplane lets you build a control plane with Kubernetes-style declarative and API-driven configuration and management for anything."
