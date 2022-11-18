@@ -53,12 +53,13 @@ public/*
 hugo
 hugo-*
 .hugo_build.lock
+package-lock.json
 
 # Webpack related files #
 ######################
 utils/webpack/node_modules
 
-# From original Upbound Crossplane .gitignore #
+# From original Crossplane .gitignore #
 ######################
 /_site
 /vendor
