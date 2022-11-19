@@ -10,3 +10,4 @@ import './bootstrap/src/popover';
 import './bootstrap/src/tab';
 import './bootstrap/src/offcanvas';
 
+import './tabDeepAnchor.js';

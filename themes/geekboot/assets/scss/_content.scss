@@ -33,7 +33,7 @@ body {
   }
 
   // Offset content from fixed navbar when jumping to headings
-  > :target {
+  & :target {
     padding-top: 5rem;
     margin-top: -5rem;
   }
