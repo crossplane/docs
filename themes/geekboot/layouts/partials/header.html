@@ -12,7 +12,7 @@
 
 
 <title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Site.Params.docs_version }}{{ end }}</title>
-<link rel="preload" href="{{.Site.BaseURL}}fonts/Avenir-Roman.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Avenir-Roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="canonical" href="{{ .Permalink }}">
 
 {{ partial "stylesheet" . }}

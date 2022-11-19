@@ -1,7 +1,7 @@
 [build]
     base = "/"
     publish = "public/"
-    command = "hugo --minify --baseURL docs.crossplane.io "
+    command = "hugo --minify "
 
 
 [[redirects]]
@@ -10,7 +10,7 @@ to = "/v1.10"
 status = 302
 
 [context.production]
-    command = "hugo --minify --baseURL docs.crossplane.io "
+    command = "hugo --minify "
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
