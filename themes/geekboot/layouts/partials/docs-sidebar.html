@@ -3,6 +3,13 @@
 <nav class="bd-links-nav w-100 pt-3" aria-label="Docs navigation">
 
   <div class="bd-links-container">
+    <div class="container nav-container d-flex w-100">
+    <div class="container flex-row">
+      <div class="d-flex flex-column ">
+            <div class="d-flex"><a href="{{ .FirstSection.Permalink }} ">Overview</a></div>
+      </div>
+    </div>
+  </div>
     {{ range ((index $version_section 0).Pages).GroupBy "Weight" }}
         {{ range .Pages.ByWeight }}
           {{ if not .Params.tocHidden }}
