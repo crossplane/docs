@@ -126,3 +126,10 @@ body {
   fill: currentcolor;
 }
 
+blockquote {
+  border-left: 3px solid var(--dropdown-border-color) !important;
+  padding-left: 1rem !important;
+  background: var(--nav-highlight-color) !important;
+  line-height: 1.5rem;
+  font-size: 1rem
+}
