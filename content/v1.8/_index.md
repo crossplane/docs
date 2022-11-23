@@ -1,9 +1,6 @@
 ---
 title: "Overview"
-toc_include: false
 weight: -1
-aliases:
-    - /docs/v1.8/index.html
 cascade:
     version: "1.8"
 ---
