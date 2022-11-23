@@ -20,7 +20,6 @@ const mediasort = require('postcss-sort-media-queries')({
 
 
 
-// postcssLightningcss
 module.exports = {
   plugins: [
     purgecss,
