@@ -1,14 +1,18 @@
-{{- /*
-  Usage: `callout "type"`, where `type` is one of info (default), danger, or warning
-*/ -}}
+{{- $cssClass := .Get 0 | lower | default "tip" -}}
 
-{{- $css_class := .Get 0 | default "info" -}}
+{{ $icons := dict
+  "tip" "#check"
+  "note" "#info"
+  "important" "#exclamation"
+  "warning" "#fire" }}
 
-<div class="bd-callout bd-callout-info d-flex flex-column w-75">
-  <div class="bd-title fs-5 fw-bold border-bottom border-info w-25">
-    <svg class="bi flex-shrink-0" role="img" aria-label="Info:"><use xlink:href="#{{ $css_class }}"/></svg>
+<div class="admonition {{$cssClass}} d-flex flex-column w-75 p-0">
+  <div class="admonition-title">
+    <svg class="bi flex-shrink-0" role="img" aria-label="{{$cssClass}}:"><use
+    xlink:href="{{index $icons $cssClass }}"/></svg>
+    {{ $cssClass | humanize}}
   </div>
-  <div class="bd-content mt-3">
-    {{ .Inner}}
+  <div class="admonition-content">
+    {{ .Inner | .Page.RenderString }}
   </div>
 </div>

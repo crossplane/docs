@@ -29,4 +29,17 @@
     --toc-font-color: #6b7884;
     --toc-mobile-menu-outline: #ffcd3c;
     --toc-mobile-menu-background: #f8f9fa;
+
+    //hint boxes
+    --hint-important:       rgba(255, 145, 0, 1); //"exclamation",
+    --hint-important-background: rgba(255, 145, 0, .1);
+
+    --hint-warning:         rgba(255, 82, 82, 1); //"fire",
+    --hint-warning-background: rgba(255, 82, 82, .1);
+
+    --hint-tip:             rgba(0,200,82,1);; //"check",
+    --hint-tip-background: rgba(0,200,82,.1);
+
+    --hint-note:            rgba(0,176,255,1); //"info",
+    --hint-note-background:  rgba(0,176,255,.1);
 }
