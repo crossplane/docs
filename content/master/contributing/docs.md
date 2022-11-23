@@ -383,12 +383,98 @@ Provide theme specific color overrides in
 `/themes/geekboot/assets/scss/light-mode.scss`.
 
 {{<hint "note" >}}
-When creating new styles rely on variables for any color function, even if the
-color is shared for both themes.
+When creating new styles rely on variables for any color function, even if both
+themes share the color.
 {{< /hint >}}
 
 #### SCSS compilation
 Hugo compiles the SCSS to CSS. Local development doesn't require SCSS installed.
 
+For local development (when using `hugo server`) Hugo compiles SCSS without
+any optimizations.
+
+For production (publishing on Netlify or using `hugo server
+--environment production`) Hugo compiles SCSS and optimizes the CSS with
+[PostCSS](https://postcss.org/). The PostCSS configuration is in
+`/postcss.config.js`. The optimizations includes:
+* [postcss-lightningcss](https://github.com/onigoetz/postcss-lightningcss) - for
+  building, minimizing and generating a source map.
+* [PurgeCSS](https://purgecss.com/plugins/postcss.html) - removes unused styles
+  to reduce the CSS file size. 
+* [postcss-sort-media-queries](https://github.com/yunusga/postcss-sort-media-queries)- 
+to organize and reduce CSS media queries to remove duplicate and unused
+    CSS.
+
+Optimizing CSS locally with PostCSS requires installing extra packages.
+* [Sass](https://sass-lang.com/install)
+* [NPM](https://www.npmjs.com/)
+* NPM packages defined in `/package.json` with `npm install`.
+
 
 ### JavaScript
+A goal of the documentation website is to use as little JavaScript as possible. Unless
+the script provides a significant improvement in performance, capability or user
+experience. 
+
+To make local development there are no run-time dependencies for
+JavaScript. 
+
+Runtime JavaScript is in `/themes/geekboot/assets/js/`. [Webpack](https://webpack.js.org/)
+has bundled, minified and compressed the JavaScript.
+
+The source JavaScript is in `/utils/webpack/src/js` and
+requires [Webpack](https://webpack.js.org/) to bundle and optimize the code.
+
+* `colorMode.js` provides the ability to change the light/dark mode color theme.
+* `tabDeepAnchor.js` rewrites anchor links inside tabs to open a tab and present
+  the anchor. 
+* `globalScripts.js` is the point of entry for Webpack to determine all
+  dependencies. This bundles [instant.page](https://instant.page/) and
+  [Bootstrap's
+  JavaScript](https://getbootstrap.com/docs/5.2/getting-started/javascript/).
+  
+#### Bootstrap JavaScript
+The entire [Bootstap JavaScript
+source](https://github.com/twbs/bootstrap/tree/main/js/src) is in
+`/utils/webpack/src/js/bootstrap`. 
+
+Adding a new Bootstrap feature requires importing it in `globalScripts.js`. 
+
+By importing only the necessary Bootstrap JavaScript features, reduces the
+bundle size.
+## Annotated website tree
+Expand the tab below to see an annotated `tree` output of the website repo.
+
+{{<expand >}}
+```shell
+├── content                     # Root for all page content
+│   ├── master
+│   ├── v1.10
+│   ├── v1.8
+│   └── v1.9
+├── themes                      # Entry point for theme-specific designs
+│   └── geekboot
+│       ├── assets              # JS and stylesheets
+│       │   ├── js              # Bundled and optmized Javascript
+│       │   └── scss            # Bootstrap SCSS overrides
+│       │       └── bootstrap   # Bootstrap original SCSS files
+│       ├── data
+│       ├── layouts             # HTML layouts and shortcodes
+│       │   ├── _default        # HTML layouts for page types
+│       │   │   └── _markup     # Hugo render hooks
+│       │   ├── partials        # HTML Template elements
+│       │   │   ├── icons
+│       │   │   └── utils
+│       │   └── shortcodes      # Shortcode features
+│       └── static              # Static files across the theme.
+│           ├── fonts           # Font files
+│           └── img             # Global images
+└── utils                       # Files unrelated to Hugo
+    └── webpack                 # Files managed or related to webpack
+        └── src
+            └── js
+                └── bootstrap/  # Original Bootstrap JavaScript
+                └── colorMode.js  # Color theme switcher
+                └── tabDeepAnchor.js # Enable anchors inside tabs
+```
+{{</expand>}}
