@@ -341,6 +341,31 @@ metadata:
 The `expand` shortcode requires opening and closing tags. Unclosed tags causes
 Hugo to fail.
 
+## Adding new content
+
+To create new content create a new markdown file in the appropriate location. 
+
+To create a new section, create a new directory and an `_index.md` file in the
+root. 
+
+### Front matter
+Each page contains metadata called [front matter](https://gohugo.io/content-management/front-matter/). Each page requires front matter to render.
+
+```yaml
+---
+title: "A New Page"
+weight: 610
+---
+```
+
+`title` defines the name of the page.
+`weight` determines the ordering of the page in the table of contents. Lower weight pages come before higher weights in the table of contents. The value of `weight` is otherwise arbitrary.
+
+
+### Hiding pages
+To hide a page from the left-hand navigation use `tocHidden: true` in the front
+matter of the page. The docs website skips pages with `tocHidden:true` when building the menu.
+
 ## Docs website
 The Crossplane document website is in a unique [website GitHub
 repository](https://github.com/crossplane/crossplane.github.io).
