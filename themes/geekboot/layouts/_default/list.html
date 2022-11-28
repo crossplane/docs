@@ -42,9 +42,9 @@
 
       <div class="bd-content ps-lg-2 DocSearch-content">
         {{- if eq .Page.Params.version "master" -}}
-          {{ partial "master-version-alert" . }}
+          {{ partialCached "master-version-alert" . }}
         {{- else if ne .Page.Params.version .Site.Params.latest -}}
-          {{ partial "old-version-alert" . }}
+          {{ partialCached "old-version-alert" . .Section }}
         {{ end }}
         {{ .Content }}
       </div>

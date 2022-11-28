@@ -6,15 +6,14 @@ color-theme="light">
     {{ partial "header" . }}
   </head>
   {{ block "body_override" . }}<body>{{ end }}
-    {{ partial "skippy" . }}
-    {{ partial "icons" . }}
+    {{ partialCached "icons" . }}
 
-    {{ partial "docs-navbar" . }}
+    {{ partialCached "docs-navbar" . }}
 
     {{ block "main" . }}
     {{ end }}
 
-    {{ partial "footer" . }}
-    {{ partial "scripts" . }}
+    {{ partialCached "footer" . }}
+    {{ partialCached "scripts" . }}
   </body>
 </html>

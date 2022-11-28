@@ -1,23 +1,16 @@
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="{{ .Page.Params.description | default .Site.Params.description | markdownify }}">
-<meta name="author" content="Crossplane Community">
-<meta name="color-scheme" content="light dark">
-<meta name="docsearch:language" content="en" />
+{{ partialCached "meta-common" . }}
 {{ if .Page.Params.version }}
-<meta name="docsearch:version" content="{{.Page.Params.version}}" />
+    <meta name="docsearch:version" content="{{.Page.Params.version}}" />
 {{ end }}
 
-{{ hugo.Generator }}
-
-
 <title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Site.Params.docs_version }}{{ end }}</title>
-<link rel="preload" href="/fonts/Avenir-Roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="canonical" href="https://docs.crossplane.io{{ .Permalink }}">
 
-{{ partial "stylesheet" . }}
-{{ partial "favicons" . }}
+{{ partialCached "stylesheet" . }}
+{{ partialCached "favicons" . }}
+
 {{ partial "social" . }}
+
 {{ if eq hugo.Environment "production" -}}
-    {{ partial "analytics" . }}
+    {{ partialCached "analytics" . }}
 {{ end }}

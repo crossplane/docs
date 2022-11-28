@@ -2,7 +2,7 @@
   <nav class="container-xxl w-100 bd-gutter flex-wrap flex-lg-nowrap justify-content-between" aria-label="Main navigation">
     <div class="bd-navbar-toggle">
       <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdSidebar" aria-controls="bdSidebar" aria-label="Toggle docs navigation">
-        {{ partial "icons/hamburger.svg" (dict "class" "bi" "width" "24" "height" "24") }}
+        {{ partialCached "icons/hamburger.svg" (dict "class" "bi" "width" "24" "height" "24") }}
         <span class="d-none fs-6 pe-1">Browse</span>
       </button>
     </div>
@@ -54,12 +54,12 @@
         <div class="d-flex align-items-center justify-content-evenly">
           <div class="icons d-flex">
             <a class="github-icon nav-link py-2 px-0 px-lg-2" href="https://github.com/crossplane" target="_blank" rel="noopener">
-              {{ partial "icons/github.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
+              {{ partialCached "icons/github.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
               <small class="d-lg-none ms-2">Crossplane GitHub</small>
             </a>
 
             <a class="slack-icon nav-link py-2 px-0 px-lg-2" href="https://slack.crossplane.io" target="_blank" rel="noopener">
-              {{ partial "icons/slack.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
+              {{ partialCached "icons/slack.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
               <small class="d-lg-none ms-2">Crossplane Slack</small>
             </a>
           </div>
