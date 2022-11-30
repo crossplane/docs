@@ -10,7 +10,3 @@
 {{ partialCached "favicons" . }}
 
 {{ partial "social" . }}
-
-{{ if eq hugo.Environment "production" -}}
-    {{ partialCached "analytics" . }}
-{{ end }}

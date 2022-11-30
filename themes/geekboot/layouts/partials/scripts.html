@@ -2,3 +2,7 @@
 <script src="{{ $js.Permalink }}" data-no-instant></script>
 {{- $jsmap := resources.Get (printf "%s.map" (index (index .Site.Data.assets "main.js") "src")) -}}
 {{- $jsmap.Publish -}}
+
+{{ if eq hugo.Environment "production" -}}
+    {{ partialCached "analytics" . }}
+{{ end }}
