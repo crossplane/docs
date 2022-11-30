@@ -5,8 +5,13 @@
 
 
 [[redirects]]
-from = "/latest"
-to = "/v1.10"
+from = "/latest/*"
+to = "/v1.10/:splat"
+status = 302
+
+[[redirects]]
+from = "/docs/*"
+to = "/:splat"
 status = 302
 
 [context.production]
