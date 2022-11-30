@@ -139,7 +139,7 @@ curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.
 {{% tab "Latest" %}}
 
 ```bash
-curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | CHANNEL=master sh
+curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | XP_CHANNEL=master sh
 ```
 
 You may also specify `XP_VERSION` for download if you would like to select a
@@ -147,7 +147,7 @@ specific version from the given release channel. If a version is not specified
 the latest version from the release channel will be used.
 
 ```bash
-curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | CHANNEL=master VERSION=v1.0.0-rc.0.130.g94f34fd3 sh
+curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | XP_CHANNEL=master XP_VERSION=v1.0.0-rc.0.130.g94f34fd3 sh
 ```
 <!-- close "Latest" -->
 {{% /tab %}}
@@ -194,7 +194,7 @@ provider that can satisfy a `PostgreSQLInstance`. Let's get started!
 > section.
 
 ```bash
-kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws:v1.10.1
+kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws:v1.9.1
 ```
 
 Wait until all packages become healthy:
@@ -248,7 +248,7 @@ kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release
 > section.
 
 ```bash
-kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws-with-vpc:v1.10.1
+kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws-with-vpc:v1.9.1
 ```
 
 Wait until all packages become healthy:
@@ -303,7 +303,7 @@ kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release
 > section.
 
 ```bash
-kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-gcp:v1.10.1
+kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-gcp:v1.9.1
 ```
 
 Wait until all packages become healthy:
@@ -374,7 +374,7 @@ spec:
 > section.
 
 ```bash
-kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-azure:v1.10.1
+kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-azure:v1.9.1
 ```
 
 Wait until all packages become healthy:
@@ -415,7 +415,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/configure/azure/providerconfig.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.9/docs/snippets/configure/azure/providerconfig.yaml
 ```
 <!-- close "Azure" -->
 {{% /tab %}}
