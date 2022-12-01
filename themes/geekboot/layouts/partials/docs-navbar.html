@@ -1,0 +1,79 @@
+<header class="navbar navbar-expand-lg bd-navbar  sticky-top">
+  <nav class="container-xxl w-100 bd-gutter flex-wrap flex-lg-nowrap justify-content-between" aria-label="Main navigation">
+    <div class="bd-navbar-toggle">
+      <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdSidebar" aria-controls="bdSidebar" aria-label="Toggle docs navigation">
+        {{ partialCached "icons/hamburger.svg" (dict "class" "bi" "width" "24" "height" "24") }}
+        <span class="d-none fs-6 pe-1">Browse</span>
+      </button>
+    </div>
+    <a class="navbar-brand" href="https://www.crossplane.io" aria-label="Bootstrap">
+      <img
+      src="/img/crossplane-logo.svg"
+      alt="Crossplane logo"
+      srcset="/img/crossplane-logo.svg 1x, /img/crossplane-logo.svg 2x"
+      width="185"
+      height="40"
+      decoding="async"
+      data-nimg="future"
+      loading="lazy">
+    </a>
+
+    <div class="d-flex">
+      <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-label="Toggle navigation">
+        <svg class="bi white" aria-hidden="true"><use xlink:href="#three-dots"></use></svg>
+      </button>
+    </div>
+
+    <div class="offcanvas-lg offcanvas-end flex-grow-1 w-100" tabindex="-1" id="bdNavbar" aria-labelledby="CrossplaneLogo" data-bs-scroll="true">
+      <div class="offcanvas-header px-4 pb-0">
+        <div class="offcanvas-title fw-bold" id="CrossplaneLogo">
+          <img src="/img/popsicle-icon.svg" alt="Crossplane popsicle logo" height="40" width="185" decoding="async" loading="lazy" /> Crossplane
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
+      </div>
+
+      <div class="offcanvas-body p-4 pt-0 p-lg-0">
+        <hr class="d-lg-none text-white-50">
+        <ul class="navbar-nav vstack bd-navbar-nav align-items-center justify-content-center">
+          <li class="nav-item text-center">
+            <a class="p-3 navbar-link" href="https://www.crossplane.io/why-control-planes">Why Control Planes?</a>
+          </li>
+          <li class="nav-item">
+            <a class="p-3 navbar-link"  aria-current="page" href="https://docs.crossplane.io">Documentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="p-3 navbar-link"  href="https://www.crossplane.io/community">Community</a>
+          </li>
+          <li class="nav-item">
+            <a class="p-3 navbar-link"  href="https://blog.crossplane.io/">Blog</a>
+          </li>
+        </ul>
+
+        <hr class="d-lg-none text-white-50">
+
+        <div class="d-flex align-items-center justify-content-evenly">
+          <div class="icons d-flex">
+            <a class="github-icon nav-link py-2 px-0 px-lg-2" href="https://github.com/crossplane" target="_blank" rel="noopener">
+              {{ partialCached "icons/github.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
+              <small class="d-lg-none ms-2">Crossplane GitHub</small>
+            </a>
+
+            <a class="slack-icon nav-link py-2 px-0 px-lg-2" href="https://slack.crossplane.io" target="_blank" rel="noopener">
+              {{ partialCached "icons/slack.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
+              <small class="d-lg-none ms-2">Crossplane Slack</small>
+            </a>
+          </div>
+
+          <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white"></div>
+          <hr class="d-lg-none text-white-50">
+
+          <div class="color-switcher">
+            <div class="navbar-link form-check form-switch d-flex align-items-center pe-3" >
+              <input class="d-flex form-check-input" type="checkbox" id="darkSwitch" />
+              <label class="d-flex form-check-label ps-3" for="darkSwitch">Dark Mode</label>
+            </div>
+          </div>
+        </div>
+    </div>
+  </nav>
+</header>

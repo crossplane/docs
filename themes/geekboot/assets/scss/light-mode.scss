@@ -1,0 +1,45 @@
+@mixin light-mode {
+    // body and content
+    --body-background: white;
+    --body-font-color: rgba(52, 58, 64, 1);
+    --content-link-color: #0a539a;
+    --anchor-link-color: #{lighten(rgba(52, 58, 64, 1), 25)};
+
+    // Single code lines inside text. Code blocks are in _code_theme_light.scss
+    --code-background: #e9ecef;
+    --code-color: #505a72;
+
+    //Tabs
+    --nav-tab-background-color: var(--body-background);
+    --active-tab-color: #f3807b; // Not an accessable color contrast on white.
+    --inactive-tab-hover-color: #37ccb7;
+
+    // Sidebar nav
+    --nav-highlight-color: rgba(80,90,114, .1);
+
+    //Version dropdown
+    --dropdown-highlight: var(--nav-highlight-color);
+    --dropdown-background: var(--body-background);
+    --latest-pill-background: #f3807b;
+    --latest-pill-color: #141414;
+    --dropdown-color: var(--body-font-color);
+    --dropdown-border-color: #{lighten(rgba(52, 58, 64, 1), 50)};
+
+    //Right-side table of contents
+    --toc-font-color: #6b7884;
+    --toc-mobile-menu-outline: #ffcd3c;
+    --toc-mobile-menu-background: #f8f9fa;
+
+    //hint boxes
+    --hint-important:       rgba(255, 145, 0, 1); //"exclamation",
+    --hint-important-background: rgba(255, 145, 0, .1);
+
+    --hint-warning:         rgba(255, 82, 82, 1); //"fire",
+    --hint-warning-background: rgba(255, 82, 82, .1);
+
+    --hint-tip:             rgba(0,200,82,1);; //"check",
+    --hint-tip-background: rgba(0,200,82,.1);
+
+    --hint-note:            rgba(0,176,255,1); //"info",
+    --hint-note-background:  rgba(0,176,255,.1);
+}

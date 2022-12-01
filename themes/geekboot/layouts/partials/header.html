@@ -1,0 +1,12 @@
+{{ partialCached "meta-common" . }}
+{{ if .Page.Params.version }}
+    <meta name="docsearch:version" content="{{.Page.Params.version}}" />
+{{ end }}
+
+<title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Site.Params.docs_version }}{{ end }}</title>
+<link rel="canonical" href="https://docs.crossplane.io{{ .Permalink }}">
+
+{{ partialCached "stylesheet" . }}
+{{ partialCached "favicons" . }}
+
+{{ partial "social" . }}

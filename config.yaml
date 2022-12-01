@@ -2,24 +2,47 @@ baseURL: "/"
 enableRobotsTXT: True
 languageCode: "en-us"
 title: "Crossplane"
-theme: "crossplane"
-uglyurls: true
+theme: "geekboot"
+enableGitInfo: true
+uglyurls: false
 disableKinds:
   - taxonomy
   - term
   - RSS
 
+build:
+  writeStats: true
 
 markup:
   goldmark:
     renderer:
       unsafe: true
+  tableOfContents:
+    startLevel: 1
+    endLevel: 9
   highlight:
-    CodeFences: true
+    codeFences: true
+    noClasses: false
+    linenos: true
+    LineNumbersInTable: true
+    anchorLineNos: false    # Need to fix the line number ID generation.
 
-
+module:
+  mounts:
+  - source: content
+    target: content
+  - source: assets
+    target: assets
+  - source: content
+    target: assets/content
+    includeFiles:
+      - "**/**.png"
+      - "**/**.jpg"
+      - "**/**.jpeg"
+      - "**/**.gif"
 
 params:
+  latest: "1.10"
   upboundLink: "https://www.upbound.io/"
   slackLink: "https://slack.crossplane.io/"
   githubLink: "https://github.com/crossplane/crossplane"
@@ -33,5 +56,9 @@ params:
   prodFormLink: "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform"
   infoMailToLink: "mailto:info@crossplane.io"
   upboundGithubLink: "https://github.com/upbound"
-  latest: "1.10"
+
   repoLink: "https://github.com/crossplane/crossplane"
+  anchors:
+    min: 2
+    max: 5
+  description: "Crossplane lets you build a control plane with Kubernetes-style declarative and API-driven configuration and management for anything."

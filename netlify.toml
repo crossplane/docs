@@ -1,0 +1,26 @@
+[build]
+    base = "/"
+    publish = "public/"
+    command = "hugo --minify "
+
+
+[[redirects]]
+from = "/latest/*"
+to = "/v1.10/:splat"
+status = 302
+
+[[redirects]]
+from = "/docs/*"
+to = "/:splat"
+status = 302
+
+[context.production]
+    command = "hugo --minify "
+
+# Use [dev] to set configuration overrides for local
+# development environments run using Netlify Dev - except
+# for environment variables. Environment variables for Netlify
+# Dev should be set under [context.dev.environment] instead.
+[dev]
+    command = "hugo server"
+    port = 8888

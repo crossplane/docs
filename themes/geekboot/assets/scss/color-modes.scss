@@ -1,0 +1,71 @@
+:root {
+  color-scheme: light dark;
+}
+
+:root[color-theme="light"] {
+  @import "code-theme-base";
+  @import "light-mode";
+  @import "code-theme-light";
+
+  @include code-theme-base;
+  @include light-mode;
+  @include code-theme-light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @import "code-theme-base";
+    @import "light-mode";
+    @import "code-theme-light";
+
+    @include code-theme-base;
+    @include light-mode;
+    @include code-theme-light
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @import "code-theme-base";
+    @import "dark-mode";
+    @import "code-theme-dark";
+
+    @include code-theme-base;
+    @include dark-mode;
+    @include code-theme-dark;
+  }
+
+  img {
+    filter: brightness(.8) contrast(1.2);
+  }
+
+  .bd-content img {
+    background-color: #fff;
+  }
+
+}
+
+:root[color-theme="dark"] {
+    @import "code-theme-base";
+    @import "dark-mode";
+    @import "code-theme-dark";
+
+    @include code-theme-base;
+    @include dark-mode;
+    @include code-theme-dark;
+
+    img {
+      filter: brightness(.8) contrast(1.2);
+    }
+
+    .bd-content img {
+      background-color: #fff;
+    }
+}
+
+
+body{
+  background: var(--body-background);
+  color: var(--body-font-color);
+}

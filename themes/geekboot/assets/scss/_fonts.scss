@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Avenir-Roman';
+  src: url("/fonts/Avenir-Roman.eot"); /* IE9 Compat Modes */
+  src: url("/fonts/Avenir-Roman.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+       url("/fonts/Avenir-Roman.woff2") format("woff2"), /* Super Modern Browsers */
+       url("/fonts/Avenir-Roman.woff") format("woff"), /* Pretty Modern Browsers */
+       url("/fonts/Avenir-Roman.ttf") format("truetype"); /* Safari, Android, iOS */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Consolas';
+  src: url("/fonts/Consolas.eot"); /* IE9 Compat Modes */
+  src: url("/fonts/Consolas.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+       url("/fonts/Consolas.woff2") format("woff2"), /* Super Modern Browsers */
+       url("/fonts/Consolas.woff") format("woff"), /* Pretty Modern Browsers */
+       url("/fonts/Consolas.ttf") format("truetype"); /* Safari, Android, iOS */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "Avenir-Roman", "Arial", sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: "Consolas", monospace;
+  font-size: .95rem;
+}

@@ -1,0 +1,41 @@
+// stylelint-disable scss/dollar-variable-default
+
+//$bd-gutter-x: 3rem;
+$bd-callout-variants: info, warning, danger !default;
+$font-family-sans-serif:      "Avenir-Roman", "Avenir" !default;
+$font-family-monospace:       "Consolas" !default;
+$line-height-base:            1.8 !default;
+$font-size-root:              18px !default;
+$font-size-base:              1.125 !default;
+$body-font-size:              19px !default;
+
+$aquaMarine:                #3de2cb !default;
+$aquarius:                  #37ccb7 !default;
+$fillBlackBlack:            #183b56 !default;
+$redPrimary:                #ff4f52 !default;
+$slate:                     #505a72 !default;
+$linkWater:                 #D3E7F7 !default;
+$nileBlue:                  #183d54 !default;
+$bayOfMany:                 #215373 !default;
+$turquoise:                 #35d0ba !default;
+$brightSun:                 #ffcd3c !default;
+$froly:                     #f3807b !default;
+$blueBayoux:                #5A7184 !default;
+
+$navbar-background-color:   #183d54 !default;
+$navbar-link-color:         rgba(255,255,255,.85) !default;
+$navbar-link-color-hover:   rgba(255,255,255,1) !default;
+$navbar-link-font-size:     17px !default;
+$navbar-link-padding-left:  16px !default;
+$navbar-link-padding-right: 16px !default;
+$navbar-background:         #183d54 !default;
+
+$body-font-weight:          normal !default;
+$body-min-width:            20rem !default;
+$body-font-size:            18px !default;
+
+$color-admonition-background: transparent;
+
+:root {
+  font-size: $font-size-root;
+}

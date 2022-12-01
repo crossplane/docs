@@ -1,0 +1,22 @@
+<script>
+  // Try and ensure the color theme is applied as early as possible to prevent "flash of inaccurate color"
+(() => {
+  var darkThemeSelected =
+    localStorage.getItem("darkSwitch") !== null &&
+    localStorage.getItem("darkSwitch") === "dark";
+  darkThemeSelected
+    ? document.documentElement.setAttribute("color-theme", "dark")
+    : document.documentElement.removeAttribute("color-theme");
+})();
+</script>
+
+{{ $style := false }}
+{{ $sassOptions := (dict "outputStyle" "expanded" "precision" 6 "enableSourceMap" true ) }}
+
+{{ if eq hugo.Environment "production" -}}
+  {{ $style = resources.Get "scss/docs.scss" | toCSS $sassOptions | resources.PostCSS | resources.PostProcess }}
+{{ else }}
+  {{ $style = resources.Get "scss/docs.scss" | toCSS $sassOptions  }}
+{{ end }}
+
+<link href="{{ $style.Permalink}}" rel="stylesheet">
