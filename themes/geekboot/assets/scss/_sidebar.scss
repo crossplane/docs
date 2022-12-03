@@ -1,5 +1,8 @@
 .bd-sidebar-container {
   background-color: var(--body-background) !important;
+  position: sticky;
+  top: 5rem;
+
 
   .btn-close {
     filter: var(--btn-close-color)!important;
