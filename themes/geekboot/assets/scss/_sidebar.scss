@@ -51,22 +51,24 @@
 
     .sidebar-checkbox{
       display: none !important;
+    }
 
-      &:not(:checked){
+    .sidebar-label {
+      &.collapsed{
 
-        & ~ label svg.sidebar-icon.plus {
+        svg.sidebar-icon.plus {
           display: block !important;
         }
-        & ~ label svg.sidebar-icon.x {
+        svg.sidebar-icon.x {
           display: none !important;
         }
       }
-      &:checked{
+      &:not(.collapsed){
 
-        & ~ label svg.sidebar-icon.plus {
+        svg.sidebar-icon.plus {
           display: none !important;
         }
-        & ~ label svg.sidebar-icon.x {
+        svg.sidebar-icon.x {
           display: block !important;
         }
       }
