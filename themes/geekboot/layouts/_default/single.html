@@ -4,7 +4,7 @@
       <div class="offcanvas-lg offcanvas-start bd-sidebar-container" tabindex="-1" id="bdSidebar" aria-labelledby="bdSidebarOffcanvasLabel">
         <div class="offcanvas-header pb-4 border-bottom">
           <div class="d-flex offcanvas-title fw-bold" id="bdNavbarOffcanvasLabel">
-            Crossplane {{ if ne .Page.Params.version "master" }}v{{ end }}{{.Page.Params.version}} Documentation
+            Crossplane Documentation - {{ if ne .Page.Params.version "master" }}v{{ end }}{{.Page.Params.version}}
           </div>
           <div class="d-flex"><button type="button" class="btn-close bi align-self-center p-0" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdSidebar"></button></div>
         </div>
