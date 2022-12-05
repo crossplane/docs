@@ -1,79 +1,170 @@
-<header class="navbar navbar-expand-lg bd-navbar  sticky-top">
-  <nav class="container-xxl w-100 bd-gutter flex-wrap flex-lg-nowrap justify-content-between" aria-label="Main navigation">
-    <div class="bd-navbar-toggle">
-      <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdSidebar" aria-controls="bdSidebar" aria-label="Toggle docs navigation">
-        {{ partialCached "icons/hamburger.svg" (dict "class" "bi" "width" "24" "height" "24") }}
-        <span class="d-none fs-6 pe-1">Browse</span>
-      </button>
-    </div>
-    <a class="navbar-brand" href="https://www.crossplane.io" aria-label="Bootstrap">
+<header class="navbar docs-navbar navbar-expand-lg sticky-top py-0 align-items-center">
+
+  <div class="docs-left-toggle">
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+    data-bs-target="#bdSidebar" aria-controls="bdSidebar" aria-label="Toggle docs content">
+      {{ partialCached "icons/hamburger.svg" (dict "class" "" "width" "1.5rem" "height" "1.5rem") }}
+      <span class="d-none fs-6 pe-1">Browse</span>
+    </button>
+  </div>
+
+  <div class="docs-right-toggle order-3">
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+    data-bs-target="#offcanvas" aria-controls="offcanvas" aria-label="Toggle Crossplane navigation">
+      <svg class="bi white" aria-hidden="true"><use xlink:href="#three-dots"></use></svg>
+    </button>
+  </div>
+
+  <div class="navbar-brand">
+    <a href="https://www.crossplane.io" aria-label="Crossplane">
       <img
       src="/img/crossplane-logo.svg"
       alt="Crossplane logo"
       srcset="/img/crossplane-logo.svg 1x, /img/crossplane-logo.svg 2x"
-      width="185"
-      height="40"
+      width="152px"
       decoding="async"
       data-nimg="future"
       loading="lazy">
     </a>
+  </div>
 
-    <div class="d-flex">
-      <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-label="Toggle navigation">
-        <svg class="bi white" aria-hidden="true"><use xlink:href="#three-dots"></use></svg>
-      </button>
-    </div>
+  <div class="w-100 offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
 
-    <div class="offcanvas-lg offcanvas-end flex-grow-1 w-100" tabindex="-1" id="bdNavbar" aria-labelledby="CrossplaneLogo" data-bs-scroll="true">
-      <div class="offcanvas-header px-4 pb-0">
-        <div class="offcanvas-title fw-bold" id="CrossplaneLogo">
-          <img src="/img/popsicle-icon.svg" alt="Crossplane popsicle logo" height="40" width="185" decoding="async" loading="lazy" /> Crossplane
+    <div class="offcanvas-body p-0">
+
+      <div class="offcanvas-header p-0">
+        <div class="navbar-brand">
+          <a href="https://www.crossplane.io" aria-label="Crossplane">
+            <img
+            src="/img/crossplane-logo.svg"
+            alt="Crossplane logo"
+            srcset="/img/crossplane-logo.svg 1x, /img/crossplane-logo.svg 2x"
+            width="152px"
+            decoding="async"
+            data-nimg="future"
+            loading="lazy">
+          </a>
         </div>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#offcanvas"></button>
       </div>
 
-      <div class="offcanvas-body p-4 pt-0 p-lg-0">
-        <hr class="d-lg-none text-white-50">
-        <ul class="navbar-nav vstack bd-navbar-nav align-items-center justify-content-center">
-          <li class="nav-item text-center">
-            <a class="p-3 navbar-link" href="https://www.crossplane.io/why-control-planes">Why Control Planes?</a>
+
+      <div class="navbar-center-links collapse navbar-collapse justify-content-evenly show">
+        <ul class="navbar-nav align-items-center ">
+          <li class="nav-item">
+            <a class="navbar-link" href="https://www.crossplane.io/why-control-planes">Why Control Planes?</a>
           </li>
           <li class="nav-item">
-            <a class="p-3 navbar-link"  aria-current="page" href="https://docs.crossplane.io">Documentation</a>
+            <a class="navbar-link"  aria-current="page" href="https://docs.crossplane.io">Documentation</a>
           </li>
           <li class="nav-item">
-            <a class="p-3 navbar-link"  href="https://www.crossplane.io/community">Community</a>
+            <a class="navbar-link"  href="https://www.crossplane.io/community">Community</a>
           </li>
           <li class="nav-item">
-            <a class="p-3 navbar-link"  href="https://blog.crossplane.io/">Blog</a>
+            <a class="navbar-link"  href="https://blog.crossplane.io/">Blog</a>
           </li>
         </ul>
+      </div>
 
-        <hr class="d-lg-none text-white-50">
+      <div class="navbar-icons flex-shrink-1 show">
+          <ul class="navbar-nav">
+            <li class="nav-item col-xs p-2">
+              <a class="navbar-link" href="https://github.com/crossplane" title="Crossplane Github Repository" target="_blank" rel="noopener">
+                {{ partialCached "icons/github.svg" .}} <span class="icon-label">Crossplane GitHub</span>
+              </a>
+            </li>
 
-        <div class="d-flex align-items-center justify-content-evenly">
-          <div class="icons d-flex">
-            <a class="github-icon nav-link py-2 px-0 px-lg-2" href="https://github.com/crossplane" target="_blank" rel="noopener">
-              {{ partialCached "icons/github.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
-              <small class="d-lg-none ms-2">Crossplane GitHub</small>
-            </a>
+            <li class="nav-item col-xs p-2">
+              <a class="navbar-link" href="https://slack.crossplane.io" title="Join the Crossplane Slack" target="_blank" rel="noopener">
+                {{ partialCached "icons/slack.svg" . }} <span class="icon-label">Crossplane Slack</span>
+              </a>
+            </li>
 
-            <a class="slack-icon nav-link py-2 px-0 px-lg-2" href="https://slack.crossplane.io" target="_blank" rel="noopener">
-              {{ partialCached "icons/slack.svg" (dict "class" "navbar-nav-svg" "width" "16" "height" "16") }}
-              <small class="d-lg-none ms-2">Crossplane Slack</small>
-            </a>
-          </div>
+            <li class="nav-item col-x p-2">
+              <div class="vr d-lg-flex mx-lg-2 text-white"></div>
+            </li>
 
-          <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white"></div>
-          <hr class="d-lg-none text-white-50">
-
-          <div class="color-switcher">
-            <div class="navbar-link form-check form-switch d-flex align-items-center pe-3" >
-              <input class="d-flex form-check-input" type="checkbox" id="darkSwitch" />
-              <label class="d-flex form-check-label ps-3" for="darkSwitch">Dark Mode</label>
-            </div>
-          </div>
-        </div>
+            <li class="nav-item col-xs p-2">
+              <div class="form-check form-switch color-switcher" >
+                <input class="d-flex form-check-input" type="checkbox" id="darkSwitch" />
+                <label class="d-flex navbar-link form-check-label" for="darkSwitch">Dark Mode</label>
+              </div>
+            </li>
+          </ul>
+      </div>
     </div>
-  </nav>
+  </div>
+
+  <!-- Offcanvas section is a duplicate of the standard display.
+    It's much easier and more obvious to duplicate the content instead of
+    working with a single offcanvas style and modifying the visible elements -->
+    <!-- <div class="offcanvas w-100 off canvas-lg offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+
+      <div class="offcanvas-header">
+          <a href="https://www.crossplane.io" class="offcanvas-title position-relative top-50 start-50 translate-middle" aria-label="Crossplane">
+          <img
+          src="/img/crossplane-logo.svg"
+          alt="Crossplane logo"
+          srcset="/img/crossplane-logo.svg 1x, /img/crossplane-logo.svg 2x"
+          width="185"
+          height="40"
+          decoding="async"
+          data-nimg="future"
+          loading="lazy"></a>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#offcanvas"></button>
+      </div>
+      <div class="offcanvas-body float-end">
+        <div>
+          <hr class="d-lg-none text-white-50">
+        </div>
+
+        <div class="offcanvas-center-links">
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item p-2">
+              <a class="navbar-link" href="https://www.crossplane.io/why-control-planes">Why Control Planes?</a>
+            </li>
+            <li class="nav-item p-2">
+              <a class="navbar-link"  aria-current="page" href="https://docs.crossplane.io">Documentation</a>
+            </li>
+            <li class="nav-item p-2">
+              <a class="navbar-link"  href="https://www.crossplane.io/community">Community</a>
+            </li>
+            <li class="nav-item p-2">
+              <a class="navbar-link"  href="https://blog.crossplane.io/">Blog</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <hr class="d-lg-none text-white-50">
+        </div>
+
+        <div class="offcanvas-icons">
+          <ul class="justify-content-center">
+            <li class="p-2">
+              <a class="navbar-link d-flex" href="https://github.com/crossplane" title="Crossplane Github Repository" target="_blank" rel="noopener">
+                <div class="pe-2">
+                  {{ partialCached "icons/github.svg" .}}
+                </div>
+                <div class="">
+                  Crossplane Github
+                </div>
+              </a>
+            </li>
+
+            <li class="col-xs p-2">
+              <a class="navbar-link d-flex" href="https://slack.crossplane.io" title="Join the Crossplane Slack" target="_blank" rel="noopener">
+                <div class="pe-2">
+                  {{ partialCached "icons/slack.svg" . }}
+                </div>
+                <div>
+                  Join the Crossplane Slack
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div> -->
+
 </header>
