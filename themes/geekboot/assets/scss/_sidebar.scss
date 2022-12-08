@@ -1,8 +1,11 @@
 .bd-sidebar-container {
   background-color: var(--body-background) !important;
-  position: sticky;
   top: 5rem;
 
+
+  @include media-breakpoint-up(lg) {
+    position: sticky;
+  }
 
   .btn-close {
     filter: var(--btn-close-color)!important;
