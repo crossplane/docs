@@ -1,10 +1,10 @@
 {{ $current := . }}
 {{ $version_section := (where .Site.Sections ".Page.Params.version" .Page.Params.version) }}
-<nav class="bd-links-nav w-100 pt-3" aria-label="Docs navigation">
+<nav class="bd-links-nav w-100" aria-label="Docs navigation">
 
   <div class="bd-links-container">
-    <div class="container nav-container d-flex w-100">
-    <div class="container flex-row">
+    <div class="container nav-container pe-0 d-flex w-100">
+    <div class="container flex-row pe-0">
       <div class="d-flex flex-column ">
             <div class="d-flex"><a href="{{ .FirstSection.Permalink }} ">{{ .FirstSection.Title }}</a></div>
       </div>
@@ -36,9 +36,9 @@
   {{ if or $isCurrent (eq .thisPage .current.Parent) }}
     {{ $expand = true }}
   {{ end }}
-  <div class="section-container container">
+  <div class="section-container container pe-0">
   {{ if $isParent }}
-      <div class="container nav-container d-flex w-100 {{if eq .thisPage $.current}}active{{ else if $expand }}active-parent{{end}}">
+      <div class="container nav-container pe-0 d-flex w-100 {{if eq .thisPage $.current}}active{{ else if $expand }}active-parent{{end}}">
         <div class=" d-flex w-100 border-0">
           <a class="" href="{{.thisPage.Permalink}}">{{.thisPage.Title}}</a>
         </div>
