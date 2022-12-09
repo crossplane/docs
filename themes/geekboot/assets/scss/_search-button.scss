@@ -32,9 +32,7 @@
     }
 
     .DocSearch-Button {
-        .DocSearch-Button-Keys{
-            display: none;
-        }
+        display: flex !important;
 
         /* In order to get the buttons to render like Bootstrap buttons
         the following just copies all the styles of the desired button and
