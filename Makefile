@@ -75,6 +75,12 @@ $(HUGO):
 # ====================================================================================
 # Targets
 
+# Setup npm packages
+npm.init:
+	@$(INFO) Installing npm packages
+	@npm install
+	@$(OK) Installed npm packages
+
 # Run local development server.
 run: $(HUGO)
 	@$(INFO) starting hugo development server
