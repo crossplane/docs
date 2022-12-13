@@ -12,3 +12,4 @@ import './bootstrap/src/tab';
 import './bootstrap/src/offcanvas';
 
 import './tabDeepAnchor.js';
+import './customClipboard.js';

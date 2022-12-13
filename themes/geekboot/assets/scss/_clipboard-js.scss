@@ -2,6 +2,12 @@
 //
 // JS-based `Copy` buttons for code snippets.
 
+.docs-code-snippet{
+  margin-right: 0;
+  margin-left: 0;
+  border-radius: 0.375rem;
+}
+
 .bd-clipboard,
 .bd-edit {
   position: relative;
