@@ -12,7 +12,7 @@ const btnHtml = [
 ].join('')
 
 // wrap programmatically code blocks and add copy btn.
-document.querySelectorAll('.highlight')
+document.querySelectorAll('.chroma')
   .forEach(element => {
       element.insertAdjacentHTML('beforeend', btnHtml)
   })
