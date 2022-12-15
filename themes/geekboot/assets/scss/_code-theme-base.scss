@@ -19,16 +19,12 @@
 
       background-color: var(--code-block-background-color);
       display: flex !important;
-      // padding-left: 20px;
-      padding-top: 0px;
-      padding-bottom: 0px;
+      padding-right: 10px;
 
       .btn-clipboard{
         border: 0;
-        padding: 0;
         color: $gray-500;
         background-color: inherit;
-        max-width: 20px;
         &:hover {
           color: #fff;
         }
@@ -43,9 +39,10 @@
       font-size: .95rem !important;
       line-height: 1.45em;
       display: flex !important;
-      flex-grow: 1 !important;
       background-color: var(--code-block-background-color);
       margin-bottom: 0;
+      padding-bottom: .5rem;
+      padding-top: .5rem;
 
       code {
         color: #f8f9fa;   // Code color if there is no defined highlighter style

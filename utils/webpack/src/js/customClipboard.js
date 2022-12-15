@@ -12,7 +12,7 @@ const btnHtml = [
 ].join('')
 
 // wrap programmatically code blocks and add copy btn.
-document.querySelectorAll('.chroma')
+document.querySelectorAll('.highlight')
   .forEach(element => {
       element.insertAdjacentHTML('beforeend', btnHtml)
   })
@@ -22,8 +22,8 @@ document.querySelectorAll('.chroma')
   // second parent is the .hightlight div
 const clipboard = new ClipboardJS('.btn-clipboard', {
   target: trigger => trigger.parentNode.parentNode,
-  text: function(trigger) { return getText(trigger.parentNode.parentNode) }
-})
+  }
+)
 
 clipboard.on('success', event => {
   const iconFirstChild = event.trigger.querySelector('.bi').firstElementChild
