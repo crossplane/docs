@@ -1,46 +1,126 @@
 @mixin code-theme-base {
 
-  //.chroma is applied to the entire code block div and the line number and
-  // code pre elements.
-  .chroma {
-    font-size: .95rem !important;
-    line-height: 1.45em;
-    margin-bottom: .5rem;
+  // Code box div
+  .highlight {
+    overflow-x: auto;
+    width: 100% !important;
+    background-color: var(--code-block-background-color);
+    display: flex !important;
+    margin-top: 1rem; // prevent boxes from running together
 
-    // Applied to the top-level table
-    .lntable {
-      border-spacing: 0;
-      width: 100%;
-      display: block;
+    :target{
+      margin-top: 0;
+      padding-top: 0;
+    }
 
-      // Apply to both line numbers and code lines
-      code {
-        display: block;
-        color: #f8f9fa;
-      }
+      // Clipboard div
+    .bd-clipboard{
 
-      // Line numbers
-      td:first-child {
+      background-color: var(--code-block-background-color);
+      display: flex !important;
+      padding-left: 20px;
+      padding-top: 0px;
+      padding-bottom: 0px;
 
-        a:hover{
-          text-decoration: none !important;
-        }
 
-        code {
-          padding-right: 0px;
-          margin-right: 5px;
-          background-color: var(--code-line-numbers-background-color);
-        }
+      .btn-clipboard{
+        border: 0;
+        color: $gray-500;
+        background-color: inherit;
 
-      }
-
-      td:nth-child(2) {
-        code {
-          background-color: var(--code-box-background-color);
-          padding-left: 1rem;
+        &:hover {
+          color: #fff;
         }
       }
     }
+
+
+    //.highlight.chroma is applied to the entire code block div and the line number and
+    // code pre elements.
+    .chroma {
+      width: 100%;
+      font-size: .95rem !important;
+      line-height: 1.45em;
+      display: flex !important;
+      flex-grow: 1 !important;
+      background-color: var(--code-block-background-color);
+
+      code {
+        color: #f8f9fa;   // Code color if there is no defined highlighter style
+
+        // Line numbers
+        .ln {
+          padding-right: 0px;
+          background-color: var(--code-line-numbers-background-color);
+          border-right: 1px solid #505a72;
+
+           // Line number anchors
+          a {
+            color: var(--code-line-number-color);
+            scroll-margin-top: 90px;
+            &:hover{
+              // text-decoration: none !important;
+              color: #fff;
+              font-weight: 800;
+              text-decoration: none !important;
+            }
+        }
+        }
+
+        // code line
+        .cl {
+          background-color: var(--code-block-background-color);
+          padding-left: 1rem;
+        }
+      }
+
+    }
+
+      // .lntd {
+      //   pre {
+      //     // Prevent extra space at the code box bottom
+      //     margin-bottom: 0px !important;
+      //     padding-bottom: 0px;
+      //   }
+
+      // }
+
+    //     // Apply to both line numbers and code lines
+    //     code {
+    //       color: #f8f9fa;   // Code color if there is no defined highlighter style
+    //     }
+    //     // Line numbers
+    //     td:first-child {
+
+    //       // Box containing line numbers
+    //       code {
+    //         padding-right: 0px;
+    //         background-color: var(--code-line-numbers-background-color);
+    //         border-right: 1px solid #505a72;
+    //       }
+
+    //       // Line number anchors
+    //       a {
+    //         color: var(--code-line-number-color);
+    //         scroll-margin-top: 90px;
+    //         &:hover{
+    //           // text-decoration: none !important;
+    //           color: #fff;
+    //           font-weight: 800;
+    //           text-decoration: none !important;
+    //         }
+    //     }
+
+    //     }
+
+    //     // Code
+    //     td:nth-child(2) {
+    //       code {
+    //         background-color: var(--code-block-background-color);
+    //         padding-left: 1rem;
+    //       }
+    //     }
+    //   }
+    // }
   }
 }
-

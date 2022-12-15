@@ -4,27 +4,25 @@ import * as ClipboardJS from 'clipboard';
 // Most of the following is directly from the Bootstrap Website.
 // https://github.com/twbs/bootstrap/blob/main/site/assets/js/code-examples.js
 const btnHtml = [
-  '<div class="bd-code-snippet">',
   '   <div class="bd-clipboard">',
   '      <button type="button" class="btn-clipboard">',
   '        <svg class="bi" role="img" title="Copy" aria-label="Copy"><use xlink:href="#clipboard"/></svg>',
   '      </button>',
-  '   </div>',
-  '</div>'
+  '   </div>'
 ].join('')
 
 // wrap programmatically code blocks and add copy btn.
 document.querySelectorAll('.highlight')
   .forEach(element => {
-    if (!element.closest('.bd-example-snippet')) { // Ignore examples made be shortcode
-      element.insertAdjacentHTML('beforebegin', btnHtml)
-      element.previousElementSibling.append(element)
-    }
+      element.insertAdjacentHTML('beforeend', btnHtml)
   })
 
+  // use .parentNode.parentNode because the trigger is the <button> element.
+  // first parent is the .bd-clipboard div
+  // second parent is the .hightlight div
 const clipboard = new ClipboardJS('.btn-clipboard', {
-  target: trigger => trigger.closest('.bd-code-snippet').querySelector('.highlight'),
-  text: function(trigger) { return getText(trigger.closest('.bd-code-snippet').querySelector('.highlight')) }
+  target: trigger => trigger.parentNode.parentNode,
+  text: function(trigger) { return getText(trigger.parentNode.parentNode) }
 })
 
 clipboard.on('success', event => {
@@ -50,7 +48,6 @@ clipboard.on('error', event => {
 // Get the lines from the code box based on the optional `copy-lines` attribute.
 // Defaults to copying all lines.
 function getText(highlightDiv){
-
   // Find the code lines inside the code table
   var codeLines = highlightDiv.getElementsByClassName("line")
   var codeText = []
