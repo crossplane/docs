@@ -1,8 +1,6 @@
 .bd-sidebar-container {
   background-color: var(--body-background) !important;
-  position: sticky;
   top: 0;
-
 
   @include media-breakpoint-up(lg) {
     position: sticky;

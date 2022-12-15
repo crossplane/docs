@@ -1,4 +1,6 @@
 {{ partialCached "meta-common" . }}
+<meta name="description" content="{{ .Page.Params.description | default .Site.Params.description | markdownify }}">
+<meta property="og:url"             content="{{ .Permalink }}" />
 {{ if .Page.Params.version }}
     {{if eq .Page.Params.version "master" }}
         <!-- "master" is not a SemVer version. Set it to 0.0.0 to derank it in search -->
@@ -8,10 +10,11 @@
     {{ end }}
 {{ end }}
 
-<title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Site.Params.docs_version }}{{ end }}</title>
+<title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Page.Params.version }}{{ end }}</title>
 <link rel="canonical" href="https://docs.crossplane.io{{ .Permalink }}">
 
-{{ partialCached "stylesheet" . }}
+{{ partialCached "stylesheet-cached" . }}
+{{ partial "stylesheet-dynamic" . }}
 {{ partialCached "favicons" . }}
 
 {{ partial "social" . }}
