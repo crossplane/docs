@@ -64,10 +64,13 @@ function tabDeepLink(anchorName){
 function openTab(){
     var urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('tab')){
-        document.getElementById(urlParams.get('tab')).click();
+        tabID = urlParams.get('tab')
+        document.getElementById(tabID).click();
+        document.getElementById(tabID + location.hash).scrollIntoView();
     }
 }
 
 
 window.onload = tabDeepLink("anchor-link");
+window.onload = tabDeepLink("lnlinks");
 window.onload = openTab();
