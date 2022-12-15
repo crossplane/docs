@@ -1,6 +1,11 @@
 {{ partialCached "meta-common" . }}
 {{ if .Page.Params.version }}
-    <meta name="docsearch:version" content="{{.Page.Params.version}}" />
+    {{if eq .Page.Params.version "master" }}
+        <!-- "master" is not a SemVer version. Set it to 0.0.0 to derank it in search -->
+        <meta name="docsearch:version" content="0.0.0-master" />
+    {{ else }}
+        <meta name="docsearch:version" content="{{.Page.Params.version}}" />
+    {{ end }}
 {{ end }}
 
 <title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Site.Params.docs_version }}{{ end }}</title>

@@ -41,6 +41,9 @@
 @import "hints";
 @import "callouts";
 @import "anchor";
-// @import "search";
+/* purgecss start ignore */
+@import "search-button";
+@import "search-results";
+/* purgecss end ignore */
 @import "skippy";
 @import "fonts";

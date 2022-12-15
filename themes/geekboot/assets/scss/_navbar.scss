@@ -26,41 +26,6 @@
     }
   }
 
-
-  @media (min-width: 993px) and (max-width: 1090px){
-
-    // .icons {
-    //   white-space: nowrap;
-    //   flex-direction: column;
-    //   padding-right: 0 !important;
-
-    //   .slack-icon,
-    //   .github-icon {
-    //     padding-left: 0 !important;
-    //     padding-right: 0 !important;
-    //     padding-top: 0 !important;
-    //     padding-bottom: 0 !important;
-    //   }
-    // }
-
-    // .color-switcher {
-    //   .form-check {
-    //     white-space: nowrap;
-    //     flex-direction: column;
-    //     padding-right: 0 !important;
-
-    //     .form-check-input {
-    //       padding-bottom: 2px;
-    //     }
-
-    //     .form-check-label {
-    //       padding-right: 0px !important;
-    //       padding-left: 0px !important;
-    //     }
-    //   }
-    // }
-  }
-
   // Mobile View
   @include media-breakpoint-down(lg) {
 
@@ -125,6 +90,23 @@
 
   // Desktop View
   @include media-breakpoint-up(lg) {
+
+    //spacing fixes between large screens and mobile view
+    @include media-breakpoint-down(xxl){
+      .navbar-brand{
+        width: initial !important;
+      }
+
+      .navbar-icons{
+        min-width: 0 !important;
+      }
+
+      .navbar-link{
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+      }
+    }
+
     .offcanvas{
       display: none;
     }

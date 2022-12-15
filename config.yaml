@@ -10,6 +10,9 @@ disableKinds:
   - term
   - RSS
 
+ignoreFiles:
+- README.md
+
 build:
   writeStats: true
 
