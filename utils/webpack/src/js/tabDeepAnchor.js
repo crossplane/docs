@@ -69,5 +69,5 @@ function openTab(){
 }
 
 
-// window.onload = tabDeepLink("anchor-link");
-// window.onload = openTab();
+window.onload = tabDeepLink("anchor-link");
+window.onload = openTab();
