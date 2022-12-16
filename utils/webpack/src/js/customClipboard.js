@@ -22,6 +22,7 @@ document.querySelectorAll('.highlight')
   // second parent is the .hightlight div
 const clipboard = new ClipboardJS('.btn-clipboard', {
   target: trigger => trigger.parentNode.parentNode,
+  text: trigger => getText(trigger.parentNode.parentNode)
   }
 )
 
@@ -49,7 +50,9 @@ clipboard.on('error', event => {
 // Defaults to copying all lines.
 function getText(highlightDiv){
   // Find the code lines inside the code table
-  var codeLines = highlightDiv.getElementsByClassName("line")
+  // ".line" contains the line number and text
+  // .cl is just the text
+  var codeLines = highlightDiv.getElementsByClassName("cl")
   var codeText = []
 
   for (var i = 0; i < codeLines.length; i++){
