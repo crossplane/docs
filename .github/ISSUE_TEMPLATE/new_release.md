@@ -1,5 +1,6 @@
 ---
 name: New Release
+title: "[New Release]: "
 about: Cut a Crossplane release
 labels: release
 ---
