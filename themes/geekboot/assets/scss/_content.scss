@@ -11,11 +11,15 @@ body {
   font-size: $body-font-size;
   line-height: 1.8em;
 
+  h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
   code {
     background-color: var(--code-background);
     color: var(--code-color);
     padding: 0.2em 0.4em;
-
   }
 
   a {

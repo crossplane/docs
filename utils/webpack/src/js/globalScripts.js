@@ -1,6 +1,7 @@
 // The collection of things to load on all pages
-import ColorMode from './colorMode'
-import 'instant.page'
+import ColorMode from './colorMode';
+import 'instant.page';
+
 
 import './bootstrap/src/base-component';
 import './bootstrap/src/button';
@@ -11,3 +12,4 @@ import './bootstrap/src/tab';
 import './bootstrap/src/offcanvas';
 
 import './tabDeepAnchor.js';
+import './customClipboard.js';

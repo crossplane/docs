@@ -10,18 +10,6 @@
 })();
 </script>
 
-{{ $style := false }}
-{{ $sassOptions := (dict "outputStyle" "expanded" "precision" 6 "enableSourceMap" true ) }}
-
-{{ if eq hugo.Environment "production" -}}
-  {{ $style = resources.Get "scss/docs.scss" | toCSS $sassOptions | resources.PostCSS | resources.PostProcess }}
-{{ else }}
-  {{ $style = resources.Get "scss/docs.scss" | toCSS $sassOptions  }}
-{{ end }}
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" media="print" onload="this.media='all'"/>
-
-<link href="{{ $style.Permalink}}" rel="stylesheet">
-
 <link rel="preconnect" href="https://9UXKYX61NK-dsn.algolia.net" crossorigin />
 

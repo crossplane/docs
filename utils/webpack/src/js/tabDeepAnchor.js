@@ -36,8 +36,8 @@ function getParents(elem, selector) {
 
 // Update the anchor link if the anchor is inside a tab
 // The updated link will create a query string with the name of the tab.
-function tabDeepLink(){
-    var anchorCollection = document.getElementsByClassName("anchor-link");
+function tabDeepLink(anchorName){
+    var anchorCollection = document.getElementsByClassName(anchorName);
 
     if(anchorCollection.length == 0){
         return
@@ -53,8 +53,9 @@ function tabDeepLink(){
         if(parentTab.length == 1){
             tabID = parentTab[0].id.replace("-pane", "");
 
-            link = '?tab=' + tabID + '#' + anchor.id;
+            link = '?tab=' + tabID + anchor.hash;
             anchor.setAttribute('href', link);
+            anchor.setAttribute('id', (tabID + anchor.hash));
         }
     }
 }
@@ -63,11 +64,13 @@ function tabDeepLink(){
 function openTab(){
     var urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('tab')){
-        document.getElementById(urlParams.get('tab')).click();
+        tabID = urlParams.get('tab')
+        document.getElementById(tabID).click();
+        document.getElementById(tabID + location.hash).scrollIntoView();
     }
-    //document.getElementById('tab-367').click();
 }
 
 
-window.onload = tabDeepLink();
+window.onload = tabDeepLink("anchor-link");
+window.onload = tabDeepLink("lnlinks");
 window.onload = openTab();

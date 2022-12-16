@@ -1,7 +1,7 @@
 @mixin code-theme-light {
 
   --code-block-background-color: #19212C;
-  --code-line-numbers-background-color: #{darken(#19212C, 2)};
+  --code-line-numbers-background-color: #{lighten(#19212C, 3)};
 
   // --code-background: #{$code-background-dark};
   // --code-accent-color: #{darken($code-background-dark, 4)};
@@ -24,7 +24,7 @@
   /* PreWrapper */
   .chroma {
     color: #f8f8f2;
-    background-color: #1b1c16;
+    //background-color: #1b1c16;
   }
   /* Other */
   .chroma .x {

@@ -27,8 +27,8 @@ markup:
     codeFences: true
     noClasses: false
     linenos: true
-    LineNumbersInTable: true
-    anchorLineNos: false    # Need to fix the line number ID generation.
+    anchorLineNos: true
+    lineNumbersInTable: false
 
 module:
   mounts:

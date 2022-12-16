@@ -1,7 +1,6 @@
 .bd-sidebar-container {
   background-color: var(--body-background) !important;
-  top: 5rem;
-
+  top: 0;
 
   @include media-breakpoint-up(lg) {
     position: sticky;
@@ -14,7 +13,6 @@
 }
 
 .bd-links-nav {
-  margin-top: 1rem;
   font-size: .95rem !important;
 
   @include media-breakpoint-down(lg) {
