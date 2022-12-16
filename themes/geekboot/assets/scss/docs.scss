@@ -24,6 +24,7 @@
 // Happy Bootstrapping!
 
 
+// Import the entire Bootstrap library and let PurgeCSS optimize in production
 @import "bootstrap/bootstrap";
 @import "variables";
 /* purgecss start ignore */
