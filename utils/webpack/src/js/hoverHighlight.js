@@ -19,25 +19,14 @@ export function build_eventlistener(command_id, code_box_label, code_line_number
     // the outer div for the fenced code block
     var code_box = document.querySelector("div[label=" + code_box_label + "]");
 
-    // the element of the line number we want
-    // var code_line_num = code_box.getElementsByClassName("ln")[code_line_number - 1 ];
-
     // the element of the source code text we want
     var code_line_text = code_box.getElementsByClassName("cl")[code_line_number - 1 ];
 
-
-    // // create a new span element to wrap the line number in for highlighting
-    // var line_num_hl_span = document.createElement('span');
-    // line_num_hl_span.classList.add('hl');
-    // line_num_hl_span.setAttribute('id', 'hover-hl');
-
     command.addEventListener('mouseover', function handleMouseOver() {
-        //toggle_highlight(code_line_num, code_line_text, line_num_hl_span);
         code_line_text.classList.toggle("hl");
     });
 
     command.addEventListener('mouseout', function handleMouseOut() {
-        //toggle_highlight(code_line_num, code_line_text, line_num_hl_span);
         code_line_text.classList.toggle("hl");
     });
 
@@ -46,15 +35,5 @@ export function build_eventlistener(command_id, code_box_label, code_line_number
 function toggle_highlight(line_num, line_text, hl_span) {
     line_text.classList.toggle("hl");
 }
-
-// function remove_highlight_line(line_num, line_text, hl_span){
-//     // get the element's parent node
-//     var parent = hl_span.parentNode;
-//     // move all children out of the element
-//     while (hl_span.firstChild) parent.insertBefore(hl_span.firstChild, hl_span);
-//     // remove the empty element
-//     parent.removeChild(hl_span);
-//     line_text.classList.toggle("hl");
-// }
 
 window.onload = getKeywords();
