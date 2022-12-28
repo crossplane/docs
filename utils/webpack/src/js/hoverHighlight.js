@@ -8,10 +8,6 @@ export function getKeywords(){
 
 
 export function build_eventlistener(command_id, code_box_label, code_line_number){
-    // get the dynamic variables created by Hugo shortcode
-    // var command_id = document.currentScript.getAttribute('rand_id');
-    // var code_box_label = document.currentScript.getAttribute('label');
-    // var code_line_number = document.currentScript.getAttribute('line');
 
     // the <mouseover> elment of the individual command calling the shortcode
     var command = document.getElementById(command_id);
@@ -30,10 +26,6 @@ export function build_eventlistener(command_id, code_box_label, code_line_number
         code_line_text.classList.toggle("hl");
     });
 
-}
-
-function toggle_highlight(line_num, line_text, hl_span) {
-    line_text.classList.toggle("hl");
 }
 
 window.onload = getKeywords();
