@@ -21,8 +21,9 @@ body {
     text-decoration: none;
     color: var(--content-link-color);
 
-    &:hover{
+    &:hover, code{
       text-decoration: underline !important;
+      color: var(--content-link-color);
     }
 
     &:visited {
