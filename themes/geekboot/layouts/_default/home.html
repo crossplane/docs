@@ -1,0 +1,46 @@
+{{ define "main" }}
+<div class="container px-4 py-5 bd-content" id="home">
+  <h1 class="pb-2 border-bottom">Crossplane Documentation</h1>
+  <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#book"/></svg>
+      </div>
+      <h3 class="fs-2"><a href="{{.Site.BaseURL}}v{{.Site.Params.latest}}">User Documentation</a></h3>
+      <p>
+        Documentation for installing, configuring and using Crossplane.
+      </p>
+      <a href="{{.Site.BaseURL}}v{{.Site.Params.latest}}" class="d-inline-flex align-items-center">
+        Read the docs
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+      </a>
+    </div>
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#signpost-split"/></svg>
+      </div>
+      <h3 class="fs-2"><a href="{{.Site.BaseURL}}knowledge-base">Knowledge Base</a></h3>
+      <p>
+        Guides describing Crossplane integrations and best practices.
+      </p>
+      <a href="{{.Site.BaseURL}}knowledge-base" class="d-inline-flex align-items-center">
+        Read the knowledge base
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+      </a>
+    </div>
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg>
+      </div>
+      <h3 class="fs-2"><a href="{{.Site.BaseURL}}contribute">Developer Guide</a></h3>
+      <p>
+        Details and information on how to develope and contribute to the Crossplane project.
+      </p>
+      <a href="{{.Site.BaseURL}}contribute" class="d-inline-flex align-items-center">
+        Learn how to contribute
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+{{ end }}
