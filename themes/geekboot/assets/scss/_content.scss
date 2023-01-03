@@ -39,44 +39,6 @@ body {
   }
 
 
-  // Override Bootstrap defaults
-  > .table,
-  > .table-responsive .table {
-    margin-bottom: 1.5rem;
-    @include font-size(.875rem);
-
-    @include media-breakpoint-down(lg) {
-      &.table-bordered {
-        border: 0;
-      }
-    }
-
-    thead {
-      border-bottom: 2px solid currentcolor;
-    }
-
-    tbody:not(:first-child) {
-      border-top: 2px solid currentcolor;
-    }
-
-    th,
-    td {
-      &:first-child {
-        padding-left: 0;
-      }
-
-      &:not(:last-child) {
-        padding-right: 1.5rem;
-      }
-    }
-
-    // Prevent breaking of code
-    // stylelint-disable-next-line selector-max-compound-selectors
-    th,
-    td:first-child > code {
-      white-space: nowrap;
-    }
-  }
 }
 
 .bd-title {
@@ -105,4 +67,12 @@ h1,h2,h3,h4,h5,h6 {
   &.accordion-header {
     padding-top: 0 !important;
   }
+}
+
+
+.table {
+  color: var(--font-body-color);
+  // Override bootstrap defaults to support dark mode
+  --bs-table-hover-color: var(--font-body-color);
+  --bs-table-hover-bg: var(--nav-highlight-color);
 }
