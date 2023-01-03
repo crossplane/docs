@@ -59,7 +59,7 @@ params:
   prodFormLink: "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform"
   infoMailToLink: "mailto:info@crossplane.io"
   upboundGithubLink: "https://github.com/upbound"
-
+  docs: true
   repoLink: "https://github.com/crossplane/crossplane"
   anchors:
     min: 2

@@ -2,7 +2,9 @@
 <meta name="description" content="{{ .Page.Params.description | default .Site.Params.description | markdownify }}">
 <meta property="og:url"             content="{{ .Permalink }}" />
 {{ if .Page.Params.version }}
-    {{if eq .Page.Params.version "master" }}
+    {{ if eq .Page.Params.product "kb" }}
+        <meta name="docsearch:version" content="0.0.0-kb" />
+    {{else if eq .Page.Params.version "master" }}
         <!-- "master" is not a SemVer version. Set it to 0.0.0 to derank it in search -->
         <meta name="docsearch:version" content="0.0.0-master" />
     {{ else }}
@@ -10,7 +12,17 @@
     {{ end }}
 {{ end }}
 
-<title>{{ if .IsHome }}{{ .Site.Title | markdownify }} · {{ .Site.Params.subtitle | markdownify }}{{ else }}{{ .Title | markdownify }} · {{ .Site.Title | markdownify }} v{{ .Page.Params.version }}{{ end }}</title>
+<title>
+    {{ if .IsHome }}
+        Crossplane Documentation
+    {{ else if $.Param "docs" }}
+        {{ .Title | markdownify }} · {{ .Site.Title | markdownify }}v{{ .Page.Params.version }}
+    {{ else }}
+        {{ .Title | markdownify }} · {{ .Site.Title | markdownify }} {{.Page.Params.product }}
+    {{ end }}
+</title>
+
+
 <link rel="canonical" href="https://docs.crossplane.io{{ .Permalink }}">
 
 {{ partialCached "stylesheet-cached" . }}

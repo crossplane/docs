@@ -1,5 +1,10 @@
 {{ $current := . }}
-{{ $version_section := (where .Site.Sections ".Page.Params.version" .Page.Params.version) }}
+{{ $version_section := "" }}
+{{ if $.Param "docs" }}
+{{ $version_section = (where .Site.Sections ".Page.Params.version" .Page.Params.version) }}
+{{ else }}
+{{ $version_section = (where .Site.Sections ".Page.Params.product" .Page.Params.product) }}
+{{ end }}
 <nav class="bd-links-nav w-100" aria-label="Docs navigation">
 
   <div class="bd-links-container">
@@ -17,7 +22,37 @@
           {{ end }}
         {{ end }}
     {{ end }}
-  </div>
+
+    {{ if not ($.Param "docs") }}
+    <div class="section-container container pe-0">
+      <div class="nav-container">
+        <a href="{{.Site.BaseURL}}v{{.Site.Params.latest}}" class="d-inline-flex align-items-center">
+          User Documentation
+        </a>
+      </div>
+    </div>
+    {{ end }}
+
+    {{ if ne .Page.Params.product "Knowledge Base" }}
+    <div class="section-container container pe-0">
+      <div class="nav-container">
+        <a href="{{.Site.BaseURL}}knowledge-base" class="d-inline-flex align-items-center">
+          Knowledge Base
+        </a>
+      </div>
+    </div>
+    {{ end }}
+
+    {{ if ne .Page.Params.product "Developer Guide" }}
+    <div class="section-container container pe-0">
+      <div class="nav-container">
+        <a href="{{.Site.BaseURL}}contribute" class="d-inline-flex align-items-center">
+          Developer Guide
+        </a>
+      </div>
+    </div>
+    {{ end }}
+
 </nav>
 
 {{ define "sidebar-nav" }}
