@@ -1,6 +1,7 @@
 ---
 title: "Documentation"
 weight: 20
+description: How to contribute to the Crossplane documentation
 ---
 
 All the information needed to contribute to the Crossplane documentation is

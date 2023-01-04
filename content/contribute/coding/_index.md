@@ -1,5 +1,6 @@
 ---
-title: Crossplane
+title: Crossplane Core
+description: How to contribute to the Crossplane project
 ---
 Welcome, and thank you for considering contributing to Crossplane. We encourage
 you to help out by raising issues, improving documentation, fixing bugs, or

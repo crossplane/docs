@@ -1,46 +1,46 @@
 {{ define "main" }}
-<div class="container px-4 py-5 bd-content" id="home">
-  <h1 class="pb-2 border-bottom">Crossplane Documentation</h1>
-  <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-    <div class="feature col">
-      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#book"/></svg>
-      </div>
-      <h3 class="fs-2"><a href="{{.Site.BaseURL}}v{{.Site.Params.latest}}">User Documentation</a></h3>
-      <p>
-        Documentation for installing, configuring and using Crossplane.
-      </p>
-      <a href="{{.Site.BaseURL}}v{{.Site.Params.latest}}" class="d-inline-flex align-items-center">
-        Read the docs
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
-      </a>
-    </div>
-    <div class="feature col">
-      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#signpost-split"/></svg>
-      </div>
-      <h3 class="fs-2"><a href="{{.Site.BaseURL}}knowledge-base">Knowledge Base</a></h3>
-      <p>
-        Guides describing Crossplane integrations and best practices.
-      </p>
-      <a href="{{.Site.BaseURL}}knowledge-base" class="d-inline-flex align-items-center">
-        Read the knowledge base
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
-      </a>
-    </div>
-    <div class="feature col">
-      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg>
-      </div>
-      <h3 class="fs-2"><a href="{{.Site.BaseURL}}contribute">Developer Guide</a></h3>
-      <p>
-        Details and information on how to develope and contribute to the Crossplane project.
-      </p>
-      <a href="{{.Site.BaseURL}}contribute" class="d-inline-flex align-items-center">
-        Learn how to contribute
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
-      </a>
-    </div>
+
+{{/* Define the section cards on the landing page. */}}
+{{/* Cards are displayed in order */}}
+{{ $sectionSlice := slice
+  (dict "User Documentation" "/img/automate.svg")
+  (dict "Knowledge Base" "/img/truck.svg")
+  (dict "Developer Guide" "/img/multi-crane.svg")
+}}
+
+<div class="container-fluid py-5 bd-content" id="home">
+  <div class="row mx-5 justify-content-evenly my-5">
+
+    {{ $thisSite := .Site }}
+    {{ $version_section := slice }}
+    {{ range $sectionSlice }}
+       {{ range $docType, $headerImage := . }}
+        {{ if eq $docType "User Documentation" }}
+          {{ $version_section = where $thisSite.Sections ".Page.Params.version" $thisSite.Params.latest }}
+        {{ else }}
+          {{ $version_section = where $thisSite.Sections ".Page.Params.product" $docType }}
+        {{ end }}
+        <div class="card home-card rounded shadow col d-flex mx-4 pt-3">
+          <img src="{{ $headerImage }}" class="card-img-top home-svg align-self-center" alt="...">
+          <div class="card-body pt-0 px-4">
+            <h4 class="card-title fw-bold pt-4">{{ $docType }}</h4>
+            <ul class="list-group list-group-flush">
+              {{ range ((index $version_section 0).Pages).GroupBy "Weight" }}
+              {{ range .Pages.ByWeight }}
+                {{ if not .Params.tocHidden }}
+                  <li class="list-group-item px-0">
+                    <span class="home-link-title">{{ .Title }}</span><br />
+                    <span class="home-link-description"><a href="{{.Permalink}}">{{ .Description }}</a></span>
+                  </li>
+                {{ end }}
+              {{ end }}
+            {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
   </div>
 </div>
 {{ end }}
+

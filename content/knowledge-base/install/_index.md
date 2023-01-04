@@ -1,6 +1,7 @@
 ---
 title: Installing and Upgrading
 weight: 30
+description: Special considerations on installing and upgrading Crossplane
 ---
 
 Installing and upgrading guides cover unique scenarios related to installing or

@@ -76,9 +76,3 @@ h1,h2,h3,h4,h5,h6 {
   --bs-table-hover-color: var(--font-body-color);
   --bs-table-hover-bg: var(--nav-highlight-color);
 }
-
-#home {
-  @include media-breakpoint-up(lg) {
-    height: calc(100vh - 500px);
-  }
-}

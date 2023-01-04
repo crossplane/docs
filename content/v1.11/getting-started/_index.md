@@ -1,6 +1,7 @@
 ---
 title: Getting Started
 weight: 4
+description: Crossplane concepts and quickstart guides.
 ---
 
 ## Learn
