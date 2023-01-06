@@ -95,76 +95,10 @@
     </div>
   </div>
 
-  <!-- Offcanvas section is a duplicate of the standard display.
-    It's much easier and more obvious to duplicate the content instead of
-    working with a single offcanvas style and modifying the visible elements -->
-    <!-- <div class="offcanvas w-100 off canvas-lg offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
-
-      <div class="offcanvas-header">
-          <a href="https://www.crossplane.io" class="offcanvas-title position-relative top-50 start-50 translate-middle" aria-label="Crossplane">
-          <img
-          src="/img/crossplane-logo.svg"
-          alt="Crossplane logo"
-          srcset="/img/crossplane-logo.svg 1x, /img/crossplane-logo.svg 2x"
-          width="185"
-          height="40"
-          decoding="async"
-          data-nimg="future"
-          loading="lazy"></a>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#offcanvas"></button>
-      </div>
-      <div class="offcanvas-body float-end">
-        <div>
-          <hr class="d-lg-none text-white-50">
-        </div>
-
-        <div class="offcanvas-center-links">
-          <ul class="navbar-nav align-items-center">
-            <li class="nav-item p-2">
-              <a class="navbar-link" href="https://www.crossplane.io/why-control-planes">Why Control Planes?</a>
-            </li>
-            <li class="nav-item p-2">
-              <a class="navbar-link"  aria-current="page" href="https://docs.crossplane.io">Documentation</a>
-            </li>
-            <li class="nav-item p-2">
-              <a class="navbar-link"  href="https://www.crossplane.io/community">Community</a>
-            </li>
-            <li class="nav-item p-2">
-              <a class="navbar-link"  href="https://blog.crossplane.io/">Blog</a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <hr class="d-lg-none text-white-50">
-        </div>
-
-        <div class="offcanvas-icons">
-          <ul class="justify-content-center">
-            <li class="p-2">
-              <a class="navbar-link d-flex" href="https://github.com/crossplane" title="Crossplane Github Repository" target="_blank" rel="noopener">
-                <div class="pe-2">
-                  {{ partialCached "icons/github.svg" .}}
-                </div>
-                <div class="">
-                  Crossplane Github
-                </div>
-              </a>
-            </li>
-
-            <li class="col-xs p-2">
-              <a class="navbar-link d-flex" href="https://slack.crossplane.io" title="Join the Crossplane Slack" target="_blank" rel="noopener">
-                <div class="pe-2">
-                  {{ partialCached "icons/slack.svg" . }}
-                </div>
-                <div>
-                  Join the Crossplane Slack
-                </div>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div> -->
+{{ if eq (os.Getenv "CONTEXT")  "deploy-preview"}}
+  <div class="position-absolute px-5 w-50 top-100 start-50 translate-middle bg-warning rounded-3 d-flex justify-content-center">
+    <div class="fs-4">Deploy Preview for PR <a href="https://github.com/crossplane/docs/pull/{{os.Getenv "REVIEW_ID" }}">#{{os.Getenv "REVIEW_ID" }}</a></div>
+  </div>
+{{ end }}
 
 </header>
