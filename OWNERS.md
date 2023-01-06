@@ -8,6 +8,12 @@ Please see the Crossplane
 [GOVERNANCE.md](https://github.com/crossplane/crossplane/blob/master/GOVERNANCE.md) for governance
 guidelines and responsibilities for the steering committee and maintainers.
 
+The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://github.com/crossplane/crossplane/blob/master/OWNERS.md) with the following changes:
+
+
+* Pete Lumbis <pete@upbound.io> ([plumbis](https://github.com/plumbis)) as a maintainer
+* Michael Goff <michael@upbound.io> ([thephred](https://github.com/thephred)) as a maintainer
+
 ## Maintainers
 
 * Daniel Mangum <dan@upbound.io> ([hasheddan](https://github.com/hasheddan))
@@ -15,6 +21,16 @@ guidelines and responsibilities for the steering committee and maintainers.
 * Michael Goff <michael@upbound.io> ([thephred](https://github.com/thephred))
 * Nic Cope <negz@upbound.io> ([negz](https://github.com/negz))
 * Pete Lumbis <pete@upbound.io> ([plumbis](https://github.com/plumbis))
+* Muvaffak Onus <monus@upbound.io> ([muvaf](https://github.com/muvaf))
+* Hasan Turken <hasan@upbound.io> ([turkenh](https://github.com/turkenh))
+
+## Reviewers
+
+* Bob Haddleton <bob.haddleton@nokia.com> ([bobh66](https://github.com/bobh66))
+* Yury Tsarev <yury@upbound.io> ([ytsarev](https://github.com/ytsarev))
+* Daren Iott <daren@upbound.io> ([nullable-eth](https://github.com/nullable-eth))
+* Ezgi Demirel <ezgi@upbound.io> ([ezgidemirel](https://github.com/ezgidemirel))
+* Max Blatt ([MisterMX](https://github.com/MisterMX))
 
 ## Emeritus maintainers
 
