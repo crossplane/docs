@@ -44,6 +44,12 @@ module:
       - "**/**.jpeg"
       - "**/**.gif"
 
+security:
+  funcs:
+    getenv:
+      - ^CONTEXT
+      - ^REVIEW_ID
+
 params:
   latest: "1.10"
   upboundLink: "https://www.upbound.io/"
