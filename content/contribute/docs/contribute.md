@@ -3,65 +3,31 @@ title: Contributing to the Docs
 weight: 40
 ---
 
-Crossplane documentation lives in two repositories:
-
-* Crossplane documentation source is in the [Crossplane
-repository](https://github.com/crossplane/crossplane) `/docs` directory. 
-
-* The Crossplane docs website is in the
-  [docs](https://github.com/crossplane/docs)
-repository.
-
-Use `crossplane/crossplane` for documentation contributions.  
-Use `crossplane/docs` for local development or updates involving
-HTML, CSS or Hugo.
-
+The Crossplane documentation lives in the 
+[docs GitHub repository](https://github.com/crossplane/docs).
 
 ## Local development
-Build the Crossplane documentation site locally for development and
-testing. 
+Clone the documentation and use [Hugo](https://gohugo.io/) to 
+build the Crossplane documentation site locally for development and testing. 
 
-### Clone the Crossplane repository
-Clone the [Crossplane
-repository](https://github.com/crossplane/crossplane) with
-
-```command
-git clone https://github.com/crossplane/crossplane.git
-```
-
-<!-- vale off -->
-<!-- ignore Make -->
-### Install Make
-<!-- vale on -->
-{{< tabs >}}
-
-{{< tab "MacOS" >}}
-Install `make` with [Homebrew](https://formulae.brew.sh/formula/make).
+### Clone the docs repository
+Clone the [Crossplane docs
+repository](https://github.com/crossplane/docs) with
 
 ```command
-brew install make
+git clone https://github.com/crossplane/docs.git
 ```
-{{< /tab >}}
 
-{{<tab "Linux" >}}
-Most Linux distributions include `make` by default. For more information on
-`make` for Linux, visit the [GNU make
-website](https://www.gnu.org/software/make/).
+### Download Hugo
+Download [Hugo](https://github.com/gohugoio/hugo/releases/tag/v0.107.0), the
+static site generator Crossplane docs uses.
 
-{{< /tab >}}
+{{< hint "important" >}}
+Download the `hugo_extended` version. The standard Hugo package doesn't support
+the Crossplane docs CSS.
+{{< /hint >}}
 
-{{<tab "Windows" >}}
-The Crossplane build system doesn't support Windows.
-{{< /tab >}}
-
-{{< /tabs >}}
-
-### Build the Crossplane documentation
-From the `crossplane` folder run
-
-```command
-make docs.run
-```
+Extract and run Hugo with `hugo server`.
 
 Hugo builds the website and launch a local web server on
 [http://localhost:1313](http://localhost:1313).
@@ -70,16 +36,15 @@ Any changes made are instantly reflected on the local web server. You
 don't need to restart Hugo.
 
 ### Contribute to a specific version
-In the [crossplane/crossplane](https://github.com/crossplane/crossplane)
-each active release has a `/docs` folder in a branch called
-`release-<version>`. For example, v1.10 docs are in the branch
-[release-1.10](https://github.com/crossplane/crossplane/tree/release-1.10).
+Each Crossplane version is a unique folder inside `/content`. 
 
-To contribute to a specific release submit a pull-request to the
-`release-<version>` or `master` branch.
+{{<hint "note" >}}
+The next Crossplane release uses `/content/master` as the starting
+documentation.
+{{< /hint >}}
 
-The next Crossplane release uses `master` as the starting documentation.
-
+Make changes to the files in the associated version folder. To make changes
+across multiple versions change the files in each version folder.
 ## Adding new content
 
 To create new content create a new markdown file in the appropriate location. 
