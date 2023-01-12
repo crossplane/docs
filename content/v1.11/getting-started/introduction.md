@@ -22,7 +22,12 @@ to monitor the state of the external resources and provide state enforcement. If
 something modifies or deletes a resource outside of Kubernetes, Crossplane reverses
 the change or recreates the deleted resource.
 
-Crossplane allows the creation of custom Kubernetes APIs. Platform teams can
+{{<img src="/media/crossplane-intro-diagram.png" alt="Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP" >}}
+With Crossplane installed in a Kubernetes cluster, users only communicate with
+Kubernetes. Crossplane manages the communication to external resources like AWS,
+Azure or Google Cloud.
+
+Crossplane also allows the creation of custom Kubernetes APIs. Platform teams can
 combine external resources and simplify or customize the APIs presented to the
 platform consumers.
 
@@ -68,7 +73,7 @@ storeconfigs.secrets.crossplane.io
 The following sections describe the functions of some of these CRDs.
 
 ## Providers
-A Crossplane _Provider_ is a second set of CRDs that define how Crossplane
+A Crossplane _Provider_ creates a second set of CRDs that define how Crossplane
 connects to a non-Kubernetes service. Each external service relies on its own
 Provider. For example, 
 [AWS](https://marketplace.upbound.io/providers/upbound/provider-aws), 
@@ -139,7 +144,8 @@ _Compositions_ are cluster scoped and available to all cluster namespaces.
 
 ## Composite Resources
 
-_Composite Resources_ (`XRs`) are custom Kubernetes APIs.
+_Composite Resources_ (`XRs`) are custom Kubernetes APIs defined by Crossplane 
+administrators.
 
 Crossplane links _Composite Resources_ to specific _Compositions_. 
 A _Composite Resource_ hides or abstracts the _Managed Resources_ configuration 
@@ -147,7 +153,7 @@ required in the _Composition_.
 
 For example, a _Composition_ that creates a compute node requires knowledge of a
 cloud provider's compute class names like AWS's `m6in.large` or GCP's `e2-standard-2`. A
-_Composite Resource_ can provide default values or pre-defined values. The
+_Composite Resource_ can provide default or pre-defined values. The
 infrastructure consumer may only need to provide a `large` or `small` parameter.
 The _Composite Resource_ defines those options and the _Composition_ maps them
 to specific settings.
