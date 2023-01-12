@@ -25,6 +25,9 @@
           </div>
           <h1 class="bd-title mb-0" id="content">{{ .Title | markdownify }}</h1>
         </div>
+        {{ if .Page.Params.state }}
+          {{ partial "feature-state-alert" . }}
+        {{ end }}
       </div>
 
 
