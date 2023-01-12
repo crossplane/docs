@@ -94,4 +94,11 @@
       </div>
     </div>
   </div>
+
+{{ if eq (os.Getenv "CONTEXT")  "deploy-preview"}}
+  <div class="position-absolute px-5 w-50 top-100 start-50 translate-middle bg-warning rounded-3 d-flex justify-content-center">
+    <div class="fs-4">Deploy Preview for PR <a href="https://github.com/crossplane/docs/pull/{{os.Getenv "REVIEW_ID" }}">#{{os.Getenv "REVIEW_ID" }}</a></div>
+  </div>
+{{ end }}
+
 </header>
