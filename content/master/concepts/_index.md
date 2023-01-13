@@ -1,6 +1,7 @@
 ---
 title: Concepts
 weight: 100
+description: Understand Crossplane's core components
 ---
 
 Crossplane introduces multiple building blocks that enable you to provision,

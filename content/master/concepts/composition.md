@@ -128,7 +128,7 @@ A basic `Composition` for the above `XPostgreSQLInstance` might look like this:
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: production
+  name: example
   labels:
     crossplane.io/xrd: xpostgresqlinstances.database.example.org
     provider: gcp
@@ -242,7 +242,6 @@ scenarios, including:
 
 [managed-resources]: {{<ref "managed-resources" >}}
 [xrs-and-mrs]: /media/composition-xrs-and-mrs.svg
-[xr-ref]: {{<ref "../reference/composition" >}}
 [how-it-works]: /media/composition-how-it-works.svg
 [crd-docs]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
 [provider-kubernetes]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-kubernetes
