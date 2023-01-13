@@ -5,7 +5,7 @@ cascade:
     version: "1.9"
 ---
 
-{{< img src="../media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
+{{< img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
 
 
 Crossplane is an open source Kubernetes add-on that transforms your cluster into

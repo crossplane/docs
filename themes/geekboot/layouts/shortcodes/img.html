@@ -11,9 +11,13 @@
   {{ $loading = "eager" }}
 {{ end }}
 
-{{ $source := resources.Get (printf "content/%s%s" .Page.File.Dir (.Get "src")) }}
+{{ $source := resources.Get (printf "content%s" (.Get "src")) }}
 {{ $customAlt := .Get "alt" }}
 {{ $customSize := .Get "size" | default "original" }}
+
+{{ if not $source }}
+{{ warnf "Unable to find image %s on page ./content/%s" (.Get "src") .Page.File }}
+{{ end }}
 
 {{ with $source }}
 
@@ -35,5 +39,3 @@
   alt="{{ $customAlt }}"
   decoding="async"><br /><br />
 {{ end }}
-
-
