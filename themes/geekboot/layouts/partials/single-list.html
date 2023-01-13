@@ -1,0 +1,72 @@
+  <div class="bd-layout docs-container">
+    <aside class="bd-sidebar">
+      <div class="offcanvas-lg offcanvas-start bd-sidebar-container" tabindex="-1" id="bdSidebar" aria-labelledby="bdSidebarOffcanvasLabel">
+        <div class="offcanvas-header pb-4 border-bottom">
+          <div class="d-flex offcanvas-title fw-bold" id="bdNavbarOffcanvasLabel">
+            Crossplane Documentation -
+            {{- if $.Param "docs" -}}
+            {{ if ne .Page.Params.version "master" }} v{{ end}}{{.Page.Params.version}}
+            {{- else }}
+             {{.Page.Params.product }}
+            {{ end }}
+          </div>
+          <div class="d-flex"><button type="button" class="btn-close bi align-self-center p-0" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdSidebar"></button></div>
+        </div>
+        {{ partial "left-nav" . }}
+    </aside>
+
+    <main class="bd-main order-1">
+      <div class="bd-intro pt-2 ps-lg-2">
+        <div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+          <div class="mb-3 mb-md-0 d-flex">
+            {{ if $.Param "docs" }}
+              {{ partial "version-dropdown-menu" . }}
+            {{ end }}
+          </div>
+          <h1 class="bd-title mb-0" id="content">{{ .Title | markdownify }}</h1>
+        </div>
+        {{ if .Page.Params.state }}
+          {{ partial "feature-state-alert" . }}
+        {{ end }}
+      </div>
+
+
+        <div class="bd-toc mt-3 mb-5 my-lg-0 ps-xl-3 mb-lg-5">
+          {{ if (ne .Page.Params.toc false) }}
+          {{ if gt (len .TableOfContents) 40 }}
+            <button class="btn btn-link p-md-0 mb-2 mb-md-0 text-decoration-none bd-toc-toggle d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#tocContents" aria-expanded="false" aria-controls="tocContents">
+              On this page
+              <svg class="bi d-md-none ms-2" aria-hidden="true"><use xlink:href="#chevron-expand"></use></svg>
+            </button>
+            <strong class="d-none d-md-block h6 my-2">On this page</strong>
+            <hr class="d-none d-md-block my-2">
+            <div class="collapse bd-toc-collapse" id="tocContents">
+              {{ .TableOfContents }}
+              <nav class="pt-3">
+                <div>
+                  <svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg>
+                  <a target="_blank" href="{{printf "https://github.com/crossplane/docs/issues/new?title=[Web Bug] - %s&body=<!-- What's the problem? -->\n\n\nURL: %s" .Page.Title .Permalink}}">Report a problem</a>
+                </div>
+                <div>
+                  <svg class="bi" width="1em" height="1em"><use xlink:href="#github"/></svg>
+                  <a href="{{printf "https://github.com/crossplane/docs/tree/master/content/%s" .Page.File}}">View page source</a>
+                </div>
+              </div>
+            </nav>
+          {{ end }}
+
+        </div>
+      {{ end }}
+
+        <div class="bd-content ps-lg-2 DocSearch-content">
+          {{ if $.Param "docs" }}
+            {{- if eq .Page.Params.version "master" -}}
+              {{ partialCached "master-version-alert" . }}
+            {{- else if ne .Page.Params.version .Site.Params.latest -}}
+              {{ partialCached "old-version-alert" . .Section }}
+            {{ end }}
+          {{ end }}
+          {{ .Content }}
+        </div>
+    </main>
+  </div>
