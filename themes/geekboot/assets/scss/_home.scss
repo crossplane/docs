@@ -1,0 +1,33 @@
+.home-card{
+    min-width: 301px;
+}
+
+.home-svg {
+    height: 301px;
+    width: 301px;
+}
+
+.home-link-title{
+    font-size: 20px !important;
+}
+
+.home-link-description{
+    font-size: 16px !important;
+}
+
+.card {
+    background: var(--body-background);
+    color: var(--body-font-color);
+}
+
+.list-group-item {
+    border-color: var(--dropdown-border-color);
+    background: var(--body-background);
+    color: var(--body-font-color);
+}
+
+@include media-breakpoint-down(xl) {
+    .home-card {
+        margin-top: 1rem !important;
+    }
+}
