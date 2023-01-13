@@ -51,7 +51,7 @@ spec:
 ```
 
 ```console
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/provision/aws.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/provision/aws.yaml
 ```
 
 Creating the above instance will cause Crossplane to provision an RDS instance
@@ -100,7 +100,7 @@ spec:
 ```
 
 ```console
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/provision/gcp.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/provision/gcp.yaml
 ```
 
 Creating the above instance will cause Crossplane to provision a CloudSQL
@@ -167,7 +167,7 @@ spec:
 ```
 
 ```console
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/master/docs/snippets/provision/azure.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/provision/azure.yaml
 ```
 
 Creating the above instance will cause Crossplane to provision a PostgreSQL
@@ -464,39 +464,15 @@ fields are there and those are enough to import a resource. The tool you're
 using needs to store `annotations` and `spec` fields, which most tools do
 including Velero.
 
-## Reference Policies
-
-We have two types of policies for reference fields: Resolve and Resolution.
-
-Resolve specifies when this reference should be resolved. The default is
-‘IfNotPresent’, which will attempt to resolve the reference only when the
-corresponding field is not present. Use ‘Always’ to resolve the reference on
-every reconcile.
-
-Resolution specifies whether resolution of this reference is required. The
-default is ‘Required’, which means the reconcile will fail if the reference
-cannot be resolved. ‘Optional’ means this reference will be a no-op if it cannot
-be resolved.
-
-Example usage:
-
-```yaml
-subnetIdRefs:
-  - name: example
-    policy:
-      resolve: Always
-      resolution: Required
-```
-
-[term-xrm]: {{<ref "terminology" >}}#crossplane-resource-model
+[term-xrm]:  "terminology"
 [rds]: https://aws.amazon.com/rds/
 [cloudsql]: https://cloud.google.com/sql
-[composition]: {{<ref "composition" >}}
+[composition]: "composition"
 [api-versioning]: https://kubernetes.io/docs/reference/using-api/#api-versioning#api-versioning
 [velero]: https://velero.io/
-[api-reference]: {{<ref "../api-docs" >}}
-[provider]: {{<ref "providers" >}}
+[api-reference]: "../api-docs" 
+[provider]:  "providers"
 [issue-727]: https://github.com/crossplane/crossplane/issues/727
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143
-[managed-api-patterns]: https://github.com/crossplane/crossplane/blob/master/design/one-pager-managed-resource-api-design.md
+[managed-api-patterns]: https://github.com/crossplane/crossplane/blob/release-1.10/design/one-pager-managed-resource-api-design.md
 [managed reconciler]: https://github.com/crossplane/crossplane-runtime/blob/84e629b9589852df1322ff1eae4c6e7639cf6e99/pkg/reconciler/managed/reconciler.go#L637

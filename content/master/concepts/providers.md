@@ -90,8 +90,8 @@ will attempt to use a `ProviderConfig` named `default`.
 
 <!-- Named Links -->
 
-[getting-started]: {{<ref "../getting-started/install-configure" >}}
-[Google Cloud Platform (GCP) Service Account]: {{<ref "../cloud-providers/gcp/gcp-provider" >}}
-[Microsoft Azure Service Principal]: {{<ref "../cloud-providers/azure/azure-provider" >}}
-[Amazon Web Services (AWS) IAM User]: {{<ref "../cloud-providers/aws/aws-provider" >}}
-[managed-resources]: {{<ref "managed-resources" >}}
+[getting-started]:  "../getting-started/install-configure" 
+[Google Cloud Platform (GCP) Service Account]: "../cloud-providers/gcp/gcp-provider" 
+[Microsoft Azure Service Principal]:  "../cloud-providers/azure/azure-provider"
+[Amazon Web Services (AWS) IAM User]: "../cloud-providers/aws/aws-provider"
+[managed-resources]: "managed-resources"

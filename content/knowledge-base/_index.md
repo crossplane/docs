@@ -1,5 +1,6 @@
 ---
 title: Knowledge Base
+weight: -1
 cascade:
     version: "0"
     docs: false
@@ -30,4 +31,4 @@ Some examples of Knowledge Base articles could include:
 * Using Crossplane with [ArgoCD]({{< ref "integrations/argo-cd-crossplane" >}})
 
 Find more information in the Crossplane 
-[documentation contributor's guide]({{< ref "/contribute/docs" >}}).
+[documentation contributor's guide]({{< ref "/contribute" >}}).

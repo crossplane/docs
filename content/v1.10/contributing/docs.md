@@ -171,11 +171,11 @@ By default the image isn't resized.
 
 An example of using the `img` shortcode:
 ```html
-{{</* img src="../media/banner.png" alt="Crossplane Popsicle Truck" size="small" */>}}
+{{</* img src="media/banner.png" alt="Crossplane Popsicle Truck" size="small" */>}}
 ```
 
 Which generates this responsive image (change your browser size to see it change):
-{{<img src="../media/banner.png" alt="Crossplane Popsicle Truck" size="small" >}}
+{{<img src="media/banner.png" alt="Crossplane Popsicle Truck" size="small" >}}
 
 ### Links
 Crossplane docs support standard [Markdown

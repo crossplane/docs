@@ -4,7 +4,7 @@ toc_include: false
 weight: 1
 ---
 
-{{< img src="../media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
+{{< img src="media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
 
 
 Crossplane is an open source Kubernetes add-on that transforms your cluster into

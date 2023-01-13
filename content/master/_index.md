@@ -2,10 +2,11 @@
 title: "Overview"
 weight: -1
 cascade:
-    version: master
+    version: "master"
 ---
 
-{{< img src="media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
+{{< img src="media/banner.png" alt="Crossplane Popsicle Truck" eager=true >}}
+
 
 Crossplane is an open source Kubernetes add-on that transforms your cluster into
 a **universal control plane**. Crossplane enables platform teams to assemble
@@ -15,7 +16,12 @@ for application teams to consume, without having to write any code.
 Crossplane extends your Kubernetes cluster to support orchestrating any
 infrastructure or managed service. Compose Crossplane's granular resources into
 higher level abstractions that can be versioned, managed, deployed and consumed
-using your favorite tools and existing processes. [Install Crossplane]({{<ref "getting-started/install-configure" >}}) into any
+using your favorite tools and existing processes. [Install Crossplane]({{<ref "software/install" >}}) into any
 Kubernetes cluster to get started.
 
-Crossplane is a [Cloud Native Compute Foundation](https://www.cncf.io/) project.
+Crossplane is a [Cloud Native Compute Foundation][cncf] project.
+
+<!-- Named Links -->
+
+
+[cncf]: https://www.cncf.io/

@@ -1,14 +1,12 @@
 ---
 title: Composition Revisions
+state: alpha
 ---
 
 This guide discusses the use of "Composition Revisions" to safely make and roll
 back changes to a Crossplane [`Composition`][composition-type]. It assumes
 familiarity with Crossplane, and particularly with
 [Composition][composition-term].
-
-> Composition Revisions are an __alpha feature__. They are not yet recommended
-> for production use, and are disabled by default.
 
 A `Composition` configures how Crossplane should reconcile a Composite Resource
 (XR). Put otherwise, when you create an XR the selected `Composition` determines
@@ -147,7 +145,7 @@ spec:
     name: db-conn
 ```
 
-[composition-type]: {{<ref "../../master/concepts/composition" >}}
-[composition-term]: {{<ref "../../master/concepts/terminology" >}}#composition
+[composition-type]: {{<ref "../../v1.10/concepts/composition" >}}
+[composition-term]: {{<ref "../../v1.10/concepts/terminology" >}}#composition
 [canary]: https://martinfowler.com/bliki/CanaryRelease.html
-[install-guide]: {{<ref "../../master/getting-started/install-configure" >}}
+[install-guide]: {{<ref "../../v1.10/getting-started/install-configure" >}}

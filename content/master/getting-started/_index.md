@@ -1,19 +1,17 @@
 ---
 title: Getting Started
 weight: 4
+description: Crossplane concepts and quickstart guides.
 ---
 
-{{< img src="../media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
+## Learn
+New to Crossplane? Get an introduction to Crossplane components and how they work together in [Introduction to Crossplane]({{<ref "introduction" >}}).
 
-Crossplane is an open source Kubernetes add-on that transforms your cluster into
-a **universal control plane**. Crossplane enables platform teams to assemble
-infrastructure from multiple vendors, and expose higher level self-service APIs
-for application teams to consume, without having to write any code.
+## Hands-On
+Want a hands-on example? Follow a Crossplane Quickstart for your cloud provider.
+* [AWS quickstart]({{<ref "provider-aws" >}})
+* [Azure quickstart]({{<ref "provider-azure" >}})
+* [GCP quickstart]({{<ref "provider-gcp" >}})
 
-Crossplane extends your Kubernetes cluster to support orchestrating any
-infrastructure or managed service. Compose Crossplane's granular resources into
-higher level abstractions that can be versioned, managed, deployed and consumed
-using your favorite tools and existing processes. [Install Crossplane]({{<ref "./install-configure" >}}) into any
-Kubernetes cluster to get started.
-
-Crossplane is a [Cloud Native Compute Foundation](https://www.cncf.io/) project.
+## Install
+Ready to get started? Install Crossplane in a Kubernetes cluster.
