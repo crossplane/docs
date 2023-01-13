@@ -1,67 +1,41 @@
 {{ $current := . }}
-{{ $version_section := (where .Site.Sections ".Page.Params.version" .Page.Params.version) }}
+
 <nav class="bd-links-nav w-100" aria-label="Docs navigation">
+  {{ with .Site.GetPage "section" .Section }}
+    {{ $sectionPages := (.Pages | append .) }}
+    {{ range $sectionPages.ByWeight }}
+      {{ $expand := (eq $current .) }}
+      {{ $expand = (and (eq $current.CurrentSection .) (ne .FirstSection .)) }}
+      {{ $id := substr (sha1 .Permalink) 0 8 }}
 
-  <div class="bd-links-container">
-    <div class="container nav-container pe-0 d-flex w-100">
-    <div class="container flex-row pe-0">
-      <div class="d-flex flex-column ">
-            <div class="d-flex"><a href="{{ .FirstSection.Permalink }} ">{{ .FirstSection.Title }}</a></div>
-      </div>
-    </div>
-  </div>
-    {{ range ((index $version_section 0).Pages).GroupBy "Weight" }}
-        {{ range .Pages.ByWeight }}
-          {{ if not .Params.tocHidden }}
-            {{ template "sidebar-nav" dict "childPages" .Pages "current" $current "thisPage" .}}
+      {{ if not .Page.Params.tocHidden }}
+        <div class="section-container container pe-0 pt-1">
+          <div class="container nav-container pe-0 d-flex w-100 {{if eq . $current}}active{{ else if $expand }}active-parent{{end}}">
+            <div class="d-flex w-100 border-0"><a href="{{.Permalink}}">{{ .Title }} </a></div>
+            {{ if and .IsSection (ne .FirstSection .) }}
+              {{/* Don't put an expand icon on pages that aren't sections or the section index */}}
+              <div class="d-flex flex-shrink-1 sidebar-control-container align-self-center">
+                <input type="checkbox" class="d-flex sidebar-checkbox" {{if $expand}}checked{{ end }} aria-label="Close or Expand {{.Title}} Section" />
+                <label for="collapse-{{$id}}" class="sidebar-label {{if not $expand}} collapsed {{ end }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{$id}}" aria-expanded="false" aria-label="Close or Expand {{.Title}} Section">
+                  <svg class="flex bi sidebar-icon plus" ><use xlink:href="#plus"></use></svg>
+                  <svg class="flex bi sidebar-icon x " ><use xlink:href="#x"></use></svg>
+                </label>
+              </div>
+            {{ end }}
+          </div>
+          {{ if ne .FirstSection . }}
+            {{ range .Pages }}
+              {{ if not .Page.Params.tocHidden }}
+                <div class="container flex-row collapse {{if $expand}} show {{ end }}" id="collapse-{{$id }}">
+                  <div class="d-flex flex-column">
+                    <div class="bd-links d-flex {{if eq $current . }}active{{end}}"><a href="{{ .Permalink }} ">{{.Title }}</a></div>
+                  </div>
+                </div>
+              {{ end }}
+            {{ end }}
           {{ end }}
-        {{ end }}
+        </div>
+      {{ end }}
     {{ end }}
-  </div>
+  {{ end }}
 </nav>
-
-{{ define "sidebar-nav" }}
-  {{ $id := "" }}
-  {{ if not .id }}
-    {{ $id = substr (sha1 .thisPage.Permalink) 0 8 }}
-  {{ else }}
-    {{ $id = .id }}
-  {{ end }}
-  {{ $isParent := (and (ne .childPages nil) (ne (len .childPages) 0)) }}
-  {{ $isCurrent := eq .current .thisPage }}
-  {{ $expand := false }}
-  {{ if .expand }}
-    {{ $expand = .expand }}
-  {{ end }}
-  {{ if or $isCurrent (eq .thisPage .current.Parent) }}
-    {{ $expand = true }}
-  {{ end }}
-  <div class="section-container container pe-0">
-  {{ if $isParent }}
-      <div class="container nav-container pe-0 d-flex w-100 {{if eq .thisPage $.current}}active{{ else if $expand }}active-parent{{end}}">
-        <div class=" d-flex w-100 border-0">
-          <a class="" href="{{.thisPage.Permalink}}">{{.thisPage.Title}}</a>
-        </div>
-        <div class="d-flex flex-shrink-1 sidebar-control-container align-self-center">
-          <input type="checkbox" class="d-flex sidebar-checkbox" {{if $expand}}checked{{ end }} aria-label="Close or Expand {{.thisPage.Title}} Section" />
-          <label for="collapse-{{$id}}" class="sidebar-label {{if not $expand}} collapsed {{ end }}" data-bs-toggle="collapse"
-          data-bs-target="#collapse-{{$id}}" aria-expanded="false"
-          aria-label="Close or Expand {{.thisPage.Title}} Section">
-          <svg class="flex bi sidebar-icon plus" ><use xlink:href="#plus"></use></svg>
-          <svg class="flex bi sidebar-icon x " ><use xlink:href="#x"></use></svg>
-          </label>
-        </div>
-    </div>
-    {{ template "sidebar-nav" dict "childPages" .Pages "current" .current "thisPage" . "id" $id "expand" $expand}}
-  {{ else }}
-    <div class="container flex-row collapse {{if $expand}} show {{ end }}" id="collapse-{{ $id }}">
-      <div class="d-flex flex-column ">
-        {{ $current := .current }}
-        {{ range .thisPage.childPages }}
-            <div class="bd-links d-flex {{if eq . $.current}}active{{end}}"><a href="{{ .Permalink }} ">{{ .Title }}</a></div>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
-</div>
-{{ end }}
