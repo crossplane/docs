@@ -72,3 +72,7 @@ docs/.DS_Store
 # jekyll_files
 ######################
 jekyll_files/*
+
+# Netlify local dev
+######################
+.netlify/*
