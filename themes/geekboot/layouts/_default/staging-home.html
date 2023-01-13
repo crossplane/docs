@@ -1,0 +1,46 @@
+{{ define "main" }}
+
+{{/* Define the section cards on the landing page. */}}
+{{/* Cards are displayed in order */}}
+{{ $sectionSlice := slice
+  (dict "User Documentation" "/img/automate.svg")
+  (dict "Knowledge Base" "/img/truck.svg")
+  (dict "Contributing Guide" "/img/multi-crane.svg")
+}}
+
+<div class="container-fluid py-5 bd-content" id="home">
+  <div class="row mx-5 justify-content-evenly my-5">
+
+    {{ $thisSite := .Site }}
+    {{ $version_section := slice }}
+    {{ range $sectionSlice }}
+       {{ range $docType, $headerImage := . }}
+        {{ if eq $docType "User Documentation" }}
+          {{ $version_section = where $thisSite.Sections ".Page.Params.version" $thisSite.Params.latest }}
+        {{ else }}
+          {{ $version_section = where $thisSite.Sections ".Page.Params.product" $docType }}
+        {{ end }}
+        <div class="card home-card rounded shadow col d-flex mx-4 pt-3">
+          <img src="{{ $headerImage }}" class="card-img-top home-svg align-self-center" alt="...">
+          <div class="card-body pt-0 px-4">
+            <h4 class="card-title fw-bold pt-4">{{range $version_section }}<a href="{{ .Permalink}}">{{$docType}}</a> {{ end }} </h4>
+            <ul class="list-group list-group-flush">
+              {{ range ((index $version_section 0).Pages).GroupBy "Weight" }}
+              {{ range .Pages.ByWeight }}
+                {{ if not .Params.tocHidden }}
+                  <li class="list-group-item px-0">
+                    <span class="home-link-title">{{ .Title }}</span><br />
+                    <span class="home-link-description"><a href="{{.Permalink}}">{{ .Description }}</a></span>
+                  </li>
+                {{ end }}
+              {{ end }}
+            {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+  </div>
+</div>
+{{ end }}
+
