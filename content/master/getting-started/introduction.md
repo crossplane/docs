@@ -22,7 +22,7 @@ to monitor the state of the external resources and provide state enforcement. If
 something modifies or deletes a resource outside of Kubernetes, Crossplane reverses
 the change or recreates the deleted resource.
 
-{{<img src="/media/crossplane-intro-diagram.png" alt="Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP" >}}
+{{<img src="/media/crossplane-intro-diagram.png" alt="Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP" align="center">}}
 With Crossplane installed in a Kubernetes cluster, users only communicate with
 Kubernetes. Crossplane manages the communication to external resources like AWS,
 Azure or Google Cloud.
