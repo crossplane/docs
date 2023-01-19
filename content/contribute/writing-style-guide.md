@@ -21,6 +21,8 @@ Guiding principals for the documentation include:
 * Avoid [gerund](https://owl.purdue.edu/owl/general_writing/mechanics/gerunds_participles_and_infinitives/index.html) headings (-ing words).
 * Try and limit sentences to 25 words or fewer.
 * [Be descriptive in link text](https://usability.yale.edu/web-accessibility/articles/links#link-text). Don't use "click here" or "read more".
+* Order brand names alphabetically. For example, AWS, Azure, GCP.
+* Don't use smart quotes (“like this”). Only use standard straight quotes ("like this").
 <!-- vale on -->
 
 Crossplane documentation is adopting
