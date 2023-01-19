@@ -38,11 +38,11 @@ This table provides a summary of Crossplane components and their roles.
 | Component | Abbreviation | Scope | Summary |
 | --- | --- | --- | ---- | 
 | [Provider]({{<ref "#Provider">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
-| [ProviderConfig]({{<ref "#ProviderConfig">}}) | `PC` | cluster | Applies settings for a Provider. |
+| [ProviderConfig]({{<ref "#ProviderConfig">}}) | `PC` | cluster | Applies settings for a _Provider_. |
 | [Managed Resource]({{<ref "#managed-resource">}}) | `MR` | cluster | A provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
-| [Composition]({{<ref "#composition">}}) |  | cluster | Creates multiple Managed Resources at once. |
-| [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | A custom API defined by the platform team, used to access _Compositions_. |
-| [Composite Resource Definitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for a _Composite Resource_ |
+| [Composition]({{<ref "#composition">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
+| [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
+| [Composite Resource Definitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
 | [Claims]({{<ref "#claims" >}}) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
 {{< /table >}}
 
@@ -190,7 +190,7 @@ Use `kubectl get compositions` to view all _compositions_.
 
 A _Composite Resource_ (`XR`) is a set of provisioned _managed resources_. A
 _Composite Resource_ uses the template defined by a _Composition_ and applies
-settings. 
+any user defined settings. 
 
 Multiple unique _Composite Resource_ objects can use the same _Composition_. For
 example, a _Composition_ template can create a compute, storage and networking
@@ -200,7 +200,8 @@ every time a user requests this set of resources.
 If a _Composition_ allows a user to define resource settings, users apply them
 in a _Composite Resource_.
 
-A _Composition_ defines which _Composite Resources_ can use the _Composition_
+
+<!-- A _Composition_ defines which _Composite Resources_ can use the _Composition_
 template with the _Composition_ `spec.compositeTypeRef` value. This defines the
 {{<hover label="comp" line="7">}}apiVersion{{< /hover >}} and {{<hover
 label="comp" line="8">}}kind{{< /hover >}} of _Composite Resources_ that can use the
@@ -241,7 +242,7 @@ matches the _Composition_ {{<hover label="comp" line="8">}}kind{{< /hover >}}.
 In this example, the _Composite Resource_ also sets the 
 {{<hover label="xr" line="7">}}storage{{< /hover >}} setting. The
 _Composition_ uses this value when creating the associated _managed resources_
-owned by this _Composite Resource_.
+owned by this _Composite Resource_. -->
 
 {{< hint "tip" >}}
 _Compositions_ are templates for a set of _managed resources_.  
@@ -255,7 +256,7 @@ _Composite Resources_ are cluster scoped and available to all cluster namespaces
 Use `kubectl get composite` to view all _Composite Resources_.
 
 ## Composite Resource Definitions
-_Composite Resource Definitions_ (`XRDs`) define the API schema for 
+_Composite Resource Definitions_ (`XRDs`) create custom Kubernetes APIs used by 
 _Claims_ and _Composite Resources_.
 
 {{< hint "note" >}}
@@ -263,8 +264,24 @@ The _[Claims]({{<ref "#claims">}})_ section discusses
 _Claims_.
 {{< /hint >}}
 
-A _Composite Resource_ has a unique `apiVersion`, `kind` and `spec`. The 
-_Composite Resource Definition_ defines these API types. 
+Platform teams define the custom APIs.  
+These APIs can define specific values
+like storage space in gigabytes, generic settings like `small` or `large`,
+deployment options like `cloud` or `onprem`. Crossplane doesn't limit the API definitions.
+
+The _Composite Resource Definition's_ `kind` is from Crossplane.
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+```
+
+The `spec` of a _Composite Resource Definition_ creates the  `apiVersion`,
+`kind` and `spec` of a _Composite Resource_. 
+
+{{< hint "tip" >}}
+The _Composite Resource Definition_ defines the parameters for a _Composite
+Resource_.
+{{< /hint >}}
 
 A _Composite Resource Definition_ has four main `spec` parameters:
 * A {{<hover label="specGroup" line="3" >}}group{{< /hover >}} 
@@ -279,18 +296,6 @@ to define the _Custom Resource_
 * A {{< hover label="specGroup" line="8" >}}versions.schema{{</hover>}} section
 to define the _Custom Resource_ {{<hover label="xr2" line="6" >}}spec{{</hover >}}.
 
-```yaml {label="xr2"}
-# Composite Resource (XR)
-apiVersion: test.example.org/v1alpha1
-kind: myComputeResource
-metadata:
-  name: myResource
-spec:
-  storage: "large"
-```
-
-The related _Composite Resource Definition_ has the following `spec`:
-
 ```yaml {label="specGroup"}
 # Composite Resource Definition (XRD)
 spec:
@@ -301,6 +306,18 @@ spec:
   - name: v1alpha1
     schema:
       # Removed for brevity
+```
+
+A _Composite Resource_ based on this _Composite Resource Definition_ looks like this:
+
+```yaml {label="xr2"}
+# Composite Resource (XR)
+apiVersion: test.example.org/v1alpha1
+kind: myComputeResource
+metadata:
+  name: myResource
+spec:
+  storage: "large"
 ```
 
 A _Composite Resource Definition_ {{< hover label="specGroup" line="8" >}}schema{{</hover >}} defines the _Composite Resource_
@@ -316,13 +333,13 @@ A _Composite Resource Definition_ can limit the choices to `small` or `large`.
 A _Composite Resource_ uses those options and the _Composition_ maps them
 to specific cloud provider settings settings. 
 
-The following _Composite Resource Definition_ defines a {{<hover label="specVersions" line="18" >}}storage{{< /hover >}}
+The following _Composite Resource Definition_ defines a {{<hover label="specVersions" line="17" >}}storage{{< /hover >}}
 parameter. The size is a 
-{{<hover label="specVersions" line="19">}}string{{< /hover >}} 
+{{<hover label="specVersions" line="18">}}string{{< /hover >}} 
 and the OpenAPI 
-{{<hover label="specVersions" line="20" >}}oneOf{{< /hover >}} requires the
-options to be either {{<hover label="specVersions" line="21" >}}small{{< /hover >}} 
-or {{<hover label="specVersions" line="22" >}}large{{< /hover >}}.
+{{<hover label="specVersions" line="19" >}}oneOf{{< /hover >}} requires the
+options to be either {{<hover label="specVersions" line="20" >}}small{{< /hover >}} 
+or {{<hover label="specVersions" line="21" >}}large{{< /hover >}}.
 
 ```yaml {label="specVersions"}
 # Composite Resource Definition (XRD)
