@@ -749,6 +749,12 @@ Currently only `multiply` is supported.
      regexp:
       match: 'arn:aws:iam::(\d+):.*'
       group: 1  # Optional capture group. Omit to match the entire regexp.
+
+# The output will be the hash of the JSON representation of the 'from' field.
+- type: string
+  string:
+     type: Convert
+     convert: ToSha1 # alternatives: 'ToSha256' or 'ToSha512'
 ```
 
 `convert`. Transforms values of one type to another, for example from a string
