@@ -1,6 +1,6 @@
 ---
 title: Upgrade Crossplane
-weight: 300
+weight: 200
 ---
 
 Install, Uninstall, Upgrade
