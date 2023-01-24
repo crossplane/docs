@@ -1,6 +1,6 @@
 ---
 title: Azure Quickstart 
-weight: 100
+weight: 110
 ---
 
 Connect Crossplane to Microsoft Azure to create and manage cloud resources from Kubernetes with the [Upbound Azure Provider](https://marketplace.upbound.io/providers/upbound/provider-azure).
