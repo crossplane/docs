@@ -25,7 +25,7 @@ authenticate to Azure:
 
 ```bash
 # create service principal with Owner role
-az ad sp create-for-rbac --sdk-auth --role Owner > crossplane-azure-provider-key.json
+az ad sp create-for-rbac --sdk-auth --role Owner --scopes="/subscriptions/<azure subscription id>"  > crossplane-azure-provider-key.json
 ```
 
 Take note of the `clientID` value from the JSON file that we just created, and
