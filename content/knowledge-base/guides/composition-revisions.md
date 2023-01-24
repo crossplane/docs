@@ -1,6 +1,6 @@
 ---
 title: Composition Revisions
-state: alpha
+state: beta
 ---
 
 This guide discusses the use of "Composition Revisions" to safely make and roll
