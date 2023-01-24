@@ -779,6 +779,17 @@ true converts to integer 1 and float 1.0, while false converts to 0 and 0.0.
    toType: int
 ```
 
+Converting `string` to `float64` additionally supports parsing string in
+[K8s quantity format](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity),
+such as `1000m` or `500 Mi`:
+
+```yaml
+- type: convert
+  convert:
+   toType: float64
+   format: quantity
+```
+
 ### Connection Details
 
 Connection details secret of XR is an aggregated sum of the connection details
