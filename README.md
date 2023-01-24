@@ -1,6 +1,6 @@
 # Crossplane Documentation
 
-This is the repository for the [Crossplane documentation](https://crossplane.io/docs).
+This is the repository for the [Crossplane documentation](https://docs.crossplane.io).
 
 The documentation site is built using [Hugo](https://gohugo.io/) and tested with BrowserStack.
 
