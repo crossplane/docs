@@ -6,7 +6,7 @@ cascade:
 ---
 
 {{< img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
-
+<br />
 Crossplane is an open source Kubernetes add-on that transforms your cluster into
 a **universal control plane**. Crossplane enables platform teams to assemble
 infrastructure from multiple vendors, and expose higher level self-service APIs

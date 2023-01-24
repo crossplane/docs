@@ -8,6 +8,7 @@ cascade:
 ---
 
 {{< img src="media/banner.png" alt="Crossplane Popsicle Truck" eager=true >}}
+<br />
 
 The Crossplane Knowledge Base is a collection of documents covering recommended
 practices, third-party integrations and Crossplane-related how-tos. 
