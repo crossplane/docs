@@ -23,7 +23,7 @@ practices, third-party integrations and Crossplane-related how-tos.
 
 ## Contribute an article
 Contributions to the Knowledge Base are always welcome. Knowledge Base articles
-cover topics detail or describe using Crossplane with third-party software.
+cover topics in detail or describe using Crossplane with third-party software.
 
 Some examples of Knowledge Base articles could include:
 * Troubleshooting Crossplane providers
