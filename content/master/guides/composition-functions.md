@@ -62,14 +62,11 @@ deployed as a sidecar pod. You can confirm Composition Functions are enabled by
 looking for a log line like:
 
 ```json
+$ kubectl -n crossplane-system logs -l app=crossplane
 {"level":"info","ts":1674535093.36186,"logger":"crossplane","msg":"Alpha feature enabled","flag":"EnableAlphaCompositionFunctions"}
 ```
 
-{{< hint "tip" >}}
-Use `kubectl -n crossplane-system logs -l app=crossplane` to see the logs. You
-should see the "Alpha feature enabled" log line emitted shortly after Crossplane
-starts.
-{{< /hint >}}
+You should see the log line emitted shortly after Crossplane starts.
 
 ## The xfn Runner
 
