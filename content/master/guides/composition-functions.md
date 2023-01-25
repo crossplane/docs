@@ -163,14 +163,11 @@ spec:
       image: xpkg.upbound.io/example-org/create-rds-securitygroup:v0.9.0
 ```
 
-{{< hint "tip" >}}
-Use `kubectl describe <xr-kind> <xr-name>` to debug Composition Functions. Most
-functions will emit events associated with the XR if they experience issues.
-{{< /hint >}}
 
-You can use `kubectl explain` to explore the configuration options available
-when using Composition Functions.
+Use `kubectl explain` to explore the configuration options available when using
+Composition Functions, or take a look at the example Composition below.
 
+{{< expand "Using `kubectl explain` on a Composition" >}}
 ```console
 $ kubectl explain composition.spec.functions
 KIND:     Composition
@@ -204,8 +201,9 @@ FIELDS:
    type <string> -required-
      Type of this function.
 ```
+{{< /expand >}}
 
-{{< expand "A Composition that demonstrates most Composition Function options" >}}
+{{< expand "A Composition that uses most Composition Function options" >}}
 ```yaml
 apiVersion: apiextensions.crossplane.io/v2alpha1
 kind: Composition
@@ -254,6 +252,12 @@ spec:
 ```
 {{< /expand >}}
 
+{{< hint "tip" >}}
+Use `kubectl describe <xr-kind> <xr-name>` to debug Composition Functions. Look
+for status conditions and events. Most functions will emit events associated
+with the XR if they experience issues.
+{{< /hint >}}
+
 ## Building a Composition Function
 
  Crossplane is mostly unopinionated about how a Composition Function is built.
@@ -265,16 +269,188 @@ spec:
  * Run within the constraints specified by the Composition that includes them
    (e.g. timeouts, compute, network access).
 
+Here's a simple Composition Function that annotates all of an XR's composed
+resources with a quote:
+
+```python
+import sys
+
+import requests
+import yaml
+
+ANNOTATION_KEY_AUTHOR = "quotable.io/author"
+ANNOTATION_KEY_QUOTE = "quotable.io/quote"
+
+
+def get_quote() -> tuple[str, str]:
+    """Get a quote from quotable.io"""
+    rsp = requests.get("https://api.quotable.io/random")
+    rsp.raise_for_status()
+    j = rsp.json()
+    return (j["author"], j["content"])
+
+
+def read_functionio() -> dict:
+    """Read the FunctionIO from stdin."""
+    return yaml.load(sys.stdin.read(), yaml.Loader)
+
+
+def write_functionio(functionio: dict):
+    """Write the FunctionIO to stdout and exit."""
+    sys.stdout.write(yaml.dump(functionio))
+    sys.exit(0)
+
+
+def result_warning(functionio: dict, message: str):
+    """Add a warning result to the supplied FunctionIO."""
+    if "results" not in functionio:
+        functionio["results"] = []
+    functionio["results"].append({"severity": "Warning", "message": message})
+
+
+def main():
+    """Annotate all desired composed resources with a quote from quotable.io"""
+    try:
+        functionio = read_functionio()
+    except yaml.parser.ParserError as err:
+        sys.stdout.write("cannot parse FunctionIO: {}\n".format(err))
+        sys.exit(1)
+
+    # Return early if there are no desired resources to annotate.
+    if "desired" not in functionio or "resources" not in functionio["desired"]:
+        write_functionio(functionio)
+
+    # If we can't get our quote, add a warning and return early.
+    try:
+        quote, author = get_quote()
+    except requests.exceptions.RequestException as err:
+        result_warning(functionio, "Cannot get quote: {}".format(err))
+        write_functionio(functionio)
+
+    # Annotate all desired resources with our quote.
+    for r in functionio["desired"]["resources"]:
+        if "resource" not in r:
+            # This shouldn't happen - add a warning and continue.
+            result_warning(
+                functionio,
+                "Desired resource {name} missing resource body".format(
+                    name=r.get("name", "unknown")
+                ),
+            )
+            continue
+
+        if "metadata" not in r["resource"]:
+            r["resource"]["metadata"] = {}
+
+        if "annotations" not in r["resource"]["metadata"]:
+            r["resource"]["metadata"]["annotations"] = {}
+
+        if ANNOTATION_KEY_QUOTE in r["resource"]["metadata"]["annotations"]:
+            continue
+
+        r["resource"]["metadata"]["annotations"][ANNOTATION_KEY_AUTHOR] = author
+        r["resource"]["metadata"]["annotations"][ANNOTATION_KEY_QUOTE] = quote
+
+    write_functionio(functionio)
+
+
+if __name__ == "__main__":
+    main()
 ```
+
+{{< expand "The function's `requirements.txt`" >}}
+```
+certifi==2022.12.7
+charset-normalizer==3.0.1
+click==8.1.3
+idna==3.4
+pathspec==0.10.3
+platformdirs==2.6.2
+PyYAML==6.0
+requests==2.28.2
+tomli==2.0.1
+urllib3==1.26.14
+```
+{{< /expand >}}
+
+{{< expand "The function's `Dockerfile`" >}}
+```Dockerfile
+FROM debian:11-slim AS build
+RUN apt-get update && \
+    apt-get install --no-install-suggests --no-install-recommends --yes python3-venv && \
+    python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip setuptools wheel
+
+FROM build AS build-venv
+COPY requirements.txt /requirements.txt
+RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
+
+FROM gcr.io/distroless/python3-debian11
+COPY --from=build-venv /venv /venv
+COPY . /app
+WORKDIR /app
+ENTRYPOINT ["/venv/bin/python3", "main.py"]
+```
+{{< /expand >}}
+
+Create and push the function just like you would any Docker image:
+
+```console
+# Build the function.
+$ docker build .
+Sending build context to Docker daemon  38.99MB
+Step 1/10 : FROM debian:11-slim AS build
+ ---> 4810399f6c13
+Step 2/10 : RUN apt-get update &&     apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc && python3 -m venv /venv &&     /venv/bin/pip install --upgrade pip setuptools wheel
+ ---> Using cache
+ ---> 9b34960c88d7
+Step 3/10 : FROM build AS build-venv
+ ---> 9b34960c88d7
+Step 4/10 : COPY requirements.txt /requirements.txt
+ ---> Using cache
+ ---> fae19dad52af
+Step 5/10 : RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
+ ---> Using cache
+ ---> f4b811c75812
+Step 6/10 : FROM gcr.io/distroless/python3-debian11
+ ---> 2a0e74a2b005
+Step 7/10 : COPY --from=build-venv /venv /venv
+ ---> Using cache
+ ---> cf727d3f20d3
+Step 8/10 : COPY . /app
+ ---> a044aef45e32
+Step 9/10 : WORKDIR /app
+ ---> Running in d08a6144815b
+Removing intermediate container d08a6144815b
+ ---> 7250f5aa653e
+Step 10/10 : ENTRYPOINT ["/venv/bin/python3", "main.py"]
+ ---> Running in 3f4d9dc55bad
+Removing intermediate container 3f4d9dc55bad
+ ---> bfd2f920c591
+Successfully built bfd2f920c591
+
+# Tag the function.
+$ docker tag bfd2f920c591 negz/xfn-quotable-simple:v0.1.0
+
+# Push the function.
+$ docker push xpkg.upbound.io/negz/xfn-quotable-simple:v0.1.0
+The push refers to repository [xpkg.upbound.io/negz/xfn-quotable-simple]
+cf6d94b88843: Pushed
+77646fd315d2: Mounted from negz/xfn-quotable
+50630ee42b6e: Mounted from negz/xfn-quotable
+7e2cf97ed8c4: Mounted from negz/xfn-quotable
+96e320b34b54: Mounted from negz/xfn-quotable
+fba4381f2bb7: Mounted from negz/xfn-quotable
+v0.1.0: digest: sha256:d8a6404e5fe38936aa8dadd861fea35ede0aded6168d501052f91cdabab0135e size: 1584
+```
+
 TODO(negz):
 
 * FunctionIO example - link to Go type def for 'full spec' (for now).
-* Example function w/Dockerfile - something single file (quote annotator?)
 * Things to keep in mind
     * Handling Observed and desired state.
     * You need to name your resources (we only add owner ref, annotations).
     * How to handle errors.
-```
 
 [rootless-containers]: https://rootlesscontaine.rs
 [kubernetes-seccomp]: https://kubernetes.io/docs/tutorials/security/seccomp/
