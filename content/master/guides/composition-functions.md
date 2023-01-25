@@ -1,5 +1,5 @@
 ---
-title: Composition Function
+title: Composition Functions
 state: alpha
 ---
 
@@ -65,16 +65,22 @@ looking for a log line like:
 {"level":"info","ts":1674535093.36186,"logger":"crossplane","msg":"Alpha feature enabled","flag":"EnableAlphaCompositionFunctions"}
 ```
 
+{{< hint "tip" >}}
+Use `kubectl -n crossplane-system logs -l app=crossplane` to see the logs. You
+should see the "Alpha feature enabled" log line emitted shortly after Crossplane
+starts.
+{{< /hint >}}
+
 ## The xfn Runner
 
 Composition Function runners are designed to be pluggable. Each time Crossplane
 needs to invoke a Composition Function it makes a gRPC call to a configurable
 endpoint. The default, reference Composition Function runner is named `xfn`.
 
-![Crossplane talking to xfn via gRPC](composition-functions-xfn-runner.png)
+{{< img src="composition-functions-xfn-runner.png" alt="Crossplane running functions using xfn via gRPC" size="tiny" >}}
 
 `xfn` is deployed as a sidecar container within the Crossplane pod. It runs each
-Composition Function as a nested [Rootless Container][rootless-containers]. The
+Composition Function as a nested [rootless container][rootless-containers]. The
 Crossplane Helm chart deploys `xfn` with slightly elevated permissions. Namely:
 
 * The [Unconfined seccomp profile][kubernetes-seccomp].
@@ -96,13 +102,160 @@ will appear to be root inside the Composition Function container thanks to
 
 ## Using Composition Functions
 
-```
-TODO(negz):
+To use Composition Functions you must:
 
-* Some ideas/inspiration.
-* Examples
-    * A less simple Composition that uses functions and P&T.
+1. Find one or more Composition Functions, or write your own.
+2. Write a `Composition` that uses your Composition Functions.
+3. Create an XR that uses your `Composition`.
+
+Your XRs, claims, and providers don't need to be updated or otherwise aware
+of Composition Functions to use them - they need only use a Composition that
+includes one or more entries in its `spec.functions` array.
+
+Composition Functions are designed to be run in a pipeline, so you can 'stack'
+several of them together. Each function is passed the output of the previous
+function as its input. Functions can also be used in conjunction with P&T
+Composition (i.e. a `spec.resources` array). 
+
+In the following example P&T Composition composes an RDS instance. A pipeline of
+(hypothetical) Composition Functions then updates that RDS instance (before it's
+applied to the API server) with a randomly generated password, and composes an
+RDS security group.
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v2alpha1
+kind: Composition
+metadata:
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: database.example.org/v1alpha1
+    kind: XPostgreSQLInstance
+  resources:
+    - name: rds-instance
+      base:
+        apiVersion: rds.aws.upbound.io/v1beta1
+        kind: Instance
+        spec:
+          forProvider:
+            dbName: exmaple
+            instanceClass: db.t3.micro
+            region: us-west-2
+            skipFinalSnapshot: true
+            username: exampleuser
+            engine: postgres
+            engineVersion: "12"
+      patches:
+        - fromFieldPath: spec.parameters.storageGB
+          toFieldPath: spec.forProvider.allocatedStorage
+      connectionDetails:
+        - type: FromFieldPath
+          name: username
+          fromFieldPath: spec.forProvider.username
+        - type: FromConnectionSecretKey
+          name: password
+          fromConnectionSecretKey: attribute.password
+  functions:
+  - name: rds-instance-password
+    type: Container
+    container:
+      image: xpkg.upbound.io/provider-aws-xfns/random-rds-password:v0.1.0
+  - name: create-dbsecuritygroup
+    type: Container
+    container:
+      image: xpkg.upbound.io/example-org/create-rds-securitygroup:v0.9.0
 ```
+
+{{< hint "tip" >}}
+Use `kubectl describe <xr-kind> <xr-name>` to debug Composition Functions. Most
+functions will emit events associated with the XR if they experience issues.
+{{< /hint >}}
+
+You can use `kubectl explain` to explore the configuration options available
+when using Composition Functions.
+
+```console
+$ kubectl explain composition.spec.functions
+KIND:     Composition
+VERSION:  apiextensions.crossplane.io/v1
+
+RESOURCE: functions <[]Object>
+
+DESCRIPTION:
+     Functions is list of Composition Functions that will be used when a
+     composite resource referring to this composition is created. At least one
+     of resources and functions must be specified. If both are specified the
+     resources will be rendered first, then passed to the functions for further
+     processing. THIS IS AN ALPHA FIELD. Do not use it in production. It is not
+     honored unless the relevant Crossplane feature flag is enabled, and may be
+     changed or removed without notice.
+
+     A Function represents a Composition Function.
+
+FIELDS:
+   config       <>
+     Config is an optional, arbitrary Kubernetes resource (i.e. a resource with
+     an apiVersion and kind) that will be passed to the Composition Function as
+     the 'config' block of its FunctionIO.
+
+   container    <Object>
+     Container configuration of this function.
+
+   name <string> -required-
+     Name of this function. Must be unique within its Composition.
+
+   type <string> -required-
+     Type of this function.
+```
+
+{{< expand "A Composition that demonstrates most Composition Function options" >}}
+```yaml
+apiVersion: apiextensions.crossplane.io/v2alpha1
+kind: Composition
+metadata:
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: database.example.org/v1alpha1
+    kind: XPostgreSQLInstance
+  functions:
+  - name: my-cool-function
+    # Currently only Container is supported. Other types may be added in future.
+    type: Container
+    # Configuration specific to type: Container.
+    container:
+      # The OCI image to pull and run.
+      image: xkpg.io/my-cool-function:0.1.0
+      # Whether to pull the function image Never, Always, or IfNotPresent.
+      imagePullPolicy: IfNotPresent
+      # Note that only resource limits are supported - not requests.
+      # The function will be run with the specified resource limits, specified
+      # in Kubernetes-style resource.Quantity form.
+      resources:
+        limits:
+          # Defaults to 128Mi
+          memory: 64Mi
+          # Defaults to 100m (a 10th of a core)
+          cpu: 250m
+      # Defaults to 'Isolated' - i.e an isolated network namespace with no
+      # network access. Use 'Runner' to allow a function access to the runner's
+      # (e.g. the xfn container's) network namespace.
+      network:
+        policy: Runner
+      # How long the function may run before it's killed. Defaults to 20s.
+      timeout: 30s
+    # An x-kubernetes-embedded-resource RawExtension (i.e. an unschemafied
+    # Kubernetes resource). Passed to the function as the config block of its
+    # FunctionIO.
+    config:
+      apiVersion: database.example.org/v1alpha1
+      kind: Config
+      metadata:
+        name: cloudsql
+      spec:
+        version: POSTGRES_9_6
+```
+{{< /expand >}}
 
 ## Building a Composition Function
 
