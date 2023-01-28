@@ -15,7 +15,7 @@ to = "/:splat"
 status = 302
 
 [context.production]
-    command = "hugo --minify "
+    command = "sed -i 's/# writeStats: true/writeStats: true/g' config.yaml && hugo --minify"
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
