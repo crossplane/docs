@@ -7,6 +7,9 @@ tocHidden: true
 {{< hint "important" >}}
 This guide is part 2 of a series. Follow **[part 1]({{<ref "provider-aws" >}})** 
 to install Crossplane and connect your Kubernetes cluster to AWS.
+
+**[Part 3]({{<ref "provider-aws-part-3">}})** covers patching _composite resources_
+and using Crossplane _packages_.
 {{< /hint >}}
 
 This section creates a _[Composition](#create-a-composition)_, 
@@ -21,7 +24,7 @@ to create a custom Kubernetes API to create AWS resources.
 DynamoDB instance
 
 {{<expand "Skip part 1 and just get started" >}}
-1. Add the Crossplane Helm repo and install Crossplane
+1. Add the Crossplane Helm repository and install Crossplane
 ```shell
 helm repo add \
 crossplane-stable https://charts.crossplane.io/stable
@@ -482,7 +485,7 @@ This custom API has only one setting:
 <!-- vale Google.We = NO -->
 * {{<hover label="customAPI" line="4" >}}region{{</hover >}} - where to deploy
 the resources, a choice of "EU" or "US"
-<!-- vale Google.We = YES -->
+
 
 Users can't change any other settings of the S3 bucket or DynamoDB instance. 
 
@@ -627,7 +630,7 @@ can be either {{<hover label="xrdSnip" line="15">}}EU{{</hover>}} or
 
 This _composite resource_ uses 
 {{<hover label="xr" line="7">}}region: US{{</hover>}}.
-
+<!-- vale Google.We = YES -->
 ### Apply the composite resource
 
 Apply the composite resource to the Kubernetes cluster. 
@@ -643,7 +646,7 @@ spec:
 EOF
 ```
 
-### Verify the composite resource.
+### Verify the composite resource
 Verify Crossplane created the _composite resource_ with `kubectl get composite`
 
 ```shell {copy-lines="1"}
