@@ -134,8 +134,10 @@ compressed and use responsive image sizing.
 The `img` shortcode doesn't support .SVG files.
 {{< /hint >}}
 
-The shortcode requires a `src` (relative to the file using the shortcode), an
-`alt` text and an optional `size`.
+The shortcode requires a `src`, an
+`alt` text and an optional `size`.  
+
+The `src` is relative to `/content`.
 
 The `size` can be one of:
 * `xtiny` - Resizes the image to 150px.
