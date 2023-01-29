@@ -1,7 +1,7 @@
 <!-- 2000 is the maxium Hugo seq length -->
 {{ $randNum := index (seq 2000 | shuffle) 0 }}
 {{ $title := .Get 0 | default "Expand"}}
-{{ $id := (replaceRE "(\\s)" "" (printf "%s-%d" $title $randNum))  }}
+{{ $id := (replaceRE "(\\s)" "" (printf "%s-%d" (anchorize $title) $randNum))  }}
 <div class="accordion mb-3" id="{{$id}}-Parent">
   <div class="accordion-item">
     <h2 class="accordion-header" id="{{$id}}">
