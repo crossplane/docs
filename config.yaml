@@ -14,7 +14,7 @@ ignoreFiles:
 - README.md
 
 build:
-  writeStats: true
+  # writeStats: true
 
 markup:
   goldmark:
