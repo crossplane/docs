@@ -18,7 +18,7 @@ status = 302
     command = "sed -i 's/# writeStats: true/writeStats: true/g' config.yaml && cat config.yaml && hugo --minify"
 
 [context.production]
-    command = "sed -i 's/# writeStats: true/writeStats: true/g' config.yaml && && hugo --minify"
+    command = "sed -i 's/# writeStats: true/writeStats: true/g' config.yaml && hugo --minify"
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
