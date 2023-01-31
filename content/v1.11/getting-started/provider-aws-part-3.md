@@ -102,9 +102,7 @@ spec:
           name: crossplane-quickstart-bucket
         spec:
           forProvider:
-            region: us-east-2
-          providerConfigRef:
-            name: default
+            region: "us-east-2"
     - name: dynamoDB
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
@@ -166,7 +164,7 @@ kubectl create namespace test
 
 {{</expand >}}
 
-## Enable patches
+## Enable composition patches
 In a _composition_ `patches` map fields in the custom API to fields inside the
 _managed resources_.
 
@@ -187,9 +185,7 @@ resources:
           name: crossplane-quickstart-bucket
         spec:
           forProvider:
-            region: us-east-2
-          providerConfigRef:
-            name: default
+            region: "us-east-2"
     - name: dynamoDB
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
@@ -274,13 +270,13 @@ resources:
         kind: Bucket
         spec:
           forProvider:
-            region: us-east-2
+            region: "us-east-2"
       patches:
         - fromFieldPath: "region"
           toFieldPath: "spec.forProvider.region"
           transforms:
-             - type: map
-               map: 
+            - type: map
+              map: 
                 EU: "eu-north-1"
                 US: "us-east-2"
 ```
@@ -296,6 +292,268 @@ _composition_.
 
 ```yaml
 cat <<EOF | kubectl apply -f -
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: dynamo-with-bucket
+spec:
+  compositeTypeRef:
+    apiVersion: custom-api.example.org/v1alpha1
+    kind: database
+  resources:
+    - name: s3Bucket
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        metadata:
+          name: crossplane-quickstart-bucket
+        spec:
+          forProvider:
+            name: default
+            region: "us-east-2"
+      patches:
+        - fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+          transforms:
+            - type: map
+              map: 
+                EU: "eu-north-1"
+                US: "us-east-2"
+    - name: dynamoDB
+      base:
+        apiVersion: dynamodb.aws.upbound.io/v1beta1
+        kind: Table
+        metadata:
+          name: crossplane-quickstart-database
+        spec:
+          forProvider:
+            writeCapacity: 1
+            readCapacity: 1
+            attribute:
+              - name: S3ID
+                type: S
+            hashKey: S3ID
+            region: "us-east-2"
+      patches:
+        - fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+          transforms:
+            - type: map
+              map: 
+                EU: "eu-north-1"
+                US: "us-east-2"
+EOF
+```
+
+### Create a claim
+Create a new _claim_ and set the 
+{{<hover label="claim" line="8" >}}region{{</hover >}} to "EU."
+
+```yaml {label="claim"}
+cat <<EOF | kubectl apply -f -
+apiVersion: custom-api.example.org/v1alpha1
+kind: custom-database
+metadata:
+  name: claimed-eu-database
+  namespace: test
+spec:
+  region: "EU"
+EOF
+```
+
+View the _claim_ with `kubectl get claim`
+
+```shell
+kubectl get claim -n test
+NAME                  SYNCED   READY   CONNECTION-SECRET   AGE
+claimed-eu-database   True     True                        18m
+```
+
+The claim reports `SYNCED` and `READY` as `True` after Crossplane creates
+all the _managed resources_.
+
+Describe the `Table` resource to see the AWS region is `eu-north-1`.
+
+```shell
+kubectl describe table | grep arn:aws
+    Arn:           arn:aws:dynamodb:eu-north-1:622343227358:table/claimed-eu-database-2sh9w-dhvw6
+```
+
+<!-- vale Google.We = NO -->
+Using {{<hover label="claim" line="8" >}}region: "EU"{{</hover >}} patches the
+_composite resource_, updating the AWS region from `us-east-2` to `eu-north-1`.
+The developer creating the claim doesn't need to know which specific AWS region
+or the naming conventions. Using the abstract API options of "EU" or "US" the
+developer places their resources in the desired location.
+<!-- vale Google.We = YES -->
+
+Deleting the claim removes the _managed resources_.
+
+{{<hint "note" >}}
+The _managed resources_ take up to 5 minutes to delete.
+{{< /hint >}}
+
+```shell
+kubectl delete claim claimed-eu-database -n test
+```
+
+## Create a Crossplane configuration package
+
+Crossplane _configuration packages_ allow users to combine their _custom
+resource definition_ and _composition_ files into an OCI image. 
+
+{{< hint "note" >}}
+The [Open Container Initiative](https://opencontainers.org/faq/) 
+defines the OCI image standard.  
+An OCI images is a standard way to package data.
+{{< /hint >}}
+
+You can host configuration packages in image registries like 
+[Docker Hub](https://hub.docker.com/) or the
+[Upbound Marketplace](https://marketplace.upbound.io/). 
+
+Crossplane can download and install configuration packages into a Kubernetes
+cluster. 
+
+Creating a configuration package makes your Crossplane custom APIs portable
+and versioned. 
+
+Building and installing configuration packages requires an OCI image compatible
+tool. 
+
+{{< hint "note" >}}
+You can use any software that builds OCI images. This includes
+[Docker](https://www.docker.com/) or 
+[Upbound's Universal Crossplane (UXP)](https://github.com/upbound/universal-crossplane)
+{{< /hint >}}
+
+A configuration package includes three files:
+* `crossplane.yaml` defines the metadata of the package.
+* `definition.yaml` is the _composite resource definition_ for the package.
+* `composition.yaml` is the _composition_ template for the package. 
+
+<!-- vale gitlab.Substitutions = NO -->
+<!-- yaml is in the filename -->
+### Create a crossplane.yaml file
+<!-- vale gitlab.Substitutions = YES -->
+Configuration packages describe their contents and requirements with a 
+`crossplane.yaml` file.
+
+The `crossplane.yaml` file lists the required Crossplane _providers_ and their
+compatible versions as well as the required Crossplane version. 
+
+The Crossplane
+{{<hover label="xpyaml" line="1" >}}meta.pkg{{</hover>}} API defines the schema
+for a 
+{{<hover label="xpyaml" line="2" >}}Configuration{{</hover>}}.
+
+Inside the {{<hover label="xpyaml" line="5" >}}spec{{</hover>}} define the
+required Crossplane
+{{<hover label="xpyaml" line="7" >}}version{{</hover>}}.
+
+The {{<hover label="xpyaml" line="8" >}}dependsOn{{</hover>}} section lists the
+dependencies for a package. 
+
+This package lists the Upbound 
+{{<hover label="xpyaml" line="9" >}}provider-aws{{</hover>}}
+version {{<hover label="xpyaml" line="10" >}}0.27.0{{</hover>}} or later as a
+dependency.
+
+{{<hint "tip" >}}
+Crossplane automatically installs dependencies. Dependencies can include other
+configuration packages.
+{{< /hint >}}
+
+```yaml {label="xpyaml"}
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: crossplane-aws-quickstart
+spec:
+  crossplane:
+    version: ">=v1.11.0"
+  dependsOn:
+    - provider: xpkg.upbound.io/upbound/provider-aws
+      version: ">=v0.27.0"
+```
+
+Create a new directory and save the `crossplane.yaml` file.
+
+```yaml
+mkdir crossplane-aws-quickstart
+cat <<EOF > crossplane-aws-quickstart/crossplane.yaml
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: crossplane-aws-quickstart
+spec:
+  crossplane:
+    version: ">=v1.11.0"
+  dependsOn:
+    - provider: xpkg.upbound.io/upbound/provider-aws
+      version: ">=v0.27.0"
+EOF
+```
+
+<!-- vale gitlab.Substitutions = NO -->
+<!-- yaml is in the filename -->
+### Create a definition.yaml file
+<!-- vale gitlab.Substitutions = YES -->
+
+A configuration package requires a _composite resource definition_ (XRD) to define the
+custom API.
+
+Save the _XRD_ as `definition.yaml` in the same directory as the
+`crossplane.yaml` file.
+
+```yaml
+cat <<EOF > crossplane-aws-quickstart/definition.yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: databases.custom-api.example.org
+spec:
+  group: custom-api.example.org
+  names:
+    kind: database
+    plural: databases
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              region:
+                type: string
+                oneOf:
+                  - pattern: '^EU$'
+                  - pattern: '^US$'
+            required:
+              - region
+  claimNames:
+    kind: custom-database
+    plural: custom-databases
+EOF
+```
+
+<!-- vale gitlab.Substitutions = NO -->
+<!-- yaml is in the filename -->
+### Create a composition.yaml file
+<!-- vale gitlab.Substitutions = YES -->
+
+The _composition_ template creates the _managed resources_ and allows _patches_
+to customize the _managed resources_.
+
+Copy the _composition_ into the `composition.yaml` file in the same directory as
+`crossplane.yaml`.
+
+```yaml
+cat <<EOF > crossplane-aws-quickstart/composition.yaml
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
@@ -347,19 +605,43 @@ spec:
 EOF
 ```
 
-### Create a claim
-Create a new _claim_ and set the 
-{{<hover label="claim" line="8" >}}region{{</hover >}} to "EU."
+### Install the Crossplane command-line
+To build a configuration package install the Crossplane Kubernetes command-line
+extension. 
 
-```yaml {label="claim"}
-cat <<EOF | kubectl apply -f -
-apiVersion: custom-api.example.org/v1alpha1
-kind: custom-database
-metadata:
-  name: claimed-eu-database
-  namespace: test
-spec:
-  region: "EU"
-EOF
+```shell
+curl "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
+./install.sh
+sudo mv kubectl-crossplane /usr/bin
 ```
 
+Verify the Crossplane command-line installed with `kubectl crossplane --help`
+
+```shell
+kubectl crossplane --help
+Usage: kubectl crossplane <command>
+
+A command line tool for interacting with Crossplane.
+
+Flags:
+  -h, --help       Show context-sensitive help.
+  -v, --version    Print version and quit.
+      --verbose    Print verbose logging statements.
+# Ouptut removed for brevity
+```
+
+### Build a configuration package
+
+Use the `kubectl crossplane` command to create an `.xpkg` file containing the
+custom APIs and Crossplane configuration.
+
+```shell
+kubectl crossplane build configuration -f crossplane-aws-quickstart/ --name="crossplane-aws-quickstart"
+```
+
+Now an `.xpkg` OCI image is inside the `crossplane-aws-quickstart` directory.
+
+```shell
+ls crossplane-aws-quickstart/
+composition.yaml  crossplane-aws-quickstart.xpkg  crossplane.yaml  definition.yaml
+```
