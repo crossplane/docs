@@ -645,3 +645,8 @@ Now an `.xpkg` OCI image is inside the `crossplane-aws-quickstart` directory.
 ls crossplane-aws-quickstart/
 composition.yaml  crossplane-aws-quickstart.xpkg  crossplane.yaml  definition.yaml
 ```
+
+## Next steps
+* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
+* Read more about [Crossplane concepts]({{<ref "../concepts" >}})
