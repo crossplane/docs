@@ -457,7 +457,7 @@ _Claims_ are namespace scoped.
 
 View all available Claims with the command `kubectl get claim`.
 
-## Next Steps
+## Next steps
 Build your own Crossplane platform using one of the quickstart guides.
 * [Azure Quickstart]({{<ref "provider-azure" >}})
 * [AWS Quickstart]({{<ref "provider-aws" >}})
