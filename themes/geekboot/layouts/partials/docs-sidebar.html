@@ -38,4 +38,16 @@
       {{ end }}
     {{ end }}
   {{ end }}
+
+  {{ if not ($.Param "docs") }}
+    {{ partialCached "sidebar/user-docs" . }}
+  {{ end }}
+
+  {{ if ne .Page.Params.product "Knowledge Base" }}
+    {{ partialCached "sidebar/knowledge-base" . }}
+  {{ end }}
+
+  {{ if ne .Page.Params.product "Contributing Guide" }}
+    {{ partialCached "sidebar/contributing-guide" . }}
+  {{ end }}
 </nav>
