@@ -45,11 +45,11 @@
               <nav class="pt-3">
                 <div class="pb-2">
                   <svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg>
-                  <a target="_blank" href="{{printf "https://github.com/crossplane/docs/issues/new?title=[Web Bug] - %s&body=<!-- What's the problem? -->\n\n\nURL: %s" .Page.Title .Permalink}}">Report a problem</a>
+                  <span class="ps-1"><a target="_blank" href="{{printf "https://github.com/crossplane/docs/issues/new?title=[Web Bug] - %s&body=<!-- What's the problem? -->\n\n\nURL: %s" .Page.Title .Permalink}}">Report a problem</a></span>
                 </div>
                 <div>
                   <svg class="bi" width="1em" height="1em"><use xlink:href="#github"/></svg>
-                  <a href="{{printf "https://github.com/crossplane/docs/tree/master/content/%s" .Page.File}}">View page source</a>
+                  <span class="ps-1"><a href="{{printf "https://github.com/crossplane/docs/tree/master/content/%s" .Page.File}}">View page source</a></span>
                 </div>
               </div>
             </nav>
