@@ -13,6 +13,7 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 
 * Pete Lumbis <pete@upbound.io> ([plumbis](https://github.com/plumbis)) as a maintainer
 * Michael Goff <michael@upbound.io> ([thephred](https://github.com/thephred)) as a maintainer
+* Jean du Plessis <jean@upbound.io> ([jeanduplessis](https://github.com/jeanduplessis) as a maintainer
 
 ## Maintainers
 
@@ -23,6 +24,7 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 * Pete Lumbis <pete@upbound.io> ([plumbis](https://github.com/plumbis))
 * Muvaffak Onus <monus@upbound.io> ([muvaf](https://github.com/muvaf))
 * Hasan Turken <hasan@upbound.io> ([turkenh](https://github.com/turkenh))
+* Jean du Plessis <jean@upbound.io> ([jeanduplessis](https://github.com/jeanduplessis)
 
 ## Reviewers
 
