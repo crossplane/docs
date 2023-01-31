@@ -781,7 +781,7 @@ if __name__ == "__main__":
 Building this function requires its `requirements.txt` and a `Dockerfile`:
 
 {{< expand "The Function's requirements" >}}
-```
+```python
 certifi==2022.12.7
 charset-normalizer==3.0.1
 click==8.1.3
