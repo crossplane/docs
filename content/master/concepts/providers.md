@@ -3,8 +3,8 @@ title: Providers
 weight: 101
 ---
 
-Providers are Crossplane packages that bundle a set of [Managed
-Resources][managed-resources] and their respective controllers to allow
+Providers are Crossplane packages that bundle a set of 
+[Managed Resources]({{<ref "managed-resources" >}}) and their respective controllers to allow
 Crossplane to provision the respective infrastructure resource.
 
 ## Installing Providers

@@ -3,8 +3,8 @@ title: Providers
 weight: 101
 ---
 
-Providers are Crossplane packages that bundle a set of [Managed
-Resources][managed-resources] and their respective controllers to allow
+Providers are Crossplane packages that bundle a set of 
+[Managed Resources]({{<ref "./managed-resources" >}}) and their respective controllers to allow
 Crossplane to provision the respective infrastructure resource.
 
 ## Installing Providers
@@ -94,4 +94,3 @@ will attempt to use a `ProviderConfig` named `default`.
 [Google Cloud Platform (GCP) Service Account]: "../cloud-providers/gcp/gcp-provider" 
 [Microsoft Azure Service Principal]:  "../cloud-providers/azure/azure-provider"
 [Amazon Web Services (AWS) IAM User]: "../cloud-providers/aws/aws-provider"
-[managed-resources]: "managed-resources"
