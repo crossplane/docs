@@ -314,6 +314,7 @@ spec:
           name: example-environment
       - type: Selector
         selector:
+          matchLabels:
           - key: stage
             type: FromCompositeFieldPath # this is the default
             valueFromFieldPath: spec.parameters.stage
