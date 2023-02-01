@@ -967,7 +967,7 @@ authentication will be added in a future release.
 `xfn` runs as a sidecar container within the Crossplane pod. It runs each
 Composition Function as a nested [rootless container][rootless-containers].
 
-{{< img src="master/guides/composition-functions-xfn-runner.png" alt="Crossplane running Functions using xfn via gRPC" size="tiny" >}}
+{{< img src="media/composition-functions-xfn-runner.png" alt="Crossplane running Functions using xfn via gRPC" size="tiny" >}}
 
 The Crossplane Helm chart deploys `xfn` with:
 
