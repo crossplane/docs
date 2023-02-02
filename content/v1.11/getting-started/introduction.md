@@ -172,9 +172,9 @@ Using the previous example, the platform team may set a compute resource size
 and virtual network settings. But the platform team allows users to define the 
 storage resource size.
 
-Creating a _Composition_ Crossplane doesn't create any managed
-resources. The _Composition_ is only a template for a collection of _managed
-resources_ and their settings. A _Composite Resource_ creates the specific resources.
+Creating a _Composition_ doesn't create any managed resources. The _Composition_
+is only a template for a collection of _managed resources_ and their settings. A
+_Composite Resource_ creates the specific resources.
 
 {{< hint "note" >}}
 The _[Composite Resources]({{<ref "#composite-resources">}})_ section discusses
