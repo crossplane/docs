@@ -1166,6 +1166,8 @@ apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
   generateName: crossplane-bucket-
+  labels:
+    docs.crossplane.io/example: provider-aws
 spec:
   forProvider:
     region: us-east-2
@@ -1187,18 +1189,22 @@ This may take up to 5 minutes.
 
 ```shell
 kubectl get buckets
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-crossplane-bucket-45eed4ae0   True    True     crossplane-bucket-45eed4ae0   61s
+NAME                      READY   SYNCED   EXTERNAL-NAME             AGE
+crossplane-bucket-lrxrf   True    True     crossplane-bucket-lrxrf   61s
 ```
 
 ## Delete the managed resource
 Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
 
-Use `kubectl delete bucket <bucketname>` to remove the bucket.
+Use `kubectl delete bucket` to remove the bucket. 
+
+{{<hint "tip" >}}
+Use the `--label` flag to delete by label instead of by name.
+{{</hint>}}
 
 ```shell {copy-lines="1"}
-kubectl delete bucket $bucket
-bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
+kubectl delete bucket --label docs.crossplane.io/example=provider-aws
+bucket.s3.aws.upbound.io "crossplane-bucket-lrxrf" deleted
 ```
 
 ## Next steps

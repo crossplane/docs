@@ -175,6 +175,8 @@ apiVersion: storage.gcp.upbound.io/v1beta1
 kind: Bucket
 metadata:
   generateName: crossplane-bucket-
+  labels:
+    docs.crossplane.io/example: provider-gcp
 spec:
   forProvider:
     location: US
@@ -200,8 +202,8 @@ This may take up to 5 minutes.
 
 ```shell
 kubectl get bucket
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-crossplane-bucket-cf2b6d853   True    True     crossplane-bucket-cf2b6d853   3m3s
+NAME                      READY   SYNCED   EXTERNAL-NAME             AGE
+crossplane-bucket-lrxrf   True    True     crossplane-bucket-lrxrf   3m3s
 ```
 
 Optionally, log into the [GCP Console](https://console.cloud.google.com/) and see the storage bucket inside GCP.
@@ -209,11 +211,15 @@ Optionally, log into the [GCP Console](https://console.cloud.google.com/) and se
 ## Delete the managed resource
 Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
 
-Use `kubectl delete bucket <bucketname>` to remove the bucket.
+Use `kubectl delete bucket` to remove the bucket. 
+
+{{<hint "tip" >}}
+Use the `--label` flag to delete by label instead of by name.
+{{</hint>}}
 
 ```shell
-kubectl delete bucket $bucket
-bucket.storage.gcp.upbound.io "crossplane-bucket-b7cf6b590" deleted
+kubectl delete bucket --label docs.crossplane.io/example: provider-gcp
+bucket.storage.gcp.upbound.io "crossplane-bucket-lrxrf" deleted
 ```
 
 Look in the [GCP Console](https://console.cloud.google.com/) to confirm Crossplane deleted the bucket from GCP.
