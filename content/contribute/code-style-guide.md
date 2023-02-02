@@ -168,3 +168,31 @@ metadata:
   name: aProvider
 ```
 ````
+
+## Editable fields
+
+The `editCode` shortcode makes specific lines or words editable. Editable fields allow readers to put their own inputs as part of a command and copy out the entire modified block. 
+
+For example, the following code block allows editing the key and secret fields.
+
+{{< editCode >}}
+```ini {copy-lines="all"}
+[default]
+aws_access_key_id = $$<aws_access_key>$$
+aws_secret_access_key = $$<aws_secret_key>$$
+```
+{{</ editCode >}}
+
+To set a field as editable wrap a standard code block, including language highlighting hints in the `{{</* editCode */>}}` shortcode. 
+
+Wrap any editable element in two dollar-sign characters (`$$`).
+
+````go
+{{</* editCode */>}}
+```ini {copy-lines="all"}
+[default]
+aws_access_key_id = $$<aws_access_key>$$
+aws_secret_access_key = $$<aws_secret_key>$$
+```
+{{</* /editCode */>}}
+````
