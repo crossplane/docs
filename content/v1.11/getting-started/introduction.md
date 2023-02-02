@@ -246,10 +246,10 @@ in a _Composite Resource_ .
 * The {{< hover label="specGroup" line="7" >}}versions.name{{</hover >}} 
 that defines the version used in a _Composite Resource_.
 * A {{< hover label="specGroup" line="5" >}}names.kind{{</hover >}}
-to define the _Custom Resource_ 
+to define the _Composite Resource_ 
 {{< hover label="xr2" line="3" >}}kind{{</hover>}}.
 * A {{< hover label="specGroup" line="8" >}}versions.schema{{</hover>}} section
-to define the _Custom Resource_ {{<hover label="xr2" line="6" >}}spec{{</hover >}}.
+to define the _Composite Resource_ {{<hover label="xr2" line="6" >}}spec{{</hover >}}.
 
 ```yaml {label="specGroup"}
 # Composite Resource Definition (XRD)
@@ -322,19 +322,20 @@ spec:
             - size  
 ```
 
-A _Custom Resource Definition_ can define a wide variety of settings and options. 
+A _Composite Resource Definition_ can define a wide variety of settings and
+options. 
 
-Creating a _Custom Resource Definition_ enables the creation of _Custom
-Resources_ but can also create a _Claim_.
+Creating a _Composite Resource Definition_ enables the creation of _Composite
+Resources_. It can also enable the creation of _Claims_.
 
-_Custom Resource Definitions_ with a `spec.claimNames` allow developers to
+_Composite Resource Definitions_ with a `spec.claimNames` allow developers to
 create _Claims_.
 
 For example, the 
 {{< hover label="xrdClaim" line="6" >}}claimNames.kind{{</hover >}}
 allows the creation of _Claims_ of `kind: computeClaim`.
 ```yaml {label="xrdClaim"}
-# Custom Resource Definition (XRD)
+# Composite Resource Definition (XRD)
 spec:
   group: test.example.org
   names:
@@ -347,11 +348,11 @@ spec:
 ## Claims
 _Claims_ are the primary way developers interact with Crossplane. 
 
-_Claims_ access the custom APIs defined by the platform team in a _Custom
+_Claims_ access the custom APIs defined by the platform team in a _Composite
 Resource Definition_.
 
-_Claims_ look like _Custom Resources_, but they're namespace scoped,
-while _Custom Resources_ are cluster scoped. 
+_Claims_ look like _Composite Resources_, but they're namespace scoped,
+while _Composite Resources_ are cluster scoped. 
 
 {{< hint "note" >}}
 **Why does namespace scope matter?**  
@@ -359,7 +360,7 @@ Having namespace scoped _Claims_ allows multiple teams, using unique namespaces,
 to create the same types of resources, independent of each other. The compute
 resources of team-A are unique to the compute resources of team-B.
 
-Directly creating _Custom Resources_ requires cluster-wide permissions,
+Directly creating _Composite Resources_ requires cluster-wide permissions,
 shared with all teams.   
 _Claims_ create the same set of resources, but on a namespace level.
 {{< /hint >}}
@@ -373,7 +374,7 @@ Claims use the same
 defined in _Composite Resource Definition_ and also used by 
 _Composite Resources_.
 ```yaml {label="xrdClaim2"}
-# Custom Resource Definition (XRD)
+# Composite Resource Definition (XRD)
 spec:
   group: test.example.org
   names:
@@ -386,10 +387,10 @@ spec:
 In an example _Claim_ the 
 {{<hover label="claim" line="2">}}apiVersion{{< /hover >}}
 matches the {{<hover label="xrdClaim2" line="3">}}group{{< /hover >}} in the
-_Custom Resource Definition_. 
+_Composite Resource Definition_. 
 
 The _Claim_ {{<hover label="claim" line="3">}}kind{{< /hover >}} matches the
-_Custom Resource Definition_ 
+_Composite Resource Definition_ 
 {{<hover label="xrdClaim2" line="7">}}claimNames.kind{{< /hover >}}.
 
 ```yaml {label="claim"}
@@ -404,8 +405,8 @@ spec:
 ```
 
 A _Claim_ can define a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
-The _Custom Resource Definition_ defines the 
-{{<hover label="claim" line="7">}}spec{{< /hover >}} like a _Custom Resource_.
+The _Composite Resource Definition_ defines the 
+{{<hover label="claim" line="7">}}spec{{< /hover >}} like a _Composite Resource_.
 
 
 _Claims_ are namespace scoped.
