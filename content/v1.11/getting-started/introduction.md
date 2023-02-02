@@ -404,8 +404,9 @@ spec:
   size: "large"
 ```
 
-_Claims_ are namespace scoped. A _Claim_ must specify a {{<hover label="claim"
-line="6">}}namespace{{</hover >}}.  
+_Claims_ are namespace scoped. A Claim can specify a {{<hover label="claim"
+line="6">}}namespace{{</hover >}}. A Claim that does not specify a namespace
+will be created in the `default` namespace.
 The _Composite Resource Definition_ defines the Claim's {{<hover label="claim"
 line="7">}}spec{{< /hover >}} like a _Composite Resource_.
 
