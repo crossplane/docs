@@ -199,50 +199,6 @@ set of _managed resources_.
 If a _Composite Resource Definition_ (`XRD`) allows a user to define resource
 settings, users apply them in a _Composite Resource_.
 
-
-<!-- A _Composition_ defines which _Composite Resources_ can use the _Composition_
-template with the _Composition_ `spec.compositeTypeRef` value. This defines the
-{{<hover label="comp" line="7">}}apiVersion{{< /hover >}} and {{<hover
-label="comp" line="8">}}kind{{< /hover >}} of _Composite Resources_ that can use the
-_Composition_.
-
-For example, in the _Composition_:
-```yaml {label="comp"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: test.example.org
-spec:
-  compositeTypeRef:
-    apiVersion: test.example.org/v1alpha1
-    kind: myComputeResource
-    # Removed for brevity
-```
-
-A _Composite Resource_ that can use this template must match this 
-{{<hover label="comp" line="7">}}apiVersion{{< /hover >}} and {{<hover
-label="comp" line="8">}}kind{{< /hover >}}.
-
-```yaml {label="xr"}
-apiVersion: test.example.org/v1alpha1
-kind: myComputeResource
-metadata:
-  name: myResource
-spec:
-  storage: "large"
-```
-
-The _Composite Resource_ {{<hover label="xr" line="1">}}apiVersion{{< /hover >}}
-matches the and _Composition_ 
-{{<hover label="comp" line="7">}}apiVersion{{</hover >}} and the 
-_Composite Resource_  {{<hover label="xr" line="2">}}kind{{< /hover >}}
-matches the _Composition_ {{<hover label="comp" line="8">}}kind{{< /hover >}}.
-
-In this example, the _Composite Resource_ also sets the 
-{{<hover label="xr" line="7">}}storage{{< /hover >}} setting. The
-_Composition_ uses this value when creating the associated _managed resources_
-owned by this _Composite Resource_. -->
-
 {{< hint "tip" >}}
 _Compositions_ are templates for a set of _managed resources_.  
 _Composite Resources_ fill out the template and create _managed resources_.
