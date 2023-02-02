@@ -11,7 +11,7 @@ authenticate to AWS and creating a _Managed Resource_ in AWS directly from your
 Kubernetes cluster. This shows Crossplane can communicate with AWS.
 * [Part 2]({{< ref "provider-aws-part-2" >}}) creates a 
 _Composite Resource Definition_ (XRD), _Composite Resource_ (XR) and a _Claim_
-(XC) to show how to create and use custom APIs.
+(XRC) to show how to create and use custom APIs.
 * [Part 3]({{< ref "provider-aws-part-3" >}}) demonstrates how to patch
 _Compositions_ with values used in a _Claim_ and how to build a Crossplane
 _Package_ to make a Crossplane platform portable and reusable.

@@ -43,7 +43,7 @@ This table provides a summary of Crossplane components and their roles.
 | [Composition]({{<ref "#composition">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
 | [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
 | [Composite Resource Definitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
-| [Claims]({{<ref "#claims" >}}) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
+| [Claims]({{<ref "#claims" >}}) | `XRC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
 {{< /table >}}
 
 ## The Crossplane Pod
