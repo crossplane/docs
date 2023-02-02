@@ -153,13 +153,14 @@ and
 
 ## Compositions
 
-A _Composition_ is a template for a collection of _managed resource_. _Compositions_ 
-allow platform teams to specify a set of _managed resources_ as a 
+A _Composition_ is a template for a collection of _managed resources_.
+_Compositions_ allow platform teams to specify a set of _managed resources_ as a
 single object.
 
 For example, a compute _managed resource_ may require the creation of a storage 
 resource and a virtual network as well. A single _Composition_ can specify all
-three resources in a single _Composition_ object. 
+three resources, the compute, storage, and networking resources, in a single
+_Composition_ object. 
 
 Using _Compositions_ simplifies the deployment of infrastructure made up of
 multiple _managed resources_. _Compositions_ also enforce standards and settings
@@ -169,8 +170,8 @@ Platform teams can specify fixed or default settings for each _managed resource_
 inside a _Composition_ or specify fields and settings that users may change.
 
 Using the previous example, the platform team may set a compute resource size
-and virtual network settings. But the platform team allows users to specify the 
-storage resource size.
+and virtual network settings. But the platform team only allows users to specify
+the storage resource size.
 
 Creating a _Composition_ doesn't create any managed resources. The _Composition_
 is only a template for a collection of _managed resources_ and their settings. A
