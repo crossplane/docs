@@ -197,8 +197,8 @@ example, a _Composition_ template can create a compute, storage and networking
 set of _managed resources_. Crossplane uses the same _Composition_ template
 every time a user requests this set of resources.
 
-If a _Composition_ allows a user to define resource settings, users apply them
-in a _Composite Resource_.
+If a _Composite Resource Definition_ (`XRD`) allows a user to define resource
+settings, users apply them in a _Composite Resource_.
 
 
 <!-- A _Composition_ defines which _Composite Resources_ can use the _Composition_
