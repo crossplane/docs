@@ -86,7 +86,7 @@ Most Providers are for cloud services but Crossplane can use a Provider to
 connect to any service with an API.
 {{< /hint >}}
 
-For example, an AWS Provider defines Kubernetes CRDs for AWS resources like EC2
+For example, an AWS Provider installs Kubernetes CRDs for AWS resources like EC2
 compute instances or S3 storage buckets.
 
 The Provider defines the Kubernetes API definition for the external resource.
@@ -98,7 +98,7 @@ resource for creating and managing AWS S3 storage buckets.
 
 Within the `bucket` CRD is a
 [`spec.forProvider.region`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1#doc:spec-forProvider-region)
-value that defines which AWS region to deploy the bucket in.
+value that specifies which AWS region to deploy the bucket in.
 
 The Upbound Marketplace contains a large 
 [collection of Crossplane Providers](https://marketplace.upbound.io/providers).
@@ -154,22 +154,22 @@ and
 ## Compositions
 
 A _Composition_ is a template for a collection of _managed resource_. _Compositions_ 
-allow platform teams to define a set of _managed resources_ as a 
+allow platform teams to specify a set of _managed resources_ as a 
 single object.
 
 For example, a compute _managed resource_ may require the creation of a storage 
-resource and a virtual network as well. A single _Composition_ can define all three
-resources in a single _Composition_ object. 
+resource and a virtual network as well. A single _Composition_ can specify all
+three resources in a single _Composition_ object. 
 
 Using _Compositions_ simplifies the deployment of infrastructure made up of
 multiple _managed resources_. _Compositions_ also enforce standards and settings
 across deployments.
 
-Platform teams can define fixed or default settings for each _managed resource_ inside a
-_Composition_ or define fields and settings that users may change.
+Platform teams can specify fixed or default settings for each _managed resource_
+inside a _Composition_ or specify fields and settings that users may change.
 
 Using the previous example, the platform team may set a compute resource size
-and virtual network settings. But the platform team allows users to define the 
+and virtual network settings. But the platform team allows users to specify the 
 storage resource size.
 
 Creating a _Composition_ doesn't create any managed resources. The _Composition_
@@ -189,14 +189,14 @@ Use `kubectl get compositions` to view all _compositions_.
  ## Composite Resources
 
 A _Composite Resource_ (`XR`) is a set of provisioned _managed resources_. A
-_Composite Resource_ uses the template defined by a _Composition_ and applies
-any user defined settings. 
+_Composite Resource_ uses the template specified by a _Composition_ and applies
+any user specified settings. 
 
 Multiple unique _Composite Resource_ objects can use the same _Composition_. For
 example, a _Composition_ template can create a compute, storage and networking
 set of _managed resources_.
 
-If a _Composite Resource Definition_ (`XRD`) allows a user to define resource
+If a _Composite Resource Definition_ (`XRD`) allows a user to specify resource
 settings, users apply them in a _Composite Resource_.
 
 {{< hint "tip" >}}
@@ -220,9 +220,9 @@ _Claims_.
 {{< /hint >}}
 
 Platform teams define the custom APIs.  
-These APIs can define specific values
-like storage space in gigabytes, generic settings like `small` or `large`,
-deployment options like `cloud` or `onprem`. Crossplane doesn't limit the API definitions.
+These APIs can specify specific values like storage space in gigabytes, generic
+settings like `small` or `large`, or deployment options like `cloud` or
+`onprem`. Crossplane doesn't limit the API definitions.
 
 The _Composite Resource Definition's_ `kind` is from Crossplane.
 ```yaml
@@ -404,14 +404,12 @@ spec:
   size: "large"
 ```
 
-A _Claim_ can define a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
-The _Composite Resource Definition_ defines the 
-{{<hover label="claim" line="7">}}spec{{< /hover >}} like a _Composite Resource_.
+_Claims_ are namespace scoped. A _Claim_ must specify a {{<hover label="claim"
+line="6">}}namespace{{</hover >}}.  
+The _Composite Resource Definition_ defines the Claim's {{<hover label="claim"
+line="7">}}spec{{< /hover >}} like a _Composite Resource_.
 
-
-_Claims_ are namespace scoped.
-
-View all available Claims with the command `kubectl get claim`.
+View all existing Claims with the command `kubectl get claim`.
 
 ## Next steps
 Build your own Crossplane platform using one of the quickstart guides.
