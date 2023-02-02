@@ -165,15 +165,16 @@ The {{< hover label="providerconfig" line="12">}}spec.credentials.secretRef.name
 ## Create a managed resource
 A _managed resource_ is anything Crossplane creates and manages outside of the Kubernetes cluster. This creates a GCP storage bucket with Crossplane. The storage bucket is a _managed resource_.
 
-This generates a random name for the storage bucket starting with {{< hover label="xr" line="1" >}}crossplane-bucket{{< /hover >}}
+{{< hint type="note" >}}
+To generate a unique name the example uses `generateName` instead of `name`.
+{{< /hint >}}
 
 ```yaml {label="xr",copy-lines="all"}
-bucket=$(echo "crossplane-bucket-"$(head -n 4096 /dev/urandom | openssl sha1 | tail -c 10))
 cat <<EOF | kubectl apply -f -
 apiVersion: storage.gcp.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: $bucket
+  generateName: crossplane-bucket-
 spec:
   forProvider:
     location: US
@@ -185,10 +186,6 @@ EOF
 ```
 
 Notice the {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="4">}}kind{{</hover >}} are from the `Provider's` CRDs.
-
-
-The {{< hover label="xr" line="6">}}metadata.name{{< /hover >}} value is the name of the created GCP storage bucket.  
-This example uses the generated name `crossplane-bucket-<hash>` in the {{< hover label="xr" line="6">}}$bucket{{</hover >}} variable.
 
 {{< hover label="xr" line="10" >}}spec.storageClass{{< /hover >}} defines the GCP storage bucket is [single-region, dual-region or multi-region](https://cloud.google.com/storage/docs/locations#key-concepts). 
 
