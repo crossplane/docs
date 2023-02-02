@@ -256,7 +256,7 @@ to define the _Composite Resource_ {{<hover label="xr2" line="6" >}}spec{{</hove
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   versions:
   - name: v1alpha1
     schema:
@@ -268,9 +268,9 @@ A _Composite Resource_ based on this _Composite Resource Definition_ looks like 
 ```yaml {label="xr2"}
 # Composite Resource (XR)
 apiVersion: test.example.org/v1alpha1
-kind: myComputeResource
+kind: MyComputeResource
 metadata:
-  name: myResource
+  name: my-resource
 spec:
   storage: "large"
 ```
@@ -301,7 +301,7 @@ or {{<hover label="specVersions" line="21" >}}large{{< /hover >}}.
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   versions:
   - name: v1alpha1
     served: true
@@ -333,15 +333,15 @@ create _Claims_.
 
 For example, the 
 {{< hover label="xrdClaim" line="6" >}}claimNames.kind{{</hover >}}
-allows the creation of _Claims_ of `kind: computeClaim`.
+allows the creation of _Claims_ of `kind: ComputeClaim`.
 ```yaml {label="xrdClaim"}
 # Composite Resource Definition (XRD)
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   claimNames:
-    kind: computeClaim
+    kind: ComputeClaim
   # Removed for brevity 
 ```
 
@@ -367,7 +367,7 @@ _Claims_ create the same set of resources, but from a namespace level.
 
 The previous _Composite Resource Definition_ allows the creation of _Claims_
 of the kind  
-{{<hover label="xrdClaim2" line="7" >}}computeClaim{{</hover>}}.  
+{{<hover label="xrdClaim2" line="7" >}}ComputeClaim{{</hover>}}.  
 
 Claims use the same 
 {{< hover label="xrdClaim2" line="3" >}}apiVersion{{< /hover >}}
@@ -378,9 +378,9 @@ _Composite Resources_.
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   claimNames:
-    kind: computeClaim
+    kind: ComputeClaim
   # Removed for brevity 
 ```
 
@@ -396,10 +396,10 @@ _Composite Resource Definition_
 ```yaml {label="claim"}
 # Claim
 apiVersion: test.example.org/v1alpha1
-kind: computeClaim
+kind: ComputeClaim
 metadata:
-  name: myClaim
-  namespace: devGroup
+  name: my-claim
+  namespace: dev-group
 spec:
   size: "large"
 ```
