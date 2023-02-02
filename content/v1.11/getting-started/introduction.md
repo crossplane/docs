@@ -362,7 +362,7 @@ resources of team-A are unique to the compute resources of team-B.
 
 Directly creating _Composite Resources_ requires cluster-wide permissions,
 shared with all teams.   
-_Claims_ create the same set of resources, but on a namespace level.
+_Claims_ create the same set of resources, but from a namespace level.
 {{< /hint >}}
 
 The previous _Composite Resource Definition_ allows the creation of _Claims_
