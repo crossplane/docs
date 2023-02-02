@@ -194,8 +194,7 @@ any user defined settings.
 
 Multiple unique _Composite Resource_ objects can use the same _Composition_. For
 example, a _Composition_ template can create a compute, storage and networking
-set of _managed resources_. Crossplane uses the same _Composition_ template
-every time a user requests this set of resources.
+set of _managed resources_.
 
 If a _Composite Resource Definition_ (`XRD`) allows a user to define resource
 settings, users apply them in a _Composite Resource_.
