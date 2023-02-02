@@ -167,10 +167,11 @@ A _managed resource_ is anything Crossplane creates and manages outside of the K
 
 {{< hint type="note" >}}
 To generate a unique name the example uses `generateName` instead of `name`.
+Manifests that use `generateName` must use `kubectl create`, not `apply`.
 {{< /hint >}}
 
 ```yaml {label="xr",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.gcp.upbound.io/v1beta1
 kind: Bucket
 metadata:
@@ -187,11 +188,11 @@ spec:
 EOF
 ```
 
-Notice the {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="4">}}kind{{</hover >}} are from the `Provider's` CRDs.
+Notice the {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="3">}}kind{{</hover >}} are from the `Provider's` CRDs.
 
-{{< hover label="xr" line="10" >}}spec.storageClass{{< /hover >}} defines the GCP storage bucket is [single-region, dual-region or multi-region](https://cloud.google.com/storage/docs/locations#key-concepts). 
+{{< hover label="xr" line="11" >}}spec.storageClass{{< /hover >}} defines the GCP storage bucket is [single-region, dual-region or multi-region](https://cloud.google.com/storage/docs/locations#key-concepts). 
 
-{{< hover label="xr" line="9">}}spec.forProvider.location{{< /hover >}} is a [GCP location based](https://cloud.google.com/storage/docs/locations) on the {{< hover label="xr" line="10" >}}storageClass{{< /hover >}}. 
+{{< hover label="xr" line="10">}}spec.forProvider.location{{< /hover >}} is a [GCP location based](https://cloud.google.com/storage/docs/locations) on the {{< hover label="xr" line="11" >}}storageClass{{< /hover >}}. 
 
 Use `kubectl get buckets` to verify Crossplane created the bucket.
 

@@ -1156,12 +1156,13 @@ The {{< hover label="providerconfig" line="11">}}spec.credentials.secretRef.name
 A _managed resource_ is anything Crossplane creates and manages outside of the Kubernetes cluster. This creates an AWS S3 bucket with Crossplane. The S3 bucket is a _managed resource_.
 
 {{< hint type="note" >}}
-AWS S3 bucket names must be globally unique. To generate a unique name the
-example uses `generateName` instead of `name`. Any unique name is acceptable.
+AWS S3 bucket names must be globally unique. Any unique name is acceptable. To
+generate a unique name the example uses `generateName` instead of `name`.
+Manifests that use `generateName` must use `kubectl create`, not `apply`.
 {{< /hint >}}
 
 ```yaml {label="xr"}
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl create -f -
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
@@ -1176,9 +1177,9 @@ spec:
 EOF
 ```
 
-The {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="4">}}kind{{</hover >}} are from the provider's CRDs.
+The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
 
-The {{< hover label="xr" line="9">}}spec.forProvider.region{{< /hover >}} tells AWS which AWS region to use when deploying resources. The region can be any [AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) code.
+The {{< hover label="xr" line="10">}}spec.forProvider.region{{< /hover >}} tells AWS which AWS region to use when deploying resources. The region can be any [AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) code.
 
 Use `kubectl get buckets` to verify Crossplane created the bucket.
 
