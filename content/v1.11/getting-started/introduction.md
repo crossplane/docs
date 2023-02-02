@@ -197,7 +197,7 @@ example, a _Composition_ template can create a compute, storage and networking
 set of _managed resources_.
 
 If a _Composite Resource Definition_ (`XRD`) allows a user to specify resource
-settings, users apply them in a _Composite Resource_.
+settings, users apply them in a _Composite Resource_ (`XR`).
 
 {{< hint "tip" >}}
 _Compositions_ are templates for a set of _managed resources_.  
