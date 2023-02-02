@@ -13,9 +13,10 @@ and using Crossplane _packages_.
 {{< /hint >}}
 
 This section creates a _[Composition](#create-a-composition)_, 
-_[Custom Resource Definition](#define-a-composite-resource)_ and a
+_[Composite Resource Definition](#define-a-composite-resource)_ and a
 _[Claim](#create-a-claim)_
-to create a custom Kubernetes API to create AWS resources. 
+to create a custom Kubernetes API to create AWS resources. This custom API is a
+_Composite Resource_ (XR) API.
 
 ## Prerequisites
 * Complete [quickstart part 1]({{<ref "provider-aws" >}}) connecting Kubernetes
@@ -116,7 +117,9 @@ Next, define a DynamoDB `table` resource.
 
 {{< hint "tip" >}}
 The [Upbound Marketplace](https://marketplace.upbound.io/) provides
-[schema documentation](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.27.0/resources/dynamodb.aws.upbound.io/Table/v1beta1) for a `Table` resource.
+[schema
+documentation](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.27.0/resources/dynamodb.aws.upbound.io/Table/v1beta1)
+for a `Table` resource.
 {{< /hint >}}
 
 The _AWS Provider_ defines the 
@@ -173,7 +176,7 @@ Create any {{<hover label="compName" line="4">}}name{{</ hover>}} for this _comp
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: dynamoDBWithS3
+  name: dynamodb-with-s3
 ```
 
 Add the resources to the 
@@ -190,26 +193,22 @@ key.
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: dynamoDBWithS3
+  name: dynamodb-with-s3
 spec:
   resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
         spec:
           forProvider:
             region: "us-east-2"
           providerConfigRef:
             name: default
-    - name: dynamoDB
+    - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
         kind: Table
-        metadata:
-          name: crossplane-quickstart-database
         spec:
           forProvider:
             region: "us-east-2"
@@ -244,7 +243,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
-    kind: database
+    kind: XDatabase
   resources:
     # Removed for Brevity    
 ```
@@ -258,7 +257,7 @@ With this {{<hover label="compRef" line="6">}}spec.compositeTypeRef{{</ hover>}}
 Crossplane only allows _composite resources_ from the API group
 {{<hover label="compRef" line="7">}}custom-api.example.org{{</ hover>}} 
 that are of
-{{<hover label="compRef" line="8">}}kind: database{{</ hover>}}
+{{<hover label="compRef" line="8">}}kind: XDatabase{{</ hover>}}
 to use this template to create resources. 
 <!-- vale gitlab.SentenceLength = YES -->
 
@@ -274,25 +273,21 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
-    kind: database
+    kind: XDatabase
   resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
         spec:
           forProvider:
             region: us-east-2
           providerConfigRef:
             name: default
-    - name: dynamoDB
+    - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
         kind: Table
-        metadata:
-          name: crossplane-quickstart-database
         spec:
           forProvider:
             region: "us-east-2"
@@ -365,9 +360,15 @@ metadata:
 spec:
   group: custom-api.example.org
   names:
-    kind: database
-    plural: databases
+    kind: XDatabase
+    plural: xdatabases
 ```
+
+{{< hint "tip" >}}
+This new API endpoint is a _Composite Resource_ (XR) API endpoint. It is
+convention for Composite Resource kinds to start with `X`. For example
+`XDatabase`. This is only convention and not required.
+{{< /hint >}}
 
 {{<hint "note" >}}
 The _XRD_ {{<hover label="xrdGroup" line="6" >}}group{{</hover>}} matches the _composition_ {{<hover label="noteComp"
@@ -381,7 +382,7 @@ kind: Composition
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
-    kind: database
+    kind: XDatabase
 ```
 {{< /hint >}}
 
@@ -408,7 +409,7 @@ metadata:
 spec:
   group: custom-api.example.org
   names:
-    kind: database
+    kind: XDatabase
     plural: databases
   versions:
   - name: v1alpha1
@@ -472,9 +473,8 @@ spec:
 ```
 
 {{< hint "tip" >}}
-An _XRD_ is a Kubernetes _custom resource definition_.  
-For more information on the values allowed in the _XRD_ view the _XRD_ object with  
-`kubectl describe crd  compositeresourcedefinitions`
+For more information on the values allowed in the _XRD_ view its schema with
+`kubectl explain compositeresourcedefinitions`
 {{< /hint >}}
 
 Now, define the custom API. Your custom API continues under the last
@@ -515,8 +515,8 @@ required:
 ```
 
 ### Enable claims to the API
-Allow a _claim_ to use this _XRD_ by defining the _claim_ API endpoint under the _XRD_ 
-{{<hover label="XRDclaim" line="4">}}spec{{< /hover >}}.
+Tell this _XRD_ to offer a _claim_ by defining the _claim_ API endpoint under
+the _XRD_ {{<hover label="XRDclaim" line="4">}}spec{{< /hover >}}.
 
 ```yaml {label="XRDclaim"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -524,10 +524,20 @@ kind: CompositeResourceDefinition
 # Removed for brevity
 spec:
 # Removed for brevity
+  names:
+    kind: XDatabase
+    plural: xdatabases
   claimNames:
-    kind: customDatabase
-    plural: customDatabases
+    kind: Database
+    plural: databases
 ```
+
+{{< hint "tip" >}}
+This new API endpoint is a _Composite Resource Claim_ (XRC) API endpoint. It is
+convention for _Claim_ kinds to match their _Composite Resource_ (XR) kinds,
+without the preceding `X`. For example `Database`. This is only convention and
+not required.
+{{< /hint >}}
 
 {{<hint "note" >}}
 The [Claims](#create-a-claim) section later in this guide discusses _claims_.
@@ -542,11 +552,11 @@ cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: databases.custom-api.example.org
+  name: xdatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: database
+    kind: XDatabase
     plural: databases
   versions:
   - name: v1alpha1
@@ -567,8 +577,8 @@ spec:
             required:
               - region
   claimNames:
-    kind: custom-database
-    plural: custom-databases
+    kind: Database
+    plural: databases
 EOF
 ```
 
@@ -576,8 +586,8 @@ Verify Kubernetes created the XRD with `kubectl get xrd`
 
 ```shell {copy-lines="1",label="getXRD"}
 kubectl get xrd
-NAME                               ESTABLISHED   OFFERED   AGE
-databases.custom-api.example.org   True          True      9s
+NAME                                ESTABLISHED   OFFERED   AGE
+xdatabases.custom-api.example.org   True          True      9s
 ```
 
 
@@ -597,7 +607,7 @@ kind: CompositeResourceDefinition
 spec:
   group: custom-api.example.org
   names:
-    kind: database
+    kind: XDatabase
 # Removed for brevity
       spec:
         type: object
@@ -638,7 +648,7 @@ Apply the composite resource to the Kubernetes cluster.
 ```yaml {label="xr"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
-kind: database
+kind: XDatabase
 metadata:
   name: my-composite-resource
 spec: 
@@ -647,10 +657,10 @@ EOF
 ```
 
 ### Verify the composite resource
-Verify Crossplane created the _composite resource_ with `kubectl get composite`
+Verify Crossplane created the _composite resource_ with `kubectl get xdatabase`
 
 ```shell {copy-lines="1"}
-kubectl get composite
+kubectl get xdatabase
 NAME                    SYNCED   READY   COMPOSITION          AGE
 my-composite-resource   True     True    dynamo-with-bucket   31s
 ```
@@ -683,7 +693,7 @@ kubectl describe bucket | grep "Owner References" -A5
     API Version:           custom-api.example.org/v1alpha1
     Block Owner Deletion:  true
     Controller:            true
-    Kind:                  database
+    Kind:                  XDatabase
     Name:                  my-composite-resource
 ```
 
@@ -694,7 +704,7 @@ and DynamoDB `table`.
 ```yaml {label="xr"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
-kind: database
+kind: XDatabase
 metadata:
   name: my-second-composite-resource
 spec: 
@@ -702,10 +712,10 @@ spec:
 EOF
 ```
 
-Again, use `kubectl get composite` to view both _composite resources_.
+Again, use `kubectl get xdatabase` to view both _composite resources_.
 
 ```shell {copy-lines="1"}
-kubectl get composite
+kubectl get xdatabase
 NAME                           SYNCED   READY   COMPOSITION          AGE
 my-composite-resource          True     True    dynamo-with-bucket   2m21s
 my-second-composite-resource   True     True    dynamo-with-bucket   42s
@@ -731,10 +741,10 @@ my-second-composite-resource-nsz6j   True    True     my-second-composite-resour
 Because the _composite resource_ is the `Owner` of the _managed resources_, when
 Crossplane deletes the _composite resource_, it also deletes the _managed resources_ automatically.
 
-Delete the new _composite resource_ with `kubectl delete composite`.
+Delete the new _composite resource_ with `kubectl delete xdatabase`.
 
 ```shell
-kubectl delete composite my-second-composite-resource
+kubectl delete xdatabase my-second-composite-resource
 ```
 
 {{<hint "note">}}
@@ -761,7 +771,7 @@ Delete the second _composite resource_ to remove the last `bucket` and `table`
 _managed resources_.
 
 ```shell
-kubectl delete composite my-composite-resource
+kubectl delete xdatabase my-composite-resource
 ```
 
 _Composite resources_ are great for creating multiple related resources against
@@ -794,8 +804,8 @@ spec:
 # Removed for brevity
   group: custom-api.example.org
   claimNames:
-    kind: custom-database
-    plural: custom-databases
+    kind: Database
+    plural: databases
 ```
 
 Like the _composite resource_, create a new object with the 
@@ -803,7 +813,7 @@ Like the _composite resource_, create a new object with the
 endpoint.
 
 The _XRD_
-{{<hover label="XRDclaim2" line="8" >}}ClaimNames.kind{{</hover>}} defines the
+{{<hover label="XRDclaim2" line="8" >}}claimNames.kind{{</hover>}} defines the
 {{<hover label="claim" line="3" >}}kind{{</hover>}}.
 
 The {{<hover label="claim" line="7" >}}spec{{</hover>}} uses the same
@@ -815,7 +825,7 @@ Apply the _claim_ to your Kubernetes cluster.
 ```yaml {label="claim"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
-kind: custom-database
+kind: Database
 metadata:
   name: claimed-database
   namespace: test
@@ -825,20 +835,20 @@ EOF
 ```
 
 ### Verify the claim
-Verify Crossplane created the _claim_ with `kubectl get claim` in the `test`
+Verify Crossplane created the _claim_ with `kubectl get database` in the `test`
 namespace.
 
 ```shell {copy-lines="1"}
-kubectl get claim -n test
+kubectl get database -n test
 NAME               SYNCED   READY   CONNECTION-SECRET   AGE
 claimed-database   True     True                        35s
 ```
 
 When Crossplane creates a _claim_ a unique _composite resource_ is automatically
-created too. View the new _composite resource_ with `kubectl get composite`.
+created too. View the new _composite resource_ with `kubectl get xdatabase`.
 
 ```shell {copy-lines="1"}
-kubectl get composite
+kubectl get xdatabase
 NAME                     SYNCED   READY   COMPOSITION          AGE
 claimed-database-6xsgq   True     True    dynamo-with-bucket   46s
 ```
@@ -852,7 +862,7 @@ Create a second namespace and a second claim.
 kubectl create namespace test2
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
-kind: custom-database
+kind: Database
 metadata:
   name: claimed-database
   namespace: test2
@@ -861,10 +871,10 @@ spec:
 EOF
 ```
 
-View the _claims_ in all namespaces with `kubectl get claim -A`
+View the _claims_ in all namespaces with `kubectl get database -A`
 
 ```shell {copy-lines="1"}
-kubectl get claim -A
+kubectl get database -A
 NAMESPACE   NAME               SYNCED   READY   CONNECTION-SECRET   AGE
 test        claimed-database   True     True                        4m32s
 test2       claimed-database   True     True                        43s
@@ -873,7 +883,7 @@ test2       claimed-database   True     True                        43s
 Now look at the _composite resources_ at the cluster scope.
 
 ```shell
-kubectl get composite
+kubectl get xdatabase
 NAME                     SYNCED   READY   COMPOSITION          AGE
 claimed-database-6xsgq   True     True    dynamo-with-bucket   8m37s
 claimed-database-f54qv   True     True    dynamo-with-bucket   4m47s
@@ -903,8 +913,8 @@ Removing the _claims_ removes the _composite resources_ and the associated
 _managed resources_.
 
 ```shell
-kubectl delete claim claimed-database -n test
-kubectl delete claim claimed-database -n test2
+kubectl delete database claimed-database -n test
+kubectl delete database claimed-database -n test2
 ```
 
 Verify Crossplane removed all the _managed resources_.
