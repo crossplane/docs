@@ -1240,7 +1240,7 @@ so:
 1. Use a `FromCompositeFieldPath` patch to patch from the 'intermediary' field
    you patched to in step 1 to a field on the destination composed resource.
 
-
+[managed-resources]: {{<ref "managed-resources" >}}
 [crd-docs]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
 [raise an issue]: https://github.com/crossplane/crossplane/issues/new?assignees=&labels=enhancement&template=feature_request.md
 [issue-2524]: https://github.com/crossplane/crossplane/issues/2524
