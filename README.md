@@ -1,13 +1,21 @@
 # Crossplane Documentation
 
-This is the repository for the [Crossplane documentation](https://docs.crossplane.io).
+This is the repository for the [Crossplane
+documentation](https://docs.crossplane.io).
 
-The documentation site is built using [Hugo](https://gohugo.io/) and tested with BrowserStack.
+The documentation site is built using [Hugo](https://gohugo.io/) and tested with
+BrowserStack.
 
-For detailed information about contributing to documentation read the [Docs Contributing Guide](https://docs.crossplane.io/contribute/).
-
+For detailed information about contributing to documentation read the [Docs
+Contributing Guide](https://docs.crossplane.io/contribute/).
 
 ## License
-The Crossplane documentation is under the [Creative Commons Attribution](https://creativecommons.org/licenses/by/4.0/) license. CC-BY allows reuse, remixing and republishing of Crossplane documentation with attribution to the Crossplane organization.
+The Crossplane documentation is under the [Creative Commons
+Attribution](https://creativecommons.org/licenses/by/4.0/) license. CC-BY allows
+reuse, remixing and republishing of Crossplane documentation with attribution to
+the Crossplane organization.
 
-The docs.crossplane.io theme is based on [Geekdoc](https://github.com/thegeeklab/hugo-geekdoc) and [Bootstrap](https://github.com/twbs/bootstrap), both licensed under the MIT License.
+The docs.crossplane.io theme is based on
+[Geekdoc](https://github.com/thegeeklab/hugo-geekdoc) and
+[Bootstrap](https://github.com/twbs/bootstrap), both licensed under the MIT
+License.
