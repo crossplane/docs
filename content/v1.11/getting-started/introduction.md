@@ -54,7 +54,7 @@ Custom Resource Definitions (`CRDs`) of the core Crossplane components.
 After installing Crossplane use `kubectl get crds` to view the Crossplane
 installed CRDs.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get crds
 NAME                                                     
 compositeresourcedefinitions.apiextensions.crossplane.io 

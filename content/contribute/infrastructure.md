@@ -112,6 +112,7 @@ Expand the tab below to see an annotated `tree` output of the website repository
 
 {{<expand >}}
 ```shell
+tree .
 ├── content                     # Root for all page content
 │   ├── master
 │   ├── v1.10

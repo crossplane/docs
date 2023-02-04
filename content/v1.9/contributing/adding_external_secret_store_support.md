@@ -28,7 +28,7 @@ We need a workaround for code generation since latest runtime both adds new API
 but also adds a new interface to managed.resourceSpec. Without this workaround,
 expect errors similar to below:
 
-  ```shell
+  ```console
   16:40:56 [ .. ] go generate darwin_amd64
   angryjet: error: error loading packages using pattern ./...: /Users/hasanturken/  Workspace/crossplane/provider-gcp/apis/cache/v1beta1/zz_  generated.managedlist.go:27:14: cannot use &l.Items[i] (value of type *  CloudMemorystoreInstance) as "github.com/crossplane/crossplane-runtime/pkg/  resource".Managed value in assignment: missing method GetPublishConnectionDetailsTo
   exit status 1

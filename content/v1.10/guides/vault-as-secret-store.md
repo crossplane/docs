@@ -56,18 +56,26 @@ for the cluster where Crossplane is running.
 
 1. Install Vault Helm Chart
 
+Add the Helm repo.
 ```shell
-kubectl create ns vault-system
-
 helm repo add hashicorp https://helm.releases.hashicorp.com --force-update
-helm -n vault-system upgrade --install vault hashicorp/vault
+```
+
+Install the Helm chart.
+```shell
+helm -n vault-system upgrade --install vault hashicorp/vault --create-namespace
 ```
 
 2. [Unseal] Vault
 
+Get the Vault keys.
 ```shell
 kubectl -n vault-system exec vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
 VAULT_UNSEAL_KEY=$(cat cluster-keys.json | jq -r ".unseal_keys_b64[]")
+```
+
+Unseal the vault with the keys.
+```shell
 kubectl -n vault-system exec vault-0 -- vault operator unseal $VAULT_UNSEAL_KEY
 ```
 

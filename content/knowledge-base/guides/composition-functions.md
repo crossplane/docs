@@ -33,14 +33,11 @@ array rather than the typical P&T style array of `resources`.
 
 ## Enabling functions
 
-To enable support for Composition Functions you must:
-
- * Enable the alpha feature flag in Crossplane.
- * Deploy a runner that's responsible for running Functions.
+Enable support for Composition Functions by enabling the alpha feature flag in Crossplane with `helm install --args`.
 
 ```shell
-kubectl create namespace crossplane-system
 helm install crossplane --namespace crossplane-system crossplane-stable/crossplane \
+    --create-namespace
     --set "args={--debug,--enable-composition-functions}" \
     --set "xfn.enabled=true" \
     --set "xfn.args={--debug}"
@@ -51,8 +48,8 @@ feature flag enabled, and with the reference _xfn_ Composition Function runner
 deployed as a sidecar pod. Confirm Composition Functions were enabled by looking
 for a log line:
 
-```shell
-$ kubectl -n crossplane-system logs -l app=crossplane
+```shell {copy-lines="1"}
+ kubectl -n crossplane-system logs -l app=crossplane
 {"level":"info","ts":1674535093.36186,"logger":"crossplane","msg":"Alpha feature enabled","flag":"EnableAlphaCompositionFunctions"}
 ```
 
@@ -129,8 +126,8 @@ Use `kubectl explain` to explore the configuration options available when using
 Composition Functions, or take a look at the following example.
 
 {{< expand "View Composition Function configuration options" >}}
-```shell
-$ kubectl explain composition.spec.functions
+```shell {copy-lines="1"}
+kubectl explain composition.spec.functions
 KIND:     Composition
 VERSION:  apiextensions.crossplane.io/v1
 
@@ -815,11 +812,12 @@ ENTRYPOINT ["/venv/bin/python3", "main.py"]
 ```
 {{< /expand >}}
 
-Create and push the Function just like you would any Docker image:
+Create and push the Function just like you would any Docker image.
+
+Build the function.
 
 ```shell
-# Build the Function.
-$ docker build .
+docker build .
 Sending build context to Docker daemon  38.99MB
 Step 1/10 : FROM debian:11-slim AS build
  ---> 4810399f6c13
@@ -850,12 +848,17 @@ Step 10/10 : ENTRYPOINT ["/venv/bin/python3", "main.py"]
 Removing intermediate container 3f4d9dc55bad
  ---> bfd2f920c591
 Successfully built bfd2f920c591
+```
 
-# Tag the Function.
-$ docker tag bfd2f920c591 example-org/xfn-quotable-simple:v0.1.0
+Tag the function.
+```shell
+docker tag bfd2f920c591 example-org/xfn-quotable-simple:v0.1.0
+```
 
-# Push the Function.
-$ docker push xpkg.upbound.io/example-org/xfn-quotable-simple:v0.1.0
+Push the function.
+
+```shell {copy-lines="1"}
+docker push xpkg.upbound.io/example-org/xfn-quotable-simple:v0.1.0
 The push refers to repository [xpkg.upbound.io/example-org/xfn-quotable-simple]
 cf6d94b88843: Pushed
 77646fd315d2: Mounted from example-org/xfn-quotable

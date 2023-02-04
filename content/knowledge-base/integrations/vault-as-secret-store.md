@@ -56,22 +56,30 @@ for the cluster where Crossplane is running.
 
 1. Install Vault Helm Chart
 
+Add the Vault Helm chart.
 ```shell
-kubectl create ns vault-system
+helm repo add hashicorp https://helm.releases.hashicorp.com --force-update --create-namespace
+```
 
-helm repo add hashicorp https://helm.releases.hashicorp.com --force-update
+Install Vault.
+```shell
 helm -n vault-system upgrade --install vault hashicorp/vault
 ```
 
 2. [Unseal] Vault
 
+Get the Vault keys.
 ```shell
 kubectl -n vault-system exec vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
 VAULT_UNSEAL_KEY=$(cat cluster-keys.json | jq -r ".unseal_keys_b64[]")
+```
+
+Unseal the vault using the keys.
+```shell
 kubectl -n vault-system exec vault-0 -- vault operator unseal $VAULT_UNSEAL_KEY
 ```
 
-3. Configure Vault with Kubernetes Auth.
+1. Configure Vault with Kubernetes Auth.
 
 In order for Vault to be able to authenticate requests based on Kubernetes 
 service accounts, the [Kubernetes auth method] must be enabled.
@@ -90,16 +98,24 @@ Login as root and enable/configure Kubernetes Auth:
 
 ```shell
 kubectl -n vault-system exec -it vault-0 -- /bin/sh
+```
 
+Login to vault.
+```shell
 vault login # use root token from above
+```
 
+Enable the Kubernetes authentication method.
+```shell
 vault auth enable kubernetes
+```
+
+Configure Vault to talk to Kubernetes.
+```shell
 vault write auth/kubernetes/config \
         token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
         kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
         kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        
-exit # exit vault container
 ```
 
 4. Enable Vault Key Value Secret Engine
@@ -124,7 +140,10 @@ path "secret/metadata/*" {
     capabilities = ["create", "read", "update", "delete"]
 }
 EOF
+```
 
+Apply the vault policy.
+```shell
 kubectl -n vault-system exec -it vault-0 -- vault write auth/kubernetes/role/crossplane \
     bound_service_account_names="*" \
     bound_service_account_namespaces=crossplane-system \
@@ -140,11 +159,11 @@ kubectl -n vault-system exec -it vault-0 -- vault write auth/kubernetes/role/cro
 - Annotating for [Vault Agent Sidecar Injection]
 
 ```shell
-kubectl create ns crossplane-system
+helm repo add crossplane-stable https://charts.crossplane.io/stable --force-update --create-namespace
+```
 
-helm repo add crossplane-stable https://charts.crossplane.io/stable --force-update
-
-
+Create the Vault configuration settings.
+```shell
 cat << EOF > values.yaml
 args:
 - --enable-external-secret-stores
@@ -154,8 +173,10 @@ customAnnotations:
   vault.hashicorp.com/role: "crossplane"
   vault.hashicorp.com/agent-run-as-user: "65532"
   EOF
+```
 
-
+Apply the settings to the Crossplane installation. 
+```shell 
 helm upgrade --install crossplane crossplane-stable/crossplane --namespace crossplane-system -f values.yaml
 ```
 
@@ -242,7 +263,7 @@ spec:
 > Prerequisite: You should have a working **default** `ProviderConfig` for
 > GCP available.
 
-1. Create a `Composition` and a `CompositeResourceDefinition`:
+1. Create a `CompositeResourceDefinition`:
 
 ```shell
 echo "apiVersion: apiextensions.crossplane.io/v1
@@ -282,7 +303,10 @@ spec:
                   - serviceAccount
             required:
               - parameters" | kubectl apply -f -
-              
+```
+
+Create a `Composition`.
+```shell
 echo "apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
@@ -326,7 +350,7 @@ spec:
         - fromConnectionSecretKey: publicKeyType" | kubectl apply -f -
 ```
 
-2. Create a `Claim`:
+1. Create a `Claim`:
 
 ```shell
 echo "apiVersion: ess.example.org/v1alpha1
@@ -352,7 +376,8 @@ spec:
 
 3. Verify all resources SYNCED and READY:
 
-```shell
+View the managed resources.
+```shell {copy-lines="1"}
 kubectl get managed
 # Example output:
 # NAME                                                      READY   SYNCED   DISPLAYNAME                     EMAIL                                                            DISABLED
@@ -360,12 +385,18 @@ kubectl get managed
 
 # NAME                                                         READY   SYNCED   KEY_ID                                     CREATED_AT             EXPIRES_AT
 # serviceaccountkey.iam.gcp.crossplane.io/my-ess-zvmkz-bq8pz   True    True     5cda49b7c32393254b5abb121b4adc07e140502c   2022-03-23T10:54:50Z
+```
 
+View the claims
+```shell {copy-lines="1"}
 kubectl -n default get claim
 # Example output:
 # NAME     READY   CONNECTION-SECRET   AGE
 # my-ess   True                        19s
+```
 
+View the composite resources.
+```shell {copy-lines="1"}
 kubectl get composite
 # Example output:
 # NAME           READY   COMPOSITION                    AGE
@@ -374,23 +405,26 @@ kubectl get composite
 
 ### Verify the Connection Secrets landed to Vault
 
-```shell
-# Check connection secrets in the "default" scope (namespace). 
+```shell {copy-lines="1"}
 kubectl -n vault-system exec -i vault-0 -- vault kv list /secret/default
 # Example output:
 # Keys
 # ----
 # ess-claim-conn
+```
 
-# Check connection secrets in the "crossplane-system" scope (namespace).
+Check connection secrets in the "crossplane-system" scope (namespace).
+```shell {copy-lines="1"}
 kubectl -n vault-system exec -i vault-0 -- vault kv list /secret/crossplane-system
 # Example output:
 # Keys
 # ----
 # d2408335-eb88-4146-927b-8025f405da86
 # ess-mr-conn
+```
 
-# Check contents of claim connection secret
+Check contents of claim connection secret
+```shell {copy-lines="1"}
 kubectl -n vault-system exec -i vault-0 -- vault kv get /secret/default/ess-claim-conn
 # Example output:
 # ======= Metadata =======
@@ -415,8 +449,10 @@ kubectl -n vault-system exec -i vault-0 -- vault kv get /secret/default/ess-clai
 # vwIDAQAB
 # -----END PUBLIC KEY-----
 # publicKeyType    TYPE_RAW_PUBLIC_KEY
+```
 
-# Check contents of managed resource connection secret
+Check contents of managed resource connection secret.
+```shell {copy-lines="1"}
 kubectl -n vault-system exec -i vault-0 -- vault kv get /secret/crossplane-system/ess-mr-conn
 # Example output:
 # ======= Metadata =======
@@ -469,7 +505,7 @@ Now, you can open http://127.0.0.1:8200/ui in browser and login with the root to
 
 Delete the claim which should clean up all the resources created.
 
-```
+```shell
 kubectl -n default delete claim my-ess
 ```
 

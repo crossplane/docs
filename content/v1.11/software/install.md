@@ -24,8 +24,7 @@ Add the Crossplane repository with the `helm repo add` command and update the
 local Helm chart cache with `helm repo update`.
 
 ```shell
-helm repo add crossplane-stable https://charts.crossplane.io/stable
-helm repo update
+helm repo add crossplane-stable https://charts.crossplane.io/stable && helm repo update
 ```
 
 ### Install the Crossplane Helm chart
