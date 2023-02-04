@@ -816,7 +816,7 @@ Create and push the Function just like you would any Docker image.
 
 Build the function.
 
-```shell
+```shell {copy-lines="1"}
 docker build .
 Sending build context to Docker daemon  38.99MB
 Step 1/10 : FROM debian:11-slim AS build
