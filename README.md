@@ -4,7 +4,7 @@ This is the repository for the [Crossplane documentation](https://docs.crossplan
 
 The documentation site is built using [Hugo](https://gohugo.io/) and tested with BrowserStack.
 
-For detailed information about contributing to documentation read the [Docs Contributing Guide](https://crossplane.io/master/contributing/docs/).
+For detailed information about contributing to documentation read the [Docs Contributing Guide](https://docs.crossplane.io/contribute/).
 
 
 ## License
