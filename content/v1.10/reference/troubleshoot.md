@@ -259,7 +259,6 @@ spec:
 ```
 
 <!-- Named Links -->
-<!-- 
 [Requested Resource Not Found]: #requested-resource-not-found
 [install Crossplane CLI]: "../getting-started/install-configure"
 [Resource Status and Conditions]: #resource-status-and-conditions
@@ -272,4 +271,4 @@ spec:
 [Installing Crossplane Package]: #installing-crossplane-package
 [Crossplane package]: "../concepts/packages"
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
-[semver spec]: https://github.com/Masterminds/semver#basic-comparisons -->
+[semver spec]: https://github.com/Masterminds/semver#basic-comparisons
