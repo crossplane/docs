@@ -2,7 +2,6 @@ DirectoryPath: "public"
 # The version drop down has an empty hash.
 # This doesn't cause errors
 IgnoreInternalEmptyHash: true
-# Commenting out for default runs. Enable to check externals.
-# CheckExternal: false
+#CheckExternal: false
 IgnoreURLs:
   - "github.com/crossplane/docs/tree/master/content/(.*).md" # Ignore the links to "view this source"
