@@ -72,8 +72,13 @@ the convention of `release-[minor-semver]`.
 
 If this is the first ever release branch being created in a repo (uncommon), you
 should also set up branch protection rules for the `release-*` pattern. You can
-find existing examples in the [Crossplane repo
-settings](https://github.com/crossplane/crossplane/settings/branches).
+find existing examples in the 
+<a href="https://github.com/crossplane/crossplane/settings/branches" data-proofer-ignore>Crossplane repo
+settings</a>. 
+
+{{<hint "important">}}
+Only maintainers can view the repo settings.
+{{< /hint >}}
 
 At this point, the `HEAD` commit in the release branch will be our release
 candidate. The build pipeline will automatically be started due to the create
