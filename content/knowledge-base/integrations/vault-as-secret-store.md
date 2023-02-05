@@ -58,12 +58,12 @@ for the cluster where Crossplane is running.
 
 Add the Vault Helm chart.
 ```shell
-helm repo add hashicorp https://helm.releases.hashicorp.com --force-update --create-namespace
+helm repo add hashicorp https://helm.releases.hashicorp.com --force-update 
 ```
 
 Install Vault.
 ```shell
-helm -n vault-system upgrade --install vault hashicorp/vault
+helm -n vault-system --create-namespace upgrade --install vault hashicorp/vault
 ```
 
 2. [Unseal] Vault
@@ -159,7 +159,7 @@ kubectl -n vault-system exec -it vault-0 -- vault write auth/kubernetes/role/cro
 - Annotating for [Vault Agent Sidecar Injection]
 
 ```shell
-helm repo add crossplane-stable https://charts.crossplane.io/stable --force-update --create-namespace
+helm repo add crossplane-stable https://charts.crossplane.io/stable --force-update 
 ```
 
 Create the Vault configuration settings.
@@ -177,7 +177,7 @@ customAnnotations:
 
 Apply the settings to the Crossplane installation. 
 ```shell 
-helm upgrade --install crossplane crossplane-stable/crossplane --namespace crossplane-system -f values.yaml
+helm upgrade --install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace -f values.yaml
 ```
 
 2. Create a Secret `StoreConfig` for Crossplane to be used by
