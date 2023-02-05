@@ -177,7 +177,7 @@ provided constraints.
 > Dependency resolution is a `beta` feature and depends on the `v1beta1`
 > [`Lock` API][lock-api].
 
-For an example Configuration package, see [getting-started-with-gcp].
+For an example Configuration package, see [getting-started-with-gcp](https://github.com/crossplane/docs/tree/master/content/v1.10/snippets/package/gcp).
 
 To build a Configuration package, navigate to the package root directory and
 execute the following command:
@@ -491,7 +491,6 @@ by [pre-pulling images] onto nodes in the cluster.
 [provider-docs]: https://doc.crds.dev/github.com/crossplane/crossplane/meta.pkg.crossplane.io/Provider/v1
 [configuration-docs]: https://doc.crds.dev/github.com/crossplane/crossplane/meta.pkg.crossplane.io/Configuration/v1
 [lock-api]: https://doc.crds.dev/github.com/crossplane/crossplane/pkg.crossplane.io/Lock/v1beta1
-[getting-started-with-gcp]: https://github.com/crossplane/crossplane/tree/master/docs/snippets/package/gcp
 [specification]: https://github.com/Masterminds/semver#basic-comparisons
 [composition]: {{<ref "composition" >}}
 [IAM Roles for Service Accounts]: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
