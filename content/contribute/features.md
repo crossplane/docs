@@ -28,9 +28,9 @@ Commonmark and `GFM` are extensions to the
 The docs support standard Markdown for images, links and tables, Crossplane
 recommend using the custom shortcodes to provide a better experience for readers.
 
-* [Images]({{< ref "#Images">}})
-* [Links]({{< ref "#Links">}})
-* [Tables]({{< ref "#Tables" >}})
+* [Images]({{< ref "#images">}})
+* [Links]({{< ref "#links">}})
+* [Tables]({{< ref "#tables" >}})
 
 ## Hide long outputs
 Some outputs may be verbose or only relevant for
