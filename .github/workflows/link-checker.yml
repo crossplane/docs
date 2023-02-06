@@ -18,7 +18,8 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo
+        # Set to env=dev so SCSS isn't required.
+        run: hugo --environment development
 
       - name: Run htmltest
         uses: wjdp/htmltest-action@master
