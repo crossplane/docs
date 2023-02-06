@@ -1,0 +1,14 @@
+name: Run htmltest and validate links
+
+on:
+  # Allows manual workflow run (must in default branch to work)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run htmltest
+        uses: wjdp/htmltest-action@master
+        with:
+          config: /utils/htmltest/.htmltest.yml
