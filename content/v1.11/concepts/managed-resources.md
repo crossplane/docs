@@ -464,14 +464,14 @@ fields are there and those are enough to import a resource. The tool you're
 using needs to store `annotations` and `spec` fields, which most tools do
 including Velero.
 
-[term-xrm]:  "terminology"
+[term-xrm]: {{<ref "terminology" >}}
 [rds]: https://aws.amazon.com/rds/
 [cloudsql]: https://cloud.google.com/sql
-[composition]: "composition"
+[composition]: {{<ref "composition" >}}
 [api-versioning]: https://kubernetes.io/docs/reference/using-api/#api-versioning#api-versioning
 [velero]: https://velero.io/
-[api-reference]: "../api-docs" 
-[provider]:  "providers"
+[api-reference]: ../api-docs
+[provider]: {{<ref "providers" >}}
 [issue-727]: https://github.com/crossplane/crossplane/issues/727
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143
 [managed-api-patterns]: https://github.com/crossplane/crossplane/blob/release-1.10/design/one-pager-managed-resource-api-design.md
