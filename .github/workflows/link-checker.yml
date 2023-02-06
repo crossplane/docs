@@ -3,8 +3,8 @@ name: Run htmltest and validate links
 on:
   pull_request:
     paths:
-      - '/content/**'
-      - '/themes/**'
+      - 'content/**'
+      - 'themes/**'
 
   # Allows manual workflow run (must in default branch to work)
   workflow_dispatch:
