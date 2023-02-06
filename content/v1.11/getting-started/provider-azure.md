@@ -22,7 +22,7 @@ This guide walks you through the steps required to get started with the Upbound 
 This quickstart requires:
 * a Kubernetes cluster with at least 3 GB of RAM
 * permissions to create pods and secrets in the Kubernetes cluster
-* [Helm] version `v3.2.0` or later
+* [Helm](https://helm.sh/) version `v3.2.0` or later
 * an Azure account with permissions to create an Azure [service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) and an [Azure Resource Group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
 
 {{< hint type="tip" >}}
@@ -33,8 +33,6 @@ If you don't have a Kubernetes cluster create one locally with [minikube](https:
 {{< hint type="note" >}}
 All commands use the current `kubeconfig` context and configuration. 
 {{< /hint >}}
-
-{{</* include file="install-crossplane.md" type="page" */>}}
 
 ## Install the Azure provider
 
