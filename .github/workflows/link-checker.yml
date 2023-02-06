@@ -8,7 +8,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the docs repo
+        uses: actions/checkout@v3
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.109.0'
+          extended: true
+
+      - name: Build
+        run: hugo
+
       - name: Run htmltest
         uses: wjdp/htmltest-action@master
         with:
-          config: /utils/htmltest/.htmltest.yml
+          config: ./utils/htmltest/.htmltest.yml
