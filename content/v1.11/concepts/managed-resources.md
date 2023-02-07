@@ -470,7 +470,7 @@ including Velero.
 [composition]: {{<ref "composition" >}}
 [api-versioning]: https://kubernetes.io/docs/reference/using-api/#api-versioning#api-versioning
 [velero]: https://velero.io/
-[api-reference]: ../api-docs
+[api-reference]: https://doc.crds.dev/github.com/crossplane/crossplane
 [provider]: {{<ref "providers" >}}
 [issue-727]: https://github.com/crossplane/crossplane/issues/727
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143
