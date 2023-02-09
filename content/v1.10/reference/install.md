@@ -64,9 +64,8 @@ including all the custom resources and controllers.
 
 ## Configuration
 
-The following tables lists the configurable parameters of the Crossplane chart
-and their default values.
-
+{{< expand "Select to view all configuration options" >}}
+{{< table "table table-hover table-striped table-sm">}}
 | Parameter | Description | Default |
 | --- | --- | --- |
 | `affinity` | Enable affinity for Crossplane pod | `{}` |
@@ -118,7 +117,8 @@ and their default values.
 | `extraEnvVarsCrossplane` | List of extra environment variables to set in the crossplane deployment. Any `.` in variable names will be replaced with `_` (example: `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`). | `{}` |
 | `extraEnvVarsRBACManager` | List of extra environment variables to set in the crossplane rbac manager deployment. Any `.` in variable names will be replaced with `_` (example: `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`). | `{}` |
 | `webhooks.enabled` | Enable webhook functionality for Crossplane as well as packages installed by Crossplane. | `false` |
-
+{{< /table >}}
+{{< /expand >}}
 ### Command Line
 
 You can pass the settings with helm command line parameters. Specify each
