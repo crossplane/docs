@@ -89,7 +89,7 @@ will attempt to use a `ProviderConfig` named `default`.
 
 <!-- Named Links -->
 
-
-[Google Cloud Platform (GCP) Service Account]: "../cloud-providers/gcp/gcp-provider" 
-[Microsoft Azure Service Principal]:  "../cloud-providers/azure/azure-provider"
-[Amazon Web Services (AWS) IAM User]: "../cloud-providers/aws/aws-provider"
+[getting-started]:  ../../getting-started/introduction
+[Google Cloud Platform (GCP) Service Account]: ../../cloud-providers/provider-gcp
+[Microsoft Azure Service Principal]: ../../cloud-providers/provider-azure
+[Amazon Web Services (AWS) IAM User]: ../../cloud-providers/provider-aws

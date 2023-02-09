@@ -48,8 +48,8 @@ helm install crossplane --namespace crossplane-system crossplane-stable/crosspla
 
 The preceding Helm command installs Crossplane with the Composition Functions
 feature flag enabled, and with the reference _xfn_ Composition Function runner
-deployed as a sidecar pod. Confirm Composition Functions were enabled by looking
-for a log line:
+deployed as a sidecar container. Confirm Composition Functions were enabled by
+looking for a log line:
 
 ```shell
 $ kubectl -n crossplane-system logs -l app=crossplane

@@ -379,8 +379,10 @@ package without considering the version of Crossplane that is installed.
 
 ### spec.controllerConfigRef
 
-> This field is only available when installing a `Provider` and is an `alpha`
-> feature that depends on the `v1alpha1` [`ControllerConfig` API][controller-config-docs].
+{{< hint "warning" >}}
+The `ControllerConfig` API has been deprecated and will be removed in a future
+release when a comparable alternative is available.
+{{< /hint >}}
 
 Valid values: name of a `ControllerConfig` object
 
