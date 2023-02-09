@@ -49,7 +49,7 @@ kind: Provider
 metadata:
   name: upbound-provider-gcp
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp:v0.15.0
+  package: xpkg.upbound.io/upbound/provider-gcp:v0.26.0
 EOF
 ```
 
@@ -64,7 +64,7 @@ It may take up to five minutes for the provider to list `HEALTHY` as `True`.
 ```shell 
 kubectl get providers
 NAME                   INSTALLED   HEALTHY   PACKAGE                                        AGE
-upbound-provider-gcp   True        False     xpkg.upbound.io/upbound/provider-gcp:v0.15.0   8s
+upbound-provider-gcp   True        False     xpkg.upbound.io/upbound/provider-gcp:v0.26.0   8s
 ```
 
 A provider installs their own Kubernetes _Custom Resource Definitions_ (CRDs). These CRDs allow you to create GCP resources directly inside Kubernetes.
