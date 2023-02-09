@@ -92,9 +92,9 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
-    kind: database
+    kind: XDatabase
   resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
@@ -103,12 +103,10 @@ spec:
         spec:
           forProvider:
             region: "us-east-2"
-    - name: dynamoDB
+    - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
         kind: Table
-        metadata:
-          name: crossplane-quickstart-database
         spec:
           forProvider:
             region: "us-east-2"
@@ -131,7 +129,7 @@ metadata:
 spec:
   group: custom-api.example.org
   names:
-    kind: database
+    kind: XDatabase
     plural: databases
   versions:
   - name: v1alpha1
@@ -152,8 +150,8 @@ spec:
             required:
               - region
   claimNames:
-    kind: custom-database
-    plural: custom-databases
+    kind: Database
+    plural: databases
 EOF
 ```
 
@@ -177,21 +175,17 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 # Removed for Brevity
 resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
         spec:
           forProvider:
             region: "us-east-2"
-    - name: dynamoDB
+    - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
         kind: Table
-        metadata:
-          name: crossplane-quickstart-database
         spec:
           forProvider:
             region: "us-east-2"
@@ -217,7 +211,7 @@ kind: CompositeResourceDefinition
 spec:
   group: custom-api.example.org
   names:
-    kind: database
+    kind: XDatabase
 # Removed for brevity
       spec:
         type: object
@@ -264,7 +258,7 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 # Removed for Brevity
 resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
@@ -299,14 +293,12 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
-    kind: database
+    kind: XDatabase
   resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
         spec:
           forProvider:
             name: default
@@ -319,12 +311,10 @@ spec:
               map: 
                 EU: "eu-north-1"
                 US: "us-east-2"
-    - name: dynamoDB
+    - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
         kind: Table
-        metadata:
-          name: crossplane-quickstart-database
         spec:
           forProvider:
             writeCapacity: 1
@@ -352,7 +342,7 @@ Create a new _claim_ and set the
 ```yaml {label="claim"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
-kind: custom-database
+kind: Database
 metadata:
   name: claimed-eu-database
   namespace: test
@@ -515,7 +505,7 @@ metadata:
 spec:
   group: custom-api.example.org
   names:
-    kind: database
+    kind: XDatabase
     plural: databases
   versions:
   - name: v1alpha1
@@ -536,8 +526,8 @@ spec:
             required:
               - region
   claimNames:
-    kind: custom-database
-    plural: custom-databases
+    kind: Database
+    plural: databases
 EOF
 ```
 
@@ -561,14 +551,12 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
-    kind: database
+    kind: XDatabase
   resources:
-    - name: s3Bucket
+    - name: s3-bucket
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
         spec:
           providerConfigRef:
             name: default
@@ -580,12 +568,10 @@ spec:
                map: 
                 EU: "eu-north-1"
                 US: "us-east-1"
-    - name: dynamoDB
+    - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
         kind: Table
-        metadata:
-          name: crossplane-quickstart-database
         spec:
           forProvider:
             writeCapacity: 1

@@ -11,7 +11,7 @@ authenticate to AWS and creating a _Managed Resource_ in AWS directly from your
 Kubernetes cluster. This shows Crossplane can communicate with AWS.
 * [Part 2]({{< ref "provider-aws-part-2" >}}) creates a 
 _Composite Resource Definition_ (XRD), _Composite Resource_ (XR) and a _Claim_
-(XC) to show how to create and use custom APIs.
+(XRC) to show how to create and use custom APIs.
 * [Part 3]({{< ref "provider-aws-part-3" >}}) demonstrates how to patch
 _Compositions_ with values used in a _Claim_ and how to build a Crossplane
 _Package_ to make a Crossplane platform portable and reusable.
@@ -1155,17 +1155,19 @@ The {{< hover label="providerconfig" line="11">}}spec.credentials.secretRef.name
 A _managed resource_ is anything Crossplane creates and manages outside of the Kubernetes cluster. This creates an AWS S3 bucket with Crossplane. The S3 bucket is a _managed resource_.
 
 {{< hint type="note" >}}
-AWS S3 bucket names must be globally unique. To generate a unique name the example uses a random hash. 
-Any unique name is acceptable.
+AWS S3 bucket names must be globally unique. Any unique name is acceptable. To
+generate a unique name the example uses `generateName` instead of `name`.
+Manifests that use `generateName` must use `kubectl create`, not `apply`.
 {{< /hint >}}
 
 ```yaml {label="xr"}
-bucket=$(echo "crossplane-bucket-"$(head -n 4096 /dev/urandom | openssl sha1 | tail -c 10))
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl create -f -
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: $bucket
+  generateName: crossplane-bucket-
+  labels:
+    docs.crossplane.io/example: provider-aws
 spec:
   forProvider:
     region: us-east-2
@@ -1174,13 +1176,9 @@ spec:
 EOF
 ```
 
-The {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="4">}}kind{{</hover >}} are from the provider's CRDs.
+The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
 
-
-The {{< hover label="xr" line="6">}}metadata.name{{< /hover >}} value is the name of the created S3 bucket in AWS.  
-This example uses the generated name `crossplane-bucket-<hash>` in the {{< hover label="xr" line="6">}}`$bucket`{{</hover >}} variable.
-
-The {{< hover label="xr" line="9">}}spec.forProvider.region{{< /hover >}} tells AWS which AWS region to use when deploying resources. The region can be any [AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) code.
+The {{< hover label="xr" line="10">}}spec.forProvider.region{{< /hover >}} tells AWS which AWS region to use when deploying resources. The region can be any [AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) code.
 
 Use `kubectl get buckets` to verify Crossplane created the bucket.
 
@@ -1191,18 +1189,22 @@ This may take up to 5 minutes.
 
 ```shell
 kubectl get buckets
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-crossplane-bucket-45eed4ae0   True    True     crossplane-bucket-45eed4ae0   61s
+NAME                      READY   SYNCED   EXTERNAL-NAME             AGE
+crossplane-bucket-lrxrf   True    True     crossplane-bucket-lrxrf   61s
 ```
 
 ## Delete the managed resource
 Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
 
-Use `kubectl delete bucket <bucketname>` to remove the bucket.
+Use `kubectl delete bucket` to remove the bucket. 
+
+{{<hint "tip" >}}
+Use the `--label` flag to delete by label instead of by name.
+{{</hint>}}
 
 ```shell {copy-lines="1"}
-kubectl delete bucket $bucket
-bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
+kubectl delete bucket --label docs.crossplane.io/example=provider-aws
+bucket.s3.aws.upbound.io "crossplane-bucket-lrxrf" deleted
 ```
 
 ## Next steps

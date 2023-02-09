@@ -165,15 +165,19 @@ The {{< hover label="providerconfig" line="12">}}spec.credentials.secretRef.name
 ## Create a managed resource
 A _managed resource_ is anything Crossplane creates and manages outside of the Kubernetes cluster. This creates a GCP storage bucket with Crossplane. The storage bucket is a _managed resource_.
 
-This generates a random name for the storage bucket starting with {{< hover label="xr" line="1" >}}crossplane-bucket{{< /hover >}}
+{{< hint type="note" >}}
+To generate a unique name the example uses `generateName` instead of `name`.
+Manifests that use `generateName` must use `kubectl create`, not `apply`.
+{{< /hint >}}
 
 ```yaml {label="xr",copy-lines="all"}
-bucket=$(echo "crossplane-bucket-"$(head -n 4096 /dev/urandom | openssl sha1 | tail -c 10))
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.gcp.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: $bucket
+  generateName: crossplane-bucket-
+  labels:
+    docs.crossplane.io/example: provider-gcp
 spec:
   forProvider:
     location: US
@@ -184,15 +188,11 @@ spec:
 EOF
 ```
 
-Notice the {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="4">}}kind{{</hover >}} are from the `Provider's` CRDs.
+Notice the {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="3">}}kind{{</hover >}} are from the `Provider's` CRDs.
 
+{{< hover label="xr" line="11" >}}spec.storageClass{{< /hover >}} defines the GCP storage bucket is [single-region, dual-region or multi-region](https://cloud.google.com/storage/docs/locations#key-concepts). 
 
-The {{< hover label="xr" line="6">}}metadata.name{{< /hover >}} value is the name of the created GCP storage bucket.  
-This example uses the generated name `crossplane-bucket-<hash>` in the {{< hover label="xr" line="6">}}$bucket{{</hover >}} variable.
-
-{{< hover label="xr" line="10" >}}spec.storageClass{{< /hover >}} defines the GCP storage bucket is [single-region, dual-region or multi-region](https://cloud.google.com/storage/docs/locations#key-concepts). 
-
-{{< hover label="xr" line="9">}}spec.forProvider.location{{< /hover >}} is a [GCP location based](https://cloud.google.com/storage/docs/locations) on the {{< hover label="xr" line="10" >}}storageClass{{< /hover >}}. 
+{{< hover label="xr" line="10">}}spec.forProvider.location{{< /hover >}} is a [GCP location based](https://cloud.google.com/storage/docs/locations) on the {{< hover label="xr" line="11" >}}storageClass{{< /hover >}}. 
 
 Use `kubectl get buckets` to verify Crossplane created the bucket.
 
@@ -203,8 +203,8 @@ This may take up to 5 minutes.
 
 ```shell
 kubectl get bucket
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-crossplane-bucket-cf2b6d853   True    True     crossplane-bucket-cf2b6d853   3m3s
+NAME                      READY   SYNCED   EXTERNAL-NAME             AGE
+crossplane-bucket-lrxrf   True    True     crossplane-bucket-lrxrf   3m3s
 ```
 
 Optionally, log into the [GCP Console](https://console.cloud.google.com/) and see the storage bucket inside GCP.
@@ -212,11 +212,15 @@ Optionally, log into the [GCP Console](https://console.cloud.google.com/) and se
 ## Delete the managed resource
 Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
 
-Use `kubectl delete bucket <bucketname>` to remove the bucket.
+Use `kubectl delete bucket` to remove the bucket. 
+
+{{<hint "tip" >}}
+Use the `--label` flag to delete by label instead of by name.
+{{</hint>}}
 
 ```shell
-kubectl delete bucket $bucket
-bucket.storage.gcp.upbound.io "crossplane-bucket-b7cf6b590" deleted
+kubectl delete bucket --label docs.crossplane.io/example: provider-gcp
+bucket.storage.gcp.upbound.io "crossplane-bucket-lrxrf" deleted
 ```
 
 Look in the [GCP Console](https://console.cloud.google.com/) to confirm Crossplane deleted the bucket from GCP.
