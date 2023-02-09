@@ -41,8 +41,7 @@ Enable the Crossplane Helm Chart repository:
 
 ```shell
 helm repo add \
-crossplane-stable https://charts.crossplane.io/stable
-helm repo update
+crossplane-stable https://charts.crossplane.io/stable && helm repo update
 ```
 
 Run the Helm dry-run to see all the Crossplane components Helm installs.

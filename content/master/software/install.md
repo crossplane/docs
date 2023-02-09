@@ -20,11 +20,15 @@ Install Crossplane using the Crossplane published _Helm chart_.
 
 ### Add the Crossplane Helm repository
 
-Add the Crossplane repository with the `helm repo add` command and update the
-local Helm chart cache with `helm repo update`.
+Add the Crossplane repository with the `helm repo add` command.
 
 ```shell
 helm repo add crossplane-stable https://charts.crossplane.io/stable
+```
+
+Update the
+local Helm chart cache with `helm repo update`.
+```shell
 helm repo update
 ```
 
@@ -48,7 +52,7 @@ helm install crossplane \
 
 View the installed Crossplane pods with `kubectl get pods -n crossplane-system`.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get pods -n crossplane-system
 NAME                                       READY   STATUS    RESTARTS   AGE
 crossplane-6d67f8cd9d-g2gjw                1/1     Running   0          26m
@@ -71,7 +75,7 @@ helm install crossplane \
 Crossplane creates two Kubernetes _deployments_ in the `crossplane-system`
 namespace to deploy the Crossplane pods. 
 
-```shell
+```shell {copy-lines="1"}
 kubectl get deployments -n crossplane-system
 NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
 crossplane                1/1     1            1           8m13s
@@ -252,11 +256,15 @@ Only use `master` for testing and development.
 
 #### Add the Crossplane master Helm repository
 
-Add the Crossplane repository with the `helm repo add` command and update the
-local Helm chart cache with `helm repo update`.
+Add the Crossplane repository with the `helm repo add` command.
 
 ```shell
 helm repo add crossplane-master https://charts.crossplane.io/master/
+```
+
+Update the
+local Helm chart cache with `helm repo update`.
+```shell
 helm repo update
 ```
 

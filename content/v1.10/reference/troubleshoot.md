@@ -2,18 +2,6 @@
 title: Troubleshoot
 weight: 306
 ---
-
-* [Requested Resource Not Found]
-* [Resource Status and Conditions]
-* [Resource Events]
-* [Crossplane Logs]
-* [Provider Logs]
-* [Pausing Crossplane]
-* [Pausing Providers]
-* [Deleting When a Resource Hangs]
-* [Installing Crossplane Package]
-* [Handling Crossplane Package Dependency]
-
 ## Requested Resource Not Found
 
 If you use the kubectl Crossplane plugin to install a `Provider` or
@@ -32,15 +20,10 @@ Most Crossplane resources have a `status` section that can represent the current
 state of that particular resource. Running `kubectl describe` against a
 Crossplane resource will frequently give insightful information about its
 condition. For example, to determine the status of a GCP `CloudSQLInstance`
-managed resource, run:
+managed resource use `kubectl describe` for the resource.
 
-```shell
+```shell {copy-lines="1"}
 kubectl describe cloudsqlinstance my-db
-```
-
-This should produce output that includes:
-
-```console
 Status:
   Conditions:
     Last Transition Time:  2019-09-16T13:46:42Z
@@ -183,14 +166,14 @@ lingering resources to clean up.
 
 In general, a finalizer can be removed from an object with this command:
 
-```console
+```shell
 kubectl patch <resource-type> <resource-name> -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
 
 For example, for a `CloudSQLInstance` managed resource (`database.gcp.crossplane.io`) named
 `my-db`, you can remove its finalizer with:
 
-```console
+```shell
 kubectl patch cloudsqlinstance my-db -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
 
@@ -202,7 +185,7 @@ you can do.
 
 Run below command to list all Crossplane resources available on your cluster:
 
-```console
+```shell
 kubectl get crossplane
 ```
 
@@ -220,14 +203,14 @@ package are listed if the package is installed successfully.
 If you only care about the installed packages, you can also run below command
 which will show you all installed Configuration and Provider packages:
 
-```console
+```shell
 kubectl get pkg
 ```
 
 When there are errors, you can run below command to check detailed information 
 for the packages that are getting installed.
 
-```console
+```shell
 kubectl get lock -o yaml
 ```
 
@@ -276,9 +259,8 @@ spec:
 ```
 
 <!-- Named Links -->
-
 [Requested Resource Not Found]: #requested-resource-not-found
-[install Crossplane CLI]: {{<ref "../getting-started/install-configure" >}}#install-crossplane-cli
+[install Crossplane CLI]: "../getting-started/install-configure"
 [Resource Status and Conditions]: #resource-status-and-conditions
 [Resource Events]: #resource-events
 [Crossplane Logs]: #crossplane-logs
@@ -287,6 +269,6 @@ spec:
 [Pausing Providers]: #pausing-providers
 [Deleting When a Resource Hangs]: #deleting-when-a-resource-hangs
 [Installing Crossplane Package]: #installing-crossplane-package
-[Crossplane package]: {{<ref "../concepts/packages" >}}
+[Crossplane package]: "../concepts/packages"
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
 [semver spec]: https://github.com/Masterminds/semver#basic-comparisons

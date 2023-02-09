@@ -28,7 +28,7 @@ We need a workaround for code generation since latest runtime both adds new API
 but also adds a new interface to managed.resourceSpec. Without this workaround,
 expect errors similar to below:
 
-  ```shell
+  ```console
   16:40:56 [ .. ] go generate darwin_amd64
   angryjet: error: error loading packages using pattern ./...: /Users/hasanturken/  Workspace/crossplane/provider-gcp/apis/cache/v1beta1/zz_  generated.managedlist.go:27:14: cannot use &l.Items[i] (value of type *  CloudMemorystoreInstance) as "github.com/crossplane/crossplane-runtime/pkg/  resource".Managed value in assignment: missing method GetPublishConnectionDetailsTo
   exit status 1
@@ -42,10 +42,7 @@ First, we need to consume a temporary runtime version together with the latest
 Crossplane Tools:
 
   ```shell
-  go mod edit -replace=github.com/crossplane/crossplane-runtime=github.com/turkenh/crossplane-runtime@v0.0.0-20220314141040-6f74175d3c1f
-  go get github.com/crossplane/crossplane-tools@master
-
-  go mod tidy
+  go mod edit -replace=github.com/crossplane/crossplane-runtime=github.com/turkenh/crossplane-runtime@v0.0.0-20220314141040-6f74175d3c1f && go get github.com/crossplane/crossplane-tools@master && go mod tidy
   ```
 
 Then, remove `trivialVersions=true` in the file `api/generate.go`:
@@ -65,10 +62,7 @@ Finally, we can revert our workaround by consuming the latest Crossplane
 Runtime:
 
   ```shell
-  go mod edit -dropreplace=github.com/crossplane/crossplane-runtime
-  go get github.com/crossplane/crossplane-runtime@master
-  go mod tidy
-  make generate
+  go mod edit -dropreplace=github.com/crossplane/crossplane-runtime && go get github.com/crossplane/crossplane-runtime@master && go mod tidy && make generate
   ```
 
 **2. Add a new Type and CRD for Secret StoreConfig.**

@@ -1,4 +1,11 @@
 @mixin code-theme-base {
+// code.language-shell::before {
+//   content: "$ ";
+// }
+
+  .language-shell :first-child .cl::before{
+      content: "$ "
+  }
 
   // Code box div
   .highlight {
