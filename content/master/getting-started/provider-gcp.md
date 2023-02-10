@@ -21,7 +21,7 @@ This guide walks you through the steps required to get started with the Upbound 
 This quickstart requires:
 * a Kubernetes cluster with at least 3 GB of RAM
 * permissions to create pods and secrets in the Kubernetes cluster
-* [Helm] version `v3.2.0` or later
+* [Helm](https://helm.sh/) version `v3.2.0` or later
 * a GCP account with permissions to create a storage bucket
 * GCP [account keys](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
 * GCP [Project ID](https://support.google.com/googleapi/answer/7014113?hl=en)
@@ -34,9 +34,6 @@ If you don't have a Kubernetes cluster create one locally with [minikube](https:
 {{< hint type="note" >}}
 All commands use the current `kubeconfig` context and configuration. 
 {{< /hint >}}
-
-
-{{</* include file="install-crossplane.md" type="page" */>}}
 
 ## Install the GCP provider
 
