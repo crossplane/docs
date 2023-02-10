@@ -5,20 +5,19 @@ weight: 102
 
 A Managed Resource (MR) is Crossplane's representation of a resource in an
 external system - most commonly a cloud provider. Managed Resources are
-opinionated, Crossplane Resource Model ([XRM][term-xrm]) compliant Kubernetes
-Custom Resources that are installed by a Crossplane [provider].
+opinionated, Crossplane Resource Model ([XRM]({{<ref "../concepts/terminology">}})) compliant Kubernetes
+Custom Resources that are installed by a Crossplane [provider]({{<ref "providers" >}}).
 
 For example, `RDSInstance` in the AWS Provider corresponds to an actual RDS
 Instance in AWS. There is a one-to-one relationship and the changes on managed
 resources are reflected directly on the corresponding resource in the provider.
 Similarly, the `Database` types in the SQL provider represent a PostgreSQL or
-MySQL database. You can browse [API Reference][api-reference] to discover all
-available managed resources.
+MySQL database.
 
 Managed Resources are the building blocks of Crossplane. They're designed to be
 _composed_ into higher level, opinionated Custom Resources that Crossplane calls
 Composite Resources or XRs - not used directly. See the
-[Composition][composition] documentation for more information.
+[Composition]({{<ref "composition" >}}) documentation for more information.
 
 ## Syntax
 
@@ -448,8 +447,7 @@ the values that are fetched from the provider.
 
 Note that if a resource has required fields, you must fill those fields or the
 creation of the managed resource will be rejected. So, in those cases, you will
-need to enter the name of the resource as well as the required fields as
-indicated in the [API Reference][api-reference] documentation.
+need to enter the name of the resource as well as the required fields.
 
 ## Backup and Restore
 
@@ -464,14 +462,10 @@ fields are there and those are enough to import a resource. The tool you're
 using needs to store `annotations` and `spec` fields, which most tools do
 including Velero.
 
-[term-xrm]: {{<ref "terminology" >}}
 [rds]: https://aws.amazon.com/rds/
 [cloudsql]: https://cloud.google.com/sql
-[composition]: {{<ref "composition" >}}
 [api-versioning]: https://kubernetes.io/docs/reference/using-api/#api-versioning#api-versioning
 [velero]: https://velero.io/
-[api-reference]: https://doc.crds.dev/github.com/crossplane/crossplane
-[provider]: {{<ref "providers" >}}
 [issue-727]: https://github.com/crossplane/crossplane/issues/727
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143
 [managed-api-patterns]: https://github.com/crossplane/crossplane/blob/release-1.10/design/one-pager-managed-resource-api-design.md

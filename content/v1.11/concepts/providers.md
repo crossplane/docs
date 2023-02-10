@@ -65,8 +65,7 @@ spec:
 You can see that there is a reference to a key in a specific `Secret`. The value
 of that key should contain the credentials that the controller will use. The
 documentation of each provider should give you an idea of how that credentials
-blob should look like. See [Getting Started][getting-started] guide for more
-details.
+blob should look like.
 
 The following is an example usage of AWS `ProviderConfig`, referenced by a
 `RDSInstance`:

@@ -388,7 +388,7 @@ spec:
 ```
 
 ```console
-curl -OL https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/package/gcp/composition.yaml
+curl -OL https://raw.githubusercontent.com/crossplane/docs/master/content/v1.10/snippets/package/gcp/composition.yaml
 ```
 
 {{< /tab >}}
@@ -589,7 +589,7 @@ spec:
 ```
 
 ```console
-curl -OL https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/package/gcp/crossplane.yaml
+curl -OL https://raw.githubusercontent.com/crossplane/docs/master/content/v1.10/snippets/package/gcp/crossplane.yaml
 
 kubectl crossplane build configuration
 ```

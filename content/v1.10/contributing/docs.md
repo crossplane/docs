@@ -87,7 +87,7 @@ hugo server
 ```
 
 Hugo builds the website and launch a local web server on
-[http://localhost:1313](http://localhost:1313).
+<a href="http://localhost:1313" data-proofer-ignore>http://localhost:1313</a>.
 
 Any changes made are instantly reflected on the local web server. You
 don't need to restart Hugo.

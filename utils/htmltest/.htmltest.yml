@@ -1,0 +1,7 @@
+DirectoryPath: "public"
+# The version drop down has an empty hash.
+# This doesn't cause errors
+IgnoreInternalEmptyHash: true
+CheckExternal: false
+IgnoreURLs:
+  - "github.com/crossplane/docs/tree/master/content/(.*).md" # Ignore the links to "view this source"

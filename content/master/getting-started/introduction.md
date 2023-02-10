@@ -37,10 +37,10 @@ This table provides a summary of Crossplane components and their roles.
 {{< table "table table-hover table-sm">}}
 | Component | Abbreviation | Scope | Summary |
 | --- | --- | --- | ---- | 
-| [Provider]({{<ref "#Provider">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
-| [ProviderConfig]({{<ref "#ProviderConfig">}}) | `PC` | cluster | Applies settings for a _Provider_. |
-| [Managed Resource]({{<ref "#managed-resource">}}) | `MR` | cluster | A provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
-| [Composition]({{<ref "#composition">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
+| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
+| [ProviderConfig]({{<ref "#provider-configurations">}}) | `PC` | cluster | Applies settings for a _Provider_. |
+| [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
+| [Composition]({{<ref "#compositions">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
 | [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
 | [Composite Resource Definitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
 | [Claims]({{<ref "#claims" >}}) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
