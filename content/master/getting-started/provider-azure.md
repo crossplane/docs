@@ -34,8 +34,6 @@ If you don't have a Kubernetes cluster create one locally with [minikube](https:
 All commands use the current `kubeconfig` context and configuration. 
 {{< /hint >}}
 
-{{</* include file="install-crossplane.md" type="page" */>}}
-
 ## Install the Azure provider
 
 Install the provider into the Kubernetes cluster with a Kubernetes configuration file. 
