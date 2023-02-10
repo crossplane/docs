@@ -15,6 +15,11 @@
 .bd-links-nav {
   font-size: .95rem !important;
 
+  a.bd-links{
+    text-decoration: none !important;
+    color: var(--body-color) !important;
+  }
+
   @include media-breakpoint-down(lg) {
     margin-top: 0 !important;
     font-size: 1rem !important;

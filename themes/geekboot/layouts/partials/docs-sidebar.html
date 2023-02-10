@@ -11,7 +11,7 @@
       {{ if not .Page.Params.tocHidden }}
         <div class="section-container container pe-0 pt-1">
           <div class="container nav-container pe-0 d-flex w-100 {{if eq . $current}}active{{ else if $expand }}active-parent{{end}}">
-            <div class="d-flex w-100 border-0"><a href="{{.Permalink}}">{{ .Title }} </a></div>
+            <a class="d-flex w-100 border-0" href="{{.Permalink}}">{{ .Title }} </a>
             {{ if and .IsSection (ne .FirstSection .) }}
               {{/* Don't put an expand icon on pages that aren't sections or the section index */}}
               <div class="d-flex flex-shrink-1 sidebar-control-container align-self-center">
@@ -28,7 +28,7 @@
               {{ if not .Page.Params.tocHidden }}
                 <div class="container flex-row collapse {{if $expand}} show {{ end }}" id="collapse-{{$id }}">
                   <div class="d-flex flex-column">
-                    <div class="bd-links d-flex {{if eq $current . }}active{{end}}"><a href="{{ .Permalink }} ">{{.Title }}</a></div>
+                    <a class="bd-links d-flex {{if eq $current . }}active{{end}}" href="{{ .Permalink }} ">{{.Title }}</a>
                   </div>
                 </div>
               {{ end }}
