@@ -12,7 +12,9 @@ indicator that the kubectl Crossplane you're using is outdated. In other words
 some Crossplane API has been graduated from alpha to beta or stable and the old
 plugin is not aware of this change.
 
-You can follow the [install Crossplane CLI] instructions to upgrade the plugin.
+You can follow the 
+[install Crossplane CLI]({{<ref "../getting-started/install-configure" >}}) 
+instructions to upgrade the plugin.
 
 ## Resource Status and Conditions
 
@@ -179,7 +181,7 @@ kubectl patch cloudsqlinstance my-db -p '{"metadata":{"finalizers": []}}' --type
 
 ## Installing Crossplane Package
 
-After installing [Crossplane package], to verify the install results or 
+After installing [Crossplane package]({{<ref "../concepts/packages" >}}), to verify the install results or 
 troubleshoot any issue spotted during the installation, there are a few things 
 you can do.
 
@@ -260,7 +262,6 @@ spec:
 
 <!-- Named Links -->
 [Requested Resource Not Found]: #requested-resource-not-found
-[install Crossplane CLI]: "../getting-started/install-configure"
 [Resource Status and Conditions]: #resource-status-and-conditions
 [Resource Events]: #resource-events
 [Crossplane Logs]: #crossplane-logs
@@ -269,6 +270,5 @@ spec:
 [Pausing Providers]: #pausing-providers
 [Deleting When a Resource Hangs]: #deleting-when-a-resource-hangs
 [Installing Crossplane Package]: #installing-crossplane-package
-[Crossplane package]: "../concepts/packages"
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
 [semver spec]: https://github.com/Masterminds/semver#basic-comparisons
