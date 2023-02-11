@@ -50,12 +50,14 @@ spec:
 EOF
 ```
 
-3. Create a file with your AWS keys
-```ini
+3. Create a file called `aws-credentials.txt` with your AWS keys
+{{< editCode >}}
+```ini {copy-lines="all"}
 [default]
-aws_access_key_id = <aws_access_key>
-aws_secret_access_key = <aws_secret_key>
+aws_access_key_id = $$<aws_access_key>$$
+aws_secret_access_key = $$<aws_secret_key>$$
 ```
+{{</ editCode >}}
 
 4. Create a Kubernetes secret from the AWS keys
 ```shell {label="kube-create-secret",copy-lines="all"}
@@ -88,7 +90,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: dynamo-with-bucket
+  name: dynamodb-with-bucket
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
@@ -98,8 +100,6 @@ spec:
       base:
         apiVersion: s3.aws.upbound.io/v1beta1
         kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
         spec:
           forProvider:
             region: "us-east-2"
@@ -125,12 +125,12 @@ cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: databases.custom-api.example.org
+  name: xdatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
     kind: XDatabase
-    plural: databases
+    plural: xdatabases
   versions:
   - name: v1alpha1
     served: true
@@ -168,7 +168,7 @@ _managed resources_.
 
 The _composition_ has two _managed resources_, a 
 {{<hover label="compResources" line="8">}}bucket{{</hover>}} and a
-{{<hover label="compResources" line="19">}}table{{</hover>}}.
+{{<hover label="compResources" line="15">}}table{{</hover>}}.
 
 ```yaml {label="compResources"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -289,7 +289,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: dynamo-with-bucket
+  name: dynamodb-with-bucket
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
@@ -353,7 +353,7 @@ EOF
 
 View the _claim_ with `kubectl get claim`
 
-```shell
+```shell {copy-lines="1"}
 kubectl get claim -n test
 NAME                  SYNCED   READY   CONNECTION-SECRET   AGE
 claimed-eu-database   True     True                        18m
@@ -364,7 +364,7 @@ all the _managed resources_.
 
 Describe the `Table` resource to see the AWS region is `eu-north-1`.
 
-```shell
+```shell {copy-lines="1"}
 kubectl describe table | grep arn:aws
     Arn:           arn:aws:dynamodb:eu-north-1:622343227358:table/claimed-eu-database-2sh9w-dhvw6
 ```

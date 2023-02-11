@@ -292,9 +292,7 @@ spec:
         kind: Bucket
         spec:
           forProvider:
-            region: us-east-2
-          providerConfigRef:
-            name: default
+            region: "us-east-2"
     - name: dynamodb
       base:
         apiVersion: dynamodb.aws.upbound.io/v1beta1
@@ -749,11 +747,18 @@ my-second-composite-resource-nsz6j   True    True     my-second-composite-resour
 Because the _composite resource_ is the `Owner` of the _managed resources_, when
 Crossplane deletes the _composite resource_, it also deletes the _managed resources_ automatically.
 
-Delete the new _composite resource_ with `kubectl delete xdatabase`.
+Delete the new _composite resource_ with `kubectl delete composition`.
 
+Delete the first composition
 ```shell
-kubectl delete xdatabase my-second-composite-resource
+kubectl delete composition dynamodb-with-bucket
 ```
+
+And the second composition
+```shell
+kubectl delete composition my-second-composite-resource
+```
+
 
 {{<hint "note">}}
 There may a delay in deleting the _managed resources_. Crossplane is making API
