@@ -1083,11 +1083,13 @@ The [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-con
 
 Create a text file containing the AWS account `aws_access_key_id` and `aws_secret_access_key`.  
 
+{{< editCode >}}
 ```ini {copy-lines="all"}
 [default]
-aws_access_key_id = <aws_access_key>
-aws_secret_access_key = <aws_secret_key>
+aws_access_key_id = $$<aws_access_key>$$
+aws_secret_access_key = $$<aws_secret_key>$$
 ```
+{{</ editCode >}}
 
 Save this text file as `aws-credentials.txt`.
 
@@ -1187,7 +1189,7 @@ Crossplane created the bucket when the values `READY` and `SYNCED` are `True`.
 This may take up to 5 minutes.  
 {{< /hint >}}
 
-```shell
+```shell {copy-lines="1"}
 kubectl get buckets
 NAME                      READY   SYNCED   EXTERNAL-NAME             AGE
 crossplane-bucket-lrxrf   True    True     crossplane-bucket-lrxrf   61s
@@ -1199,11 +1201,11 @@ Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
 Use `kubectl delete bucket` to remove the bucket. 
 
 {{<hint "tip" >}}
-Use the `--label` flag to delete by label instead of by name.
+Use `--selector` to delete a Kubernetes object by label instead of by name.
 {{</hint>}}
 
 ```shell {copy-lines="1"}
-kubectl delete bucket --label docs.crossplane.io/example=provider-aws
+kubectl delete bucket --selector=docs.crossplane.io/example=provider-aws
 bucket.s3.aws.upbound.io "crossplane-bucket-lrxrf" deleted
 ```
 
