@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  lint-content:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the docs repo
