@@ -506,7 +506,7 @@ spec:
   group: custom-api.example.org
   names:
     kind: XDatabase
-    plural: databases
+    plural: xdatabases
   versions:
   - name: v1alpha1
     served: true
@@ -547,7 +547,7 @@ cat <<EOF > crossplane-aws-quickstart/composition.yaml
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: dynamo-with-bucket
+  name: dynamodb-with-bucket
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1

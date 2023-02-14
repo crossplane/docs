@@ -417,7 +417,7 @@ spec:
   group: custom-api.example.org
   names:
     kind: XDatabase
-    plural: databases
+    plural: xdatabases
   versions:
   - name: v1alpha1
     served: true
