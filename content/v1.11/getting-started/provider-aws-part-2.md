@@ -353,7 +353,7 @@ Crossplane recommends using a plural name for the _XRD_
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: databases.custom-api.example.org
+  name: xdatabases.custom-api.example.org
 ```
 
 The _XRD's_
@@ -370,7 +370,7 @@ Next, create the API {{<hover label="xrdGroup" line="8" >}}kind{{</hover>}} and
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: databases.custom-api.example.org
+  name: xdatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
@@ -412,7 +412,7 @@ and
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: custom-api-definition
+  name: xdatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:

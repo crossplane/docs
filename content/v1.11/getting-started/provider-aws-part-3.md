@@ -501,7 +501,7 @@ cat <<EOF > crossplane-aws-quickstart/definition.yaml
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: databases.custom-api.example.org
+  name: xdatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
