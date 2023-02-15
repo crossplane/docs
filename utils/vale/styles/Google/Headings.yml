@@ -11,7 +11,9 @@ exceptions:
   - CLI
   - Code
   - Cosmos
+  - Crossplane
   - Docker
+  - DynamoDB
   - Emmet
   - gRPC
   - I
