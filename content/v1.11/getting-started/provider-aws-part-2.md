@@ -87,7 +87,7 @@ EOF
 
 ## Create a composition
 [Part 1]({{<ref "provider-aws" >}}) created a single _managed resource_.
-A _Composition_ is a template to create more than one _managed resource_ at the same time.
+A _Composition_ is a template to create one or more _managed resource_ at the same time.
 
 This sample _composition_ creates an DynamoDB instance and associated S3 storage 
 bucket. 
@@ -600,7 +600,7 @@ xdatabases.custom-api.example.org   True          True      10s
 ## Create a composite resource
 Creating an _XRD_ allows the creation _composite resources_.
 
-_Composite resources_ are a convenient way to create more than one resource with a standard template. 
+_Composite resources_ are a convenient way to create one or more resource with a standard template. 
 
 A _composite resource_ uses the custom API created in the _XRD_.
 
@@ -787,7 +787,7 @@ _managed resources_.
 kubectl delete xdatabase my-composite-resource
 ```
 
-_Composite resources_ are great for creating more than one related resources against
+_Composite resources_ are great for creating one or more related resources against
 a template, but all _composite resources_ exist at the Kubernetes "cluster
 level." There's no isolation between _composite resources_. Crossplane uses
 _claims_ to create resources with namespace isolation. 
