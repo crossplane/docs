@@ -166,7 +166,7 @@ kubectl create namespace test
 In a _composition_ `patches` map fields in the custom API to fields inside the
 _managed resources_.
 
-The _composition_ has two _managed resources_, a 
+The example _composition_ has two _managed resources_, a 
 {{<hover label="compResources" line="8">}}bucket{{</hover>}} and a
 {{<hover label="compResources" line="15">}}table{{</hover>}}.
 
@@ -354,7 +354,7 @@ EOF
 View the _claim_ with `kubectl get claim`
 
 ```shell {copy-lines="1"}
-kubectl get claim -n test
+kubectl get database -n test
 NAME                  SYNCED   READY   CONNECTION-SECRET   AGE
 claimed-eu-database   True     True                        18m
 ```
@@ -384,7 +384,7 @@ The _managed resources_ take up to 5 minutes to delete.
 {{< /hint >}}
 
 ```shell
-kubectl delete claim claimed-eu-database -n test
+kubectl delete database claimed-eu-database -n test
 ```
 
 ## Create a Crossplane configuration package

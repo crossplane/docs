@@ -227,11 +227,6 @@ spec:
             hashKey: S3ID
 ```
 
-Put the entire resource definition including the 
-{{<hover label="specResources" line="20">}}apiVersion{{</ hover>}} and resource
-settings under the 
-{{<hover label="specResources" line="19">}}base{{</ hover>}}.
-
 _Compositions_ are a template for generating resources. A _composite
 resource_ actually creates the resources.
 
@@ -481,7 +476,7 @@ spec:
 
 {{< hint "tip" >}}
 For more information on the values allowed in a _composite resource definition_ view its schema with
-`kubectl explain compositeresourcedefinition`
+`kubectl explain xrd`
 {{< /hint >}}
 
 Now, define the custom API. Your custom API continues under the last
@@ -600,9 +595,10 @@ xdatabases.custom-api.example.org   True          True      10s
 ## Create a composite resource
 Creating an _XRD_ allows the creation _composite resources_.
 
-_Composite resources_ are a convenient way to create one or more resource with a standard template. 
-
 A _composite resource_ uses the custom API created in the _XRD_.
+
+The _XRD_ maps the _composite resource_ values to the _composition_ template and
+creates new _managed resources_.
 
 Looking at part of the _XRD_:
 
@@ -664,6 +660,11 @@ EOF
 
 ### Verify the composite resource
 Verify Crossplane created the _composite resource_ with `kubectl get xdatabase`
+
+{{<hint "tip" >}}
+Use `kubectl get <kind>` to view a specific `kind` of _composite resource_.  
+View all _composite resources_ with `kubectl get composite`.
+{{< /hint >}}
 
 ```shell {copy-lines="1"}
 kubectl get xdatabase
@@ -747,18 +748,17 @@ my-second-composite-resource-nsz6j   True    True     my-second-composite-resour
 Because the _composite resource_ is the `Owner` of the _managed resources_, when
 Crossplane deletes the _composite resource_, it also deletes the _managed resources_ automatically.
 
-Delete the new _composite resource_ with `kubectl delete composition`.
+Delete the new _composite resource_ with `kubectl delete xdatabase`.
 
-Delete the first composition
+{{<hint "tip" >}}
+Delete a specific _composite resource_ with `kubectl delete <kind>` or
+`kubectl delete composite`.
+{{< /hint >}}
+
+Delete the second composition
 ```shell
-kubectl delete composition dynamodb-with-bucket
+kubectl delete xdatabase my-second-composite-resource
 ```
-
-And the second composition
-```shell
-kubectl delete composition my-second-composite-resource
-```
-
 
 {{<hint "note">}}
 There may a delay in deleting the _managed resources_. Crossplane is making API
@@ -780,7 +780,7 @@ NAME                                 READY   SYNCED   EXTERNAL-NAME             
 my-composite-resource-m6vk6   True    True     my-composite-resource-m6vk6   7m37s
 ```
 
-Delete the second _composite resource_ to remove the last `bucket` and `table`
+Delete the other _composite resource_ to remove the last `bucket` and `table`
 _managed resources_.
 
 ```shell
@@ -805,6 +805,7 @@ Create a new namespace with `kubectl create namespace`.
 kubectl create namespace test
 ```
 
+Look at the _XRD_ to see the parameters for the _claim_.
 A _claim_ uses the same {{<hover label="XRDclaim2" line="6" >}}group{{</hover>}}
 a _composite resource_ uses but a different 
 {{<hover label="XRDclaim2" line="8" >}}kind{{</hover>}}.
@@ -850,6 +851,11 @@ EOF
 ### Verify the claim
 Verify Crossplane created the _claim_ with `kubectl get database` in the `test`
 namespace.
+
+{{<hint "tip" >}}
+View claims with `kubectl get <kind>` or use `kubectl get claim` to view all
+_claims_.
+{{</hint >}}
 
 ```shell {copy-lines="1"}
 kubectl get database -n test
