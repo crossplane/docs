@@ -8,18 +8,23 @@ indicators:
   - ':'
 exceptions:
   - Azure
+  - BigQuery
   - CLI
   - Code
   - Cosmos
+  - Crossplane
   - Docker
   - Emmet
   - gRPC
+  - Helm
   - I
   - Kubernetes
   - Linux
   - macOS
   - Marketplace
   - MongoDB
+  - ProviderConfig
+  - Pub/Sub
   - REPL
   - Studio
   - TypeScript
