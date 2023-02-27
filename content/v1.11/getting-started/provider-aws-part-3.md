@@ -596,7 +596,8 @@ To build a configuration package install the Crossplane Kubernetes command-line
 extension. 
 
 ```shell
-curl "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
+wget "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
+chmod +x install.sh
 ./install.sh
 sudo mv kubectl-crossplane /usr/bin
 ```
