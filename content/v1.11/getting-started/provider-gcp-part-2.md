@@ -15,7 +15,7 @@ _composite resources_ and using Crossplane _packages_.
 This section creates a _[Composition](#create-a-composition)_, 
 _[Composite Resource Definition](#define-a-composite-resource)_ and a
 _[Claim](#create-a-claim)_
-to create a custom Kubernetes API to create AWS resources. This custom API is a
+to create a custom Kubernetes API to create GCP resources. This custom API is a
 _Composite Resource_ (XR) API.
 
 ## Prerequisites
@@ -26,7 +26,7 @@ _Composite Resource_ (XR) API.
   [Pub/Sub topic](https://cloud.google.com/pubsub).
 
 {{<expand "Skip part 1 and just get started" >}}
-1. Add the Crossplane Helm repository and install Crossplane
+1. Add the Crossplane Helm repository and install Crossplane.
 ```shell
 helm repo add \
 crossplane-stable https://charts.crossplane.io/stable
@@ -38,8 +38,7 @@ crossplane-stable/crossplane \
 --create-namespace
 ```
 
-1. When the Crossplane pods finish installing and are ready, apply the GCP 
-Provider
+2. When the Crossplane pods finish installing and are ready, apply the GCP Provider.
    
 ```yaml {label="provider",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
@@ -52,8 +51,8 @@ spec:
 EOF
 ```
 
-1. Create a file called `gcp-credentials.json` with your GCP service account
-   JSON file.
+3. Create a file called `gcp-credentials.json` with your GCP service account 
+JSON file.
 
 {{< hint type="tip" >}}
 The 
@@ -61,8 +60,7 @@ The
 provides information on how to generate a service account JSON file.
 {{< /hint >}}
 
-
-1. Create a Kubernetes secret from the AWS keys
+4. Create a Kubernetes secret from the GCP JSON file
 ```shell {label="kube-create-secret",copy-lines="all"}
 kubectl create secret \
 generic gcp-secret \
@@ -70,7 +68,7 @@ generic gcp-secret \
 --from-file=creds=./gcp-credentials.json
 ```
 
-1. Create a _ProviderConfig_
+5. Create a _ProviderConfig_
 Include your 
 {{< hover label="providerconfig" line="7" >}}GCP project ID{{< /hover >}} in the
 _ProviderConfig_ settings.
@@ -153,7 +151,7 @@ and
 
 A Pub/Sub topic doesn't have requirements but using 
 {{<hover line="8" label="topicMR">}}messageStoragePolicy.allowedPersistenceRegions{{< /hover >}} 
-can keep messages stored in the same region as the storage bucket.
+can keep messages stored in the same location as the storage bucket.
 
 ```yaml {label="topicMR"}
 apiVersion: pubsub.gcp.upbound.io/v1beta1
@@ -275,7 +273,7 @@ this template.
 ### Apply the composition
 Apply the full _Composition_ to your Kubernetes cluster.
 
-```yaml
+```yaml {copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
@@ -553,7 +551,7 @@ The [Claims](#create-a-claim) section later in this guide discusses _claims_.
 Apply the complete _XRD_ to your Kubernetes cluster.
 
 
-```yaml
+```yaml {copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
@@ -651,7 +649,7 @@ This _composite resource_ uses
 
 Apply the composite resource to the Kubernetes cluster. 
 
-```yaml {label="xr"}
+```yaml {label="xr", copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
 kind: XTopicBucket
@@ -709,10 +707,10 @@ kubectl describe bucket | grep "Owner References" -A5
 ```
 
 Each _composite resource_ creates and owns a unique set of _managed resources_.
-If you create a second _composite resource_ Crossplane creates a new S3 `bucket`
-and DynamoDB `table`.
+If you create a second _composite resource_ Crossplane creates a new storage 
+`bucket` and Pub/Sub `topic`.
 
-```yaml {label="xr"}
+```yaml {label="xr", copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
 kind: XTopicBucket
@@ -841,7 +839,7 @@ API options as the _composite resource_.
 ### Apply the claim
 Apply the _claim_ to your Kubernetes cluster.
 
-```yaml {label="claim"}
+```yaml {label="claim", copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
 kind: TopicBucket
@@ -882,7 +880,7 @@ at the "namespace scope."
 
 Create a second namespace and a second claim.
 
-```shell
+```shell {copy-lines="all"}
 kubectl create namespace test2
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
