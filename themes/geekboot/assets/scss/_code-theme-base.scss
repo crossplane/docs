@@ -1,10 +1,13 @@
 @mixin code-theme-base {
-// code.language-shell::before {
-//   content: "$ ";
-// }
 
   .language-shell :first-child .cl::before{
       content: "$ "
+  }
+
+  // Style for highlighted lines when hovering over copy button
+  .copyHover {
+    background-color: #e9ecef;
+    color: black;
   }
 
   // Code box div
