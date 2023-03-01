@@ -45,7 +45,8 @@ documentation.
 {{< /hint >}}
 
 Make changes to the files in the associated version folder. To make changes
-across multiple versions change the files in each version folder.
+across more than one version, change the files in each version folder.
+
 ## Adding new content
 
 To create new content create a new markdown file in the appropriate location. 
@@ -55,8 +56,8 @@ root.
 
 ### Types of content
 Crossplane documentation has three content sections:
-* The [Contributing Guide]({{<ref "/contribute/_index.md">}}) with details on how to
-  contribute to the Crossplane documentation.
+* The [Contributing Guide]({{<ref "/contribute/_index.md">}}) with details on 
+  how to contribute to the Crossplane documentation.
 * The [Knowledge Base]({{<ref "/knowledge-base" >}}) is for content related to
   Crossplane integrations, in-depth articles or how-to guides. 
 * [User documentation]({{<ref "/master" >}}) are for generic documentation,
@@ -74,22 +75,26 @@ of a Crossplane Provider.
 _Procedural_ content is the step-by-step instructions to do something.
 Procedural content details the "how" of a piece of technology.
 
-An example of a _Procedural_ document would be a step-by-step Crossplane installation guide.
+An example of a _Procedural_ document would be a step-by-step Crossplane 
+installation guide.
 
 User documentation is more narrowly focused on a single piece or
 related pieces of technology. For example, installing a Provider and creating a
 ProviderConfig.
 
-Knowledge base articles are more "free-form" and can describe multiple pieces of
-technology or provide more opinionated examples.
+Knowledge base articles are more "free-form" and can describe more than one 
+piece of technology or provide more opinionated examples.
 
 {{< hint "tip" >}}
 Not sure if the content would be better as a knowledge base article or user
-document? Ask in the `#documentation` channel of the [Crossplane Slack](https://slack.crossplane.io/).
+document? Ask in the `#documentation` channel of the 
+[Crossplane Slack](https://slack.crossplane.io/).
 {{< /hint >}}
 
 ### Front matter
-Each page contains metadata called [front matter](https://gohugo.io/content-management/front-matter/). Each page requires front matter to render.
+Each page contains metadata called 
+[front matter](https://gohugo.io/content-management/front-matter/). Each page 
+requires front matter to render.
 
 ```yaml
 ---
@@ -103,9 +108,36 @@ weight: 610
 weight pages come before higher weights in the table of contents. The value of
 `weight` is otherwise arbitrary. 
 
+#### Alpha and beta features
+Note features as alpha or beta in the front matter.
+
+For alpha features set `state: alpha` and use `alphaVersion` to provide the 
+version that introduced the feature. 
+
+```yaml
+---
+title: Composition Functions
+state: alpha
+alphaVersion: "1.11"
+---
+```
+
+For beta features set `state: beta` and use both `alhpaVersion` and 
+`betaVersion` to provide the version that introduced and graudated the feature.
+
+```yaml
+---
+title: Composition Revisions
+state: beta
+alphaVersion: "1.4"
+betaVersion: "1.11"
+---
+```
+
 ### Headings
 Use standard markdown for headings (`#`). The top level heading, a single hash
-(`#`) is for the page title. All content headings should be two hashes (`##`) or more.
+(`#`) is for the page title. All content headings should be two hashes (`##`) or
+more.
 
 ### Hiding pages
 To hide a page from the left-hand navigation use `tocHidden: true` in the front
