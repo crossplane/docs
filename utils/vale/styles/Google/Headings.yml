@@ -13,6 +13,7 @@ exceptions:
   - Cosmos
   - Docker
   - Emmet
+  - Hugo
   - gRPC
   - I
   - Kubernetes

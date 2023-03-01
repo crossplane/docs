@@ -40,8 +40,6 @@ swap:
     \ time"
   long time no see: "I haven\u2019t seen you in a long time|it\u2019s been a long\
     \ time"
-  master: primary|hub|reference
-  masters: primaries|hubs|references
   mexican: Latinx
   natives are becoming restless: dissatisfied|frustrated
   natives are getting restless: dissatisfied|frustrated
