@@ -5,15 +5,30 @@
         </div>
         <div class="d-flex">
             {{ if eq .Page.Params.state "alpha"}}
+            {{- if not .Page.Params.alphaVersion -}}
+            {{- errorf "\n\nNo \"alphaVersion\" front matter in page %q\n\n\n" .Page.File.Path -}}
+            {{- end -}}
             This is an alpha feature.
             {{ end }}
             {{ if eq .Page.Params.state "beta" }}
+                {{- if not .Page.Params.alphaVersion -}}
+                {{- errorf "\n\nNo \"alphaVersion\" front matter in page %q\n\n\n" .Page.File.Path -}}
+                {{- end -}}
+                {{- if not .Page.Params.betaVersion -}}
+                    {{- errorf "\n\nNo \"betaVersion\" front matter in page %q\n\n\n" .Page.File.Path -}}
+                {{- end -}}
             This is a beta feature.
             {{ end }}
         </div>
     </div>
     <div class="bd-content mt-3">
         <p>
+            This feature was introduced in v{{.Page.Params.alphaVersion}}.
+            {{ if eq .Page.Params.state "beta" }}
+            <br />
+            This feature graduated to beta status in v{{.Page.Params.betaVersion}}.
+            {{ end }}
+            <br /><br />
             Crossplane may change or drop this feature at any time. <br />
             For more information read the <a href="{{.Site.BaseURL}}knowledge-base/guides/feature-lifecycle/">Crossplane feature lifecycle</a>.
         </p>

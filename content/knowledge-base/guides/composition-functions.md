@@ -1,6 +1,7 @@
 ---
 title: Composition Functions
 state: alpha
+alphaVersion: "1.11"
 ---
 
 Composition Functions allow you to supplement or replace your Compositions with
