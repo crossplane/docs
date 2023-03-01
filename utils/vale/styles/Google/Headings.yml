@@ -15,6 +15,7 @@ exceptions:
   - Docker
   - DynamoDB
   - Emmet
+  - Helm
   - gRPC
   - I
   - Kubernetes
@@ -22,6 +23,7 @@ exceptions:
   - macOS
   - Marketplace
   - MongoDB
+  - ProviderConfig
   - REPL
   - Studio
   - TypeScript
