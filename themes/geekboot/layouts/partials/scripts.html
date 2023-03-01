@@ -19,3 +19,21 @@
     });
 
 </script>
+
+<script>
+    // Used by editCode shortcode to clear the editable element
+    function clearSpan(spanElem){
+        // Only clear the contents if it's the default contents
+        if (!spanElem.innerText.localeCompare(spanElem.dataset.default)){
+            spanElem.innerText = ""
+        }
+    }
+
+    // Used by editCode shortcode to restore the placeholder text
+    function checkSpanDefault(spanElem){
+        // Restore the placeholder text if the box is empty
+        if (spanElem.innerText === ""){
+            spanElem.innerText = spanElem.dataset.default
+        }
+    }
+</script>
