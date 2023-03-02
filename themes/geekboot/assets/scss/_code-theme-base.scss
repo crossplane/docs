@@ -16,6 +16,15 @@
     margin-top: 1rem; // prevent boxes from running together
     margin-bottom: 1rem;
 
+    [contentEditable=true]:empty:before{
+      content:attr(data-default);
+    }
+
+
+    [contentEditable=true]:empty:focus:before{
+      color:#ddd;
+    }
+
     :target{
       margin-top: 0;
       padding-top: 0;
