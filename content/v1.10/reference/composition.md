@@ -3,6 +3,13 @@ title: Composition
 weight: 304
 ---
 
+{{<hint "important" >}}
+This document moved in recent versions of Crossplane documentation. 
+
+Read the new 
+[Crossplane Introduction]({{<ref "/v1.11/getting-started/introduction">}}).
+{{</hint >}}
+
 
 This reference provides detailed examples of defining, configuring, and using
 Composite Resources in Crossplane. You can also refer to Crossplane's [API

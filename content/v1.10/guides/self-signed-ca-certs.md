@@ -3,6 +3,12 @@ title: Self-Signed CA Certs
 weight: 270   
 ---  
 
+{{<hint "important" >}}
+This document has moved. 
+Read the recent version in the 
+[Crossplane Knowledge Base]({{< ref "knowledge-base/guides/self-signed-ca-certs" >}}).
+{{</hint >}}
+
 >  Using self-signed certificates is not advised in production, it is 
 recommended to only use self-signed certificates for testing.
 

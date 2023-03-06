@@ -3,6 +3,13 @@ title: Create a Configuration
 weight: 4
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+Current Crossplane documentation versions introduce configurations as part of
+the [Getting Started]({{<ref "/v1.11/getting-started" >}}) guides. 
+{{</hint >}}
+
 In the [previous section] we were able to create a PostgreSQL database because
 we had installed a configuration package that defined the `PostgreSQLInstance`
 type and a `Composition` of managed resources that mapped to it. Crossplane

@@ -2,6 +2,12 @@
 title: Composition Revisions
 ---
 
+{{<hint "important" >}}
+This document has moved. 
+Read the recent version in the 
+[Crossplane Knowledge Base]({{< ref "knowledge-base/guides/composition-revisions" >}}).
+{{</hint >}}
+
 This guide discusses the use of "Composition Revisions" to safely make and roll
 back changes to a Crossplane [`Composition`][composition-type]. It assumes
 familiarity with Crossplane, and particularly with

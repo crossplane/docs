@@ -3,6 +3,10 @@ title: Reference
 weight: 300
 ---
 
+{{<hint "important" >}}
+Recent versions of Crossplane documentation removed this document.
+{{</hint >}}
+
 The reference documentation includes answers to frequently asked questions,
 information about similar projects, and links to resources that can help you
 learn more about Crossplane and Kubernetes. If you have additional information

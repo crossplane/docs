@@ -3,6 +3,16 @@ title: Contributing
 weight: 1000
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+Contributing to the Crossplane project and provider development is now in the
+[Crossplane contributing repository](https://github.com/crossplane/crossplane/tree/master/contributing).
+
+Contributing to Crossplane documentation is in the docs 
+[Contributing]({{<ref "contribute" >}}) section.
+{{</hint >}}
+
 The best place to start if you're thinking about contributing to Crossplane is
 our [`CONTRIBUTING.md`] file. The following documents supplement that guide.
 

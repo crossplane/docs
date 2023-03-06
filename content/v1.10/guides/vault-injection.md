@@ -3,6 +3,11 @@ title: Vault Credential Injection
 weight: 230
 ---
 
+{{<hint "important" >}}
+This document has moved. 
+Read the recent version in the 
+[Crossplane Knowledge Base]({{< ref "knowledge-base/integrations/vault-injection" >}}).
+{{</hint >}}
 
 > This guide is adapted from the [Vault on Minikube] and [Vault Kubernetes
 > Sidecar] guides.

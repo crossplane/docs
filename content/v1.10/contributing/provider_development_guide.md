@@ -3,6 +3,13 @@ title: Provider Development Guide
 weight: 1001
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+The [Crossplane contributing repository](https://github.com/crossplane/crossplane/blob/master/contributing/guide-provider-development.md)
+contains any future revisions to this document.
+{{</hint >}}
+
 Crossplane allows you to manage infrastructure directly from Kubernetes. Each
 infrastructure API resource that Crossplane orchestrates is known as a "managed
 resource". This guide will walk through the process of adding support for a new

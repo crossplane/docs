@@ -2,6 +2,14 @@
 title: Install & Configure
 weight: 2
 ---
+
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+Read the current [Install and Upgrade]({{<ref "/v1.11/software" >}}) guide.
+{{</hint >}}
+
+
 ## Choosing Your Crossplane Distribution
 
 Users looking to use Crossplane for the first time have two options available to

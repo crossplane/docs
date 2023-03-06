@@ -3,6 +3,12 @@ title: Multi-Tenant Crossplane
 weight: 240
 ---
 
+{{<hint "important" >}}
+This document has moved. 
+Read the recent version in the 
+[Crossplane Knowledge Base]({{< ref "knowledge-base/guides/multi-tenant" >}}).
+{{</hint >}}
+
 This guide describes how to use Crossplane effectively in multi-tenant
 environments by utilizing Kubernetes primitives and compatible policy
 enforcement projects in the cloud-native ecosystem.

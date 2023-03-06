@@ -3,6 +3,13 @@ title: Adding Microsoft Azure to Crossplane
 tocHidden: true
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+View the latest 
+[Azure quickstart guide]({{<ref "/v1.11/getting-started/provider-azure" >}}).
+{{</hint >}}
+
 In this guide, we will walk through the steps necessary to configure your Azure
 account to be ready for integration with Crossplane. The general steps we will
 take are summarized below:

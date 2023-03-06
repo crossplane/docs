@@ -3,6 +3,12 @@ title: Adding Google Cloud Platform (GCP) to Crossplane
 tocHidden: true
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+View the latest 
+[GCP quickstart guide]({{<ref "/v1.11/getting-started/provider-gcp" >}}).
+{{</hint >}}
 
 In this guide, we will walk through the steps necessary to configure your GCP
 account to be ready for integration with Crossplane. The general steps we will

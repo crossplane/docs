@@ -3,14 +3,21 @@ title: Adding Secret Store Support
 weight: 1004
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+The [Crossplane contributing repository](https://github.com/crossplane/crossplane/blob/master/contributing/guide-adding-external-secret-stores.md)
+contains any future revisions to this document.
+{{</hint >}}
+
 To add support for [External Secret Stores] in a provider, we need the following
 changes at a high level:
 
 1. Bump Crossplane Runtime and Crossplane Tools to latest and generate existing
 resources to include `PublishConnectionDetails` API.
-2. Add a new Type and CRD for Secret StoreConfig.
-3. Add feature flag for enabling External Secret Store support.
-4. Add Secret Store Connection Details Manager as a `ConnectionPublisher` if
+1. Add a new Type and CRD for Secret StoreConfig.
+2. Add feature flag for enabling External Secret Store support.
+3. Add Secret Store Connection Details Manager as a `ConnectionPublisher` if
 feature enabled.
 
 In this document, we will go through each step in details. You can check 
