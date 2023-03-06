@@ -2,6 +2,8 @@
   color-scheme: light dark;
 }
 
+
+
 :root[color-theme="light"] {
   @import "code-theme-base";
   @import "light-mode";
@@ -10,40 +12,14 @@
   @include code-theme-base;
   @include light-mode;
   @include code-theme-light;
-}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    @import "code-theme-base";
-    @import "light-mode";
-    @import "code-theme-light";
-
-    @include code-theme-base;
-    @include light-mode;
-    @include code-theme-light
-  }
-}
-
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    @import "code-theme-base";
-    @import "dark-mode";
-    @import "code-theme-dark";
-
-    @include code-theme-base;
-    @include dark-mode;
-    @include code-theme-dark;
-  }
-
+  // Don't dim images in light mode
+  // Safety catch to reset dark mode setting
   img {
-    filter: brightness(.8) contrast(1.2);
+    filter: none;
   }
 
-  .bd-content img {
-    background-color: #fff;
-  }
-
+  // Background colors don't need resets since light mode uses white.
 }
 
 :root[color-theme="dark"] {
@@ -55,14 +31,18 @@
     @include dark-mode;
     @include code-theme-dark;
 
+    // Dim all images in dark mode
     img {
       filter: brightness(.8) contrast(1.2);
     }
 
+    // Set the default image background to white
+    // Without this transparent images are hard to see
     .bd-content img {
       background-color: #fff;
     }
 
+    // But don't set the background to white on the home page tiles
     .home-card img {
       background: none;
     }
