@@ -747,16 +747,10 @@ my-second-composite-resource-nsz6j   True    True     my-second-composite-resour
 Because the _composite resource_ is the `Owner` of the _managed resources_, when
 Crossplane deletes the _composite resource_, it also deletes the _managed resources_ automatically.
 
-Delete the new _composite resource_ with `kubectl delete composition`.
+Delete the second _composite resource_ with `kubectl delete xdatabase`.
 
-Delete the first composition
 ```shell
-kubectl delete composition dynamodb-with-bucket
-```
-
-And the second composition
-```shell
-kubectl delete composition my-second-composite-resource
+kubectl delete xdatabase my-second-composite-resource
 ```
 
 
