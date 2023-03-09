@@ -530,7 +530,7 @@ kubectl crossplane push configuration ${REG}/getting-started-with-aws:v1.10.2
 > root package directory.
 
 {{< /tab >}}
-{{< tab "AWS (Default VPC)" >}}
+{{< tab "AWS (New VPC)" >}}
 
 ```yaml
 apiVersion: meta.pkg.crossplane.io/v1
