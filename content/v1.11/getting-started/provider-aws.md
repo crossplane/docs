@@ -1226,7 +1226,7 @@ This may take up to 5 minutes.
 
 {{< hint "important" >}}
 This guide uses Upbound AWS provider v0.27.0. AWS Provider v0.30.0 and later 
-requires the full CRD name `buckets.s3.aws.upbound.io` instead of `buckets`.
+requires the full CRD name `bucket.s3.aws.upbound.io` instead of `buckets`.
 {{</hint >}}
 
 ```shell {copy-lines="1"}
