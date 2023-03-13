@@ -6,6 +6,7 @@
 
 (() => {
     var darkSwitch = document.getElementById("darkSwitch");
+
     window.addEventListener("load", function () {
       if (darkSwitch) {
           initTheme();
@@ -15,6 +16,7 @@
       }
     });
 })();
+
 /**
  * Summary: function that adds or removes the attribute 'color-theme' depending if
  * the switch is 'on' or 'off'.
@@ -27,13 +29,42 @@
  * @return {void}
  */
 function initTheme() {
+
+  /******
+   * Changes to this function likely need to be copied to
+   * themes/geekboot/layouts/partials/stylesheet-cached.html
+   ******/
+
+  // Is the system set to dark mode?
+  var darkPrefered = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+  // The DOM element for the color mode toggle
+  var darkSwitch = document.getElementById("darkSwitch");
+
+  // Do we have a dark mode cookie saved?
   var darkThemeSelected =
     localStorage.getItem("darkSwitch") !== null &&
     localStorage.getItem("darkSwitch") === "dark";
-  darkSwitch.checked = darkThemeSelected;
-  darkThemeSelected
-    ? document.documentElement.setAttribute("color-theme", "dark")
-    : document.documentElement.removeAttribute("color-theme");
+
+  // Do we have a light mode cookie saved?
+  var lightThemeSelected =
+    localStorage.getItem("darkSwitch") !== null &&
+    localStorage.getItem("darkSwitch") === "light";
+
+  // if a light mode cookie is saved ignore the system dark mode
+  if (lightThemeSelected) {
+    darkPrefered = false;
+  }
+
+  // Set the document color theme based on the user's system or cookie  preference
+  if (darkThemeSelected || darkPrefered) {
+    document.documentElement.setAttribute("color-theme", "dark")
+    darkSwitch.checked = true;
+  }
+  else {
+    document.documentElement.setAttribute("color-theme", "light")
+    darkSwitch.checked = false;
+  }
 }
 
 /**
@@ -43,11 +74,14 @@ function initTheme() {
  * @return {void}
  */
 function resetTheme() {
+
+  var darkSwitch = document.getElementById("darkSwitch");
+
   if (darkSwitch.checked) {
     document.documentElement.setAttribute("color-theme", "dark");
     localStorage.setItem("darkSwitch", "dark");
   } else {
-    document.documentElement.removeAttribute("color-theme", "light");
-    localStorage.removeItem("darkSwitch");
+    document.documentElement.setAttribute("color-theme", "light");
+    localStorage.setItem("darkSwitch", "light");
   }
 }

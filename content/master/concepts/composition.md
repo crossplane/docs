@@ -652,7 +652,7 @@ apiVersion: test.com/v1alpha1
 kind: MyResource
 metadata:
   annotations:
-     crossplane.io/paused: true
+     crossplane.io/paused: "true"
   namespace: upbound-system
   name: my-resource
 spec:
@@ -671,7 +671,7 @@ the status `False`, and the reason `ReconcilePaused` is emitted
 on the resource.
 Please also note that annotations on a Composite Resource Claim are propagated
 to the associated Composite Resource but when the
-`crossplane.io/paused: true` annotation is added to a Claim, because
+`crossplane.io/paused: "true"` annotation is added to a Claim, because
 reconciliations on the Claim are now paused, this newly added annotation
 will not be propagated. However, whenever the annotation's value is set to a
 non-`true` value, reconciliations on the Claim will now resume, and thus the

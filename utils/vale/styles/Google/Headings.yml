@@ -8,6 +8,7 @@ indicators:
   - ':'
 exceptions:
   - Azure
+  - BigQuery
   - CLI
   - Code
   - Cosmos
@@ -16,7 +17,9 @@ exceptions:
   - DynamoDB
   - Emmet
   - Helm
+  - Hugo
   - gRPC
+  - Helm
   - I
   - Kubernetes
   - Linux
@@ -24,6 +27,7 @@ exceptions:
   - Marketplace
   - MongoDB
   - ProviderConfig
+  - Pub/Sub
   - REPL
   - Studio
   - TypeScript

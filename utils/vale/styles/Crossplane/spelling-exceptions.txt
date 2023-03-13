@@ -4,6 +4,8 @@ Bootstrap
 CRDs
 Crossplane
 Crossplane's
+Dataflow
+Datastore
 editCode
 Env
 GCP's

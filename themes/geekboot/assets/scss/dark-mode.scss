@@ -32,6 +32,19 @@
     --toc-mobile-menu-outline: #ffcd3c;
     --toc-mobile-menu-background: #2e3d52;
 
+    //hint boxes
+    --hint-important:       rgba(255, 145, 0, 1); //"exclamation",
+    --hint-important-background: rgba(255, 145, 0, .1);
+
+    --hint-warning:         rgba(255, 82, 82, 1); //"fire",
+    --hint-warning-background: rgba(255, 82, 82, .1);
+
+    --hint-tip:             rgba(0,200,82,1);; //"check",
+    --hint-tip-background: rgba(0,200,82,.1);
+
+    --hint-note:            rgba(0,176,255,1); //"info",
+    --hint-note-background:  rgba(0,176,255,.1);
+
     //Search Related
     --search-box-background: #3D4856;
     --result-path: #e3f5ff;
