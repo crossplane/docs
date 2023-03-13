@@ -3,7 +3,9 @@ title: AWS Quickstart
 weight: 100
 ---
 
-Connect Crossplane to AWS to create and manage cloud resources from Kubernetes with the [Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-aws).
+Connect Crossplane to AWS to create and manage cloud resources from Kubernetes 
+with the 
+[Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-aws).
 
 This guide is in three parts:
 * Part 1 walks through installing Crossplane, configuring the provider to
@@ -29,13 +31,15 @@ This quickstart requires:
 Crossplane installs into an existing Kubernetes cluster. 
 
 {{< hint type="tip" >}}
-If you don't have a Kubernetes cluster create one locally with [Kind](https://kind.sigs.k8s.io/).
+If you don't have a Kubernetes cluster create one locally with 
+[Kind](https://kind.sigs.k8s.io/).
 {{< /hint >}}
 
 
 ### Install the Crossplane Helm chart
 
-Helm enables Crossplane to install all its Kubernetes components through a _Helm Chart_.
+Helm enables Crossplane to install all its Kubernetes components through a 
+_Helm Chart_.
 
 Enable the Crossplane Helm Chart repository:
 
@@ -1010,7 +1014,8 @@ crossplane-d4cd8d784-ldcgb                1/1     Running   0          54s
 crossplane-rbac-manager-84769b574-6mw6f   1/1     Running   0          54s
 ```
 
-Installing Crossplane creates new Kubernetes API end-points. Look at the new API end-points with `kubectl api-resources  | grep crossplane`.
+Installing Crossplane creates new Kubernetes API end-points. Look at the new API 
+end-points with `kubectl api-resources  | grep crossplane`.
 
 ```shell  {label="grep",copy-lines="1"}
 kubectl api-resources  | grep crossplane
@@ -1028,7 +1033,8 @@ storeconfigs                                   secrets.crossplane.io/v1alpha1   
 
 ## Install the AWS provider
 
-Install the provider into the Kubernetes cluster with a Kubernetes configuration file. 
+Install the provider into the Kubernetes cluster with a Kubernetes configuration 
+file. 
 
 ```yaml {label="provider",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
@@ -1041,7 +1047,8 @@ spec:
 EOF
 ```
 
-The Crossplane {{< hover label="provider" line="3" >}}Provider{{</hover>}} Custom Resource Definition tells Kubernetes how to
+The Crossplane {{< hover label="provider" line="3" >}}Provider{{</hover>}} 
+Custom Resource Definition tells Kubernetes how to
 connect to the provider.
 
 Verify the provider installed with `kubectl get providers`. 
@@ -1056,32 +1063,41 @@ NAME                   INSTALLED   HEALTHY   PACKAGE                            
 upbound-provider-aws   True        True      xpkg.upbound.io/upbound/provider-aws:v0.27.0   12m
 ```
 
-A provider installs their own Kubernetes _Custom Resource Definitions_ (CRDs). These CRDs allow you to create AWS resources directly inside Kubernetes.
+A provider installs their own Kubernetes _Custom Resource Definitions_ (CRDs). 
+These CRDs allow you to create AWS resources directly inside Kubernetes.
 
-You can view the new CRDs with `kubectl get crds`. Every CRD maps to a unique AWS service Crossplane can provision and manage.
+You can view the new CRDs with `kubectl get crds`. Every CRD maps to a unique 
+AWS service Crossplane can provision and manage.
 
 
 {{< hint type="tip" >}}
-See details about all the supported CRDs in the [Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.27.0/crds).
+See details about all the supported CRDs in the 
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.27.0/crds).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
-The provider requires credentials to create and manage AWS resources. Providers use a Kubernetes _Secret_ to connect the credentials to the provider.
+The provider requires credentials to create and manage AWS resources. Providers 
+use a Kubernetes _Secret_ to connect the credentials to the provider.
 
-First generate a Kubernetes _Secret_ from your AWS key-pair and then configure the Provider to use it.
+First generate a Kubernetes _Secret_ from your AWS key-pair and then configure 
+the Provider to use it.
 
 {{< hint type="note" >}}
-Other authentication methods exist and are beyond the scope of this guide. The [Provider documentation](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/docs/configuration) contains information on alternative authentication methods. 
+Other authentication methods exist and are beyond the scope of this guide. The 
+[Provider documentation](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/docs/configuration) 
+contains information on alternative authentication methods. 
 {{< /hint >}}
 
 ### Generate an AWS key-pair file
 For basic user authentication, use an AWS Access keys key-pair file. 
 
 {{< hint type="tip" >}}
-The [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds) provides information on how to generate AWS Access keys.
+The [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds) 
+provides information on how to generate AWS Access keys.
 {{< /hint >}}
 
-Create a text file containing the AWS account `aws_access_key_id` and `aws_secret_access_key`.  
+Create a text file containing the AWS account `aws_access_key_id` and 
+`aws_secret_access_key`.  
 
 {{< editCode >}}
 ```ini {copy-lines="all"}
@@ -1094,12 +1110,21 @@ aws_secret_access_key = $$<aws_secret_key>$$
 Save this text file as `aws-credentials.txt`.
 
 {{< hint type="note" >}}
-The [Configuration](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/docs/configuration) section of the Provider documentation describes other authentication methods.
+The [Configuration](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/docs/configuration) 
+section of the Provider documentation describes other authentication methods.
 {{< /hint >}}
 
 ### Create a Kubernetes secret with the AWS credentials
-A Kubernetes generic secret has a name and contents. Use {{< hover label="kube-create-secret" line="1">}}kubectl create secret{{< /hover >}} to generate the secret object named {{< hover label="kube-create-secret" line="2">}}aws-secret{{< /hover >}} in the {{< hover label="kube-create-secret" line="3">}}crossplane-system{{</ hover >}} namespace.  
-Use the {{< hover label="kube-create-secret" line="4">}}--from-file={{</hover>}} argument to set the value to the contents of the  {{< hover label="kube-create-secret" line="4">}}aws-credentials.txt{{< /hover >}} file.
+A Kubernetes generic secret has a name and contents. Use 
+{{< hover label="kube-create-secret" line="1">}}kubectl create secret{{< /hover >}} 
+to generate the secret object named 
+{{< hover label="kube-create-secret" line="2">}}aws-secret{{< /hover >}} in the 
+{{< hover label="kube-create-secret" line="3">}}crossplane-system{{</ hover >}} 
+namespace.  
+Use the {{< hover label="kube-create-secret" line="4">}}--from-file={{</hover>}} 
+argument to set the value to the contents of the  
+{{< hover label="kube-create-secret" line="4">}}aws-credentials.txt{{< /hover >}} 
+file.
 
 ```shell {label="kube-create-secret",copy-lines="all"}
 kubectl create secret \
@@ -1131,7 +1156,8 @@ creds:  114 bytes
 ## Create a ProviderConfig
 A `ProviderConfig` customizes the settings of the AWS Provider.  
 
-Apply the {{< hover label="providerconfig" line="2">}}ProviderConfig{{</ hover >}} with the command:
+Apply the {{< hover label="providerconfig" line="2">}}ProviderConfig{{</ hover >}} 
+with the command:
 ```yaml {label="providerconfig",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: aws.upbound.io/v1beta1
@@ -1148,13 +1174,18 @@ spec:
 EOF
 ```
 
-This attaches the AWS credentials, saved as a Kubernetes secret, as a {{< hover label="providerconfig" line="9">}}secretRef{{</ hover>}}.
+This attaches the AWS credentials, saved as a Kubernetes secret, as a 
+{{< hover label="providerconfig" line="9">}}secretRef{{</ hover>}}.
 
-The {{< hover label="providerconfig" line="11">}}spec.credentials.secretRef.name{{< /hover >}} value is the name of the Kubernetes secret containing the AWS credentials in the {{< hover label="providerconfig" line="10">}}spec.credentials.secretRef.namespace{{< /hover >}}.
+The {{< hover label="providerconfig" line="11">}}spec.credentials.secretRef.name{{< /hover >}} 
+value is the name of the Kubernetes secret containing the AWS credentials in the 
+{{< hover label="providerconfig" line="10">}}spec.credentials.secretRef.namespace{{< /hover >}}.
 
 
 ## Create a managed resource
-A _managed resource_ is anything Crossplane creates and manages outside of the Kubernetes cluster. This creates an AWS S3 bucket with Crossplane. The S3 bucket is a _managed resource_.
+A _managed resource_ is anything Crossplane creates and manages outside of the 
+Kubernetes cluster. This creates an AWS S3 bucket with Crossplane. The S3 bucket 
+is a _managed resource_.
 
 {{< hint type="note" >}}
 AWS S3 bucket names must be globally unique. Any unique name is acceptable. To
@@ -1178,9 +1209,13 @@ spec:
 EOF
 ```
 
-The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and {{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
+The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
+{{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
 
-The {{< hover label="xr" line="10">}}spec.forProvider.region{{< /hover >}} tells AWS which AWS region to use when deploying resources. The region can be any [AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) code.
+The {{< hover label="xr" line="10">}}spec.forProvider.region{{< /hover >}} tells 
+AWS which AWS region to use when deploying resources. The region can be any 
+[AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) 
+code.
 
 Use `kubectl get buckets` to verify Crossplane created the bucket.
 
@@ -1188,6 +1223,11 @@ Use `kubectl get buckets` to verify Crossplane created the bucket.
 Crossplane created the bucket when the values `READY` and `SYNCED` are `True`.  
 This may take up to 5 minutes.  
 {{< /hint >}}
+
+{{< hint "important" >}}
+This guide uses Upbound AWS provider v0.27.0. AWS Provider v0.30.0 and later 
+requires the full CRD name `bucket.s3.aws.upbound.io` instead of `buckets`.
+{{</hint >}}
 
 ```shell {copy-lines="1"}
 kubectl get buckets
@@ -1210,6 +1250,9 @@ bucket.s3.aws.upbound.io "crossplane-bucket-lrxrf" deleted
 ```
 
 ## Next steps
-* **[Continue to part 2]({{< ref "provider-aws-part-2">}})** to create a Crossplane _Composite Resource_ and _Claim_.
-* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
+* **[Continue to part 2]({{< ref "provider-aws-part-2">}})** to create a 
+  Crossplane _Composite Resource_ and _Claim_.
+* Explore AWS resources that Crossplane can configure in the 
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
+  Crossplane users and contributors.

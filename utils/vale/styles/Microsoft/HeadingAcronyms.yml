@@ -7,5 +7,6 @@ tokens:
   - '[A-Z]{2,4}'
 exceptions:
   - API
+  - AWS
   - GCP
   - JSON

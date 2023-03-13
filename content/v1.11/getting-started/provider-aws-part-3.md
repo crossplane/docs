@@ -166,7 +166,7 @@ kubectl create namespace test
 In a _composition_ `patches` map fields in the custom API to fields inside the
 _managed resources_.
 
-The _composition_ has two _managed resources_, a 
+The example _composition_ has two _managed resources_, a 
 {{<hover label="compResources" line="8">}}bucket{{</hover>}} and a
 {{<hover label="compResources" line="15">}}table{{</hover>}}.
 
@@ -354,7 +354,7 @@ EOF
 View the _claim_ with `kubectl get claim`
 
 ```shell {copy-lines="1"}
-kubectl get claim -n test
+kubectl get database -n test
 NAME                  SYNCED   READY   CONNECTION-SECRET   AGE
 claimed-eu-database   True     True                        18m
 ```
@@ -384,7 +384,7 @@ The _managed resources_ take up to 5 minutes to delete.
 {{< /hint >}}
 
 ```shell
-kubectl delete claim claimed-eu-database -n test
+kubectl delete database claimed-eu-database -n test
 ```
 
 ## Create a Crossplane configuration package
@@ -501,12 +501,12 @@ cat <<EOF > crossplane-aws-quickstart/definition.yaml
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: databases.custom-api.example.org
+  name: xdatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
     kind: XDatabase
-    plural: databases
+    plural: xdatabases
   versions:
   - name: v1alpha1
     served: true
@@ -547,7 +547,7 @@ cat <<EOF > crossplane-aws-quickstart/composition.yaml
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: dynamo-with-bucket
+  name: dynamodb-with-bucket
 spec:
   compositeTypeRef:
     apiVersion: custom-api.example.org/v1alpha1
@@ -596,7 +596,8 @@ To build a configuration package install the Crossplane Kubernetes command-line
 extension. 
 
 ```shell
-curl "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
+wget "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
+chmod +x install.sh
 ./install.sh
 sudo mv kubectl-crossplane /usr/bin
 ```

@@ -14,7 +14,9 @@ exceptions:
   - Cosmos
   - Crossplane
   - Docker
+  - DynamoDB
   - Emmet
+  - Helm
   - Hugo
   - gRPC
   - Helm
