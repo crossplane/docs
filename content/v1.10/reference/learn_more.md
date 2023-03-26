@@ -3,6 +3,10 @@ title: Learn More
 weight: 307
 ---
 
+{{<hint "important" >}}
+Recent versions of Crossplane documentation removed this document.
+{{</hint >}}
+
 If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us]!
 
 ***Learn more about using Crossplane***

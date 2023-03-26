@@ -3,6 +3,12 @@ title: Install Crossplane
 weight: 301
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+Read the current [Install and Upgrade]({{<ref "/v1.11/software" >}}) guide.
+{{</hint >}}
+
 Crossplane can be easily installed into any existing Kubernetes cluster using
 the regularly published Helm chart. The Helm chart contains all the custom
 resources and controllers needed to deploy and configure Crossplane.

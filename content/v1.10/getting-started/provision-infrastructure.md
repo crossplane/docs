@@ -3,6 +3,13 @@ title: Provision Infrastructure
 weight: 3
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+Current Crossplane documentation versions introduce configurations as part of
+the [Getting Started]({{<ref "/v1.11/getting-started" >}}) guides. 
+{{</hint >}}
+
 Composite resources (XRs) are always cluster scoped - they exist outside of any
 namespace. This allows an XR to represent infrastructure that might be consumed
 from several different namespaces. This is often true for VPC networks - an

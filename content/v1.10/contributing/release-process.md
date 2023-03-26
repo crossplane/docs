@@ -3,6 +3,14 @@ title: Release Process
 weight: 1003
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+The [Crossplane contributing repository](https://github.com/crossplane/crossplane/blob/master/contributing/release-process.md)
+contains any future revisions to this document.
+{{</hint >}}
+
+
 This document is meant to be a complete end-to-end guide for how to release new
 versions of software for Crossplane and its related projects.
 

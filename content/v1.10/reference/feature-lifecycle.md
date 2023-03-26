@@ -5,6 +5,11 @@ weight: 309
 indent: true
 ---
 
+{{<hint "important" >}}
+This document has moved. 
+Read the recent version in the 
+[Crossplane Knowledge Base]({{< ref "knowledge-base/guides/feature-lifecycle" >}}).
+{{</hint >}}
 # Feature Lifecycle
 
 Crossplane follows a similar feature lifecycle to [upstream

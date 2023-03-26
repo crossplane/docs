@@ -2,6 +2,13 @@
 title: Troubleshoot
 weight: 306
 ---
+
+{{<hint "important" >}}
+This document has moved. 
+Read the recent version in the 
+[Crossplane Knowledge Base]({{< ref "knowledge-base/guides/troubleshoot" >}}).
+{{</hint >}}
+
 ## Requested Resource Not Found
 
 If you use the kubectl Crossplane plugin to install a `Provider` or

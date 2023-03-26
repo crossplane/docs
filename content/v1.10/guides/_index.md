@@ -3,6 +3,10 @@ title: Guides
 weight: 200
 ---
 
+{{<hint "important" >}}
+Recent versions of Crossplane documentation removed this document.
+{{</hint >}}
+
 This section contains guides for using Crossplane in specific scenarios or
 alongside other technologies. If you are interested in writing and
 maintaining a guide for your own use-case please feel free to [open an issue] to

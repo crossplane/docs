@@ -3,6 +3,14 @@ title: Observability Developer Guide
 weight: 1002
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+The [Crossplane contributing repository](https://github.com/crossplane/crossplane/blob/master/contributing/guide-observability.md)
+contains any future revisions to this document.
+{{</hint >}}
+
+
 ## Introduction
 
 Observability is crucial to Crossplane users; both those operating Crossplane

@@ -2,6 +2,16 @@
 title: "Crossplane Documentation"
 weight: 2000
 ---
+
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+The 
+[Crossplane docs contributing guide]({{<ref "contribute">}})
+contains any future revisions to this document.
+{{</hint >}}
+
+
 ## Code of conduct
 Crossplane follows the [CNCF Code of
 Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).

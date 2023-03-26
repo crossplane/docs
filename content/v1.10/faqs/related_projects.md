@@ -3,6 +3,10 @@ title: Related Projects
 weight: 1201
 ---
 
+{{<hint "important" >}}
+Recent versions of Crossplane documentation removed this document.
+{{</hint >}}
+
 While there are many projects that address similar issues, none of them
 encapsulate the full use case that Crossplane addresses. This list is not
 exhaustive and is not meant to provide a deep analysis of the following

@@ -3,6 +3,11 @@ title: Upgrading to v1.x
 weight: 220
 ---
 
+
+{{<hint "important" >}}
+Recent versions of Crossplane documentation removed this document.
+{{</hint >}}
+
 Crossplane versions post v1.0 do not introduce any breaking changes, but may
 make some backward compatible changes to the core Crossplane CRDs. Helm [does
 not currently touch CRDs](https://github.com/helm/helm/issues/6581) when a chart

@@ -3,6 +3,12 @@ title: Uninstall Crossplane
 weight: 303
 ---
 
+{{<hint "important" >}}
+This document has moved in recent versions of Crossplane documentation. 
+
+Read the current [Install and Upgrade]({{<ref "/v1.11/software" >}}) guide.
+{{</hint >}}
+
 Crossplane has a number of components that must be cleaned up in order to
 guarantee proper removal from the cluster. When deleting objects, it is best to
 consider parent-child relationships and clean up the children first to ensure
