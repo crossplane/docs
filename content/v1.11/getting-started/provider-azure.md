@@ -45,7 +45,7 @@ kind: Provider
 metadata:
   name: upbound-provider-azure
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure:v0.16.0
+  package: xpkg.upbound.io/upbound/provider-azure:v0.29.0
 EOF
 ```
 
@@ -60,7 +60,7 @@ It may take up to five minutes for the provider to list `HEALTHY` as `True`.
 ```shell
 kubectl get providers 
 NAME                     INSTALLED   HEALTHY   PACKAGE                                          AGE
-upbound-provider-azure   True        True      xpkg.upbound.io/upbound/provider-azure:v0.16.0   3m3s
+upbound-provider-azure   True        True      xpkg.upbound.io/upbound/provider-azure:v0.29.0   3m3s
 ```
 
 A provider installs their own Kubernetes _Custom Resource Definitions_ (CRDs). These CRDs allow you to create Azure resources directly inside Kubernetes.
