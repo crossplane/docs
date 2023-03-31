@@ -1251,7 +1251,7 @@ so:
 [issue-2024]: https://github.com/crossplane/crossplane/issues/2024
 [xrs-and-mrs]: /media/composition-xrs-and-mrs.svg
 [how-it-works]: /media/composition-how-it-works.svg
-[crd-docs]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
 [provider-kubernetes]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-kubernetes
 [provider-helm]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-helm/
 [claims-and-xrs]: /media/composition-claims-and-xrs.svg
+[xr-ref]: {{<ref "#compositions" >}}
