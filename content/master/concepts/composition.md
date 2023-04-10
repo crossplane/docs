@@ -905,8 +905,8 @@ transform.
 
 `math`. Transforms values using math. The input value must be an integer.
 * math transform type `Multiply`, multiplies the input by the given value.
-* math transform type `ClampMin`, sets a minimum value for the input.
-* math transform type `ClampMax`, sets a maximum value for the input.
+* math transform type `ClampMin`, sets a minimum value for the output.
+* math transform type `ClampMax`, sets a maximum value for the output.
 
 ```yaml
 # If you omit the field type, by default type is set to `Multiply`
