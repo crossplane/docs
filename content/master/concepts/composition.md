@@ -889,8 +889,14 @@ patterns. It should be used if more advanced pattern matchings than a simple
 string equality check are required.
 The result of the first matching pattern is used as the output of this
 transform.
+If no pattern matches, you can either fallback to a given `fallbackValue` or
+fallback to the input value by setting the `fallbackTo` field to `Input`.
 
 ```yaml
+# In the example below, if the value in the 'from' field is 'us-west', the
+# value in the 'to' field will be set to 'West US'.
+# If the value in the 'from' field is 'eu-west', the value in the 'to' field
+# will be set to 'Unknown' because no pattern matches.
 - type: match
   match:
     patterns:
@@ -900,7 +906,25 @@ transform.
       - type: regexp
         regexp: '^af-.*'
         result: Somewhere in Africa
+    fallbackTo: Value # Not needed. This is the default.
     fallbackValue: Unknown
+
+# If fallbackTo is set to Input, the output will be the input value if no
+# pattern matches.
+# In the example below, if the value in the 'from' field is 'us-west', the
+# value in the 'to' field will be set to 'West US'.
+# If the value in the 'from' field is 'eu-west', the value in the 'to' field
+# will be set to 'eu-west' because no pattern matches.
+- type: match
+  match:
+    patterns:
+      - type: literal
+        literal: us-west
+        result: West US
+      - type: regexp
+        regexp: '^af-.*'
+        result: Somewhere in Africa
+    fallbackTo: Input
 ```
 
 `math`. Transforms values using math. The input value must be an integer.
