@@ -928,14 +928,39 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
 ```
 
 `math`. Transforms values using math. The input value must be an integer.
-Currently only `multiply` is supported.
+* math transform type `Multiply`, multiplies the input by the given value.
+* math transform type `ClampMin`, sets a minimum value for the output.
+* math transform type `ClampMax`, sets a maximum value for the output.
 
 ```yaml
+# If you omit the field type, by default type is set to `Multiply`
 # If the value of the 'from' field is 2, the value of the 'to' field will be set
 # to 4.
 - type: math
   math:
     multiply: 2
+    
+# This is the same as above
+# If the value of the 'from' field is 2, the value of the 'to' field will be set
+# to 4.
+- type: math
+  math:
+    type: Multiply
+    multiply: 2
+
+# If the value of the 'from' field is 3, the value of the 'to' field will
+# be set to 4.
+- type: math
+  math:
+    type: ClampMin
+    clampMin: 4
+
+# If the value of the 'from' field is 3, the value of the 'to' field will
+# be set to 2.
+- type: math
+  math:
+    type: ClampMax
+    clampMax: 2
 ```
 
 `string`. Transforms string values. 
