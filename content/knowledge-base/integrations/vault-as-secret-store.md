@@ -4,9 +4,9 @@ weight: 230
 ---
 
 This guide walks through the steps required to configure Crossplane and
-its Providers to use [Vault] as an [External Secret Store]. For the sake of
-completeness, we will also include steps for Vault installation and setup,
-however, you can skip those and use your existing Vault.
+its Providers to use [Vault] as an [External Secret Store] with [ESS Plugin Vault].
+For the sake of completeness, we will also include steps for Vault installation
+and setup, however, you can skip those and use your existing Vault.
 
 > External Secret Stores are an alpha feature. They are not yet recommended for
 > production use, and are disabled by default.
@@ -44,6 +44,7 @@ At a high level we will run the following steps:
 - Configure Vault with Kubernetes Auth.
 - Install and Configure Crossplane by enabling the feature.
 - Install and Configure Provider GCP by enabling the feature.
+- Install and Configure ESS Plugin Vault.
 - Deploy a Composition and CompositeResourceDefinition.
 - Create a Claim.
 - Verify all secrets land in Vault as expected.
@@ -63,7 +64,7 @@ helm repo add hashicorp https://helm.releases.hashicorp.com --force-update
 
 Install Vault.
 ```shell
-helm -n vault-system --create-namespace upgrade --install vault hashicorp/vault
+helm -n vault-system upgrade --install vault hashicorp/vault --create-namespace
 ```
 
 2. [Unseal] Vault
@@ -153,34 +154,23 @@ kubectl -n vault-system exec -it vault-0 -- vault write auth/kubernetes/role/cro
 
 ### Install and Configure Crossplane
 
+> Prerequisite: Plugin support will be available in Crossplane v1.13.0. In this doc, we
+> will use the release candidate version of Crossplane 1.12.0-rc.0.284.g190ab067.
+
 1. Install Crossplane by:
 
-- Enabling `External Secret Stores` feature. 
-- Annotating for [Vault Agent Sidecar Injection]
+- Enabling `External Secret Stores` feature.
 
 ```shell
-helm repo add crossplane-stable https://charts.crossplane.io/stable --force-update 
-```
-
-Create the Vault configuration settings.
-```shell
-cat << EOF > values.yaml
-args:
-- --enable-external-secret-stores
-customAnnotations:
-  vault.hashicorp.com/agent-inject: "true"
-  vault.hashicorp.com/agent-inject-token: "true"
-  vault.hashicorp.com/role: "crossplane"
-  vault.hashicorp.com/agent-run-as-user: "65532"
-  EOF
+helm repo add crossplane-master https://charts.crossplane.io/master --force-update
 ```
 
 Apply the settings to the Crossplane installation. 
 ```shell 
-helm upgrade --install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace -f values.yaml
+helm upgrade --install crossplane crossplane-master/crossplane --devel --version 1.12.0-rc.0.284.g190ab067 --namespace crossplane-system --create-namespace --set args='{--enable-external-secret-stores}'
 ```
 
-2. Create a Secret `StoreConfig` for Crossplane to be used by
+2. Create a `StoreConfig` resource with type `Plugin` for Crossplane to be used by
 Composition types, i.e. `Composites` and `Claims`:
 
 ```shell
@@ -189,18 +179,14 @@ kind: StoreConfig
 metadata:
   name: vault
 spec:
-  type: Vault
+  type: Plugin
   defaultScope: crossplane-system
-  vault:
-    server: http://vault.vault-system:8200
-    mountPath: secret/
-    version: v2
-    auth:
-      method: Token
-      token:
-        source: Filesystem
-        fs:
-          path: /vault/secrets/token" | kubectl apply -f -
+  plugin:
+    endpoint: ess-plugin-vault.crossplane-system:4040
+    configRef:
+      apiVersion: secrets.crossplane.io/v1alpha1
+      kind: VaultConfig
+      name: vault-internal" | kubectl apply -f -
 ```
 
 ### Install and Configure Provider GCP
@@ -208,7 +194,6 @@ spec:
 1. Similar to Crossplane, install Provider GCP by:
 
 - Enabling `External Secret Stores` feature.
-- Annotating for [Vault Agent Sidecar Injection]
 
 ```shell
 echo "apiVersion: pkg.crossplane.io/v1alpha1
@@ -218,44 +203,73 @@ metadata:
 spec:
   args:
     - --enable-external-secret-stores
-  metadata:
-    annotations:
-      vault.hashicorp.com/agent-inject: \"true\"
-      vault.hashicorp.com/agent-inject-token: \"true\"
-      vault.hashicorp.com/role: crossplane
-      vault.hashicorp.com/agent-run-as-user: \"2000\"
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-gcp
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.22.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.23.0-rc.0.19.ge9b75ee5
   controllerConfigRef:
     name: vault-config" | kubectl apply -f -
 ```
 
-2. Create a Secret `StoreConfig` for Provider GCP to be used by GCP Managed
+2. Create a `StoreConfig` resource with type `Plugin` for Provider GCP to be used by GCP Managed
 Resources:
 
 ```shell
-echo "apiVersion: gcp.secrets.crossplane.io/v1alpha1
+echo "apiVersion: gcp.crossplane.io/v1alpha1
 kind: StoreConfig
 metadata:
   name: vault
 spec:
-  type: Vault
+  type: Plugin
   defaultScope: crossplane-system
-  vault:
-    server: http://vault.vault-system:8200
-    mountPath: secret/
-    version: v2
-    auth:
-      method: Token
-      token:
-        source: Filesystem
-        fs:
-          path: /vault/secrets/token" | kubectl apply -f -
+  plugin:
+    endpoint: ess-plugin-vault.crossplane-system:4040
+    configRef:
+      apiVersion: secrets.crossplane.io/v1alpha1
+      kind: VaultConfig
+      name: vault-internal" | kubectl apply -f -
+```
+
+### Install and Configure Vault Plugin
+
+> Prerequisite: You should have helm v3 installed to be able to deploy the charts from the oci image.
+
+1. Install the plugin via helm with [Vault Agent Sidecar Injection]:
+
+```shell
+cat > values.yaml <<EOF
+podAnnotations:
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-token: "true"
+  vault.hashicorp.com/role: crossplane
+  vault.hashicorp.com/agent-run-as-user: "65532"
+EOF
+```
+
+```shell
+helm upgrade --install ess-plugin-vault oci://xpkg.upbound.io/crossplane-contrib/ess-plugin-vault --namespace crossplane-system -f values.yaml
+```
+
+2. Create a `VaultConfig` resource for the plugin to connect to Vault:
+
+```shell
+echo "apiVersion: secrets.crossplane.io/v1alpha1
+kind: VaultConfig
+metadata:
+  name: vault-internal
+spec:
+  server: http://vault.vault-system:8200
+  mountPath: secret/
+  version: v2
+  auth:
+    method: Token
+    token:
+      source: Filesystem
+      fs:
+        path: /vault/secrets/token" | kubectl apply -f -
 ```
 
 ### Deploy and Test
@@ -519,3 +533,4 @@ kubectl -n default delete claim my-ess
 [Unseal]: https://www.vaultproject.io/docs/concepts/seal
 [Vault KV Secrets Engine]: https://www.vaultproject.io/docs/secrets/kv
 [Vault Agent Sidecar Injection]: https://www.vaultproject.io/docs/platform/k8s/injector
+[ESS Plugin Vault]: https://github.com/crossplane-contrib/ess-plugin-vault
