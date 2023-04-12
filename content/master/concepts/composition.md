@@ -1288,6 +1288,34 @@ so:
 1. Use a `FromCompositeFieldPath` patch to patch from the 'intermediary' field
    you patched to in step 1 to a field on the destination composed resource.
 
+### Composition Validation
+
+In order to notify users as soon as possible of any `Composition`'s
+misconfiguration, Crossplane deploys a `Validating Webhook`. By default, only
+"logical" checks are performed, enforcing requirements not encoded in the
+schema itself, but documented and assumed by Crossplane to hold at runtime.
+
+In addition to the above, experimental schema-aware validation can be enabled
+by setting the `--enable-composition-webhook-schema-validation` feature flag.
+This will validate the given Composition at deploy time against the available
+schemas, e.g. fieldPaths are valid and source and destination types match in
+patches. Two modes are available for it and can be set through the
+`crossplane.io/composition-validation-mode` annotation on the Composition:
+
+- `strict`: if the required schemas are available, the Composition will be
+   validated against them and any error will make it invalid, otherwise it will
+   just error out straight away due to the missing requirement.
+- `loose` (default): if the required schemas are
+    available, it will behave as in `strict` mode. Instead, if they
+    are not available, schema validation will be skipped, emitting a
+    warning to notify the users about it.
+
+See the dedicated [design document][validation-design-doc] for more information
+about future development around schema-aware validation.
+
+Webhooks are enabled by default, but can be disabled by setting
+`webhooks.enabled` to `false` in the provided Helm Chart.
+
 [crd-docs]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
 [raise an issue]: https://github.com/crossplane/crossplane/issues/new?assignees=&labels=enhancement&template=feature_request.md
 [issue-2524]: https://github.com/crossplane/crossplane/issues/2524
@@ -1303,3 +1331,4 @@ so:
 [claims-and-xrs]: /media/composition-claims-and-xrs.svg
 [xr-ref]: {{<ref "#compositions" >}}
 [managed-resources]: {{<ref "managed-resources" >}}
+[validation-design-doc]: https://github.com/crossplane/crossplane/blob/master/design/design-doc-composition-validating-webhook.md
