@@ -1168,6 +1168,40 @@ not considered to be 'empty', and thus will pass the readiness check.
 
 `None`. Considers the composed resource to be ready as soon as it exists.
 
+### Composition Validation
+
+Crossplane uses a `Validating Webhook` to inform users of any potential
+misconfigurations in a `Composition` as early as possible. The default behavior
+of the webhook is to perform `logical checks` only, enforcing requirements that
+are not explicitly defined in the schema but are assumed to be hold at runtime.
+
+#### Experimental Validation With Schemas
+
+Crossplane provides experimental schema-aware validation that can be enabled
+through the `--enable-composition-webhook-schema-validation` feature flag. This
+will enable Composition validation against available schemas in the Cluster,
+ensuring, for example, that fieldPaths are valid and source and destination
+types match taking into account provided transforms too.
+
+The `crossplane.io/composition-validation-mode` annotation on the Composition
+allows to set one of two modes for schema validation:
+
+There are two modes of validation:
+-  `strict`: Compositions are validated against required schemas, and rejected
+    if any error is found. If any of the required schemas is missing, the
+    Composition will be directly rejected.
+-  `loose` (default): Same as `strict` mode, except that in case of missing
+    required schemas, schema validation will be skipped emitting only a
+    warning.
+
+See the dedicated [design document][validation-design-doc] for more information
+about future development around schema-aware validation.
+
+#### Disabling Webhooks
+
+Webhooks are enabled by default, but can be disabled by setting
+`webhooks.enabled` to `false` in the provided Helm Chart.
+
 ### Missing Functionality
 
 You might find while reading through this reference that Crossplane is missing
@@ -1287,40 +1321,6 @@ so:
    annotation.
 1. Use a `FromCompositeFieldPath` patch to patch from the 'intermediary' field
    you patched to in step 1 to a field on the destination composed resource.
-
-### Composition Validation
-
-Crossplane uses a `Validating Webhook` to inform users of any potential
-misconfigurations in a `Composition` as early as possible. The default behavior
-of the webhook is to perform `logical checks` only, enforcing requirements that
-are not explicitly defined in the schema but are assumed to be hold at runtime.
-
-#### Experimental Validation With Schemas
-
-Crossplane provides experimental schema-aware validation that can be enabled
-through the `--enable-composition-webhook-schema-validation` feature flag. This
-will enable Composition validation against available schemas in the Cluster,
-ensuring, for example, that fieldPaths are valid and source and destination
-types match taking into account provided transforms too.
-
-The `crossplane.io/composition-validation-mode` annotation on the Composition
-allows to set one of two modes for schema validation:
-
-There are two modes of validation:
--  `strict`: Compositions are validated against required schemas, and rejected
-    if any error is found. If any of the required schemas is missing, the
-    Composition will be directly rejected.
--  `loose` (default): Same as `strict` mode, except that in case of missing
-    required schemas, schema validation will be skipped emitting only a
-    warning.
-
-See the dedicated [design document][validation-design-doc] for more information
-about future development around schema-aware validation.
-
-#### Disabling Webhooks
-
-Webhooks are enabled by default, but can be disabled by setting
-`webhooks.enabled` to `false` in the provided Helm Chart.
 
 [crd-docs]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
 [raise an issue]: https://github.com/crossplane/crossplane/issues/new?assignees=&labels=enhancement&template=feature_request.md
