@@ -1173,29 +1173,28 @@ not considered to be 'empty', and thus will pass the readiness check.
 Crossplane uses a `Validating Webhook` to inform users of any potential
 misconfigurations in a `Composition` as early as possible. The default behavior
 of the webhook is to perform `logical checks` only, enforcing requirements that
-are not explicitly defined in the schema but are assumed to be hold at runtime.
+are not explicitly defined in the schema but are assumed to hold at runtime.
 
 #### Experimental Validation With Schemas
 
 Crossplane provides experimental schema-aware validation that can be enabled
 through the `--enable-composition-webhook-schema-validation` feature flag. This
-will enable Composition validation against available schemas in the Cluster,
-ensuring, for example, that fieldPaths are valid and source and destination
+will enable Composition validation against available schemas in the cluster,
+ensuring, for example, that `fieldPaths` are valid and source and destination
 types match taking into account provided transforms too.
 
 The `crossplane.io/composition-validation-mode` annotation on the Composition
-allows to set one of two modes for schema validation:
+allows setting one of two modes for schema validation:
 
-There are two modes of validation:
--  `strict`: Compositions are validated against required schemas, and rejected
-    if any error is found. If any of the required schemas is missing, the
-    Composition will be directly rejected.
 -  `loose` (default): Same as `strict` mode, except that in case of missing
     required schemas, schema validation will be skipped emitting only a
     warning.
+-  `strict`: Compositions are validated against required schemas, and rejected
+    if any error is found. If any of the required schemas is missing, the
+    Composition will be directly rejected.
 
-See the dedicated [design document][validation-design-doc] for more information
-about future development around schema-aware validation.
+See the [Composition Validating Webhook design document][validation-design-doc]
+for more information about future development around schema-aware validation.
 
 #### Disabling Webhooks
 
