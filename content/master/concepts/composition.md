@@ -1186,9 +1186,9 @@ types match taking into account provided transforms too.
 The `crossplane.io/composition-validation-mode` annotation on the Composition
 allows setting one of two modes for schema validation:
 
--  `loose` (default): Same as `strict` mode, except that in case of missing
-    required schemas, schema validation will be skipped emitting only a
-    warning.
+-  `loose` (default): Validates Compositions against required schemas. If a 
+    required schema is missing, schema validation stops, emits a warning and 
+    falls back to `logical checks` only.
 -  `strict`: Validates Compositions against required schemas, and rejects them
     when finding errors. Rejects any Compositions missing required schemas.
 
