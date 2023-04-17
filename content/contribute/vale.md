@@ -11,6 +11,12 @@ Crossplane's Vale style definitions are in the
 [utils/vale](https://github.com/crossplane/docs/tree/master/utils/vale) 
 directory.
 
+{{< hint "important" >}}
+The Crossplane community is updating existing content to pass Vale. Until the
+community completes the project Vale errors are only enforced for new or changed
+content. The community approves PRs with Vale errors in unmodified document sections.
+{{< /hint >}}
+
 ## Install Vale
 
 Follow the directions on the Vale website to 
@@ -49,6 +55,12 @@ Crossplane uses the following Vale styles:
 * [Upbound](https://github.com/upbound/vale/tree/main/styles/Upbound) - for
   customized terms and preventing corporate jargon.
 * [write-good](https://github.com/errata-ai/write-good) - for higher quality writing.
+
+{{<hint "warning" >}}
+Crossplane maintainers consider Vale warnings the same as errors. 
+
+Error levels aren't changed to make Vale style maintenance easier.
+{{< /hint >}}
 
 ### Ignore Vale rules
 
