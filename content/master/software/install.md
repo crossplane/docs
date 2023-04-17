@@ -263,7 +263,7 @@ or by looking at the table below.
 {{< /table >}}
 {{< /expand >}}
 
-These can be set either in the `values.yaml` file or at install time using the
+Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
 args=["--enable-composition-functions","--enable-composition-webhook-schema-validation"]`.
 
