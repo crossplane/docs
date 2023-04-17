@@ -1173,7 +1173,7 @@ not considered to be 'empty', and thus will pass the readiness check.
 Crossplane uses a `Validating Webhook` to inform users of any potential
 misconfigurations in a `Composition` as early as possible. The default behavior
 of the webhook is to perform `logical checks` only, enforcing requirements that
-are not explicitly defined in the schema but are assumed to hold at runtime.
+aren't explicitly defined in the schema but are assumed to hold at runtime.
 
 #### Experimental Validation With Schemas
 
@@ -1211,7 +1211,7 @@ understand that the Crossplane maintainers are growing the feature set of the
 community, but we also feel it's critical to avoid bloat and complexity. We
 therefore wish to carefully consider each new addition. We feel some features
 may be better suited for a real, expressive programming language and intend to
-build an alternative to the `Composition` type as it is documented here per
+build an alternative to the `Composition` type as it's documented here per
 [this proposal][issue-2524].
 
 ## Tips, Tricks, and Troubleshooting
