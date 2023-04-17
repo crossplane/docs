@@ -264,7 +264,7 @@ or by looking at the table below.
 {{< /expand >}}
 
 These can be set either in the `values.yaml` file or at install time using the
-`--set` flag, e.g. `--set
+`--set` flag, for example: `--set
 args=["--enable-composition-functions","--enable-composition-webhook-schema-validation"]`.
 
 ### Install pre-release Crossplane versions
