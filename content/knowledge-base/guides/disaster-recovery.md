@@ -1,5 +1,5 @@
 ---
-title: AWS Disaster Recovery with Crossplane
+title: Disaster Recovery with Crossplane
 weight: 10
 ---
 
