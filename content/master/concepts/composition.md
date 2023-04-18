@@ -965,7 +965,7 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
 
 `string`. Transforms string values. 
 * string transform type `Format`, Currently only Go style fmt is supported. [Go style `fmt`][pkg/fmt] is supported.
-* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`.
+* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`, `ToJson`, `ToSha1`, `ToSha256`, `ToSha512`.
 * string transform type `TrimPrefix`, accepts a string to be trimmed from the beginning of the input.
 * string transform type `TrimSuffix`, accepts a string to be trimmed from the end of the input.
 * string transform type `Regexp`, accepts a string for regexp to be applied to.
@@ -1013,6 +1013,19 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
      type: Convert
      convert: FromBase64
 
+# If the value of the 'from' field is not nil, the value of the 'to' field will be
+# set to raw JSON representation of the 'from' field.
+- type: string
+  string:
+     type: Convert
+     convert: ToJson
+
+# The output will be the hash of the JSON representation of the 'from' field.
+- type: string
+  string:
+    type: Convert
+    convert: ToSha1 # alternatives: 'ToSha256' or 'ToSha512'
+
 # If the value of the 'from' field is https://crossplane.io, the value of the 'to' field will
 # be set to crossplane.io
 - type: string
@@ -1035,12 +1048,6 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
      regexp:
       match: 'arn:aws:iam::(\d+):.*'
       group: 1  # Optional capture group. Omit to match the entire regexp.
-
-# The output will be the hash of the JSON representation of the 'from' field.
-- type: string
-  string:
-     type: Convert
-     convert: ToSha1 # alternatives: 'ToSha256' or 'ToSha512'
 ```
 
 `convert`. Transforms values of one type to another, for example from a string
