@@ -245,19 +245,19 @@ crossplane-stable/crossplane \
 
 #### Feature flags
 
-Crossplane usually introduces new features behind feature flags. Alpha features
-are disabled by default. Beta features are enabled by default. To enable or
-disable a feature flag, set the `args` value in the Helm chart. Available
-feature flags can be directly found by running `crossplane core start --help`,
-or by looking at the table below.
+Crossplane usually introduces new features behind feature flags. By default
+alpha features are off, while beta features are enabled. To enable a feature
+flag, set the `args` value in the Helm chart. Available feature flags can be
+directly found by running `crossplane core start --help`, or by looking at the
+table below.
 
-{{< expand "Feature flags" "v" >}}
+{{< expand "Feature flags" >}}
 {{< table caption="Feature flags" >}}
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-revisions` |Enable support for CompositionRevisions |
 | Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
-| Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas.
+| Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 {{< /table >}}
