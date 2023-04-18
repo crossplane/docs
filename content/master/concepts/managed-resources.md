@@ -214,6 +214,12 @@ under `spec` should look like.
   deleted when this managed resource is deleted in Kubernetes API server.
   Possible values are `Delete` (the default) and `Orphan`.
 
+* `managementPolicy`: Enum to specify the level of control Crossplane has over
+  the external resource.
+  Possible values are `FullControl` (the default) and `ObserveOnly`. Please note
+  that this is an experimental feature, see the [management policies] section
+  for further details.
+
 * `forProvider`: While the rest of the fields relate to how Crossplane should
   behave, the fields under `forProvider` are solely used to configure the actual
   external resource. In most of the cases, the field names correspond to the
@@ -419,6 +425,22 @@ does not create the external resource until the referenced object is ready. In
 this example, creation call of Azure MySQL Server will not be made until
 referenced `ResourceGroup` has its `status.condition` named `Ready` to be true.
 
+## Management Policies
+
+Crossplane offers a set of management policies that allow you to define the
+level of control it has over external resources. You can configure these
+policies using the `spec.managementPolicy` field in the managed resource
+definition. The available policies include:
+
+- `FullControl (Default)`: With this policy, Crossplane fully manages and
+controls the external resource.
+- `ObserveOnly`: With the ObserveOnly policy, Crossplane only observes the
+external resource without making any changes or deletions.
+
+Please note that management policies are an experimental feature, and the API is
+subject to change. To use management policies, you must enable them with the
+`--enable-management-policies` flag when starting the provider controller.
+
 ## Importing Existing Resources
 
 If you have some resources that are already provisioned in the cloud provider,
@@ -449,6 +471,35 @@ Note that if a resource has required fields, you must fill those fields or the
 creation of the managed resource will be rejected. So, in those cases, you will
 need to enter the name of the resource as well as the required fields.
 
+### Alternative Import Procedure: Start with ObserveOnly
+
+The above approach has the following caveats:
+
+1. You need to provide all the required fields in the spec of the resource with
+correct values even though they are not used for importing the resource. A wrong
+value for a required field will result a configuration update which is not
+desired.
+2. Any typo in the external name annotation or some mistake in the identifying
+arguments (e.g. `region`) will result creation of a new resource instead of
+importing the existing one.
+
+Alternatively, you can import with first observing the resource with
+management policy `ObserveOnly` by following the procedure below:
+
+1. Create a new resource with `ObserveOnly` policy.
+  1. With external name annotation set to the external name of the resource to be
+     imported.
+  2. Only provide the identifying arguments (e.g. `region`) in the spec of the
+     resource.
+2. Expect the existing resource to be observed successfully indicating that the
+   existing resource is found.
+3. Change the policy to `FullControl` and provide the required fields by copying
+   them from `status.atProvider` to give full control of the resource to
+   Crossplane.
+
+Please note that management policies is an experimental feature needs to be
+enabled first. See the [management policies] section for more details.
+
 ## Backup and Restore
 
 Crossplane adheres to Kubernetes conventions as much as possible and one of the
@@ -470,3 +521,4 @@ including Velero.
 [issue-1143]: https://github.com/crossplane/crossplane/issues/1143
 [managed-api-patterns]: https://github.com/crossplane/crossplane/blob/release-1.10/design/one-pager-managed-resource-api-design.md
 [managed reconciler]: https://github.com/crossplane/crossplane-runtime/blob/84e629b9589852df1322ff1eae4c6e7639cf6e99/pkg/reconciler/managed/reconciler.go#L637
+[management policies]: #management-policies
