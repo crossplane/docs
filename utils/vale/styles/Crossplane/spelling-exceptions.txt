@@ -1,6 +1,6 @@
 APIs
-conformant
 Bootstrap
+conformant
 CRDs
 Crossplane
 Crossplane's
@@ -27,12 +27,13 @@ stdout
 tolerations
 Upbound
 Upbound's
+Velero
 VSCode
 Webpack
 xpkg
 XRD
-XRDs
 XRD's
+XRDs
 XRs
 Zendesk
 Hashicorp

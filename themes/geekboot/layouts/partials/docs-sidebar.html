@@ -50,4 +50,6 @@
   {{ if ne .Page.Params.product "Contributing Guide" }}
     {{ partialCached "sidebar/contributing-guide" . }}
   {{ end }}
+
+  {{ partialCached "sidebar/roadmap" . }}
 </nav>

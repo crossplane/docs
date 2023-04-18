@@ -965,7 +965,7 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
 
 `string`. Transforms string values. 
 * string transform type `Format`, Currently only Go style fmt is supported. [Go style `fmt`][pkg/fmt] is supported.
-* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`.
+* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`, `ToJson`, `ToSha1`, `ToSha256`, `ToSha512`.
 * string transform type `TrimPrefix`, accepts a string to be trimmed from the beginning of the input.
 * string transform type `TrimSuffix`, accepts a string to be trimmed from the end of the input.
 * string transform type `Regexp`, accepts a string for regexp to be applied to.
@@ -1013,6 +1013,19 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
      type: Convert
      convert: FromBase64
 
+# If the value of the 'from' field is not nil, the value of the 'to' field will be
+# set to raw JSON representation of the 'from' field.
+- type: string
+  string:
+     type: Convert
+     convert: ToJson
+
+# The output will be the hash of the JSON representation of the 'from' field.
+- type: string
+  string:
+    type: Convert
+    convert: ToSha1 # alternatives: 'ToSha256' or 'ToSha512'
+
 # If the value of the 'from' field is https://crossplane.io, the value of the 'to' field will
 # be set to crossplane.io
 - type: string
@@ -1035,12 +1048,6 @@ fallback to the input value by setting the `fallbackTo` field to `Input`.
      regexp:
       match: 'arn:aws:iam::(\d+):.*'
       group: 1  # Optional capture group. Omit to match the entire regexp.
-
-# The output will be the hash of the JSON representation of the 'from' field.
-- type: string
-  string:
-     type: Convert
-     convert: ToSha1 # alternatives: 'ToSha256' or 'ToSha512'
 ```
 
 `convert`. Transforms values of one type to another, for example from a string
@@ -1168,6 +1175,38 @@ not considered to be 'empty', and thus will pass the readiness check.
 
 `None`. Considers the composed resource to be ready as soon as it exists.
 
+### Composition validation
+
+Crossplane uses a `Validating Webhook` to inform users of any potential
+errors in a `Composition`. By default webhooks only perform
+`logical checks`. `logical checks` enforce requirements that
+aren't explicitly defined in the schema but Crossplane assumes to hold at runtime.
+
+#### Experimental validation with schemas
+
+Enable experimental schema-aware validation in Crossplane
+through the `--enable-composition-webhook-schema-validation` feature flag. This
+enables Composition validation against available schemas in the cluster.
+For example, ensuring that `fieldPaths` are valid and source and destination
+types match taking into account provided transforms too.
+
+The `crossplane.io/composition-validation-mode` annotation on the Composition
+allows setting one of two modes for schema validation:
+
+-  `loose` (default): Validates Compositions against required schemas. If a 
+    required schema is missing, schema validation stops, emits a warning and 
+    falls back to `logical checks` only.
+-  `strict`: Validates Compositions against required schemas, and rejects them
+    when finding errors. Rejects any Compositions missing required schemas.
+
+See the [Composition Validating Webhook design document][validation-design-doc]
+for more information about future development around schema-aware validation.
+
+#### Disabling webhooks
+
+Crossplane enables webhooks by default. Turn off webhooks by
+`webhooks.enabled` to `false` in the provided Helm Chart.
+
 ### Missing Functionality
 
 You might find while reading through this reference that Crossplane is missing
@@ -1178,7 +1217,7 @@ understand that the Crossplane maintainers are growing the feature set of the
 community, but we also feel it's critical to avoid bloat and complexity. We
 therefore wish to carefully consider each new addition. We feel some features
 may be better suited for a real, expressive programming language and intend to
-build an alternative to the `Composition` type as it is documented here per
+build an alternative to the `Composition` type as it's documented here per
 [this proposal][issue-2524].
 
 ## Tips, Tricks, and Troubleshooting
@@ -1303,3 +1342,4 @@ so:
 [claims-and-xrs]: /media/composition-claims-and-xrs.svg
 [xr-ref]: {{<ref "#compositions" >}}
 [managed-resources]: {{<ref "managed-resources" >}}
+[validation-design-doc]: https://github.com/crossplane/crossplane/blob/master/design/design-doc-composition-validating-webhook.md
