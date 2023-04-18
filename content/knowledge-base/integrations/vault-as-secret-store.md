@@ -49,30 +49,6 @@ Install Vault using Helm.
 helm -n vault-system upgrade --install vault hashicorp/vault --create-namespace
 ```
 
-{{< hint "tip" >}}
-Vault requires a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes).
-
-The Vault pod doesn't start without an available persistent volume.
-
-{{< expand "An example persistent volume" >}}
-```yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: persistent-volume
-spec:
-  capacity:
-   storage: 10Gi
-  accessModes:
-   - ReadWriteOnce
-  hostPath:
-    path: "/tmp/vault"
-```
-{{< /expand >}}
-
-{{< /hint >}}
-
-
 ### Unseal Vault
 
 If Vault is [sealed](https://developer.hashicorp.com/vault/docs/concepts/seal)
@@ -212,7 +188,7 @@ Success! Data written to: auth/kubernetes/role/crossplane
 ## Install Crossplane
 
 {{<hint "important" >}}
-Plugin support is in the unreleased Crossplane v1.13. This guide uses a
+Plugin support is in the unreleased Crossplane v1.12. This guide uses a
 pre-release build with plugin support.
 {{< /hint >}}
 
