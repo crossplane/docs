@@ -243,6 +243,30 @@ crossplane-stable/crossplane \
 -f settings.yaml
 ```
 
+#### Feature flags
+
+Crossplane usually introduces new features behind feature flags. By default
+alpha features are off, while beta features are enabled. To enable a feature
+flag, set the `args` value in the Helm chart. Available feature flags can be
+directly found by running `crossplane core start --help`, or by looking at the
+table below.
+
+{{< expand "Feature flags" >}}
+{{< table caption="Feature flags" >}}
+| Status | Flag | Description |
+| --- | --- | --- |
+| Beta | `--enable-composition-revisions` |Enable support for CompositionRevisions |
+| Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
+| Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
+| Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
+| Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
+{{< /table >}}
+{{< /expand >}}
+
+Set these flags either in the `values.yaml` file or at install time using the
+`--set` flag, for example: `--set
+args=["--enable-composition-functions","--enable-composition-webhook-schema-validation"]`.
+
 ### Install pre-release Crossplane versions
 Install a pre-release versions of Crossplane from the `master` Crossplane Helm channel.
 
