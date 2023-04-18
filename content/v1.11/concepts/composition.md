@@ -917,7 +917,7 @@ Currently only `multiply` is supported.
 
 `string`. Transforms string values. 
 * string transform type `Format`, Currently only Go style fmt is supported. [Go style `fmt`][pkg/fmt] is supported.
-* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`.
+* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`, `ToJson`.
 * string transform type `TrimPrefix`, accepts a string to be trimmed from the beginning of the input.
 * string transform type `TrimSuffix`, accepts a string to be trimmed from the end of the input.
 * string transform type `Regexp`, accepts a string for regexp to be applied to.
@@ -964,6 +964,13 @@ Currently only `multiply` is supported.
   string:
      type: Convert
      convert: FromBase64
+
+# If the value of the 'from' field is not nil, the value of the 'to' field will be
+# set to raw JSON representation of the 'from' field.
+- type: string
+  string:
+    type: Convert
+    convert: ToJson
 
 # If the value of the 'from' field is https://crossplane.io, the value of the 'to' field will
 # be set to crossplane.io
