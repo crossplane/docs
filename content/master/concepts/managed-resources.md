@@ -477,14 +477,14 @@ The above approach has the following caveats:
 
 1. You need to provide all the required fields in the spec of the resource with
 correct values even though they are not used for importing the resource. A wrong
-value for a required field will result a configuration update which is not
+value for a required field result in a configuration update which is not
 desired.
-2. Any typo in the external name annotation or some mistake in the identifying
-arguments (e.g. `region`) will result creation of a new resource instead of
-importing the existing one.
+2. Any typos in the external name annotation or mistakes in the identifying
+arguments, such as the `region`, results in the creation of a new resource
+instead of importing the existing one.
 
-Alternatively, you can import with first observing the resource with
-management policy `ObserveOnly` by following the procedure below:
+Alternatively, you can import the resource by first observing it with a
+management policy of `ObserveOnly`. To do this, follow the procedure below:
 
 1. Create a new resource with `ObserveOnly` policy.
   1. With external name annotation set to the external name of the resource to be
@@ -497,7 +497,7 @@ management policy `ObserveOnly` by following the procedure below:
    them from `status.atProvider` to give full control of the resource to
    Crossplane.
 
-Please note that management policies is an experimental feature needs to be
+Please note that management policies are an experimental feature need to be
 enabled first. See the [management policies] section for more details.
 
 ## Backup and Restore
