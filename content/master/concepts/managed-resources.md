@@ -216,9 +216,11 @@ under `spec` should look like.
 
 * `managementPolicy`: Enum to specify the level of control Crossplane has over
   the external resource.
-  Possible values are `FullControl` (the default) and `ObserveOnly`. Please note
-  that this is an experimental feature, see the [management policies] section
-  for further details.
+  Possible values are `FullControl` (the default) and `ObserveOnly`.
+  {{<hint "important">}}
+  `managementPolicy` is an experimental feature, see the management policies
+  section below for further details.
+  {{< /hint >}}
 
 * `forProvider`: While the rest of the fields relate to how Crossplane should
   behave, the fields under `forProvider` are solely used to configure the actual
@@ -437,8 +439,12 @@ controls the external resource.
 - `ObserveOnly`: With the ObserveOnly policy, Crossplane only observes the
 external resource without making any changes or deletions.
 
-Please note that management policies are an experimental feature, and the API is
-subject to change. To use management policies, you must enable them with the
+{{<hint "important" >}}
+Management policies are an experimental feature, and the API is
+subject to change.
+{{< /hint >}}
+
+To use management policies, you must enable them with the
 `--enable-management-policies` flag when starting the provider controller.
 
 ## Importing Existing Resources
@@ -473,32 +479,125 @@ need to enter the name of the resource as well as the required fields.
 
 ### Alternative Import Procedure: Start with ObserveOnly
 
-The above approach has the following caveats:
+Directly importing existing managed resources approach has the following caveats:
 
-1. You need to provide all the required fields in the spec of the resource with
-correct values even though they are not used for importing the resource. A wrong
-value for a required field result in a configuration update which is not
+1. You must provide all the required fields in the spec of the resource with
+correct values even though they're not used for importing the resource. A wrong
+value for a required field result in a configuration update which isn't
 desired.
 2. Any typos in the external name annotation or mistakes in the identifying
 arguments, such as the `region`, results in the creation of a new resource
 instead of importing the existing one.
 
-Alternatively, you can import the resource by first observing it with a
-management policy of `ObserveOnly`. To do this, follow the procedure below:
+Instead of manually creating resources you can import the resource with an
+`ObserveOnly` management policy.
 
-1. Create a new resource with `ObserveOnly` policy.
-  1. With external name annotation set to the external name of the resource to be
-     imported.
-  2. Only provide the identifying arguments (e.g. `region`) in the spec of the
-     resource.
-2. Expect the existing resource to be observed successfully indicating that the
-   existing resource is found.
-3. Change the policy to `FullControl` and provide the required fields by copying
-   them from `status.atProvider` to give full control of the resource to
-   Crossplane.
+Crossplane imports `ObserveOnly` resources but never changes or deletes the
+resource.
 
-Please note that management policies are an experimental feature need to be
-enabled first. See the [management policies] section for more details.
+{{< hint "important" >}}
+Management policies including `ObserveOnly` are experimental. They must be
+explicitly enabled.
+See the management policies section for more details.
+{{< /hint >}}
+
+To configure an `ObserveOnly` resource:
+
+1. Create a new resource with an `ObserveOnly` management policy.
+   1. With external name annotation set to the external name of the resource to be
+      imported.
+   2. Only provide the identifying arguments (for example, `region`) in the spec
+      of the resource.
+
+```yaml
+apiVersion: sql.gcp.upbound.io/v1beta1
+kind: DatabaseInstance
+metadata:
+  annotations:
+    crossplane.io/external-name: existing-database-instance
+  name: existing-database-instance
+spec:
+  managementPolicy: ObserveOnly
+  forProvider:
+    region: "us-central1"
+```
+
+Crossplane discovers the managed resource and populates the `status.atProvider`
+with the observed state.
+
+```yaml
+apiVersion: sql.gcp.upbound.io/v1beta1
+kind: DatabaseInstance
+metadata:
+  annotations:
+    crossplane.io/external-name: existing-database-instance
+  name: existing-database-instance
+spec:
+  managementPolicy: ObserveOnly
+  forProvider:
+    region: us-central1
+status:
+  atProvider:
+    connectionName: crossplane-playground:us-central1:existing-database-instance
+    databaseVersion: POSTGRES_14
+    deletionProtection: true
+    firstIpAddress: 35.184.74.79
+    id: existing-database-instance
+    publicIpAddress: 35.184.74.79
+    region: us-central1
+    <truncated-for-brevity>
+    settings:
+    - activationPolicy: ALWAYS
+      availabilityType: REGIONAL
+      diskSize: 100
+      <truncated-for-brevity>
+      pricingPlan: PER_USE
+      tier: db-custom-4-26624
+      version: 4
+  conditions:
+  - lastTransitionTime: "2023-02-22T07:16:51Z"
+    reason: Available
+    status: "True"
+    type: Ready
+  - lastTransitionTime: "2023-02-22T07:16:51Z"
+    reason: ReconcileSuccess
+    status: "True"
+    type: Synced
+```
+
+To allow Crossplane to control and change the `ObserveOnly` resource, edit the
+policy. Change the `ObserveOnly` field to `FullControl`. If there are required
+parameters, copy their values from `status.atProvider` and provide them at the
+`spec.forProvider`.
+
+```yaml
+apiVersion: sql.gcp.upbound.io/v1beta1
+kind: DatabaseInstance
+metadata:
+  annotations:
+    crossplane.io/external-name: existing-database-instance
+  name: existing-database-instance
+spec:
+  managementPolicy: Full
+  forProvider:
+    databaseVersion: POSTGRES_14
+    region: us-central1
+    settings:
+    - diskSize: 100
+      tier: db-custom-4-26624
+status:
+  atProvider:
+    <truncated-for-brevity>
+  conditions:
+    - lastTransitionTime: "2023-02-22T07:16:51Z"
+      reason: Available
+      status: "True"
+      type: Ready
+    - lastTransitionTime: "2023-02-22T11:16:45Z"
+      reason: ReconcileSuccess
+      status: "True"
+      type: Synced
+```
 
 ## Backup and Restore
 
