@@ -36,3 +36,10 @@ exceptions:
   - Visual
   - VS
   - Windows
+  - Vault
+  - Hashicorpterms
+  - StoreConfig
+  - Provider
+  - CompositeResourceDefinition
+  - Composition
+  - Claim

@@ -17,6 +17,7 @@ exceptions:
   - ACL
   - AJAX
   - AKS
+  - ESS
   - ANSI
   - API
   - APM

@@ -36,3 +36,4 @@ XRD's
 XRDs
 XRs
 Zendesk
+Hashicorp
