@@ -7,7 +7,7 @@
 extends: substitution
 message: '%s "%s".'
 link: https://docs.gitlab.com/ee/development/documentation/styleguide/word_list.html
-level: suggestion
+level: warning
 ignorecase: true
 swap:
   in order to: "Be concise: use 'to' rather than"

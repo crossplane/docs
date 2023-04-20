@@ -7,7 +7,6 @@ action:
 swap:
   '(?:drive C:|drive C>|C: drive)': drive C
   '(?:internet bot|web robot)s?': bot(s)
-  '(?:microsoft cloud|the cloud)': cloud
   '(?:mobile|smart) ?phone': phone
   '24/7': every day
   'audio(?:-| )book': audiobook
