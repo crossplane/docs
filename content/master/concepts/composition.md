@@ -436,12 +436,21 @@ spec:
   # be written to the connection secret of the XR.
   connectionSecretKeys:
   - hostname
+  # Each type of XR may specify a default Composite Delete Policy to be used
+  # when the Claim has no compositeDeletePolicy.  The valid values are Background
+  # and Foreground, and the default is Background.  See the description of the
+  # compositeDeletePolicy parameter for more information.
+  defaultCompositeDeletePolicy: Background
   # Each type of XR may specify a default Composition to be used when none is
   # specified (e.g. when the XR has no compositionRef or selector). A similar
   # enforceCompositionRef field also exists to allow XRs to enforce a specific
   # Composition that should always be used.
   defaultCompositionRef:
     name: example
+  # Each type of XR may specify a default Composition Update Policy to be used
+  # when the Claim has no compositionUpdatePolicy.  The valid values are Automatic
+  # and Manual and the default is Automatic.
+  defaultCompositionUpdatePolicy: Automatic
   # Each type of XR may be served at different versions - e.g. v1alpha1, v1beta1
   # and v1 - simultaneously. Currently Crossplane requires that all versions
   # have an identical schema, so this is mostly useful to 'promote' a type of XR
