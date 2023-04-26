@@ -9,9 +9,11 @@ Datastore
 editCode
 Enum
 Env
+finalizers
 GCP's
 Geekdocs
 Grammarly
+Hashicorp
 kubeconfig
 kubectl
 minikube
@@ -37,4 +39,3 @@ XRD's
 XRDs
 XRs
 Zendesk
-Hashicorp
