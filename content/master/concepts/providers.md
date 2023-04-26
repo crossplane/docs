@@ -3,8 +3,6 @@ title: Providers
 weight: 101
 ---
 
-<!-- REsolves #336, #235, #278 -->
-
 Providers enable Crossplane to provision infrastructure on an
 external service. Providers create new Kubernetes APIs and map them to external 
 APIs.
