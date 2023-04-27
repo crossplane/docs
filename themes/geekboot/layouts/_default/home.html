@@ -8,8 +8,28 @@
   (dict "Contributing Guide" "/img/multi-crane.svg")
 }}
 
-<div class="container-fluid py-5 bd-content" id="home">
-  <div class="row mx-5 justify-content-evenly my-5">
+
+<div class="container-fluid bd-content" id="home">
+
+
+  <aside class="bd-sidebar">
+    <div class="offcanvas-lg offcanvas-start bd-sidebar-container" tabindex="-1" id="bdSidebar" aria-labelledby="bdSidebarOffcanvasLabel">
+      <div class="offcanvas-header pb-4 border-bottom">
+        <div class="d-flex offcanvas-title fw-bold" id="bdNavbarOffcanvasLabel">
+          Crossplane Documentation
+        </div>
+        <div class="d-flex"><button type="button" class="btn-close bi align-self-center p-0" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdSidebar"></button></div>
+      </div>
+      <div class="offcanvas-body">
+        <div class="row mx-4">
+          <div class="mb-3 mx-4 col d-flex">
+            {{ partialCached "search-button" . }}
+          </div>
+        </div>
+      </div>
+  </aside>
+
+  <div class="row mx-5 justify-content-evenly mb-5">
 
     {{ $thisSite := .Site }}
     {{ $version_section := slice }}
