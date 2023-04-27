@@ -503,13 +503,16 @@ See the management policies section for more details.
 
 To configure an `ObserveOnly` resource:
 
-1. Create a new resource with an `ObserveOnly` management policy.
-   1. With external name annotation set to the external name of the resource to be
-      imported.
-   2. Only provide the identifying arguments (for example, `region`) in the spec
-      of the resource.
+1. Create a new resource with an {{<hover label="oo" line="8">}}ObserveOnly{{</hover>}}
+   management policy.
+  1. With the
+     {{<hover label="oo" line="5">}}crossplane.io/external-name{{</hover>}}
+     annotation set to the external name of the resource to import.
+  1. Only provide the identifying arguments (for example,
+     {{<hover label="oo" line="10">}}region{{</hover>}}) in the spec
+     of the resource.
 
-```yaml
+```yaml {label="oo"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
@@ -522,10 +525,11 @@ spec:
     region: "us-central1"
 ```
 
-Crossplane discovers the managed resource and populates the `status.atProvider`
+Crossplane discovers the managed resource and populates the
+{{<hover label="ooPopulated" line="12">}}status.atProvider{{</hover>}}
 with the observed state.
 
-```yaml
+```yaml {label="ooPopulated"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
@@ -566,11 +570,16 @@ status:
 ```
 
 To allow Crossplane to control and change the `ObserveOnly` resource, edit the
-policy. Change the `ObserveOnly` field to `FullControl`. If there are required
-parameters, copy their values from `status.atProvider` and provide them at the
-`spec.forProvider`.
+policy. 
 
-```yaml
+Change the {{<hover label="ooPopulated" line="8">}}ObserveOnly{{</hover>}} field
+to {{<hover label="fc" line="8">}}FullControl{{</hover>}}.
+
+Copy any required parameter values from
+{{<hover label="fc" line="16">}}status.atProvider{{</hover>}} and provide them
+in {{<hover label="fc" line="9">}}spec.forProvider{{</hover>}}.
+
+```yaml {label="fc"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
