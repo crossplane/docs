@@ -39,14 +39,12 @@
     {{/* Strip training / so .GetPage works */}}
     {{ $sectionPage = strings.TrimRight "/" $sectionPage }}
 
-    {{/* Look for the Page matching this page, but in the latest version directory */}}
-    {{ $latestPage := .Site.GetPage (printf "/v%s%s" .Site.Params.latest $sectionPage) }}
+    {{/* Look for the Page matching this page, but in the latest directory */}}
+    {{ $latestPage := .Site.GetPage (printf "/latest%s" $sectionPage) }}
 
     {{/* If it exists set the canonical URL to the latest, otherwise we are canonical */}}
     {{ if $latestPage }}
     <link rel="canonical" href="{{$latestPage.Permalink }}">
-    {{ else }}
-    <link rel="canonical" href="{{.Permalink}}">
     {{ end }}
 
 {{ else }}
