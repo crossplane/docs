@@ -8,4 +8,10 @@ sed -i "s/^\s*version: \"$LATEST_VER\"//g" content/latest/_index.md
 
 sed -i 's/# writeStats: true/writeStats: true/g' config.yaml
 cat config.yaml
-hugo --minify
+
+if [ $CONTEXT = "production"]
+then
+hugo --minify --baseURL $URL
+else
+hugo --minify --baseURL $DEPLOY_URL
+fi
