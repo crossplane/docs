@@ -15,9 +15,43 @@
     {{ end }}
 {{ end }}
 
+{{ $ver := .Page.Params.version | default .Site.Params.latest }}
+
 <title>
-    {{- if .IsHome -}}{{- .Site.Title | markdownify }} · {{.Site.Params.subtitle | markdownify }} {{- else }}{{- .Title | markdownify}} · {{ .Site.Title | markdownify }} {{ if and (ne .Page.Params.version "0") (ne .Page.Params.version "master")}}v{{.Page.Params.version }}{{end}}{{if eq .Page.Params.version "master"}}{{.Page.Params.version }}{{end}}{{ end }}</title>
-<link rel="canonical" href="https://docs.crossplane.io{{ .Permalink }}">
+    {{- if .IsHome -}}{{- .Site.Title | markdownify }} · {{.Site.Params.subtitle | markdownify }} {{- else }}{{- .Title | markdownify}} · {{ .Site.Title | markdownify }} {{ if and (ne .Page.Params.version "0") (ne .Page.Params.version "master")}}v{{ $ver }}{{end}}{{if eq .Page.Params.version "master"}}{{.Page.Params.version }}{{end}}{{ end }}</title>
+
+
+{{/* Don't do the URL processing for KB and Contrib guides */}}
+{{ if not .Page.Params.Product }}
+    {{/* Strip out the version from the path to get just the section + page */}}
+    {{ $sectionPage := replaceRE (printf "v%s/" .Page.Params.version) "" .RelPermalink }}
+
+    {{/* Handle the /latest directory */}}
+    {{ if not .Page.Params.version }}
+        {{ $sectionPage = replaceRE "/latest" "" .RelPermalink }}
+    {{ end }}
+
+    {{/* Handle the /master directory */}}
+    {{ if eq .Page.Params.version "master" }}
+        {{ $sectionPage = replaceRE "/master" "" .RelPermalink }}
+    {{ end }}
+
+    {{/* Strip training / so .GetPage works */}}
+    {{ $sectionPage = strings.TrimRight "/" $sectionPage }}
+
+    {{/* Look for the Page matching this page, but in the latest version directory */}}
+    {{ $latestPage := .Site.GetPage (printf "/v%s%s" .Site.Params.latest $sectionPage) }}
+
+    {{/* If it exists set the canonical URL to the latest, otherwise we are canonical */}}
+    {{ if $latestPage }}
+    <link rel="canonical" href="{{$latestPage.Permalink }}">
+    {{ else }}
+    <link rel="canonical" href="{{.Permalink}}">
+    {{ end }}
+
+{{ else }}
+    <link rel="canonical" href="{{.Permalink}}">
+{{ end }}
 
 {{ partialCached "stylesheet-cached" . }}
 {{ partial "stylesheet-dynamic" . }}
