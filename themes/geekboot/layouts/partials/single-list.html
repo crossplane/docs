@@ -28,6 +28,9 @@
         {{ if .Page.Params.state }}
           {{ partial "feature-state-alert" . }}
         {{ end }}
+        {{ if .Page.Params.ga }}
+          {{ partial "ga-tag" . }}
+        {{ end }}
       </div>
 
 
