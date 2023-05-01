@@ -88,6 +88,17 @@ For objects that Kubernetes can't provide a watch for, Crossplane
 periodically poll the resource to find it's state. The default polling rate is
 one minute. Change the polling rate with the `---poll-interval` pod argument.
 
+Reducing the poll-interval value causes Crossplane to poll resources more
+frequently. This increases the load of the Crossplane pod and
+results in more frequent provider API calls.
+
+<!-- vale write-good.TooWordy = NO -->
+<!-- allow "maximum" -->
+Increasing the poll-interval causes Crossplane to poll resources less
+frequently. This increases the maximum time until Crossplane
+discovers changes in the cloud provider that require updating. 
+<!-- vale write-good.TooWordy = YES -->
+
 Managed resources use polling.
 
 Crossplane checks all resources, both watched and polled resources, to
