@@ -5,20 +5,15 @@
 
 
 [[redirects]]
-from = "/latest/*"
-to = "/v1.12/:splat"
-status = 302
-
-[[redirects]]
 from = "/docs/*"
 to = "/:splat"
 status = 302
 
 [context.deploy-preview]
-    command = "sed -i 's/# writeStats: true/writeStats: true/g' config.yaml && cat config.yaml && hugo --minify"
+    command = "bash netlify_build.sh"
 
 [context.production]
-    command = "sed -i 's/# writeStats: true/writeStats: true/g' config.yaml && hugo --minify"
+    command = "bash netlify_build.sh"
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
