@@ -1323,7 +1323,7 @@ use an intermediary XR to mutate the connection details to suit your needs.
 [This example][helm-and-gcp] from provider-helm demonstrates using a GKE cluster
 connection secret as Helm `ProviderConfig` credentials.
 
-### Patching From One Composed Resource to Another
+### Patching From One Composed Resource to Another or Itself
 
 It's not possible to patch _directly_ from one composed resource to another -
 i.e. from one entry in the `spec.resources` array of a `Composition` to another.
@@ -1335,6 +1335,8 @@ so:
    annotation.
 1. Use a `FromCompositeFieldPath` patch to patch from the 'intermediary' field
    you patched to in step 1 to a field on the destination composed resource.
+
+Note that the source and the target composed resource can be the same.
 
 [crd-docs]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
 [raise an issue]: https://github.com/crossplane/crossplane/issues/new?assignees=&labels=enhancement&template=feature_request.md
