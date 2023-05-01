@@ -11,7 +11,7 @@ cat config.yaml
 
 if [ $CONTEXT = "production"]
 then
-hugo --minify --baseURL $URL
+hugo --minify --baseURL https://docs.crossplane.io/
 else
 hugo --minify --baseURL $DEPLOY_URL
 fi
