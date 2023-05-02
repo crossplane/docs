@@ -105,31 +105,40 @@ spec:
 > Note that a reference to a `ControllerConfig` can be added to an already
 > installed `Provider` and it will update its `Deployment` accordingly.
 
-## Compositions and XRDs
+## Compositions and composite resource definition
 
 ### General troubleshooting steps
 
-Most error messages are logged to resources' event fields. Whenever your Composite Resources are not getting provisioned, follow the following steps:
+Crossplane and its providers log most error messages to resources' event fields. Whenever your Composite Resources aren't getting provisioned, follow the following steps:
 
 1. Get the events for the root resource using `kubectl describe` or `kubectl get event`
 2. If there are errors in the events, address them.
-3. If no errors, follow its sub-resources. `kubectl get <KIND> <NAME> -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq`
-4. Go back to step 1 using one of resources returned by step 3.
+3. If there are no errors, follow its sub-resources.
 
-The rest of this section will show you how to debug issues related to compositions without using external tooling. However, if you are using ArgoCD or FluxCD with UI, you can visualize object relationships more easily in the UI. You can also use the kube-lineage plugin to visualize object relationships in your terminal.
+    `kubectl get <KIND> <NAME> -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq`
+4. Repeat this process for each resource returned.
 
+{{< hint "note" >}}
+The rest of this section show you how to debug issues related to compositions without using external tooling. 
+If you are using ArgoCD or FluxCD with UI, you can visualize object relationships in the UI. 
+You can also use the kube-lineage plugin to visualize object relationships in your terminal.
+{{< /hint >}}
 
-### Example
+### Examples
 
 #### Composition
-An example application was deployed as a claim of a composite resource. Kind = `ExampleApp`. Name = `example-application`.
+<!-- vale Google.WordList = NO --> 
+You deployed an example application using a claim. Kind = `ExampleApp`. Name = `example-application`.
+
 
 The example application never reaches available state as shown below.
 
 
-1. Run `kubectl describe exampleapp example-application`
+1. View the claim.
 
     ```bash
+    kubectl describe exampleapp example-application
+
     Status:
     Conditions:
         Last Transition Time:  2022-03-01T22:57:38Z
@@ -139,7 +148,8 @@ The example application never reaches available state as shown below.
     Events:                    <none>
     ```
 
-2. No errors were found in events of the claim. Find its cluster scoped resource (composite resource).
+2. If the claim doesn't have errors, inspect the `.spec.resourceRef` field of the claim.
+
     ```bash
     kubectl get exampleapp example-application -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq
 
@@ -149,8 +159,9 @@ The example application never reaches available state as shown below.
       "name": "example-application-xqlsz"
     }
     ```
-3. In the above output, we see the cluster scoped resource for this claim. Kind = `XExampleApp` name = `example-application-xqlsz`
-4. Get the cluster resource's event.
+3. In the preceding output, you see the cluster scoped resource for this claim. Kind = `XExampleApp` name = `example-application-xqlsz`
+4. View the cluster scoped resource's events.
+
     ```bash
     kubectl describe xexampleapp example-application-xqlsz
 
@@ -159,10 +170,10 @@ The example application never reaches available state as shown below.
     ----     ------                   ----              ----                                                             -------
     Normal   PublishConnectionSecret  9s (x2 over 10s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  Successfully published connection details
     Normal   SelectComposition        6s (x6 over 11s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  Successfully selected composition
-    Warning  ComposeResources         6s (x6 over 10s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  cannot render composed resource from resource template at index 3: cannot use dry-run create to name composed resource: an empty namespace may not be set during creation
+    Warning  ComposeResources         6s (x6 over 10s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  can't render composed resource from resource template at index 3: can't use dry-run create to name composed resource: an empty namespace may not be set during creation
     Normal   ComposeResources         6s (x6 over 10s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  Successfully composed resources
     ```
-5. We see errors in the events. It is complaining about not specifying namespace in its compositions. For this particular kind of error, we can get its sub-resources and check which one is not created.
+5. You see errors in the events. it's complaining about not specifying namespace in its compositions. For this particular kind of error, you can get its sub-resources and check which one isn't created.
 
     ```bash
     kubectl get xexampleapp example-application-xqlsz -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq
@@ -189,20 +200,22 @@ The example application never reaches available state as shown below.
         }
     ]
     ```
-6. Notice the last element in the array does not have a name. When a resource in composition fails validation, the resource object is not created and will not have a name. For this particular issue, we need to specify the namespace for the IRSA resource.
+6. Notice the last element in the array doesn't have a name. When a resource in composition fails validation, the resource object isn't created and doesn't have a name. For this particular issue, you must specify the namespace for the IRSA resource.
 
-#### Composition Definition
+#### Composite resource definition
 
-Debugging Composition Definitions is similar to debugging Compositions.
+Debugging Composite Resource Definition (XRD) is like debugging Compositions.
 
-1. Get XRD
+1. Get the XRD
+
     ```bash
     kubectl get xrd testing.awsblueprints.io
 
     NAME                       ESTABLISHED   OFFERED   AGE
     testing.awsblueprints.io                           66s
     ```
-2. Notice its status it not established. We describe this XRD to get its events
+2. Notice its status it not established. You describe this XRD to get its events.
+
     ```bash
     kubectl describe xrd testing.awsblueprints.io
 
@@ -211,15 +224,14 @@ Debugging Composition Definitions is similar to debugging Compositions.
     ----     ------              ----                   ----                                                             -------
     Normal   ApplyClusterRoles   3m19s (x3 over 3m19s)  rbac/compositeresourcedefinition.apiextensions.crossplane.io     Applied RBAC ClusterRoles
     Normal   RenderCRD           18s (x9 over 3m19s)    defined/compositeresourcedefinition.apiextensions.crossplane.io  Rendered composite resource CustomResourceDefinition
-    Warning  EstablishComposite  18s (x9 over 3m19s)    defined/compositeresourcedefinition.apiextensions.crossplane.io  cannot apply rendered composite resource CustomResourceDefinition: cannot create object: CustomResourceDefinition.apiextensions.k8s.io "testing.awsblueprints.io" is invalid: metadata.name: Invalid value: "testing.awsblueprints.io": must be spec.names.plural+"."+spec.group
+    Warning  EstablishComposite  18s (x9 over 3m19s)    defined/compositeresourcedefinition.apiextensions.crossplane.io  can't apply rendered composite resource CustomResourceDefinition: can't create object: CustomResourceDefinition.apiextensions.k8s.io "testing.awsblueprints.io" is invalid: metadata.name: Invalid value: "testing.awsblueprints.io": must be spec.names.plural+"."+spec.group
     ```
-3. We see in the events that CRD cannot be generated for this XRD. In this case, we need to ensure the name is `spec.names.plural+"."+spec.group`
-
+3. You see in the events that Crossplane can't generate corresponding CRDs for this XRD. In this case, ensure the name is `spec.names.plural+"."+spec.group`
 
 #### Providers
 
-There are two ways to install providers in Crossplane. Using `configuration.pkg.crossplane.io` and `provider.pkg.crossplane.io`. There are no functional differences to providers themselves. You can use either one to install providers.
-Note that if you define a `configuration.pkg.crossplane.io` object, Crossplane will create a `provider.pkg.crossplane.io` object. This object is managed by Crossplane. Please refer to [this guide](https://github.com/crossplane/crossplane/blob/master/docs/concepts/packages.md) for more information about Crossplane Packages.
+You can use install providers in two ways: `configuration.pkg.crossplane.io` and `provider.pkg.crossplane.io`. You can use either one to install providers with no functional differences to providers themselves.
+If you define a `configuration.pkg.crossplane.io` object, Crossplane creates a `provider.pkg.crossplane.io` object and manages it. Refer to [this guide](https://github.com/crossplane/crossplane/blob/master/docs/concepts/packages.md) for more information about Crossplane Packages.
 
 If you are experiencing provider issues, steps below are a good starting point. 
 
@@ -244,11 +256,11 @@ If you are experiencing provider issues, steps below are a good starting point.
         ----    ------                  ----                     ----                                 -------
         Normal  InstallPackageRevision  9m49s (x237 over 4d17h)  packages/provider.pkg.crossplane.io  Successfully installed package revision
     ```
-    In the output above we see that this provider is healthy. To get more information about this provider, we can dig deeper. The `Current Revision` field let us know of our next object to look at. 
+    In the output above you see that this provider is healthy. To get more information about this provider, you can dig deeper. The `Current Revision` field let you know of your next object to look at.
 
 
-2. When you create a provider object, Crossplane will create a `ProviderRevision` object based on the contents of the OCI image. In this example, we are specifying the OCI image to be `crossplane/provider-aws:v0.29.0`. This image contains a YAML file which defines many Kubernetes objects such as Deployment, ServiceAccount, and CRDs.
-The `ProviderRevision` object creates resources necessary for a provider to function based on the contents of the YAML file. To inspect what is deployed as part of the provider package, we inspect the ProviderRevision object. The `Current Revision` field above indicates which ProviderRevision object is currently used for this provider.
+2. When you create a provider object, Crossplane creates a `ProviderRevision` object based on the contents of the OCI image. In this example, you're specifying the OCI image to be `crossplane/provider-aws:v0.29.0`. This image contains a YAML file which defines Kubernetes objects such as Deployment, ServiceAccount, and CRDs.
+The `ProviderRevision` object creates resources necessary for a provider to function based on the contents of the YAML file. To inspect what's deployed as part of the provider package, you inspect the ProviderRevision object. The `Current Revision` field above indicates which ProviderRevision object this provider uses.
 
     ```bash
     kubectl get providerrevision provider-aws-a2e16ca2fc1a
@@ -257,8 +269,7 @@ The `ProviderRevision` object creates resources necessary for a provider to func
     provider-aws-a2e16ca2fc1a   True      1          crossplane/provider-aws:v0.29.0   Active                               19d
     ```
 
-    When you describe the object, you will find that many objects are managed by this same object. 
-    
+    When you describe the object, you find all CRDs managed by this object. 
 
     ```bash
     kubectl describe providerrevision provider-aws-a2e16ca2fc1a
@@ -276,13 +287,13 @@ The `ProviderRevision` object creates resources necessary for a provider to func
         Type    Reason             Age                    From                                         Message
         ----    ------             ----                   ----                                         -------
         Normal  SyncPackage        22m (x369 over 4d18h)  packages/providerrevision.pkg.crossplane.io  Successfully configured package revision
-        Normal  BindClusterRole    15m (x348 over 4d18h)  rbac/providerrevision.pkg.crossplane.io      Bound system ClusterRole to provider ServiceAccount(s)
+        Normal  BindClusterRole    15m (x348 over 4d18h)  rbac/providerrevision.pkg.crossplane.io      Bound system ClusterRole to provider ServiceAccount
         Normal  ApplyClusterRoles  15m (x364 over 4d18h)  rbac/providerrevision.pkg.crossplane.io      Applied RBAC ClusterRoles
     ```
     
-    The event field will also indicate any issues that may have occurred during this process. 
-
-3. If you do not see any errors in the event field above, you should check if deployments and pods were provisioned successfully. As a part of the provider configuration process, a deployment is created:
+    The event field also indicates any issues that may have occurred during this process.
+    <!-- vale  Google.WordList = YES -->
+3. If you don't see any errors in the event field above, you should check if Crossplane provisioned deployments and their status.
 
     ```bash
     kubectl get deployment -n crossplane-system
@@ -300,6 +311,7 @@ The `ProviderRevision` object creates resources necessary for a provider to func
     provider-aws-a2e16ca2fc1a-776769ccbd-4dqml   1/1     Running   0          4d23h
     ```
     If there are any pods failing, check its logs and remedy the problem.
+
 
 ## Pausing Crossplane
 
