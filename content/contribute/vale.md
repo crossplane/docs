@@ -29,13 +29,13 @@ Crossplane CI uses [Vale v2.22.0](https://github.com/errata-ai/vale/releases/tag
 Run Vale on all documentation from the command-line with
 
 ```shell
-vale --config="utils/vale/.vale.ini"` content/
+vale --config="utils/vale/.vale.ini" content/
 ```
 
 To run Vale on a single file use
 
 ```shell
-vale --config="utils/vale/.vale.ini"` content/contribute/writing-style-guide.md
+vale --config="utils/vale/.vale.ini" content/contribute/writing-style-guide.md
 ```
 
 {{<hint "tip" >}}
@@ -109,3 +109,4 @@ Do not turn off rules without good reasons.
 {{<hint "important" >}}
 Vale requires capitalization for `YES` and `NO` and a space around `=`.
 {{</hint >}}
+
