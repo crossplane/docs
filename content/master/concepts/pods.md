@@ -82,7 +82,8 @@ Crossplane monitors resources in one of two ways:
 Crossplane requests that Kubernetes notifies Crossplane of any changes on
 objects. This notification tool is a _watch_. 
 
-Watched objects include Providers and Composite Resource Definitions.
+Watched objects include providers, managed resources and composite resource 
+definitions.
 
 For objects that Kubernetes can't provide a watch for, Crossplane
 periodically poll the resource to find it's state. The default polling rate is
@@ -101,13 +102,57 @@ discovers changes in the cloud provider that require updating.
 
 Managed resources use polling.
 
+{{< hint "note" >}}
+Managed resources watch for Kubernetes events like deletion or changes to
+their `spec`. Managed resources rely on polling to detect changes in the
+provider environment.
+{{< /hint >}}
+
 Crossplane checks all resources, both watched and polled resources, to
 confirm they're in the desired state. Crossplane does this every one hour by
 default. Use the `--sync-interval` Crossplane pod argument to change this
 interval. 
 
-The most that Crossplane acts on objects is the 
-`--max-reconcile-rate` rate. This rate is 10 times per second by default.
+The `--max-reconcile-rate` rate defines two different settings at the same time:
+
+* The global retry rate for checking failed objects.
+* The number of threads created to reconcile resources.
+
+Reducing the `--max-reconcile-rate`, or making it smaller, increases the
+CPU resources Crossplane uses.
+
+Increasing the `--max-reconcile-rate`, or making it larger, reduces CPU 
+resources Crossplane uses, but increases the amount of time until changed 
+resources are fully synced. 
+
+{{< hint "important" >}}
+Most providers use their own `--max-reconcile-rate`. This determines the
+same settings for Providers and their managed resources. 
+{{< /hint >}}
+##### Reconcile retry rate
+
+When Crossplane checks a resource and it's not in the desired
+state they 100 times per second. If the resource is still not in the desired 
+state Crossplane checks the `--max-reconcile-rate` times per second. By default,
+the `--max-reconcile-rate` value of 10 means checking 10 times per second. 
+
+{{< hint "note" >}}
+Kubernetes defines the initial rate of 100 times per second. This isn't
+configurable.
+{{< /hint >}}
+
+All core Crossplane components share the retry rate. Each Provider
+implements their own retry rate. 
+
+##### Number of reconcilers
+
+The second value `--max-reconcile-rate` defines is the number of threads
+created to reconcile resources. Each thread manages the reconciliation of a
+specific resource. If there are more resources than configured threads,
+remaining resources must wait until a new thread is available. 
+
+Changing `--max-reconcile-rate` changes the number of threads Crossplane creates
+when more than one resource need reconciliation.
 
 Read the [Change Pod Settings]({{<ref "#change-pod-settings">}}) section for
 instructions on applying these settings. 
