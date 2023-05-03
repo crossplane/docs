@@ -5,7 +5,7 @@ description: Background on the components installed with Crossplane and their fu
 ---
 
 The base Crossplane installation consists of two pods, the `crossplane` pod and
-the `rbac-manager` pod. Both pods install in the `crossplane-system`
+the `crossplane-rbac-manager` pod. Both pods install in the `crossplane-system`
 namespace by default. 
 
 
@@ -13,10 +13,10 @@ namespace by default.
 
 ### Init container
 Before starting the core Crossplane container an _init_ container runs. The init
-container sets parameters related to the core Crossplane container and
-installing the core Crossplane 
+container installs the core Crossplane 
 [Custom Resource Definitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions)
-(`CRDs`).
+(`CRDs`), configures Crossplane webhooks and installs any supplied Providers or
+Configurations. 
 
 {{<hint "tip" >}}
 The Kubernetes documentation contains more information about 
@@ -32,7 +32,7 @@ The core CRDs installed by the init container include:
 * `locks` to manage package dependencies
 * `controllerconfigs` to apply settings to installed Providers
 * `storeconfigs` for connecting external secret stores like 
-[Hashicorp Vault](https://www.vaultproject.io/)
+[HashiCorp Vault](https://www.vaultproject.io/)
 
 {{< hint "note" >}}
 
@@ -75,9 +75,9 @@ and composite resources. Providers are responsible for reconciling their managed
 resources. 
 {{< /hint >}}
 
-Crossplane monitors resources in one of two ways:
-1. A Kubernetes _[watch](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)_
-2. Periodic polling
+Crossplane monitors resources through a Kubernetes 
+_[watch](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)_
+or through periodic polling. Some resources may be both watched and polled. 
 
 Crossplane requests that Kubernetes notifies Crossplane of any changes on
 objects. This notification tool is a _watch_. 
@@ -108,26 +108,27 @@ their `spec`. Managed resources rely on polling to detect changes in the
 provider environment.
 {{< /hint >}}
 
-Crossplane checks all resources, both watched and polled resources, to
+Crossplane checks all resources to
 confirm they're in the desired state. Crossplane does this every one hour by
 default. Use the `--sync-interval` Crossplane pod argument to change this
 interval. 
 
-The `--max-reconcile-rate` rate defines two different settings at the same time:
+The `--max-reconcile-rate` rate defines the rate, in times per second, 
+Crossplane reconciles resources. 
 
-* The global retry rate for checking failed objects.
-* The number of threads created to reconcile resources.
-
-Reducing the `--max-reconcile-rate`, or making it smaller, increases the
-CPU resources Crossplane uses.
-
-Increasing the `--max-reconcile-rate`, or making it larger, reduces CPU 
+Reducing the `--max-reconcile-rate`, or making it smaller, reduces CPU 
 resources Crossplane uses, but increases the amount of time until changed 
 resources are fully synced. 
 
+Increasing the `--max-reconcile-rate`, or making it larger, increases the
+CPU resources Crossplane uses but allows Crossplane to reconcile all resources
+faster. 
+
 {{< hint "important" >}}
 Most providers use their own `--max-reconcile-rate`. This determines the
-same settings for Providers and their managed resources. 
+same settings for Providers and their managed resources. Applying the
+`--max-reconcile-rate` to Crossplane only controls the rate for
+core Crossplane resources. 
 {{< /hint >}}
 ##### Reconcile retry rate
 
@@ -192,10 +193,10 @@ main RBAC manager container.
 <!-- vale Microsoft.HeadingAcronyms = YES -->
 
 The RBAC manager container preforms the following tasks:
-* creating and applying RBAC policies to Provider Service Accounts, allowing 
+* creating and binding RBAC roles to Provider Service Accounts, allowing 
   them to control their managed resources
 * allowing the `crossplane` Service Account to create managed resources
-* creating and applying policies for Crossplane composite resources
+* creating and binding RBAC roles for Crossplane composite resources
 
 When installing a Provider their service account needs permissions to create and 
 manage managed resources. 
@@ -207,11 +208,10 @@ The RBAC manager container manages these functions.
 
 The RBAC manager pod supports two policy options:
 * `All` - The default policy, configures and manages all RBAC capabilities.
-* `Basic` - Only manage policies related to Composite resources. 
+* `Basic` - Doesn't enable namespaced RBAC roles.
 
-Use the `Basic` policy option when manually assigning RBAC policies to
-Crossplane providers and provider resources. The RBAC manager still creates
-cluster roles for composite resources. 
+Using the `Basic` policy option prevents creating namespaced Crossplane RBAC
+roles and attaching RBAC annotations to Claims. 
 
 Change from the default `All` to the `Basic` policy with the `-m Basic` pod 
 argument.
