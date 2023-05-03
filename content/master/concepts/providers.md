@@ -25,12 +25,10 @@ Find more providers in the [Upbound Marketplace](https://marketplace.upbound.io)
 
 <!-- vale write-good.Passive = NO -->
 <!-- "are Managed" isn't passive in this context -->
-Providers define every external resources they can create in Kubernetes as a
+Providers define every external resource they can create in Kubernetes as a
 Kubernetes API endpoint. These endpoints are 
 [_Managed Resources_]({{<ref "managed-resources" >}}).
 <!-- vale write-good.Passive = YES -->
-
-Providers are cluster scoped and any namespace can access them.
 
 {{< hint "note" >}}
 Instructions on building your own Provider are outside of the scope of this
@@ -77,7 +75,7 @@ Crossplane supports installing Providers during an initial Crossplane
 installation with the Crossplane Helm chart.
 
 Use the 
-{{<hover label="helm" line="5" >}}--set provider.pacakges{{</hover >}} 
+{{<hover label="helm" line="5" >}}--set provider.packages{{</hover >}} 
 argument with `helm install`. 
 
 For example, to install the AWS Community Provider,
@@ -106,6 +104,12 @@ spec:
   packagePullSecrets:
     - name: my-secret
 ```
+
+{{< hint "note" >}}
+The Kubernetes secret object the Provider uses must be in the same namespace as
+the Crossplane pod.
+{{< /hint >}}
+
 ## Upgrade a Provider
 
 To upgrade an existing Provider edit the installed Provider Package by either
@@ -123,8 +127,9 @@ provider`.
 Removing a Provider without first removing the Provider's managed resources 
 may abandon the resources. The external resources aren't deleted.
 
-You must manually delete external resources through your cloud provider. Managed
-resources must be manually deleted by removing their finalizers. 
+If you remove the Provider first, you must manually delete external resources 
+through your cloud provider. Managed resources must be manually deleted by 
+removing their finalizers. 
 
 For more information on deleting abandoned resources read the [Crossplane
 troubleshooting guide]({{<ref "/knowledge-base/guides/troubleshoot#deleting-when-a-resource-hangs" >}}). 
