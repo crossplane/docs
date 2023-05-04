@@ -1,4 +1,8 @@
-const postcssLightningcss = require("postcss-lightningcss");
+const postcssLightningcss = require("postcss-lightningcss")({
+  browsers: ">= .25%",
+  lightningcssOptions: {
+  }
+});
 
 const purgecss = require('@fullhuman/postcss-purgecss')({
   content: ['./hugo_stats.json'],
