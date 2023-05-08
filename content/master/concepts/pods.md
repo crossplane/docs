@@ -28,10 +28,10 @@ packages with Crossplane, customizing the namespace Crossplane installs in and
 defining webhook configurations. 
 
 The core CRDs installed by the init container include: 
-* Composite Resource Definitions, Compositions, Configurations and Providers
-* `locks` to manage package dependencies
-* `controllerconfigs` to apply settings to installed Providers
-* `storeconfigs` for connecting external secret stores like 
+* CompositeResourceDefinitions, Compositions, Configurations and Providers
+* Locks to manage package dependencies
+* ControllerConfigs to apply settings to installed Providers
+* StoreConfigs for connecting external secret stores like 
 [HashiCorp Vault](https://www.vaultproject.io/)
 
 {{< hint "note" >}}
@@ -63,17 +63,17 @@ The main Crossplane container, called the _core_ container, enforces
 the desired state of Crossplane resources, manages leader elections and process
 webhooks. 
 
+{{<hint "note" >}}
+The Crossplane pod only reconciles core Crossplane components, including Claims
+and composite resources. Providers are responsible for reconciling their managed
+resources. 
+{{< /hint >}}
+
 #### Reconcile loop
 
 The core container operates on a _reconcile loop_, constantly checking the 
 status of deployed resources and correcting any "drift." After checking a 
 resource Crossplane waits some time and checks again.
-
-{{<hint "note" >}}
-The Crossplane pod only reconciles core Crossplane components, including claims
-and composite resources. Providers are responsible for reconciling their managed
-resources. 
-{{< /hint >}}
 
 Crossplane monitors resources through a Kubernetes 
 _[watch](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)_
@@ -82,8 +82,8 @@ or through periodic polling. Some resources may be both watched and polled.
 Crossplane requests that Kubernetes notifies Crossplane of any changes on
 objects. This notification tool is a _watch_. 
 
-Watched objects include providers, managed resources and composite resource 
-definitions.
+Watched objects include Providers, managed resources and 
+CompositeResourceDefinitions.
 
 For objects that Kubernetes can't provide a watch for, Crossplane
 periodically poll the resource to find it's state. The default polling rate is
@@ -125,25 +125,19 @@ CPU resources Crossplane uses but allows Crossplane to reconcile all resources
 faster. 
 
 {{< hint "important" >}}
-Most providers use their own `--max-reconcile-rate`. This determines the
+Most Providers use their own `--max-reconcile-rate`. This determines the
 same settings for Providers and their managed resources. Applying the
 `--max-reconcile-rate` to Crossplane only controls the rate for
 core Crossplane resources. 
 {{< /hint >}}
 ##### Reconcile retry rate
 
-When Crossplane checks a resource and it's not in the desired
-state they 100 times per second. If the resource is still not in the desired 
-state Crossplane checks the `--max-reconcile-rate` times per second. By default,
-the `--max-reconcile-rate` value of 10 means checking 10 times per second. 
+The `--max-reconcile-rate` setting configures the number of times per second
+Crossplane or a provider attempts to correct a resource. The default value is 
+10 times per second.
 
-{{< hint "note" >}}
-Kubernetes defines the initial rate of 100 times per second. This isn't
-configurable.
-{{< /hint >}}
-
-All core Crossplane components share the retry rate. Each Provider
-implements their own retry rate. 
+All core Crossplane components share the reconcile rate. Each Provider
+implements their own max reconcile rate setting. 
 
 ##### Number of reconcilers
 
@@ -175,6 +169,20 @@ The
 provides more comprehensive details on the Crossplane RBAC requirements.
 {{< /hint >}}
 
+### Disable the RBAC manager 
+
+Disable the RBAC manager after installation by deleting the
+`crossplane-rbac-manager` deployment from the `crossplane-system` namespace.
+
+Disable the RBAC manager before installation by editing the Helm `values.yaml`
+file, setting `rbacManager.deploy` to `false`.
+
+{{< hint "note" >}}
+
+Instructions for changing Crossplane pod settings during installation are in the
+[Crossplane Install]({{<ref "../software/install">}}) section. 
+{{< /hint >}}
+
 <!-- vale Microsoft.HeadingAcronyms = NO -->
 <!-- allow 'RBAC' since that's the name -->
 ### RBAC init container
@@ -186,44 +194,99 @@ The RBAC manager requires the `CompositeResourceDefinition` and
 The RBAC manager init container waits for these resources before starting the 
 main RBAC manager container. 
 
-
-<!-- vale Microsoft.HeadingAcronyms = NO -->
-<!-- allow 'RBAC' since that's the name -->
 ### RBAC manager container
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 The RBAC manager container preforms the following tasks:
-* creating and binding RBAC roles to Provider Service Accounts, allowing 
+* creating and binding RBAC roles to Provider ServiceAccounts, allowing 
   them to control their managed resources
-* allowing the `crossplane` Service Account to create managed resources
-* creating and binding RBAC roles for Crossplane composite resources
+* allowing the `crossplane` ServiceAccount to create managed resources
+* creating ClusterRoles to access Crossplane resources in all namespaces
+* creating Roles to access Crossplane resources in specific namespaces
 
-When installing a Provider their service account needs permissions to create and 
-manage managed resources. 
+Use the [ClusterRoles]({{<ref "#crossplane-clusterroles">}}) to grant access to all Crossplane resources in the
+cluster.  
+Use the [Roles]({{<ref "#crossplane-roles" >}}) to only grant access to Crossplane Claims. 
 
-When creating composite resources the Crossplane service account needs
-permissions for the newly created API endpoints. 
+#### Crossplane ClusterRoles
 
-The RBAC manager container manages these functions. 
+The RBAC manager creates four Kubernetes ClusterRoles. These Roles grant 
+permissions over cluster wide Crossplane resources. 
 
-The RBAC manager pod supports two policy options:
-* `All` - The default policy, configures and manages all RBAC capabilities.
-* `Basic` - Doesn't enable namespaced RBAC roles.
+<!-- vale Google.Headings = NO -->
+<!-- disable heading checking for the role names -->
+<!-- vale Google.WordList = NO -->
+<!-- allow "admin" -->
+##### crossplane-admin
+<!-- vale Google.WordList = YES -->
 
-Using the `Basic` policy option prevents creating namespaced Crossplane RBAC
-roles and attaching RBAC annotations to Claims. 
+The `crossplane-admin` ClusterRole has the following permissions:
+  * full access to all Crossplane types
+  * full access to all secrets and namespaces (even those unrelated to Crossplane)
+  * read-only access to all cluster RBAC roles, CustomResourceDefinitions and
+    events
+  * ability to bind RBAC roles to other entities. 
 
-Change from the default `All` to the `Basic` policy with the `-m Basic` pod 
-argument.
+View the full RBAC policy with 
 
-To control all RBAC roles and policies related to Crossplane resources and
-providers, you can disable the RBAC manager. 
+```shell
+kubectl describe clusterrole crossplane:aggregate-to-admin
+```
 
-Disable the RBAC manager after installation by deleting the
-`crossplane-rbac-manager` deployment from the `crossplane-system` namespace.
+##### crossplane-edit
 
-Disable the RBAC manager before installation by editing the Helm `values.yaml`
-file, setting `rbacManager.deploy` to `false`.
+The `crossplane-edit` ClusterRole has the following permissions:
+
+  * full access to all Crossplane types
+  * full access to all secrets (even those unrelated to Crossplane)
+  * read-only access to all namespaces and events (even those unrelated to Crossplane).
+
+View the full RBAC policy with 
+
+```shell
+kubectl describe clusterrole crossplane:aggregate-to-edit
+```
+
+##### crossplane-view
+
+The `crossplane-view` ClusterRole has the following permissions:
+
+  * read-only access to all Crossplane types
+  * read-only access to all namespaces and events (even those unrelated to Crossplane).
+
+View the full RBAC policy with 
+
+```shell
+kubectl describe clusterrole crossplane:aggregate-to-view
+```
+
+##### crossplane-browse
+
+The `crossplane-browse` ClusterRole has the following permissions:
+
+  * read-only access to all Crossplane types
+  * read-only access to all namespaces and events (even those unrelated to Crossplane).
+
+View the full RBAC policy with 
+
+```shell
+kubectl describe clusterrole crossplane:aggregate-to-browse
+```
+
+#### Crossplane Roles
+By default the RBAC manager creates three Roles in every namespace. These Roles 
+grant access to Claims in a specific namespace. The RBAC manager dynamically 
+updates the Roles to access the specific API endpoints in a Claim. 
+
+{{< hint "note" >}}
+The specific details of the namespace Roles are beyond this guide. For more
+information read the [Composite Resource ClusterRole
+Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
+section of the RBAC Manager design document.
+{{< /hint >}}
+
+You can disable these namespace specific roles by configuring the RBAC manager
+with `--manage=Basic`.
+
 
 {{< hint "note" >}}
 
