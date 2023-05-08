@@ -11,10 +11,11 @@ exceptions:
   - BigQuery
   - Claim
   - CLI
+  - ClusterRoles
   - Code
+  - Composite Resource Definitions
   - Composite Resources
   - CompositeResourceDefinition
-  - Composite Resource Definitions
   - Composition
   - Cosmos
   - Crossplane
