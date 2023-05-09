@@ -334,7 +334,7 @@ A _Composite Resource_ uses those options and the _Composition_ maps them
 to specific cloud provider settings. 
 
 The following _Composite Resource Definition_ defines a {{<hover label="specVersions" line="17" >}}storage{{< /hover >}}
-parameter. The size is a 
+parameter. The storage is a 
 {{<hover label="specVersions" line="18">}}string{{< /hover >}} 
 and the OpenAPI 
 {{<hover label="specVersions" line="19" >}}oneOf{{< /hover >}} requires the
@@ -364,7 +364,7 @@ spec:
                   - pattern: '^small$'
                   - pattern: '^large$'
             required:
-            - size  
+            - storage  
 ```
 
 A _Composite Resource Definition_ can define a wide variety of settings and options. 
@@ -448,10 +448,32 @@ spec:
   size: "large"
 ```
 
-A _Claim_ can define a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
+A _Claim_ can install in a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
 The _Composite Resource Definition_ defines the 
-{{<hover label="claim" line="7">}}spec{{< /hover >}} like a _Custom Resource_.
+{{<hover label="claim" line="7">}}spec{{< /hover >}} options the same way it
+does for a _Composite Resource_ 
+{{<hover label="xr-claim" line="6">}}spec{{< /hover >}}.
 
+{{< hint "tip" >}}
+_Composite Resources_ and _Claims_ are similar.   
+Only _Claims_ can be in
+a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
+Also the _Composite Resource's_ {{<hover label="xr-claim"
+line="3">}}kind{{</hover >}} may be different than the _Claim's_
+{{<hover label="claim" line="3">}}kind{{< /hover >}}.  
+The _Composite Resource Definition_ defines the 
+{{<hover label="xrdClaim2" line="7">}}kind{{</hover >}} values.
+{{< /hint >}}
+
+```yaml {label="xr-claim"}
+# Composite Resource (XR)
+apiVersion: test.example.org/v1alpha1
+kind: myComputeResource
+metadata:
+  name: myResource
+spec:
+  storage: "large"
+```
 
 _Claims_ are namespace scoped.
 
