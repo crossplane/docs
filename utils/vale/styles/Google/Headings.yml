@@ -9,37 +9,39 @@ indicators:
 exceptions:
   - Azure
   - BigQuery
+  - Claim
   - CLI
   - Code
+  - Composite Resources
+  - CompositeResourceDefinition
+  - Composition
   - Cosmos
   - Crossplane
   - Docker
   - DynamoDB
   - Emmet
+  - gRPC
+  - Hashicorpterms
+  - Helm
   - Helm
   - Hugo
-  - gRPC
-  - Helm
   - I
   - Kubernetes
   - Linux
   - macOS
   - Marketplace
   - MongoDB
+  - Pod
+  - Provider
   - ProviderConfig
   - Pub/Sub
   - REPL
+  - StoreConfig
   - Studio
   - TypeScript
   - URLs
   - Vale
+  - Vault
   - Visual
   - VS
   - Windows
-  - Vault
-  - Hashicorpterms
-  - StoreConfig
-  - Provider
-  - CompositeResourceDefinition
-  - Composition
-  - Claim
