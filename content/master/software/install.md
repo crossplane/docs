@@ -11,8 +11,14 @@ If you don't have a Kubernetes cluster create one locally with [Kind](https://ki
 {{< /hint >}}
 
 ## Prerequisites
-* [Kubernetes](https://kubernetes.io/releases/) version `v1.16.0` or later
+* [Kubernetes](https://kubernetes.io/releases/) version `v1.23.0` or later
 * [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
+
+{{< hint "note" >}}
+Crossplane supports the versions of Kubernetes [supported by the
+Kubernetes
+community](https://kubernetes.io/releases/patch-releases/#support-period).
+{{< /hint >}} 
 
 ## Install Crossplane
 
@@ -140,7 +146,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `rbacManager.affinity` | Enable affinity for the Crossplane RBAC Manager pod. | `{}` |
 | `rbacManager.deploy` | Deploy the Crossplane RBAC Manager pod and its required roles. | `true` |
 | `rbacManager.leaderElection` | Enable the leader election for the Crossplane RBAC Managers pod. | `true` |
-| `rbacManager.managementPolicy`| The extent to which the Crossplane RBAC manager manages permissions. Setting `rbacManager.managementPolicy` to `All` the Crossplane RBAC contoller manages all Crossplane controller and user roles. Setting `rbacManager.managementPolicy` to `Basic` the Crossplane RBAC controller only manages `crossplane-admin`, `crossplane-edit`, and `crossplane-view` user roles. | `All` |
+| `rbacManager.managementPolicy`| The extent to which the Crossplane RBAC manager manages permissions. Setting `rbacManager.managementPolicy` to `All` the Crossplane RBAC controller manages all Crossplane controller and user roles. Setting `rbacManager.managementPolicy` to `Basic` the Crossplane RBAC controller only manages `crossplane-admin`, `crossplane-edit`, and `crossplane-view` user roles. | `All` |
 | `rbacManager.nodeSelector` | Enable a node selector for the Crossplane RBAC Manager pod. | `{}` |
 | `rbacManager.replicas` | The number of replicas to run for the Crossplane RBAC Manager pods. | `1` |
 | `rbacManager.skipAggregatedClusterRoles` | Don't deploy RBAC aggregated ClusterRoles. | `false` |
@@ -203,7 +209,7 @@ crossplane-stable/crossplane \
 --set image.pullPolicy=Always
 ```
 
-Helm supports multiple, comma-seperated, arguments.
+Helm supports comma-seperated arguments.
 
 For example, to change the image pull policy and number of replicas:
 
