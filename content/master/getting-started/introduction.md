@@ -8,7 +8,7 @@ non-Kubernetes resources, and allows platform teams to build custom Kubernetes
 APIs to consume those resources.
 
 Crossplane creates Kubernetes
-[Custom Resource Definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
+[CustomResourceDefinitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
 (`CRDs`) to represent the external resources as native 
 [Kubernetes objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/). 
 As native Kubernetes objects, you can use standard commands like `kubectl create`
@@ -18,7 +18,7 @@ for every Crossplane resource.
 
 Crossplane also acts as a
 [Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/)
-to monitor the state of the external resources and provide state enforcement. If
+to watch the state of the external resources and provide state enforcement. If
 something modifies or deletes a resource outside of Kubernetes, Crossplane reverses
 the change or recreates the deleted resource.
 
@@ -37,18 +37,18 @@ This table provides a summary of Crossplane components and their roles.
 {{< table "table table-hover table-sm">}}
 | Component | Abbreviation | Scope | Summary |
 | --- | --- | --- | ---- | 
-| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
+| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes CustomResourceDefinitions for an external service. |
 | [ProviderConfig]({{<ref "#provider-configurations">}}) | `PC` | cluster | Applies settings for a _Provider_. |
-| [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
+| [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A Provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
 | [Composition]({{<ref "#compositions">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
 | [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
-| [Composite Resource Definitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
+| [CompositeResourceDefinitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
 | [Claims]({{<ref "#claims" >}}) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
 {{< /table >}}
 
 ## The Crossplane Pod
 When installed in a Kubernetes cluster Crossplane creates an initial set of
-Custom Resource Definitions (`CRDs`) of the core Crossplane components. 
+CustomResourceDefinitions (`CRDs`) of the core Crossplane components. 
 
 {{< expand "View the initial Crossplane CRDs" >}}
 After installing Crossplane use `kubectl get crds` to view the Crossplane
@@ -120,7 +120,7 @@ _ProviderConfigs_ are cluster scoped and available to all cluster namespaces.
 
 View all installed ProviderConfigs with the command `kubectl get providerconfig`.
 
-## Managed Resources
+## Managed resources
 A Provider's CRDs map to individual _resources_ inside the provider. When
 Crossplane creates and monitors a resource it's a _Managed Resource_.
 
@@ -291,10 +291,10 @@ in a _Composite Resource_ .
 * The {{< hover label="specGroup" line="7" >}}versions.name{{</hover >}} 
 that defines the version used in a _Composite Resource_.
 * A {{< hover label="specGroup" line="5" >}}names.kind{{</hover >}}
-to define the _Custom Resource_ 
+to define the _Composite Resource_ 
 {{< hover label="xr2" line="3" >}}kind{{</hover>}}.
 * A {{< hover label="specGroup" line="8" >}}versions.schema{{</hover>}} section
-to define the _Custom Resource_ {{<hover label="xr2" line="6" >}}spec{{</hover >}}.
+to define the _Composite Resource_ {{<hover label="xr2" line="6" >}}spec{{</hover >}}.
 
 ```yaml {label="specGroup"}
 # Composite Resource Definition (XRD)
@@ -331,7 +331,7 @@ cloud provider's compute class names like AWS's `m6in.large` or GCP's
 
 A _Composite Resource Definition_ can limit the choices to `small` or `large`.
 A _Composite Resource_ uses those options and the _Composition_ maps them
-to specific cloud provider settings settings. 
+to specific cloud provider settings. 
 
 The following _Composite Resource Definition_ defines a {{<hover label="specVersions" line="17" >}}storage{{< /hover >}}
 parameter. The size is a 
@@ -367,19 +367,19 @@ spec:
             - size  
 ```
 
-A _Custom Resource Definition_ can define a wide variety of settings and options. 
+A _Composite Resource Definition_ can define a wide variety of settings and options. 
 
-Creating a _Custom Resource Definition_ enables the creation of _Custom
+Creating a _Composite Resource Definition_ enables the creation of _Composite
 Resources_ but can also create a _Claim_.
 
-_Custom Resource Definitions_ with a `spec.claimNames` allow developers to
+_Composite Resource Definitions_ with a `spec.claimNames` allow developers to
 create _Claims_.
 
 For example, the 
 {{< hover label="xrdClaim" line="6" >}}claimNames.kind{{</hover >}}
 allows the creation of _Claims_ of `kind: computeClaim`.
 ```yaml {label="xrdClaim"}
-# Custom Resource Definition (XRD)
+# Composite Resource Definition (XRD)
 spec:
   group: test.example.org
   names:
@@ -392,11 +392,11 @@ spec:
 ## Claims
 _Claims_ are the primary way developers interact with Crossplane. 
 
-_Claims_ access the custom APIs defined by the platform team in a _Custom
+_Claims_ access the custom APIs defined by the platform team in a _Composite
 Resource Definition_.
 
-_Claims_ look like _Custom Resources_, but they're namespace scoped,
-while _Custom Resources_ are cluster scoped. 
+_Claims_ look like _Composite Resources_, but they're namespace scoped,
+while _Composite Resources_ are cluster scoped. 
 
 {{< hint "note" >}}
 **Why does namespace scope matter?**  
@@ -404,7 +404,7 @@ Having namespace scoped _Claims_ allows multiple teams, using unique namespaces,
 to create the same types of resources, independent of each other. The compute
 resources of team-A are unique to the compute resources of team-B.
 
-Directly creating _Custom Resources_ requires cluster-wide permissions,
+Directly creating _Composite Resources_ requires cluster-wide permissions,
 shared with all teams.   
 _Claims_ create the same set of resources, but on a namespace level.
 {{< /hint >}}
@@ -418,7 +418,7 @@ Claims use the same
 defined in _Composite Resource Definition_ and also used by 
 _Composite Resources_.
 ```yaml {label="xrdClaim2"}
-# Custom Resource Definition (XRD)
+# Composite Resource Definition (XRD)
 spec:
   group: test.example.org
   names:
@@ -431,10 +431,10 @@ spec:
 In an example _Claim_ the 
 {{<hover label="claim" line="2">}}apiVersion{{< /hover >}}
 matches the {{<hover label="xrdClaim2" line="3">}}group{{< /hover >}} in the
-_Custom Resource Definition_. 
+_Composite Resource Definition_. 
 
 The _Claim_ {{<hover label="claim" line="3">}}kind{{< /hover >}} matches the
-_Custom Resource Definition_ 
+_Composite Resource Definition_ 
 {{<hover label="xrdClaim2" line="7">}}claimNames.kind{{< /hover >}}.
 
 ```yaml {label="claim"}
@@ -449,7 +449,7 @@ spec:
 ```
 
 A _Claim_ can define a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
-The _Custom Resource Definition_ defines the 
+The _Composite Resource Definition_ defines the 
 {{<hover label="claim" line="7">}}spec{{< /hover >}} like a _Custom Resource_.
 
 
