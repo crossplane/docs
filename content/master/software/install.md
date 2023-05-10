@@ -11,14 +11,9 @@ If you don't have a Kubernetes cluster create one locally with [Kind](https://ki
 {{< /hint >}}
 
 ## Prerequisites
-* [Kubernetes](https://kubernetes.io/releases/) version `v1.23.0` or later
+* An actively [supported Kubernetes version](https://kubernetes.io/releases/patch-releases/#support-period)
 * [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
 
-{{< hint "note" >}}
-Crossplane supports the versions of Kubernetes [supported by the
-Kubernetes
-community](https://kubernetes.io/releases/patch-releases/#support-period).
-{{< /hint >}} 
 
 ## Install Crossplane
 
