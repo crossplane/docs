@@ -20,6 +20,13 @@
     color: var(--body-font-color);
 }
 
+@include media-breakpoint-up(lg) {
+.home-search {
+    display: flex !important;
+
+}
+}
+
 .list-group-item {
     border-color: var(--dropdown-border-color);
     background: var(--body-background);
