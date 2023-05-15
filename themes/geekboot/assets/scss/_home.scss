@@ -27,6 +27,7 @@
 }
 }
 
+/* purgecss start ignore */
 #tooltip {
     display: inline-block;
     background: $brightSun;
@@ -76,6 +77,7 @@
   #tooltip[data-popper-placement^='right'] > #arrow {
     left: -4px;
   }
+/* purgecss end ignore */
 
 .list-group-item {
     border-color: var(--dropdown-border-color);
