@@ -8,7 +8,7 @@ color-theme="light">
   {{ block "body_override" . }}<body>{{ end }}
     {{ partialCached "icons" . }}
 
-    {{ partialCached "docs-navbar" . }}
+    {{ partialCached "docs-navbar" . .IsHome }}
 
     {{ block "main" . }}
     {{ end }}
