@@ -276,7 +276,7 @@ resources:
 ```
 <!-- vale Google.We = NO -->
 Patching is a powerful tool enabling simpler or abstracted APIs. A developer
-doesn't need to know the specific AWS region identifier, only the abstracted
+isn't required to know the specific AWS region identifier, only the abstracted
 option of "EU" or "US."
 <!-- vale Google.We = YES -->
 
@@ -372,9 +372,9 @@ kubectl describe table | grep arn:aws
 <!-- vale Google.We = NO -->
 Using {{<hover label="claim" line="8" >}}region: "EU"{{</hover >}} patches the
 _composite resource_, updating the AWS region from `us-east-2` to `eu-north-1`.
-The developer creating the claim doesn't need to know which specific AWS region
-or the naming conventions. Using the abstract API options of "EU" or "US" the
-developer places their resources in the desired location.
+The developer creating the claim isn't required to know which specific AWS 
+region or the naming conventions. Using the abstract API options of "EU" or "US" 
+the developer places their resources in the desired location.
 <!-- vale Google.We = YES -->
 
 Deleting the claim removes the _managed resources_.
