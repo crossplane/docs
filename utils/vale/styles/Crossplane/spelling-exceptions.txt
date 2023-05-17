@@ -27,6 +27,7 @@ shortcodes
 SLAs
 stdin
 stdout
+subnet
 tolerations
 Upbound
 Upbound's
