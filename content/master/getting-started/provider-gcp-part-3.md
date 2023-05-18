@@ -286,7 +286,7 @@ resources:
 ```
 <!-- vale Google.We = NO -->
 Patching is a powerful tool enabling simpler or abstracted APIs. Developers
-don't need to know the specific GCP region, just the abstracted
+aren't required to know the specific GCP region, just the abstracted
 option of "EU" or "US."
 <!-- vale Google.We = YES -->
 
@@ -392,9 +392,9 @@ Using {{<hover label="claim" line="8" >}}location: "EU"{{</hover >}} in the
 claim patches the _composite resource_, updating the `Topic` GCP region from 
 `us-central1` to `europe-central-2` and the `Bucket` from GCP region `US` to GCP
 region `EU`.  
-The developer creating the claim doesn't need to know which specific GCP region
-or the naming conventions. Using the abstract API options of "EU" or "US" the
-developer places their resources in the desired location.
+The developer creating the claim isn't required to know which specific GCP 
+region or the naming conventions. Using the abstract API options of "EU" or "US" 
+the developer places their resources in the desired location.
 
 In this example, patching also allows platform teams to ensure all resources are 
 in the same location.
@@ -501,7 +501,7 @@ metadata:
   name: crossplane-gcp-quickstart
 spec:
   crossplane:
-    version: ">=v1.11.0"
+    version: ">=v1.12.0"
   dependsOn:
     - provider: xpkg.upbound.io/upbound/provider-gcp
       version: ">=v0.28.0"
