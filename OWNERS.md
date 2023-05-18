@@ -33,6 +33,8 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 * Daren Iott <daren@upbound.io> ([nullable-eth](https://github.com/nullable-eth))
 * Ezgi Demirel <ezgi@upbound.io> ([ezgidemirel](https://github.com/ezgidemirel))
 * Max Blatt ([MisterMX](https://github.com/MisterMX))
+* Philippe Scorsolini <philippe.scorsolini@upbound.io> ([phisco](https://github.com/phisco))
+* Lovro Sviben <lovro.sviben@upbound.io> ([lsviben](https://github.com/lsviben))
 
 ## Emeritus maintainers
 
