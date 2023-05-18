@@ -86,7 +86,11 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
+<<<<<<< HEAD
   projectID: $@<PROJECT_ID>$@
+=======
+  projectID: $$<PROJECT_ID>$$
+>>>>>>> 77a5ec7 (Updates GCP quickstarts to match v1.11's three-part guide (#446))
   credentials:
     source: Secret
     secretRef:
