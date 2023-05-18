@@ -501,7 +501,7 @@ metadata:
   name: crossplane-gcp-quickstart
 spec:
   crossplane:
-    version: ">=v1.11.0"
+    version: ">=v1.12.0"
   dependsOn:
     - provider: xpkg.upbound.io/upbound/provider-gcp
       version: ">=v0.28.0"
