@@ -18,10 +18,27 @@
     <main class="bd-main order-1">
       <div class="bd-intro pt-2 ps-lg-2">
         <div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
-          <div class="mb-3 mb-md-0 d-flex">
-            {{ if $.Param "docs" }}
-              {{ partial "version-dropdown-menu" . }}
+          <div class="mb-3 mb-md-0">
+            <table class="table table-sm">
+            {{ if .Page.Params.alpha }}
+              <tr>
+                <td><code>v1alpha</code></td>
+                <td>{{.Page.Params.alpha}}</td>
+              </tr>
             {{ end }}
+            {{ if .Page.Params.beta }}
+            <tr>
+              <td><code>v1beta</code></td>
+              <td>{{.Page.Params.beta}}</td>
+            </tr>
+            {{ end }}
+            {{ if .Page.Params.v1 }}
+            <tr>
+              <td><code>v1</code></td>
+              <td>{{.Page.Params.v1}}</td>
+            </tr>
+            {{ end }}
+            </table>
           </div>
           <h1 class="bd-title mb-0" id="content">{{ .Title | markdownify }}</h1>
         </div>
