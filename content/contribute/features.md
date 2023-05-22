@@ -172,11 +172,7 @@ shortcode](https://gohugo.io/content-management/shortcodes/#ref-and-relref)
 with the path of the file relative to `/content` for the link location.
 
 For example, to link to the `master` release index page use
-```markdown
-[master branch documentation]({{</* ref "master/_index.md" */>}})
-```
 
-<!-- [master branch documentation]({{<ref "master/_index.md" >}}) -->
 
 The `ref` value is of the markdown file, including `.md` extension.
 

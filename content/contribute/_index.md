@@ -1,6 +1,6 @@
 ---
 title: "Contributing Guide"
-weight: -1
+weight: 1000
 cascade:
     version: "0"
     docs: false
