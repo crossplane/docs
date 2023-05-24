@@ -3,6 +3,150 @@ title: Managed Resources
 weight: 102
 ---
 
+A _managed resource_ (`MR`) represents an external service in a Provider. When
+asking a Provider to create an external resource, the Provider creates a managed resource
+inside the Kubernetes cluster. Every external service managed by Crossplane maps
+to a managed resource. 
+
+{{< hint "note" >}}
+Crossplane calls the object inside Kubernetes a _managed resource_ and the
+external object inside the Provider an _external resource_.
+{{< /hint >}}
+
+Examples of managed resources include:
+* Amazon AWS EC2 [`Instance`](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/resources/ec2.aws.upbound.io/Instance/v1beta1)
+* Google Cloud GKE [`Cluster`](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/resources/container.gcp.upbound.io/Cluster/v1beta1)
+* Microsoft Azure Postgre [`Database`](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/resources/dbforpostgresql.azure.upbound.io/Database/v1beta1)
+
+{{< hint "tip" >}}
+
+You can create individual managed resources, but Crossplane recommends using
+[Compositions]({{<ref "../concepts/composition" >}}) and Claims to create
+managed resources.
+{{< /hint >}}
+
+## Managed resource fields
+
+The Provider defines the group, Kind and version of a managed resource. The
+Provider also define the available settings of a managed resource.
+
+### Group, kind and version
+Each managed resource is a unique API endpoint with their own
+group, Kind and version. 
+
+For example the [Upbound AWS
+Provider](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/)
+defines the {{<hover label="gkv" line="2">}}Instance{{</hover>}} Kind from the
+group {{<hover label="gkv" line="1">}}ec2.aws.upbound.io{{</hover>}}
+
+```yaml {label="gkv"}
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Instance
+```
+
+<!-- vale off -->
+### deletionPolicy
+<!-- vale on --> 
+
+A managed resource's `deletionPolicy` tells the Provider what to do after
+deleting the managed resource. If the `deletionPolicy` is `delete` the Provider
+deletes the external resource as well. If the `deletionPolicy` is `orphan` 
+
+#### Options
+* `deletionPolicy: delete` - Delete the external resource when deleting the managed resource. _Default value_
+* `deletionPolicy: orphan` - Leave the external resource when deleting the managed resource. 
+
+<!-- vale off -->
+### forProvider
+<!-- vale on -->
+
+The {{<hover label="forProvider" line="4">}}spec.forProvider{{</hover>}} of a managed resource maps to the parameters of the
+external resource. 
+
+For example, when creating an AWS EC2 instance the Provider supports defining the 
+AWS {{<hover label="forProvider" line="5">}}region{{</hover>}} and the VM size,
+called the {{<hover label="forProvider" line="6">}}instanceType{{</hover>}}.
+
+```yaml {label="forProvider"}
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Instance
+spec:
+  forProvider:
+    region: us-west-1
+    instanceType: t2.micro
+```
+
+{{< hint "note" >}}
+The Provider defines the settings and their valid values. Providers also define
+the required values in the `forProvider` definition.
+
+Refer to the documentation for your specific Provider for details. 
+{{< /hint >}}
+
+
+<!-- vale off -->
+### managementPolicy
+<!-- vale on --> 
+
+<!-- vale off -->
+### providerConfigRef
+<!-- vale on -->
+
+The `providerConfigRef` on a managed resource tells the Provider which
+[ProviderConfig]({{<ref "../concepts/providers#provider-configuration">}}) to
+use when creating the managed resource.  
+
+A ProviderConfig commonly defines the authentication to use when communicating to
+the Provider.
+
+{{< hint "important" >}}
+If `providerConfigRef` isn't applied, Providers use the ProviderConfig named `default`.
+{{< /hint >}}
+
+For example, a managed resource references a ProviderConfig named {{<hover label="pcref"
+line="6">}}user-keys{{</hover>}}.
+
+This matches the {{<hover label="pc" line="4">}}name{{</hover>}} of a ProviderConfig.
+
+```yaml {label="pcref"}
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Instance
+spec:
+  forProvider:
+    # Removed for brevity
+  providerConfigRef: user-keys
+```
+
+```yaml {label="pc"}
+apiVersion: aws.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: user-keys
+# Removed for brevity
+```
+
+{{< hint "tip" >}}
+Different managed resources can reference different ProviderConfigs. This allows
+different managed resources to authenticate with different credentials with the
+same Provider. 
+{{< /hint >}}
+
+<!-- vale off -->
+### providerRef
+<!-- vale on --> 
+
+Crossplane deprecated the `providerRef` field in `crossplane-runtime` 
+[v0.10.0](https://github.com/crossplane/crossplane-runtime/releases/tag/v0.10.0). 
+Managed resources using `providerRef`must use `providerConfigRef`.
+
+<!-- vale off -->
+### publishConnectionDetailsTo
+<!-- vale on --> 
+
+<!-- vale off -->
+### writeConnectionSecretToRef
+<!-- vale on --> 
+
 A Managed Resource (MR) is Crossplane's representation of a resource in an
 external system - most commonly a cloud provider. Managed Resources are
 opinionated, Crossplane Resource Model ([XRM]({{<ref "../concepts/terminology">}})) compliant Kubernetes
