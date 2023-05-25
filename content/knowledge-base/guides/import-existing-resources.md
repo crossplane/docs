@@ -4,12 +4,14 @@ weight: 200
 ---
 
 If you have resources that are already provisioned in a Provider,
-you can import them as managed resources and let Crossplane manage them. 
+you can import them as managed resources and let Crossplane manage them.
+A managed resource's [`managementPolicy`]({{<ref
+"/v1.12/concepts/managed-resources#managementPolicy">}}) field enables importing
+external resources into Crossplane.
 
 Crossplane can import resources either [manually]({{<ref
 "#import-resources-manually">}}) or [automatically]({{<ref
 "#import-resources-automatically">}}).
-
 
 ## Import resources manually
 
@@ -20,10 +22,8 @@ To import an existing external resource in a Provider, create a new managed
 resource with a `metadata.annotations.crossplane.io/external-name` value. Set
 the `external-name` to the name of the resource in the Provider.
 
-Leave the `spec.forProvider` field empty. Crossplane imports the settings and
-applies them to the managed resource. 
-
-For example, to import an existing GCP Network named `my-existing-network`,
+For example, to import an existing GCP Network named 
+{{<hover label="annotation" line="5">}}my-existing-network{{</hover>}},
 create a new managed resource and use the 
 {{<hover label="annotation" line="5">}}my-existing-network{{</hover>}} in the
 annotation. 
@@ -36,89 +36,136 @@ metadata:
     crossplane.io/external-name: my-existing-network
 ```
 
+The {{<hover label="name" line="5">}}metadata.name{{</hover>}} 
+field can be anything you want. For example, 
+{{<hover label="name" line="5">}}imported-network{{</hover>}}. 
 
+{{< hint "note" >}}
+This name is the 
+name of the Kubernetes object. It's not related to the resource name inside the
+Provider. 
+{{< /hint >}}
 
-## Import resources automatically 
-
-
-What
-you need to do is to enter the name of the external resource as well as the
-required fields on the managed resource. For example, let's say I have a GCP
-Network provisioned from GCP console and I would like to migrate it to
-Crossplane. Here is the YAML that I need to create:
-
-```yaml
+```yaml {label="name"}
 apiVersion: compute.gcp.crossplane.io/v1beta1
 kind: Network
 metadata:
-  name: foo-network
   annotations:
-    crossplane.io/external-name: existing-network
-spec:
-  forProvider: {}
-  providerConfigRef:
-    name: default
+    name: imported-network
+    crossplane.io/external-name: my-existing-network
 ```
 
-Crossplane will check whether a GCP Network called `existing-network` exists,
-and if it does, then the optional fields under `forProvider` will be filled with
-the values that are fetched from the provider.
+Leave the 
+{{<hover label="fp" line="8">}}spec.forProvider{{</hover>}} field empty. 
+Crossplane imports the settings and automatically applies them to the managed 
+resource. 
 
-Note that if a resource has required fields, you must fill those fields or the
-creation of the managed resource will be rejected. So, in those cases, you will
-need to enter the name of the resource as well as the required fields.
-
-### Alternative Import Procedure: Start with ObserveOnly
-
-Directly importing existing managed resources approach has the following caveats:
-
-1. You must provide all the required fields in the spec of the resource with
-correct values even though they're not used for importing the resource. A wrong
-value for a required field result in a configuration update which isn't
-desired.
-2. Any typos in the external name annotation or mistakes in the identifying
-arguments, such as the `region`, results in the creation of a new resource
-instead of importing the existing one.
-
-Instead of manually creating resources you can import the resource with an
-`ObserveOnly` management policy.
-
-Crossplane imports `ObserveOnly` resources but never changes or deletes the
-resource.
+```yaml {label="fp",copy-lines="all"}
+apiVersion: compute.gcp.crossplane.io/v1beta1
+kind: Network
+metadata:
+  annotations:
+    name: imported-network
+    crossplane.io/external-name: my-existing-network
+spec:
+  forProvider: {}
+```
 
 {{< hint "important" >}}
-Management policies including `ObserveOnly` are experimental. They must be
-explicitly enabled.
-See the management policies section for more details.
+If the managed resource has _required_ fields in the 
+{{<hover label="fp" line="8">}}spec.forProvider{{</hover>}} you must add it to
+the `forProvider` field. 
+
+The values of those fields must match what's inside the Provider or Crossplane
+overwrites the existing values.
 {{< /hint >}}
 
-To configure an `ObserveOnly` resource:
+Crossplane now controls and manages this imported resource. Any changes to the
+managed resource `spec` changes the external resource.
 
-1. Create a new resource with an {{<hover label="oo" line="8">}}ObserveOnly{{</hover>}}
-   management policy.
-  1. With the
-     {{<hover label="oo" line="5">}}crossplane.io/external-name{{</hover>}}
-     annotation set to the external name of the resource to import.
-  1. Only provide the identifying arguments (for example,
-     {{<hover label="oo" line="10">}}region{{</hover>}}) in the spec
-     of the resource.
+## Import resources automatically 
 
-```yaml {label="oo"}
+Automatically import external resources with the
+`ObserveOnly` [`managementPolicy`]({{<ref
+"/v1.12/concepts/managed-resources#managementPolicy">}}).
+
+Crossplane imports `ObserveOnly` resources but never changes or deletes the
+resources.
+
+{{<hint "important" >}}
+The managed resource `managementPolicy` option is an alpha feature. 
+
+Enable the `managementPolicy` in a provider with `--enable-management-policies` 
+in a 
+[ControllerConfig]({{<ref "/v1.12/concepts/providers#controller-configuration" >}}).
+{{< /hint >}}
+
+<!-- vale off -->
+### Apply the ObserveOnly managementPolicy
+<!-- vale on -->
+
+Create a new managed resource with {{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} set. 
+
+```yaml {label="oo-policy"}
+apiVersion: sql.gcp.upbound.io/v1beta1
+kind: DatabaseInstance
+spec:
+  managementPolicy: ObserveOnly
+```
+
+### Add the external-name annotation
+Add the {{<hover label="oo-ex-name" line="5">}}external-name{{</hover>}} annotation
+for the resource. This name must match the name inside the Provider.
+
+```yaml {label="oo-ex-name"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
   annotations:
-    crossplane.io/external-name: existing-database-instance
-  name: existing-database-instance
+    crossplane.io/external-name: my-external-database
+spec:
+  managementPolicy: ObserveOnly
+```
+
+### Create a Kubernetes object name
+Create a {{<hover label="oo-name" line="4">}}name{{</hover>}} to use for the 
+Kubernetes object. 
+
+```yaml {label="oo-name"}
+apiVersion: sql.gcp.upbound.io/v1beta1
+kind: DatabaseInstance
+metadata:
+  name: my-imported-database
+  annotations:
+    crossplane.io/external-name: my-external-database
+spec:
+  managementPolicy: ObserveOnly
+```
+
+### Identify a specific external resource
+If more than one resource inside the Provider shares the same name, identify the
+specific resource with a unique 
+{{<hover line="9" label="oo-region">}}spec.forProvider{{</hover>}} field. 
+For example, the
+{{<hover line="10" label="oo-region">}}region{{</hover>}}. 
+
+```yaml {label="oo-region"}
+apiVersion: sql.gcp.upbound.io/v1beta1
+kind: DatabaseInstance
+metadata:
+  name: my-imported-database
+  annotations:
+    crossplane.io/external-name: my-external-database
 spec:
   managementPolicy: ObserveOnly
   forProvider:
     region: "us-central1"
 ```
 
+### View the discovered resource
 Crossplane discovers the managed resource and populates the
 {{<hover label="ooPopulated" line="12">}}status.atProvider{{</hover>}}
-with the observed state.
+fields with the values from the external resource.
 
 ```yaml {label="ooPopulated"}
 apiVersion: sql.gcp.upbound.io/v1beta1
@@ -140,12 +187,12 @@ status:
     id: existing-database-instance
     publicIpAddress: 35.184.74.79
     region: us-central1
-    <truncated-for-brevity>
+    # Removed for brevity
     settings:
     - activationPolicy: ALWAYS
       availabilityType: REGIONAL
       diskSize: 100
-      <truncated-for-brevity>
+      # Removed for brevity
       pricingPlan: PER_USE
       tier: db-custom-4-26624
       version: 4
@@ -159,16 +206,23 @@ status:
     status: "True"
     type: Synced
 ```
+<!-- vale off -->
+## Control imported ObserveOnly resources
+<!-- vale on --> 
 
-To allow Crossplane to control and change the `ObserveOnly` resource, edit the
-policy. 
+Crossplane can take active control of `ObserveOnly` imported resources by 
+changing the `managementPolicy` after import.
 
-Change the {{<hover label="ooPopulated" line="8">}}ObserveOnly{{</hover>}} field
-to {{<hover label="fc" line="8">}}FullControl{{</hover>}}.
+Change the {{<hover label="fc" line="8">}}managementPolicy{{</hover>}} field
+of the managed resource to {{<hover label="fc" line="8">}}Full{{</hover>}}.
 
 Copy any required parameter values from
 {{<hover label="fc" line="16">}}status.atProvider{{</hover>}} and provide them
 in {{<hover label="fc" line="9">}}spec.forProvider{{</hover>}}.
+
+{{< hint "tip" >}}
+Manually copy the important `spec.atProvider` values to `spec.forProvider`.
+{{< /hint >}}
 
 ```yaml {label="fc"}
 apiVersion: sql.gcp.upbound.io/v1beta1
@@ -187,7 +241,13 @@ spec:
       tier: db-custom-4-26624
 status:
   atProvider:
-    <truncated-for-brevity>
+    databaseVersion: POSTGRES_14
+    region: us-central1
+    # Removed for brevity
+    settings:
+    - diskSize: 100
+      tier: db-custom-4-26624
+      # Removed for brevity
   conditions:
     - lastTransitionTime: "2023-02-22T07:16:51Z"
       reason: Available
@@ -198,3 +258,6 @@ status:
       status: "True"
       type: Synced
 ```
+
+Crossplane now fully manages the imported resource. Any changes are reflected
+inside the Provider.
