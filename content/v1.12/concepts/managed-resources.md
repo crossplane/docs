@@ -50,18 +50,19 @@ kind: Instance
 
 A managed resource's `deletionPolicy` tells the Provider what to do after
 deleting the managed resource. If the `deletionPolicy` is `delete` the Provider
-deletes the external resource as well. If the `deletionPolicy` is `orphan` 
+deletes the external resource as well. If the `deletionPolicy` is `orphan` the
+Provider deletes the managed resource but doesn't delete the remote resource.
 
 #### Options
-* `deletionPolicy: delete` - Delete the external resource when deleting the managed resource. _Default value_
+* `deletionPolicy: delete` - **Default** - Delete the external resource when deleting the managed resource.
 * `deletionPolicy: orphan` - Leave the external resource when deleting the managed resource. 
 
 <!-- vale off -->
 ### forProvider
 <!-- vale on -->
 
-The {{<hover label="forProvider" line="4">}}spec.forProvider{{</hover>}} of a managed resource maps to the parameters of the
-external resource. 
+The {{<hover label="forProvider" line="4">}}spec.forProvider{{</hover>}} of a 
+managed resource maps to the parameters of the external resource. 
 
 For example, when creating an AWS EC2 instance the Provider supports defining the 
 AWS {{<hover label="forProvider" line="5">}}region{{</hover>}} and the VM size,
@@ -80,13 +81,41 @@ spec:
 The Provider defines the settings and their valid values. Providers also define
 the required values in the `forProvider` definition.
 
-Refer to the documentation for your specific Provider for details. 
+Refer to the documentation of your specific Provider for details. 
 {{< /hint >}}
 
 
 <!-- vale off -->
 ### managementPolicy
 <!-- vale on --> 
+
+{{<hint "important" >}}
+The managed resource `managementPolicy` option is an alpha feature. 
+
+Enable the `managementPolicy` in a provider with `--enable-management-policies` 
+in a 
+[ControllerConfig]({{<ref "../concepts/providers#controller-configuration" >}}).
+{{< /hint >}}
+
+A `managementPolicy` determines if Crossplane can make changes to managed
+resources. The `ObserveOnly` policy imports existing external resources not 
+originally created by Crossplane.  
+This allows new managed resources to reference 
+the `ObserveOnly` resource, for example, a shared database or network. 
+The `ObserveOnly` policy can also place existing resources under the control of
+Crossplane.  
+
+Read the [Import Existing Resources]({{<ref
+"/knowledge-base/guides/import-existing-resources" >}}) guide for more
+information. 
+
+#### Options
+* `managementPolicy: FullControl` - **Default** - Crossplane can create, change
+  and delete the managed resource. 
+* `managementPolicy: ObserveOnly` - Crossplane only imports the details of the
+  external resource, but doesn't make any changes to the managed resource. 
+
+
 
 <!-- vale off -->
 ### providerConfigRef
@@ -163,6 +192,7 @@ _composed_ into higher level, opinionated Custom Resources that Crossplane calls
 Composite Resources or XRs - not used directly. See the
 [Composition]({{<ref "composition" >}}) documentation for more information.
 
+## Annotations
 ## Syntax
 
 Crossplane API conventions extend the Kubernetes API conventions for the schema
