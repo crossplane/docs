@@ -79,7 +79,7 @@ Crossplane monitors resources through a Kubernetes
 _[watch](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)_
 or through periodic polling. Some resources may be both watched and polled. 
 
-Crossplane requests that Kubernetes notifies Crossplane of any changes on
+Crossplane requests that the API server notifies Crossplane of any changes on
 objects. This notification tool is a _watch_. 
 
 Watched objects include Providers, managed resources and 
@@ -105,10 +105,10 @@ Managed resources use polling.
 {{< hint "note" >}}
 Managed resources watch for Kubernetes events like deletion or changes to
 their `spec`. Managed resources rely on polling to detect changes in the
-provider environment.
+external system.
 {{< /hint >}}
 
-Crossplane checks all resources to
+Crossplane double-checks all resources to
 confirm they're in the desired state. Crossplane does this every one hour by
 default. Use the `--sync-interval` Crossplane pod argument to change this
 interval. 
@@ -141,13 +141,10 @@ implements their own max reconcile rate setting.
 
 ##### Number of reconcilers
 
-The second value `--max-reconcile-rate` defines is the number of threads
-created to reconcile resources. Each thread manages the reconciliation of a
-specific resource. If there are more resources than configured threads,
-remaining resources must wait until a new thread is available. 
-
-Changing `--max-reconcile-rate` changes the number of threads Crossplane creates
-when more than one resource need reconciliation.
+The second value `--max-reconcile-rate` defines is the number of
+resources that can reconcile at once. If there are more resources than
+configured `--max-reconcile-rate` the remaining resources must wait until
+Crossplane reconciles a an existing resource.
 
 Read the [Change Pod Settings]({{<ref "#change-pod-settings">}}) section for
 instructions on applying these settings. 
@@ -229,7 +226,7 @@ The `crossplane-admin` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:aggregate-to-admin
+kubectl describe clusterrole crossplane:admin
 ```
 
 ##### crossplane-edit
@@ -243,7 +240,7 @@ The `crossplane-edit` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:aggregate-to-edit
+kubectl describe clusterrole crossplane:edit
 ```
 
 ##### crossplane-view
@@ -256,7 +253,7 @@ The `crossplane-view` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:aggregate-to-view
+kubectl describe clusterrole crossplane:view
 ```
 
 ##### crossplane-browse
@@ -269,7 +266,7 @@ The `crossplane-browse` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:aggregate-to-browse
+kubectl describe clusterrole crossplane:browse
 ```
 
 #### Crossplane Roles
