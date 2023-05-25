@@ -62,14 +62,22 @@
             <hr class="d-none d-md-block my-2">
             <div class="collapse bd-toc-collapse" id="tocContents">
               {{ .TableOfContents }}
-              <nav class="pt-3">
-                <div class="pb-2">
-                  <svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg>
-                  <span class="ps-1"><a target="_blank" href="{{printf "https://github.com/crossplane/docs/issues/new?title=[Web Bug] - %s&body=<!-- What's the problem? -->\n\n\nURL: %s" .Page.Title .Permalink}}">Report a problem</a></span>
+              <nav class="pt-3 container p-0">
+                <div class="row pb-2">
+                  <div class="col-1"><svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg></div>
+                  <div class="col"><a target="_blank" href="{{printf "https://github.com/crossplane/docs/issues/new?title=[Web Bug] - %s&body=<!-- What's the problem? -->\n\n\nURL: %s" .Page.Title .Permalink}}">Report a problem</a></div>
                 </div>
-                <div>
-                  <svg class="bi" width="1em" height="1em"><use xlink:href="#github"/></svg>
-                  <span class="ps-1"><a href="{{printf "https://github.com/crossplane/docs/tree/master/content/%s" .Page.File}}">View page source</a></span>
+                <div class="row pb-2">
+                  <div class="col-1"><svg class="bi" width="1em" height="1em"><use xlink:href="#github"/></svg></div>
+                  <div class="col"><a href="{{printf "https://github.com/crossplane/docs/tree/master/content/%s" .Page.File}}">View page source</a></div>
+                </div>
+                <div class="row pb-2">
+                  <div class="col-1"><svg class="bi" width="1em" height="1em"><use xlink:href="#clock"/></svg></div>
+                  <div class="col"><span class="ps-1">Last updated:</div>
+                </div>
+                <div class="row pb-2">
+                  <div class="col-1"><svg class="d-none" width="1em" height="1em"><use xlink:href="#clock"/></svg></div>
+                  <div class="col"><span class="ps-1">{{.Page.Lastmod.Format "Jan 2, 2006"}}</span></div>
                 </div>
               </div>
             </nav>
