@@ -4,9 +4,9 @@ weight: 102
 ---
 
 A _managed resource_ (`MR`) represents an external service in a Provider. When
-asking a Provider to create an external resource, the Provider creates a managed resource
-inside the Kubernetes cluster. Every external service managed by Crossplane maps
-to a managed resource. 
+asking a Provider to create an external resource, the Provider creates a managed 
+resource inside the Kubernetes cluster. Every external service managed by 
+Crossplane maps to a managed resource. 
 
 {{< hint "note" >}}
 Crossplane calls the object inside Kubernetes a _managed resource_ and the
@@ -64,9 +64,18 @@ Provider deletes the managed resource but doesn't delete the remote resource.
 The {{<hover label="forProvider" line="4">}}spec.forProvider{{</hover>}} of a 
 managed resource maps to the parameters of the external resource. 
 
-For example, when creating an AWS EC2 instance the Provider supports defining the 
-AWS {{<hover label="forProvider" line="5">}}region{{</hover>}} and the VM size,
-called the {{<hover label="forProvider" line="6">}}instanceType{{</hover>}}.
+For example, when creating an AWS EC2 instance, the Provider supports defining 
+the AWS {{<hover label="forProvider" line="5">}}region{{</hover>}} and the VM 
+size, called the 
+{{<hover label="forProvider" line="6">}}instanceType{{</hover>}}.
+
+{{< hint "note" >}}
+The Provider defines the settings and their valid values. Providers also define
+the required values in the `forProvider` definition.
+
+Refer to the documentation of your specific Provider for details. 
+{{< /hint >}}
+
 
 ```yaml {label="forProvider"}
 apiVersion: ec2.aws.upbound.io/v1beta1
@@ -77,13 +86,13 @@ spec:
     instanceType: t2.micro
 ```
 
-{{< hint "note" >}}
-The Provider defines the settings and their valid values. Providers also define
-the required values in the `forProvider` definition.
-
-Refer to the documentation of your specific Provider for details. 
+{{< hint "important">}}
+Crossplane considers the `forProvider` field of a managed resource 
+the "source of truth." Crossplane overrides any changes made to a managed
+resource outside of Crossplane. If a user makes a change inside a
+Provider's web console, Crossplane reverts that change back to what's
+configured in the `forProvider` setting. 
 {{< /hint >}}
-
 
 <!-- vale off -->
 ### managementPolicy
@@ -105,16 +114,17 @@ the `ObserveOnly` resource, for example, a shared database or network.
 The `ObserveOnly` policy can also place existing resources under the control of
 Crossplane.  
 
+{{< hint "tip" >}}
 Read the [Import Existing Resources]({{<ref
 "/knowledge-base/guides/import-existing-resources" >}}) guide for more
-information. 
+information on using the `managementPolicy` to import existing resources.
+{{< /hint >}}
 
 #### Options
 * `managementPolicy: FullControl` - **Default** - Crossplane can create, change
   and delete the managed resource. 
 * `managementPolicy: ObserveOnly` - Crossplane only imports the details of the
   external resource, but doesn't make any changes to the managed resource. 
-
 
 
 <!-- vale off -->
@@ -125,8 +135,8 @@ The `providerConfigRef` on a managed resource tells the Provider which
 [ProviderConfig]({{<ref "../concepts/providers#provider-configuration">}}) to
 use when creating the managed resource.  
 
-A ProviderConfig commonly defines the authentication to use when communicating to
-the Provider.
+Use a ProviderConfig to define the authentication method to use when 
+communicating to the Provider.
 
 {{< hint "important" >}}
 If `providerConfigRef` isn't applied, Providers use the ProviderConfig named `default`.
@@ -172,238 +182,41 @@ Managed resources using `providerRef`must use `providerConfigRef`.
 ### publishConnectionDetailsTo
 <!-- vale on --> 
 
+When a Provider creates a managed resource it may generate resource-specific
+details, like usernames, passwords or connection details like an IP address. 
+
+Crossplane stores these details in a Kubernetes Secret object
+
+
+
 <!-- vale off -->
 ### writeConnectionSecretToRef
 <!-- vale on --> 
 
-A Managed Resource (MR) is Crossplane's representation of a resource in an
-external system - most commonly a cloud provider. Managed Resources are
-opinionated, Crossplane Resource Model ([XRM]({{<ref "../concepts/terminology">}})) compliant Kubernetes
-Custom Resources that are installed by a Crossplane [provider]({{<ref "providers" >}}).
+{{< hint "important" >}}
+The Crossplane community recommends using `publishConnectionDetailsTo` over
+`writeConnectionSecretToRef`.
+{{< /hint >}}
 
-For example, `RDSInstance` in the AWS Provider corresponds to an actual RDS
-Instance in AWS. There is a one-to-one relationship and the changes on managed
-resources are reflected directly on the corresponding resource in the provider.
-Similarly, the `Database` types in the SQL provider represent a PostgreSQL or
-MySQL database.
 
-Managed Resources are the building blocks of Crossplane. They're designed to be
-_composed_ into higher level, opinionated Custom Resources that Crossplane calls
-Composite Resources or XRs - not used directly. See the
-[Composition]({{<ref "composition" >}}) documentation for more information.
-
-## Annotations
-## Syntax
-
-Crossplane API conventions extend the Kubernetes API conventions for the schema
-of Crossplane managed resources. Following is an example of a managed resource:
-
-{{< tabs >}}
-{{< tab "AWS" >}}
-
-The AWS provider supports provisioning an [RDS][rds] instance via the `RDSInstance`
-managed resource it adds to Crossplane.
-
-```yaml
-apiVersion: database.aws.crossplane.io/v1beta1
-kind: RDSInstance
-metadata:
-  name: rdspostgresql
-spec:
-  forProvider:
-    region: us-east-1
-    dbInstanceClass: db.t2.small
-    masterUsername: masteruser
-    allocatedStorage: 20
-    engine: postgres
-    engineVersion: "12"
-    skipFinalSnapshotBeforeDeletion: true
-  writeConnectionSecretToRef:
-    namespace: crossplane-system
-    name: aws-rdspostgresql-conn
-```
-
-```console
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/provision/aws.yaml
-```
-
-Creating the above instance will cause Crossplane to provision an RDS instance
-on AWS. You can view the progress with the following command:
-
-```console
-kubectl get rdsinstance rdspostgresql
-```
-
-When provisioning is complete, you should see `READY: True` in the output. You
-can take a look at its connection secret that is referenced under
-`spec.writeConnectionSecretToRef`:
-
-```console
-kubectl describe secret aws-rdspostgresql-conn -n crossplane-system
-```
-
-You can then delete the `RDSInstance`:
-
-```console
-kubectl delete rdsinstance rdspostgresql
-```
-
-{{< /tab >}}
-{{< tab "GCP" >}}
-
-The GCP provider supports provisioning a [CloudSQL][cloudsql] instance with the
-`CloudSQLInstance` managed resource it adds to Crossplane.
-
-```yaml
-apiVersion: database.gcp.crossplane.io/v1beta1
-kind: CloudSQLInstance
-metadata:
-  name: cloudsqlpostgresql
-spec:
-  forProvider:
-    databaseVersion: POSTGRES_12
-    region: us-central1
-    settings:
-      tier: db-custom-1-3840
-      dataDiskType: PD_SSD
-      dataDiskSizeGb: 10
-  writeConnectionSecretToRef:
-    namespace: crossplane-system
-    name: cloudsqlpostgresql-conn
-```
-
-```console
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/provision/gcp.yaml
-```
-
-Creating the above instance will cause Crossplane to provision a CloudSQL
-instance on GCP. You can view the progress with the following command:
-
-```console
-kubectl get cloudsqlinstance cloudsqlpostgresql
-```
-
-When provisioning is complete, you should see `READY: True` in the output. You
-can take a look at its connection secret that is referenced under
-`spec.writeConnectionSecretToRef`:
-
-```console
-kubectl describe secret cloudsqlpostgresql-conn -n crossplane-system
-```
-
-You can then delete the `CloudSQLInstance`:
-
-```console
-kubectl delete cloudsqlinstance cloudsqlpostgresql
-```
-
-{{< /tab >}}
-{{< tab "Azure" >}}
-
-The Azure provider supports provisioning an [Azure Database for PostgreSQL]
-instance with the `PostgreSQLServer` managed resource it adds to Crossplane.
-
-> Note: provisioning an Azure Database for PostgreSQL requires the presence of a
-> [Resource Group] in your Azure account. We go ahead and provision a new
-> `ResourceGroup` here in case you do not already have a suitable one in your
-> account.
-
-```yaml
-apiVersion: azure.crossplane.io/v1alpha3
-kind: ResourceGroup
-metadata:
-  name: sqlserverpostgresql-rg
-spec:
-  location: West US 2
----
-apiVersion: database.azure.crossplane.io/v1beta1
-kind: PostgreSQLServer
-metadata:
-  name: sqlserverpostgresql
-spec:
-  forProvider:
-    administratorLogin: myadmin
-    resourceGroupNameRef:
-      name: sqlserverpostgresql-rg
-    location: West US 2
-    sslEnforcement: Disabled
-    version: "9.6"
-    sku:
-      tier: GeneralPurpose
-      capacity: 2
-      family: Gen5
-    storageProfile:
-      storageMB: 20480
-  writeConnectionSecretToRef:
-    namespace: crossplane-system
-    name: sqlserverpostgresql-conn
-```
-
-```console
-kubectl apply -f https://raw.githubusercontent.com/crossplane/crossplane/release-1.10/docs/snippets/provision/azure.yaml
-```
-
-Creating the above instance will cause Crossplane to provision a PostgreSQL
-database instance on Azure. You can view the progress with the following
-command:
-
-```console
-kubectl get postgresqlserver sqlserverpostgresql
-```
-
-When provisioning is complete, you should see `READY: True` in the output. You
-can take a look at its connection secret that is referenced under
-`spec.writeConnectionSecretToRef`:
-
-```console
-kubectl describe secret sqlserverpostgresql-conn -n crossplane-system
-```
-
-You can then delete the `PostgreSQLServer`:
-
-```console
-kubectl delete postgresqlserver sqlserverpostgresql
-kubectl delete resourcegroup sqlserverpostgresql-rg
-```
-
-{{< /tab >}}
-{{< /tabs >}}
-
-In Kubernetes, `spec` top field represents the desired state of the user.
-Crossplane adheres to that and has its own conventions about how the fields
-under `spec` should look like.
-
-* `writeConnectionSecretToRef`: A reference to the secret that you want this
+`writeConnectionSecretToRef`: A reference to the secret that you want this
   managed resource to write its connection secret that you'd be able to mount to
   your pods in the same namespace. For `RDSInstance`, this secret would contain
   `endpoint`, `username` and `password`.
 
-* `providerConfigRef`: Reference to the `ProviderConfig` resource that will
-  provide information regarding authentication of Crossplane to the provider.
-  `ProviderConfig` resources refer to `Secret` and potentially contain other
-  information regarding authentication. The `providerConfigRef` is defaulted to
-  a `ProviderConfig` named `default` if omitted.
+## Annotations
 
-* `deletionPolicy`: Enum to specify whether the actual cloud resource should be
-  deleted when this managed resource is deleted in Kubernetes API server.
-  Possible values are `Delete` (the default) and `Orphan`.
+## Status fields
 
-* `managementPolicy`: Enum to specify the level of control Crossplane has over
-  the external resource.
-  Possible values are `FullControl` (the default) and `ObserveOnly`.
-  {{<hint "important">}}
-  `managementPolicy` is an experimental feature, see the management policies
-  section below for further details.
-  {{< /hint >}}
+<!-- vale off -->
+### atProvider
+<!-- vale on -->
+https://github.com/crossplane/docs/issues/272
 
-* `forProvider`: While the rest of the fields relate to how Crossplane should
-  behave, the fields under `forProvider` are solely used to configure the actual
-  external resource. In most of the cases, the field names correspond to the
-  what exists in provider's API Reference.
 
-  The objects under `forProvider` field can get huge depending on the provider
-  API. For example, GCP `ServiceAccount` has only a few fields while GCP
-  `CloudSQLInstance` has over 100 fields that you can configure.
+When provisioning is complete, you should see `READY: True` in the output. You
+can take a look at its connection secret that is referenced under
+`spec.writeConnectionSecretToRef`:
 
 ### Versioning
 
@@ -441,21 +254,6 @@ This applies to grouping of resources, too. For example, `Queue` appears under
 apiVersion: sqs.aws.crossplane.io/v1beta1
 kind: Queue
 ```
-
-## Behavior
-
-As a general rule, managed resource controllers try not to make any decision
-that is not specified by the user in the desired state since managed resources
-are the lowest level primitives that operate directly on the cloud provider
-APIs.
-
-### Continuous Reconciliation
-
-Crossplane providers continuously reconcile the managed resource to achieve the
-desired state. The parameters under `spec` are considered the one and only
-source of truth for the external resource. This means that if someone changed a
-configuration in the UI of the provider, like AWS Console, Crossplane will
-change it back to what's given under `spec`.
 
 #### Connection Details
 
@@ -601,186 +399,6 @@ does not create the external resource until the referenced object is ready. In
 this example, creation call of Azure MySQL Server will not be made until
 referenced `ResourceGroup` has its `status.condition` named `Ready` to be true.
 
-## Management Policies
-
-Crossplane offers a set of management policies that allow you to define the
-level of control it has over external resources. You can configure these
-policies using the `spec.managementPolicy` field in the managed resource
-definition. The available policies include:
-
-- `FullControl (Default)`: With this policy, Crossplane fully manages and
-controls the external resource.
-- `ObserveOnly`: With the ObserveOnly policy, Crossplane only observes the
-external resource without making any changes or deletions.
-
-{{<hint "important" >}}
-Management policies are an experimental feature, and the API is
-subject to change.
-{{< /hint >}}
-
-To use management policies, you must enable them with the
-`--enable-management-policies` flag when starting the provider controller.
-
-## Importing Existing Resources
-
-If you have some resources that are already provisioned in the cloud provider,
-you can import them as managed resources and let Crossplane manage them. What
-you need to do is to enter the name of the external resource as well as the
-required fields on the managed resource. For example, let's say I have a GCP
-Network provisioned from GCP console and I would like to migrate it to
-Crossplane. Here is the YAML that I need to create:
-
-```yaml
-apiVersion: compute.gcp.crossplane.io/v1beta1
-kind: Network
-metadata:
-  name: foo-network
-  annotations:
-    crossplane.io/external-name: existing-network
-spec:
-  forProvider: {}
-  providerConfigRef:
-    name: default
-```
-
-Crossplane will check whether a GCP Network called `existing-network` exists,
-and if it does, then the optional fields under `forProvider` will be filled with
-the values that are fetched from the provider.
-
-Note that if a resource has required fields, you must fill those fields or the
-creation of the managed resource will be rejected. So, in those cases, you will
-need to enter the name of the resource as well as the required fields.
-
-### Alternative Import Procedure: Start with ObserveOnly
-
-Directly importing existing managed resources approach has the following caveats:
-
-1. You must provide all the required fields in the spec of the resource with
-correct values even though they're not used for importing the resource. A wrong
-value for a required field result in a configuration update which isn't
-desired.
-2. Any typos in the external name annotation or mistakes in the identifying
-arguments, such as the `region`, results in the creation of a new resource
-instead of importing the existing one.
-
-Instead of manually creating resources you can import the resource with an
-`ObserveOnly` management policy.
-
-Crossplane imports `ObserveOnly` resources but never changes or deletes the
-resource.
-
-{{< hint "important" >}}
-Management policies including `ObserveOnly` are experimental. They must be
-explicitly enabled.
-See the management policies section for more details.
-{{< /hint >}}
-
-To configure an `ObserveOnly` resource:
-
-1. Create a new resource with an {{<hover label="oo" line="8">}}ObserveOnly{{</hover>}}
-   management policy.
-  1. With the
-     {{<hover label="oo" line="5">}}crossplane.io/external-name{{</hover>}}
-     annotation set to the external name of the resource to import.
-  1. Only provide the identifying arguments (for example,
-     {{<hover label="oo" line="10">}}region{{</hover>}}) in the spec
-     of the resource.
-
-```yaml {label="oo"}
-apiVersion: sql.gcp.upbound.io/v1beta1
-kind: DatabaseInstance
-metadata:
-  annotations:
-    crossplane.io/external-name: existing-database-instance
-  name: existing-database-instance
-spec:
-  managementPolicy: ObserveOnly
-  forProvider:
-    region: "us-central1"
-```
-
-Crossplane discovers the managed resource and populates the
-{{<hover label="ooPopulated" line="12">}}status.atProvider{{</hover>}}
-with the observed state.
-
-```yaml {label="ooPopulated"}
-apiVersion: sql.gcp.upbound.io/v1beta1
-kind: DatabaseInstance
-metadata:
-  annotations:
-    crossplane.io/external-name: existing-database-instance
-  name: existing-database-instance
-spec:
-  managementPolicy: ObserveOnly
-  forProvider:
-    region: us-central1
-status:
-  atProvider:
-    connectionName: crossplane-playground:us-central1:existing-database-instance
-    databaseVersion: POSTGRES_14
-    deletionProtection: true
-    firstIpAddress: 35.184.74.79
-    id: existing-database-instance
-    publicIpAddress: 35.184.74.79
-    region: us-central1
-    <truncated-for-brevity>
-    settings:
-    - activationPolicy: ALWAYS
-      availabilityType: REGIONAL
-      diskSize: 100
-      <truncated-for-brevity>
-      pricingPlan: PER_USE
-      tier: db-custom-4-26624
-      version: 4
-  conditions:
-  - lastTransitionTime: "2023-02-22T07:16:51Z"
-    reason: Available
-    status: "True"
-    type: Ready
-  - lastTransitionTime: "2023-02-22T07:16:51Z"
-    reason: ReconcileSuccess
-    status: "True"
-    type: Synced
-```
-
-To allow Crossplane to control and change the `ObserveOnly` resource, edit the
-policy. 
-
-Change the {{<hover label="ooPopulated" line="8">}}ObserveOnly{{</hover>}} field
-to {{<hover label="fc" line="8">}}FullControl{{</hover>}}.
-
-Copy any required parameter values from
-{{<hover label="fc" line="16">}}status.atProvider{{</hover>}} and provide them
-in {{<hover label="fc" line="9">}}spec.forProvider{{</hover>}}.
-
-```yaml {label="fc"}
-apiVersion: sql.gcp.upbound.io/v1beta1
-kind: DatabaseInstance
-metadata:
-  annotations:
-    crossplane.io/external-name: existing-database-instance
-  name: existing-database-instance
-spec:
-  managementPolicy: Full
-  forProvider:
-    databaseVersion: POSTGRES_14
-    region: us-central1
-    settings:
-    - diskSize: 100
-      tier: db-custom-4-26624
-status:
-  atProvider:
-    <truncated-for-brevity>
-  conditions:
-    - lastTransitionTime: "2023-02-22T07:16:51Z"
-      reason: Available
-      status: "True"
-      type: Ready
-    - lastTransitionTime: "2023-02-22T11:16:45Z"
-      reason: ReconcileSuccess
-      status: "True"
-      type: Synced
-```
 
 ## Backup and Restore
 
