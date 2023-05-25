@@ -214,7 +214,8 @@ Crossplane can take active control of `ObserveOnly` imported resources by
 changing the `managementPolicy` after import.
 
 Change the {{<hover label="fc" line="8">}}managementPolicy{{</hover>}} field
-of the managed resource to {{<hover label="fc" line="8">}}Full{{</hover>}}.
+of the managed resource to 
+{{<hover label="fc" line="8">}}FullControl{{</hover>}}.
 
 Copy any required parameter values from
 {{<hover label="fc" line="16">}}status.atProvider{{</hover>}} and provide them
@@ -232,7 +233,7 @@ metadata:
     crossplane.io/external-name: existing-database-instance
   name: existing-database-instance
 spec:
-  managementPolicy: Full
+  managementPolicy: FullControl
   forProvider:
     databaseVersion: POSTGRES_14
     region: us-central1
@@ -259,5 +260,5 @@ status:
       type: Synced
 ```
 
-Crossplane now fully manages the imported resource. Any changes are reflected
-inside the Provider.
+Crossplane now fully manages the imported resource. Crossplane applies any 
+changes to the managed resource in the Provider's external resource. 
