@@ -9,6 +9,7 @@ Datastore
 editCode
 Enum
 Env
+finalizer
 finalizers
 GCP's
 Geekdocs
@@ -28,9 +29,11 @@ shortcodes
 SLAs
 stdin
 stdout
+Subnet
 tolerations
 Upbound
 Upbound's
+Upjet
 Velero
 VSCode
 Webpack
