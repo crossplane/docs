@@ -142,8 +142,8 @@ implements their own max reconcile rate setting.
 ##### Number of reconcilers
 
 The second value `--max-reconcile-rate` defines is the number of
-resources that can reconcile at once. If there are more resources than
-configured `--max-reconcile-rate` the remaining resources must wait until
+resources that Crossplane can reconcile at once. If there are more resources than
+the configured `--max-reconcile-rate` the remaining resources must wait until
 Crossplane reconciles a an existing resource.
 
 Read the [Change Pod Settings]({{<ref "#change-pod-settings">}}) section for
