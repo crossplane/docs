@@ -5,9 +5,8 @@ weight: 200
 
 If you have resources that are already provisioned in a Provider,
 you can import them as managed resources and let Crossplane manage them.
-A managed resource's [`managementPolicy`]({{<ref
-"/v1.12/concepts/managed-resources#managementPolicy">}}) field enables importing
-external resources into Crossplane.
+A managed resource's [`managementPolicy`]({{<ref "/v1.12/concepts/managed-resources#managementpolicy">}}) 
+field enables importing external resources into Crossplane.
 
 Crossplane can import resources either [manually]({{<ref
 "#import-resources-manually">}}) or [automatically]({{<ref
@@ -86,8 +85,7 @@ managed resource `spec` changes the external resource.
 ## Import resources automatically 
 
 Automatically import external resources with the
-`ObserveOnly` [`managementPolicy`]({{<ref
-"/v1.12/concepts/managed-resources#managementPolicy">}}).
+`ObserveOnly` [`managementPolicy`]({{<ref "/v1.12/concepts/managed-resources#managementpolicy">}}).
 
 Crossplane imports `ObserveOnly` resources but never changes or deletes the
 resources.
