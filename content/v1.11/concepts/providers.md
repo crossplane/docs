@@ -197,7 +197,7 @@ Provider `Conditions` support two `Types`:
 * `Type: Healthy` - The Provider package is ready to use. 
 
 #### Reasons
-Each `Reason` is related to a specific `Type` and `Status`. Crossplane uses the
+Each `Reason` relates to a specific `Type` and `Status`. Crossplane uses the
 following `Reasons` for Provider `Conditions`.
 
 <!-- vale Google.Headings = NO -->
