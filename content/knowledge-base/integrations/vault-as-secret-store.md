@@ -188,23 +188,15 @@ Success! Data written to: auth/kubernetes/role/crossplane
 ## Install Crossplane
 
 {{<hint "important" >}}
-Plugin support is in the unreleased Crossplane v1.12. This guide uses a
-pre-release build with plugin support.
+Plugin support was introduced with Crossplane v1.12. Make sure you are using
+a version of Crossplane that supports plugins.
 {{< /hint >}}
 
-Pre-release Crossplane versions are in the Crossplane `master` repository.
-
-```shell
-helm repo add crossplane-master https://charts.crossplane.io/master --force-update
-```
-
-Install the Crossplane development build version and enable the External Secrets
-Stores feature.
+Install the Crossplane with the External Secrets Stores feature enabled.
 
 ```shell 
-helm upgrade --install crossplane crossplane-master/crossplane --devel --version 1.12.0-rc.0.284.g190ab067 --namespace crossplane-system --create-namespace --set args='{--enable-external-secret-stores}'
+helm upgrade --install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace --set args='{--enable-external-secret-stores}'
 ```
-
 
 ## Install the Crossplane Vault plugin
 
