@@ -9,6 +9,27 @@ from = "/docs/*"
 to = "/:splat"
 status = 302
 
+[[redirects]]
+from = "/v1.9/concepts/managed-resources.html"
+to = "/latest/concepts/managed-resources"
+status = 302
+
+[[redirects]]
+from = "/v1.9/concepts/providers.html"
+to = "/latest/concepts/providers"
+status = 302
+
+[[redirects]]
+from = "/v1.9/getting-started/create-configuration"
+to = "/latest/getting-started"
+status = 302
+
+[[redirects]]
+from = "/v1.9/getting-started/install-configure"
+to = "/latest/software/install/"
+status = 302
+
+
 [context.deploy-preview]
     command = "bash netlify_build.sh"
 
