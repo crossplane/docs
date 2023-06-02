@@ -159,6 +159,17 @@ Copying a single line is also supported without using the ending line number. Fo
 The line number range must be in quotations.
 {{< /hint >}}
 
+Disable the copy button with `{copy-lines="none"}`.
+
+````yaml {copy-lines="none"}
+```yaml {copy-lines="none"}
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: aProvider
+```
+````
+
 Combining copying and highlighting in a single comma-seperated annotation. 
 ````yaml {copy-lines="2-5", hl_lines="2-3"}
 ```yaml {copy-lines="2-5", hl_lines="2-3"}
@@ -168,7 +179,6 @@ metadata:
   name: aProvider
 ```
 ````
-
 ## Editable fields
 
 The `editCode` shortcode makes specific lines or words editable. Editable fields allow readers to put their own inputs as part of a command and copy out the entire modified block. 
