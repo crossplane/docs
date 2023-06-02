@@ -18,10 +18,10 @@ _custom resource definition_ and a _claim_.
 _CompositeResourceDefinition_ to define the schema of the custom API. 
 Users create a _Claim_ to use the custom API and apply their options. 
 Part 2 didn't show how the options set in a _Claim_ change or get 
-applied the associated _composite resources_.
+applied to the associated _composite resources_.
 
 ## Prerequisites
-* Complete quickstart [part 1]({{<ref "provider-azure" >}}) and [Part 2]({{<ref
+* Complete quickstart [part 1]({{<ref "provider-azure" >}}) and [part 2]({{<ref
   "provider-azure-part-2" >}}) to install Crossplane and the quickstart
   configurations.
   
@@ -222,7 +222,7 @@ The example _Composition_ has four _managed resources_. A {{<hover label="compRe
 {{<hover label="compResources" line="20" >}}VirtualNetwork{{</hover>}}.
 
 
-```yaml {label="compResources"}
+```yaml {label="compResources",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 # Removed for Brevity
@@ -252,7 +252,7 @@ The custom API defined a single option,
 {{<hover label="xrdSnip" line="16">}}US{{</hover>}}. 
 <!-- vale Google.We = YES -->
 
-```yaml {label="xrdSnip"}
+```yaml {label="xrdSnip",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 # Removed for brevity
@@ -304,7 +304,7 @@ and "US" is {{<hover label="patch" line="20">}}mapped{{</hover>}} to the value
 <!-- vale Google.We = YES -->
 
 
-```yaml {label="patch"}
+```yaml {label="patch",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 # Removed for Brevity
@@ -537,7 +537,7 @@ You can use any software that builds OCI images. This includes
 [Upbound's Up CLI)](https://github.com/upbound/up).
 {{< /hint >}}
 
-A configuration package includes three files:
+A configuration package includes at least three files:
 * `crossplane.yaml` defines the metadata of the package.
 * `definition.yaml` is the _CompositeResourceDefinition_ for the package.
 * `composition.yaml` is the _Composition_ template for the package. 
@@ -598,7 +598,7 @@ metadata:
   name: crossplane-azure-quickstart
 spec:
   crossplane:
-    version: ">=v1.11.0"
+    version: ">=v1.12.0"
   dependsOn:
     - provider: xpkg.upbound.io/upbound/provider-azure
       version: ">=v0.32.0"
@@ -783,6 +783,8 @@ chmod +x install.sh
 ./install.sh
 sudo mv kubectl-crossplane /usr/bin
 ```
+
+
 
 Verify the Crossplane command-line installed with `kubectl crossplane --help`
 

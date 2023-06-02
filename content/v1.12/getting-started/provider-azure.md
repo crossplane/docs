@@ -23,9 +23,11 @@ This quickstart requires:
 * a Kubernetes cluster with at least 6 GB of RAM
 * permissions to create pods and secrets in the Kubernetes cluster
 * [Helm](https://helm.sh/) version `v3.2.0` or later
-* an Azure account with permissions to create an Azure Virtual Machine and
-  Virtual Networking
-* an Azure account with permissions to create an Azure [service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) and an [Azure Resource Group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
+* an Azure account with permissions to create an 
+  [Azure Virtual Machine](https://learn.microsoft.com/en-us/azure/virtual-machines/) 
+  and
+  [Virtual Network](https://learn.microsoft.com/en-us/azure/virtual-network/)
+* an Azure account with permissions to create an Azure [service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) and an [Azure resource group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
 
 ## Install Crossplane
 
@@ -1077,13 +1079,17 @@ See details about all the supported CRDs in the
 {{< /hint >}}
 
 ## Create a Kubernetes secret for Azure
-The provider requires credentials to create and manage Azure resources. Providers use a Kubernetes _Secret_ to connect the credentials to the provider.
+The provider requires credentials to create and manage Azure resources. 
+Providers use a Kubernetes _Secret_ to connect the credentials to the provider.
+
+This guide generates an Azure service principal JSON file and saves it as a 
+Kubernetes _Secret_.
 
 {{< hint type="note" >}}
-Other authentication methods exist and are beyond the scope of this guide. The [Provider documentation](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/docs/configuration) contains information on alternative authentication methods. 
+Other authentication methods exist and are beyond the scope of this guide. The 
+[Provider documentation](https://github.com/upbound/provider-azure/blob/main/AUTHENTICATION.md) 
+contains information on alternative authentication methods. 
 {{< /hint >}}
-
-First generate a Kubernetes _Secret_ from your Azure JSON file and then configure the Provider to use it.
 
 ### Install the Azure command-line
 Generating an [authentication file](https://docs.microsoft.com/en-us/azure/developer/go/azure-sdk-authorization#use-file-based-authentication) requires the Azure command-line.  
@@ -1111,7 +1117,9 @@ az ad sp create-for-rbac \
 Save your Azure JSON output as `azure-credentials.json`.
 
 {{< hint type="note" >}}
-The [Configuration](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/docs/configuration) section of the Provider documentation describes other authentication methods.
+The Azure Provider 
+[Authentication documentation](https://github.com/upbound/provider-azure/blob/main/AUTHENTICATION.md)
+describes other authentication methods.
 {{< /hint >}}
 
 ### Create a Kubernetes secret with the Azure credentials
@@ -1179,7 +1187,9 @@ Kubernetes cluster. This example creates an Azure Virtual Network with
 Crossplane. The Virtual Network is a _managed resource_.
 
 {{< hint type="note" >}}
-Add your Azure Resource Group name.
+Add your Azure Resource Group name. Follow the Azure documentation to 
+[create a resource group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
+if you don't have one.
 {{< /hint >}}
 
 {{< editCode >}}

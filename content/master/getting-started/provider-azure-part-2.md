@@ -107,7 +107,7 @@ Don't apply this configuration. This YAML is part of a larger
 definition. 
 {{< /hint >}}
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: network.azure.upbound.io/v1beta1
 kind: VirtualNetwork
 metadata:
@@ -128,7 +128,7 @@ Don't apply this configuration. This YAML is part of a larger
 definition. 
 {{< /hint >}}
 
-```yaml {label="subnet"}
+```yaml {label="subnet",copy-lines="none"}
 apiVersion: network.azure.upbound.io/v1beta1
 kind: Subnet
 metadata:
@@ -148,7 +148,7 @@ Don't apply this configuration. This YAML is part of a larger
 definition. 
 {{< /hint >}}
 
-```yaml {label="nic"}
+```yaml {label="nic",copy-lines="none"}
 apiVersion: network.azure.upbound.io/v1beta1
 kind: NetworkInterface
 metadata:
@@ -170,7 +170,7 @@ Don't apply this configuration. This YAML is part of a larger
 definition. 
 {{< /hint >}}
 
-```yaml {label="vm"}
+```yaml {label="vm",copy-lines="none"}
 apiVersion: compute.azure.upbound.io/v1beta1
 kind: LinuxVirtualMachine
 metadata:
@@ -206,7 +206,7 @@ API resources.
 
 Create any {{<hover label="compName" line="4">}}name{{</ hover>}} for this _Composition_.
 
-```yaml {label="compName"}
+```yaml {label="compName",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
@@ -232,7 +232,7 @@ The contents of the
 doesn't include the `metadata` field from the managed resources.
 {{< /hint >}}
 
-```yaml {label="specResources"}
+```yaml {label="specResources",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
@@ -273,7 +273,7 @@ definition.
 Crossplane recommends prefacing the `kind` with an `X` to show it's a Composition.
 {{< /hint >}}
 
-```yaml {label="compRef"}
+```yaml {label="compRef",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
@@ -425,7 +425,7 @@ Crossplane recommends using a plural name for the _XRD_
 {{<hover label="xrdName" line="4" >}}name{{</hover>}}.
 {{< /hint >}}
 
-```yaml {label="xrdName"}
+```yaml {label="xrdName",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
@@ -442,7 +442,7 @@ First, define the new API
 Next, create the API {{<hover label="xrdGroup" line="8" >}}kind{{</hover>}} and
 {{<hover label="xrdGroup" line="9" >}}plural{{</hover>}}.
 
-```yaml {label="xrdGroup"}
+```yaml {label="xrdGroup",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
@@ -460,7 +460,7 @@ line="5">}}apiVersion{{</hover>}} and the
 _XRD_ {{<hover label="xrdGroup" line="8" >}}kind{{</hover>}} matches the _composition_ 
 {{<hover label="noteComp" line="6">}}compositeTypeRef.kind{{</hover>}}.
 
-```yaml {label="noteComp"}
+```yaml {label="noteComp",copy-lines="none"}
 kind: Composition
 # Removed for brevity
 spec:
@@ -484,7 +484,7 @@ _XRDs_ require both
 and
 {{<hover label="xrdVersion" line="13">}}versions.referenceable{{</hover>}}.
 
-```yaml {label="xrdVersion"}
+```yaml {label="xrdVersion",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
@@ -538,7 +538,7 @@ The
 {{< hover label="xrdSchema" line="13" >}}object{{</hover>}} with
 {{< hover label="xrdSchema" line="14" >}}properties{{</hover>}}.
 
-```yaml {label="xrdSchema"}
+```yaml {label="xrdSchema",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 # Removed for brevity
@@ -583,7 +583,7 @@ This API requires the setting
 {{<hover label="customAPI" line="10" >}}region{{</hover >}}.
 
 
-```yaml {label="customAPI"}
+```yaml {label="customAPI",copy-lines="none"}
 # Removed for brevity
 # schema.openAPIV3Schema.type.properties.spec
 properties:
@@ -607,7 +607,7 @@ without the preceding `X`.
 {{< /hint >}}
 
 
-```yaml {label="XRDclaim"}
+```yaml {label="XRDclaim",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 # Removed for brevity
@@ -682,7 +682,7 @@ creates new _managed resources_.
 
 Looking at part of the _XRD_:
 
-```yaml {label="xrdSnip"}
+```yaml {label="xrdSnip",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 # Removed for brevity
@@ -897,7 +897,7 @@ A _Claim_ uses the same {{<hover label="XRDclaim2" line="6" >}}group{{</hover>}}
 a _composite resource_ uses but a different 
 {{<hover label="XRDclaim2" line="8" >}}kind{{</hover>}}.
 
-```yaml {label="XRDclaim2"}
+```yaml {label="XRDclaim2",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 # Removed for brevity
@@ -964,7 +964,7 @@ at the "namespace scope."
 
 Create a second namespace and a second claim.
 
-```shell
+```yaml
 kubectl create namespace test2
 cat <<EOF | kubectl apply -f -
 apiVersion: custom-api.example.org/v1alpha1
@@ -1025,12 +1025,12 @@ kubectl delete virtualmachine claimed-virtualmachine -n test2
 
 Verify Crossplane removed all the _managed resources_.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get linuxvirtualmachines
 No resources found
 ```
 
-```shell
+```shell {copy-lines="1"}
 kubectl get networkinterface
 No resources found
 ```
