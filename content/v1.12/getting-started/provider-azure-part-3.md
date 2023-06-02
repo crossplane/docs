@@ -534,7 +534,7 @@ tool.
 {{< hint "note" >}}
 You can use any software that builds OCI images. This includes
 [Docker](https://www.docker.com/) or 
-[Upbound's Up CLI)](https://github.com/upbound/up).
+[Upbound's Up CLI](https://github.com/upbound/up).
 {{< /hint >}}
 
 A configuration package includes at least three files:
