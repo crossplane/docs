@@ -8,8 +8,16 @@
   (dict "Contributing Guide" "/img/multi-crane.svg")
 }}
 
-<div class="container-fluid py-5 bd-content" id="home">
-  <div class="row mx-5 justify-content-evenly my-5">
+
+  <div class="mx-5 home-search">
+    <div class="mx-4">
+    {{ partialCached "search-button" . }}
+    </div>
+  </div>
+
+
+<div class="container-fluid pb-5 bd-content" id="home">
+  <div class="row mx-5 justify-content-evenly mb-5 mt-2">
 
     {{ $thisSite := .Site }}
     {{ $version_section := slice }}

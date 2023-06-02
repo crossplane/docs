@@ -14,3 +14,4 @@ import './bootstrap/src/offcanvas';
 import './tabDeepAnchor.js';
 import './customClipboard.js';
 import './hoverHighlight.js';
+import './slackNotify.js';

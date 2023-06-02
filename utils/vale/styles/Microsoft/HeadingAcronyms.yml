@@ -10,3 +10,4 @@ exceptions:
   - AWS
   - GCP
   - JSON
+  - RBAC

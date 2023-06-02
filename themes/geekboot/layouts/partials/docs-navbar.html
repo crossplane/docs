@@ -75,9 +75,18 @@
             </li>
 
             <li class="nav-item col-xs p-2">
-              <a class="navbar-link" href="https://slack.crossplane.io" title="Join the Crossplane Slack" target="_blank" rel="noopener">
+              <div id="slack"><a class="navbar-link" href="https://slack.crossplane.io" title="Join the Crossplane Slack" target="_blank" rel="noopener">
                 {{ partialCached "icons/slack.svg" . }} <span class="icon-label">Crossplane Slack</span>
               </a>
+            </div>
+            {{ if .IsHome }}
+            <a class="navbar-link" href="https://slack.crossplane.io" title="Join the Crossplane Slack" target="_blank" rel="noopener">
+              <div id="tooltip" class="" role="tooltip">
+                Join the Crossplane Slack
+                <div id="arrow" data-popper-arrow></div>
+              </div>
+            </a>
+            {{ end }}
             </li>
 
             <li class="nav-item col-x p-2">

@@ -19,6 +19,7 @@ kubectl
 minikube
 namespace
 namespaces
+namespaced
 Netlify
 proselint
 semver

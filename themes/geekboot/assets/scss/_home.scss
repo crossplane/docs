@@ -20,6 +20,65 @@
     color: var(--body-font-color);
 }
 
+@include media-breakpoint-up(lg) {
+.home-search {
+    display: flex !important;
+
+}
+}
+
+/* purgecss start ignore */
+#tooltip {
+    display: inline-block;
+    background: $brightSun;
+    color: $slate;
+    font-weight: bold;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+
+@include media-breakpoint-down(lg) {
+    #tooltip {
+        display: none !important;
+    }
+}
+
+  #arrow,
+  #arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+
+  #arrow {
+    visibility: hidden;
+  }
+
+  #arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  #tooltip[data-popper-placement^='top'] > #arrow {
+    bottom: -4px;
+  }
+
+  #tooltip[data-popper-placement^='bottom'] > #arrow {
+    top: -4px;
+  }
+
+  #tooltip[data-popper-placement^='left'] > #arrow {
+    right: -4px;
+  }
+
+  #tooltip[data-popper-placement^='right'] > #arrow {
+    left: -4px;
+  }
+/* purgecss end ignore */
+
 .list-group-item {
     border-color: var(--dropdown-border-color);
     background: var(--body-background);
