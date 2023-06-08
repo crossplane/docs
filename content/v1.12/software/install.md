@@ -110,83 +110,92 @@ chart.
 
 Apply customizations with the command line or with a Helm _values_ file. 
 
+<!-- vale gitlab.Substitutions = NO -->
+<!-- allow lowercase yaml -->
 {{<expand "All Crossplane customization options" >}}
 {{< table "table table-hover table-striped table-sm">}}
 | Parameter | Description | Default |
 | --- | --- | --- |
-| `affinity` | Enable pod affinity for the Crossplane pods. | `{}` |
-| `args` | Optional arguments passed to the Crossplane pods. | `{}` |
-| `configuration.packages` | A list of Crossplane _Configuration_ packages to install together with Crossplane. | `[]` |
-| `customAnnotations` | Add custom annotations to the Crossplane deployments and pods. | `{}` |
-| `customLabels` | Add custom labels to the Crossplane deployments and pods. | `{}` |
-| `deploymentStrategy` | The deployment strategy for the Crossplane and RBAC Manager pods. | `RollingUpdate` |
-| `extraEnvVarsCrossplane` | List of extra environment variables to set in the Crossplane deployment. **Note**: Helm replaces all dot `.` values with underscores `_` (example: `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`). | `{}` |
-| `extraEnvVarsRBACManager` | List of extra environment variables to set in the Crossplane RBAC Manager deployment. **Note**: Helm replaces all dot `.` values with underscores `_` (example: `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`). | `{}` |
-| `image.pullPolicy` | Image pull policy used in all Crossplane containers. | `IfNotPresent` |
-| `image.repository` | Image repository for the Crossplane pods. | `crossplane/crossplane` |
-| `image.tag` | Image tag used to install the Crossplane pod image. | `master` |
-| `imagePullSecrets` | Names of image pull secrets to use. | `{}` |
-| `leaderElection` | Enable leader election for the Crossplane Manager pods. | `true` |
-| `metrics.enabled` | Expose Crossplane and RBAC Manager pod metrics endpoints. | `false` |
-| `nodeSelector` | Enable a node selector for the Crossplane pods. | `{}` |
-| `packageCache.configMap` | A [Kubernetes `configMap`](https://kubernetes.io/docs/concepts/storage/volumes/#configmap) to define the Crossplane _Configuration_ package cache. Configuring `packageCache.configMap` disables the [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir). Crossplane ignores the `packageCache.configMap` when using `packageCache.pvc`. | `""` | 
-| `packageCache.medium` | The [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) medium used for the Crossplane _Configuration_ package cache. Unused with `packageCache.pvc` or `packageCache.configMap` set. | `""` |
-| `packageCache.pvc` | Name of the [Kubernetes `PersistentVolumeClaim`](https://kubernetes.io/docs/concepts/storage/volumes/#persistentvolumeclaim) used for the Crossplane _Configuration_ package cache. The `packageCache.pvc` takes precedence over `packageCache.configMap` and disables the [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir).  | `""` |
-| `packageCache.sizeLimit` | The size limit of the [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) used for the Crossplane _Configuration_ package cache. Unused with `packageCache.pvc` or `packageCache.configMap` set. | `5Mi` |
-| `podSecurityContextCrossplane` | Configure a [Kubernetes `securityContext`](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for the Crossplane pods. | `{}` |
-| `podSecurityContextCrossplane` | Configure a [Kubernetes `securityContext`](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for the Crossplane RBAC Manager pod. | `{}` |
-| `priorityClassName` | The priority class name for Crossplane and RBAC Manager pods. | `""` |
-| `provider.packages` | A list of Crossplane _Provider_ packages to install together with Crossplane. | `[]` |
-| `rbacManager.affinity` | Enable affinity for the Crossplane RBAC Manager pod. | `{}` |
-| `rbacManager.deploy` | Deploy the Crossplane RBAC Manager pod and its required roles. | `true` |
-| `rbacManager.leaderElection` | Enable the leader election for the Crossplane RBAC Managers pod. | `true` |
-| `rbacManager.managementPolicy`| The extent to which the Crossplane RBAC manager manages permissions. Setting `rbacManager.managementPolicy` to `All` the Crossplane RBAC controller manages all Crossplane controller and user roles. Setting `rbacManager.managementPolicy` to `Basic` the Crossplane RBAC controller only manages `crossplane-admin`, `crossplane-edit`, and `crossplane-view` user roles. | `All` |
-| `rbacManager.nodeSelector` | Enable a node selector for the Crossplane RBAC Manager pod. | `{}` |
-| `rbacManager.replicas` | The number of replicas to run for the Crossplane RBAC Manager pods. | `1` |
-| `rbacManager.skipAggregatedClusterRoles` | Don't deploy RBAC aggregated ClusterRoles. | `false` |
-| `rbacManager.tolerations` | Enable tolerations for Crossplane RBAC Managers pod. | `[]` |
-| `registryCaBundleConfig.key` | Key to use from the _ConfigMap_ containing a CA bundle for fetching from package registries. | `{}` |
-| `registryCaBundleConfig.name` | Name of _ConfigMap_ containing a CA bundle for fetching from package registries.  | `{}` |
-| `replicas` | The number of replicas to run for the Crossplane pods. | `1` |
-| `resourcesCrossplane.limits.cpu` | CPU resource limits for the Crossplane pods. | `100m` |
-| `resourcesCrossplane.limits.memory` | Memory resource limits for the Crossplane pods. | `512Mi` |
-| `resourcesCrossplane.requests.cpu` | CPU resource requests for the Crossplane pods. | `100m` |
-| `resourcesCrossplane.requests.memory` | Memory resource requests for the Crossplane pods. | `256Mi` |
-| `resourcesRBACManager.limits.cpu` | CPU resource limits for the Crossplane RBAC Manager pod. | `100m` |
-| `resourcesRBACManager.limits.memory` | Memory resource limits for the Crossplane RBAC Manager pod. | `512Mi` |
-| `resourcesRBACManager.requests.cpu` | CPU resource requests for the Crossplane RBAC Manager pod. | `100m` |
-| `resourcesRBACManager.requests.memory` | Memory resource requests value the Crossplane RBAC Manager pod. | `256Mi` |
-| `securityContextCrossplane.allowPrivilegeEscalation` | Allow privilege escalation for the Crossplane pods. | `false` |
-| `securityContextCrossplane.readOnlyRootFilesystem` | Set a read only root file system for the Crossplane pods. | `true` |
-| `securityContextCrossplane.runAsGroup` | A _run as group_ for the Crossplane pods. | `65532` |
-| `securityContextCrossplane.runAsUser` | A _run as user_ for the Crossplane pods. | `65532` |
-| `securityContextRBACManager.allowPrivilegeEscalation` | Allow privilege escalation for the Crossplane RBAC Manager pod. | `false` |
-| `securityContextRBACManager.readOnlyRootFilesystem` | Set a read only root file system for the Crossplane RBAC Manager pod. | `true` |
-| `securityContextRBACManager.runAsGroup` | The _run as group_ for the Crossplane RBAC Manager pod. | `65532` |
-| `securityContextRBACManager.runAsUser` | The _run as user_ for the Crossplane RBAC Manager pod. | `65532` |
-| `serviceAccount.customAnnotations` | Add custom annotations to the Crossplane service account. | `{}` |
-| `tolerations` | Enable tolerations for Crossplane pod. | `[]` |
-| `webhooks.enabled` | Enable webhooks for Crossplane as well as packages installed by Crossplane. | `false` |
-| `xfn.args` | Optional arguments passed to the _Composite Resource Functions_ sidecar container. | `{}` |
-| `xfn.cache.medium` | The [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) medium used for the _Composite Resource Functions_ sidecar container cache. Unused with `xfn.cache.pvc` set. | `""` |
-| `xfn.cache.pvc` | Name of the [Kubernetes `PersistentVolumeClaim`](https://kubernetes.io/docs/concepts/storage/volumes/#persistentvolumeclaim) used for the _Composite Resource Functions_ sidecar container cache. The `xfn.cache.pvc` disables the _Composite Resource Functions_ [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir).  | `""` |
-| `xfn.cache.sizeLimit` | The size limit of the [Kubernetes `emptyDir`](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) used for the _Composite Resource Functions_ sidecar container cache. Unused with `xfn.cache.pvc` set. | `1Gi` |
-| `xfn.enabled` | Enable Crossplane _Composite Resource Functions_. Enabling _Composite Resource Functions_ also requires `args` set with `--enable-composition-functions`. | `false` |
-| `xfn.extraEnvVars` | List of extra environment variables to set in the _Composite Resource Functions_ sidecar container. **Note**: Helm replaces all dot `.` values with underscores `_` (example: `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`). | `{}` |
-| `xfn.image.pullPolicy` | Image pull policy used in the _Composite Resource Functions_ sidecar container. | `IfNotPresent` |
-| `xfn.image.repository` | Image repository for the _Composite Resource Functions_ sidecar container. | `crossplane/xfn` |
-| `xfn.image.tag` | Image tag used to install the _Composite Resource Functions_ sidecar container. | The installed Crossplane version. |
-| `xfn.imagePullSecrets` | Names of image pull secrets to use when installing the _Composite Resource Functions_ sidecar container. | `{}` |
-| `xfn.limits.cpu` | CPU resource limits for the Crossplane RBAC Manager pod. | `2000m` |
-| `xfn.limits.memory` | Memory resource limits for the Crossplane RBAC Manager pod. | `2Gi` |
-| `xfn.requests.cpu` | CPU resource requests for the Crossplane RBAC Manager pod. | `1000m` |
-| `xfn.requests.memory` | Memory resource requests value the Crossplane RBAC Manager pod. | `1Gi` |
-| `xfn.securityContext.allowPrivilegeEscalation` | Allow privilege escalation for the Crossplane RBAC Manager pod. | `false` |
-| `xfn.securityContext.readOnlyRootFilesystem` | Set a read only root file system for the Crossplane RBAC Manager pod. | `true` |
-| `xfn.securityContext.runAsGroup` | The _run as group_ for the Crossplane RBAC Manager pod. | `65532` |
-| `xfn.securityContext.runAsUser` | The _run as user_ for the Crossplane RBAC Manager pod. | `65532` |
+| `affinity` | Add `affinities` to the Crossplane pod deployment. | `{}` |
+| `args` | Add custom arguments to the Crossplane pod. | `[]` |
+| `configuration.packages` | A list of Configuration packages to install. | `[]` |
+| `customAnnotations` | Add custom `annotations` to the Crossplane pod deployment. | `{}` |
+| `customLabels` | Add custom `labels` to the Crossplane pod deployment. | `{}` |
+| `deploymentStrategy` | The deployment strategy for the Crossplane and RBAC Manager pods. | `"RollingUpdate"` |
+| `extraEnvVarsCrossplane` | Add custom environmental variables to the Crossplane pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
+| `extraEnvVarsRBACManager` | Add custom environmental variables to the RBAC Manager pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
+| `extraVolumeMountsCrossplane` | Add custom `volumeMounts` to the Crossplane pod. | `{}` |
+| `extraVolumesCrossplane` | Add custom `volumes` to the Crossplane pod. | `{}` |
+| `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork`` grants the Crossplane Pod access to the host network namespace. | `false` |
+| `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
+| `image.repository` | Repository for the Crossplane pod image. | `"crossplane/crossplane"` |
+| `image.tag` | The Crossplane image tag. Defaults to the value of `appVersion` in Chart.yaml. | `""` |
+| `imagePullSecrets` | The imagePullSecret names to add to the Crossplane ServiceAccount. | `{}` |
+| `leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the Crossplane pod. | `true` |
+| `metrics.enabled` | Enable Prometheus path, port and scrape annotations and expose port 8080 for both the Crossplane and RBAC Manager pods. | `false` |
+| `nodeSelector` | Add `nodeSelectors` to the Crossplane pod deployment. | `{}` |
+| `packageCache.configMap` | The name of a ConfigMap to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
+| `packageCache.medium` | Set to `Memory` to hold the package cache in a RAM-backed file system. Useful for Crossplane development. | `""` |
+| `packageCache.pvc` | The name of a PersistentVolumeClaim to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
+| `packageCache.sizeLimit` | The size limit for the package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"20Mi"` |
+| `podSecurityContextCrossplane` | Add a custom `securityContext` to the Crossplane pod. | `{}` |
+| `podSecurityContextRBACManager` | Add a custom `securityContext` to the RBAC Manager pod. | `{}` |
+| `priorityClassName` | The PriorityClass name to apply to the Crossplane and RBAC Manager pods. | `""` |
+| `provider.packages` | A list of Provider packages to install. | `[]` |
+| `rbacManager.affinity` | Add `affinities` to the RBAC Manager pod deployment. | `{}` |
+| `rbacManager.args` | Add custom arguments to the RBAC Manager pod. | `[]` |
+| `rbacManager.deploy` | Deploy the RBAC Manager pod and its required roles. | `true` |
+| `rbacManager.leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the RBAC Manager pod. | `true` |
+| `rbacManager.managementPolicy` | Defines the Roles and ClusterRoles the RBAC Manager creates and manages. - A policy of `Basic` creates and binds Roles only for the Crossplane ServiceAccount, Provider ServiceAccounts and creates Crossplane ClusterRoles. - A policy of `All` includes all the `Basic` settings and also creates Crossplane Roles in all namespaces. - Read the Crossplane docs for more information on the [RBAC Roles and ClusterRoles](https://docs.crossplane.io/latest/concepts/pods/#crossplane-clusterroles) | `"All"` |
+| `rbacManager.nodeSelector` | Add `nodeSelectors` to the RBAC Manager pod deployment. | `{}` |
+| `rbacManager.replicas` | The number of RBAC Manager pod `replicas` to deploy. | `1` |
+| `rbacManager.skipAggregatedClusterRoles` | Don't install aggregated Crossplane ClusterRoles. | `false` |
+| `rbacManager.tolerations` | Add `tolerations` to the RBAC Manager pod deployment. | `[]` |
+| `registryCaBundleConfig.key` | The ConfigMap key containing a custom CA bundle to enable fetching packages from registries with unknown or untrusted certificates. | `""` |
+| `registryCaBundleConfig.name` | The ConfigMap name containing a custom CA bundle to enable fetching packages from registries with unknown or untrusted certificates. | `""` |
+| `replicas` | The number of Crossplane pod `replicas` to deploy. | `1` |
+| `resourcesCrossplane.limits.cpu` | CPU resource limits for the Crossplane pod. | `"100m"` |
+| `resourcesCrossplane.limits.memory` | Memory resource limits for the Crossplane pod. | `"512Mi"` |
+| `resourcesCrossplane.requests.cpu` | CPU resource requests for the Crossplane pod. | `"100m"` |
+| `resourcesCrossplane.requests.memory` | Memory resource requests for the Crossplane pod. | `"256Mi"` |
+| `resourcesRBACManager.limits.cpu` | CPU resource limits for the RBAC Manager pod. | `"100m"` |
+| `resourcesRBACManager.limits.memory` | Memory resource limits for the RBAC Manager pod. | `"512Mi"` |
+| `resourcesRBACManager.requests.cpu` | CPU resource requests for the RBAC Manager pod. | `"100m"` |
+| `resourcesRBACManager.requests.memory` | Memory resource requests for the RBAC Manager pod. | `"256Mi"` |
+| `securityContextCrossplane.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the Crossplane pod. | `false` |
+| `securityContextCrossplane.readOnlyRootFilesystem` | Set the Crossplane pod root file system as read-only. | `true` |
+| `securityContextCrossplane.runAsGroup` | The group ID used by the Crossplane pod. | `65532` |
+| `securityContextCrossplane.runAsUser` | The user ID used by the Crossplane pod. | `65532` |
+| `securityContextRBACManager.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the RBAC Manager pod. | `false` |
+| `securityContextRBACManager.readOnlyRootFilesystem` | Set the RBAC Manager pod root file system as read-only. | `true` |
+| `securityContextRBACManager.runAsGroup` | The group ID used by the RBAC Manager pod. | `65532` |
+| `securityContextRBACManager.runAsUser` | The user ID used by the RBAC Manager pod. | `65532` |
+| `serviceAccount.customAnnotations` | Add custom `annotations` to the Crossplane ServiceAccount. | `{}` |
+| `tolerations` | Add `tolerations` to the Crossplane pod deployment. | `[]` |
+| `webhooks.enabled` | Enable webhooks for Crossplane and installed Provider packages. | `true` |
+| `xfn.args` | Add custom arguments to the Composite functions runner container. | `[]` |
+| `xfn.cache.configMap` | The name of a ConfigMap to use as the Composite function runner package cache. Disables the default Composite function runner package cache `emptyDir` Volume. | `""` |
+| `xfn.cache.medium` | Set to `Memory` to hold the Composite function runner package cache in a RAM-backed file system. Useful for Crossplane development. | `""` |
+| `xfn.cache.pvc` | The name of a PersistentVolumeClaim to use as the Composite function runner package cache. Disables the default Composite function runner package cache `emptyDir` Volume. | `""` |
+| `xfn.cache.sizeLimit` | The size limit for the Composite function runner package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"1Gi"` |
+| `xfn.enabled` | Enable the alpha Composition functions (`xfn`) sidecar container. Also requires Crossplane `args` value `--enable-composition-functions` set. | `false` |
+| `xfn.extraEnvVars` | Add custom environmental variables to the Composite function runner container. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
+| `xfn.image.pullPolicy` | Composite function runner container image pull policy. | `"IfNotPresent"` |
+| `xfn.image.repository` | Composite function runner container image. | `"crossplane/xfn"` |
+| `xfn.image.tag` | Composite function runner container image tag. Defaults to the value of `appVersion` in Chart.yaml. | `""` |
+| `xfn.resources.limits.cpu` | CPU resource limits for the Composite function runner container. | `"2000m"` |
+| `xfn.resources.limits.memory` | Memory resource limits for the Composite function runner container. | `"2Gi"` |
+| `xfn.resources.requests.cpu` | CPU resource requests for the Composite function runner container. | `"1000m"` |
+| `xfn.resources.requests.memory` | Memory resource requests for the Composite function runner container. | `"1Gi"` |
+| `xfn.securityContext.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the Composite function runner container. | `false` |
+| `xfn.securityContext.capabilities.add` | Set Linux capabilities for the Composite function runner container. The default values allow the container to create an unprivileged user namespace for running Composite function containers. | `["SETUID","SETGID"]` |
+| `xfn.securityContext.readOnlyRootFilesystem` | Set the Composite function runner container root file system as read-only. | `true` |
+| `xfn.securityContext.runAsGroup` | The group ID used by the Composite function runner container. | `65532` |
+| `xfn.securityContext.runAsUser` | The user ID used by the Composite function runner container. | `65532` |
+| `xfn.securityContext.seccompProfile.type` | Apply a `seccompProfile` to the Composite function runner container. The default value allows the Composite function runner container permissions to use the `unshare` syscall. | `"Unconfined"` |
 {{< /table >}}
 {{< /expand >}}
+<!-- vale gitlab.Substitutions = YES -->
 
 #### Command line customization
 
@@ -245,11 +254,11 @@ crossplane-stable/crossplane \
 
 #### Feature flags
 
-Crossplane usually introduces new features behind feature flags. By default
-alpha features are off, while beta features are enabled. To enable a feature
-flag, set the `args` value in the Helm chart. Available feature flags can be
-directly found by running `crossplane core start --help`, or by looking at the
-table below.
+Crossplane introduces new features behind feature flags. By default
+alpha features are off. Crossplane enables beta features by default. To enable a 
+feature flag, set the `args` value in the Helm chart. Available feature flags
+can be directly found by running `crossplane core start --help`, or by looking 
+at the table below.
 
 {{< expand "Feature flags" >}}
 {{< table caption="Feature flags" >}}

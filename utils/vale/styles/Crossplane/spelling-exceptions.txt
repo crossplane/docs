@@ -18,8 +18,8 @@ kubeconfig
 kubectl
 minikube
 namespace
-namespaces
 namespaced
+namespaces
 Netlify
 proselint
 semver
@@ -28,7 +28,9 @@ shortcodes
 SLAs
 stdin
 stdout
+syscall
 tolerations
+untrusted
 Upbound
 Upbound's
 Velero
