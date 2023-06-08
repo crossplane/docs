@@ -469,6 +469,45 @@ spec:
       version: ">=v0.18.2"
 ```
 
+
+## Tips, Tricks, and Troubleshooting
+
+In this section we'll cover some common tips, tricks, and troubleshooting steps
+for working with Composite Resources. If you're trying to track down why your
+Composite Resources aren't working the [Troubleshooting][trouble-ref] page also
+has some useful information.
+
+### Troubleshooting Claims and XRs
+
+Crossplane relies heavily on status conditions and events for troubleshooting.
+You can see both using `kubectl describe` - for example:
+
+```console
+# Describe the PostgreSQLInstance claim named my-db
+kubectl describe postgresqlinstance.database.example.org my-db
+```
+
+Per Kubernetes convention, Crossplane keeps errors close to the place they
+happen. This means that if your claim is not becoming ready due to an issue with
+your `Composition` or with a composed resource you'll need to "follow the
+references" to find out why. Your claim will only tell you that the XR is not
+yet ready.
+
+To follow the references:
+
+1. Find your XR by running `kubectl describe` on your claim and looking for its
+   "Resource Ref" (aka `spec.resourceRef`).
+1. Run `kubectl describe` on your XR. This is where you'll find out about issues
+   with the `Composition` you're using, if any.
+1. If there are no issues but your XR doesn't seem to be becoming ready, take a
+   look for the "Resource Refs" (or `spec.resourceRefs`) to find your composed
+   resources.
+1. Run `kubectl describe` on each referenced composed resource to determine
+   whether it is ready and what issues, if any, it is encountering.
+
+
+
+
 <!-- Named Links -->
 <!-- 
 [Requested Resource Not Found]: #requested-resource-not-found
@@ -484,3 +523,5 @@ spec:
 [Crossplane package]: "../concepts/packages"
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
 [semver spec]: https://github.com/Masterminds/semver#basic-comparisons -->
+
+
