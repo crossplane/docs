@@ -53,4 +53,4 @@ learn more about all of these concepts in the [composition documentation].
 [providers documentation]: {{<ref "providers" >}}
 [Upbound Marketplace]: https://marketplace.upbound.io
 [managed resources documentation]: {{<ref "managed-resources" >}}
-[composition documentation]: {{<ref "composition" >}}
+[composition documentation]: {{<ref "compositions" >}}
