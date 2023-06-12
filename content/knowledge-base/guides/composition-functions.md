@@ -5,7 +5,8 @@ alphaVersion: "1.11"
 ---
 
 Composition Functions allow you to supplement or replace your Compositions with
-advanced logic. You can build a Function using general purpose programming
+advanced logic not implementable through available patching strategies. 
+You can build a Function using general purpose programming
 languages such as Go or Python, or relevant tools such as Helm, kustomize, or
 CUE. Functions compliment contemporary "Patch and Transform" (P&T) style
 Composition. It's possible to use only P&T, only Functions, or a mix of both in
@@ -243,7 +244,7 @@ follows Kubernetes conventions.
 A `FunctionIO` consists of:
 
 * An optional, arbitrary `config` object.
-* The `observed` state of the XR and any existing composed resources.
+* The `observed` state of the XR and any existing composed resources and their connection details.
 * The `desired` state of the XR and any composed resources.
 * Optional `results` of the Function pipeline.
 
@@ -321,7 +322,13 @@ The `observed` state of the XR and any existing composed resources reflects the
 observed state at the beginning of a reconcile, before any Composition happens.
 Your Function will only see composite and composed resources that _actually
 exist_ in the API server in the `observed` state. The `observed` state also
-includes any observed connection details.
+includes any observed connection details. A few early function invocations
+might be seeing empty connection details, but as soon external resources are created,
+connection details are going to be passed to the functions. Access to the connection
+details enables us to implement quite a sophisticated tweaks on composed resources.
+For example, if a composition is declared on two or more resources, it would be possible
+to use the connection details of one resource to update another resource properly.
+None of the available patch types can achieve that.
 
 The `desired` state of the XR and composed resources is how your Function tells
 Crossplane what it should do. Crossplane 'bootstraps' the initial desired state
