@@ -244,7 +244,7 @@ follows Kubernetes conventions.
 A `FunctionIO` consists of:
 
 * An optional, arbitrary `config` object.
-* The `observed` state of the XR and any existing composed resources and their connection details.
+* The `observed` state of the XR, any existing composed resources, and their connection details.
 * The `desired` state of the XR and any composed resources.
 * Optional `results` of the Function pipeline.
 
@@ -322,13 +322,14 @@ The `observed` state of the XR and any existing composed resources reflects the
 observed state at the beginning of a reconcile, before any Composition happens.
 Your Function will only see composite and composed resources that _actually
 exist_ in the API server in the `observed` state. The `observed` state also
-includes any observed connection details. A few early function invocations
-might be seeing empty connection details, but as soon external resources are created,
-connection details are going to be passed to the functions. Access to the connection
-details enables us to implement quite a sophisticated tweaks on composed resources.
-For example, if a composition is declared on two or more resources, it would be possible
-to use the connection details of one resource to update another resource properly.
-None of the available patch types can achieve that.
+includes any observed connection details. Initial function invocations
+might see empty connection details, but once external resources are created,
+connection details will be passed to the functions. Access to the connection
+details enables us to implement quite sophisticated tweaks on composed resources.
+
+For example, if a composition is declared on two or more resources, it is possible
+to use one resource's connection details to update another. This ability is not available
+with any of the available patch types available.
 
 The `desired` state of the XR and composed resources is how your Function tells
 Crossplane what it should do. Crossplane 'bootstraps' the initial desired state
