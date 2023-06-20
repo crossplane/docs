@@ -86,7 +86,7 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
-  projectID: $$<PROJECT_ID>$$
+  projectID: $@<PROJECT_ID>$@
   credentials:
     source: Secret
     secretRef:
