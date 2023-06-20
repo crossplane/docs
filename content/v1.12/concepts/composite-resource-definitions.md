@@ -3,6 +3,13 @@ title: Composite Resource Definitions
 weight: 40
 ---
 
+# Document XRD Conditions
+https://github.com/crossplane/docs/issues/448
+
+
+# Restart XR and claim controllers when XRDs are updated
+https://github.com/crossplane/docs/issues/288
+
 ## CompositeResourceDefinitions
 
 Below is an example `CompositeResourceDefinition` that includes all configurable

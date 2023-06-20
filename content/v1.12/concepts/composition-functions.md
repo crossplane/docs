@@ -4,6 +4,9 @@ state: alpha
 alphaVersion: "1.11"
 ---
 
+https://github.com/crossplane/crossplane/issues/4182
+XFN only use read-only filesystem.
+
 Composition Functions allow you to supplement or replace your Compositions with
 advanced logic not implementable through available patching strategies. 
 You can build a Function using general purpose programming
