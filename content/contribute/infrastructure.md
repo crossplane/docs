@@ -13,9 +13,10 @@ influences the directory structure of the website repository.
 The `/content` directory is the root directory for all documentation content.
 
 The `/themes/geekboot` directory is the root directory for all website related
-files, like HTML templates, shortcodes and global media files. 
+files, like HTML templates, shortcodes and global media files.
 
-The `/utils/` directory is for JavaScript source code used in the website. 
+The `/utils/` directory is for JavaScript source code and files unrelated to
+Hugo used in the website.
 
 The `/themes/geekboot/assets` folder contains all (S)CSS and compiled JavaScript
 for the website.
@@ -114,10 +115,12 @@ Expand the tab below to see an annotated `tree` output of the website repository
 ```shell
 tree .
 ├── content                     # Root for all page content
+│   ├── contribute
+│   ├── knowledge-base
 │   ├── master
-│   ├── v1.10
-│   ├── v1.8
-│   └── v1.9
+│   ├── v1.12
+│   ├── v1.11
+│   └── v1.10
 ├── themes                      # Entry point for theme-specific designs
 │   └── geekboot
 │       ├── assets              # JS and stylesheets
@@ -136,13 +139,16 @@ tree .
 │           ├── fonts           # Font files
 │           └── img             # Global images
 └── utils                       # Files unrelated to Hugo
+    └── vale                    # Files related to our Vale validation rules
     └── webpack                 # Files managed or related to webpack
         └── src
             └── js
                 └── bootstrap/          # Original Bootstrap JavaScript
                 └── colorMode.js        # Color theme switcher
                 └── customClipboard.js  # Defines where to put a clipboard icon and what to copy
+                └── globalScripts.js    # The collection of things to load on all pages
                 └── hoverHighlight.js   # Enables hover to highlight
+                └── slackNotify.js      # Tooltip to prompt user to join the community Slack
                 └── tabDeepAnchor.js    # Enable anchors inside tabs
 ```
 {{</expand>}}
