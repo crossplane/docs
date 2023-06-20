@@ -11,3 +11,5 @@ exceptions:
   - GCP
   - JSON
   - RBAC
+  - CSS
+  - SCSS
