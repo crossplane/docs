@@ -33,8 +33,8 @@ Extract and run Hugo with `hugo server`.
 Hugo builds the website and launch a local web server on
 <a href="http://localhost:1313" data-proofer-ignore>http://localhost:1313</a>.
 
-Any changes made are instantly reflected on the local web server. You
-don't need to restart Hugo.
+Any changes made are instantly reflected on the local web server. No need
+to restart Hugo.
 
 ### Contribute to a specific version
 Each Crossplane version is a unique folder inside `/content`. 
@@ -122,8 +122,8 @@ alphaVersion: "1.11"
 ---
 ```
 
-For beta features set `state: beta` and use both `alhpaVersion` and 
-`betaVersion` to provide the version that introduced and graudated the feature.
+For beta features set `state: beta` and use both `alhpaVersion` and
+`betaVersion` to provide the version that introduced and graduated the feature.
 
 ```yaml
 ---
