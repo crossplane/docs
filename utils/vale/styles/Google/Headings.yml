@@ -13,8 +13,10 @@ exceptions:
   - CLI
   - ClusterRoles
   - Code
+  - Composite Resource
   - Composite Resource Definitions
   - Composite Resources
+  - CompositeFunctions
   - CompositeResourceDefinition
   - Composition
   - Cosmos
@@ -22,6 +24,7 @@ exceptions:
   - Docker
   - DynamoDB
   - Emmet
+  - EnvironmentConfigs
   - gRPC
   - Hashicorpterms
   - Helm
