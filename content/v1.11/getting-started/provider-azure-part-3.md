@@ -553,20 +553,20 @@ The `crossplane.yaml` file lists the required Crossplane _Providers_ and their
 compatible versions as well as the required Crossplane version. 
 
 The Crossplane
-{{<hover label="xpyaml" line="1" >}}meta.pkg{{</hover>}} API defines the schema
+{{<hover label="xpyaml" line="3" >}}meta.pkg{{</hover>}} API defines the schema
 for a 
-{{<hover label="xpyaml" line="2" >}}Configuration{{</hover>}}.
+{{<hover label="xpyaml" line="4" >}}Configuration{{</hover>}}.
 
-Inside the {{<hover label="xpyaml" line="5" >}}spec{{</hover>}} define the
+Inside the {{<hover label="xpyaml" line="7" >}}spec{{</hover>}} define the
 required Crossplane
-{{<hover label="xpyaml" line="7" >}}version{{</hover>}}.
+{{<hover label="xpyaml" line="9" >}}version{{</hover>}}.
 
-The {{<hover label="xpyaml" line="8" >}}dependsOn{{</hover>}} section lists the
+The {{<hover label="xpyaml" line="10" >}}dependsOn{{</hover>}} section lists the
 dependencies for a package. 
 
 This package lists the Upbound 
-{{<hover label="xpyaml" line="9" >}}provider-azure{{</hover>}}
-version {{<hover label="xpyaml" line="10" >}}0.32.0{{</hover>}} or later as a
+{{<hover label="xpyaml" line="11" >}}provider-azure{{</hover>}}
+version {{<hover label="xpyaml" line="12" >}}0.32.0{{</hover>}} or later as a
 dependency.
 
 {{<hint "tip" >}}
@@ -574,22 +574,9 @@ Crossplane automatically installs dependencies. Dependencies can include other
 configuration packages.
 {{< /hint >}}
 
-```yaml {label="xpyaml"}
-apiVersion: meta.pkg.crossplane.io/v1
-kind: Configuration
-metadata:
-  name: crossplane-azure-quickstart
-spec:
-  crossplane:
-    version: ">=v1.11.0"
-  dependsOn:
-    - provider: xpkg.upbound.io/upbound/provider-azure
-      version: ">=v0.32.0"
-```
-
 Create a new directory and save the `crossplane.yaml` file.
 
-```yaml
+```yaml {label="xpyaml"}
 mkdir crossplane-azure-quickstart
 cat <<EOF > crossplane-azure-quickstart/crossplane.yaml
 apiVersion: meta.pkg.crossplane.io/v1
@@ -598,7 +585,7 @@ metadata:
   name: crossplane-azure-quickstart
 spec:
   crossplane:
-    version: ">=v1.12.0"
+    version: ">=v1.11.0"
   dependsOn:
     - provider: xpkg.upbound.io/upbound/provider-azure
       version: ">=v0.32.0"
@@ -781,10 +768,10 @@ extension.
 wget "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
 chmod +x install.sh
 ./install.sh
-sudo mv kubectl-crossplane /usr/bin
 ```
 
-
+Follow the directions and move the `kubectl-crossplane` binary to the correct
+directory. 
 
 Verify the Crossplane command-line installed with `kubectl crossplane --help`
 
