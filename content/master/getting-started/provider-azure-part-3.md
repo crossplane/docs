@@ -574,7 +574,7 @@ Crossplane automatically installs dependencies. Dependencies can include other
 configuration packages.
 {{< /hint >}}
 
-```yaml {label="xpyaml"}
+```yaml {label="xpyaml",copy-lines="none"}
 apiVersion: meta.pkg.crossplane.io/v1
 kind: Configuration
 metadata:
@@ -781,10 +781,10 @@ extension.
 wget "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
 chmod +x install.sh
 ./install.sh
-sudo mv kubectl-crossplane /usr/bin
 ```
 
-
+Follow the directions and move the `kubectl-crossplane` binary to the correct
+directory. 
 
 Verify the Crossplane command-line installed with `kubectl crossplane --help`
 
