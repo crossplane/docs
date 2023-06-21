@@ -3,6 +3,8 @@
     publish = "public/"
     command = "hugo --minify "
 
+[build.environment]
+  HUGO_VERSION = "0.114.0"    
 
 [[redirects]]
 from = "/docs/*"
@@ -42,4 +44,4 @@ status = 302
 # Dev should be set under [context.dev.environment] instead.
 [dev]
     command = "hugo server"
-    port = 8888
+    port = 8888    
