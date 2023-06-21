@@ -96,7 +96,17 @@ same time.
 This sample _composition_ creates an Linux Virtual Machine and the required
 networking components. 
 
-To create a _composition_, first define each individual managed resource.
+Compositions have multiple components:
+* The individual managed resources.
+* The Composition kind and version.
+* A Composite type reference. 
+
+The following steps describe each of these components before 
+[applying the final Composition](#apply-the-composition).
+
+Follow the steps to understand their details or skip straight to 
+[applying the Composition](#apply-the-composition). 
+
 
 ### Define a virtual network
 Define a `virtualnetwork` resource using the configuration from the previous 
