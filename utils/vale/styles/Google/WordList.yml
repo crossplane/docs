@@ -39,7 +39,6 @@ swap:
   chapter: documents|pages|sections
   check box: checkbox
   check: select
-  CLI: command-line tool
   click on: click|click in
   Container Engine: Kubernetes Engine
   content type: media type

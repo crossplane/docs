@@ -28,6 +28,7 @@ shortcodes
 SLAs
 stdin
 stdout
+subnet
 syscall
 tolerations
 untrusted
