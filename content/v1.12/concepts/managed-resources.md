@@ -1,6 +1,6 @@
 ---
 title: Managed Resources
-weight: 20
+weight: 102
 ---
 
 A _managed resource_ (`MR`) represents an external service in a Provider. When
@@ -16,7 +16,7 @@ external object inside the Provider an _external resource_.
 Managed Resources are the building blocks of Crossplane. They're designed to be
 _composed_ into higher level, opinionated Custom Resources that Crossplane calls
 Composite Resources or XRs - not used directly. See the
-[Composition]({{<ref "composite-resources" >}}) documentation for more information.
+[Composition]({{<ref "composition" >}}) documentation for more information.
 
 {{< hint "tip" >}}
 
