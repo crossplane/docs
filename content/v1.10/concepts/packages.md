@@ -332,6 +332,10 @@ to avoid having to manually activate new versions. However, each user should
 consider their specific environment and choose a combination that makes sense
 for them.
 
+For security reasons, it's suggested using image digests instead or alongside
+tags (`vx.y.z@sha256:...`), to ensure that the package content wasn't tampered
+with.
+
 ### spec.revisionHistoryLimit
 
 Valid values: any integer, disabled by explicitly setting to `0` (default `1`)
