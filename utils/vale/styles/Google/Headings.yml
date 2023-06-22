@@ -18,7 +18,9 @@ exceptions:
   - Composite Resources
   - CompositeFunctions
   - CompositeResourceDefinition
+  - compositeTypeRef
   - Composition
+  - Compositions
   - Cosmos
   - Crossplane
   - Docker
