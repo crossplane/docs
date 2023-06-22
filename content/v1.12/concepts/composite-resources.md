@@ -3,6 +3,39 @@ title: Composite Resources
 weight: 30
 ---
 
+### Influencing External Names
+
+The `crossplane.io/external-name` annotation has special meaning to Crossplane
+managed resources - it specifies the name (or identifier) of the resource in the
+external system, for example the actual name of a `CloudSQLInstance` in the GCP
+API. Some managed resources don't let you specify an external name - in those
+cases Crossplane will set it for you to whatever the external system requires.
+
+If you add the `crossplane.io/external-name` annotation to a claim Crossplane
+will automatically propagate it when it creates an XR. It's good practice to
+have your `Composition` further propagate the annotation to one or more composed
+resources, but it's not required.
+
+where `MyResource` is a Composite Resource Claim kind.
+When a Composite Resource or a Claim has the `crossplane.io/paused` annotation
+with its value set to `true`, the Composite Resource controller or the Claim
+controller pauses reconciliations on the resource until
+the annotation is removed or its value set to something other than `true`.
+Before temporarily pausing reconciliations, an event with the type `Synced`,
+the status `False`, and the reason `ReconcilePaused` is emitted
+on the resource.
+Please also note that annotations on a Composite Resource Claim are propagated
+to the associated Composite Resource but when the
+`crossplane.io/paused: "true"` annotation is added to a Claim, because
+reconciliations on the Claim are now paused, this newly added annotation
+will not be propagated. However, whenever the annotation's value is set to a
+non-`true` value, reconciliations on the Claim will now resume, and thus the
+annotation will now be propagated to the associated Composite Resource
+with a non-`true` value. An implication of the described behavior is that
+pausing reconciliations on the Claim will not inherently pause reconciliations
+on the associated Composite Resource.
+
+
 # Document EnvironmentConfig
 https://github.com/crossplane/docs/issues/305
 

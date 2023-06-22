@@ -3,6 +3,19 @@ title: Composite Resource Definitions
 weight: 40
 ---
 
+### Influencing External Names
+
+The `crossplane.io/external-name` annotation has special meaning to Crossplane
+managed resources - it specifies the name (or identifier) of the resource in the
+external system, for example the actual name of a `CloudSQLInstance` in the GCP
+API. Some managed resources don't let you specify an external name - in those
+cases Crossplane will set it for you to whatever the external system requires.
+
+If you add the `crossplane.io/external-name` annotation to a claim Crossplane
+will automatically propagate it when it creates an XR. It's good practice to
+have your `Composition` further propagate the annotation to one or more composed
+resources, but it's not required.
+
 # Document XRD Conditions
 https://github.com/crossplane/docs/issues/448
 

@@ -3,6 +3,108 @@ title: Patch and Transforms
 weight: 55
 ---
 
+### Influencing External Names
+
+The `crossplane.io/external-name` annotation has special meaning to Crossplane
+managed resources - it specifies the name (or identifier) of the resource in the
+external system, for example the actual name of a `CloudSQLInstance` in the GCP
+API. Some managed resources don't let you specify an external name - in those
+cases Crossplane will set it for you to whatever the external system requires.
+
+If you add the `crossplane.io/external-name` annotation to a claim Crossplane
+will automatically propagate it when it creates an XR. It's good practice to
+have your `Composition` further propagate the annotation to one or more composed
+resources, but it's not required.
+
+where `MyResource` is a Composite Resource Claim kind.
+When a Composite Resource or a Claim has the `crossplane.io/paused` annotation
+with its value set to `true`, the Composite Resource controller or the Claim
+controller pauses reconciliations on the resource until
+the annotation is removed or its value set to something other than `true`.
+Before temporarily pausing reconciliations, an event with the type `Synced`,
+the status `False`, and the reason `ReconcilePaused` is emitted
+on the resource.
+Please also note that annotations on a Composite Resource Claim are propagated
+to the associated Composite Resource but when the
+`crossplane.io/paused: "true"` annotation is added to a Claim, because
+reconciliations on the Claim are now paused, this newly added annotation
+will not be propagated. However, whenever the annotation's value is set to a
+non-`true` value, reconciliations on the Claim will now resume, and thus the
+annotation will now be propagated to the associated Composite Resource
+with a non-`true` value. An implication of the described behavior is that
+pausing reconciliations on the Claim will not inherently pause reconciliations
+on the associated Composite Resource.
+
+<!-- This also related to XRs -->
+### Connection Details
+
+Connection details secret of XR is an aggregated sum of the connection details
+of the composed resources. It's recommended that the author of XRD specify
+exactly which keys will be allowed in the XR connection secret by listing them
+in `spec.connectionSecretKeys` so that consumers of claims and XRs can see what
+they can expect in the connection details secret.
+
+If `spec.connectionSecretKeys` is empty, then all keys of the aggregated connection
+details secret will be propagated.
+
+You can derive the following types of connection details from a composed
+resource to be aggregated:
+
+`FromConnectionSecretKey`. Derives an XR connection detail from a connection
+secret key of a composed resource.
+
+```yaml
+# Derive the XR's 'user' connection detail from the 'username' key of the
+# composed resource's connection secret.
+- type: FromConnectionSecretKey
+  name: user
+  fromConnectionSecretKey: username
+```
+
+`FromFieldPath`. Derives an XR connection detail from a field path within the
+composed resource.
+
+```yaml
+# Derive the XR's 'user' connection detail from the 'adminUser' status field of
+# the composed resource.
+- type: FromFieldPath
+  name: user
+  fromFieldPath: status.atProvider.adminUser
+```
+
+`FromValue`. Derives an XR connection detail from a fixed value.
+
+```yaml
+# Always sets the XR's 'user' connection detail to 'admin'.
+- type: FromValue
+  name: user
+  value: admin
+```
+
+<!-- break --> 
+
+You'll encounter a lot of 'field paths' when reading or writing a `Composition`.
+Field paths reference a field within a Kubernetes object via a simple string
+'path'. [API conventions][field-paths] describe the syntax as:
+
+> Standard JavaScript syntax for accessing that field, assuming the JSON object
+> was transformed into a JavaScript object, without the leading dot, such as
+> `metadata.name`.
+
+ Valid field paths include:
+
+* `metadata.name` - The `name` field of the `metadata` object.
+* `spec.containers[0].name` - The `name` field of the 0th `containers` element.
+* `data[.config.yml]` - The `.config.yml` field of the `data` object.
+* `apiVersion` - The `apiVersion` field of the root object.
+
+ While the following are invalid:
+
+* `.metadata.name` - Leading period.
+* `metadata..name` - Double period.
+* `metadata.name.` - Trailing period.
+* `spec.containers[]` - Empty brackets.
+* `spec.containers.[0].name` - Period before open bracket.
 
 ### Patch Types
 
