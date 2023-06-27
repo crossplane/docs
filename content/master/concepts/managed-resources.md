@@ -39,7 +39,7 @@ Provider](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/)
 defines the {{<hover label="gkv" line="2">}}Instance{{</hover>}} kind from the
 group {{<hover label="gkv" line="1">}}ec2.aws.upbound.io{{</hover>}}
 
-```yaml {label="gkv",copy-lines="none}
+```yaml {label="gkv",copy-lines="none"}
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Instance
 ```
@@ -77,7 +77,7 @@ Refer to the documentation of your specific Provider for details.
 {{< /hint >}}
 
 
-```yaml {label="forProvider",copy-lines="none}
+```yaml {label="forProvider",copy-lines="none"}
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Instance
 # Removed for brevity
@@ -124,7 +124,7 @@ my-test-vpc     True    True     vpc-01353cfe93950a8ff   49m
 To match the VPC by name, use the external name. For example, creating a Subnet
 managed resource attached to this VPC.
 
-```yaml {copy-lines="none}
+```yaml {copy-lines="none"}
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Subnet
 spec:
@@ -462,7 +462,7 @@ For example, a managed resource named
 the name `my-rds-instance` as an external resource inside the Provider's
 environment. 
 
-```yaml {label="external-name,copy-lines="none"}
+```yaml {label="external-name",copy-lines="none"}
 apiVersion: database.aws.crossplane.io/v1beta1
 kind: RDSInstance
 metadata:
@@ -518,7 +518,7 @@ for more details
 {{< /hint >}}
 
 
-### Pause
+### Paused
 Manually applying the `crossplane.io/paused` annotation causes the Provider to
 stop reconciling the managed resource. 
 
