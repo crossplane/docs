@@ -1288,6 +1288,18 @@ an existing Composite Resource as long as its a type of XR that offers a claim
 and no one else has already claimed it. To do so:
 
 1. Set the `spec.resourceRef` of your claim to reference the existing XR.
+    ```yaml
+    apiVersion: database.example.org/v1alpha1
+    kind: PostgreSQLInstance
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      resourceRef:
+        apiVersion: database.example.org/v1alpha1
+        kind: XPostgreSQLInstance
+        name: example-d4lmv
+    ```
 1. Make sure the rest of your claim's spec fields match the XR's.
 
 If your claim's spec fields don't match the XR's Crossplane will still claim it

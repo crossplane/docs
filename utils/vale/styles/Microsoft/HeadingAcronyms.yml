@@ -10,3 +10,6 @@ exceptions:
   - AWS
   - GCP
   - JSON
+  - RBAC
+  - CSS
+  - SCSS

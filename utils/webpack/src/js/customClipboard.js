@@ -16,6 +16,9 @@ var codeBlocks = document.querySelectorAll('.highlight')
 
 for (var i = 0; i < codeBlocks.length; i++){
   var copyLines = getLines(codeBlocks[i])
+  if(copyLines[0] == 0 && copyLines[1] == 0){
+    continue
+  }
   setHighlight(codeBlocks[i], copyLines)
   codeBlocks[i].insertAdjacentHTML('beforeend', btnHtml)
 }
@@ -85,6 +88,10 @@ function getLines(highlightDiv){
   var copyVal = highlightDiv.attributes["copy-lines"].value
   var startLines = 1
   var endLines = codeLinesLength
+
+  if(copyVal === "none"){
+    return [0,0]
+  }
 
   // if it's a single digit then start == end
   if(copyVal.length === 1){

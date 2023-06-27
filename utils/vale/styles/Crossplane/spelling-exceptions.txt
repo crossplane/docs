@@ -19,6 +19,7 @@ kubeconfig
 kubectl
 minikube
 namespace
+namespaced
 namespaces
 Netlify
 PostgreSQL
@@ -30,7 +31,10 @@ SLAs
 stdin
 stdout
 Subnet
+subnet
+syscall
 tolerations
+untrusted
 Upbound
 Upbound's
 Upjet

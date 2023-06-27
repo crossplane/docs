@@ -39,7 +39,7 @@ are available from the Vault documentation.
 
 ### Add the Vault Helm chart
 
-Add the Hashicorp Helm repository.
+Add the Helm repository for `hashicorp`.
 ```shell
 helm repo add hashicorp https://helm.releases.hashicorp.com --force-update 
 ```
@@ -188,23 +188,14 @@ Success! Data written to: auth/kubernetes/role/crossplane
 ## Install Crossplane
 
 {{<hint "important" >}}
-Plugin support is in the unreleased Crossplane v1.12. This guide uses a
-pre-release build with plugin support.
+Crossplane v1.12 introduced the plugin support. Make sure your version of Crossplane supports plugins.
 {{< /hint >}}
 
-Pre-release Crossplane versions are in the Crossplane `master` repository.
-
-```shell
-helm repo add crossplane-master https://charts.crossplane.io/master --force-update
-```
-
-Install the Crossplane development build version and enable the External Secrets
-Stores feature.
+Install the Crossplane with the External Secrets Stores feature enabled.
 
 ```shell 
-helm upgrade --install crossplane crossplane-master/crossplane --devel --version 1.12.0-rc.0.284.g190ab067 --namespace crossplane-system --create-namespace --set args='{--enable-external-secret-stores}'
+helm upgrade --install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace --set args='{--enable-external-secret-stores}'
 ```
-
 
 ## Install the Crossplane Vault plugin
 

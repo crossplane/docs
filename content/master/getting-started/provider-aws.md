@@ -1190,7 +1190,7 @@ Crossplane created the bucket when the values `READY` and `SYNCED` are `True`.
 This may take up to 5 minutes.  
 {{< /hint >}}
 
-```shell
+```shell {copy-lines="1"}
 kubectl get buckets
 NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
 crossplane-bucket-45eed4ae0   True    True     crossplane-bucket-45eed4ae0   61s

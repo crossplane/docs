@@ -39,14 +39,12 @@ swap:
   chapter: documents|pages|sections
   check box: checkbox
   check: select
-  CLI: command-line tool
   click on: click|click in
   Container Engine: Kubernetes Engine
   content type: media type
   curated roles: predefined roles
   data are: data is
   Developers Console: Google API Console|API Console
-  disabled?: turn off|off
   ephemeral IP address: ephemeral external IP address
   fewer data: less data
   file name: filename
