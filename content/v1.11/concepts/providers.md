@@ -147,7 +147,7 @@ View the status of a Provider with
 During the install a Provider report `INSTALLED` as `True` and `HEALTHY` as
 `Unknown`.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
 crossplane-contrib-provider-aws   True        Unknown   xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0   63s
@@ -156,7 +156,7 @@ crossplane-contrib-provider-aws   True        Unknown   xpkg.upbound.io/crosspla
 After the Provider install completes and it's ready for use the `HEALTHY` status
 reports `True`.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
 crossplane-contrib-provider-aws   True        True      xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0   88s
@@ -172,13 +172,41 @@ The Crossplane community has more
 {{< /hint >}}
 ### Provider conditions
 
+Crossplane uses a standard set of `Conditions` for Providers.  
 View the conditions of a provider under their `Status` with 
-`kubectl describe provider`.
+`kubectl describe provider`. 
 
-Providers have the following possible conditions:
+```yaml
+kubectl describe provider
+Name:         my-provider
+API Version:  pkg.crossplane.io/v1
+Kind:         Provider
+# Removed for brevity
+Status:
+  Conditions:
+    Reason:      HealthyPackageRevision
+    Status:      True
+    Type:        Healthy
+    Reason:      ActivePackageRevision
+    Status:      True
+    Type:        Installed
+# Removed for brevity
+```
+
+#### Types
+Provider `Conditions` support two `Types`:
+* `Type: Installed` - the Provider package installed but isn't ready for use.
+* `Type: Healthy` - The Provider package is ready to use. 
+
+#### Reasons
+Each `Reason` relates to a specific `Type` and `Status`. Crossplane uses the
+following `Reasons` for Provider `Conditions`.
 
 <!-- vale Google.Headings = NO -->
-#### InactivePackageRevision
+##### InactivePackageRevision
+`Reason: InactivePackageRevision` indicates the Provider Package is using an 
+inactive Provider Package Revision.
+
 <!-- vale Google.Headings = YES -->
 ```yaml
 Type: Installed
@@ -186,17 +214,9 @@ Status: False
 Reason: InactivePackageRevision
 ```
 
-The Provider Package is using an inactive Provider Package Revision.
-
 <!-- vale Google.Headings = NO -->
-#### ActivePackageRevision
+##### ActivePackageRevision
 <!-- vale Google.Headings = YES -->
-```yaml
-Type: Installed
-Status: True
-Reason: ActivePackageRevision
-```
-
 The Provider Package is the current Package Revision, but Crossplane hasn't
 finished installing the Package Revision yet. 
 
@@ -206,8 +226,20 @@ Providers stuck in this state are because of a problem with Package Revisions.
 Use `kubectl describe providerrevisions` for more details.
 {{< /hint >}}
 
+```yaml
+Type: Installed
+Status: True
+Reason: ActivePackageRevision
+```
+
 <!-- vale Google.Headings = NO -->
-#### HealthyPackageRevision
+##### HealthyPackageRevision
+The Provider is fully installed and ready to use.
+
+{{<hint "tip" >}}
+`Reason: HealthyPackageRevision` is the normal state of a working Provider.
+{{< /hint >}}
+
 <!-- vale Google.Headings = YES -->
 ```yaml
 Type: Healthy
@@ -215,18 +247,9 @@ Status: True
 Reason: HealthyPackageRevision
 ```
 
-The Provider is fully installed and ready to use.
-
-
 <!-- vale Google.Headings = NO -->
-#### UnhealthyPackageRevision
+##### UnhealthyPackageRevision
 <!-- vale Google.Headings = YES -->
-
-```yaml
-Type: Healthy
-Status: False
-Reason: UnhealthyPackageRevision
-```
 
 There was an error installing the Provider Package Revision, preventing
 Crossplane from installing the Provider Package. 
@@ -236,14 +259,15 @@ Use `kubectl describe providerrevisions` for more details on why the Package
 Revision failed.
 {{< /hint >}}
 
-<!-- vale Google.Headings = NO -->
-#### UnknownPackageRevisionHealth
-<!-- vale Google.Headings = YES -->
 ```yaml
 Type: Healthy
-Status: Unknown
-Reason: UnknownPackageRevisionHealth
+Status: False
+Reason: UnhealthyPackageRevision
 ```
+<!-- vale Google.Headings = NO -->
+##### UnknownPackageRevisionHealth
+<!-- vale Google.Headings = YES -->
+
 
 The status of the Provider Package Revision is `Unknown`. The Provider Package
 Revision may be installing or has an issue. 
@@ -252,6 +276,12 @@ Revision may be installing or has an issue.
 Use `kubectl describe providerrevisions` for more details on why the Package
 Revision failed.
 {{< /hint >}}
+
+```yaml
+Type: Healthy
+Status: Unknown
+Reason: UnknownPackageRevisionHealth
+```
 
 ## Configure a Provider
 
