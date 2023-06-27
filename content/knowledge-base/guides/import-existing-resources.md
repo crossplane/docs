@@ -15,11 +15,11 @@ Crossplane can import resources either [manually]({{<ref
 ## Import resources manually
 
 Crossplane can discover and import existing Provider resources by matching the
-`external-name` annotation in a managed resource. 
+`crossplane.io/external-name` annotation in a managed resource. 
 
 To import an existing external resource in a Provider, create a new managed
-resource with a `metadata.annotations.crossplane.io/external-name` value. Set
-the `external-name` to the name of the resource in the Provider.
+resource with the `crossplane.io/external-name` annotation. Set the annotation
+value to the name of the resource in the Provider.
 
 For example, to import an existing GCP Network named 
 {{<hover label="annotation" line="5">}}my-existing-network{{</hover>}},
@@ -27,7 +27,7 @@ create a new managed resource and use the
 {{<hover label="annotation" line="5">}}my-existing-network{{</hover>}} in the
 annotation. 
 
-```yaml {label="annotation"}
+```yaml {label="annotation",copy-lines="none"}
 apiVersion: compute.gcp.crossplane.io/v1beta1
 kind: Network
 metadata:
@@ -45,7 +45,7 @@ name of the Kubernetes object. It's not related to the resource name inside the
 Provider. 
 {{< /hint >}}
 
-```yaml {label="name"}
+```yaml {label="name",copy-lines="none"}
 apiVersion: compute.gcp.crossplane.io/v1beta1
 kind: Network
 metadata:
@@ -59,6 +59,15 @@ Leave the
 Crossplane imports the settings and automatically applies them to the managed 
 resource. 
 
+{{< hint "important" >}}
+If the managed resource has _required_ fields in the 
+{{<hover label="fp" line="8">}}spec.forProvider{{</hover>}} you must add it to
+the `forProvider` field. 
+
+The values of those fields must match what's inside the Provider or Crossplane
+overwrites the existing values.
+{{< /hint >}}
+
 ```yaml {label="fp",copy-lines="all"}
 apiVersion: compute.gcp.crossplane.io/v1beta1
 kind: Network
@@ -70,14 +79,6 @@ spec:
   forProvider: {}
 ```
 
-{{< hint "important" >}}
-If the managed resource has _required_ fields in the 
-{{<hover label="fp" line="8">}}spec.forProvider{{</hover>}} you must add it to
-the `forProvider` field. 
-
-The values of those fields must match what's inside the Provider or Crossplane
-overwrites the existing values.
-{{< /hint >}}
 
 Crossplane now controls and manages this imported resource. Any changes to the
 managed resource `spec` changes the external resource.
@@ -102,9 +103,17 @@ in a
 ### Apply the ObserveOnly managementPolicy
 <!-- vale on -->
 
-Create a new managed resource with {{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} set. 
+Create a new managed resource matching the 
+{{<hover label="oo-policy" line="1">}}apiVersion{{</hover>}} and 
+{{<hover label="oo-policy" line="2">}}kind{{</hover>}} of the resource
+to import and add
+{{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} to the 
+{{<hover label="oo-policy" line="3">}}spec{{</hover>}}
 
-```yaml {label="oo-policy"}
+For example, to import a GCP SQL DatabaseInstance, create a new resource with
+the {{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} 
+set.
+```yaml {label="oo-policy",copy-lines="none"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 spec:
@@ -112,10 +121,17 @@ spec:
 ```
 
 ### Add the external-name annotation
-Add the {{<hover label="oo-ex-name" line="5">}}external-name{{</hover>}} annotation
-for the resource. This name must match the name inside the Provider.
+Add the {{<hover label="oo-ex-name" line="5">}}crossplane.io/external-name{{</hover>}} 
+annotation for the resource. This name must match the name inside the Provider.
 
-```yaml {label="oo-ex-name"}
+For example, for a GCP database named 
+{{<hover label="oo-ex-name" line="5">}}my-external-database{{</hover>}}, apply
+the 
+{{<hover label="oo-ex-name" line="5">}}crossplane.io/external-name{{</hover>}} 
+annotation with the value 
+{{<hover label="oo-ex-name" line="5">}}my-external-database{{</hover>}}.
+
+```yaml {label="oo-ex-name",copy-lines="none"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
@@ -129,7 +145,10 @@ spec:
 Create a {{<hover label="oo-name" line="4">}}name{{</hover>}} to use for the 
 Kubernetes object. 
 
-```yaml {label="oo-name"}
+For example, name the Kubernetes object 
+{{<hover label="oo-name" line="4">}}my-imported-database{{</hover>}}.
+
+```yaml {label="oo-name",copy-lines="none"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
@@ -144,8 +163,9 @@ spec:
 If more than one resource inside the Provider shares the same name, identify the
 specific resource with a unique 
 {{<hover line="9" label="oo-region">}}spec.forProvider{{</hover>}} field. 
-For example, the
-{{<hover line="10" label="oo-region">}}region{{</hover>}}. 
+
+For example, only import the GCP SQL database in the 
+{{<hover line="10" label="oo-region">}}us-central1{{</hover>}} region. 
 
 ```yaml {label="oo-region"}
 apiVersion: sql.gcp.upbound.io/v1beta1
@@ -160,12 +180,17 @@ spec:
     region: "us-central1"
 ```
 
+### Apply the managed resource
+
+Apply the new managed resource. Crossplane syncs the status of the external
+resource in the cloud with the newly created managed resource. 
+
 ### View the discovered resource
 Crossplane discovers the managed resource and populates the
 {{<hover label="ooPopulated" line="12">}}status.atProvider{{</hover>}}
 fields with the values from the external resource.
 
-```yaml {label="ooPopulated"}
+```yaml {label="ooPopulated",copy-lines="none"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
