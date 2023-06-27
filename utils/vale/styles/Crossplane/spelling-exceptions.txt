@@ -21,7 +21,7 @@ minikube
 namespace
 namespaces
 Netlify
-Postgre
+PostgreSQL
 proselint
 semver
 shortcode
