@@ -449,7 +449,7 @@ resources.
 began creating a new managed resource. | 
 | `crossplane.io/external-create-succeeded` | The timestamp of when the Provider successfully created the managed resource. | 
 | `crossplane.io/external-create-failed` | The timestamp of when the Provider failed to create the managed resource. | 
-| `crossplane.io/paused` | Indicates Crossplane isn't reconciling this resource. Read the [Pause Annotation](#pause) for more details. |
+| `crossplane.io/paused` | Indicates Crossplane isn't reconciling this resource. Read the [Pause Annotation](#paused) for more details. |
 | `crossplane.io/composition-resource-name` | For managed resource created by a Composition, this is the Composition's `resources.name` value. | 
 {{</table >}}
 
