@@ -147,7 +147,7 @@ View the status of a Provider with
 During the install a Provider report `INSTALLED` as `True` and `HEALTHY` as
 `Unknown`.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
 crossplane-contrib-provider-aws   True        Unknown   xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0   63s
@@ -156,7 +156,7 @@ crossplane-contrib-provider-aws   True        Unknown   xpkg.upbound.io/crosspla
 After the Provider install completes and it's ready for use the `HEALTHY` status
 reports `True`.
 
-```shell
+```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
 crossplane-contrib-provider-aws   True        True      xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0   88s
@@ -181,6 +181,7 @@ kubectl describe provider
 Name:         my-provider
 API Version:  pkg.crossplane.io/v1
 Kind:         Provider
+# Removed for brevity
 Status:
   Conditions:
     Reason:      HealthyPackageRevision
@@ -189,6 +190,7 @@ Status:
     Reason:      ActivePackageRevision
     Status:      True
     Type:        Installed
+# Removed for brevity
 ```
 
 #### Types
