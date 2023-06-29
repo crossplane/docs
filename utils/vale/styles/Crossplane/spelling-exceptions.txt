@@ -9,6 +9,7 @@ Datastore
 editCode
 Enum
 Env
+finalizer
 finalizers
 GCP's
 Geekdocs
@@ -21,6 +22,7 @@ namespace
 namespaced
 namespaces
 Netlify
+PostgreSQL
 proselint
 semver
 shortcode
@@ -28,12 +30,14 @@ shortcodes
 SLAs
 stdin
 stdout
+Subnet
 subnet
 syscall
 tolerations
 untrusted
 Upbound
 Upbound's
+Upjet
 Velero
 VSCode
 Webpack

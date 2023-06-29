@@ -360,8 +360,9 @@ authentication for that Provider.
 
 <!-- vale write-good.TooWordy = NO -->
 <!-- allow multiple -->
-ProviderConfig objects apply to individual Managed Resources. A single
-Provider can authenticate with multiple users or accounts through 
+ProviderConfig objects apply to individual managed resources with a 
+[`providerConfigRef`]({{<ref "../concepts/managed-resources#providerconfigref" >}}). 
+A single Provider can authenticate with multiple users or accounts through 
 ProviderConfigs.
 <!-- vale write-good.TooWordy = YES -->
 
