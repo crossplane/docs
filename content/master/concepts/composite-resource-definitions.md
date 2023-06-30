@@ -503,7 +503,81 @@ spec:
 
 ### Manage connection secrets
 
-By default, any connection secrets 
+When a composite resource creates managed resources, Crossplane provides any
+[connection secrets]({{<ref "./managed-resources#writeconnectionsecrettoref">}})
+to the composite resource or Claim. This requires the creators of composite
+resources and Claims to know the secrets provided by a managed resource.
+In other cases, Crossplane administrators may not want to expose some or all the
+generated connection secrets.
+
+XRDs can define a list of 
+{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}}
+to limit what's provided to a composite resource or Claim.
+
+Crossplane only provides the keys listed in the 
+{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}} 
+to the composite resource or Claim using this XRD. Any other connection
+secrets aren't passed to the composite resource or Claim. 
+
+{{<hint "important" >}}
+The keys listed in the 
+{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}}
+must match the key names provided by the managed resources. An XRD ignores any 
+keys listed that aren't created by a managed resource.
+{{< /hint >}}
+
+
+For example, an XRD passes the keys 
+{{<hover label="key" line="11">}}username{{</hover>}}, 
+{{<hover label="key" line="12">}}password{{</hover>}} and 
+{{<hover label="key" line="13">}}address{{</hover>}}.
+
+Composite resources or Claims save these in the secret defined by their
+`writeConnectionSecretToRef` field. 
+
+```yaml {label="key",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xdatabases.custom-api.example.org
+spec:
+  group: custom-api.example.org
+  names:
+    kind: xDatabase
+    plural: xdatabases
+  connectionSecretKeys:
+    - username
+    - password
+    - address
+  versions:
+  # Removed for brevity
+```
+
+{{<hint "warning">}}
+Changing the `connectionSecretKeys` of an XRD requires restarting the Crossplane
+pod to take effect.
+{{</hint >}}
+
+### Set composite resource defaults
+XRDs can set default parameters for composite resources and Claims.
+
+#### defaultCompositeDeletePolicy
+The `defaultCompositeDeletePolicy` defines the deletion policy for composite
+resources and claims. 
+
+Using a `defaultCompositeDeletePolicy: Background` policy deletes 
+the composite resource or Claim and relies on Kubernetes to delete the remaining
+dependent objects, like managed resources or secrets. 
+
+Using `defaultCompositeDeletePolicy: Foreground` causes Kubernetes to attach a
+`foregroundDeletion` finalizer to the composite resource or Claim. Kubernetes
+deletes all the dependent objects before deleting the composite resource or
+Claim. 
+
+The default value is `defaultCompositeDeletePolicy: Background`. 
+
+### defaultCompositionRef
+
 
 ## Webhooks
 apis/apiextensions/v1/xrd_webhooks.go
