@@ -13,10 +13,10 @@ Crossplane calls the object inside Kubernetes a _managed resource_ and the
 external object inside the Provider an _external resource_.
 {{< /hint >}}
 
-Managed Resources are the building blocks of Crossplane. They're designed to be
-_composed_ into higher level, opinionated Custom Resources that Crossplane calls
-Composite Resources or XRs - not used directly. See the
-[Composition]({{<ref "composition" >}}) documentation for more information.
+Examples of managed resources include:
+* Amazon AWS EC2 [`Instance`](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/resources/ec2.aws.upbound.io/Instance/v1beta1)
+* Google Cloud GKE [`Cluster`](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/resources/container.gcp.upbound.io/Cluster/v1beta1)
+* Microsoft Azure PostgreSQL [`Database`](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/resources/dbforpostgresql.azure.upbound.io/Database/v1beta1)
 
 {{< hint "tip" >}}
 
