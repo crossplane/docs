@@ -125,7 +125,7 @@ The version shows how mature or stable the API is and changes when changing,
 adding or removing fields in the API.
 
 Crossplane doesn't require specific versions or a version naming convention, but
-following [Kubernetes API versioning guidelines]((https://kubernetes.io/docs/reference/using-api/#api-versioning)) 
+following [Kubernetes API versioning guidelines](https://kubernetes.io/docs/reference/using-api/#api-versioning)
 is strongly recommended. 
 
 * `v1alpha1` - A new API that's may change at any time.

@@ -1,6 +1,6 @@
 ---
 title: Managed Resources
-weight: 10
+weight: 102
 ---
 
 A _managed resource_ (`MR`) represents an external service in a Provider. When
@@ -13,15 +13,15 @@ Crossplane calls the object inside Kubernetes a _managed resource_ and the
 external object inside the Provider an _external resource_.
 {{< /hint >}}
 
-Managed Resources are the building blocks of Crossplane. They're designed to be
-_composed_ into higher level, opinionated Custom Resources that Crossplane calls
-Composite Resources or XRs - not used directly. See the
-[Composition]({{<ref "./compositions" >}}) documentation for more information.
+Examples of managed resources include:
+* Amazon AWS EC2 [`Instance`](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/resources/ec2.aws.upbound.io/Instance/v1beta1)
+* Google Cloud GKE [`Cluster`](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/resources/container.gcp.upbound.io/Cluster/v1beta1)
+* Microsoft Azure PostgreSQL [`Database`](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/resources/dbforpostgresql.azure.upbound.io/Database/v1beta1)
 
 {{< hint "tip" >}}
 
 You can create individual managed resources, but Crossplane recommends using
-[Compositions]({{<ref "../concepts/composition" >}}) and Claims to create
+[Compositions]({{<ref "./compositions" >}}) and Claims to create
 managed resources.
 {{< /hint >}}
 
@@ -166,7 +166,7 @@ spec:
 Matching by selector is the most flexible matching method. 
 
 {{<hint "note" >}}
-The [Composition]({{<ref "composition">}}) section covers the 
+The [Compositions]({{<ref "./compositions">}}) section covers the 
 `matchControllerRef` selector.
 {{</hint >}}
 
@@ -217,7 +217,7 @@ The managed resource `managementPolicy` option is an alpha feature.
 
 Enable the `managementPolicy` in a provider with `--enable-management-policies` 
 in a 
-[ControllerConfig]({{<ref "../concepts/providers#controller-configuration" >}}).
+[ControllerConfig]({{<ref "./providers#controller-configuration" >}}).
 {{< /hint >}}
 
 A `managementPolicy` determines if Crossplane can make changes to managed
@@ -246,7 +246,7 @@ information on using the `managementPolicy` to import existing resources.
 <!-- vale on -->
 
 The `providerConfigRef` on a managed resource tells the Provider which
-[ProviderConfig]({{<ref "../concepts/providers#provider-configuration">}}) to
+[ProviderConfig]({{<ref "./providers#provider-configuration">}}) to
 use when creating the managed resource.  
 
 Use a ProviderConfig to define the authentication method to use when 

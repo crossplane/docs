@@ -199,7 +199,7 @@ this Composition a
 Composition. 
 
 {{<hint "note" >}}
-The [Enabling a Composite Resource](#enabling-a-composite-resources) section 
+The [Enabling a Composite Resource](#enabling-composite-resources) section 
 describes the 
 {{<hover label="xnetwork" line="20">}}compositeTypeRef{{</hover>}} field.
 {{< /hint >}}
