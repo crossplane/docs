@@ -2,6 +2,7 @@
 title: Composition Functions
 state: alpha
 alphaVersion: "1.11"
+weight: 80
 ---
 
 https://github.com/crossplane/crossplane/issues/4182

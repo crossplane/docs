@@ -1,6 +1,6 @@
 ---
 title: Managed Resources
-weight: 102
+weight: 10
 ---
 
 A _managed resource_ (`MR`) represents an external service in a Provider. When

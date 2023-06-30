@@ -1,6 +1,6 @@
 ---
 title: Composite Resources
-weight: 30
+weight: 50
 ---
 
 ### Influencing External Names

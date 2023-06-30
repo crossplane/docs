@@ -24,7 +24,7 @@ Crossplane has four core components that users commonly mix up:
 * [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
   Composition template to create new managed resources. 
-* [Claims]({{<ref "./claims" >}}) (`XC`) - Like a Composite Resource, but
+* [Claims]({{<ref "./claims" >}}) (`XRC`) - Like a Composite Resource, but
   with namespace scoping. 
 {{</expand >}}
 

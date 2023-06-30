@@ -1,6 +1,6 @@
 ---
 title: Providers
-weight: 101
+weight: 5
 ---
 
 Providers enable Crossplane to provision infrastructure on an
