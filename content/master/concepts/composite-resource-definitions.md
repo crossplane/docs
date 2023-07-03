@@ -42,9 +42,10 @@ Creating a CompositeResourceDefinintion consists of:
 * [Defining a custom API name](#xrd-names).
 * [Defining a custom API schema and version](#xrd-versions).
   
-Optionally, CompositeResourceDefinintion also support:
-* [Defining a Claim]
-
+Optionally, CompositeResourceDefinintions also support:
+* [Offering a Claim](#enable-claims).
+* [Defining connection secrets](#manage-connection-secrets).
+* [Setting composite resource defaults](#set-composite-resource-defaults).
  
 Composite resource definitions (`XRDs`) create new API endpoints inside a
 Kubernetes cluster. 
@@ -69,6 +70,21 @@ spec:
   # Removed for brevity
 ```
 
+After applying an XRD, Crossplane creates a new Kubernetes custom resource
+definition matching the defined API.
+
+For example, the XRD 
+{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover >}} 
+creates a custom resource definition 
+{{<hover label="kubeapi" line="2">}}xmydatabases.example.org{{</hover >}}.  
+
+```shell {label="kubeapi",copy-lines="3"}
+kubectl api-resources
+NAME                              SHORTNAMES   APIVERSION          NAMESPACED   KIND
+xmydatabases.example.org                       v1                  false        xmydatabases
+# Removed for brevity
+```
+
 ### XRD groups
 
 Groups define a collection of related API endpoints. The `group` can be any
@@ -80,8 +96,8 @@ Many XRDs may use the same `group` to create a logical collection of APIs.
 
 ### XRD names
 
-The `names` field defines how to refer to this specific XRD. The required name 
-fields are: 
+The `names` field defines how to refer to this specific XRD.  
+The required name fields are: 
 
 * `kind` - the `kind` value to use when calling this API. The kind is
   [UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
@@ -121,14 +137,15 @@ spec:
 
 The XRD `version` is like the 
 [API versioning used by Kubernetes](https://kubernetes.io/docs/reference/using-api/#api-versioning).
-The version shows how mature or stable the API is and changes when changing,
+The version shows how mature or stable the API is and increments when changing,
 adding or removing fields in the API.
 
-Crossplane doesn't require specific versions or a version naming convention, but
-following [Kubernetes API versioning guidelines](https://kubernetes.io/docs/reference/using-api/#api-versioning)
+Crossplane doesn't require specific versions or a specific version naming 
+convention, but following 
+[Kubernetes API versioning guidelines](https://kubernetes.io/docs/reference/using-api/#api-versioning)
 is strongly recommended. 
 
-* `v1alpha1` - A new API that's may change at any time.
+* `v1alpha1` - A new API that may change at any time.
 * `v1beta1` - An existing API that's considered stable. Breaking changes are
   strongly discouraged.
 * `v1` - A stable API that doesn't change.
@@ -318,6 +335,18 @@ The Swagger "[Describing
 Parameters](https://swagger.io/docs/specification/describing-parameters/)"
 documentation has more examples. 
 
+##### Crossplane reserved fields
+
+Crossplane doesn't allow the following fields in a schema:
+* `spec.resourceRef`
+* `spec.resourceRefs`
+* `spec.claimRef`
+* `spec.writeConnectionSecretToRef`
+* `status.conditions`
+* `status.connectionDetails`
+
+Crossplane ignores any fields matching the reserved fields.
+
 #### Serve and reference a schema
 
 To use a schema it must be
@@ -357,7 +386,7 @@ false`.
 
 {{< hint "tip" >}}
 Setting a schema version as `served:false` causes errors for users using an older
-schmea. This can be an effective way to identify and upgrade users before
+schema. This can be an effective way to identify and upgrade users before
 deleting the older schema version. 
 {{< /hint >}}
 
@@ -501,6 +530,11 @@ spec:
   # Removed for brevity
 ```
 
+{{<hint "important" >}}
+You can't change the `claimNames` after they're defined. You must delete and
+recreate the XRD to change the `claimNames`.
+{{</hint >}}
+
 ### Manage connection secrets
 
 When a composite resource creates managed resources, Crossplane provides any
@@ -520,9 +554,9 @@ to the composite resource or Claim using this XRD. Any other connection
 secrets aren't passed to the composite resource or Claim. 
 
 {{<hint "important" >}}
-The keys listed in the 
-{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}}
-must match the key names provided by the managed resources. An XRD ignores any 
+The keys listed in the
+{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}} must match the 
+key names provided by the managed resources. An XRD ignores any 
 keys listed that aren't created by a managed resource.
 {{< /hint >}}
 
@@ -554,14 +588,16 @@ spec:
 ```
 
 {{<hint "warning">}}
-Changing the `connectionSecretKeys` of an XRD requires restarting the Crossplane
-pod to take effect.
+You can't change the `connectionSecretKeys` of an XRD. You must delete and
+recreate the XRD to change the `connectionSecretKeys`.
 {{</hint >}}
 
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources and Claims.
 
+<!-- vale Google.Headings = NO -->
 #### defaultCompositeDeletePolicy
+<!-- vale Google.Headings = YES -->
 The `defaultCompositeDeletePolicy` defines the deletion policy for composite
 resources and claims. 
 
@@ -576,133 +612,197 @@ Claim.
 
 The default value is `defaultCompositeDeletePolicy: Background`. 
 
-### defaultCompositionRef
+Set 
+{{<hover label="delete" line="6">}}defaultCompositeDeletePolicy: Foreground{{</hover>}} 
+to change the XRD deletion policy.
 
-
-## Webhooks
-apis/apiextensions/v1/xrd_webhooks.go
-### Influencing External Names
-
-The `crossplane.io/external-name` annotation has special meaning to Crossplane
-managed resources - it specifies the name (or identifier) of the resource in the
-external system, for example the actual name of a `CloudSQLInstance` in the GCP
-API. Some managed resources don't let you specify an external name - in those
-cases Crossplane will set it for you to whatever the external system requires.
-
-If you add the `crossplane.io/external-name` annotation to a claim Crossplane
-will automatically propagate it when it creates an XR. It's good practice to
-have your `Composition` further propagate the annotation to one or more composed
-resources, but it's not required.
-
-# Document XRD Conditions
-https://github.com/crossplane/docs/issues/448
-
-## What happens when you delete xrd?
-
-# Restart XR and claim controllers when XRDs are updated
-https://github.com/crossplane/docs/issues/288
-
-## CompositeResourceDefinitions
-
-Below is an example `CompositeResourceDefinition` that includes all configurable
-fields.
-
-```yaml
+```yaml {label="delete",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  # XRDs must be named '<plural>.<group>', per the plural and group names below.
-  name: xpostgresqlinstances.example.org
+  name: xdatabases.custom-api.example.org
 spec:
-  # This XRD defines an XR in the 'example.org' API group.
-  group: example.org
-  # The kind of this XR will be 'XPostgreSQLInstance`. You may also optionally
-  # specify a singular name and a listKind.
+  defaultCompositeDeletePolicy: Foreground
+  group: custom-api.example.org
   names:
-    kind: XPostgreSQLInstance
-    plural: xpostgresqlinstances
-  # This type of XR offers a claim. Omit claimNames if you don't want to do so.
-  # The claimNames must be different from the names above - a common convention
-  # is that names are prefixed with 'X' while claim names are not. This lets app
-  # team members think of creating a claim as (e.g.) 'creating a
-  # PostgreSQLInstance'.
-  claimNames:
-    kind: PostgreSQLInstance
-    plural: postgresqlinstances
-  # Each type of XR can declare any keys they write to their connection secret
-  # which will act as a filter during aggregation of the connection secret from
-  # composed resources. It's recommended to provide the set of keys here so that
-  # consumers of claims and XRs can see what to expect in the connection secret.
-  # If no key is given, then all keys in the aggregated connection secret will
-  # be written to the connection secret of the XR.
-  connectionSecretKeys:
-  - hostname
-  # Each type of XR may specify a default Composite Delete Policy to be used
-  # when the Claim has no compositeDeletePolicy.  The valid values are Background
-  # and Foreground, and the default is Background.  See the description of the
-  # compositeDeletePolicy parameter for more information.
-  defaultCompositeDeletePolicy: Background
-  # Each type of XR may specify a default Composition to be used when none is
-  # specified (e.g. when the XR has no compositionRef or selector). A similar
-  # enforceCompositionRef field also exists to allow XRs to enforce a specific
-  # Composition that should always be used.
-  defaultCompositionRef:
-    name: example
-  # Each type of XR may specify a default Composition Update Policy to be used
-  # when the Claim has no compositionUpdatePolicy.  The valid values are Automatic
-  # and Manual and the default is Automatic.
-  defaultCompositionUpdatePolicy: Automatic
-  # Each type of XR may be served at different versions - e.g. v1alpha1, v1beta1
-  # and v1 - simultaneously. Currently Crossplane requires that all versions
-  # have an identical schema, so this is mostly useful to 'promote' a type of XR
-  # from alpha to beta to production ready.
+  # Removed for brevity
   versions:
-  - name: v1alpha1
-    # Served specifies that XRs should be served at this version. It can be set
-    # to false to temporarily disable a version, for example to test whether
-    # doing so breaks anything before a version is removed wholesale.
-    served: true
-    # Referenceable denotes the version of a type of XR that Compositions may
-    # use. Only one version may be referenceable.
-    referenceable: true
-    # Schema is an OpenAPI schema just like the one used by Kubernetes CRDs. It
-    # determines what fields your XR and claim will have. Note that Crossplane
-    # will automatically extend with some additional Crossplane machinery.
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              parameters:
-                type: object
-                properties:
-                  storageGB:
-                    type: integer
-                required:
-                - storageGB
-            required:
-            - parameters
-          status:
-            type: object
-            properties:
-              address:
-                description: Address of this MySQL server.
-                type: string
+  # Removed for brevity
 ```
 
-Take a look at the Kubernetes [CRD documentation][crd-docs] for a more detailed
-guide to writing OpenAPI schemas. Note that the following fields are reserved
-for Crossplane machinery, and will be ignored if your schema includes them:
+<!-- vale Google.Headings = NO -->
+#### defaultCompositionRef
+<!-- vale Google.Headings = YES -->
+It's possible for multiple [Compositions]({{<ref "./compositions">}}) to
+reference the same XRD. If more than one Composition references the same XRD,
+the composite resource or Claim must select which Composition to use. 
 
-* `spec.resourceRef`
-* `spec.resourceRefs`
-* `spec.claimRef`
-* `spec.writeConnectionSecretToRef`
-* `status.conditions`
-* `status.connectionDetails`
+An XRD can define the default Composition to use with the
+`defaultCompositionRef` value. 
 
-> If your `CompositeResourceDefinition` isn't working as you'd expect you can
-> try running `kubectl describe xrd` for details - pay particular attention to
-> any events and status conditions.
+Set a
+{{<hover label="defaultComp" line="6">}}defaultCompositionRef{{</hover>}} 
+to set the default Composition.
+
+```yaml {label="defaultComp",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xdatabases.custom-api.example.org
+spec:
+  defaultCompositionRef: 
+    name: myComposition
+  group: custom-api.example.org
+  names:
+  # Removed for brevity
+  versions:
+  # Removed for brevity
+```
+
+<!-- vale Google.Headings = NO -->
+#### defaultCompositionUpdatePolicy
+<!-- vale Google.Headings = YES -->
+
+Changes to a Composition generate a new Composition revision. By default all
+composite resources and Claims use the updated Composition revision. 
+
+Set the XRD `defaultCompositionUpdatePolicy` to `Manual` to prevent composite
+resources and Claims from automatically using the new revision. 
+
+The default value is `defaultCompositionUpdatePolicy: Automatic`.
+
+Set {{<hover label="compRev" line="6">}}defaultCompositionUpdatePolicy: Manual{{</hover>}}
+to set the default Composition update policy for composite resources and Claims
+using this XRD.
+
+```yaml {label="compRev",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xdatabases.custom-api.example.org
+spec:
+  defaultCompositionUpdatePolicy: Manual
+  group: custom-api.example.org
+  names:
+  # Removed for brevity
+  versions:
+  # Removed for brevity
+```
+
+<!-- vale Google.Headings = NO -->
+#### enforcedCompositionRef
+<!-- vale Google.Headings = YES -->
+To require all composite resources or Claims to use a specific Composition use
+the `enforcedCompositionRef` setting in the XRD.
+
+For example, to require all composite resources and Claims using this XRD to use
+the Composition 
+{{<hover label="enforceComp" line="6">}}myComposition{{</hover>}} 
+set 
+{{<hover label="enforceComp" line="6">}}enforcedCompositionRef.name: myComposition{{</hover>}}.
+
+```yaml {label="defaultComp",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xdatabases.custom-api.example.org
+spec:
+  enforcedCompositionRef: 
+    name: myComposition
+  group: custom-api.example.org
+  names:
+  # Removed for brevity
+  versions:
+  # Removed for brevity
+```
+
+## Verify a CompositeResourceDefinition
+
+Verify an XRD with `kubectl get compositeresourcedefinition` or the short form, 
+{{<hover label="getxrd" line="1">}}kubectl get xrd{{</hover>}}.
+
+```yaml {label="getxrd",copy-lines="1"}
+kubectl get xrd                                
+NAME                                ESTABLISHED   OFFERED   AGE
+xdatabases.custom-api.example.org   True          True      22m
+```
+
+The `ESTABLISHED` field indicates Crossplane installed the Kubernetes custom
+resource definition for this XRD.
+
+The `OFFERED` field indicates this XRD offers a Claim and Crossplane installed
+the Kubernetes custom resource definitions for the Claim.
+
+### XRD conditions
+Crossplane uses a standard set of `Conditions` for XRDs.  
+View the conditions of a XRD under their `Status` with 
+`kubectl describe xrd`. 
+
+```yaml {copy-lines="none"}
+kubectl describe xrd
+Name:         xpostgresqlinstances.database.starter.org
+API Version:  apiextensions.crossplane.io/v1
+Kind:         CompositeResourceDefinition
+# Removed for brevity
+Status:
+  Conditions:
+    Reason:                WatchingCompositeResource
+    Status:                True
+    Type:                  Established
+    Reason:                WatchingCompositeResourceClaim
+    Status:                True
+    Type:                  Offered
+# Removed for brevity
+```
+
+<!-- vale Google.Headings = NO -->
+#### WatchingCompositeResource
+<!-- vale Google.Headings = YES -->
+`Reason: WatchingCompositeResource` indicates Crossplane defined the new
+Kubernetes custom resource definitions related to the composite resource and is 
+watching for the creation of new composite resources. 
+
+```yaml
+Type: Established
+Status: True
+Reason: WatchingCompositeResource
+```
+
+<!-- vale Google.Headings = NO -->
+#### TerminatingCompositeResource
+<!-- vale Google.Headings = YES -->
+`Reason: TerminatingCompositeResource` indicates Crossplane is deleting the
+custom resource definitions related to the composite resource and is 
+terminating the composite resource controller.
+
+```yaml
+Type: Established
+Status: False
+Reason: TerminatingCompositeResource
+```
+
+<!-- vale Google.Headings = NO -->
+#### WatchingCompositeResourceClaim
+<!-- vale Google.Headings = YES -->
+`Reason: WatchingCompositeResourceClaim` indicates Crossplane defined the new
+Kubernetes custom resource definitions related to the offered Claims and is 
+watching for the creation of new Claims. 
+
+```yaml
+Type: Offered
+Status: True
+Reason: WatchingCompositeResourceClaim
+```
+
+<!-- vale Google.Headings = NO -->
+#### TerminatingCompositeResourceClaim
+<!-- vale Google.Headings = YES -->
+`Reason: TerminatingCompositeResourceClaim` indicates Crossplane is deleting the
+custom resource definitions related to the offered Claims and is 
+terminating the Claims controller.
+
+```yaml
+Type: Offered
+Status: False
+Reason: TerminatingCompositeResourceClaim
+```
