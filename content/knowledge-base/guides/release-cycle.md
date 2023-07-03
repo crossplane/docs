@@ -83,9 +83,18 @@ branch with the following exceptions:
   Crossplane maintainers. This process is currently informal, but may be
   formalized in the future.
 
+## Release Dates
+
+Crossplane is released on a quarterly (13 week) cadence. Typically, the release
+will happen on Tuesday of the last week of the quarter, as shown on the
+[community calendar][community calendar]. Please keep in mind that the specific
+date is **approximate**. A number of factors can alter the date slightly, such
+as code reviews, testing, and bug fixing to ensure a quality release.
+
 <!-- Named links -->
 
 [Active Development]: #active-development
 [Feature Freeze]: #feature-freeze
 [Code Freeze]: #code-freeze
 [CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md
+[community calendar]: https://calendar.google.com/calendar/embed?src=c_2cdn0hs9e2m05rrv1233cjoj1k%40group.calendar.google.com
