@@ -20,7 +20,7 @@ git clone https://github.com/crossplane/docs.git
 ```
 
 ### Download Hugo
-Download [Hugo](https://github.com/gohugoio/hugo/releases/tag/latest), the
+Download [Hugo](https://github.com/gohugoio/hugo/releases/latest), the
 static site generator Crossplane docs uses.
 
 {{< hint "important" >}}
