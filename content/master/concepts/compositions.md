@@ -238,6 +238,164 @@ View the complete Compositions in the reference platform's
 [package directory](https://github.com/upbound/platform-ref-aws/blob/main/package/cluster/composition.yaml).
 {{</hint >}}
 
+#### Cross-reference resources
+
+Inside a Composition some resources use identifiers or names of other resources.
+For example, creating a new `network` and applying the network identifier to a
+virtual machine. 
+
+Resources inside a Composition can cross-reference other resources by matching
+a label or a _controller reference_.
+
+{{<hint "note" >}}
+Providers allow matching of labels and controller references on a
+per-resource basis. Check the documentation for the specific Provider resource
+to see what's supported.
+{{< /hint >}}
+
+##### Match resource labels
+
+To match a resource label, first apply a 
+{{<hover label="matchlabel" line="11">}}label{{</hover>}} to the resource to 
+match and use
+{{<hover label="matchlabel" line="19">}}matchLabels{{</hover>}} 
+in the second resource.
+
+This example creates a AWS 
+{{<hover label="matchlabel" line="7">}}Role{{</hover>}} and applies a 
+{{<hover label="matchlabel" line="11">}}label{{</hover>}}. The second resource
+is a {{<hover label="matchlabel" line="14">}}RolePolicyAttachment{{</hover>}},
+which requires attaching to an existing `Role`. 
+
+Using the resource's 
+{{<hover label="matchlabel" line="19">}}roleSelector.matchLabels{{</hover>}}
+ensures this 
+{{<hover label="matchlabel" line="14">}}RolePolicyAttachment{{</hover>}}
+references the matching 
+{{<hover label="matchlabel" line="7">}}Role{{</hover>}}, even if the unique role
+identifier isn't known. 
+
+```yaml {label="matchlabel",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+spec:
+  resources:
+    - base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        name: iamRole
+        metadata:
+          labels:
+            role: controlplane
+    - base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        name: iamPolicy
+        spec:
+          forProvider:
+            roleSelector:
+              matchLabels:
+                role: controlplane
+  # Removed for brevity
+```
+
+##### Match a controller reference 
+
+Matching a controller reference ensures that the matching resource is
+in the same composite resource. 
+
+Matching only a controller reference simplifies the matching process without
+requiring labels or more information. 
+
+For example, creating an AWS 
+{{<hover label="controller1" line="14">}}InternetGateway{{</hover>}} requires a
+{{<hover label="controller1" line="7">}}VPC{{</hover>}}.
+
+The {{<hover label="controller1" line="14">}}InternetGateway{{</hover>}} could
+match a label, but every VPC created by this Composition share the same label. 
+
+Using {{<hover label="controller1" line="19">}}matchControllerRef{{</hover>}}
+matches only the VPC created in the same composite resource that created the 
+{{<hover label="controller1" line="14">}}InternetGateway{{</hover>}}. 
+
+```yaml {label="controller1",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+spec:
+  resources:
+    - base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        name: my-vpc
+        spec:
+          forProvider:
+          # Removed for brevity
+    - base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: InternetGateway
+        name: my-gateway
+        spec:
+          forProvider:
+            vpcIdSelector:
+              matchControllerRef: true
+# Removed for brevity
+```
+
+
+Resources can match both a label and a controller reference to match a specific
+resource in the composite resource. 
+
+For example, this Composition creates two 
+{{<hover label="controller2" line="17">}}VPC{{</hover>}}
+resources, but the 
+{{<hover label="controller2" line="27">}}InternetGateway{{</hover>}} 
+must match only one. 
+
+Applying a {{<hover label="controller2" line="21">}}label{{</hover>}} to the 
+second {{<hover label="controller2" line="17">}}VPC{{</hover>}} allows the 
+{{<hover label="controller2" line="27">}}InternetGateway{{</hover>}} to match
+the label
+{{<hover label="controller2" line="34">}}type: internet{{</hover>}} and only
+match objects in the same composite resource with 
+{{<hover label="controller2" line="32">}}matchControllerRef{{</hover>}}.
+
+```yaml {label="controller2",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+spec:
+  resources:
+    - base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        name: my-first-vpc
+        metadata:
+          labels:
+            type: backend
+        spec:
+          forProvider:
+          # Removed for brevity
+    - base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        name: my-second-vpc
+        metadata:
+          labels:
+            type: internet
+        spec:
+          forProvider:
+          # Removed for brevity
+    - base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: InternetGateway
+        name: my-gateway
+        spec:
+          forProvider:
+            vpcIdSelector:
+              matchControllerRef: true
+              matchLabels:
+                type: internet
+# Removed for brevity
+```
 ### Enabling Composite Resources
 
 A Composition is only a template defining how to create managed 
