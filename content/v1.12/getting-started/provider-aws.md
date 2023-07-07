@@ -1038,7 +1038,7 @@ kind: Provider
 metadata:
   name: upbound-provider-aws
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws:v0.27.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.41.1
 EOF
 ```
 
@@ -1054,7 +1054,7 @@ It may take up to five minutes for the provider to list `HEALTHY` as `True`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                   INSTALLED   HEALTHY   PACKAGE                                        AGE
-upbound-provider-aws   True        True      xpkg.upbound.io/upbound/provider-aws:v0.27.0   12m
+upbound-provider-aws   True        True      xpkg.upbound.io/crossplane-contrib/provider-aws:v0.41.1   12m
 ```
 
 A provider installs their own Kubernetes _Custom Resource Definitions_ (CRDs). These CRDs allow you to create AWS resources directly inside Kubernetes.
@@ -1133,7 +1133,7 @@ A `ProviderConfig` customizes the settings of the AWS Provider.
 Apply the {{< hover label="providerconfig" line="2">}}ProviderConfig{{</ hover >}} with the command:
 ```yaml {label="providerconfig",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
-apiVersion: aws.upbound.io/v1beta1
+apiVersion: pkg.crossplane.io/v1
 kind: ProviderConfig
 metadata:
   name: default
@@ -1163,7 +1163,7 @@ Any unique name is acceptable.
 ```yaml {label="xr"}
 bucket=$(echo "crossplane-bucket-"$(head -n 4096 /dev/urandom | openssl sha1 | tail -c 10))
 cat <<EOF | kubectl apply -f -
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.crossplane.io/v1beta1
 kind: Bucket
 metadata:
   name: $bucket
@@ -1203,7 +1203,7 @@ Use `kubectl delete bucket <bucketname>` to remove the bucket.
 
 ```shell {copy-lines="1"}
 kubectl delete bucket $bucket
-bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
+bucket.s3.aws.crossplane.io "crossplane-bucket-45eed4ae0" deleted
 ```
 
 ## Next steps
