@@ -414,3 +414,57 @@ resources.
 Read the 
 [conditions section]({{<ref "./managed-resources#conditions">}}) of the
 managed resources documentation for details.
+
+## Composite resource labels
+
+Crossplane adds labels to composite resources to indicates their relationship to
+other Crossplane components.
+
+### Composite label
+Crossplane adds the 
+{{<hover label="complabel" line="4">}} crossplane.io/composite{{</hover>}} label
+to all composite resources. The label matches the name of the composite.
+Crossplane applies the composite label to any manged resource created by a
+composite, creating a reference between the managed resource and owning
+composite resource. 
+
+```shell {label="claimname",copy-lines="1"}
+kubectl describe xmydatabase.example.org/my-claimed-database-x9rx9
+Name:         my-claimed-database2-x9rx9
+Namespace:
+Labels:       crossplane.io/composite=my-claimed-database-x9rx9
+```
+
+### Claim name label
+Crossplane adds the 
+{{<hover label="claimname" line="4">}}crossplane.io/claim-name{{</hover>}}
+label to composite resources created from a Claim. The label indicates the name
+of the Claim linked to this composite resource. 
+
+```shell {label="claimname",copy-lines="1"}
+kubectl describe xmydatabase.example.org/my-claimed-database-x9rx9
+Name:         my-claimed-database2-x9rx9
+Namespace:
+Labels:       crossplane.io/claim-name=my-claimed-database
+```
+
+Composite resources created directly, without using a Claim, don't have a
+{{<hover label="claimname" line="4">}}crossplane.io/claim-name{{</hover>}} 
+label. 
+
+### Claim namespace label
+Crossplane adds the 
+{{<hover label="claimname" line="4">}}crossplane.io/claim-namespace{{</hover>}}
+label to composite resources created from a Claim. The label indicates the 
+namespace of the Claim linked to this composite resource. 
+
+```shell {label="claimname",copy-lines="1"}
+kubectl describe xmydatabase.example.org/my-claimed-database-x9rx9
+Name:         my-claimed-database2-x9rx9
+Namespace:
+Labels:       crossplane.io/claim-namespace=default
+```
+
+Composite resources created directly, without using a Claim, don't have a
+{{<hover label="claimname" line="4">}}crossplane.io/claim-namespace{{</hover>}} 
+label. 
