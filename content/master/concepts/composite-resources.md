@@ -150,7 +150,7 @@ Select a specific Composition for a composite resource to use with
 {{<hint "important">}}
 The selected Composition must allow the composite resource to use it with a
 `compositeTypeRef`. Read more about the `compositeTypeRef` field in the
-[Enabling Composite Resources]({{<ref "./compositions#compositeTypeRef">}})
+[Enabling Composite Resources]({{<ref "./compositions#enabling-composite-resources">}})
 section of the Composition documentation. 
 {{< /hint >}}
 
