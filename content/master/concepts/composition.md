@@ -1270,12 +1270,20 @@ Claim and Composite Resource connection secrets are often derived from the
 connection secrets of the managed resources they compose. This is a common
 source of confusion because several things need to align for it to work:
 
-1. The XR/claim's connection secret keys must be declared by the XRD.
-1. The `Composition` must specify how to derive connection details from each
-   composed resource.
-1. If connection details are derived from a composed resource's connection
-   secret that composed resource must specify its `writeConnectionSecretToRef`.
-1. The claim and XR must both specify a `writeConnectionSecretToRef`.
+1. The **claim** must specify the secret where the aggregated connection details
+   should be written
+    * This is the `spec.writeConnectionSecretToRef` field in a claim
+1. The **composite resource** must define which connection details to aggregate
+   from its children and publish to the claim
+    * This is the `spec.connectionSecretKeys` field in a composite resource
+1. The **composition** must define where to write its aggregated connection
+   details
+    * This is the `spec.writeConnectionSecretsToNamespace` field in the
+       composition
+1. Each child **composed resource** must define the connection details it
+   publishes and where to write them
+    * These are the `connectionDetails` and
+       `base.spec.writeConnectionSecretToRef` fields of the composed resources
 
 Finally, you can't currently edit a XRD's supported connection details. The
 XRD's `spec.connectionSecretKeys` is effectively immutable. This may change in
