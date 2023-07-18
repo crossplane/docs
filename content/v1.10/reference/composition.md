@@ -820,17 +820,20 @@ source of confusion because several things need to align for it to work:
 1. The **claim** must specify the secret where the aggregated connection details
    should be written
     * This is the `spec.writeConnectionSecretToRef` field in a claim
-1. The **composite resource** must define which connection details to aggregate
-   from its children and publish to the claim
-    * This is the `spec.connectionSecretKeys` field in a composite resource
+    * If creating a composite resource directly (without a claim) then this same
+      field must be set on your composite resource instead
+1. The **composite resource definition** must state which connection details to
+   aggregate from its children to publish to the claim
+    * This is the `spec.connectionSecretKeys` field in a
+      `CompositeResourceDefinition`
 1. The **composition** must define where to write its aggregated connection
    details
     * This is the `spec.writeConnectionSecretsToNamespace` field in the
-       composition
+      `Composition`
 1. Each child **composed resource** must define the connection details it
    publishes and where to write them
     * These are the `connectionDetails` and
-       `base.spec.writeConnectionSecretToRef` fields of the composed resources
+      `base.spec.writeConnectionSecretToRef` fields of the composed resources
 
 Finally, you can't currently edit a XRD's supported connection details. The
 XRD's `spec.connectionSecretKeys` is effectively immutable. This may change in
