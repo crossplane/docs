@@ -647,6 +647,6 @@ composition.yaml  crossplane-aws-quickstart.xpkg  crossplane.yaml  definition.ya
 ```
 
 ## Next steps
-* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
+* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
 * Read more about [Crossplane concepts]({{<ref "../concepts" >}})

@@ -654,6 +654,6 @@ composition.yaml  crossplane-gcp-quickstart.xpkg  crossplane.yaml  definition.ya
 ```
 
 ## Next steps
-* Explore GCP resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/crds).
+* Explore GCP resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
 * Read more about [Crossplane concepts]({{<ref "../concepts" >}})

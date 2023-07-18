@@ -963,5 +963,5 @@ _packages_.
 * **[Continue to part 3]({{< ref "provider-gcp-part-3">}})** to create a learn
   about _patching_ resources and creating Crossplane _packages_.
 * Explore GCP resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/crds).
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.

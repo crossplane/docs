@@ -1056,5 +1056,5 @@ patches_ and making all this configuration portable in Crossplane _Packages_.
 * **[Continue to part 3]({{< ref "provider-azure-part-3">}})** to learn
   about _patching_ resources and creating Crossplane _Packages_.
 * Explore Azure resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/crds).
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.

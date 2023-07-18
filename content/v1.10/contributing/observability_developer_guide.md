@@ -189,10 +189,10 @@ implementations.
 
 <!-- Named Links -->
 
-[Events]: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#event-v1-core
+[Events]: https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/
 [debugging an application cluster]: https://kubernetes.io/docs/tasks/debug-application-cluster/
 [Dave Cheney article]: https://dave.cheney.net/2015/11/05/lets-talk-about-logging
-[`event`]: https://godoc.org/github.com/crossplane/crossplane-runtime/pkg/event
+[`event`]: https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/event-v1/
 [`logging`]: https://godoc.org/github.com/crossplane/crossplane-runtime/pkg/logging
 [Do]: https://peter.bourgon.org/go-best-practices-2016/#logging-and-instrumentation
 [not]: https://dave.cheney.net/2017/01/23/the-package-level-logger-anti-pattern

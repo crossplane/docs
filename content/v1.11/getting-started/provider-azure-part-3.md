@@ -805,6 +805,6 @@ composition.yaml  crossplane-azure-quickstart.xpkg  crossplane.yaml  definition.
 ```
 
 ## Next steps
-* Explore Azure resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/crds).
+* Explore Azure resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
 * Read more about [Crossplane concepts]({{<ref "../concepts" >}})
