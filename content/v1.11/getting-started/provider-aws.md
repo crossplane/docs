@@ -1072,7 +1072,7 @@ AWS service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.27.0/crds).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
@@ -1253,6 +1253,6 @@ bucket.s3.aws.upbound.io "crossplane-bucket-lrxrf" deleted
 * **[Continue to part 2]({{< ref "provider-aws-part-2">}})** to create a 
   Crossplane _Composite Resource_ and _Claim_.
 * Explore AWS resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.

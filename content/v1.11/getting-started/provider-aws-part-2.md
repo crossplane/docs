@@ -963,5 +963,5 @@ patches_ and making all this configuration portable in Crossplane _packages_.
 ## Next steps
 * **[Continue to part 3]({{< ref "provider-aws-part-3">}})** to create a learn
   about _patching_ resources and creating Crossplane _packages_.
-* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
+* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
