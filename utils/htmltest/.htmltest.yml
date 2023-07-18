@@ -5,3 +5,6 @@ IgnoreInternalEmptyHash: true
 CheckExternal: false
 IgnoreURLs:
   - "github.com/crossplane/docs/tree/master/content/(.*).md" # Ignore the links to "view this source"
+  - "www.googletagmanager.com/*" # Ignore google tag manager
+  - "twitter.com/*" # Ignore twitter links since they send to login page
+
