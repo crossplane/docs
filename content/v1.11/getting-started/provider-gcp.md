@@ -1073,7 +1073,7 @@ GCP service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-gcp/v0.28.0/crds).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for GCP
@@ -1250,6 +1250,6 @@ bucket.storage.gcp.upbound.io "crossplane-bucket-8b7gw" deleted
 * **[Continue to part 2]({{< ref "provider-gcp-part-2">}})** to create a 
 Crossplane _Composite Resource_ and _Claim_.
 * Explore GCP resources that can Crossplane can configure in the 
-[Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/crds).
+[Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
 Crossplane users and contributors.

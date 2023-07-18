@@ -1063,7 +1063,7 @@ You can view the new CRDs with `kubectl get crds`. Every CRD maps to a unique AW
 
 
 {{< hint type="tip" >}}
-See details about all the supported CRDs in the [Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.27.0/crds).
+See details about all the supported CRDs in the [Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
@@ -1208,5 +1208,5 @@ bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
 
 ## Next steps
 * **[Continue to part 2]({{< ref "provider-aws-part-2">}})** to create a Crossplane _Composite Resource_ and _Claim_.
-* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/crds).
+* Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
