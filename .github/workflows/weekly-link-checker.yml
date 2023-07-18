@@ -1,0 +1,34 @@
+name: Validate external links
+
+on:
+  schedule:
+    # “At 04:05 on Monday”
+    - cron:  '5 4 * * 1'
+
+  # Allows manual workflow run (must in default branch to work)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the docs repo
+        uses: actions/checkout@v3
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.109.0'
+          extended: true
+
+      - name: Build
+        # Set to env=dev so SCSS isn't required.
+        run: hugo --environment development
+
+      - name: Enable external link checking
+        run: "sed -i 's/CheckExternal: false/CheckExternal: true/' utils/htmltest/.htmltest.yml"
+
+      - name: Run htmltest
+        uses: wjdp/htmltest-action@master
+        with:
+          config: ./utils/htmltest/.htmltest.yml
