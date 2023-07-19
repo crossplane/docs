@@ -3,522 +3,1689 @@ title: Patch and Transforms
 weight: 70
 ---
 
-### Influencing External Names
+Crossplane Compositions allow for "patch and transform" operations. With patches
+a Composition can apply changes to a composite resource or managed resource. 
 
-The `crossplane.io/external-name` annotation has special meaning to Crossplane
-managed resources - it specifies the name (or identifier) of the resource in the
-external system, for example the actual name of a `CloudSQLInstance` in the GCP
-API. Some managed resources don't let you specify an external name - in those
-cases Crossplane will set it for you to whatever the external system requires.
+When users create Claims, Crossplane passes the settings in the Claim to
+the associated composite resource. Patches can use these settings to change the
+associated composite resource or managed resources. 
 
-If you add the `crossplane.io/external-name` annotation to a claim Crossplane
-will automatically propagate it when it creates an XR. It's good practice to
-have your `Composition` further propagate the annotation to one or more composed
-resources, but it's not required.
+Examples of using patch and transforms include:
+ * changing the name of the external resource
+ * mapping generic terms like "east" or "west" to specific provider locations
+ * appending custom labels or strings to resource fields
 
-where `MyResource` is a Composite Resource Claim kind.
-When a Composite Resource or a Claim has the `crossplane.io/paused` annotation
-with its value set to `true`, the Composite Resource controller or the Claim
-controller pauses reconciliations on the resource until
-the annotation is removed or its value set to something other than `true`.
-Before temporarily pausing reconciliations, an event with the type `Synced`,
-the status `False`, and the reason `ReconcilePaused` is emitted
-on the resource.
-Please also note that annotations on a Composite Resource Claim are propagated
-to the associated Composite Resource but when the
-`crossplane.io/paused: "true"` annotation is added to a Claim, because
-reconciliations on the Claim are now paused, this newly added annotation
-will not be propagated. However, whenever the annotation's value is set to a
-non-`true` value, reconciliations on the Claim will now resume, and thus the
-annotation will now be propagated to the associated Composite Resource
-with a non-`true` value. An implication of the described behavior is that
-pausing reconciliations on the Claim will not inherently pause reconciliations
-on the associated Composite Resource.
 
-<!-- This also related to XRs -->
-### Connection Details
+{{<hint "note" >}}
+<!-- vale alex.Condescending = NO -->
+Crossplane expects patch and transform operations to be simple changes.  
+Use [Composition Functions]({{<ref "./composition-functions">}}) for more
+complex or programmatic modifications.
+<!-- vale  alex.Condescending = YES -->
+{{</hint >}}
 
-Connection details secret of XR is an aggregated sum of the connection details
-of the composed resources. It's recommended that the author of XRD specify
-exactly which keys will be allowed in the XR connection secret by listing them
-in `spec.connectionSecretKeys` so that consumers of claims and XRs can see what
-they can expect in the connection details secret.
 
-If `spec.connectionSecretKeys` is empty, then all keys of the aggregated connection
-details secret will be propagated.
+A Composition [patch](#create-a-patch) is the action of changing a field.  
+A Composition [transform](#transform-a-patch) modifies the values before 
+applying the patch.
 
-You can derive the following types of connection details from a composed
-resource to be aggregated:
+## Create a patch
 
-`FromConnectionSecretKey`. Derives an XR connection detail from a connection
-secret key of a composed resource.
+Patches are part of an individual 
+{{<hover label="createComp" line="4">}}resource{{</hover>}} inside a 
+{{<hover label="createComp" line="2">}}Composition{{</hover>}}.
 
-```yaml
-# Derive the XR's 'user' connection detail from the 'username' key of the
-# composed resource's connection secret.
-- type: FromConnectionSecretKey
-  name: user
-  fromConnectionSecretKey: username
+The {{<hover label="createComp" line="8">}}patches{{</hover>}} field takes a
+list of patches to apply to the individual resource. 
+
+Each patch has a {{<hover label="createComp" line="9">}}type{{</hover>}}, which
+defines what kind of patch action Crossplane applies. 
+
+Patches reference fields inside a composite resource or Composition differently
+depending on the patch type, but all patches reference a 
+{{<hover label="createComp" line="10">}}fromFieldPath{{</hover>}} and
+{{<hover label="createComp" line="11">}}toFieldPath{{</hover>}}.
+
+The {{<hover label="createComp" line="10">}}fromFieldPath{{</hover>}} defines
+the patch's input values. 
+The {{<hover label="createComp" line="11">}}toFieldPath{{</hover>}} defines the
+data to change with a patch.
+
+Here is an example patch applied to a resource in a Composition. 
+```yaml {label="createComp",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+spec:
+  resources:
+    - name: my-composed-resource
+      base:
+        # Removed for brevity
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.field1
+          toFieldPath: metadata.labels["patchLabel"]
 ```
 
-`FromFieldPath`. Derives an XR connection detail from a field path within the
-composed resource.
+### Selecting fields
 
-```yaml
-# Derive the XR's 'user' connection detail from the 'adminUser' status field of
-# the composed resource.
-- type: FromFieldPath
-  name: user
-  fromFieldPath: status.atProvider.adminUser
+Crossplane selects fields in a composite resource or managed
+resource with
+a subset of 
+[JSONPath selectors](https://kubernetes.io/docs/reference/kubectl/jsonpath/),
+called "field selectors."
+
+Field selectors can select any field in a composite resource or managed resource 
+object, including the `metadata`, `spec` or `status` fields. 
+
+Field selectors can be a string matching a field name or an array index, in
+brackets. Field names may use a `.` character to select child elements.
+
+
+{{< expand "Example field selectors" >}}
+Here are some example selectors from a composite resource object.
+{{<table "table table-hover" >}}
+| Selector | Selected element | 
+| --- | --- |
+| `kind` | {{<hover label="select" line="3">}}kind{{</hover>}} |
+| `metadata.labels['crossplane.io/claim-name']` | {{<hover label="select" line="14">}}my-example-claim{{</hover>}} |
+| `spec.desiredRegion` | {{<hover label="select" line="31">}}eu-north-1{{</hover>}} |
+| `spec.resourceRefs[0].name` | {{<hover label="select" line="37">}}my-example-claim-978mh-r6z64{{</hover>}} |
+{{</table >}}
+
+```yaml {label="select",copy-lines="none"}
+$ kubectl get composite -o yaml
+apiVersion: example.org/v1alpha1
+kind: xExample
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"example.org/v1alpha1","kind":"ExampleClaim","metadata":{"annotations":{},"name":"my-example-claim","namespace":"default"},"spec":{"desiredRegion":"eu-north-1","field1":"field1-text","field2":"field2-text"}}
+  creationTimestamp: "2023-07-14T17:36:30Z"
+  finalizers:
+  - composite.apiextensions.crossplane.io
+  generateName: my-example-claim-
+  generation: 4
+  labels:
+    crossplane.io/claim-name: my-example-claim
+    crossplane.io/claim-namespace: default
+    crossplane.io/composite: my-example-claim-978mh
+  name: my-example-claim-978mh
+  resourceVersion: "40367"
+  uid: d64f3020-4f9d-4c52-bd14-f8491869d2c5
+spec:
+  claimRef:
+    apiVersion: example.org/v1alpha1
+    kind: ExampleClaim
+    name: my-example-claim
+    namespace: default
+  compositionRef:
+    name: example-composition
+  compositionRevisionRef:
+    name: example-composition-f4c519a
+  compositionUpdatePolicy: Automatic
+  desiredRegion: eu-north-1
+  field1: field1-text
+  field2: field2-text
+  resourceRefs:
+  - apiVersion: s3.aws.upbound.io/v1beta1
+    kind: Bucket
+    name: my-example-claim-978mh-r6z64
+  - apiVersion: s3.aws.upbound.io/v1beta1
+    kind: Bucket
+    name: my-example-claim-978mh-cnlhj
+  - apiVersion: s3.aws.upbound.io/v1beta1
+    kind: Bucket
+    name: my-example-claim-978mh-rv5nm
+status:
+  conditions:
+  - lastTransitionTime: "2023-07-14T17:36:30Z"
+    reason: ReconcileSuccess
+    status: "True"
+    type: Synced
+  - lastTransitionTime: "2023-07-14T17:36:55Z"
+    reason: Available
+    status: "True"
+    type: Ready
+```
+{{< /expand >}}
+
+## Reuse a patch
+
+A Composition can reuse a patch object on multiple resources with a 
+PatchSet.
+
+To create a PatchSet, define a 
+{{<hover label="patchset" line="5">}}PatchSets{{</hover>}} object inside the 
+Composition's
+{{<hover label="patchset" line="4">}}spec{{</hover>}}. 
+
+Each patch inside a PatchSet has a 
+{{<hover label="patchset" line="6">}}name{{</hover>}} and a list of
+{{<hover label="patchset" line="7">}}patches{{</hover>}}.  
+
+{{<hint "note" >}}
+For multiple PatchSets only use a single 
+{{<hover label="patchset" line="5">}}PatchSets{{</hover>}} object.  
+
+Identify each unique PatchSet with a unique 
+{{<hover label="patchset" line="6">}}name{{</hover>}}.
+{{</hint >}}
+
+Apply the PatchSet to a resource with a patch
+{{<hover label="patchset" line="16">}}type: PatchSet{{</hover>}}.  
+Set the 
+{{<hover label="patchset" line="17">}}patchSetName{{</hover>}} to the 
+{{<hover label="patchset" line="6">}}name{{</hover>}} of the PatchSet.
+
+```yaml {label="patchset"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+spec:
+  patchSets:
+  - name: my-patchset
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.desiredRegion
+      toFieldPath: spec.forProvider.region
+  resources:
+    - name: bucket1
+      base:
+        # Removed for brevity
+      patches:
+        - type: PatchSet
+          patchSetName: my-patchset
+    - name: bucket2
+      base:
+        # Removed for brevity
+      patches:
+        - type: PatchSet
+          patchSetName: my-patchset  
 ```
 
-`FromValue`. Derives an XR connection detail from a fixed value.
+{{<hint "important" >}}
+A PatchSet can't contain other PatchSets.  
 
-```yaml
-# Always sets the XR's 'user' connection detail to 'admin'.
-- type: FromValue
-  name: user
-  value: admin
+Crossplane ignores any [transforms](#transform-a-patch) or
+[policies](#patch-policies) in a PatchSet.
+{{< /hint >}}
+
+## Patching between resources
+
+Compositions can't patch between resources in the same Composition. For example,
+generating a network resource and patching the resource name to a compute
+resource. 
+
+Patching between resources requires multiple Compositions.
+* A Composition creating the input data, for example a Composition creating
+  networking resources. 
+* A Composition using the input data, for example a Composition creating a
+  compute resource.
+* A Composition calling both the network and compute Compositions and applying
+  the patches. 
+
+Each Composition can write data from their individual managed resources to their
+composite resource. The third Composition can read data from one composite
+resource and write it to the other composite resource. 
+
+For example, the Upbound 
+[platform-ref-aws](https://github.com/upbound/platform-ref-aws/tree/main) uses 
+this technique to generate
+network IDs and then provide them to an Amazon managed Kubernetes cluster. 
+
+First a Composition named {{<hover label="xnet" line="4">}}XNetwork{{</hover>}}
+generates a {{<hover label="xnet" line="9">}}Subnet{{</hover>}} resource.  
+The Composition patches the provider generated external resource 
+{{<hover label="xnet" line="14">}}name{{</hover>}} to a custom 
+{{<hover label="xnet" line="15">}}status.subnetIds{{</hover>}} field.
+
+```yaml {label="xnet"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xnetworks.aws.platformref.upbound.io
+spec:
+  resources:
+    - base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          # Removed for brevity
+      patches:
+        - type: ToCompositeFieldPath
+          fromFieldPath: metadata.annotations[crossplane.io/external-name]
+          toFieldPath: status.subnetIds[0]
 ```
 
-<!-- break --> 
+A second Composition named {{<hover label="xeks" line="4">}}xeks{{</hover>}}
+generates an AWS managed Kubernetes 
+{{<hover label="xeks" line="9">}}cluster{{</hover>}}.  
+The Composition uses the value in
+{{<hover label="xeks" line="15">}}spec.parameters.subnetIds{{</hover>}} to apply
+as the
+{{<hover label="xeks" line="16">}}subnetIds{{</hover>}} in the resource's 
+{{<hover label="xeks" line="12">}}forProvider.vpcConfig{{</hover>}}.
 
-You'll encounter a lot of 'field paths' when reading or writing a `Composition`.
-Field paths reference a field within a Kubernetes object via a simple string
-'path'. [API conventions][field-paths] describe the syntax as:
+{{<hint "note" >}}
+The 
+{{<hover label="xeks" line="16">}}spec.parameters.subnetIds{{</hover>}}
+field doesn't exist in this Composition.
 
-> Standard JavaScript syntax for accessing that field, assuming the JSON object
-> was transformed into a JavaScript object, without the leading dot, such as
-> `metadata.name`.
+The third Composition creates this value.
+{{< /hint >}}
 
- Valid field paths include:
-
-* `metadata.name` - The `name` field of the `metadata` object.
-* `spec.containers[0].name` - The `name` field of the 0th `containers` element.
-* `data[.config.yml]` - The `.config.yml` field of the `data` object.
-* `apiVersion` - The `apiVersion` field of the root object.
-
- While the following are invalid:
-
-* `.metadata.name` - Leading period.
-* `metadata..name` - Double period.
-* `metadata.name.` - Trailing period.
-* `spec.containers[]` - Empty brackets.
-* `spec.containers.[0].name` - Period before open bracket.
-
-### Patch Types
-
-You can use the following types of patch in a `Composition`:
-
-`FromCompositeFieldPath`. The default if the `type` is omitted. This type
-patches from a field within the XR to a field within the composed resource. It's
-commonly used to expose a composed resource spec field as an XR spec field.
-
-```yaml
-# Patch from the XR's spec.parameters.size field to the composed resource's
-# spec.forProvider.settings.tier field.
-- type: FromCompositeFieldPath
-  fromFieldPath: spec.parameters.size
-  toFieldPath: spec.forProvider.settings.tier
+```yaml {label="xeks"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xeks.aws.platformref.upbound.io
+spec:
+  resources:
+    - base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: Cluster
+        spec:
+          forProvider:
+            vpcConfig:
+              # Removed for brevity
+      patches:
+        - fromFieldPath: spec.parameters.subnetIds
+          toFieldPath: spec.forProvider.vpcConfig[0].subnetIds
 ```
 
-`ToCompositeFieldPath`. The inverse of `FromCompositeFieldPath`. This type
-patches from a field within the composed resource to a field within the XR. It's
-commonly used to derive an XR status field from a composed resource status
-field.
+The third Composition, an 
+{{<hover label="xcluster" line="4">}}xcluster{{</hover>}} uses both the 
+{{<hover label="xcluster" line="9">}}XNetwork{{</hover>}} and 
+{{<hover label="xcluster" line="16">}}XEKS{{</hover>}} Compositions.
 
-```yaml
-# Patch from the composed resource's status.atProvider.zone field to the XR's
-# status.zone field.
-- type: ToCompositeFieldPath
-  fromFieldPath: status.atProvider.zone
-  toFieldPath: status.zone
+The {{<hover label="xcluster" line="9">}}XNetwork{{</hover>}} patches the
+provider generated 
+{{<hover label="xcluster" line="12">}}subnetIds{{</hover>}} to the XNetwork 
+composite resource's
+{{<hover label="xcluster" line="13">}}status.subnetIds{{</hover>}}.  
+The XCluster Composition reads the 
+{{<hover label="xcluster" line="12">}}status.subnetIds{{</hover>}} and writes 
+them to the XCluster composite resource
+{{<hover label="xcluster" line="13">}}status.subnetIds{{</hover>}}.
+
+When the XCluster Composition creates the
+{{<hover label="xcluster" line="16">}}XEKS{{</hover>}} resource, it takes the
+value from the XCluster 
+{{<hover label="xcluster" line="18">}}status.subnetIds{{</hover>}} and applies
+it to the XEKS 
+{{<hover label="xcluster" line="19">}}spec.parameters.subnetIds{{</hover>}}.
+
+```yaml {label="xcluster"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xclusters.aws.platformref.upbound.io
+spec:
+  resources:
+    - base:
+        apiVersion: aws.platformref.upbound.io/v1alpha1
+        kind: XNetwork
+      patches:
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.subnetIds
+          toFieldPath: status.subnetIds
+    - base:
+        apiVersion: aws.platformref.upbound.io/v1alpha1
+        kind: XEKS
+      patches:
+        - fromFieldPath: status.subnetIds
+          toFieldPath: spec.parameters.subnetIds
 ```
 
-`FromCompositeFieldPath` and `ToCompositeFieldPath` patches can also take a wildcarded
-field path in the `toFieldPath` parameter and patch each array element in the `toFieldPath`
-with the singular value provided in the `fromFieldPath`.
+## Types of patches
+Crossplane supports multiple patch types, each using a different source for data
+and applying the patch to a different location. 
 
-```yaml
-# Patch from the XR's spec.parameters.allowedIPs to the CIDRBlock elements
-# inside the array spec.forProvider.firewallRules on the composed resource.
-resources:
-- name: exampleFirewall
-  base:
-    apiVersion: firewall.example.crossplane.io/v1beta1
-    kind: Firewall
-    spec:
-      forProvider:
-        firewallRules:
-        - Action: "Allow"
-          Destination: "example1"
-          CIDRBlock: ""
-        - Action: "Allow"
-          Destination: "example2"
-          CIDRBlock: ""
-- type: FromCompositeFieldPath
-  fromFieldPath: spec.parameters.allowedIP
-  toFieldPath: spec.forProvider.firewallRules[*].CIDRBlock
+Summary of Crossplane patches
+{{< table "table table-hover" >}}
+| Patch Type | Data Source | Data Destination | 
+| ---  | --- | --- | 
+| [FromCompositeFieldPath](#fromcompositefieldpath) | A field in the composite resource. | A field patched managed resource. | 
+| [ToCompositeFieldPath](#tocompositefieldpath) | A field in the patched managed resource. | A field in the composite resource. |  
+| [CombineFromComposite](#tocompositefieldpath) | Multiple fields in the composite resource. | A field in the patched managed resource. | 
+| [CombineToComposite](#tocompositefieldpath) | Multiple fields in the patched managed resource. | A field in the composite resource. | 
+| [FromEnvironmentFieldPath](#tocompositefieldpath) | Data in the in-memory EnvironmentConfig Environment | A field in the patched managed resource. | 
+| [ToEnvironmentFieldPath](#tocompositefieldpath) | A field in the patched managed resource. | The in-memory EnvironmentConfig Environment. | 
+| [CombineFromEnvironment](#tocompositefieldpath) | Multiple fields in the in-memory EnvironmentConfig Environment. | A field in the patched managed resource. | 
+| [CombineToEnvironment](#tocompositefieldpath) | Multiple fields in the patched managed resource. | A field in the in-memory EnvironmentConfig Environment. | 
+{{< /table >}}
+
+{{<hint "note" >}}
+All the following examples use the same set of Compositions, 
+CompositeResourceDefinitions, Claims and EnvironmentConfigs.  
+Only the applied patches change between
+examples. 
+
+All examples rely on Upbound
+[provider-aws-s3](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/)
+to create resources.
+
+{{< expand "Reference Composition" >}}
+```yaml {copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: xExample
+  environment:
+    environmentConfigs:
+    - ref:
+        name: example-environment
+  resources:
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+    - name: bucket2
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+```
+{{< /expand >}}
+
+{{<expand "Reference CompositeResourceDefinition" >}}
+```yaml {copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xexamples.example.org
+spec:
+  group: example.org
+  names:
+    kind: xExample
+    plural: xexamples
+  claimNames:
+    kind: ExampleClaim
+    plural: exampleclaims
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              field1:
+                type: string
+              field2:
+                type: string
+              field3: 
+                type: string
+              desiredRegion: 
+                type: string
+              boolField:
+                type: boolean
+              numberField:
+                type: integer
+          status:
+              type: object
+              properties:
+                url:
+                  type: string
+```
+{{< /expand >}}
+
+
+{{< expand "Reference Claim" >}}
+```yaml {copy-lines="all"}
+apiVersion: example.org/v1alpha1
+kind: ExampleClaim
+metadata:
+  name: my-example-claim
+spec:
+  field1: "field1-text"
+  field2: "field2-text"
+  desiredRegion: "eu-north-1"
+  boolField: false
+  numberField: 10
+```
+{{< /expand >}}
+
+{{< expand "Reference EnvironmentConfig">}}
+```yaml {copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: EnvironmentConfig
+metadata:
+  name: example-environment
+data:
+  locations:
+    us: us-east-2
+    eu: eu-north-1
+  key1: value1
+  key2: value2
+
+```
+{{< /expand >}}
+{{< /hint >}}
+
+<!-- vale Google.Headings = NO -->
+### FromCompositeFieldPath
+<!-- vale Google.Headings = YES -->
+
+The 
+{{<hover label="fromComposite" line="12">}}FromCompositeFieldPath{{</hover>}}
+patch takes a value in a composite resource and applies it to a field in the 
+managed resource. 
+
+{{< hint "tip" >}}
+Use the 
+{{<hover label="fromComposite" line="12">}}FromCompositeFieldPath{{</hover>}}
+patch to apply options from users in their Claims to settings in managed
+resource `forProvider` settings. 
+{{< /hint >}}
+
+For example, to use the value 
+{{<hover label="fromComposite" line="13">}}desiredRegion{{</hover>}} provided by
+a user in a composite resource to a managed resource's
+{{<hover label="fromComposite" line="10">}}region{{</hover>}}. 
+
+The {{<hover label="fromComposite" line="13">}}fromFieldPath{{</hover>}} value
+is a field in the composite resource. 
+
+The {{<hover label="fromComposite" line="14">}}toFieldPath{{</hover>}} value is
+the field in the managed resource to change. 
+
+```yaml {label="fromComposite",copy-lines="9-11"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.desiredRegion
+          toFieldPath: spec.forProvider.region
 ```
 
-`FromEnvironmentFieldPath`. This type patches from a field within the in-memory
-environment to a field within the composed resource. It's commonly used to
-expose a composed resource spec field as an XR spec field.
-Note that EnvironmentConfigs are an alpha feature and need to be enabled with 
-the `--enable-environment-configs` flag on startup.
+View the managed resource to see the updated 
+{{<hover label="fromCompMR" line="6">}}region{{</hover>}}
 
-```yaml
-# Patch from the environment's tier.name field to the composed resource's
-# spec.forProvider.settings.tier field.
-- type: FromEnvironmentFieldPath
-  fromFieldPath: tier.name
-  toFieldPath: spec.forProvider.settings.tier
+```yaml {label="fromCompMR",copy-lines="1"}
+$ kubectl describe bucket
+Name:         my-example-claim-qlr68-29nqf
+# Removed for brevity
+Spec:
+  For Provider:
+    Region:  eu-north-1
 ```
 
-`ToEnvironmentFieldPath`. This type patches from a composed field to the
-in-memory environment. Note that, unlike `ToCompositeFieldPath` patches, this
-is executed before the composed resource is applied on the cluster which means
-that the `status` is not available.
-Note that EnvironmentConfigs are an alpha feature and need to be enabled with 
-the `--enable-environment-configs` flag on startup.
+<!-- vale Google.Headings = NO -->
+### ToCompositeFieldPath
+<!-- vale Google.Headings = YES -->
 
-```yaml
-# Patch from the environment's tier.name field to the composed resource's
-# spec.forProvider.settings.tier field.
-- type: ToEnvironmentFieldPath
-  fromFieldPath: spec.forProvider.settings.tier
-  toFieldPath: tier.name
+The 
+{{<hover label="toComposite" line="12">}}ToCompositeFieldPath{{</hover>}} writes 
+data from an individual managed resource to
+the composite resource that created it.
+
+{{< hint "tip" >}}
+Use {{<hover label="toComposite" line="12">}}ToCompositeFieldPath{{</hover>}}
+patches to take data from one managed resource in a Composition and use it in a
+second managed resource in the same Composition. 
+{{< /hint >}}
+
+For example, after Crossplane creates a new managed resource, take the value 
+{{<hover label="toComposite" line="13">}}hostedZoneID{{</hover>}} and apply it
+as a 
+{{<hover label="toComposite" line="14">}}label{{</hover>}} in the composite
+resource.
+
+```yaml {label="toComposite",copy-lines="9-11"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.hostedZoneId
+          toFieldPath: metadata.labels['ZoneID']
 ```
 
-Note that the field to be patched requires some initial value to be set.
-
-`CombineFromComposite`. Combines multiple fields from the XR to produce one
-composed resource field.
-
-```yaml
-# Patch from the XR's spec.parameters.location field and the
-# metadata.labels[crossplane.io/claim-name] label to the composed
-# resource's spec.forProvider.administratorLogin field.
-- type: CombineFromComposite
-  combine:
-    # The patch will only be applied when all variables have non-zero values.
-    variables:
-    - fromFieldPath: spec.parameters.location
-    - fromFieldPath: metadata.labels[crossplane.io/claim-name]
-    strategy: string
-    string:
-      fmt: "%s-%s"
-  toFieldPath: spec.forProvider.administratorLogin
-  # By default Crossplane will skip the patch until all of the variables to be
-  # combined have values. Set the fromFieldPath policy to 'Required' to instead
-  # abort composition and return an error if a variable has no value.
-  policy:
-    fromFieldPath: Required
+View the created managed resource to see the 
+{{<hover label="toCompMR" line="6">}}Hosted Zone Id{{</hover>}} field.
+```yaml {label="toCompMR",copy-lines="none"}
+$ kubectl describe bucket
+Name:         my-example-claim-p5pxf-5vnp8
+# Removed for brevity
+Status:
+  At Provider:
+    Hosted Zone Id:       Z2O1EMRO9K5GLX
+    # Removed for brevity
 ```
 
-`CombineFromEnvironment`. Combines multiple fields from the in-memory
-environment to produce one composed resource field.
-Note that EnvironmentConfigs are an alpha feature and need to be enabled with 
-the `--enable-environment-configs` flag on startup.
-
-```yaml
-# Patch from the environments's location field and region to the composed
-# resource's spec.forProvider.administratorLogin field.
-- type: CombineFromEnvironment
-  combine:
-    # The patch will only be applied when all variables have non-zero values.
-    variables:
-    - fromFieldPath: location
-    - fromFieldPath: region
-    strategy: string
-    string:
-      fmt: "%s-%s"
-  toFieldPath: spec.forProvider.administratorLogin
+Next view the composite resource and confirm the patch applied the 
+{{<hover label="toCompositeXR" line="3">}}label{{</hover>}}
+```yaml {label="toCompositeXR",copy-lines="none"}
+$ kubectl describe composite
+Name:         my-example-claim-p5pxf
+Labels:       ZoneID=Z2O1EMRO9K5GLX
 ```
 
-At the time of writing only the `string` combine strategy is supported. It uses
-[Go string formatting][pkg/fmt] to combine values, so if the XR's location was
-`us-west` and its claim name was `db` the composed resource's administratorLogin
-would be set to `us-west-db`.
+{{<hint "important">}}
+Crossplane doesn't apply the patch to the composite resource until the next
+reconcile loop, after creating the managed resource. This creates a delay
+between a managed resource being Ready and applying the patch.
+{{< /hint >}}
 
-`CombineToComposite` is the inverse of `CombineFromComposite`.
 
-```yaml
-# Patch from the composed resource's spec.parameters.administratorLogin and
-# status.atProvider.fullyQualifiedDomainName fields back to the XR's
-# status.adminDSN field.
-- type: CombineToComposite
-  combine:
-    variables:
-      - fromFieldPath: spec.parameters.administratorLogin
-      - fromFieldPath: status.atProvider.fullyQualifiedDomainName
-    strategy: string
-    # Here, our administratorLogin parameter and fullyQualifiedDomainName
-    # status are formatted to a single output string representing a DSN.
-    string:
-      fmt: "mysql://%s@%s:3306/my-database-name"
-  toFieldPath: status.adminDSN
+<!-- vale Google.Headings = NO -->
+### CombineFromComposite
+<!-- vale Google.Headings = YES -->
+
+The 
+{{<hover label="combineFromComp" line="12">}}CombineFromComposite{{</hover>}}
+patch takes values from the composite resource, combines them and applies them
+to the managed resource. 
+
+{{< hint "tip" >}}
+Use the 
+{{<hover label="combineFromComp" line="12">}}CombineFromComposite{{</hover>}}
+patch to create complex strings, like security policies and apply them to
+a managed resource. 
+{{< /hint >}}
+
+For example, use the Claim value 
+{{<hover label="combineFromComp" line="15">}}desiredRegion{{</hover>}} and 
+{{<hover label="combineFromComp" line="16">}}field2{{</hover>}} to generate the
+managed resource's
+{{<hover label="combineFromComp" line="20">}}name{{</hover>}}
+
+The 
+{{<hover label="combineFromComp" line="12">}}CombineFromComposite{{</hover>}}
+patch only supports the 
+{{<hover label="combineFromComp" line="13">}}combine{{</hover>}} option. 
+
+The {{<hover label="combineFromComp" line="14">}}variables{{</hover>}} are the
+list of 
+{{<hover label="combineFromComp" line="15">}}fromFieldPath{{</hover>}} values
+from the composite resource to combine. 
+
+The only supported 
+{{<hover label="combineFromComp" line="17">}}strategy{{</hover>}} is 
+{{<hover label="combineFromComp" line="17">}}strategy: string{{</hover>}}.
+
+Optionally you can apply a 
+{{<hover label="combineFromComp" line="19">}}string.fmt{{</hover>}}, based on 
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+strings.
+
+The {{<hover label="combineFromComp" line="20">}}toFieldPath{{</hover>}} is the
+field in the managed resource to apply the new string to. 
+
+```yaml {label="combineFromComp",copy-lines="11-20"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: spec.desiredRegion
+              - fromFieldPath: spec.field2
+            strategy: string
+            string:
+              fmt: "my-resource-%s-%s"
+          toFieldPath: metadata.name
 ```
 
-`CombineToEnvironment` is the inverse of `CombineFromEnvironment`.
-Note that EnvironmentConfigs are an alpha feature and need to be enabled with 
-the `--enable-environment-configs` flag on startup.
+Describe the managed resource to see the applied patch.
 
-```yaml
-# Patch from the composed resource's spec.parameters.administratorLogin and
-# spec.forProvider.domainName fields back to the environment's adminDSN field.
-- type: CombineToEnvironment
-  combine:
-    variables:
-      - fromFieldPath: spec.parameters.administratorLogin
-      - fromFieldPath: spec.forProvider.domainName
-    strategy: string
-    # Here, our administratorLogin parameter and fullyQualifiedDomainName
-    # status are formatted to a single output string representing a DSN.
-    string:
-      fmt: "mysql://%s@%s:3306/my-database-name"
-  toFieldPath: adminDSN
+```yaml {label="describeCombineFromComp",copy-lines="none"}
+$ kubectl describe bucket
+Name:         my-resource-eu-north-1-field2-text
 ```
 
-`PatchSet`. References a named set of patches defined in the `spec.patchSets`
-array of a `Composition`.
+<!-- vale Google.Headings = NO -->
+### CombineToComposite
+<!-- vale Google.Headings = YES -->
 
-```yaml
-# This is equivalent to specifying all of the patches included in the 'metadata'
-# PatchSet.
-- type: PatchSet
-  patchSetName: metadata
+The 
+{{<hover label="combineToComposite" line="12">}}CombineToComposite{{</hover>}}
+patch takes values from the managed resource, combines them and applies them
+to the composite resource. 
+
+{{<hint "tip" >}}
+Use {{<hover label="combineToComposite" line="12">}}CombineToComposite{{</hover>}}
+patches to create a single field like a URL from multiple fields in a managed
+resource. 
+{{< /hint >}}
+
+For example, use the managed resource 
+{{<hover label="combineToComposite" line="15">}}name{{</hover>}} and 
+{{<hover label="combineToComposite" line="16">}}region{{</hover>}} to generate a
+custom 
+{{<hover label="combineToComposite" line="20">}}url{{</hover>}}
+field. 
+
+{{< hint "important" >}}
+Writing custom fields in the Status field of a composite resource requires
+defining the custom fields in the CompositeResourceDefinition first. 
+
+{{< /hint >}}
+
+The 
+{{<hover label="combineToComposite" line="12">}}CombineToComposite{{</hover>}}
+patch only supports the 
+{{<hover label="combineToComposite" line="13">}}combine{{</hover>}} option. 
+
+The {{<hover label="combineToComposite" line="14">}}variables{{</hover>}} are the
+list of 
+{{<hover label="combineToComposite" line="15">}}fromFieldPath{{</hover>}} 
+the managed resource to combine. 
+
+The only supported 
+{{<hover label="combineToComposite" line="17">}}strategy{{</hover>}} is 
+{{<hover label="combineToComposite" line="17">}}strategy: string{{</hover>}}.
+
+Optionally you can apply a 
+{{<hover label="combineToComposite" line="19">}}string.fmt{{</hover>}}, based on 
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+strings.
+
+The {{<hover label="combineToComposite" line="20">}}toFieldPath{{</hover>}} is the
+field in the composite resource to apply the new string to. 
+
+```yaml {label="combineToComposite",copy-lines="9-11"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: CombineToComposite
+          combine:
+            variables:
+              - fromFieldPath: metadata.name
+              - fromFieldPath: spec.forProvider.region
+            strategy: string
+            string:
+              fmt: "https://%s.%s.com"
+          toFieldPath: status.url
 ```
 
-The `patchSets` array may not contain patches of `type: PatchSet`. The
-`transforms` and `patchPolicy` fields are ignored by `type: PatchSet`.
+View the composite resource to verify the applied patch.
 
-### Transform Types
-
-You can use the following types of transform on a value being patched:
-
-`map`. Transforms values using a map.
-
-```yaml
-# If the value of the 'from' field is 'us-west', the value of the 'to' field
-# will be set to 'West US'.
-- type: map
-  map:
-    us-west: West US
-    us-east: East US
-    au-east: Australia East
+```yaml {copy-lines="none"}
+$ kubectl describe composite
+Name:         my-example-claim-bjdjw
+API Version:  example.org/v1alpha1
+Kind:         xExample
+# Removed for brevity
+Status:
+  # Removed for brevity
+  URL:                     https://my-example-claim-bjdjw-r6ncd.us-east-2.com
 ```
 
-`match`. A more complex version of `map` that can match different kinds of
-patterns. It should be used if more advanced pattern matchings than a simple
-string equality check are required.
-The result of the first matching pattern is used as the output of this
-transform.
-If no pattern matches, you can either fallback to a given `fallbackValue` or
-fallback to the input value by setting the `fallbackTo` field to `Input`.
+<!-- vale Google.Headings = NO -->
+### FromEnvironmentFieldPath
+<!-- vale Google.Headings = YES -->
 
-```yaml
-# In the example below, if the value in the 'from' field is 'us-west', the
-# value in the 'to' field will be set to 'West US'.
-# If the value in the 'from' field is 'eu-west', the value in the 'to' field
-# will be set to 'Unknown' because no pattern matches.
-- type: match
-  match:
-    patterns:
-      - type: literal # Not needed. This is the default.
-        literal: us-west
-        result: West US
-      - type: regexp
-        regexp: '^af-.*'
-        result: Somewhere in Africa
-    fallbackTo: Value # Not needed. This is the default.
-    fallbackValue: Unknown
+{{<hint "important" >}}
+EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
 
-# If fallbackTo is set to Input, the output will be the input value if no
-# pattern matches.
-# In the example below, if the value in the 'from' field is 'us-west', the
-# value in the 'to' field will be set to 'West US'.
-# If the value in the 'from' field is 'eu-west', the value in the 'to' field
-# will be set to 'eu-west' because no pattern matches.
-- type: match
-  match:
-    patterns:
-      - type: literal
-        literal: us-west
-        result: West US
-      - type: regexp
-        regexp: '^af-.*'
-        result: Somewhere in Africa
-    fallbackTo: Input
+For more information about using an EnvironmentConfig, read the [Environment
+Configs]({{<ref "./environment-configs">}}) documentation.
+{{< /hint >}}
+
+The 
+{{<hover label="fromEnvField" line="12">}}FromEnvironmentFieldPath{{</hover>}}
+patch takes values from the in-memory EnvironmentConfig environment and applies
+them to the managed resource.
+
+{{<hint "tip" >}}
+Use 
+{{<hover label="fromEnvField" line="12">}}FromEnvironmentFieldPath{{</hover>}}
+to apply custom managed resource settings based on the current environment.  
+{{< /hint >}}
+
+For example, use the environment's 
+{{<hover label="fromEnvField" line="13">}}locations.eu{{</hover>}} value and
+apply it as the 
+{{<hover label="fromEnvField" line="14">}}region{{</hover>}}.
+
+```yaml {label="fromEnvField",copy-lines="9-11"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+        patches:
+        - type: FromEnvironmentFieldPath
+          fromFieldPath: locations.eu
+          toFieldPath: spec.forProvider.region
 ```
 
-`math`. Transforms values using math. The input value must be an integer.
-* math transform type `Multiply`, multiplies the input by the given value.
-* math transform type `ClampMin`, sets a minimum value for the output.
-* math transform type `ClampMax`, sets a maximum value for the output.
+Verify managed resource to confirm the applied patch. 
 
-```yaml
-# If you omit the field type, by default type is set to `Multiply`
-# If the value of the 'from' field is 2, the value of the 'to' field will be set
-# to 4.
-- type: math
-  math:
-    multiply: 2
-    
-# This is the same as above
-# If the value of the 'from' field is 2, the value of the 'to' field will be set
-# to 4.
-- type: math
-  math:
-    type: Multiply
-    multiply: 2
-
-# If the value of the 'from' field is 3, the value of the 'to' field will
-# be set to 4.
-- type: math
-  math:
-    type: ClampMin
-    clampMin: 4
-
-# If the value of the 'from' field is 3, the value of the 'to' field will
-# be set to 2.
-- type: math
-  math:
-    type: ClampMax
-    clampMax: 2
+```yaml {copy-lines="none"}
+kubectl describe bucket
+Name:         my-example-claim-8vrvc-xx5sr
+Labels:       crossplane.io/claim-name=my-example-claim
+# Removed for brevity
+Spec:
+  For Provider:
+    Region:  eu-north-1
+  # Removed for brevity
 ```
 
-`string`. Transforms string values. 
-* string transform type `Format`, Currently only Go style fmt is supported. [Go style `fmt`][pkg/fmt] is supported.
-* string transform type `Convert`, accepts one of `ToUpper`, `ToLower`, `ToBase64`, `FromBase64`, `ToJson`, `ToSha1`, `ToSha256`, `ToSha512`.
-* string transform type `TrimPrefix`, accepts a string to be trimmed from the beginning of the input.
-* string transform type `TrimSuffix`, accepts a string to be trimmed from the end of the input.
-* string transform type `Regexp`, accepts a string for regexp to be applied to.
+<!-- vale Google.Headings = NO -->
+### ToEnvironmentFieldPath
+<!-- vale Google.Headings = YES -->
 
-```yaml
-# If you omit the field type, by default type is set to `Format` 
-# If the value of the 'from' field is 'hello', the value of the 'to' field will
-# be set to 'hello-world'.
-- type: string
-  string:
-    fmt: "%s-world"
+{{<hint "important" >}}
+EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
 
-# This is the same as above
-# the value of the 'to' field will be set to 'hello-world'.
-- type: string
-  string:
-    type: Format
-    fmt: "%s-world"
+For more information about using an EnvironmentConfig, read the [Environment
+Configs]({{<ref "./environment-configs">}}) documentation.
+{{< /hint >}}
 
-# If the value of the 'from' field is 'hello', the value of the 'to' field will
-# be set to 'HELLO'.
-- type: string
-  string:
-    type: Convert
-    convert: ToUpper
+The 
+{{<hover label="toEnvField" line="12">}}ToEnvironmentFieldPath{{</hover>}}
+patch takes values the managed resource and applies them to the in-memory 
+EnvironmentConfig environment.
 
-# If the value of the 'from' field is 'Hello', the value of the 'to' field will
-# be set to 'hello'.
-- type: string
-  string:
-    type: Convert
-    convert: ToLower
+{{<hint "tip" >}}
+Use 
+{{<hover label="toEnvField" line="12">}}ToEnvironmentFieldPath{{</hover>}}
+write data to the environment that any FromEnvironmentFieldPath
+patch can access. 
+{{< /hint >}}
 
-# If the value of the 'from' field is 'Hello', the value of the 'to' field will
-# be set to 'SGVsbG8='.
-- type: string
-  string:
-     type: Convert
-     convert: ToBase64
+For example, use the desired
+{{<hover label="toEnvField" line="13">}}region{{</hover>}} value and
+apply it as the environment's
+{{<hover label="toEnvField" line="14">}}key1{{</hover>}}.
 
-# If the value of the 'from' field is 'SGVsbG8=', the value of the 'to' field will
-# be set to 'Hello'.
-- type: string
-  string:
-     type: Convert
-     convert: FromBase64
+{{< hint "important" >}}
+The environment's key must already exist. Patches can't create new environment
+keys. 
+{{< /hint >}}
 
-# If the value of the 'from' field is not nil, the value of the 'to' field will be
-# set to raw JSON representation of the 'from' field.
-- type: string
-  string:
-     type: Convert
-     convert: ToJson
-
-# The output will be the hash of the JSON representation of the 'from' field.
-- type: string
-  string:
-    type: Convert
-    convert: ToSha1 # alternatives: 'ToSha256' or 'ToSha512'
-
-# If the value of the 'from' field is https://crossplane.io, the value of the 'to' field will
-# be set to crossplane.io
-- type: string
-  string:
-    type: TrimPrefix
-    trim: 'https://'
-
-# If the value of the 'from' field is my-string-test, the value of the 'to' field will
-# be set to my-string
-- type: string
-  string:
-     type: TrimSuffix
-     trim: '-test'
-
-# If the value of the 'from' field is 'arn:aws:iam::42:example, the value of the
-# 'to' field will be set to "42". Note that the 'to' field is always a string. 
-- type: string
-  string:
-     type: Regexp
-     regexp:
-      match: 'arn:aws:iam::(\d+):.*'
-      group: 1  # Optional capture group. Omit to match the entire regexp.
+```yaml {label="toEnvField",copy-lines="9-11"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+        patches:
+        - type: ToEnvironmentFieldPath
+          fromFieldPath: spec.forProvider.region
+          toFieldPath: key1
 ```
 
-`convert`. Transforms values of one type to another, for example from a string
-to an integer. The following values are supported by the `from` and `to` fields:
+Because the environment is in-memory, there is no command to confirm the patch
+wrote the value to the environment.
 
-* `string`
-* `bool`
-* `int`
-* `int64`
-* `float64`
+{{<hint "important">}}
+The 
+{{<hover label="toEnvField" line="12">}}ToEnvironmentFieldPath{{</hover>}}
+patch happens **before** creating a resource.  
+The 
+{{<hover label="toEnvField" line="13">}}fromFieldPath{{</hover>}} can't
+read from the `atProvider` or `Status` fields.
+{{< /hint >}}
 
-The strings 1, t, T, TRUE, true, and True are considered 'true', while 0, f, F,
-FALSE, false, and False are considered 'false'. The integer 1 and float 1.0 are
-considered true, while all other values are considered false. Similarly, boolean
-true converts to integer 1 and float 1.0, while false converts to 0 and 0.0.
 
-```yaml
-# If the value to be converted is "1" (a string), the value of the 'toType'
-# field will be set to 1 (an integer).
-- type: convert
-  convert:
-   toType: int
+<!-- vale Google.Headings = NO -->
+### CombineFromEnvironment
+<!-- vale Google.Headings = YES -->
+
+{{<hint "important" >}}
+EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
+
+For more information about using an EnvironmentConfig, read the [Environment
+Configs]({{<ref "./environment-configs">}}) documentation.
+{{< /hint >}}
+
+The 
+{{<hover label="combineFromEnv" line="12">}}CombineFromEnvironment{{</hover>}}
+patch combines multiple values from the in-memory EnvironmentConfig environment and applies
+them to the managed resource.
+
+{{<hint "tip" >}}
+Use 
+{{<hover label="combineFromEnv" line="12">}}CombineFromEnvironment{{</hover>}}
+patch to create complex strings, like security policies and apply them to
+a managed resource. 
+{{< /hint >}}
+
+For example, combine multiple fields in the environment to create a unique 
+{{<hover label="combineFromEnv" line="20">}}annotation{{</hover>}}
+. 
+
+The 
+{{<hover label="combineFromEnv" line="12">}}CombineFromEnvironment{{</hover>}}
+patch only supports the 
+{{<hover label="combineFromEnv" line="13">}}combine{{</hover>}} option. 
+
+The only supported 
+{{<hover label="combineFromEnv" line="14">}}strategy{{</hover>}} is 
+{{<hover label="combineFromEnv" line="14">}}strategy: string{{</hover>}}.
+
+The {{<hover label="combineFromEnv" line="15">}}variables{{</hover>}} are the
+list of 
+{{<hover label="combineFromEnv" line="16">}}fromFieldPath{{</hover>}} values
+from the in-memory environment to combine. 
+
+Optionally you can apply a 
+{{<hover label="combineFromEnv" line="19">}}string.fmt{{</hover>}}, based on 
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+strings.
+
+The {{<hover label="combineFromEnv" line="20">}}toFieldPath{{</hover>}} is the
+field in the managed resource to apply the new string to. 
+
+
+```yaml {label="combineFromEnv",copy-lines="11-20"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: CombineFromEnvironment
+          combine:
+            strategy: string
+            variables:
+            - fromFieldPath: key1
+            - fromFieldPath: key2
+            string: 
+              fmt: "%s-%s"
+          toFieldPath: metadata.annotations[EnvironmentPatch]
 ```
 
-Converting `string` to `float64` additionally supports parsing string in
-[K8s quantity format](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity),
-such as `1000m` or `500 Mi`:
+Describe the managed resource to see new 
+{{<hover label="combineFromEnvDesc" line="4">}}annotation{{</hover>}}.
 
-```yaml
+```yaml {copy-lines="none",label="combineFromEnvDesc"}
+$ kubectl describe bucket
+Name:         my-example-claim-zmxdg-grl6p
+# Removed for brevity
+Annotations:  EnvironmentPatch: value1-value2
+# Removed for brevity
+```
+
+<!-- vale Google.Headings = NO -->
+### CombineToEnvironment
+<!-- vale Google.Headings = YES -->
+
+{{<hint "important" >}}
+EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
+
+For more information about using an EnvironmentConfig, read the [Environment
+Configs]({{<ref "./environment-configs">}}) documentation.
+{{< /hint >}}
+
+The 
+{{<hover label="combineToEnv" line="12">}}CombineToEnvironment{{</hover>}}
+patch combines multiple values from the managed resource and applies them to the in-memory EnvironmentConfig environment.
+
+{{<hint "tip" >}}
+Use 
+{{<hover label="combineToEnv" line="12">}}CombineToEnvironment{{</hover>}}
+patch to create complex strings, like security policies to use in other managed resources. 
+{{< /hint >}}
+
+For example, combine multiple fields in the managed resource to create a unique
+string and store it in the environment's
+{{<hover label="combineToEnv" line="20">}}key2{{</hover>}} value. 
+
+The string combines the
+managed resource 
+{{<hover label="combineToEnv" line="16">}}Kind{{</hover>}} and 
+{{<hover label="combineToEnv" line="17">}}region{{</hover>}}.
+
+The 
+{{<hover label="combineToEnv" line="12">}}CombineToEnvironment{{</hover>}}
+patch only supports the 
+{{<hover label="combineToEnv" line="13">}}combine{{</hover>}} option. 
+
+The only supported 
+{{<hover label="combineToEnv" line="14">}}strategy{{</hover>}} is 
+{{<hover label="combineToEnv" line="14">}}strategy: string{{</hover>}}.
+
+The {{<hover label="combineToEnv" line="15">}}variables{{</hover>}} are the
+list of 
+{{<hover label="combineToEnv" line="16">}}fromFieldPath{{</hover>}} 
+values in the managed resource to combine. 
+
+Optionally you can apply a 
+{{<hover label="combineToEnv" line="19">}}string.fmt{{</hover>}}, based on 
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+strings.
+
+The {{<hover label="combineToEnv" line="20">}}toFieldPath{{</hover>}} is the
+key in the environment to write the new string to. 
+
+{{< hint "important" >}}
+The environment's key must already exist. Patches can't create new environment
+keys. 
+{{< /hint >}}
+
+```yaml {label="combineToEnv",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: CombineToEnvironment
+          combine:
+            strategy: string
+            variables:
+            - fromFieldPath: kind
+            - fromFieldPath: spec.forProvider.region
+            string:
+              fmt: "%s.%s"
+          toFieldPath: key2
+```
+
+Because the environment is in-memory, there is no command to confirm the patch
+wrote the value to the environment.
+
+## Transform a patch
+
+When applying a patch, Crossplane supports modifying the data before applying it
+as a patch. Crossplane calls this a "transform" operation. 
+
+Summary of Crossplane transforms.
+{{< table "table table-hover" >}}
+| Transform Type | Action |
+| ---  | --- |
+| [convert](#convert-transforms) | Converts an input data type to a different type. Also called "casting." | 
+| [map](#map-transforms) | Selects a specific output based on a specific input. | 
+| [match](#match-transform) | Selects a specific output based on a string or regular expression. | 
+| [math](#math-transforms) | Applies a mathematical operation on the input. | 
+| [string](#string-transforms) | Change the input string using [Go string formatting](https://pkg.go.dev/fmt). | 
+{{< /table >}}
+
+Apply a transform directly to an individual patch with the 
+{{<hover label="transform1" line="15">}}transforms{{</hover>}} field. 
+
+A 
+{{<hover label="transform1" line="15">}}transform{{</hover>}} 
+requires a 
+{{<hover label="transform1" line="16">}}type{{</hover>}}, indicating the
+transform action to take. 
+
+The other transform field is the same as the 
+{{<hover label="transform1" line="16">}}type{{</hover>}}, in this example, 
+{{<hover label="transform1" line="17">}}map{{</hover>}}.
+
+The other fields depend on the patch type used. 
+
+This example uses a 
+{{<hover label="transform1" line="16">}}type: map{{</hover>}} transform, taking 
+the input 
+{{<hover label="transform1" line="13">}}spec.desiredRegion{{</hover>}}, matching
+it to either 
+{{<hover label="transform1" line="18">}}us{{</hover>}} or 
+{{<hover label="transform1" line="19">}}eu{{</hover>}} and returning the
+corresponding AWS region for the 
+{{<hover label="transform1" line="14">}}spec.forProvider.region{{</hover>}}
+value. 
+
+```yaml {label="transform1",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            region: us-east-2
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.desiredRegion
+          toFieldPath: spec.forProvider.region
+          transforms:
+            - type: map
+              map:
+                us: us-east-2
+                eu: eu-north-1
+```
+
+### Convert transforms
+
+The {{<hover label="convert" line="6">}}convert{{</hover>}} transform type 
+changes the input data type to a different data type.
+
+{{< hint "tip" >}}
+Some provider APIs require a field to be a string. Use a 
+{{<hover label="convert" line="7">}}convert{{</hover>}} type to 
+change any boolean or integer fields to strings. 
+{{< /hint >}}
+
+A {{<hover label="convert" line="6">}}convert{{</hover>}} 
+transform requires a {{<hover label="convert" line="8">}}toType{{</hover>}}, 
+defining the output data type. 
+
+```yaml {label="convert",copy-lines="none"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.numberField
+    toFieldPath: metadata.label["numberToString"]
+    transforms:
+      - type: convert
+        convert:
+          toType: string
+```
+
+Supported `toType` values:
+{{< table "table table-sm table-hover" >}}
+| `toType` value | Description | 
+| -- | -- |
+| `bool` | A boolean value of `true` or `false`. | 
+| `float64` | A 64-bit float value. | 
+| `int` | A 32-bit integer value. | 
+| `int64` | A 64-bit integer value. | 
+| `string` | A string value. | 
+{{< /table >}}
+
+#### Converting strings to booleans
+When converting from a string to a `bool` Crossplane considers the string values  
+`1`, `t`, `T`, `TRUE`, `True` and `true`  
+equal to the boolean value `True`.  
+
+The strings   
+`0`, `f`, `F`, `FALSE`, `False` and `false`   
+are equal to the boolean value `False`. 
+
+#### Converting numbers to booleans
+Crossplane considers the integer `1` and float `1.0` equal to the boolean
+value `True`.  
+Any other integer or float value is `False`.
+
+#### Converting booleans to numbers
+Crossplane converts the boolean value `True` to the integer `1` or float64
+`1.0`.  
+
+The value `False` converts to the integer `0` or float64 `0.0`
+
+#### Converting strings to float64
+When converting from a `string` to a 
+{{<hover label="format" line="3">}}float64{{</hover>}} Crossplane supports 
+an optional  
+{{<hover label="format" line="4">}}format: quantity{{</hover>}} field.
+
+Using {{<hover label="format" line="4">}}format: quantity{{</hover>}} translates 
+size suffixes like `M` for megabyte or `Mi` for megabit into the correct float64
+value. 
+
+{{<hint "note" >}}
+Refer to the [Go language docs](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity) 
+for a full list of supported suffixes.
+{{</hint >}}
+
+Add {{<hover label="format" line="4">}}format: quantity{{</hover>}} to the 
+{{<hover label="format" line="1">}}convert{{</hover>}} object to enable quantity
+suffix support. 
+
+```yaml {label="format",copy-lines="all"}
 - type: convert
   convert:
    toType: float64
    format: quantity
 ```
 
-### Patching From One Composed Resource to Another or Itself
+### Map transforms
+The {{<hover label="map" line="6">}}map{{</hover>}} transform type 
+_maps_ an input value to an output value. 
 
-It's not possible to patch _directly_ from one composed resource to another -
-i.e. from one entry in the `spec.resources` array of a `Composition` to another.
-It is however possible to achieve this by using the XR as an intermediary. To do
-so:
+{{< hint "tip" >}}
+The {{<hover label="map" line="6">}}map{{</hover>}} transform is useful for
+translating generic region names like `US` or `EU` to provider specific region
+names. 
+{{< /hint >}}
 
-1. Use a `ToCompositeFieldPath` patch to patch from your source composed
-   resource to the XR. Typically you'll want to patch to a status field or an
-   annotation.
-1. Use a `FromCompositeFieldPath` patch to patch from the 'intermediary' field
-   you patched to in step 1 to a field on the destination composed resource.
+The {{<hover label="map" line="6">}}map{{</hover>}} transform compares the value
+from the {{<hover label="map" line="3">}}fromFieldPath{{</hover>}} to the
+options listed in the {{<hover label="map" line="6">}}map{{</hover>}}.  
 
-Note that the source and the target composed resource can be the same.
+If Crossplane finds the value, Crossplane puts
+the mapped value in the {{<hover label="map" line="4">}}toFieldPath{{</hover>}}.
+
+For example, if the value of 
+{{<hover label="map" line="3">}}spec.field1{{</hover>}} is the string
+{{<hover label="map" line="8">}}"field1-text"{{</hover>}} then Crossplane uses
+the string 
+{{<hover label="map" line="8">}}firstField{{</hover>}} for the 
+{{<hover label="map" line="4">}}annotation{{</hover>}}.  
+
+If
+{{<hover label="map" line="3">}}spec.field1{{</hover>}} is the string
+{{<hover label="map" line="8">}}"field2-text"{{</hover>}} then Crossplane uses
+the string 
+{{<hover label="map" line="8">}}secondField{{</hover>}} for the 
+{{<hover label="map" line="4">}}annotation{{</hover>}}.  
+
+```yaml {label="map",copy-lines="none"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["myAnnotation"]
+    transforms:
+      - type: map
+        map:
+          "field1-text": "firstField"
+          "field2-text": "secondField"
+```
+In this example, the value of 
+{{<hover label="map" line="3">}}spec.field1{{</hover>}} is 
+{{<hover label="comositeMap" line="5">}}field1-text{{</hover>}}.
+
+```yaml {label="comositeMap",copy-lines="none"}
+$ kubectl describe composite
+Name:         my-example-claim-twx7n
+Spec:
+  # Removed for brevity
+  field1:         field1-text
+```
+
+The annotation applied to the managed resource is 
+{{<hover label="mrMap" line="4">}}firstField{{</hover>}}.
+
+```yaml {label="mrMap",copy-lines="none"}
+$ kubectl describe bucket
+Name:         my-example-claim-twx7n-ndb2f
+Annotations:  crossplane.io/composition-resource-name: bucket1
+              myLabel: firstField
+# Removed for brevity.
+```
+
+### Match transform
+The {{<hover label="match" line="6">}}match{{</hover>}} transform is like the
+`map` transform.  
+
+The {{<hover label="match" line="6">}}match{{</hover>}} 
+transform adds support for regular expressions along with exact
+strings and can provide default values if there isn't a match.
+
+A {{<hover label="match" line="7">}}match{{</hover>}} object requires a 
+{{<hover label="match" line="8">}}patterns{{</hover>}} object.
+
+The {{<hover label="match" line="8">}}patterns{{</hover>}} is a list of one or
+more patterns to attempt to match the input value against. 
+
+```yaml {label="match",copy-lines="1-8"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["myAnnotation"]
+    transforms:
+      - type: match
+        match:
+          patterns:
+            - type: literal
+              # Removed for brevity
+            - type: regexp
+              # Removed for brevity
+```
+
+Match {{<hover label="match" line="8">}}patterns{{</hover>}} can be either 
+{{<hover label="match" line="9">}}type: literal{{</hover>}} to match an
+exact string or 
+{{<hover label="match" line="11">}}type: regexp{{</hover>}} to match a
+regular expression. 
+
+{{<hint "note" >}}
+Crossplane stops processing matches after the first pattern match.
+{{< /hint >}}
+
+#### Match an exact string
+Use a {{<hover label="matchLiteral" line="8">}}pattern{{</hover>}} with 
+{{<hover label="matchLiteral" line="9">}}type: literal{{</hover>}} to match an 
+exact string. 
+
+On a successful match Crossplane provides the 
+{{<hover label="matchLiteral" line="11">}}result:{{</hover>}} to
+the patch {{<hover label="matchLiteral" line="4">}}toFieldPath{{</hover>}}. 
+
+```yaml {label="matchLiteral"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["myAnnotation"]
+    transforms:
+      - type: match
+        match:
+          patterns:
+            - type: literal
+              literal: "field1-text"
+              result: "matchedLiteral"
+```
+
+#### Match a regular expression
+Use a {{<hover label="matchRegex" line="8">}}pattern{{</hover>}} with 
+{{<hover label="matchRegex" line="9">}}type: regexp{{</hover>}} to match a regular
+expression.  
+Define a 
+{{<hover label="matchRegex" line="10">}}regexp{{</hover>}} key with the value of the
+regular expression to match.
+
+On a successful match Crossplane provides the 
+{{<hover label="matchRegex" line="11">}}result:{{</hover>}} to
+the patch {{<hover label="matchRegex" line="4">}}toFieldPath{{</hover>}}. 
+
+```yaml {label="matchRegex"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["myAnnotation"]
+    transforms:
+      - type: match
+        match:
+          patterns:
+            - type: regexp
+              regexp: '^field1.*'
+              result: "foundField1"
+```
+
+#### Using default values
+
+Optionally you can provide a default value to use if there is no matching 
+pattern.  
+
+The default value can either be the original input value or a defined default
+value. 
+
+Use
+{{<hover label="defaultValue" line="12">}}fallbackTo: Value{{</hover>}} to
+provide a default value if a match isn't found.
+
+For example if the string 
+{{<hover label="defaultValue" line="10">}}unknownString{{</hover>}} isn't
+matched, Crossplane provides the 
+{{<hover label="defaultValue" line="12">}}Value{{</hover>}} 
+{{<hover label="defaultValue" line="13">}}StringNotFound{{</hover>}} to the 
+{{<hover label="defaultValue" line="4">}}toFieldPath{{</hover>}} 
+
+
+```yaml {label="defaultValue"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["myAnnotation"]
+    transforms:
+      - type: match
+        match:
+          patterns:
+            - type: literal
+              literal: "UnknownString"
+              result: "foundField1"
+          fallbackTo: Value
+          fallbackValue: "StringNotFound"
+```
+
+To use the original input as the fallback value use 
+{{<hover label="defaultInput" line="12">}}fallbackTo: Input{{</hover>}}.
+
+Crossplane uses the original 
+{{<hover label="defaultInput" line="3">}}fromFieldPath{{</hover>}} input for the 
+{{<hover label="defaultInput" line="4">}}toFieldPath{{</hover>}} value.
+```yaml {label="defaultInput"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["myAnnotation"]
+    transforms:
+      - type: match
+        match:
+          patterns:
+            - type: literal
+              literal: "UnknownString"
+              result: "foundField1"
+          fallbackTo: Input
+```
+
+### Math transforms
+
+Use the {{<hover label="math" line="6">}}math{{</hover>}} transform to multiply
+an input or apply a minimum or maximum value. 
+
+{{<hint "important">}}
+A {{<hover label="math" line="6">}}math{{</hover>}} transform only supports
+integer inputs. 
+{{< /hint >}}
+
+```yaml {label="math",copy-lines="1-7"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.numberField
+    toFieldPath: metadata.annotations["mathAnnotation"]
+    transforms:
+      - type: math
+        math:
+          ...
+```
+
+<!-- vale Google.Headings = NO -->
+#### clampMin
+<!-- vale Google.Headings = YES -->
+
+The {{<hover label="clampMin" line="8">}}type: clampMin{{</hover>}} uses a defined 
+minimum value if an input is larger than the 
+{{<hover label="clampMin" line="8">}}type: clampMin{{</hover>}} value.
+
+For example, this 
+{{<hover label="clampMin" line="8">}}type: clampMin{{</hover>}} requires an
+input to be greater than 
+{{<hover label="clampMin" line="9">}}20{{</hover>}}.
+
+If an input is lower than 
+{{<hover label="clampMin" line="9">}}20{{</hover>}}, Crossplane uses the 
+{{<hover label="clampMin" line="9">}}clampMin{{</hover>}} value for the 
+{{<hover label="clampMin" line="4">}}toFieldPath{{</hover>}}.
+
+```yaml {label="clampMin"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.numberField
+    toFieldPath: metadata.annotations["mathAnnotation"]
+    transforms:
+      - type: math
+        math:
+          type: clampMin
+          clampMin: 20
+```
+
+<!-- vale Google.Headings = NO -->
+#### clampMax
+<!-- vale Google.Headings = YES -->
+
+The {{<hover label="clampMax" line="8">}}type: clampMax{{</hover>}} uses a defined 
+minimum value if an input is larger than the 
+{{<hover label="clampMax" line="8">}}type: clampMax{{</hover>}} value.
+
+For example, this 
+{{<hover label="clampMax" line="8">}}type: clampMax{{</hover>}} requires an
+input to be greater than 
+{{<hover label="clampMax" line="9">}}5{{</hover>}}.
+
+If an input is higher than 
+{{<hover label="clampMax" line="9">}}5{{</hover>}}, Crossplane uses the 
+{{<hover label="clampMax" line="9">}}clampMax{{</hover>}} value for the 
+{{<hover label="clampMax" line="4">}}toFieldPath{{</hover>}}.
+
+```yaml {label="clampMax"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.numberField
+    toFieldPath: metadata.annotations["mathAnnotation"]
+    transforms:
+      - type: math
+        math:
+          type: clampMax
+          clampMax: 5
+```
+
+<!-- vale Google.Headings = NO -->
+#### Multiply
+<!-- vale Google.Headings = YES -->
+
+The {{<hover label="multiply" line="8">}}type: multiply{{</hover>}} multiplies
+the input by the {{<hover label="multiply" line="9">}}multiply{{</hover>}} 
+value.
+
+For example, this 
+{{<hover label="multiply" line="8">}}type: multiply{{</hover>}} multiplies the
+value from the {{<hover label="multiply" line="3">}}fromFieldPath{{</hover>}}
+value by {{<hover label="multiply" line="9">}}2{{</hover>}}
+
+
+```yaml {label="multiply"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.numberField
+    toFieldPath: metadata.annotations["mathAnnotation"]
+    transforms:
+      - type: math
+        math:
+          type: multiply
+          multiply: 2
+```
+
+### String transforms
+
+The {{<hover label="string" line="6">}}string{{</hover>}} transform applies
+string formatting or manipulation to string inputs.
+
+```yaml {label="string"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["stringAnnotation"]
+    transforms:
+      - type: string
+        string:
+          type: ...
+```
+
+String transforms support the following 
+{{<hover label="string" line="7">}}types{{</hover>}}
+
+* [Convert](#string-convert)
+* [Format](#string-format)
+* [Regexp](#regular-expression-type)
+* [TrimPrefix](#trimprefix)
+* [TrimSuffix](#trimsuffix)
+
+#### String convert
+
+The {{<hover label="stringConvert" line="9">}}type: convert{{</hover>}}
+converts the input based on one of the following conversion types:
+* `ToUpper` - Change the string to all upper case letters. 
+* `ToLower` - Change the string to all lower case letters.
+* `ToBase64` - Create a new base64 string from the input. 
+* `FromBase64` - Create a new text string from a base64 input.
+* `ToJson` - Convert the input string to valid JSON.
+* `ToSha1` - Create a SHA-1 hash of the input string.
+* `ToSha256` - Create a SHA-256 hash of the input string.
+* `ToSha512` - Create a SHA-512 hash of the input string. 
+
+```yaml {label="stringConvert"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["FIELD1-TEXT"]
+    transforms:
+      - type: string
+        string:
+          type: Convert
+          convert: "ToUpper"
+```
+
+#### String format
+The {{<hover label="typeFormat" line="9">}}type: format{{</hover>}}
+applies [Go string formatting](https://pkg.go.dev/fmt) to the input. 
+
+```yaml {label="typeFormat"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.field1
+    toFieldPath: metadata.annotations["stringAnnotation"]
+    transforms:
+      - type: string
+        string:
+          type: Format
+          format:
+            fmt: "the-field-%s"
+```
+
+#### Regular expression type
+The {{<hover label="typeRegex" line="8">}}type: Regexp{{</hover>}} extracts
+the part of the input matching a regular expression. 
+
+Optionally use a 
+{{<hover label="typeRegex" line="11">}}group{{</hover>}} to match a regular
+expression capture group.  
+By default Crossplane matches the entire regular expression.
+
+```yaml {label="typeRegex"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.desiredRegion
+    toFieldPath: metadata.annotations["euRegion"]
+    transforms:
+      - type: string
+        string:
+          type: Regexp
+          regexp:
+            match: '^eu-(.*)-'
+            group: 1
+```
+
+#### Trim prefix
+
+The {{<hover label="typeRegex" line="8">}}type: TrimPrefix{{</hover>}} removes
+the matching string and all preceding characters. 
+
+```yaml {label="typeRegex"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.desiredRegion
+    toFieldPath: metadata.annotations["north-1"]
+    transforms:
+      - type: string
+        string:
+          type: TrimPrefix
+          trim: `eu-
+```
+
+#### Trim suffix
+
+The {{<hover label="typeRegex" line="8">}}type: TrimSuffix{{</hover>}} removes
+the matching string and all proceeding characters. 
+
+```yaml {label="typeRegex"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.desiredRegion
+    toFieldPath: metadata.annotations["eu"]
+    transforms:
+      - type: string
+        string:
+          type: TrimSuffix
+          trim: `-north-1'
+```
+
+## Patch policies
+
+Crossplane supports two types of patch policies:
+* `fromFieldPath`
+* `mergeOptions`
+
+<!-- vale Google.Headings = NO -->
+### fromFieldPath policy
+<!-- vale Google.Headings = YES -->
+
+Using a `fromFieldPath: Required` policy on a patch requires the
+`fromFieldPath` to exist in the composite resource.
+
+{{<hint "tip" >}}
+If a resource patch isn't working applying the `fromFieldPath: Required` policy
+may produce an error in the composite resource to help troubleshoot. 
+{{< /hint >}}
+
+By default, Crossplane ignores a patch if the `fromFieldPath` doesn't exist.   
+With 
+{{<hover label="required" line="6">}}fromFieldPath: Required{{</hover>}} 
+the composite resource produces an error if the
+{{<hover label="required" line="6">}}fromFieldPath{{</hover>}} doesn't exist. 
+
+```yaml {label="required"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.desiredRegion
+    toFieldPath: metadata.annotations["eu"]
+    policy:
+      fromFieldPath: Required
+```
+
+### Merge options
+
+By default when applying a patch the destination data is overridden. Use 
+{{<hover label="merge" line="6">}}mergeOptions{{</hover>}} to allow patches to 
+merge arrays and objects without overwriting them. 
+
+With an array input, use 
+{{<hover label="merge" line="7">}}appendSlice: true{{</hover>}} to append the
+array data to the end of the existing array.
+
+With an object, use 
+{{<hover label="merge" line="8">}}keepMapValues: true{{</hover>}} to leave
+existing object keys in tact. The patch updates any matching keys between the
+input and destination data. 
+
+```yaml {label="merge"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.desiredRegion
+    toFieldPath: metadata.annotations["eu"]
+    policy:
+      mergeOptions:
+        appendSlice: true
+        keepMapValues: true
+```
