@@ -35,6 +35,7 @@ Creating Compositions consists of:
 * [Enabling Composite Resources](#enabling-composite-resources) to use this
   Composition template.
 
+<!-- vale Google.WordList = NO -->
 Optionally, Compositions also support:
 * [Modifying and patching](#changing-resource-fields) resource settings.
 * [Storing connection details](#storing-connection-details) and secrets
@@ -44,6 +45,7 @@ Optionally, Compositions also support:
 * Creating a 
   [custom check of when a resource is ready](#resource-readiness-checks) 
   to use. 
+<!-- vale Google.WordList = YES -->
  
 ###  Resource templates
 The 
