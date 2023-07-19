@@ -42,7 +42,7 @@ Creating a CompositeResourceDefinintion consists of:
 * [Defining a custom API name](#xrd-names).
 * [Defining a custom API schema and version](#xrd-versions).
   
-Optionally, CompositeResourceDefinintions also support:
+Optionally, CompositeResourceDefinitions also support:
 * [Offering a Claim](#enable-claims).
 * [Defining connection secrets](#manage-connection-secrets).
 * [Setting composite resource defaults](#set-composite-resource-defaults).
@@ -91,8 +91,9 @@ Groups define a collection of related API endpoints. The `group` can be any
 value, but common convention is to map to a fully qualified domain name.
 
 <!-- vale write-good.Weasel = NO -->
-Many XRDs may use the same `group` to create a logical collection of APIs. 
+Many XRDs may use the same `group` to create a logical collection of APIs.  
 <!-- vale write-good.Weasel = YES -->
+For example a `database` group may have a `relational` and `nosql` kinds. 
 
 ### XRD names
 
@@ -148,7 +149,7 @@ is strongly recommended.
 * `v1alpha1` - A new API that may change at any time.
 * `v1beta1` - An existing API that's considered stable. Breaking changes are
   strongly discouraged.
-* `v1` - A stable API that doesn't change.
+* `v1` - A stable API that doesn't have breaking changes. 
 
 #### Define a schema
 

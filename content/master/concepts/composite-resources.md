@@ -5,7 +5,7 @@ weight: 50
 
 A composite resource represents a set of managed resources as a single
 Kubernetes object. Crossplane creates composite resources when users access a
-custom API, defined in the CustomResourceDefinition. 
+custom API, defined in the CompositeResourceDefinition. 
 
 {{<hint "tip" >}}
 Composite resources are a _composite_ of managed resources.  
@@ -189,11 +189,6 @@ spec:
 If Crossplane uses [Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}) a composite resource can use
 a {{<hover label="comprev" line="6">}}compositionUpdatePolicy{{</hover>}} to
 manually or automatically reference newer Composition revisions.
-
-{{<hint "important" >}}
-Composition revisions are an alpha feature. Alpha features aren't enabled by
-default. 
-{{< /hint >}}
 
 The default 
 {{<hover label="comprev" line="6">}}compositionUpdatePolicy{{</hover>}} is 

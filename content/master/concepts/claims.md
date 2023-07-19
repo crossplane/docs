@@ -70,9 +70,10 @@ spec:
 ```
 
 The Claim uses the XRD's 
-{{<hover label="xrd1" line="10">}}claimNames{{</hover>}} to request resources.
+{{<hover label="xrd1" line="11">}}kind{{</hover>}} API endpoint to request 
+resources.
 
-The Claim's {{<hover label="claim1" line="1">}}apiVersion{{</hover>}} matches
+The Claim's {{<hover label="claim1CompositeResourceDefinintions" line="1">}}apiVersion{{</hover>}} matches
 the XRD {{<hover label="xrd1" line="6">}}group{{</hover>}} and the 
 {{<hover label="claim1" line="2">}}kind{{</hover>}} matches the XRD
 {{<hover label="xrd1" line="11">}}claimNames.kind{{</hover>}}
