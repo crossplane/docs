@@ -17,7 +17,6 @@ exceptions:
   - Composite Resource
   - Composite Resource Definitions
   - Composite Resources
-  - CompositeFunctions
   - CompositeResourceDefinition
   - compositeTypeRef
   - Composition
