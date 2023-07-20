@@ -3,16 +3,23 @@ title: Composition Functions
 state: alpha
 alphaVersion: "1.11"
 weight: 80
+description: "Composition Functions or XFNs allow for complex Composition patches"
 ---
 
+<!-- TODO: XFN only use read-only filesystem.
 https://github.com/crossplane/crossplane/issues/4182
-XFN only use read-only filesystem.
+-->
 
 Composition Functions allow you to supplement or replace your Compositions with
 advanced logic not implementable through available patching strategies. 
+
+
 You can build a Function using general purpose programming
-languages such as Go or Python, or relevant tools such as Helm, kustomize, or
-CUE. Functions compliment contemporary "Patch and Transform" (P&T) style
+languages such as Go or Python, or relevant tools such as Helm, 
+[Kustomize](https://kustomize.io/), or
+[CUE](https://cuelang.org/).  
+
+Functions compliment contemporary "Patch and Transform" (P&T) style
 Composition. It's possible to use only P&T, only Functions, or a mix of both in
 the same Composition.
 

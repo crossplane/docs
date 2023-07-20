@@ -3,6 +3,7 @@ title: Compositions
 weight: 30
 aliases: 
   - composition
+description: "Compositions are a template for creating Crossplane resources"
 ---
 
 Compositions are a template for creating multiple managed resources as a single

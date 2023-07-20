@@ -1,6 +1,7 @@
 ---
 title: Providers
 weight: 5
+description: "Providers connect Crossplane to external APIs"
 ---
 
 Providers enable Crossplane to provision infrastructure on an

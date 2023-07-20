@@ -1,6 +1,7 @@
 ---
 title: Claims
 weight: 60
+description: "Claims are a way to consume Crossplane resources with namespace scoping"
 ---
 
 Claims represents a set of managed resources as a single

@@ -1,6 +1,7 @@
 ---
 title: Patch and Transforms
 weight: 70
+description: "Crossplane Compositions use patches and transforms to modify inputs from claims and composite resources before creating managed resources"
 ---
 
 Crossplane Compositions allow for "patch and transform" operations. With patches

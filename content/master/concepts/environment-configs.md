@@ -3,6 +3,7 @@ title: Environment Configurations
 weight: 90
 state: alpha
 alphaVersion: "1.11"
+description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in patching Compositions"
 ---
 
 A Crossplane EnvironmentConfig is an in-memory data store. Composition 

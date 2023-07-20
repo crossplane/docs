@@ -1,6 +1,7 @@
 ---
 title: Managed Resources
 weight: 102
+description: "Managed resources are the Crossplane representation of external provider resources"
 ---
 
 A _managed resource_ (`MR`) represents an external service in a Provider. When

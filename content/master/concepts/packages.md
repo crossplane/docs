@@ -1,7 +1,11 @@
 ---
 title: Crossplane Packages
 weight: 104
+description: "Packages combine multiple Crossplane resources into a single, portable, OCI image."
 ---
+<!--
+Install packages behind a proxy.
+https://github.com/upbound/provider-azure/issues/475#issuecomment-1608390254 -->
 
 Crossplane packages are opinionated [OCI images] that contain a stream of YAML
 that can be parsed by the Crossplane package manager. Crossplane packages come
