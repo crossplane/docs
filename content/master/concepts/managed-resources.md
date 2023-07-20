@@ -166,6 +166,7 @@ spec:
 Matching by selector is the most flexible matching method. 
 
 {{<hint "note" >}}
+
 The [Compositions]({{<ref "./compositions">}}) section covers the 
 `matchControllerRef` selector.
 {{</hint >}}
