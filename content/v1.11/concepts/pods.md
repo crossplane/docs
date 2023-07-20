@@ -87,7 +87,7 @@ CompositeResourceDefinitions.
 
 For objects that Kubernetes can't provide a watch for, Crossplane
 periodically poll the resource to find it's state. The default polling rate is
-one minute. Change the polling rate with the `---poll-interval` pod argument.
+one minute. Change the polling rate with the `--poll-interval` pod argument.
 
 Reducing the poll-interval value causes Crossplane to poll resources more
 frequently. This increases the load of the Crossplane pod and
