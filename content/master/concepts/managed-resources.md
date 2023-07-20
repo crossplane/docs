@@ -1,6 +1,6 @@
 ---
 title: Managed Resources
-weight: 102
+weight: 10
 description: "Managed resources are the Crossplane representation of external provider resources"
 ---
 

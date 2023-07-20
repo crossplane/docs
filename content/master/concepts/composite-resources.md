@@ -39,7 +39,7 @@ The XRD defines the custom API users call to request the set of resources.
 
 XRDs define the API used to create a composite resource.  
 For example, 
-this {{<hover label="xrd1" line="2">}}CustomResourceDefinition{{</hover>}}
+this {{<hover label="xrd1" line="2">}}CompositeResourceDefinition{{</hover>}}
 creates a custom API endpoint 
 {{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover>}}.
 
@@ -57,8 +57,8 @@ spec:
 ```
 
 When a user calls the custom API, 
-{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover>}}, Crossplane
-selects the Composition to use based on the Composition's 
+{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover>}}, 
+Crossplane chooses the Composition to use based on the Composition's 
 {{<hover label="typeref" line="6">}}compositeTypeRef{{</hover>}}
 
 ```yaml {label="typeref",copy-lines="none"}
@@ -78,8 +78,8 @@ The Composition
 XRD {{<hover label="xrd1" line="6">}}group{{</hover>}} and 
 {{<hover label="xrd1" line="9">}}kind{{</hover>}}.
 
-Crossplane creates the resources defined in the matching Composition and returns
-them as a single `composite` resource. 
+Crossplane creates the resources defined in the matching Composition and
+represents them as a single `composite` resource. 
 
 ```shell{copy-lines="1"}
 kubectl get composite
@@ -187,7 +187,10 @@ spec:
 
 ### Composition revision policy
 
-If Crossplane uses [Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}) a composite resource can use
+Crossplane records changes to Compositions as 
+[Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}) . 
+
+A composite resource can use
 a {{<hover label="comprev" line="6">}}compositionUpdatePolicy{{</hover>}} to
 manually or automatically reference newer Composition revisions.
 
@@ -211,13 +214,12 @@ spec:
 ```
 
 ### Composition revision selection
-If Crossplane uses [Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}) a composite resource can
+
+Crossplane records changes to Compositions as 
+[Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}).    
+A composite resource can
 select a specific Composition revision.
 
-{{<hint "important" >}}
-Composition revisions are an alpha feature. Alpha features aren't enabled by
-default. 
-{{< /hint >}}
 
 Use {{<hover label="comprevref" line="6">}}compositionRevisionRef{{</hover>}} to
 select a specific Composition revision by name.
