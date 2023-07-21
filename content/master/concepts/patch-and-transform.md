@@ -5,7 +5,7 @@ description: "Crossplane Compositions use patches and transforms to modify input
 ---
 
 Crossplane Compositions allow for "patch and transform" operations. With patches
-a Composition can apply changes to a composite resource or managed resource. 
+a Composition can apply changes to the resources defined by the Composition. 
 
 When users create Claims, Crossplane passes the settings in the Claim to
 the associated composite resource. Patches can use these settings to change the
@@ -84,13 +84,13 @@ brackets. Field names may use a `.` character to select child elements.
 
 {{< expand "Example field selectors" >}}
 Here are some example selectors from a composite resource object.
-{{<table "table table-hover" >}}
+{{<table "table" >}}
 | Selector | Selected element | 
 | --- | --- |
 | `kind` | {{<hover label="select" line="3">}}kind{{</hover>}} |
-| `metadata.labels['crossplane.io/claim-name']` | {{<hover label="select" line="14">}}my-example-claim{{</hover>}} |
-| `spec.desiredRegion` | {{<hover label="select" line="31">}}eu-north-1{{</hover>}} |
-| `spec.resourceRefs[0].name` | {{<hover label="select" line="37">}}my-example-claim-978mh-r6z64{{</hover>}} |
+| `metadata.labels['crossplane.io/claim-name']` | {{<hover label="select" line="7">}}my-example-claim{{</hover>}} |
+| `spec.desiredRegion` | {{<hover label="select" line="11">}}eu-north-1{{</hover>}} |
+| `spec.resourceRefs[0].name` | {{<hover label="select" line="16">}}my-example-claim-978mh-r6z64{{</hover>}} |
 {{</table >}}
 
 ```yaml {label="select",copy-lines="none"}
@@ -98,35 +98,14 @@ $ kubectl get composite -o yaml
 apiVersion: example.org/v1alpha1
 kind: xExample
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"example.org/v1alpha1","kind":"ExampleClaim","metadata":{"annotations":{},"name":"my-example-claim","namespace":"default"},"spec":{"desiredRegion":"eu-north-1","field1":"field1-text","field2":"field2-text"}}
-  creationTimestamp: "2023-07-14T17:36:30Z"
-  finalizers:
-  - composite.apiextensions.crossplane.io
-  generateName: my-example-claim-
-  generation: 4
+  # Removed for brevity
   labels:
     crossplane.io/claim-name: my-example-claim
     crossplane.io/claim-namespace: default
     crossplane.io/composite: my-example-claim-978mh
-  name: my-example-claim-978mh
-  resourceVersion: "40367"
-  uid: d64f3020-4f9d-4c52-bd14-f8491869d2c5
 spec:
-  claimRef:
-    apiVersion: example.org/v1alpha1
-    kind: ExampleClaim
-    name: my-example-claim
-    namespace: default
-  compositionRef:
-    name: example-composition
-  compositionRevisionRef:
-    name: example-composition-f4c519a
-  compositionUpdatePolicy: Automatic
   desiredRegion: eu-north-1
   field1: field1-text
-  field2: field2-text
   resourceRefs:
   - apiVersion: s3.aws.upbound.io/v1beta1
     kind: Bucket
@@ -137,16 +116,7 @@ spec:
   - apiVersion: s3.aws.upbound.io/v1beta1
     kind: Bucket
     name: my-example-claim-978mh-rv5nm
-status:
-  conditions:
-  - lastTransitionTime: "2023-07-14T17:36:30Z"
-    reason: ReconcileSuccess
-    status: "True"
-    type: Synced
-  - lastTransitionTime: "2023-07-14T17:36:55Z"
-    reason: Available
-    status: "True"
-    type: Ready
+  # Removed for brevity
 ```
 {{< /expand >}}
 
@@ -213,129 +183,109 @@ Crossplane ignores any [transforms](#transform-a-patch) or
 
 ## Patching between resources
 
-Compositions can't patch between resources in the same Composition. For example,
-generating a network resource and patching the resource name to a compute
-resource. 
+Compositions can't directly patch between resources in the same Composition. 
+For example, generating a network resource and patching the resource name to 
+a compute resource. 
 
-Patching between resources requires multiple Compositions.
-* A Composition creating the input data, for example a Composition creating
-  networking resources. 
-* A Composition using the input data, for example a Composition creating a
-  compute resource.
-* A Composition calling both the network and compute Compositions and applying
-  the patches. 
+A resource can patch to a user-defined 
+{{<hover label="xrdPatch" line="13">}}Status{{</hover>}}
+field in the composite resource.
 
-Each Composition can write data from their individual managed resources to their
-composite resource. The third Composition can read data from one composite
-resource and write it to the other composite resource. 
+A resource can then read from that 
+{{<hover label="xrdPatch" line="13">}}Status{{</hover>}} 
+field to patch a field. 
 
-For example, the Upbound 
-[platform-ref-aws](https://github.com/upbound/platform-ref-aws/tree/main) uses 
-this technique to generate
-network IDs and then provide them to an Amazon managed Kubernetes cluster. 
+First, define a custom
+{{<hover label="xrdPatch" line="13">}}Status{{</hover>}}
+in the Composite Resource Definition and a custom field, for example
+{{<hover label="xrdPatch" line="16">}}secondResource{{</hover>}}
 
-First a Composition named {{<hover label="xnet" line="4">}}XNetwork{{</hover>}}
-generates a {{<hover label="xnet" line="9">}}Subnet{{</hover>}} resource.  
-The Composition patches the provider generated external resource 
-{{<hover label="xnet" line="14">}}name{{</hover>}} to a custom 
-{{<hover label="xnet" line="15">}}status.subnetIds{{</hover>}} field.
-
-```yaml {label="xnet"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: xnetworks.aws.platformref.upbound.io
+```yaml {label="xrdPatch",copy-lines="13-17"}
+kind: CompositeResourceDefinition
+# Removed for brevity.
 spec:
-  resources:
-    - base:
-        apiVersion: ec2.aws.upbound.io/v1beta1
-        kind: Subnet
-        spec:
-          # Removed for brevity
-      patches:
-        - type: ToCompositeFieldPath
-          fromFieldPath: metadata.annotations[crossplane.io/external-name]
-          toFieldPath: status.subnetIds[0]
+  # Removed for brevity.
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            # Removed for brevity.
+          status:
+              type: object
+              properties:
+                secondResource:
+                  type: string
 ```
 
-A second Composition named {{<hover label="xeks" line="4">}}xeks{{</hover>}}
-generates an AWS managed Kubernetes 
-{{<hover label="xeks" line="9">}}cluster{{</hover>}}.  
-The Composition uses the value in
-{{<hover label="xeks" line="15">}}spec.parameters.subnetIds{{</hover>}} to apply
-as the
-{{<hover label="xeks" line="16">}}subnetIds{{</hover>}} in the resource's 
-{{<hover label="xeks" line="12">}}forProvider.vpcConfig{{</hover>}}.
+Inside the Composition the resource with the source data uses a
+{{<hover label="patchBetween" line="10">}}ToCompositeFieldPath{{</hover>}}
+patch to write data to the 
+{{<hover label="patchBetween" line="12">}}status.secondResource{{</hover>}} 
+field in the composite resource. 
 
-{{<hint "note" >}}
-The 
-{{<hover label="xeks" line="16">}}spec.parameters.subnetIds{{</hover>}}
-field doesn't exist in this Composition.
+The destination resource uses a 
+{{<hover label="patchBetween" line="19">}}FromCompositeFieldPath{{</hover>}}
+patch to read data from the composite resource
+{{<hover label="patchBetween" line="20">}}status.secondResource{{</hover>}} 
+field in the composite resource and write it to a label named 
+{{<hover label="patchBetween" line="21">}}secondResource{{</hover>}} in the
+managed resource.
 
-The third Composition creates this value.
-{{< /hint >}}
-
-```yaml {label="xeks"}
+```yaml {label="patchBetween",copy-lines="9-11"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
-metadata:
-  name: xeks.aws.platformref.upbound.io
-spec:
-  resources:
-    - base:
-        apiVersion: eks.aws.upbound.io/v1beta1
-        kind: Cluster
-        spec:
-          forProvider:
-            vpcConfig:
-              # Removed for brevity
-      patches:
-        - fromFieldPath: spec.parameters.subnetIds
-          toFieldPath: spec.forProvider.vpcConfig[0].subnetIds
-```
-
-The third Composition, an 
-{{<hover label="xcluster" line="4">}}xcluster{{</hover>}} uses both the 
-{{<hover label="xcluster" line="9">}}XNetwork{{</hover>}} and 
-{{<hover label="xcluster" line="16">}}XEKS{{</hover>}} Compositions.
-
-The {{<hover label="xcluster" line="9">}}XNetwork{{</hover>}} patches the
-provider generated 
-{{<hover label="xcluster" line="12">}}subnetIds{{</hover>}} to the XNetwork 
-composite resource's
-{{<hover label="xcluster" line="13">}}status.subnetIds{{</hover>}}.  
-The XCluster Composition reads the 
-{{<hover label="xcluster" line="12">}}status.subnetIds{{</hover>}} and writes 
-them to the XCluster composite resource
-{{<hover label="xcluster" line="13">}}status.subnetIds{{</hover>}}.
-
-When the XCluster Composition creates the
-{{<hover label="xcluster" line="16">}}XEKS{{</hover>}} resource, it takes the
-value from the XCluster 
-{{<hover label="xcluster" line="18">}}status.subnetIds{{</hover>}} and applies
-it to the XEKS 
-{{<hover label="xcluster" line="19">}}spec.parameters.subnetIds{{</hover>}}.
-
-```yaml {label="xcluster"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: xclusters.aws.platformref.upbound.io
-spec:
-  resources:
-    - base:
-        apiVersion: aws.platformref.upbound.io/v1alpha1
-        kind: XNetwork
+# Removed for brevity
+    - name: bucket1
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        # Removed for brevity
       patches:
         - type: ToCompositeFieldPath
-          fromFieldPath: status.subnetIds
-          toFieldPath: status.subnetIds
-    - base:
-        apiVersion: aws.platformref.upbound.io/v1alpha1
-        kind: XEKS
+          fromFieldPath: metadata.name
+          toFieldPath: status.secondResource
+    - name: bucket2
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        # Removed for brevity
       patches:
-        - fromFieldPath: status.subnetIds
-          toFieldPath: spec.parameters.subnetIds
+        - type: FromCompositeFieldPath
+          fromFieldPath: status.secondResource
+          toFieldPath: metadata.labels['secondResource']
+```
+
+Describe the composite resource to view the 
+{{<hover label="descCompPatch" line="5">}}resources{{</hover>}} and the 
+{{<hover label="descCompPatch" line="11">}}status.secondResource{{</hover>}}
+value. 
+
+```yaml {label="descCompPatch",copy-lines="none"}
+$ kubectl describe composite
+Name:         my-example-claim-jp7rx
+Spec:
+  # Removed for brevity
+  Resource Refs:
+    Name:         my-example-claim-jp7rx-gfg4m
+    # Removed for brevity
+    Name:         my-example-claim-jp7rx-fttpj
+Status:
+  # Removed for brevity
+  Second Resource:         my-example-claim-jp7rx-gfg4m
+```
+
+Describe the destination managed resource to see the label 
+{{<hover label="bucketlabel" line="5">}}secondResource{{</hover>}}.
+
+```yaml {label="bucketlabel",copy-lines="none"}
+$ kubectl describe bucket
+kubectl describe bucket my-example-claim-jp7rx-fttpj
+Name:         my-example-claim-jp7rx-fttpj
+Labels:       crossplane.io/composite=my-example-claim-jp7rx
+              secondResource=my-example-claim-jp7rx-gfg4m
 ```
 
 ## Types of patches
@@ -346,7 +296,7 @@ Summary of Crossplane patches
 {{< table "table table-hover" >}}
 | Patch Type | Data Source | Data Destination | 
 | ---  | --- | --- | 
-| [FromCompositeFieldPath](#fromcompositefieldpath) | A field in the composite resource. | A field patched managed resource. | 
+| [FromCompositeFieldPath](#fromcompositefieldpath) | A field in the composite resource. | A field in the patched managed resource. | 
 | [ToCompositeFieldPath](#tocompositefieldpath) | A field in the patched managed resource. | A field in the composite resource. |  
 | [CombineFromComposite](#tocompositefieldpath) | Multiple fields in the composite resource. | A field in the patched managed resource. | 
 | [CombineToComposite](#tocompositefieldpath) | Multiple fields in the patched managed resource. | A field in the composite resource. | 
@@ -1208,7 +1158,10 @@ options listed in the {{<hover label="map" line="6">}}map{{</hover>}}.
 If Crossplane finds the value, Crossplane puts
 the mapped value in the {{<hover label="map" line="4">}}toFieldPath{{</hover>}}.
 
-For example, if the value of 
+{{<hint "note" >}}
+Crossplane ignores the patch if the value isn't found.
+{{< /hint >}}
+
 {{<hover label="map" line="3">}}spec.field1{{</hover>}} is the string
 {{<hover label="map" line="8">}}"field1-text"{{</hover>}} then Crossplane uses
 the string 
@@ -1462,7 +1415,7 @@ minimum value if an input is larger than the
 
 For example, this 
 {{<hover label="clampMax" line="8">}}type: clampMax{{</hover>}} requires an
-input to be greater than 
+input to be less than 
 {{<hover label="clampMax" line="9">}}5{{</hover>}}.
 
 If an input is higher than 
@@ -1650,7 +1603,10 @@ If a resource patch isn't working applying the `fromFieldPath: Required` policy
 may produce an error in the composite resource to help troubleshoot. 
 {{< /hint >}}
 
-By default, Crossplane ignores a patch if the `fromFieldPath` doesn't exist.   
+By default, Crossplane applies the policy `fromFieldPath: Optional`. With
+`fromFieldPath: Optional` Crossplane 
+ignores a patch if the `fromFieldPath` doesn't exist.   
+
 With 
 {{<hover label="required" line="6">}}fromFieldPath: Required{{</hover>}} 
 the composite resource produces an error if the
