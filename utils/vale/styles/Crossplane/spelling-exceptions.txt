@@ -10,6 +10,7 @@ conformant
 CRDs
 Crossplane
 Crossplane's
+CUE
 Dataflow
 Datastore
 editCode
@@ -24,6 +25,7 @@ HashiCorp
 JSONPath
 kubeconfig
 kubectl
+Kustomize
 minikube
 namespace
 namespaced
