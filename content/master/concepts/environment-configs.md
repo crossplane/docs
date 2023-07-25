@@ -7,7 +7,7 @@ description: "Environment Configurations or EnvironmentConfigs are an in-memory 
 ---
 
 A Crossplane EnvironmentConfig is an in-memory data store. Composition 
-patches can read from and write to a environment.
+patches can read from and write to an environment.
 
 Crossplane supports multiple EnvironmentConfigs, each acting as a unique
 data store. 
@@ -285,6 +285,10 @@ spec:
             valueFromFieldPath: spec.parameters.deploy
 ```
 
+The environments selected by
+{{<hover label="maxMatch" lines="18">}}matchLabels{{</hover>}} are then merged
+into any other environments listed in the 
+{{<hover label="maxMatch" lines="7">}}environmentConfigs{{</hover>}}.
 <!--
 TODO: Add Policies
 TODO: Add webhook validations
