@@ -333,6 +333,8 @@ spec:
 Read the [External Secrets Store]({{<ref "/knowledge-base/integrations/vault-as-secret-store">}}) documentation for more information on using
 external secret stores. 
 
+For more information on connection secrets read the [Connection Secrets
+knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 
 ### Pausing composite resources
 

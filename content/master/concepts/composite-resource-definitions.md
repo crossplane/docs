@@ -558,8 +558,12 @@ secrets aren't passed to the composite resource or Claim.
 {{<hint "important" >}}
 The keys listed in the
 {{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}} must match the 
-key names provided by the managed resources. An XRD ignores any 
-keys listed that aren't created by a managed resource.
+key names listed in the Composition's `connectionDetails`.  
+
+An XRD ignores any keys listed that aren't created by a managed resource.
+
+For more information read the 
+[Composition documentation]({{<ref "./composite-resource-definitions#manage-connection-secrets">}}).
 {{< /hint >}}
 
 
@@ -593,6 +597,9 @@ spec:
 You can't change the `connectionSecretKeys` of an XRD. You must delete and
 recreate the XRD to change the `connectionSecretKeys`.
 {{</hint >}}
+
+For more information on connection secrets read the [Connection Secrets
+knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources and Claims.

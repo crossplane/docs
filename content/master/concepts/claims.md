@@ -169,3 +169,36 @@ isn't required. Crossplane fills in the
 {{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}
 with the information from the composite resource created for the Claim.
 {{< /hint >}}
+
+## Claim connection secrets
+
+If a Claim expects connection secrets the Claim must define a 
+{{<hover label="claimSec" line="6">}}writeConnectionSecretToRef{{</hover>}}
+object. 
+
+The 
+{{<hover label="claimSec" line="6">}}writeConnectionSecretToRef{{</hover>}}
+object defines the name of the Kubernetes secret object where Crossplane saves
+the connection details. 
+
+{{<hint "note">}}
+The Crossplane creates the secret object in the same namespace as the Claim.
+{{< /hint >}}
+
+For example, to a new secret object named
+{{<hover label="claimSec" line="7">}}my-claim-secret{{</hover>}} use 
+{{<hover label="claimSec" line="6">}}writeConnectionSecretToRef{{</hover>}} with
+the 
+{{<hover label="claimSec" line="7">}}name: my-claim-secret{{</hover>}}.
+```yaml {label="claimSec"}
+apiVersion: example.org/v1alpha1
+kind: database
+metadata:
+  name: my-claimed-database
+spec:
+  writeConnectionSecretToRef:
+    name: my-claim-secret
+```
+
+For more information on connection secrets read the [Connection Secrets
+knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
