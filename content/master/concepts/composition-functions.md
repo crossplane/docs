@@ -4,6 +4,8 @@ state: alpha
 alphaVersion: "1.11"
 weight: 80
 description: "Composition Functions or XFNs allow for complex Composition patches"
+aliases: 
+  - /knowledge-base/guides/composition-functions
 ---
 
 <!-- TODO: XFN only use read-only filesystem.
