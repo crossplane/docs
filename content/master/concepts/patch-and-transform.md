@@ -1483,8 +1483,8 @@ String transforms support the following
 * [Convert](#string-convert)
 * [Format](#string-format)
 * [Regexp](#regular-expression-type)
-* [TrimPrefix](#trimprefix)
-* [TrimSuffix](#trimsuffix)
+* [TrimPrefix](#trim-prefix)
+* [TrimSuffix](#trim-suffix)
 
 #### String convert
 
