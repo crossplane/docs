@@ -779,7 +779,13 @@ the
 {{< /table >}}
 
 {{<hint "note">}}
-The {{<hover label="conDeet" line="20">}}value{{</hover>}} type must use a string value. 
+The {{<hover label="conDeet" line="20">}}value{{</hover>}} type must use a
+string value.  
+
+The {{<hover label="conDeet" line="20">}}value{{</hover>}} isn't added to the
+individual resource secret object. The 
+{{<hover label="conDeet" line="20">}}value{{</hover>}} only appears in the 
+combined composite resource secret.
 {{< /hint >}}
 
 ```yaml {label="conDeet",copy-lines="none"}
