@@ -286,9 +286,9 @@ spec:
 ```
 
 The environments selected by
-{{<hover label="maxMatch" lines="18">}}matchLabels{{</hover>}} are then merged
+{{<hover label="maxMatch" line="18">}}matchLabels{{</hover>}} are then merged
 into any other environments listed in the 
-{{<hover label="maxMatch" lines="7">}}environmentConfigs{{</hover>}}.
+{{<hover label="maxMatch" line="7">}}environmentConfigs{{</hover>}}.
 <!--
 TODO: Add Policies
 TODO: Add webhook validations
