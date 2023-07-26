@@ -17,7 +17,6 @@ exceptions:
   - ACL
   - AJAX
   - AKS
-  - ESS
   - ANSI
   - API
   - APM
@@ -41,6 +40,7 @@ exceptions:
   - CSRF
   - CSS
   - CSV
+  - CUE
   - CVE
   - CVS
   - DAG
@@ -57,6 +57,7 @@ exceptions:
   - EKS
   - ELB
   - EOL
+  - ESS
   - EWM
   - EXIF
   - FAQ
@@ -216,6 +217,7 @@ exceptions:
   - WEBP
   - WIP
   - WSL
+  - XEKS
   - XML
   - XPKG
   - XRD
