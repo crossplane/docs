@@ -12,7 +12,6 @@ indicator that the kubectl Crossplane you're using is outdated. In other words
 some Crossplane API has been graduated from alpha to beta or stable and the old
 plugin is not aware of this change.
 
-You can follow the [install Crossplane CLI] instructions to upgrade the plugin.
 
 ## Resource Status and Conditions
 
@@ -509,7 +508,6 @@ To follow the references:
 
 
 <!-- Named Links -->
-<!-- 
 [Requested Resource Not Found]: #requested-resource-not-found
 [install Crossplane CLI]: "../getting-started/install-configure"
 [Resource Status and Conditions]: #resource-status-and-conditions
@@ -520,8 +518,8 @@ To follow the references:
 [Pausing Providers]: #pausing-providers
 [Deleting When a Resource Hangs]: #deleting-when-a-resource-hangs
 [Installing Crossplane Package]: #installing-crossplane-package
-[Crossplane package]: "../concepts/packages"
+[Crossplane package]: /master/concepts/packages/
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
-[semver spec]: https://github.com/Masterminds/semver#basic-comparisons -->
+[semver spec]: https://github.com/Masterminds/semver#basic-comparisons
 
 

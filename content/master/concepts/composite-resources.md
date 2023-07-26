@@ -187,7 +187,7 @@ spec:
 
 ### Composition revision policy
 
-Crossplane records changes to Compositions as 
+Crossplane tracks changes to Compositions as 
 [Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}) . 
 
 A composite resource can use
@@ -417,7 +417,7 @@ managed resources documentation for details.
 
 ## Composite resource labels
 
-Crossplane adds labels to composite resources to indicates their relationship to
+Crossplane adds labels to composite resources to show their relationship to
 other Crossplane components.
 
 ### Composite label

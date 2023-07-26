@@ -37,6 +37,14 @@ spec:
         - --enable-environment-configs
 ```
 
+{{<hint "tip" >}}
+
+The [Crossplane install guide]({{<ref "../software/install#feature-flags">}}) 
+describes enabling feature flags like 
+{{<hover label="deployment" line="12">}}--enable-environment-configs{{</hover>}}
+with Helm.
+{{< /hint >}}
+
 <!-- vale Google.Headings = NO -->
 ## Create an EnvironmentConfig
 <!-- vale Google.Headings = YES -->

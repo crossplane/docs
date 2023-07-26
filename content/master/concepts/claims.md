@@ -7,7 +7,7 @@ description: "Claims are a way to consume Crossplane resources with namespace sc
 Claims represents a set of managed resources as a single
 Kubernetes object, inside a namespace. 
 
-Crossplane creates Claims when users access a
+Users create claims when they access the
 custom API, defined in the CompositeResourceDefinition. 
 
 {{< hint "tip" >}}
@@ -35,7 +35,7 @@ Crossplane has four core components that users commonly mix up:
 Creating a Claim requires a 
 [Composition]({{<ref "./compositions">}}) and a 
 [CompositeResourceDefinition]({{<ref "./composite-resource-definitions">}}) 
-(`XRD`).  
+(`XRD`) already installed.  
 
 {{<hint "note" >}}
 The XRD must 
@@ -62,7 +62,7 @@ metadata:
 spec:
   group: example.org
   names:
-    kind: xMyDatabase
+    kind: XMyDatabase
     plural: xmydatabases
   claimNames:
     kind: Database
@@ -74,7 +74,7 @@ The Claim uses the XRD's
 {{<hover label="xrd1" line="11">}}kind{{</hover>}} API endpoint to request 
 resources.
 
-The Claim's {{<hover label="claim1CompositeResourceDefinintions" line="1">}}apiVersion{{</hover>}} matches
+The Claim's {{<hover label="xrd1" line="1">}}apiVersion{{</hover>}} matches
 the XRD {{<hover label="xrd1" line="6">}}group{{</hover>}} and the 
 {{<hover label="claim1" line="2">}}kind{{</hover>}} matches the XRD
 {{<hover label="xrd1" line="11">}}claimNames.kind{{</hover>}}
@@ -88,7 +88,7 @@ spec:
   # Removed for brevity
 ```
 
-When Crossplane creates a Claim in a namespace it also creates a composite
+When a user creates a Claim in a namespace Crossplane also creates a composite
 resource.
 
 Use {{<hover label="claimcomp" line="1">}}kubectl describe{{</hover>}} on the 
@@ -105,7 +105,7 @@ Kind:         database
 Spec:
   Resource Ref:
     API Version:  example.org/v1alpha1
-    Kind:         xMyDatabase
+    Kind:         XMyDatabase
     Name:         my-claimed-database-rr4ll
 # Removed for brevity.
 ```
@@ -119,7 +119,7 @@ composite resource to the original Claim.
 kubectl describe xmydatabase.example.org/my-claimed-database-rr4ll
 Name:         my-claimed-database-rr4ll
 API Version:  example.org/v1alpha1
-Kind:         xMyDatabase
+Kind:         XMyDatabase
 Spec:
   Claim Ref:
     API Version:  example.org/v1alpha1
@@ -140,7 +140,7 @@ If you don't use namespaces in your Kubernetes deployment Claims aren't necessar
 By default, creating a Claim creates a new composite resource. Claims can also
 link to existing composite resources. 
 
-A use case for Claiming existing composite resources may be slow to provision
+A use case for claiming existing composite resources may be slow to provision
 resources. Composite resources can be pre-provisioned and a Claim can
 use those resources without waiting for their creation. 
 
@@ -156,14 +156,18 @@ metadata:
 spec:
   resourceRef:
     apiVersion: example.org/v1alpha1
-    kind: xMyDatabase
+    kind: XMyDatabase
     name: my-pre-created-xr
 ```
 
+If a Claim specifies a 
+{{<hover label="resourceref" line="6">}}resourceRef{{</hover>}} that doesn't
+exist, Crossplane doesn't create a composite resource. 
+
 {{<hint "note" >}}
 All Claims have a 
-{{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}. By default,
-manually defining the 
+{{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}. Manually
+defining the 
 {{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}
 isn't required. Crossplane fills in the
 {{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}

@@ -183,9 +183,14 @@ Crossplane ignores any [transforms](#transform-a-patch) or
 
 ## Patching between resources
 
-Compositions can't directly patch between resources in the same Composition. 
+Compositions can't directly patch between resources in the same Composition.  
 For example, generating a network resource and patching the resource name to 
 a compute resource. 
+
+{{<hint "important">}}
+The [ToEnvironmentFieldPath](#toenvironmentfieldpath) patch can't read from a
+`Status` field.
+{{< /hint >}}
 
 A resource can patch to a user-defined 
 {{<hover label="xrdPatch" line="13">}}Status{{</hover>}}
@@ -1460,6 +1465,11 @@ patches:
           type: multiply
           multiply: 2
 ```
+
+{{<hint "note" >}}
+The {{<hover label="multiply" line="9">}}multiply{{</hover>}} value only
+supports integers.
+{{< /hint >}}
 
 ### String transforms
 

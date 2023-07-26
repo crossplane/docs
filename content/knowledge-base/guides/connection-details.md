@@ -12,7 +12,7 @@ Using connection details in Crossplane requires the following components:
 * Define the list of secret keys produced by each composed resource with `connectionDetails` in the
   [Composition]({{<ref "/master/concepts/compositions#define-secret-keys">}}).
 * Optionally, define the `connectionSecretKeys` in a 
-  [CompositeResourceDefinintion]({{<ref "/master/concepts/composite-resource-definitions#manage-connection-secrets">}}).
+  [CompositeResourceDefinition]({{<ref "/master/concepts/composite-resource-definitions#manage-connection-secrets">}}).
 
 {{<hint "note">}}
 This guide discusses creating Kubernetes secrets.  
@@ -80,6 +80,13 @@ spec:
         - fromConnectionSecretKey: password
         - fromConnectionSecretKey: attribute.secret
         - fromConnectionSecretKey: attribute.ses_smtp_password_v4
+      patches:
+        - fromFieldPath: "metadata.uid"
+          toFieldPath: "spec.writeConnectionSecretToRef.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-secret1"
     - name: user
       base:
         apiVersion: iam.aws.upbound.io/v1beta1
@@ -116,6 +123,13 @@ spec:
           fromConnectionSecretKey: attribute.secret
         - name: key2-smtp
           fromConnectionSecretKey: attribute.ses_smtp_password_v4
+      patches:
+        - fromFieldPath: "metadata.uid"
+          toFieldPath: "spec.writeConnectionSecretToRef.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-secret2"
 ```
 {{</expand >}}
 
@@ -263,7 +277,7 @@ the resource
 Crossplane also creates a secret object for the entire Composition 
 saved in the namespace defined by 
 {{<hover label="comp1" line="4">}}writeConnectionSecretsToNamespace{{</hover>}}
-with an Crossplane generated name. 
+with a Crossplane generated name. 
 
 ```yaml {label="comp1",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -449,11 +463,11 @@ key2-user:                       20 bytes
 
 ## Connection secrets in Composite Resource Definitions
 
-The CompositeResourceDefinintion (`XRD`), can restrict which secrets keys are 
+The CompositeResourceDefinition (`XRD`), can restrict which secrets keys are 
 put in the combined secret and provided to a Claim. 
 
-By default an XRD writes all secret keys from the composed resources to the 
-combined secret object.
+By default an XRD writes all secret keys listed in the composed resource 
+`connectionDetails` to the combined secret object.
 
 Limit the keys passed to the combined secret object and Claims with a
 {{<hover label="xrd" line="4">}}connectionSecretKeys{{</hover>}} object.

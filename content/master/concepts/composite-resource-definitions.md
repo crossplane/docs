@@ -38,7 +38,7 @@ connection secrets.
 
 ## Creating a CompositeResourceDefinition
 
-Creating a CompositeResourceDefinintion consists of:
+Creating a CompositeResourceDefinition consists of:
 * [Defining a custom API group](#xrd-groups).
 * [Defining a custom API name](#xrd-names).
 * [Defining a custom API schema and version](#xrd-versions).
@@ -64,7 +64,7 @@ metadata:
 spec:
   group: example.org
   names:
-    kind: xMyDatabase
+    kind: XMyDatabase
     plural: xmydatabases
   versions:
   - name: v1alpha1
@@ -82,9 +82,19 @@ creates a custom resource definition
 ```shell {label="kubeapi",copy-lines="3"}
 kubectl api-resources
 NAME                              SHORTNAMES   APIVERSION          NAMESPACED   KIND
-xmydatabases.example.org                       v1                  false        xmydatabases
+xmydatabases.example.org                       v1alpha1            false        xmydatabases
 # Removed for brevity
 ```
+
+{{<hint "warning">}}
+You can't change the XRD
+{{<hover label="xrd1" line="6">}}group{{</hover>}} or
+{{<hover label="xrd1" line="7">}}names{{</hover>}}.  
+You must delete and
+recreate the XRD to change the 
+{{<hover label="xrd1" line="6">}}group{{</hover>}} or
+{{<hover label="xrd1" line="7">}}names{{</hover>}}.
+{{</hint >}}
 
 ### XRD groups
 
@@ -96,6 +106,12 @@ Many XRDs may use the same `group` to create a logical collection of APIs.
 <!-- vale write-good.Weasel = YES -->
 For example a `database` group may have a `relational` and `nosql` kinds. 
 
+{{<hint "tip" >}}
+Group names are cluster scoped. Choose group names that don't conflict with
+Providers.  
+Avoid Provider names in the group.
+{{< /hint >}}
+
 ### XRD names
 
 The `names` field defines how to refer to this specific XRD.  
@@ -103,7 +119,7 @@ The required name fields are:
 
 * `kind` - the `kind` value to use when calling this API. The kind is
   [UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
-  Crossplane recommends starting XRD `kinds` with an `x` to show 
+  Crossplane recommends starting XRD `kinds` with an `X` to show 
   it's a custom Crossplane API definition. 
 * `plural` - the plural name used for the API URL. The plural name must be
   lowercase. 
@@ -129,7 +145,7 @@ metadata:
 spec:
   group: example.org
   names:
-    kind: xMyDatabase
+    kind: XMyDatabase
     plural: xmydatabases
     # Removed for brevity
 ```
@@ -533,8 +549,11 @@ spec:
 ```
 
 {{<hint "important" >}}
-You can't change the `claimNames` after they're defined. You must delete and
-recreate the XRD to change the `claimNames`.
+You can't change the 
+{{<hover label="claim" line="10">}}claimNames{{</hover >}}
+after they're defined. You must delete and
+recreate the XRD to change the 
+{{<hover label="claim" line="10">}}claimNames{{</hover >}}.
 {{</hint >}}
 
 ### Manage connection secrets
@@ -563,7 +582,7 @@ key names listed in the Composition's `connectionDetails`.
 An XRD ignores any keys listed that aren't created by a managed resource.
 
 For more information read the 
-[Composition documentation]({{<ref "./composite-resource-definitions#manage-connection-secrets">}}).
+[Composition documentation]({{<ref "./compositions#storing-connection-details">}}).
 {{< /hint >}}
 
 
