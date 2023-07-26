@@ -1,9 +1,16 @@
+API's
 APIs
+bool
+boolean
+booleans
 Bootstrap
+clampMax
+clampMin
 conformant
 CRDs
 Crossplane
 Crossplane's
+CUE
 Dataflow
 Datastore
 editCode
@@ -15,8 +22,10 @@ GCP's
 Geekdocs
 Grammarly
 HashiCorp
+JSONPath
 kubeconfig
 kubectl
+Kustomize
 minikube
 namespace
 namespaced
@@ -32,6 +41,8 @@ stdin
 stdout
 Subnet
 subnet
+subnets
+Substrings
 syscall
 tolerations
 untrusted
@@ -41,6 +52,8 @@ Upjet
 Velero
 VSCode
 Webpack
+XCluster
+XNetwork
 xpkg
 XRD
 XRD's

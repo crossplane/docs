@@ -10,18 +10,23 @@ exceptions:
   - Azure
   - BigQuery
   - Claim
+  - Claims
   - CLI
   - ClusterRoles
   - Code
+  - Composite Resource
   - Composite Resource Definitions
   - Composite Resources
   - CompositeResourceDefinition
+  - compositeTypeRef
   - Composition
+  - Compositions
   - Cosmos
   - Crossplane
   - Docker
   - DynamoDB
   - Emmet
+  - EnvironmentConfigs
   - gRPC
   - Hashicorpterms
   - Helm
