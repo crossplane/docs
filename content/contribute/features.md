@@ -17,7 +17,7 @@ If you're having trouble with the Hugo shortcodes, ask for help in the
 ## Markdown
 Crossplane documentation uses Hugo to render Markdown to
 HTML. Hugo supports [Commonmark](https://commonmark.org/) and 
-[GitHub Flavored Markdown](https://github.github.com/gfm/) (`GFM`) through the
+[GitHub Flavored Markdown](https://github.github.com/gfm/) through the
 [Goldmark](https://github.com/yuin/goldmark/) parser.
 
 {{< hint "note" >}}
@@ -131,7 +131,7 @@ Images using the shortcode are automatically converted to `webp` image format,
 compressed and use responsive image sizing. 
 
 {{<hint "note">}}
-The `img` shortcode doesn't support .SVG files.
+The `img` shortcode doesn't support `.svg` files.
 {{< /hint >}}
 
 The shortcode requires a `src`, an
@@ -165,16 +165,19 @@ and notifies which links to change after moving a page.
 ### Between docs pages
 For links between pages use a standard Markdown link in the form:
 
+<!-- vale off -->
 `[Link text](link)`
+<!-- vale on -->
 
-Crossplane recommends using the [Hugo ref
-shortcode](https://gohugo.io/content-management/shortcodes/#ref-and-relref)
+Crossplane recommends using the [Hugo ref shortcode](https://gohugo.io/content-management/shortcodes/#ref-and-relref)
 with the path of the file relative to `/content` for the link location.
 
 For example, to link to the `master` release index page use
+<!-- vale off -->
 ```markdown
 [master branch documentation]({{</* ref "master/_index.md" */>}})
 ```
+<!-- vale on -->
 
 <!-- [master branch documentation]({{<ref "master/_index.md" >}}) -->
 
@@ -231,8 +234,10 @@ for the `table` shortcode. The docs support all Bootstrap table classes passed
 to the shortcode. 
 
 ### Striped tables
+<!-- vale off -->
 To create a table with 
 [striped rows](https://getbootstrap.com/docs/5.2/content/tables/#striped-rows):
+
 
 ```markdown
 {{</* table "table table-striped" */>}}
@@ -242,6 +247,7 @@ To create a table with
 | A Row | more of the row | another column in the row | 
 {{</* /table */>}}
 ```
+<!-- vale on -->
 
 {{< table "table table-striped">}}
 | Title | A Column | Another Column |

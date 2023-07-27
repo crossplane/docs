@@ -11,16 +11,16 @@ authenticate to AWS and creating a _Managed Resource_ in AWS directly from your
 Kubernetes cluster. This shows Crossplane can communicate with AWS.
 * [Part 2]({{< ref "provider-aws-part-2" >}}) creates a 
 _Composite Resource Definition_ (XRD), _Composite Resource_ (XR) and a _Claim_
-(XC) to show how to create and use custom APIs.
+(XRC) to show how to create and use custom APIs.
 * [Part 3]({{< ref "provider-aws-part-3" >}}) demonstrates how to patch
 _Compositions_ with values used in a _Claim_ and how to build a Crossplane
-_Package_ to make a Crossplane platform portable and reusable.
+_Package_.
 
 ## Prerequisites
 This quickstart requires:
 * a Kubernetes cluster with at least 6 GB of RAM
 * permissions to create pods and secrets in the Kubernetes cluster
-* [Helm](https://helm.sh/) version `v3.2.0` or later
+* [Helm](https://helm.sh/) version v3.2.0 or later
 * an AWS account with permissions to create an S3 storage bucket
 * AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
@@ -1207,6 +1207,6 @@ bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
 ```
 
 ## Next steps
-* **[Continue to part 2]({{< ref "provider-aws-part-2">}})** to create a Crossplane _Composite Resource_ and _Claim_.
+* [**Continue to part 2**]({{< ref "provider-aws-part-2">}})** to create a Crossplane _Composite Resource_ and _Claim_.
 * Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.

@@ -185,7 +185,7 @@ The
 object defines the name of the Kubernetes secret object where Crossplane saves
 the connection details. 
 
-{{<hint "note">}}
+{{<hint "note" >}}
 The Crossplane creates the secret object in the same namespace as the Claim.
 {{< /hint >}}
 

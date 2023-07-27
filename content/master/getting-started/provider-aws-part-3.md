@@ -7,10 +7,10 @@ tocHidden: true
 {{< hint "important" >}}
 This guide is part 3 of a series. 
 
-Follow **[part 1]({{<ref "provider-aws" >}})** 
+Follow [**part 1**]({{<ref "provider-aws" >}}) 
 to install Crossplane and connect your Kubernetes cluster to AWS. 
 
-Follow **[part 2]({{<ref "provider-aws-part-2" >}})** to create a _composition_,
+Follow [**part 2**]({{<ref "provider-aws-part-2" >}}) to create a _composition_,
 _custom resource definition_ and a _claim_.
 {{< /hint >}}
 
@@ -20,8 +20,8 @@ use the custom API and apply their options. Part 2 didn't show how the options
 set in a _claim_ change or get applied the associated _composite resources_.
 
 ## Prerequisites
-* Complete quickstart [part 1]({{<ref "provider-aws" >}}) and [Part 2]({{<ref
-  "provider-aws-part-2" >}}) to install Crossplane and the quickstart
+* Complete quickstart [part 1]({{<ref "provider-aws" >}}) and 
+  [Part 2]({{<ref "provider-aws-part-2" >}}) to install Crossplane and the quickstart
   configurations.
   
 {{<expand "Skip parts 1 and 2 and just get started" >}}

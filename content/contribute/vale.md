@@ -8,7 +8,7 @@ hideFromLanding: true
 Crossplane relies on [Vale](https://github.com/errata-ai/vale) to enforce the style guide.
 
 Crossplane's Vale style definitions are in the
-[utils/vale](https://github.com/crossplane/docs/tree/master/utils/vale) 
+[`utils/vale`](https://github.com/crossplane/docs/tree/master/utils/vale) 
 directory.
 
 {{< hint "important" >}}
@@ -21,9 +21,9 @@ content. The community approves PRs with Vale errors in unmodified document sect
 
 Follow the directions on the Vale website to 
 [install the Vale binary](https://vale.sh/docs/vale-cli/installation/).
-
+<!-- vale off -->
 Crossplane CI uses [Vale v2.22.0](https://github.com/errata-ai/vale/releases/tag/v2.22.0) or later.
-
+<!-- vale on -->
 ## Run Vale
 
 Run Vale on all documentation from the command-line with
@@ -62,6 +62,27 @@ Crossplane maintainers consider Vale warnings the same as errors.
 Error levels aren't changed to make Vale style maintenance easier.
 {{< /hint >}}
 
+### Spelling errors and exceptions
+
+Spelling exceptions are in `utils/vale/styles/Crossplane`. 
+* `allowed-jargon.txt` - technical terms allowed in the docs
+* `brands.txt` - brand and product names
+* `crossplane-words.txt` - words specific to Crossplane
+* `provider-words.txt` - words related to Providers and Provider resources
+* `spelling-exceptions.txt` - English words that are incorrectly flagged as errors
+
+If Vale considers a word incorrect add an
+exception to one of the text files along with your pull request. 
+
+<!-- vale off -->
+Because of how Vale parses words the following are errors:
+ * Hugo shortcodes without a space between the quote and angle bracket.  
+  For example `{{</* expand "Reference Composition"*/>}}`
+ * Markdown links containing a line break.
+ * Hugo `{{</* ref */>}}` links containing a line break. 
+ * Markdown link styling outside of the square brackets.  
+ For example `_[error]_` is an error. Use `[_works_]` instead. 
+ <!-- vale on -->
 ### Ignore Vale rules
 
 Vale can turn off specific rules or all rules inside a doc.
@@ -73,6 +94,24 @@ After the ignored content turn the rules back on.
 {{<hint "important" >}}
 Vale ignores rules not turned back on for the rest of the document.
 {{< /hint >}}
+
+#### Sentence length
+
+<!-- vale Google.WordList = NO -->
+Vale counts words in a link URL in the `gitlab.SentenceLength` check. 
+<!-- vale Google.WordList = YES -->
+
+Aim for 25 to 30 word sentences. If a URL triggers a Vale error wrap the sentence
+in a rule disabling the rule. 
+
+```html
+<!-- vale gitlab.SentenceLength = NO -->
+The XRD `version` is like the 
+[API versioning used by Kubernetes](https://kubernetes.io/docs/reference/using-api/#api-versioning).
+The version shows how mature or stable the API is and increments when changing,
+adding or removing fields in the API.
+<!-- vale gitlab.SentenceLength = YES -->
+```
 
 ### Ignore all rules
 

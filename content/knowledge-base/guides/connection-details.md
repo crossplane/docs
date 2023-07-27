@@ -133,7 +133,7 @@ spec:
 ```
 {{</expand >}}
 
-{{<expand "Reference CompositeResourceDefinition">}}
+{{<expand "Reference CompositeResourceDefinition" >}}
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1
