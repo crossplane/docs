@@ -7,10 +7,10 @@ tocHidden: true
 {{< hint "important" >}}
 This guide is part 3 of a series. 
 
-Follow **[part 1]({{<ref "provider-azure" >}})** 
+Follow [**part 1**]({{<ref "provider-azure" >}})
 to install Crossplane and connect your Kubernetes cluster to Azure. 
 
-Follow **[part 2]({{<ref "provider-azure-part-2" >}})** to create a _composition_,
+Follow [**part 2**]({{<ref "provider-azure-part-2" >}}) to create a _composition_,
 _custom resource definition_ and a _claim_.
 {{< /hint >}}
 
@@ -21,8 +21,8 @@ Part 2 didn't show how the options set in a _Claim_ change or get
 applied to the associated _composite resources_.
 
 ## Prerequisites
-* Complete quickstart [part 1]({{<ref "provider-azure" >}}) and [part 2]({{<ref
-  "provider-azure-part-2" >}}) to install Crossplane and the quickstart
+* Complete quickstart [part 1]({{<ref "provider-azure" >}}) and 
+  [part 2]({{<ref "provider-azure-part-2" >}}) to install Crossplane and the quickstart
   configurations.
   
 {{<expand "Skip parts 1 and 2 and just get started" >}}
@@ -38,7 +38,7 @@ crossplane-stable/crossplane \
 --create-namespace
 ```
 
-2. When the Crossplane pods finish installing and are ready, apply the Azure 
+1. When the Crossplane pods finish installing and are ready, apply the Azure 
    Provider
    
 ```yaml {label="provider",copy-lines="all"}
@@ -510,7 +510,7 @@ kubectl delete virtualmachine claimed-eu-virtualmachine -n test
 ## Create a Crossplane configuration package
 
 Crossplane _configuration packages_ allow users to combine their 
-_CustomResourceDefinition_ and _Composition_ files into a single OCI image. 
+_Custom Resource Definition_ and _Composition_ files into a single OCI image. 
 
 {{< hint "note" >}}
 The [Open Container Initiative](https://opencontainers.org/faq/) 

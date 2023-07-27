@@ -414,7 +414,7 @@ spec:
 ```
 {{< /expand >}}
 
-{{< expand "Reference EnvironmentConfig">}}
+{{< expand "Reference EnvironmentConfig" >}}
 ```yaml {copy-lines="all"}
 apiVersion: apiextensions.crossplane.io/v1alpha1
 kind: EnvironmentConfig
@@ -719,8 +719,8 @@ Status:
 {{<hint "important" >}}
 EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
 
-For more information about using an EnvironmentConfig, read the [Environment
-Configs]({{<ref "./environment-configs">}}) documentation.
+For more information about using an EnvironmentConfig, read the 
+[EnvironmentConfigs]({{<ref "./environment-configs">}}) documentation.
 {{< /hint >}}
 
 The 
@@ -776,8 +776,8 @@ Spec:
 {{<hint "important" >}}
 EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
 
-For more information about using an EnvironmentConfig, read the [Environment
-Configs]({{<ref "./environment-configs">}}) documentation.
+For more information about using an EnvironmentConfig, read the 
+[EnvironmentConfigs]({{<ref "./environment-configs">}}) documentation.
 {{< /hint >}}
 
 The 
@@ -839,8 +839,8 @@ read from the `atProvider` or `Status` fields.
 {{<hint "important" >}}
 EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
 
-For more information about using an EnvironmentConfig, read the [Environment
-Configs]({{<ref "./environment-configs">}}) documentation.
+For more information about using an EnvironmentConfig, read the 
+[EnvironmentConfigs]({{<ref "./environment-configs">}}) documentation.
 {{< /hint >}}
 
 The 
@@ -923,8 +923,8 @@ Annotations:  EnvironmentPatch: value1-value2
 {{<hint "important" >}}
 EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
 
-For more information about using an EnvironmentConfig, read the [Environment
-Configs]({{<ref "./environment-configs">}}) documentation.
+For more information about using an EnvironmentConfig, read the 
+[EnvironmentConfigs]({{<ref "./environment-configs">}}) documentation.
 {{< /hint >}}
 
 The 

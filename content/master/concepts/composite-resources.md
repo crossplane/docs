@@ -92,9 +92,11 @@ By default, managed resources created by a composite resource have the name of
 the composite resource, followed by a random suffix.
 
 <!-- vale Google.FirstPerson = NO -->
+<!-- vale Crossplane.Spelling = NO -->
 For example, a composite resource named "my-composite-resource" creates external
 resources named "my-composite-resource-fqvkw." 
 <!-- vale Google.FirstPerson = YES -->
+<!-- vale Crossplane.Spelling = YES  -->
 
 Resource names can be deterministic by applying an 
 {{<hover label="annotation" line="5">}}annotation{{</hover>}} to the composite

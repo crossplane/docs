@@ -16,12 +16,12 @@ _Composite Resource Definition_ (XRD), _Composite Resource_ (XR) and a _Claim_
 (XRC) to show how to create and use custom APIs.
 * [Part 3]({{< ref "provider-gcp-part-3" >}}) demonstrates how to patch
 _Compositions_ with values used in a _Claim_ and how to build a Crossplane
-_Package_ to make a Crossplane platform portable and reusable.
+_Package_.
 ## Prerequisites
 This quickstart requires:
 * a Kubernetes cluster with at least 6 GB of RAM
 * permissions to create pods and secrets in the Kubernetes cluster
-* [Helm](https://helm.sh/) version `v3.2.0` or later
+* [Helm](https://helm.sh/) version v3.2.0 or later
 * a GCP account with permissions to create a storage bucket
 * GCP [account keys](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
 * GCP [Project ID](https://support.google.com/googleapi/answer/7014113?hl=en)
@@ -1247,7 +1247,7 @@ bucket.storage.gcp.upbound.io "crossplane-bucket-8b7gw" deleted
 ```
 
 ## Next steps 
-* **[Continue to part 2]({{< ref "provider-gcp-part-2">}})** to create a 
+* [**Continue to part 2**]({{< ref "provider-gcp-part-2">}}) to create a 
 Crossplane _Composite Resource_ and _Claim_.
 * Explore GCP resources that can Crossplane can configure in the 
 [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).

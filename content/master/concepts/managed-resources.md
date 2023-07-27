@@ -231,8 +231,8 @@ The `ObserveOnly` policy can also place existing resources under the control of
 Crossplane.  
 
 {{< hint "tip" >}}
-Read the [Import Existing Resources]({{<ref
-"/knowledge-base/guides/import-existing-resources" >}}) guide for more
+Read the [Import Existing Resources]({{<ref "/knowledge-base/guides/import-existing-resources" >}}) 
+guide for more
 information on using the `managementPolicy` to import existing resources.
 {{< /hint >}}
 
@@ -290,10 +290,11 @@ same Provider.
 ### providerRef
 <!-- vale on --> 
 
+<!-- vale Crossplane.Spelling = NO -->
 Crossplane deprecated the `providerRef` field in `crossplane-runtime` 
 [v0.10.0](https://github.com/crossplane/crossplane-runtime/releases/tag/v0.10.0). 
 Managed resources using `providerRef`must use [`providerConfigRef`](#providerconfigref).
-
+<!-- vale Crossplane.Spelling = YES -->
 
 <!-- vale off -->
 ### writeConnectionSecretToRef
@@ -306,8 +307,7 @@ Crossplane stores these details in a Kubernetes Secret object specified by the
 `writeConnectionSecretToRef` values. 
 
 For example, when creating an AWS RDS database instance with the Crossplane 
-[community AWS
-provider](https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/v0.40.0) 
+[community AWS provider](https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/v0.40.0) 
 generates an endpoint, password, port and username data. The Provider saves
 these variables in the Kubernetes secret 
 {{<hover label="secretname" line="9" >}}rds-secret{{</hover>}}, referenced by
