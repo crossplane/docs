@@ -17,10 +17,10 @@ files, like HTML templates, shortcodes and global media files.
 
 The `/utils/` directory is for JavaScript source code and files unrelated to
 Hugo used in the website.
-
+<!-- vale Crossplane.Spelling = NO -->
 The `/themes/geekboot/assets` folder contains all (S)CSS and compiled JavaScript
 for the website.
-
+<!-- vale Crossplane.Spelling = YES -->
 ## CSS
 Crossplane documentation uses [Bootstrap
 5.2](https://getbootstrap.com/docs/5.2/getting-started/introduction/).
@@ -91,13 +91,12 @@ has bundled, minified and compressed the JavaScript.
 The source JavaScript is in `/utils/webpack/src/js` and
 requires [Webpack](https://webpack.js.org/) to bundle and optimize the code.
 
-* `colorMode.js` provides the ability to change the light/dark mode color theme.
+* `colorMode.js` provides the ability to change the light and dark mode color theme.
 * `tabDeepAnchor.js` rewrites anchor links inside tabs to open a tab and present
   the anchor. 
 * `globalScripts.js` is the point of entry for Webpack to determine all
   dependencies. This bundles [instant.page](https://instant.page/) and
-  [Bootstrap's
-  JavaScript](https://getbootstrap.com/docs/5.2/getting-started/javascript/).
+  [Bootstrap's JavaScript](https://getbootstrap.com/docs/5.2/getting-started/javascript/).
   
 ### Bootstrap JavaScript builder
 The entire [Bootstrap JavaScript

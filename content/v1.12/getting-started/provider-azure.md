@@ -1075,7 +1075,7 @@ Azure service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/crds).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for Azure
@@ -1245,6 +1245,6 @@ virtualnetwork.network.azure.upbound.io "crossplane-quickstart-network" deleted
 * **[Continue to part 2]({{< ref "provider-azure-part-2">}})** to create a 
   Crossplane _Composite Resource_ and _Claim_.
 * Explore Azure resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/crds).
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.

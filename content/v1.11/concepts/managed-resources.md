@@ -54,8 +54,8 @@ deletes the external resource as well. If the `deletionPolicy` is `orphan` the
 Provider deletes the managed resource but doesn't delete the external resource.
 
 #### Options
-* `deletionPolicy: delete` - **Default** - Delete the external resource when deleting the managed resource.
-* `deletionPolicy: orphan` - Leave the external resource when deleting the managed resource. 
+* `deletionPolicy: Delete` - **Default** - Delete the external resource when deleting the managed resource.
+* `deletionPolicy: Orphan` - Leave the external resource when deleting the managed resource. 
 
 <!-- vale off -->
 ### forProvider
