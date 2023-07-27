@@ -1,0 +1,16 @@
+Dataflow
+EC2
+EKS
+GCP's
+S3
+VPC
+GKE
+provider-aws-s3
+GCP
+provider-aws-iam
+DynmoDB
+Pub/Sub
+europe-central2
+us-central1
+eu-north-1
+us-east-2
