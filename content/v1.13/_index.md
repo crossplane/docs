@@ -2,7 +2,7 @@
 title: "Overview"
 weight: -1
 cascade:
-    version: "master"
+    version: "1.13"
 ---
 
 {{< img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
