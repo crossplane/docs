@@ -5,10 +5,10 @@ tocHidden: true
 ---
 
 {{< hint "important" >}}
-This guide is part 2 of a series. Follow **[part 1]({{<ref "provider-gcp" >}})** 
+This guide is part 2 of a series. Follow [**part 1**]({{<ref "provider-gcp" >}})
 to install Crossplane and connect your Kubernetes cluster to GCP.
 
-**[Part 3]({{<ref "provider-gcp-part-3">}})** covers patching 
+[**Part 3**]({{<ref "provider-gcp-part-3">}})** covers patching 
 _composite resources_ and using Crossplane _packages_.
 {{< /hint >}}
 
@@ -960,7 +960,7 @@ _composition patches_ and making all this configuration portable in Crossplane
 _packages_. 
 
 ## Next steps
-* **[Continue to part 3]({{< ref "provider-gcp-part-3">}})** to create a learn
+* [**Continue to part 3**]({{< ref "provider-gcp-part-3">}})** to create a learn
   about _patching_ resources and creating Crossplane _packages_.
 * Explore GCP resources that Crossplane can configure in the 
   [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).

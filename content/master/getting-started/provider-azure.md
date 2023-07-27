@@ -16,13 +16,13 @@ _Composite Resource Definition_ (XRD), _Composite Resource_ (XR) and a _Claim_
 (XRC) to show how to create and use custom APIs.
 * [Part 3]({{< ref "provider-azure-part-3" >}}) demonstrates how to patch
 _Compositions_ with values used in a _Claim_ and how to build a Crossplane
-_Package_ to make a Crossplane platform portable and reusable.
+_Package_.
 
 ## Prerequisites
 This quickstart requires:
 * a Kubernetes cluster with at least 6 GB of RAM
 * permissions to create pods and secrets in the Kubernetes cluster
-* [Helm](https://helm.sh/) version `v3.2.0` or later
+* [Helm](https://helm.sh/) version v3.2.0 or later
 * an Azure account with permissions to create an 
   [Azure Virtual Machine](https://learn.microsoft.com/en-us/azure/virtual-machines/) 
   and
@@ -1242,7 +1242,7 @@ virtualnetwork.network.azure.upbound.io "crossplane-quickstart-network" deleted
 ```
 
 ## Next steps
-* **[Continue to part 2]({{< ref "provider-azure-part-2">}})** to create a 
+* [**Continue to part 2**]({{< ref "provider-azure-part-2">}}) to create a 
   Crossplane _Composite Resource_ and _Claim_.
 * Explore Azure resources that Crossplane can configure in the 
   [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).

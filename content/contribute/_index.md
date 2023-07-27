@@ -12,12 +12,11 @@ the Crossplane documentation.
 
 Information on contributing to the Crossplane software project is in the
 Crossplane 
-[CONTRIBUTING.md](https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md)
+[`CONTRIBUTING.md`](https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md)
 file.
 
 ## Code of conduct
-Crossplane follows the [CNCF Code of
-Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
+Crossplane follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
 
 Taken directly from the code:
 <!-- vale off -->

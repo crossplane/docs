@@ -5,17 +5,19 @@ tocHidden: true
 ---
 
 {{< hint "important" >}}
-This guide is part 2 of a series. Follow **[part 1]({{<ref "provider-aws" >}})** 
+This guide is part 2 of a series. Follow [**part 1**]({{<ref "provider-aws" >}})** 
 to install Crossplane and connect your Kubernetes cluster to AWS.
 
-**[Part 3]({{<ref "provider-aws-part-3">}})** covers patching _composite resources_
+[**Part 3**]({{<ref "provider-aws-part-3">}})** covers patching _composite resources_
 and using Crossplane _packages_.
 {{< /hint >}}
 
+<!-- vale gitlab.SentenceLength = NO -->
 This section creates a _[Composition](#create-a-composition)_, 
-_[Custom Resource Definition](#define-a-composite-resource)_ and a
+_[Composite Resource Definition](#define-a-composite-resource)_ and a
 _[Claim](#create-a-claim)_
 to create a custom Kubernetes API to create AWS resources. 
+<!-- vale gitlab.SentenceLength = YES -->
 
 ## Prerequisites
 * Complete [quickstart part 1]({{<ref "provider-aws" >}}) connecting Kubernetes
@@ -922,7 +924,7 @@ the API settings when creating resources.
 patches_ and making all this configuration portable in Crossplane _packages_. 
 
 ## Next steps
-* **[Continue to part 3]({{< ref "provider-aws-part-3">}})** to create a learn
+* [**Continue to part 3**]({{< ref "provider-aws-part-3">}}) to create a learn
   about _patching_ resources and creating Crossplane _packages_.
 * Explore AWS resources that Crossplane can configure in the [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.

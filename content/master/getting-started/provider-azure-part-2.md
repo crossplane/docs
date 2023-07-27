@@ -5,10 +5,10 @@ tocHidden: true
 ---
 
 {{< hint "important" >}}
-This guide is part 2 of a series. Follow **[part 1]({{<ref "provider-azure" >}})** 
+This guide is part 2 of a series. Follow [**part 1**]({{<ref "provider-azure" >}})
 to install Crossplane and connect your Kubernetes cluster to Azure.
 
-**[Part 3]({{<ref "provider-azure-part-3">}})** covers patching _CompositeResources_
+[**Part 3**]({{<ref "provider-azure-part-3">}})** covers patching _composite resources_
 and using Crossplane _Packages_.
 {{< /hint >}}
 
@@ -521,7 +521,7 @@ inside the `spec` of the new Kubernetes object.
 
 {{< hint "note" >}}
 _XRDs_ follow the Kubernetes 
-[_CustomResourceDefinition_ rules for schemas](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#specifying-a-structural-schema). 
+[_Custom Resource Definition_ rules for schemas](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#specifying-a-structural-schema). 
 {{</hint >}}
 
 Place the API 
@@ -1053,7 +1053,7 @@ the API settings when creating resources.
 patches_ and making all this configuration portable in Crossplane _Packages_. 
 
 ## Next steps
-* **[Continue to part 3]({{< ref "provider-azure-part-3">}})** to learn
+* [**Continue to part 3**]({{< ref "provider-azure-part-3">}}) to learn
   about _patching_ resources and creating Crossplane _Packages_.
 * Explore Azure resources that Crossplane can configure in the 
   [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).

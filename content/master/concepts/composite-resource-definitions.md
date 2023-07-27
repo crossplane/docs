@@ -153,10 +153,12 @@ spec:
 
 ### XRD versions
 
+<!-- vale gitlab.SentenceLength = NO -->
 The XRD `version` is like the 
 [API versioning used by Kubernetes](https://kubernetes.io/docs/reference/using-api/#api-versioning).
 The version shows how mature or stable the API is and increments when changing,
 adding or removing fields in the API.
+<!-- vale gitlab.SentenceLength = YES -->
 
 Crossplane doesn't require specific versions or a specific version naming 
 convention, but following 
@@ -180,7 +182,7 @@ required or optional.
 
 {{<hint "note" >}}
 All `schemas` follow the Kubernetes custom resource definition 
-[Open APIv3 structural schema](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#specifying-a-structural-schema). 
+[OpenAPIv3 structural schema](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#specifying-a-structural-schema). 
 {{< /hint >}}
 
 Each 
@@ -414,8 +416,7 @@ version can be `referenceable`.
 
 {{< hint "note" >}}
 Changing which version is `referenceable:true` requires [updating the
-`compositeTypeRef.apiVersion`]({{<ref
-"./compositions#enabling-composite-resources" >}}) 
+`compositeTypeRef.apiVersion`]({{<ref "./compositions#enabling-composite-resources" >}}) 
 of any Compositions referencing that XRD.
 {{< /hint >}}
 
@@ -432,10 +433,14 @@ webhooks](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/cu
 New versions may define new optional parameters, but new required fields are
 a "breaking change."
 
+<!-- vale Crossplane.Spelling = NO -->
+<!-- ignore to allow for CRDs -->
+<!-- don't add to the spelling exceptions to catch when it's used instead of XRD -->
 Crossplane XRDs use Kubernetes custom resource definitions for versioning. 
-Read the Kubernetes documentation on [versions in
-CustomResourceDefinitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/)
+Read the Kubernetes documentation on 
+[versions in CustomResourceDefinitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/)
 for more background on versions and breaking changes. 
+<!-- vale Crossplane.Spelling = YES -->
 
 Crossplane recommends implementing breaking schema changes as brand new XRDs.
 {{< /hint >}}
@@ -623,9 +628,9 @@ knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources and Claims.
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### defaultCompositeDeletePolicy
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 The `defaultCompositeDeletePolicy` defines the deletion policy for composite
 resources and claims. 
 
@@ -658,9 +663,9 @@ spec:
   # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### defaultCompositionRef
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 It's possible for multiple [Compositions]({{<ref "./compositions">}}) to
 reference the same XRD. If more than one Composition references the same XRD,
 the composite resource or Claim must select which Composition to use. 
@@ -687,9 +692,9 @@ spec:
   # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### defaultCompositionUpdatePolicy
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 
 Changes to a Composition generate a new Composition revision. By default all
 composite resources and Claims use the updated Composition revision. 
@@ -717,9 +722,9 @@ spec:
   # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### enforcedCompositionRef
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 To require all composite resources or Claims to use a specific Composition use
 the `enforcedCompositionRef` setting in the XRD.
 
@@ -783,9 +788,9 @@ Status:
 # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### WatchingCompositeResource
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 `Reason: WatchingCompositeResource` indicates Crossplane defined the new
 Kubernetes custom resource definitions related to the composite resource and is 
 watching for the creation of new composite resources. 
@@ -796,9 +801,9 @@ Status: True
 Reason: WatchingCompositeResource
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### TerminatingCompositeResource
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 `Reason: TerminatingCompositeResource` indicates Crossplane is deleting the
 custom resource definitions related to the composite resource and is 
 terminating the composite resource controller.
@@ -809,9 +814,9 @@ Status: False
 Reason: TerminatingCompositeResource
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### WatchingCompositeResourceClaim
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 `Reason: WatchingCompositeResourceClaim` indicates Crossplane defined the new
 Kubernetes custom resource definitions related to the offered Claims and is 
 watching for the creation of new Claims. 
@@ -822,9 +827,9 @@ Status: True
 Reason: WatchingCompositeResourceClaim
 ```
 
-<!-- vale Google.Headings = NO -->
+<!-- vale off -->
 #### TerminatingCompositeResourceClaim
-<!-- vale Google.Headings = YES -->
+<!-- vale on -->
 `Reason: TerminatingCompositeResourceClaim` indicates Crossplane is deleting the
 custom resource definitions related to the offered Claims and is 
 terminating the Claims controller.

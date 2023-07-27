@@ -191,11 +191,12 @@ For example, the following code block allows editing the key and secret fields.
 aws_access_key_id = $@<aws_access_key>$@
 aws_secret_access_key = $@<aws_secret_key>$@
 ```
-{{</ editCode >}}
-
+{{< /editCode >}}
+<!-- vale off -->
 To set a field as editable wrap a standard code block, including language highlighting hints in the `{{</* editCode */>}}` shortcode. 
+<!-- vale on -->
 
-Wrap any editable element in dollar-sign followed by a at character (`$@`).
+Wrap any editable element in dollar sign followed by a at character (`$@`).
 
 ````go
 {{</* editCode */>}}
