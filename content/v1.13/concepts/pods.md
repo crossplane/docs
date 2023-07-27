@@ -326,8 +326,13 @@ Running multiple Crossplane pods without leader election is unsupported.
 Change Crossplane pod settings either before installing Crossplane by editing
 the Helm `values.yml` file or after installation by editing the `Deployment`.
 
-The full list of configuration options are available in the 
-[Crossplane Install]({{<ref "../software/install">}}) section. 
+The full list of 
+[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+and 
+[feature flags]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+are available in the 
+[Crossplane Install]({{<ref "../software/install">}}) 
+section. 
 
 {{< hint "note" >}}
 
