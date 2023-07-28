@@ -348,10 +348,17 @@ The `desired` state of the XR and composed resources is how your Function tells
 Crossplane what it should do. Crossplane 'bootstraps' the initial desired state
 passed to a Function pipeline with:
 
-* A copy of the observed state of the XR.
-* A copy of the observed state of any existing composed resources.
+* A copy of the observed state of the composite resource (XR).
+* A copy of the observed state of any existing composed resources produced
+  from the `resources` array.
 * Any new composed resources or modifications to observed resources produced
   from the `resources` array.
+
+{{< hint "note" >}}
+The initial desired state doesn't include any copies of observed resources
+produced by the function pipeline. When using multiple functions each function
+passes their desired resources output as input to the next pipeline function.
+{{< /hint >}}
 
 When adding a new desired resource to the `desired.resources` array you don't
 need to:
