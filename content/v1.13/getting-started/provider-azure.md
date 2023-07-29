@@ -5,7 +5,7 @@ weight: 110
 
 Connect Crossplane to Azure to create and manage cloud resources from Kubernetes 
 with the 
-[Upbound Azure Provider](https://marketplace.upbound.io/providers/upbound/provider-azure).
+[Upbound Azure Provider](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
 
 This guide is in three parts:
 * Part 1 walks through installing Crossplane, configuring the provider to
