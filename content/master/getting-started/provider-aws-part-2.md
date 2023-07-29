@@ -554,3 +554,11 @@ Verify Crossplane deleted the managed resources with `kubectl get managed`.
 kubectl get managed
 No resources found
 ```
+
+## Next steps
+* Explore AWS resources that Crossplane can configure in the 
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
+  Crossplane users and contributors.
+* Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out what else you can do
+  with Crossplane. 

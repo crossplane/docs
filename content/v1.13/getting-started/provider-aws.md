@@ -237,8 +237,8 @@ bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
 ```
 
 ## Next steps
-* [**Continue to part 2**]({{< ref "provider-aws-part-2">}}) to create a 
-  Crossplane _Composite Resource_ and _Claim_.
+* [**Continue to part 2**]({{< ref "provider-aws-part-2">}}) to create and use a 
+  custom API with Crossplane.
 * Explore AWS resources that Crossplane can configure in the 
   [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
