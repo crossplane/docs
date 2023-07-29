@@ -289,16 +289,17 @@ is a full resource definitions, defining all the resource settings and metadata
 like labels and annotations. 
 
 This template creates an Azure
-{{<hover label="comp" line="14">}}LinuxVirtualMachine{{</hover>}}
-{{<hover label="comp" line="14">}}NetworkInterface{{</hover>}}, 
-{{<hover label="comp" line="33">}}Subnet{{</hover>}} and
-{{<hover label="comp" line="34">}}VirtualNetwork{{</hover>}}.
+{{<hover label="comp" line="11">}}LinuxVirtualMachine{{</hover>}}
+{{<hover label="comp" line="46">}}NetworkInterface{{</hover>}}, 
+{{<hover label="comp" line="69">}}Subnet{{</hover>}}
+{{<hover label="comp" line="90">}}VirtualNetwork{{</hover>}} and
+{{<hover label="comp" line="110">}}ResourceGroup{{</hover>}}.
 
-Crossplane uses {{<hover label="comp" line="19">}}patches{{</hover>}} to apply
+Crossplane uses {{<hover label="comp" line="34">}}patches{{</hover>}} to apply
 the user's input to the resource template.  
 This Composition takes the user's 
-{{<hover label="comp" line="21">}}location{{</hover>}} input and uses it as the 
-{{<hover label="comp" line="16">}}region{{</hover>}} used in the individual 
+{{<hover label="comp" line="36">}}location{{</hover>}} input and uses it as the 
+{{<hover label="comp" line="37">}}location{{</hover>}} used in the individual 
 resource.
 
 Apply this Composition to your cluster. 
@@ -311,22 +312,6 @@ metadata:
   name: crossplane-quickstart-vm-with-network
 spec:
   resources:
-    - name: crossplane-resourcegroup
-      base:
-        apiVersion: azure.upbound.io/v1beta1
-        kind: ResourceGroup
-        spec:
-          forProvider:
-            location: Central US
-      patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: "location"
-          toFieldPath: "spec.forProvider.location"
-          transforms:
-            - type: map
-              map: 
-                EU: "Sweden Central"
-                US: "Central US"
     - name: quickstart-vm
       base:
         apiVersion: compute.azure.upbound.io/v1beta1
@@ -355,7 +340,7 @@ spec:
               matchControllerRef: true
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "location"
+          fromFieldPath: "spec.location"
           toFieldPath: "spec.forProvider.location"
           transforms:
             - type: map
@@ -378,7 +363,7 @@ spec:
               matchControllerRef: true
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "location"
+          fromFieldPath: "spec.location"
           toFieldPath: "spec.forProvider.location"
           transforms:
             - type: map
@@ -399,7 +384,7 @@ spec:
               matchControllerRef: true
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "location"
+          fromFieldPath: "spec.location"
           toFieldPath: "spec.forProvider.location"
           transforms:
             - type: map
@@ -419,7 +404,23 @@ spec:
               matchControllerRef: true
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "location"
+          fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "Sweden Central"
+                US: "Central US"
+    - name: crossplane-resourcegroup
+      base:
+        apiVersion: azure.upbound.io/v1beta1
+        kind: ResourceGroup
+        spec:
+          forProvider:
+            location: Central US
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.location"
           toFieldPath: "spec.forProvider.location"
           transforms:
             - type: map
@@ -487,7 +488,7 @@ upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/pr
 With the custom API (XRD) installed and associated to a resource template
 (Composition) users can access the API to create resources.
 
-Create a {{<hover label="xr" line="2">}}VirtualMachine{{</hover>}} object to 
+Create a {{<hover label="xr" line="3">}}VirtualMachine{{</hover>}} object to 
 create the cloud resources.
 
 ```yaml {copy-lines="all",label="xr"}
@@ -497,7 +498,7 @@ kind: VirtualMachine
 metadata:
   name: my-vm
 spec: 
-  location: "US"
+  location: "EU"
 EOF
 ```
 
@@ -540,6 +541,14 @@ virtualnetwork.network.azure.upbound.io/my-vm-pd2sw   True    True     my-vm-pd2
 
 Accessing the API created all five resources defined in the template and linked
 them together. 
+
+Look at a specific resource to see it's created in the location used in the API.
+
+```yaml {copy-lines="1"}
+kubectl describe linuxvirtualmachine | grep Location
+    Location:                         Sweden Central
+    Location:                         swedencentral
+```
 
 Delete the resources with `kubectl delete VirtualMachine`.
 
@@ -587,7 +596,7 @@ metadata:
   name: my-namespaced-vm
   namespace: crossplane-test
 spec: 
-  location: "US"
+  location: "EU"
 EOF
 ```
 View the Claim with `kubectl get claim -n crossplane-test`.

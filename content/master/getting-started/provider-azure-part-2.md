@@ -541,6 +541,14 @@ virtualnetwork.network.azure.upbound.io/my-vm-pd2sw   True    True     my-vm-pd2
 Accessing the API created all five resources defined in the template and linked
 them together. 
 
+Look at a specific resource to see it's created in the location used in the API.
+
+```yaml {copy-lines="1"}
+kubectl describe linuxvirtualmachine | grep Location
+    Location:                         Sweden Central
+    Location:                         swedencentral
+```
+
 Delete the resources with `kubectl delete VirtualMachine`.
 
 ```shell {copy-lines="1"}
@@ -654,3 +662,11 @@ Verify Crossplane deleted the managed resources with `kubectl get managed`.
 kubectl get managed
 No resources found
 ```
+
+## Next steps
+* Explore Azure resources that Crossplane can configure in the 
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
+  Crossplane users and contributors.
+* Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out
+  what else you can do with Crossplane. 
