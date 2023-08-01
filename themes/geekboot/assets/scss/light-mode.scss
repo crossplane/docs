@@ -1,51 +1,59 @@
 @mixin light-mode {
     // body and content
-    --body-background: white;
-    --body-font-color: rgba(52, 58, 64, 1);
-    --content-link-color: #0a539a;
-    --anchor-link-color: #{lighten(rgba(52, 58, 64, 1), 25)};
+    --body-background: #{$fog-0};
+    --body-font-color: #{$fog-1000};
+    --content-link-color: #{$aqua-700};
+    --anchor-link-color: #{$fog-600};
+
+    // Add underline to light mode small font links due to being similar color to main text
+    p > a, .admonition-content > a, li > a, td > a, .home-link-description > a {
+        text-decoration: underline;
+    }
+    .nav-item > a {
+        text-decoration: none;
+    }
 
     // Single code lines inside text. Code blocks are in _code_theme_light.scss
-    --code-background: #e9ecef;
-    --code-color: #505a72;
-    --code-line-number-color: #8bcbe6;
+    --code-background: #{$fog-75};
+    --code-color: #{$fog-700};
+    --code-line-number-color: #{$aqua-800};
 
     //Tabs
     --nav-tab-background-color: var(--body-background);
-    --active-tab-color: #f3807b; // Not an accessable color contrast on white.
-    --inactive-tab-hover-color: #37ccb7;
+    --active-tab-color: #{$aqua-700};
+    --inactive-tab-hover-color: #{$fog-1000};
 
     // Sidebar nav
-    --nav-highlight-color: rgba(80,90,114, .1);
-    --btn-close-color: #000000;
+    --nav-highlight-color: #{$aqua-50};
+    --btn-close-color: #{$fog-1000};
 
     //Version dropdown
-    --dropdown-highlight: var(--nav-highlight-color);
+    --dropdown-highlight: #{$fog-75};
     --dropdown-background: var(--body-background);
-    --latest-pill-background: #f3807b;
-    --latest-pill-color: #141414;
+    --latest-pill-background: #{$fog-150};
+    --latest-pill-color: #{$fog-800};
     --dropdown-color: var(--body-font-color);
-    --dropdown-border-color: #{lighten(rgba(52, 58, 64, 1), 50)};
+    --dropdown-border-color: #{$fog-100};
 
     //Right-side table of contents
-    --toc-font-color: #6b7884;
-    --toc-mobile-menu-outline: #ffcd3c;
-    --toc-mobile-menu-background: #f8f9fa;
+    --toc-font-color: #{$fog-600};
+    --toc-mobile-menu-outline: #{$fog-200};
+    --toc-mobile-menu-background: #{$fog-0};
 
     //hint boxes
-    --hint-important:       rgba(255, 145, 0, 1); //"exclamation",
-    --hint-important-background: rgba(255, 145, 0, .1);
+    --hint-important:       #{$tangerine-200}; //"exclamation",
+    --hint-important-background: #{$tangerine-50};
 
-    --hint-warning:         rgba(255, 82, 82, 1); //"fire",
-    --hint-warning-background: rgba(255, 82, 82, .1);
+    --hint-warning:         #{$salmon-200}; //"fire",
+    --hint-warning-background: #{$salmon-50};
 
-    --hint-tip:             rgba(0,200,82,1);; //"check",
-    --hint-tip-background: rgba(0,200,82,.1);
+    --hint-tip:             #{$grass-200}; //"check",
+    --hint-tip-background: #{$grass-50};
 
-    --hint-note:            rgba(0,176,255,1); //"info",
-    --hint-note-background:  rgba(0,176,255,.1);
+    --hint-note:            #{$fog-200}; //"info",
+    --hint-note-background:  #{$fog-50};
 
     //Search Results
-    --result-path:  #141414;
     --search-box-background: var(--body-background);
+    --result-path: var(--body-background);
 }

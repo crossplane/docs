@@ -17,14 +17,14 @@
 
     // Sidebar nav
     --nav-highlight-color: #{$aqua-950};
-    --btn-close-color:     invert(1) grayscale(100%) brightness(200%);
+    --btn-close-color:     #{$fog-0};
 
     //Version dropdown
     --dropdown-highlight: #{$fog-900};
     --dropdown-background: var(--body-background);
     --latest-pill-background: #{$fog-800};
     --latest-pill-color: #{$fog-200};
-    --dropdown-color: #{$fog-0};
+    --dropdown-color: var(--body-font-color);
     --dropdown-border-color: #{$fog-900};
 
     //Right-side table of contents
@@ -33,19 +33,27 @@
     --toc-mobile-menu-background: #{$fog-1000};
 
     //hint boxes
-    --hint-important:       #{tangerine-400}; //"exclamation",
-    --hint-important-background: #{tangerine-950};
+    --hint-important:       #{$tangerine-800}; //"exclamation",
+    --hint-important-background: #{$tangerine-950};
 
-    --hint-warning:         #{$salmon-400}; //"fire",
+    --hint-warning:         #{$salmon-800}; //"fire",
     --hint-warning-background: #{$salmon-950};
 
-    --hint-tip:             #{$grass-400}; //"check",
+    --hint-tip:             #{$grass-800}; //"check",
     --hint-tip-background: #{$grass-950};
 
-    --hint-note:            #{$fog-400}; //"info",
+    --hint-note:            #{$fog-800}; //"info",
     --hint-note-background:  #{$fog-950};
 
     //Search Related
-    --search-box-background: #{$fog-800};
-    --result-path: #{$fog-0};
+    --search-box-background: var(--body-background);
+    --result-path: var(--body-background);
+
+    // Add border to top nav and footer
+    .docs-navbar {
+        border-bottom: 1px solid #{$fog-850};
+    }
+    .bd-footer {
+        border-top: 1px solid #{$fog-850};
+    }
 }
