@@ -43,6 +43,7 @@ exceptions:
   - Provider
   - ProviderConfig
   - Pub/Sub
+  - PubSub
   - REPL
   - StoreConfig
   - Studio
