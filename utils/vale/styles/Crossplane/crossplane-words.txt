@@ -50,3 +50,6 @@ InactivePackageRevision
 crossplane.yaml
 definition.yaml
 composition.yaml
+managementPolicies
+deletionPolicy
+initProvider

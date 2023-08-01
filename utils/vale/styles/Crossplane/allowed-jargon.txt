@@ -53,3 +53,4 @@ CLI
 kube-controller-manager
 kube-apiserver
 cluster-wide
+autoscaler
