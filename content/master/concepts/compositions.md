@@ -1001,6 +1001,7 @@ Compositions support matching resource fields by:
  * [non-empty match](#match-that-a-field-exists)
  * [always ready](#always-consider-a-resource-ready)
  * [condition match](#match-a-condition)
+ * [boolean match](#match-a-boolean)
 
 #### Match a string
 
@@ -1155,6 +1156,72 @@ spec:
             type: MyType
             status: Success
 ```
+
+#### Match a Boolean
+
+Two types of checks exist for matching boolean fields:
+ * `MatchTrue`
+ * `MatchFalse`
+
+`MatchTrue` considers the composed resource to be ready when the value of a 
+field within that resource is `true`.
+
+`MatchFalse` considers the composed resource to be ready when the value of a 
+field within that resource is `false`.
+
+For example, consider 
+{{<hover label="matchTrue" line="7">}}my-resource{{</hover>}}, which will be marked
+as ready if 
+{{<hover label="matchTrue" line="12">}} status.atProvider.manifest.status.ready{{</hover>}}
+is {{<hover label="matchTrue" line="11">}}true{{</hover>}}.
+
+```yaml {label="matchTrue",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  resources:
+  # Removed for Brevity
+    - name: my-resource
+      base:
+        # Removed for brevity
+      readinessChecks:
+        - type: MatchTrue
+          fieldPath: status.atProvider.manifest.status.ready
+```
+{{<hint "tip" >}}
+Checking {{<hover label="matchTrue" line="11">}}MatchTrue{{</hover>}} doesn't
+require a `match` field.
+{{< /hint >}} 
+
+Alternatively, `MatchFalse` can be used for fields that express readiness with
+negative polarity.
+
+For example, consider 
+{{<hover label="matchFalse" line="7">}}my-resource{{</hover>}}, which will be marked
+as ready if 
+{{<hover label="matchFalse" line="12">}} status.atProvider.manifest.status.pending{{</hover>}}
+is {{<hover label="matchFalse" line="11">}}false{{</hover>}}.
+
+```yaml {label="matchFalse",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  resources:
+  # Removed for Brevity
+    - name: my-resource
+      base:
+        # Removed for brevity
+      readinessChecks:
+        - type: MatchFalse
+          fieldPath: status.atProvider.manifest.status.pending
+```
+
+{{<hint "tip" >}}
+Checking {{<hover label="matchFalse" line="11">}}MatchFalse{{</hover>}} doesn't
+require a `match` field.
+{{< /hint >}} 
 
 ## Verify a Composition
 
