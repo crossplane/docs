@@ -214,8 +214,8 @@ resource object is deleted from Kubernetes and the `deletionPolicy` is
 For some of the optional fields, users rely on the default that the cloud
 provider chooses for them. Since Crossplane treats the managed resource as the
 source of the truth, values of those fields need to exist in `spec` of the
-managed resource. So, in each reconciliation, Crossplane will fill the value of
-a field that is left empty by the user but is assigned a value by the provider.
+managed resource. In each reconciliation, Crossplane will fill the value of
+a field that's left empty by the user but is assigned a value by the provider.
 For example, there could be two fields like `region` and `availabilityZone` and
 you might want to give only `region` and leave the availability zone to be
 chosen by the cloud provider. In that case, if the provider assigns an
@@ -243,7 +243,7 @@ For example, setting just `["Observe"]` makes Crossplane treat the resource as
 a read-only resource, importing the external resources not originally created
 by Crossplane. This allows other managed resources to reference the read-only
 resource, for example, a shared database or network. Importing a resource as
-read-only is convenient since Crossplane will not attempt to take control and
+read-only is convenient since Crossplane wont attempt to take control and
 only identifier parameters are needed to be specified in the managed resource.
 
 {{< hint "tip" >}}
@@ -281,8 +281,8 @@ if the management policy alpha feature is enabled. To sum it up in a table:
 | "*" (default)               | Orphan           | Orphan  |
 | contains "Delete"           | Delete (default) | Delete  |
 | contains "Delete"           | Orphan           | Delete  |
-| does not contain "Delete"   | Delete (default) | Orphan  |
-| does not contain "Delete"   | Orphan           | Orphan  |
+| doesn't contain "Delete"   | Delete (default) | Orphan  |
+| doesn't contain "Delete"   | Orphan           | Orphan  |
 {{< /table >}}
 
 #### Options
@@ -297,7 +297,7 @@ if the management policy alpha feature is enabled. To sum it up in a table:
   `spec.forProvider`.
 * `Delete` - the external resource will be deleted when the managed resource is
   deleted.
-* `LateInitialize` - Unprovided spec fields are late-initialized to
+* `LateInitialize` - Unprovided spec fields are late initialized to
   `spec.forProvider` with the default values from the cloud provider. This
   enables Crossplane to take full control of the external resource, even those
   values not provided by the user upfront. Read more about [Late Initialization]({{<ref "./managed-resources#late-initialization" >}})
