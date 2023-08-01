@@ -1000,6 +1000,7 @@ Compositions support matching resource fields by:
  * [integer match](#match-an-integer)
  * [non-empty match](#match-that-a-field-exists)
  * [always ready](#always-consider-a-resource-ready)
+ * [condition match](#match-a-condition)
 
 #### Match a string
 
@@ -1125,6 +1126,34 @@ spec:
         # Removed for brevity
       readinessChecks:
         - type: None
+```
+
+#### Match a Condition
+{{<hover label="condition" line="11">}}Condition{{</hover>}} considers the composed
+resource to be ready when it finds the expected condition type, with the
+expected status for it in its `status.conditions`.
+
+For example, consider 
+{{<hover label="condition" line="7">}}my-resource{{</hover>}}, which will be marked
+as ready if there is a condition of type 
+{{<hover label="condition" line="13">}}MyType{{</hover>}} with a status of
+{{<hover label="condition" line="14">}}Success{{</hover>}}.
+
+```yaml {label="condition",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  resources:
+  # Removed for Brevity
+    - name: my-resource
+      base:
+        # Removed for brevity
+      readinessChecks:
+        - type: MatchCondition
+          matchCondition:
+            type: MyType
+            status: Success
 ```
 
 ## Verify a Composition
