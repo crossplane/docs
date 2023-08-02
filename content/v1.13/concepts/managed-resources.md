@@ -62,8 +62,8 @@ Provider deletes the managed resource but doesn't delete the external resource.
 
 If a resource configures a Crossplane
 [management policy](#managementpolicies) and the related management policy alpha
-feature is enabled, the managment policy takes precedence over the
-`deletionPolicy` setting, unless it is the default management policy.
+feature is enabled, the management policy takes precedence over the
+`deletionPolicy` setting, unless it's the default management policy.
 
 {{< table >}}
 | managementPolicies          | deletionPolicy   | result  |
