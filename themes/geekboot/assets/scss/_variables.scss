@@ -15,21 +15,21 @@ $body-font-size:              19px !default;
 // Grayscale palette. These are equivalent to varying opacities of the darkest shade over white (e.g. $fog-500 is equivalent to $fog-1000 at 50% opacity over white).
 $fog-0:                     #FFFFFF !default;
 $fog-25:                    #F9F9F9 !default;
-$fog-50:                    #F2F3F3 !default;
+$fog-50:                    #F3F3F3 !default;
 $fog-75:                    #ECEDED !default;
-$fog-100:                   #E6E7E7 !default;
+$fog-100:                   #E5E5E5 !default;
 $fog-150:                   #DADCDC !default;
-$fog-200:                   #CDD0D0 !default;
-$fog-300:                   #B4B8B8 !default;
-$fog-400:                   #9BA1A1 !default;
-$fog-500:                   #828A89 !default;
-$fog-600:                   #697371 !default;
-$fog-700:                   #505B59 !default;
-$fog-800:                   #374442 !default;
-$fog-850:                   #2A3836 !default;
-$fog-900:                   #1E2C2A !default;
-$fog-950:                   #12211F !default;
-$fog-1000:                  #051513 !default;
+$fog-200:                   #CECFCF !default;
+$fog-300:                   #B5B7B7 !default;
+$fog-400:                   #9DA0A0 !default;
+$fog-500:                   #848888 !default;
+$fog-600:                   #6C7070 !default;
+$fog-700:                   #535858 !default;
+$fog-800:                   #3B4141 !default;
+$fog-850:                   #2F3434 !default;
+$fog-900:                   #222828 !default;
+$fog-950:                   #161D1D !default;
+$fog-1000:                  #0A1111 !default;
 
 // Colored palettes. Spectrums gradually transition into white with numbers below "-500" and transition into $fog-1000 on numbers after "-500".
 
@@ -43,25 +43,29 @@ $aqua-200:                   #AEECE3 !default;
 $aqua-300:                   #86E3D6 !default;
 $aqua-400:                   #5DD9C8 !default;
 $aqua-500:                   #35D0BA !default;
-$aqua-600:                   #2BAA99 !default;
-$aqua-700:                   #228578 !default;
-$aqua-800:                   #186055 !default;
-$aqua-850:                   #134E45 !default;
-$aqua-900:                   #0F3B34 !default;
-$aqua-950:                   #092824 !default;
+$aqua-600:                   #2CA998 !default;
+$aqua-700:                   #248477 !default;
+$aqua-800:                   #1B5D54 !default;
+$aqua-850:                   #174B44 !default;
+$aqua-900:                   #133833 !default;
+$aqua-950:                   #0E2422 !default;
 
 // $Grass-500 is the middle-point between $Aqua-500 and $Sun-500.
-$grass-50:                    #F5FAF2 !default;
+$grass-25:                    #FCFEFB !default;
+$grass-50:                    #FAFDF8 !default;
+$grass-75:                    #F7FBF5 !default;
 $grass-100:                   #EBF5E5 !default;
+$grass-150:                   #F0F8EB !default;
 $grass-200:                   #D7ECCA !default;
 $grass-300:                   #C2E2B0 !default;
 $grass-400:                   #AED995 !default;
 $grass-500:                   #9ACF7B !default;
-$grass-600:                   #7CAA66 !default;
-$grass-700:                   #5E8452 !default;
-$grass-800:                   #41603C !default;
-$grass-900:                   #233A28 !default;
-$grass-950:                   #14271D !default;
+$grass-600:                   #7DA965 !default;
+$grass-700:                   #608351 !default;
+$grass-800:                   #445D3B !default;
+$grass-850:                   #364B31 !default;
+$grass-900:                   #273727 !default;
+$grass-950:                   #19241C !default;
 
 // $Sun-500 is pulled from the Crossplane popsicle logo.
 $sun-25:                    #FFFCF5 !default;
@@ -73,25 +77,29 @@ $sun-200:                   #FFEBB1 !default;
 $sun-300:                   #FFE18A !default;
 $sun-400:                   #FFD763 !default;
 $sun-500:                   #FFCD3C !default;
-$sun-600:                   #CDA834 !default;
-$sun-700:                   #9B832C !default;
-$sun-800:                   #695F23 !default;
-$sun-850:                   #504D1F !default;
-$sun-900:                   #373A1B !default;
-$sun-950:                   #1E2817 !default;
+$sun-600:                   #CEA733 !default;
+$sun-700:                   #9D822B !default;
+$sun-800:                   #6C5C22 !default;
+$sun-850:                   #544A1E !default;
+$sun-900:                   #3B371A !default;
+$sun-950:                   #232415 !default;
 
 // $Tangerine-500 is the middle-point between $Sun-500 and $Salmon-500.
+$tangerine-25:                    #FFFCFB !default;
 $tangerine-50:                    #FEF6EE !default;
+$tangerine-75:                    #FEF8F3 !default;
 $tangerine-100:                   #FEEDDE !default;
+$tangerine-150:                   #FEF2E7 !default;
 $tangerine-200:                   #FDDBBE !default;
 $tangerine-300:                   #FBCA9D !default;
 $tangerine-400:                   #FAB87D !default;
 $tangerine-500:                   #F9A65C !default;
-$tangerine-600:                   #C8894E !default;
-$tangerine-700:                   #976C3F !default;
-$tangerine-800:                   #674F30 !default;
-$tangerine-900:                   #363221 !default;
-$tangerine-950:                   #1D231A !default;
+$tangerine-600:                   #C9884D !default;
+$tangerine-700:                   #996B3E !default;
+$tangerine-800:                   #6A4C2F !default;
+$tangerine-850:                   #523E28 !default;
+$tangerine-900:                   #3A2F20 !default;
+$tangerine-950:                   #222018 !default;
 
 // $Salmon-500 is pulled from the Crossplane popsicle logo.
 $salmon-25:                    #FEF9F8 !default;
@@ -103,14 +111,15 @@ $salmon-200:                   #FACCCA !default;
 $salmon-300:                   #F8B3B0 !default;
 $salmon-400:                   #F59995 !default;
 $salmon-500:                   #F3807B !default;
-$salmon-600:                   #C36A66 !default;
-$salmon-700:                   #945552 !default;
-$salmon-800:                   #64403C !default;
-$salmon-850:                   #4C3632 !default;
-$salmon-900:                   #352B28 !default;
-$salmon-950:                   #1D201E !default;
+$salmon-600:                   #C46965 !default;
+$salmon-700:                   #965451 !default;
+$salmon-800:                   #673D3B !default;
+$salmon-850:                   #503331 !default;
+$salmon-900:                   #392827 !default;
+$salmon-950:                   #221C1C !default;
 
 
+// Older color variables are below, should be avoided moving forward
 $aquaMarine:                #3de2cb !default;
 $aquarius:                  #37ccb7 !default;
 $fillBlackBlack:            #183b56 !default;
