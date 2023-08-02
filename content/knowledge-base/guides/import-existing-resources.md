@@ -85,22 +85,21 @@ managed resource `spec` changes the external resource.
 
 ## Import resources automatically 
 
-Automatically import external resources with the granular management polices
-[`spec.managementPolicies: ["Observe"]`]({{<ref "/v1.13/concepts/managed-resources#managementpolicies">}}).
+Automatically import external resources with an `Observe` [management policy]({{<ref "/v1.13/concepts/managed-resources#managementpolicies">}}).
 
-Crossplane imports `Observe` only resources but never changes or deletes the
+Crossplane imports observe only resources but never changes or deletes the
 resources.
 
 {{<hint "important" >}}
 The managed resource `managementPolicies` option is an alpha feature. 
 
-Enable the `managementPolicies` in a provider with `--enable-management-policies` 
+Enable `managementPolicies` in a provider with `--enable-management-policies` 
 in a 
 [ControllerConfig]({{<ref "/v1.12/concepts/providers#controller-configuration" >}}).
 {{< /hint >}}
 
 <!-- vale off -->
-### Apply the ["Observe"] managementPolicies
+### Apply the Observe management policy
 <!-- vale on -->
 
 Create a new managed resource matching the 
@@ -111,7 +110,7 @@ to import and add
 {{<hover label="oo-policy" line="3">}}spec{{</hover>}}
 
 For example, to import a GCP SQL DatabaseInstance, create a new resource with
-the {{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} 
+the {{<hover label="oo-policy" line="4">}}managementPolicies: ["Observe"]{{</hover>}} 
 set.
 ```yaml {label="oo-policy",copy-lines="none"}
 apiVersion: sql.gcp.upbound.io/v1beta1
@@ -233,10 +232,10 @@ status:
 ## Control imported ObserveOnly resources
 <!-- vale on --> 
 
-Crossplane can take active control of `ObserveOnly` imported resources by 
+Crossplane can take active control of observe only imported resources by 
 changing the `managementPolicies` after import.
 
-Change the {{<hover label="fc" line="8">}}managementPolicy{{</hover>}} field
+Change the {{<hover label="fc" line="8">}}managementPolicies{{</hover>}} field
 of the managed resource to 
 {{<hover label="fc" line="8">}}["*"]{{</hover>}}.
 

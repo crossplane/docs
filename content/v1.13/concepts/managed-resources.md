@@ -58,6 +58,24 @@ Provider deletes the managed resource but doesn't delete the external resource.
 * `deletionPolicy: Delete` - **Default** - Delete the external resource when deleting the managed resource.
 * `deletionPolicy: Orphan` - Leave the external resource when deleting the managed resource. 
 
+#### Interaction with management policies
+
+If a resource configures a Crossplane
+[management policy](#managementpolicies) and the related management policy alpha
+feature is enabled, the managment policy takes precedence over the
+`deletionPolicy` setting, unless it is the default management policy.
+
+{{< table >}}
+| managementPolicies          | deletionPolicy   | result  |
+|-----------------------------|------------------|---------|
+| "*" (default)               | Delete (default) | Delete  |
+| "*" (default)               | Orphan           | Orphan  |
+| contains "Delete"           | Delete (default) | Delete  |
+| contains "Delete"           | Orphan           | Delete  |
+| doesn't contain "Delete"   | Delete (default) | Orphan  |
+| doesn't contain "Delete"   | Orphan           | Orphan  |
+{{< /table >}}
+
 <!-- vale off -->
 ### forProvider
 <!-- vale on -->
@@ -96,10 +114,13 @@ inside a Provider's web console, Crossplane reverts that change back to what's
 configured in the `forProvider` setting. 
 {{< /hint >}}
 
-Providers add any settings not manually set to the `forProvider` field of the 
-created managed resource object.
-Use `kubectl describe <managed_resource>` to view the applied values. 
- 
+#### Late Initialization
+
+After the external resource creation, providers add some provider defaulted
+settings not manually set to the `forProvider` field of the created managed
+resource object into their respected `forProvider` fields.
+Use `kubectl describe <managed_resource>` to view the applied values.
+
 #### Referencing other resources
 
 Some fields in a managed resource may depend on values from other managed
@@ -210,102 +231,6 @@ resource object is deleted from Kubernetes and the `deletionPolicy` is
 {{< /hint >}}
 
 <!-- vale off -->
-#### Late Initialization
-<!-- vale on --> 
-
-For some of the optional fields, users rely on the default that the cloud
-provider chooses for them. Since Crossplane treats the managed resource as the
-source of the truth, values of those fields need to exist in `spec` of the
-managed resource. In each reconciliation, Crossplane will fill the value of
-a field that's left empty by the user but is assigned a value by the provider.
-For example, there could be two fields like `region` and `availabilityZone` and
-you might want to give only `region` and leave the availability zone to be
-chosen by the cloud provider. In that case, if the provider assigns an
-availability zone, Crossplane gets that value and fills `availabilityZone`. Note
-that if the field is already filled, the controller won't override its value.
-
-<!-- vale off -->
-### managementPolicies
-<!-- vale on --> 
-
-{{<hint "important" >}}
-The managed resource `managementPolicies` option is an alpha feature.
-
-Enable the `managementPolicies` in a provider with `--enable-management-policies`
-in a 
-[ControllerConfig]({{<ref "./providers#controller-configuration" >}}).
-{{< /hint >}}
-
-Granular `managementPolicies` determine what actions Crossplane can take on a
-managed and its external resource. `managementPolicies` is an array of actions
-(`Observe`, `Create`, `Update`, `Delete`, `LateInitialize`, `*`), and there are
-multiple combinations that Crossplane supports based on the use case.
-
-For example, setting just `["Observe"]` makes Crossplane treat the resource as 
-a read-only resource, importing the external resources not originally created
-by Crossplane. This allows other managed resources to reference the read-only
-resource, for example, a shared database or network. Importing a resource as
-read-only is convenient since Crossplane wont attempt to take control and
-only identifier parameters are needed to be specified in the managed resource.
-
-{{< hint "tip" >}}
-Read the [Import Existing Resources]({{<ref "/knowledge-base/guides/import-existing-resources" >}}) 
-guide for more
-information on using the `managementPolicies` to import existing resources.
-{{< /hint >}}
-
-Another application of `managementPolicies` is to skip the [Late Initialization]({{<ref "./managed-resources#late-initialization" >}})
-of the managed resource, by not including `LateInitialize` in the
-`managementPolicies`, which is useful when there are fields in the resource,
-that we would not like Crossplane to control, but would usually be filled in
-by Late Initialization.
-
-{{< hint "tip" >}}
-Read the [initProvider]({{<ref "./managed-resources#initprovider" >}}) section
-for more info about how we can use management policies without `LateInitialize`
-and `initProvider` together to ignore changes to fields that are controlled
-externally.
-{{< /hint >}}
-
-The `"Delete"` action replaces the [deletionPolicy]({{<ref "./managed-resources#deletionpolicy" >}}) 
-field in the managed resource. For now the `deletionPolicy` is still supported,
-but only if it's set to a non default value, which is `Orphan`. If it's set to
-`Orphan`, and the `managementPolicies` is set to `["*"]`, which is default, 
-then the external resource will be orphaned when the managed resource is
-deleted. In other cases, non default `managementPolicies` take precedence over
-the `deletionPolicy` field. Keep in mind that this behavior is only applicable
-if the management policy alpha feature is enabled. To sum it up in a table:
-
-{{< table >}}
-| managementPolicies          | deletionPolicy   | result  |
-|-----------------------------|------------------|---------|
-| "*" (default)               | Delete (default) | Delete  |
-| "*" (default)               | Orphan           | Orphan  |
-| contains "Delete"           | Delete (default) | Delete  |
-| contains "Delete"           | Orphan           | Delete  |
-| doesn't contain "Delete"    | Delete (default) | Orphan  |
-| doesn't contain "Delete"    | Orphan           | Orphan  |
-{{< /table >}}
-
-#### Options
-* `*` - ** Default ** - Crossplane can observe, create, change, delete the
-  external resource and update the managed resource spec with late init
-  parameters.
-* `Observe` - managed resource `status.atProvider` will be updated with the
-  external resource state.
-* `Create` - external resource will be created using the managed resource
-  `spec.initProvider` and `spec.forProvider`.
-* `Update` - external resource will be updated using the managed resource
-  `spec.forProvider`.
-* `Delete` - the external resource will be deleted when the managed resource is
-  deleted.
-* `LateInitialize` - Unprovided spec fields are late initialized to
-  `spec.forProvider` with the default values from the cloud provider. This
-  enables Crossplane to take full control of the external resource, even those 
-  values not provided by the user upfront. Read more about [Late Initialization]({{<ref "./managed-resources#late-initialization" >}})
-
-
-<!-- vale off -->
 ### initProvider
 <!-- vale on -->
 
@@ -318,14 +243,37 @@ in a
 [ControllerConfig]({{<ref "./providers#controller-configuration" >}}).
 {{< /hint >}}
 
-The `spec.initProvider` is a subset of the `spec.forProvider` fields that
-Crossplane merges with `forProvider` to create the external resource, but
-ignores when updating it. This allows users to create a resource with all the
-required fields which may then be controlled externally. For example, a user may
-want to create a `NodeGroup` with the required `desiredSize` field, but then
-let an autoscaler control the field. If the `desiredSize` field is included
-in the`forProvider` field, Crossplane will attempt to update the field, which
-will conflict with the autoscaler.
+The
+{{<hover label="initProvider" line="7">}}initProvider{{</hover>}} defines
+settings Crossplane applies only when creating a new managed resource.  
+Crossplane ignores settings defined in the
+{{<hover label="initProvider" line="7">}}initProvider{{</hover>}}
+field that change after creation.
+
+{{<hint "note" >}}
+Settings in `forProvider` are always enforced by Crossplane. Crossplane reverts
+any changes to a `forProvider` field in the external resource.
+
+Settings in `initProvider` aren't enforced by Crossplane. Crossplane ignores any
+changes to a `initProvider` field in the external resource.
+{{</hint >}}
+
+Using `initProvider` is useful for setting initial values that a Provider may
+automatically change, like an auto scaling group.
+
+For example, creating a
+{{<hover label="initProvider" line="2">}}NodeGroup{{</hover>}}
+with an initial
+{{<hover label="initProvider" line="9">}}desiredSize{{</hover>}}.  
+Crossplane doesn't change the
+{{<hover label="initProvider" line="9">}}desiredSize{{</hover>}}
+setting back when an autoscaler scales the Node Group external resource.
+
+{{< hint "tip" >}}
+Crossplane recommends configuring
+{{<hover label="initProvider" line="6">}}managementPolicies{{</hover>}} without
+`LateInitialize` to avoid conflicts with `initProvider` settings.
+{{< /hint >}}
 
 ```yaml {label="initProvider",copy-lines="none"}
 apiVersion: eks.aws.upbound.io/v1beta1
@@ -344,9 +292,77 @@ spec:
         minSize: 1
 ```
 
-It's suggested to use a combination of `managementPolicies` without the
-`LateInitialize` action when using `initProvider` to avoid late initialization
-of fields in `forProvider`. Read more about [Late Initialization]({{<ref "./managed-resources#late-initialization" >}})
+<!-- vale off -->
+### managementPolicies
+<!-- vale on --> 
+
+{{<hint "important" >}}
+The managed resource `managementPolicies` option is an alpha feature.
+
+Enable `managementPolicies` in a provider with `--enable-management-policies`
+in a
+[ControllerConfig]({{<ref "./providers#controller-configuration" >}}).
+{{< /hint >}}
+
+Crossplane
+{{<hover label="managementPol1" line="4">}}managementPolicies{{</hover>}}
+determine which actions Crossplane can take on a
+managed resource and its corresponding external resource.  
+Apply one or more
+{{<hover label="managementPol1" line="4">}}managementPolicies{{</hover>}}
+to a managed resource to determine what permissions
+Crossplane has over the resource.
+
+For example, give Crossplane permission to create and delete an external resource,
+but not make any changes set the policies to
+{{<hover label="managementPol1" line="4">}}["Create", "Delete"]{{</hover>}}.
+
+```yaml {label="managementPol1"}
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+spec:
+  managementPolicies: ["Create", "Delete"]
+  forProvider:
+    # Removed for brevity
+```
+
+The default policy grants Crossplane full control over the resources.  
+Defining the `managementPolicies` field with an empty array [pauses](#paused)
+the resource.
+
+{{<hint "important" >}}
+The Provider determines support for management policies.  
+Refer to the Provider's documentation to see if the Provider supports
+management policies.
+{{< /hint >}}
+
+Crossplane supports the following policies:
+{{<table "table table-sm table-hover">}}
+| Policy | Description |
+| --- | --- |
+| `*` | _Default policy_. Crossplane has full control over a resource. |
+| `Create` | If the external resource doesn't exist, Crossplane creates it based on the managed resource settings. |
+| `Delete` | Crossplane can delete the external resource when deleting the managed resource. |
+| `LateInitialize` | Crossplane imports some external resource settings not defined in the `spec.forProvider` of the managed resource. |
+| `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for [observe only resources]({{<ref "/knowledge-base/guides/import-existing-resources#import-resources-automatically">}}). |
+| `Update` | Crossplane changes the external resource when changing the managed resource. |
+{{</table >}}
+
+The following is a list of common policy combinations:
+{{<table "table table-sm table-hover table-striped-columns" >}}
+| Create | Delete | LateInitialize | Observe | Update | Description |
+| :---:  | :---:  | :---:          | :---:   | :---:  | ---         |
+| ✔️      | ✔️      | ✔️              | ✔️       | ✔️      | _Default policy_. Crossplane has full control over the resource.                                                                                                     |
+| ✔️      | ✔️      | ✔️              | ✔️       |        | After creation any changes made to the managed resource aren't passed to the external resource. Useful for immutable external resources. |
+| ✔️      | ✔️      |                | ✔️       | ✔️      | Prevent Crossplane from managing any settings not defined in the managed resource. Useful for immutable fields in an external resource. |
+| ✔️      | ✔️      |                | ✔️       |        | Crossplane doesn't import any settings from the external resource and doesn't push changes to the managed resource. Crossplane recreates the external resource if it's deleted. |
+| ✔️      |        | ✔️              | ✔️       | ✔️      | Crossplane doesn't delete the external resource when deleting the managed resource. |
+| ✔️      |        | ✔️              | ✔️       |        | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't apply changes to the external resource after creation. |
+| ✔️      |        |                | ✔️       | ✔️      | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't import any settings from the external resource. |
+| ✔️      |        |                | ✔️       |        | Crossplane creates the external resource but doesn't apply any changes to the external resource or managed resource. Crossplane can't delete the resource. |
+|        |        |                | ✔️       |        | Crossplane only observes a resource. Used for [observe only resources]({{<ref "/knowledge-base/guides/import-existing-resources#import-resources-automatically">}}). |
+|        |        |                |         |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
+{{< /table >}}
 
 <!-- vale off -->
 ### providerConfigRef
