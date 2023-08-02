@@ -181,7 +181,7 @@ provided constraints.
 > Dependency resolution is a `beta` feature and depends on the `v1beta1`
 > [`Lock` API][lock-api].
 
-For an example Configuration package, see [getting-started-with-gcp](https://github.com/crossplane/docs/tree/master/content/v1.10/snippets/package/gcp).
+For an example Configuration package, see [getting-started-with-gcp](https://github.com/crossplane/docs/tree/master/media/snippets/package/gcp).
 
 To build a Configuration package, navigate to the package root directory and
 execute the following command:
