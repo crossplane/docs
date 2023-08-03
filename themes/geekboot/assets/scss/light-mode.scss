@@ -41,14 +41,14 @@
     --toc-mobile-menu-background: #{$fog-0};
 
     //hint boxes
-    --hint-important:       #{$tangerine-300}; //"exclamation",
-    --hint-important-background: #{$tangerine-75};
+    --hint-important:       #{$tangerine-400}; //"exclamation",
+    --hint-important-background: #{$tangerine-100};
 
-    --hint-warning:         #{$salmon-300}; //"fire",
-    --hint-warning-background: #{$salmon-75};
+    --hint-warning:         #{$salmon-400}; //"fire",
+    --hint-warning-background: #{$salmon-100};
 
-    --hint-tip:             #{$grass-300}; //"check",
-    --hint-tip-background: #{$grass-75};
+    --hint-tip:             #{$grass-400}; //"check",
+    --hint-tip-background: #{$grass-100};
 
     --hint-note:            #{$fog-200}; //"info",
     --hint-note-background:  #{$fog-50};

@@ -6,7 +6,7 @@
     --anchor-link-color: #{$fog-400};
 
     // Single code lines inside text. Code blocks are in _code_theme_dark.scss
-    --code-background: #{$fog-0}20;
+    --code-background: #{$fog-0}30;
     --code-color: #{$fog-0};
     --code-line-number-color: #{$aqua-400};
 
@@ -16,7 +16,7 @@
     --inactive-tab-hover-color: #{$fog-0};
 
     // Sidebar nav
-    --nav-highlight-color: #{$aqua-950};
+    --nav-highlight-color: #{$aqua-900};
     --btn-close-color:     #{$fog-0};
 
     //Version dropdown
@@ -33,17 +33,17 @@
     --toc-mobile-menu-background: #{$fog-1000};
 
     //hint boxes
-    --hint-important:       #{$tangerine-700}; //"exclamation",
-    --hint-important-background: #{$tangerine-900};
+    --hint-important:       #{$tangerine-600}; //"exclamation",
+    --hint-important-background: #{$tangerine-850};
 
-    --hint-warning:         #{$salmon-700}; //"fire",
-    --hint-warning-background: #{$salmon-900};
+    --hint-warning:         #{$salmon-600}; //"fire",
+    --hint-warning-background: #{$salmon-850};
 
-    --hint-tip:             #{$grass-700}; //"check",
-    --hint-tip-background: #{$grass-900};
+    --hint-tip:             #{$grass-600}; //"check",
+    --hint-tip-background: #{$grass-850};
 
-    --hint-note:            #{$fog-700}; //"info",
-    --hint-note-background:  #{$fog-900};
+    --hint-note:            #{$fog-600}; //"info",
+    --hint-note-background:  #{$fog-850};
 
     //Search Related
     --search-box-background: var(--body-background);
