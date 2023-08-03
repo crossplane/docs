@@ -6,8 +6,7 @@
 
   // Style for highlighted lines when hovering over copy button
   .copyHover {
-    background-color: #e9ecef;
-    color: black;
+    background-color: #{$fog-800};
   }
 
   // Code box div
@@ -28,6 +27,11 @@
       color:#ddd;
     }
 
+    // Color edit icon
+    .text-white {
+      fill: #{$fog-300};
+    }
+
     :target{
       margin-top: 0;
       padding-top: 0;
@@ -42,10 +46,10 @@
 
       .btn-clipboard{
         border: 0;
-        color: $gray-500;
+        color: #{$fog-300};
         background-color: inherit;
         &:hover {
-          color: #fff;
+          color: #{$fog-0};
         }
       }
     }

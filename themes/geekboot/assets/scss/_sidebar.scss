@@ -42,12 +42,12 @@
     }
 
     &.active-parent {
-      border-left-color: $brightSun !important;
+      border-left-color: #{$aqua-400} !important;
 
     }
     &:hover, &.active {
       color: var(--body-color);
-      border-left-color: $brightSun;
+      border-left-color: #{$aqua-400};
       background-color: var(--nav-highlight-color) !important;
     }
   }
