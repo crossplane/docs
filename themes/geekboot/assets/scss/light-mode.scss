@@ -98,4 +98,28 @@
         --bs-table-accent-bg: #{$fog-50};
         color: #{$fog-1000};
     }
+
+    // Tab Colors
+    .nav-tabs{
+        
+        &:not(.nav-link){
+            border-bottom: 2px solid #{$fog-200};
+        }
+
+        // Active tab style
+        .active, .active:hover {
+            color: #{$aqua-600} !important;
+            border-bottom: 2px solid #{$aqua-600} !important;
+        }
+
+        // Dim the text of non-active tabs
+        .nav-link {
+            color: #{$fog-600};
+
+            // Make the text dark on hover
+            &:hover{
+                color: #{$fog-1000};
+            }
+        }
+    }
 }

@@ -99,4 +99,27 @@
     .bd-footer {
         border-top: 1px solid #{$fog-850};
     }
+
+    // Tab colors
+    .nav-tabs{
+        &:not(.nav-link){
+          border-bottom: 2px solid #{$fog-800};
+        }
+    
+        // Active tab style
+        .active, .active:hover {
+          color: #{$aqua-400} !important;
+          border-bottom: 2px solid #{$aqua-400} !important;
+        }
+    
+        // Dim the text of non-active tabs
+        .nav-link {
+            color: #{$fog-400};
+    
+            // Make the text light on hover
+            &:hover{
+                color: #{$fog-0};
+            }
+        }
+    }
 }
