@@ -3,35 +3,39 @@
     margin-top: 2rem;
 }
 
-.nav-tabs {
+// Override Bootstrap Tab styles
+.nav-tabs{
 
-    padding-left: 2rem;
+    border-bottom: none;
+    font-weight: bold;
 
-    li {
-        margin-bottom: 0 !important;
+    @include media-breakpoint-down(xl) {
+      li {
+        display: block !important;
+        margin: 0px;
+      }
+
     }
 
-   .nav-link {
-        color: var(--body-font-color);
+    &:not(.nav-link){
+      margin-bottom: 12px !important;
     }
 
-    .nav-link.active {
-        background-color: var(--nav-tab-background-color) !important;
-        color: var(--active-tab-color) !important;
-        border-bottom-color: var(--body-background) !important;
-        text-align: left;
+    // Remove tab outline and background.
+    .nav-link {
+        --bs-nav-tabs-link-active-bg: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+
+        @include media-breakpoint-down(xl) {
+            padding-left: 12px !important;
+        }
+
+        // Override bootstrap hover behaviors.
         &:hover{
-            color: var(--active-tab-color) !important;
+            border-bottom-width: 0;
         }
     }
-
-    .nav-link:not(:active){
-        isolation: isolate;
-        // maintain the default border color
-        border-color: var(--bs-nav-tabs-link-hover-border-color);
-        &:hover{
-            color: var(--inactive-tab-hover-color);
-        }
-    }
-
+    
 }
