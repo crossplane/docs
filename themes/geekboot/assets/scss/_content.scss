@@ -91,6 +91,9 @@ h3, h4, h5, h6 {
   margin-bottom: 1.25rem !important;
   font-size: 1.25rem !important;
 }
+.d-none.d-md-block.h6.my-2 {
+  margin-top: 0px !important;
+}
 
 // These accordion stylings do not apply correctly when in _accordion
 .accordion-button {
