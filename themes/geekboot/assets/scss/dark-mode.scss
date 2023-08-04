@@ -82,13 +82,13 @@
 
     // Tables
     .table td {
-        border-top: 1px solid #{$fog-400};
+        border-top: 1px solid #{$fog-700};
     }
     .table {
-        border: 1px solid #{$fog-400};
+        border: 1px solid #{$fog-700};
     }
     .table-striped > tbody > tr:nth-of-type(odd) > * {
-        --bs-table-accent-bg: #{$fog-900};
+        --bs-table-accent-bg: #{$fog-950};
         color: #{$fog-0};
     }
 

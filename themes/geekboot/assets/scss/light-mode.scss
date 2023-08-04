@@ -89,13 +89,13 @@
 
     // Tables
     .table td {
-        border-top: 1px solid #{$fog-600};
+        border-top: 1px solid #{$fog-200};
     }
     .table {
-        border: 1px solid #{$fog-600};
+        border: 1px solid #{$fog-200};
     }
     .table-striped > tbody > tr:nth-of-type(odd) > * {
-        --bs-table-accent-bg: #{$fog-75};
+        --bs-table-accent-bg: #{$fog-50};
         color: #{$fog-1000};
     }
 }
