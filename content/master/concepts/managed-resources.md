@@ -61,11 +61,10 @@ Provider deletes the managed resource but doesn't delete the external resource.
 #### Interaction with management policies
 
 If a resource configures a Crossplane
-[management policy](#managementpolicies) and the related management policy alpha
-feature is enabled, the management policy takes precedence over the
-`deletionPolicy` setting, unless it's the default management policy.
+[management policy](#managementpolicies), the management policy takes precedence 
+over the `deletionPolicy` setting, unless it's the default management policy.
 
-{{< table >}}
+{{< table "table table-sm table-hover">}}
 | managementPolicies          | deletionPolicy   | result  |
 |-----------------------------|------------------|---------|
 | "*" (default)               | Delete (default) | Delete  |
@@ -114,7 +113,7 @@ inside a Provider's web console, Crossplane reverts that change back to what's
 configured in the `forProvider` setting. 
 {{< /hint >}}
 
-#### Late Initialization
+#### Late initialization
 
 After the external resource creation, providers add some provider defaulted
 settings not manually set to the `forProvider` field of the created managed
