@@ -122,4 +122,11 @@
             }
         }
     }
+
+    //Striped table font color
+    .table-striped-columns > :not(caption) > tr > :nth-child(even){
+        color: inherit !important;
+    }
 }
+
+
