@@ -60,10 +60,14 @@ Provider deletes the managed resource but doesn't delete the external resource.
 
 #### Interaction with management policies
 
-If a resource configures a Crossplane
-[management policy](#managementpolicies) and the related management policy alpha
-feature is enabled, the management policy takes precedence over the
-`deletionPolicy` setting, unless it's the default management policy.
+The [management policy](#managementpolicies) takes precedence over the
+`deletionPolicy` when:
+<!-- vale write-good.Passive = NO -->
+- The related management policy alpha feature is enabled.
+<!-- vale write-good.Passive = YES -->
+- The resource configures a management policy other than the default value.
+
+See the table below for more details.
 
 {{< table "table table-sm table-hover">}}
 | managementPolicies          | deletionPolicy   | result  |
@@ -225,16 +229,22 @@ resource object is deleted from Kubernetes and the `deletionPolicy` is
 
 #### Late initialization
 
-For some of the optional fields, users rely on the default that the cloud
-provider chooses for them. Since Crossplane treats the managed resource as the
-source of the truth, values of those fields need to exist in `spec` of the
-managed resource. In each reconciliation, Crossplane will fill the value of
-a field that's left empty by the user but is assigned a value by the provider.
-For example, there could be two fields like `region` and `availabilityZone` and
-you might want to give only `region` and leave the availability zone to be
-chosen by the cloud provider. In that case, if the provider assigns an
-availability zone, Crossplane gets that value and fills `availabilityZone`. Note
-that if the field is already filled, the controller won't override its value.
+Crossplane treats the managed resource as the source of truth by default;
+it expects to have all values under `spec.forProvider` including the
+optional ones. If not provided, Crossplane populates the empty fields with
+the values assigned by the provider. For example, consider fields such as
+`region` and `availabilityZone`. You might specify only the region and let the
+cloud provider choose the availability zone. In this case, if the provider
+assigns an availability zone, Crossplane uses that value to populate the
+`spec.forProvider.availabilityZone` field.
+
+{{<hint "note" >}}
+<!-- vale write-good.Passive = NO -->
+With [managementPolicies]({{<ref "./managed-resources#managementpolicies" >}}),
+this behavior can be turned off by not including the `LateInitialize` policy in
+the `managementPolicies` list.
+<!-- vale write-good.Passive = YES -->
+{{< /hint >}}
 
 <!-- vale off -->
 ### initProvider
@@ -349,7 +359,7 @@ Crossplane supports the following policies:
 | `*` | _Default policy_. Crossplane has full control over a resource. |
 | `Create` | If the external resource doesn't exist, Crossplane creates it based on the managed resource settings. |
 | `Delete` | Crossplane can delete the external resource when deleting the managed resource. |
-| `LateInitialize` | Crossplane imports some external resource settings not defined in the `spec.forProvider` of the managed resource. |
+| `LateInitialize` | Crossplane initializes some external resource settings not defined in the `spec.forProvider` of the managed resource. See [the late initialization]({{<ref "./managed-resources#late-initialization" >}}) section for more details. |
 | `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for [observe only resources]({{<ref "/knowledge-base/guides/import-existing-resources#import-resources-automatically">}}). |
 | `Update` | Crossplane changes the external resource when changing the managed resource. |
 {{</table >}}
