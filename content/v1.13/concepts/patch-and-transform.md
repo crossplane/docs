@@ -303,12 +303,12 @@ Summary of Crossplane patches
 | ---  | --- | --- | 
 | [FromCompositeFieldPath](#fromcompositefieldpath) | A field in the composite resource. | A field in the patched managed resource. | 
 | [ToCompositeFieldPath](#tocompositefieldpath) | A field in the patched managed resource. | A field in the composite resource. |  
-| [CombineFromComposite](#tocompositefieldpath) | Multiple fields in the composite resource. | A field in the patched managed resource. | 
-| [CombineToComposite](#tocompositefieldpath) | Multiple fields in the patched managed resource. | A field in the composite resource. | 
-| [FromEnvironmentFieldPath](#tocompositefieldpath) | Data in the in-memory EnvironmentConfig Environment | A field in the patched managed resource. | 
-| [ToEnvironmentFieldPath](#tocompositefieldpath) | A field in the patched managed resource. | The in-memory EnvironmentConfig Environment. | 
-| [CombineFromEnvironment](#tocompositefieldpath) | Multiple fields in the in-memory EnvironmentConfig Environment. | A field in the patched managed resource. | 
-| [CombineToEnvironment](#tocompositefieldpath) | Multiple fields in the patched managed resource. | A field in the in-memory EnvironmentConfig Environment. | 
+| [CombineFromComposite](#combinefromcomposite) | Multiple fields in the composite resource. | A field in the patched managed resource. | 
+| [CombineToComposite](#combinetocomposite) | Multiple fields in the patched managed resource. | A field in the composite resource. | 
+| [FromEnvironmentFieldPath](#fromenvironmentfieldpath) | Data in the in-memory EnvironmentConfig Environment | A field in the patched managed resource. | 
+| [ToEnvironmentFieldPath](#toenvironmentfieldpath) | A field in the patched managed resource. | The in-memory EnvironmentConfig Environment. | 
+| [CombineFromEnvironment](#combinefromenvironment) | Multiple fields in the in-memory EnvironmentConfig Environment. | A field in the patched managed resource. | 
+| [CombineToEnvironment](#combinetoenvironment) | Multiple fields in the patched managed resource. | A field in the in-memory EnvironmentConfig Environment. | 
 {{< /table >}}
 
 {{<hint "note" >}}
