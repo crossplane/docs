@@ -56,7 +56,7 @@ Provider deletes the managed resource but doesn't delete the external resource.
 
 #### Options
 * `deletionPolicy: Delete` - **Default** - Delete the external resource when deleting the managed resource.
-* `deletionPolicy: Orphan` - Leave the external resource when deleting the managed resource. 
+* `deletionPolicy: Orphan` - Leave the external resource when deleting the managed resource.
 
 #### Interaction with management policies
 
@@ -65,7 +65,7 @@ If a resource configures a Crossplane
 feature is enabled, the management policy takes precedence over the
 `deletionPolicy` setting, unless it's the default management policy.
 
-{{< table >}}
+{{< table "table table-sm table-hover">}}
 | managementPolicies          | deletionPolicy   | result  |
 |-----------------------------|------------------|---------|
 | "*" (default)               | Delete (default) | Delete  |
@@ -113,13 +113,6 @@ made to an external resource outside of Crossplane. If a user makes a change
 inside a Provider's web console, Crossplane reverts that change back to what's
 configured in the `forProvider` setting. 
 {{< /hint >}}
-
-#### Late Initialization
-
-After the external resource creation, providers add some provider defaulted
-settings not manually set to the `forProvider` field of the created managed
-resource object into their respected `forProvider` fields.
-Use `kubectl describe <managed_resource>` to view the applied values.
 
 #### Referencing other resources
 
@@ -229,6 +222,19 @@ resource object is deleted from Kubernetes and the `deletionPolicy` is
 `delete`.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
+
+#### Late initialization
+
+For some of the optional fields, users rely on the default that the cloud
+provider chooses for them. Since Crossplane treats the managed resource as the
+source of the truth, values of those fields need to exist in `spec` of the
+managed resource. In each reconciliation, Crossplane will fill the value of
+a field that's left empty by the user but is assigned a value by the provider.
+For example, there could be two fields like `region` and `availabilityZone` and
+you might want to give only `region` and leave the availability zone to be
+chosen by the cloud provider. In that case, if the provider assigns an
+availability zone, Crossplane gets that value and fills `availabilityZone`. Note
+that if the field is already filled, the controller won't override its value.
 
 <!-- vale off -->
 ### initProvider
@@ -557,7 +563,6 @@ Read the
 [Vault as an External Secrets Store]({{<ref "knowledge-base/integrations/vault-as-secret-store">}})
 guide for details on using StoreConfig objects.
 {{< /hint >}}
-
 
 ## Annotations
 

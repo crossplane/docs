@@ -61,8 +61,9 @@ Provider deletes the managed resource but doesn't delete the external resource.
 #### Interaction with management policies
 
 If a resource configures a Crossplane
-[management policy](#managementpolicies), the management policy takes precedence 
-over the `deletionPolicy` setting, unless it's the default management policy.
+[management policy](#managementpolicies) and the related management policy alpha
+feature is enabled, the management policy takes precedence over the
+`deletionPolicy` setting, unless it's the default management policy.
 
 {{< table "table table-sm table-hover">}}
 | managementPolicies          | deletionPolicy   | result  |
@@ -113,13 +114,6 @@ inside a Provider's web console, Crossplane reverts that change back to what's
 configured in the `forProvider` setting. 
 {{< /hint >}}
 
-#### Late initialization
-
-After the external resource creation, providers add some provider defaulted
-settings not manually set to the `forProvider` field of the created managed
-resource object into their respected `forProvider` fields.
-Use `kubectl describe <managed_resource>` to view the applied values. 
- 
 #### Referencing other resources
 
 Some fields in a managed resource may depend on values from other managed
@@ -229,7 +223,7 @@ resource object is deleted from Kubernetes and the `deletionPolicy` is
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
-#### Late Initialization
+#### Late initialization
 
 For some of the optional fields, users rely on the default that the cloud
 provider chooses for them. Since Crossplane treats the managed resource as the
@@ -309,10 +303,10 @@ spec:
 <!-- vale on --> 
 
 {{<hint "important" >}}
-The managed resource `managementPolicies` option is an alpha feature. 
+The managed resource `managementPolicies` option is an alpha feature.
 
-Enable `managementPolicies` in a provider with `--enable-management-policies` 
-in a 
+Enable `managementPolicies` in a provider with `--enable-management-policies`
+in a
 [ControllerConfig]({{<ref "./providers#controller-configuration" >}}).
 {{< /hint >}}
 
