@@ -8,9 +8,8 @@ you can import them as managed resources and let Crossplane manage them.
 A managed resource's [`managementPolicy`]({{<ref "/v1.12/concepts/managed-resources#managementpolicy">}}) 
 field enables importing external resources into Crossplane.
 
-Crossplane can import resources either [manually]({{<ref
-"#import-resources-manually">}}) or [automatically]({{<ref
-"#import-resources-automatically">}}).
+Crossplane can import resources either [manually]({{<ref "#import-resources-manually">}})
+or [automatically]({{<ref "#import-resources-automatically">}}).
 
 ## Import resources manually
 
