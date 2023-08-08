@@ -86,10 +86,14 @@
     }
     .table {
         border: 1px solid #{$fog-700};
+        --bs-table-hover-bg: #{$fog-1000};
     }
-    .table-striped > tbody > tr:nth-of-type(odd) > * {
+    .table-striped > tbody > tr:nth-of-type(odd) > *, .table-striped-columns > :not(caption) > tr > :nth-child(even) {
         --bs-table-accent-bg: #{$fog-950};
         color: #{$fog-0};
+    }
+    .table-striped > tbody > tr:nth-of-type(even) > *, .table-striped-columns > :not(caption) > tr > :nth-child(odd) {
+        --bs-table-hover-bg: #{$fog-1000} !important;
     }
 
     // Add border to top nav and footer
