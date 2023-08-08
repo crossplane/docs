@@ -1,5 +1,4 @@
 ActivePackageRevision
-Adler32
 clampMax
 clampMin
 CombineFromComposite
