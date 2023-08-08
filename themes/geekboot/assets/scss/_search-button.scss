@@ -28,7 +28,7 @@
         &:active,
         &:focus,
         &:hover {
-            border-color: $brightSun;
+            border-color: #{$sun-500};
         }
     }
 
@@ -41,7 +41,7 @@
         &:active,
         &:focus,
         &:hover {
-            border-color: $brightSun;
+            border-color: #{$sun-500};
             color: var(--bs-btn-hover-color);
             background-color: var(--bs-btn-hover-bg);
         }

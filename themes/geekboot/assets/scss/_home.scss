@@ -30,8 +30,8 @@
 /* purgecss start ignore */
 #tooltip {
     display: inline-block;
-    background: $brightSun;
-    color: $slate;
+    background: #{$sun-500};
+    color: #{$fog-700};
     font-weight: bold;
     padding: 5px 10px;
     font-size: 16px;
