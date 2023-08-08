@@ -1507,7 +1507,8 @@ converts the input based on one of the following conversion types:
 * `ToJson` - Convert the input string to valid JSON.
 * `ToSha1` - Create a SHA-1 hash of the input string.
 * `ToSha256` - Create a SHA-256 hash of the input string.
-* `ToSha512` - Create a SHA-512 hash of the input string. 
+* `ToSha512` - Create a SHA-512 hash of the input string.
+* `ToAdler32` - Create an Adler32 hash of the input string.
 
 ```yaml {label="stringConvert"}
 patches:
