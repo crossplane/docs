@@ -50,3 +50,16 @@ XRD
 XRD's
 XRDs
 XRs
+ActivePackageRevision
+crossplane-edit
+HealthyPackageRevision
+crossplane-view
+crossplane-browse
+InactivePackageRevision
+crossplane.yaml
+definition.yaml
+composition.yaml
+managementPolicies
+deletionPolicy
+initProvider
+LateInitialize

@@ -1,51 +1,132 @@
 @mixin dark-mode {
     // body and content
-    --body-background: #1F2937;
-    --body-font-color: #FAFAFA;
-    --content-link-color: #8bcbe6;
-    --anchor-link-color: #{darken(#FAFAFA, 25)};
+    --body-background: #{$fog-1000};
+    --body-font-color: #{$fog-0};
+    --content-link-color: #{$aqua-400};
+    --anchor-link-color: #{$fog-400};
 
     // Single code lines inside text. Code blocks are in _code_theme_dark.scss
-    --code-background: #3D4856;
-    --code-color: #f8f9fa;
-    --code-line-number-color: #8bcbe6;
+    --code-background: #{$fog-0}30;
+    --code-color: #{$fog-0};
+    --code-line-number-color: #{$aqua-400};
 
     //Tabs
     --nav-tab-background-color: var(--body-background);
-    --active-tab-color: #ffcd3c;
-    --inactive-tab-hover-color: #37ccb7;
+    --active-tab-color: #{$aqua-400};
+    --inactive-tab-hover-color: #{$fog-0};
 
     // Sidebar nav
-    --nav-highlight-color: #2e3d52;
-    --btn-close-color:     invert(1) grayscale(100%) brightness(200%);
+    --nav-highlight-color: #{$aqua-900};
+    --btn-close-color:     #{$fog-0};
 
     //Version dropdown
-    --dropdown-highlight: var(--nav-highlight-color);
+    --dropdown-highlight: #{$fog-900};
     --dropdown-background: var(--body-background);
-    --latest-pill-background: #f3807b;
-    --latest-pill-color: #141414;
+    --latest-pill-background: #{$fog-800};
+    --latest-pill-color: #{$fog-200};
     --dropdown-color: var(--body-font-color);
-    --dropdown-border-color: #{lighten(#FAFAFA, 50)};
+    --dropdown-border-color: #{$fog-900};
 
     //Right-side table of contents
-    --toc-font-color: #{darken(#FAFAFA, 15)};
-    --toc-mobile-menu-outline: #ffcd3c;
-    --toc-mobile-menu-background: #2e3d52;
+    --toc-font-color: #{$fog-400};
+    --toc-mobile-menu-outline: #{$fog-800};
+    --toc-mobile-menu-background: #{$fog-1000};
 
     //hint boxes
-    --hint-important:       rgba(255, 145, 0, 1); //"exclamation",
-    --hint-important-background: rgba(255, 145, 0, .1);
+    --hint-important:       #{$tangerine-600}; //"exclamation",
+    --hint-important-background: #{$tangerine-850};
 
-    --hint-warning:         rgba(255, 82, 82, 1); //"fire",
-    --hint-warning-background: rgba(255, 82, 82, .1);
+    --hint-warning:         #{$salmon-600}; //"fire",
+    --hint-warning-background: #{$salmon-850};
 
-    --hint-tip:             rgba(0,200,82,1);; //"check",
-    --hint-tip-background: rgba(0,200,82,.1);
+    --hint-tip:             #{$grass-600}; //"check",
+    --hint-tip-background: #{$grass-850};
 
-    --hint-note:            rgba(0,176,255,1); //"info",
-    --hint-note-background:  rgba(0,176,255,.1);
+    --hint-note:            #{$fog-600}; //"info",
+    --hint-note-background:  #{$fog-850};
 
     //Search Related
-    --search-box-background: #3D4856;
-    --result-path: #e3f5ff;
+    --search-box-background: var(--body-background);
+    --result-path: var(--body-background);
+
+    // Override Bootstrap accordion colors in the body
+    .accordion {
+        --bs-accordion-border-color: #{$fog-800};
+        --bs-accordion-active-bg: #{$fog-1000};
+        --bs-accordion-btn-focus-border-color: #{$fog-600};
+        --bs-accordion-button-focus-border-color: #{$fog-600};
+        --bs-accordion-btn-focus-box-shadow: 0 0 0 2px #{$fog-600};
+    }
+    // Improve spacing and top-border on open Bootstrap accordions
+    .accordion-body {
+        border-top: 2px solid #{$fog-800};
+        background-color: #{$fog-1000} !important;
+    }
+    // Add hover border over clickable area
+    .accordion-button:hover, .accordion-button:not(.collapsed):hover {
+        outline: 2px solid #{$fog-600};
+    }
+    // Color text and background
+    .accordion-button {
+        background-color: #{$fog-1000};
+        color: #{$fog-0} !important;
+    }
+    .accordion-item {
+        background-color: #{$fog-1000};
+        color: #{$fog-0};
+    }
+    // Load chevron svg as manually-inputed $fog-400 hex code
+    .accordion-button::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%239DA0A0'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+    }
+
+    // Tables
+    .table td {
+        border-top: 1px solid #{$fog-700};
+    }
+    .table {
+        border: 1px solid #{$fog-700};
+    }
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        --bs-table-accent-bg: #{$fog-950};
+        color: #{$fog-0};
+    }
+
+    // Add border to top nav and footer
+    .docs-navbar {
+        border-bottom: 1px solid #{$fog-850};
+    }
+    .bd-footer {
+        border-top: 1px solid #{$fog-850};
+    }
+
+    // Tab colors
+    .nav-tabs{
+        &:not(.nav-link){
+          border-bottom: 2px solid #{$fog-800};
+        }
+    
+        // Active tab style
+        .active, .active:hover {
+          color: #{$aqua-400} !important;
+          border-bottom: 2px solid #{$aqua-400} !important;
+        }
+    
+        // Dim the text of non-active tabs
+        .nav-link {
+            color: #{$fog-400};
+    
+            // Make the text light on hover
+            &:hover{
+                color: #{$fog-0};
+            }
+        }
+    }
+
+    //Striped table font color
+    .table-striped-columns > :not(caption) > tr > :nth-child(even){
+        color: inherit !important;
+    }
 }
+
+

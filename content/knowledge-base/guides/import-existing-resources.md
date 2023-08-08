@@ -8,9 +8,8 @@ you can import them as managed resources and let Crossplane manage them.
 A managed resource's [`managementPolicy`]({{<ref "/v1.12/concepts/managed-resources#managementpolicy">}}) 
 field enables importing external resources into Crossplane.
 
-Crossplane can import resources either [manually]({{<ref
-"#import-resources-manually">}}) or [automatically]({{<ref
-"#import-resources-automatically">}}).
+Crossplane can import resources either [manually]({{<ref "#import-resources-manually">}})
+or [automatically]({{<ref "#import-resources-automatically">}}).
 
 ## Import resources manually
 
@@ -85,39 +84,38 @@ managed resource `spec` changes the external resource.
 
 ## Import resources automatically 
 
-Automatically import external resources with the
-`ObserveOnly` [`managementPolicy`]({{<ref "/v1.12/concepts/managed-resources#managementpolicy">}}).
+Automatically import external resources with an `Observe` [management policy]({{<ref "/v1.13/concepts/managed-resources#managementpolicies">}}).
 
-Crossplane imports `ObserveOnly` resources but never changes or deletes the
+Crossplane imports observe only resources but never changes or deletes the
 resources.
 
 {{<hint "important" >}}
-The managed resource `managementPolicy` option is an alpha feature. 
+The managed resource `managementPolicies` option is an alpha feature. 
 
-Enable the `managementPolicy` in a provider with `--enable-management-policies` 
+Enable `managementPolicies` in a provider with `--enable-management-policies` 
 in a 
 [ControllerConfig]({{<ref "/v1.12/concepts/providers#controller-configuration" >}}).
 {{< /hint >}}
 
 <!-- vale off -->
-### Apply the ObserveOnly managementPolicy
+### Apply the Observe management policy
 <!-- vale on -->
 
 Create a new managed resource matching the 
 {{<hover label="oo-policy" line="1">}}apiVersion{{</hover>}} and 
 {{<hover label="oo-policy" line="2">}}kind{{</hover>}} of the resource
 to import and add
-{{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} to the 
+{{<hover label="oo-policy" line="4">}}managementPolicies: ["Observe"]{{</hover>}} to the 
 {{<hover label="oo-policy" line="3">}}spec{{</hover>}}
 
 For example, to import a GCP SQL DatabaseInstance, create a new resource with
-the {{<hover label="oo-policy" line="4">}}managementPolicy: ObserveOnly{{</hover>}} 
+the {{<hover label="oo-policy" line="4">}}managementPolicies: ["Observe"]{{</hover>}} 
 set.
 ```yaml {label="oo-policy",copy-lines="none"}
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 spec:
-  managementPolicy: ObserveOnly
+  managementPolicies: ["Observe"]
 ```
 
 ### Add the external-name annotation
@@ -138,7 +136,7 @@ metadata:
   annotations:
     crossplane.io/external-name: my-external-database
 spec:
-  managementPolicy: ObserveOnly
+  managementPolicies: ["Observe"]
 ```
 
 ### Create a Kubernetes object name
@@ -156,7 +154,7 @@ metadata:
   annotations:
     crossplane.io/external-name: my-external-database
 spec:
-  managementPolicy: ObserveOnly
+  managementPolicies: ["Observe"]
 ```
 
 ### Identify a specific external resource
@@ -175,7 +173,7 @@ metadata:
   annotations:
     crossplane.io/external-name: my-external-database
 spec:
-  managementPolicy: ObserveOnly
+  managementPolicies: ["Observe"]
   forProvider:
     region: "us-central1"
 ```
@@ -198,7 +196,7 @@ metadata:
     crossplane.io/external-name: existing-database-instance
   name: existing-database-instance
 spec:
-  managementPolicy: ObserveOnly
+  managementPolicies: ["Observe"]
   forProvider:
     region: us-central1
 status:
@@ -233,12 +231,12 @@ status:
 ## Control imported ObserveOnly resources
 <!-- vale on --> 
 
-Crossplane can take active control of `ObserveOnly` imported resources by 
-changing the `managementPolicy` after import.
+Crossplane can take active control of observe only imported resources by 
+changing the `managementPolicies` after import.
 
-Change the {{<hover label="fc" line="8">}}managementPolicy{{</hover>}} field
+Change the {{<hover label="fc" line="8">}}managementPolicies{{</hover>}} field
 of the managed resource to 
-{{<hover label="fc" line="8">}}FullControl{{</hover>}}.
+{{<hover label="fc" line="8">}}["*"]{{</hover>}}.
 
 Copy any required parameter values from
 {{<hover label="fc" line="16">}}status.atProvider{{</hover>}} and provide them
@@ -256,7 +254,7 @@ metadata:
     crossplane.io/external-name: existing-database-instance
   name: existing-database-instance
 spec:
-  managementPolicy: FullControl
+  managementPolicies: ["*"]
   forProvider:
     databaseVersion: POSTGRES_14
     region: us-central1
