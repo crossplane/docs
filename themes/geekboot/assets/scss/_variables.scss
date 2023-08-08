@@ -10,9 +10,7 @@ $font-size-base:              1.125rem !default;
 $body-font-size:              16px !default;
 
 
-// New color variables are below. The previous color variable found at the bottom of this file will be translated to these or removed once these new colors have been applied to enough of the docs content.
-
-// Grayscale palette. These are equivalent to varying opacities of the darkest shade over white (e.g. $fog-500 is equivalent to $fog-1000 at 50% opacity over white).
+// Grayscale palette. These are equivalent to varying opacities of the darkest shade over white (e.g. $fog-500 is the equivalent to $fog-1000 at 50% opacity over white).
 $fog-0:                     #FFFFFF !default;
 $fog-25:                    #F9F9F9 !default;
 $fog-50:                    #F3F3F3 !default;
@@ -33,7 +31,7 @@ $fog-1000:                  #0A1111 !default;
 
 // Colored palettes. Spectrums gradually transition into white with numbers below "-500" and transition into $fog-1000 on numbers after "-500".
 
-// $Aqua-500 is the teal color pulled from the Crossplane popsicle logo. This is the primary color to be used for actions.
+// $Aqua-500 is the teal color pulled from the Crossplane popsicle logo. Aqua is the primary color hue to be used for actions.
 $aqua-25:                    #F5FDFB !default;
 $aqua-50:                    #EAFAF8 !default;
 $aqua-75:                    #E1F8F5 !default;
@@ -118,20 +116,6 @@ $salmon-850:                   #503331 !default;
 $salmon-900:                   #392827 !default;
 $salmon-950:                   #221C1C !default;
 
-
-// Older color variables are below, should be avoided moving forward
-$aquaMarine:                #3de2cb !default;
-$aquarius:                  #37ccb7 !default;
-$fillBlackBlack:            #183b56 !default;
-$redPrimary:                #ff4f52 !default;
-$slate:                     #505a72 !default;
-$linkWater:                 #D3E7F7 !default;
-$nileBlue:                  #183d54 !default;
-$bayOfMany:                 #215373 !default;
-$turquoise:                 #35d0ba !default;
-$brightSun:                 #ffcd3c !default;
-$froly:                     #f3807b !default;
-$blueBayoux:                #5A7184 !default;
 
 $navbar-background-color:   #{$fog-1000} !default;
 $navbar-link-color:         #{$fog-0} !default;
