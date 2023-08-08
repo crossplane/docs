@@ -2,21 +2,20 @@
 title: GCP Quickstart Part 2
 weight: 120
 tocHidden: true
+aliases:
+  - /master/getting-started/provider-azure-part-3
 ---
 
 {{< hint "important" >}}
-This guide is part 2 of a series. Follow [**part 1**]({{<ref "provider-gcp" >}})
-to install Crossplane and connect your Kubernetes cluster to GCP.
+This guide is part 2 of a series.  
 
-[**Part 3**]({{<ref "provider-gcp-part-3">}})** covers patching 
-_composite resources_ and using Crossplane _packages_.
+[**Part 1**]({{<ref "provider-gcp" >}}) covers
+to installing Crossplane and connect your Kubernetes cluster to Azure.
+
 {{< /hint >}}
 
-This section creates a _[Composition](#create-a-composition)_, 
-_[Composite Resource Definition](#define-a-composite-resource)_ and a
-_[Claim](#create-a-claim)_
-to create a custom Kubernetes API to create GCP resources. This custom API is a
-_Composite Resource_ (XR) API.
+This guide walks you through building and accessing a custom API with 
+Crossplane.
 
 ## Prerequisites
 * Complete [quickstart part 1]({{<ref "provider-gcp" >}}) connecting Kubernetes
@@ -38,23 +37,24 @@ crossplane-stable/crossplane \
 --create-namespace
 ```
 
-2. When the Crossplane pods finish installing and are ready, apply the GCP Provider.
+2. When the Crossplane pods finish installing and are ready, apply the GCP 
+Provider.
    
 ```yaml {label="provider",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: upbound-provider-gcp
+  name: provider-gcp-storage
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp:v0.28.0
+  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.34.0
 EOF
 ```
 
 3. Create a file called `gcp-credentials.json` with your GCP service account 
 JSON file.
 
-{{< hint type="tip" >}}
+{{< hint "tip" >}}
 The 
 [GCP documentation](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) 
 provides information on how to generate a service account JSON file.
@@ -73,7 +73,7 @@ Include your
 {{< hover label="providerconfig" line="7" >}}GCP project ID{{< /hover >}} in the
 _ProviderConfig_ settings.
 
-{{< hint type="warning" >}}
+{{< hint type="tip" >}}
 Find your GCP project ID from the `project_id` field of the 
 `gcp-credentials.json` file.
 {{< /hint >}}
@@ -99,473 +99,144 @@ EOF
 
 {{</expand >}}
 
-## Create a composition
-[Part 1]({{<ref "provider-gcp" >}}) created a single _managed resource_.
-A _Composition_ is a template to create one or more _managed resources_ at the 
-same time.
+## Create a custom API
 
-This sample _composition_ creates a Pub/Sub instance and associated GCP storage 
-bucket. 
+<!-- vale alex.Condescending = NO -->
+Crossplane allows you to build your own custom APIs for your users, abstracting
+away details about the cloud provider and their resources. You can make your API
+as complex or simple as you wish. 
+<!-- vale alex.Condescending = YES -->
 
-{{< hint "note" >}}
-This example comes from part of the GCP  
-[Stream messages from Pub/Sub by using Dataflow](https://cloud.google.com/pubsub/docs/stream-messages-dataflow) 
-guide.
-{{< /hint >}}
+The custom API is a Kubernetes object.  
+Here is an example custom API.
 
-To create a _composition_, first define each individual managed resource.
-
-### Create a storage bucket object
-Define a `bucket` resource using the configuration from the previous section:
-
-{{< hint "note" >}}
-Don't apply this configuration. This YAML is part of a larger
-definition. 
-{{< /hint >}}
-
-```yaml
-apiVersion: storage.gcp.upbound.io/v1beta1
-kind: Bucket
+```yaml {label="exAPI"}
+apiVersion: database.example.com/v1alpha1
+kind: NoSQL
 metadata:
-  name: crossplane-quickstart-bucket
-spec:
-  forProvider:
-    location: US
-  providerConfigRef:
-    name: default
+  name: my-nosql-database
+spec: 
+  location: "US"
 ```
 
-### Create a Pub/Sub topic resource
-Next, define a Pub/Sub `topic` resource. 
+Like any Kubernetes object the API has a 
+{{<hover label="exAPI" line="1">}}version{{</hover>}}, 
+{{<hover label="exAPI" line="2">}}kind{{</hover>}} and 
+{{<hover label="exAPI" line="5">}}spec{{</hover>}}.
 
-{{< hint "tip" >}}
-The [Upbound Marketplace](https://marketplace.upbound.io/) provides
-[schema documentation](https://marketplace.upbound.io/providers/upbound/provider-gcp/v0.28.0/resources/pubsub.gcp.upbound.io/Topic/v1beta1)
-for a `topic` resource.
-{{< /hint >}}
+### Define a group and version
+To create your own API start by defining an 
+[API group](https://kubernetes.io/docs/reference/using-api/#api-groups) and 
+[version](https://kubernetes.io/docs/reference/using-api/#api-versioning).  
 
-The _GCP Provider_ defines the 
-{{<hover line="1" label="topicMR">}}apiVersion{{</hover>}} 
-and 
-{{<hover line="2" label="topicMR">}}kind{{</hover>}}.
-
-A Pub/Sub topic doesn't have requirements but using 
-{{<hover line="8" label="topicMR">}}messageStoragePolicy.allowedPersistenceRegions{{< /hover >}} 
-can keep messages stored in the same location as the storage bucket.
-
-```yaml {label="topicMR"}
-apiVersion: pubsub.gcp.upbound.io/v1beta1
-kind: Topic
-metadata:
-  name: crossplane-quickstart-topic
-spec:
-  forProvider:
-    messageStoragePolicy:
-      - allowedPersistenceRegions: 
-        - "us-central1"
-```
-
-{{< hint "note" >}}
-Pub/Sub topic specifics are beyond the scope of this guide. Read the GCP
-[Pub/Sub API reference](https://cloud.google.com/compute/docs/apis)
-for more information.
-{{</hint >}}
-
-### Create the composition object
-The _composition_ combines the two resource definitions.
-
-A 
-{{<hover label="compName" line="2">}}Composition{{</ hover>}} comes from the
-{{<hover label="compName" line="1">}}Crossplane{{</ hover>}} 
-API resources.
-
-Create any {{<hover label="compName" line="4">}}name{{</ hover>}} for this _composition_.
-
-```yaml {label="compName"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: topic-with-bucket
-```
-
-Add the resources to the 
-{{<hover label="specResources" line="5">}}spec.resources{{</ hover>}} 
-section of the _composition_.
-
-Give each resource a 
-{{<hover label="specResources" line="7">}}name{{</ hover>}} 
-and put the resource definition under the
-{{<hover label="specResources" line="8">}}base{{</ hover>}} 
-key.
-
-{{< hint "note" >}}
-Don't include resource `metadata` under the
-{{<hover label="specResources" line="8">}}base{{</ hover>}} key.
-{{< /hint >}}
-
-```yaml {label="specResources"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: topic-with-bucket
-spec:
-  resources:
-    - name: crossplane-quickstart-bucket
-      base:
-        apiVersion: storage.gcp.upbound.io/v1beta1
-        kind: Bucket
-        spec:
-          forProvider:
-            location: US
-    - name: crossplane-quickstart-topic
-      base:
-        apiVersion: pubsub.gcp.upbound.io/v1beta1
-        kind: Topic
-        spec:
-          forProvider:
-            messageStoragePolicy:
-              - allowedPersistenceRegions: 
-                - "us-central1"
-```
-
-_Compositions_ are a template for generating resources. A 
-_composite resource_ actually creates the resources.
-
-A _composition_ defines which _composite resources_ can use this
-template. 
-
-_Compositions_ do this with the 
-{{<hover label="compRef" line="6">}}spec.compositeTypeRef{{</ hover>}}
-definition.
-
-{{< hint "tip" >}}
-Crossplane recommends prefacing the `kind` with an `X` to show it's a
-Composition.
-{{< /hint >}}
-
-```yaml {label="compRef"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: topic-with-bucket
-spec:
-  compositeTypeRef:
-    apiVersion: custom-api.example.org/v1alpha1
-    kind: XTopicBucket
-  resources:
-    # Removed for Brevity    
-```
-
-A _composite resource_ is actually a custom Kubernetes API type you define. The
-platform team controls the kind, API endpoint and version.
+The _group_ can be any value, but common convention is to map to a fully
+qualified domain name. 
 
 <!-- vale gitlab.SentenceLength = NO -->
-<!-- Length is because of shortcodes, ignore -->
-With this {{<hover label="compRef" line="6">}}spec.compositeTypeRef{{</ hover>}}
-Crossplane allows _composite resources_ from the API group
-{{<hover label="compRef" line="7">}}custom-api.example.org{{</ hover>}} 
-that are of
-{{<hover label="compRef" line="8">}}kind: XTopicBucket{{</ hover>}}
-to use this template to create resources. No other API group or kind can use
-this template.
+The version shows how mature or stable the API is and increments when changing,
+adding or removing fields in the API.
 <!-- vale gitlab.SentenceLength = YES -->
 
-### Apply the composition
-Apply the full _Composition_ to your Kubernetes cluster.
+Crossplane doesn't require specific versions or a specific version naming 
+convention, but following 
+[Kubernetes API versioning guidelines](https://kubernetes.io/docs/reference/using-api/#api-versioning)
+is strongly recommended. 
 
-```yaml {copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: topic-with-bucket
-spec:
-  compositeTypeRef:
-    apiVersion: custom-api.example.org/v1alpha1
-    kind: XTopicBucket
-  resources:
-    - name: crossplane-quickstart-bucket
-      base:
-        apiVersion: storage.gcp.upbound.io/v1beta1
-        kind: Bucket
-        spec:
-          forProvider:
-            location: US
-    - name: crossplane-quickstart-topic
-      base:
-        apiVersion: pubsub.gcp.upbound.io/v1beta1
-        kind: Topic
-        spec:
-          forProvider:
-            messageStoragePolicy:
-              - allowedPersistenceRegions: 
-                - "us-central1"
-EOF
+* `v1alpha1` - A new API that may change at any time.
+* `v1beta1` - An existing API that's considered stable. Breaking changes are
+  strongly discouraged.
+* `v1` - A stable API that doesn't have breaking changes. 
+
+This guide uses the group 
+{{<hover label="version" line="1">}}database.example.com{{</hover>}}.
+
+Since this is the first version of the API, this guide uses the version
+{{<hover label="version" line="1">}}v1alpha1{{</hover>}}.
+
+```yaml {label="version",copy-lines="none"}
+apiVersion: database.example.com/v1alpha1
 ```
 
-Confirm the _composition_ exists with `kubectl get composition`
+### Define a kind
 
-```shell {copy-lines="1"}
-kubectl get composition
-NAME                AGE
-topic-with-bucket   8s
+The API group is a logical collection of related APIs. Within a group are
+individual kinds representing different resources.
+
+For example a `queue` group may have a `PubSub` and `CloudTask` kinds.
+
+The `kind` can be anything, but it must be 
+[UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
+
+This API's kind is 
+{{<hover label="kind" line="2">}}PubSub{{</hover>}}
+
+```yaml {label="kind",copy-lines="none"}
+apiVersion: queue.example.com/v1alpha1
+kind: PubSub
 ```
 
-## Define a composite resource
+### Define a spec
 
-The _composition_ that was just created limited which _composite resources_ can
-use that template. 
+The most important part of an API is the schema. The schema defines the inputs
+accepted from users. 
 
-A _composite resource_ is a custom API defined by the platform team.  
-A _composite resource definition_ defines the schema for a _composite resource_.
+This API allows users to provide a 
+{{<hover label="spec" line="4">}}location{{</hover>}} of where to run their 
+cloud resources.
 
+All other resource settings can't be configurable by the users. This allows
+Crossplane to enforce any policies and standards without worrying about
+user errors. 
 
-A _composite resource definition_ installs the custom API type into Kubernetes
-and defines what `spec` keys and values are valid when calling this new custom API.
-
-Before creating a _composite resource_ Crossplane requires a _composite resource definition_.
-
-{{< hint "tip" >}}
-_Composite resource definitions_ are also called `XRDs` for short. 
-{{< /hint >}}
-
-Just like a _composition_ the 
-{{<hover label="xrdName" line="2" >}}composite resource definition{{</hover>}} 
-is part of the 
-{{<hover label="xrdName" line="1" >}}Crossplane{{</hover>}}
-API group.
-
-The _XRD_ {{<hover label="xrdName" line="4" >}}name{{</hover>}} is the new
-API endpoint.
-
-{{< hint "tip" >}}
-Crossplane recommends using a plural name for the _XRD_ 
-{{<hover label="xrdName" line="4" >}}name{{</hover>}}.
-{{< /hint >}}
-
-```yaml {label="xrdName"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xtopicbuckets.custom-api.example.org
+```yaml {label="spec",copy-lines="none"}
+apiVersion: queue.example.com/v1alpha1
+kind: PubSub
+spec: 
+  location: "US"
 ```
 
-The _XRD's_
-{{<hover label="xrdGroup" line="5" >}}spec{{</hover>}} defines the new custom
-API.
+### Apply the API
 
-### Define the API endpoint and kind
-First, define the new API
-{{<hover label="xrdGroup" line="6" >}}group{{</hover>}}.  
-Next, create the API {{<hover label="xrdGroup" line="8" >}}kind{{</hover>}} and
-{{<hover label="xrdGroup" line="9" >}}plural{{</hover>}}.
+Crossplane uses 
+{{<hover label="xrd" line="3">}}Composite Resource Definitions{{</hover>}} 
+(also called an `XRD`) to install your custom API in
+Kubernetes. 
 
-```yaml {label="xrdGroup"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xtopicbuckets.custom-api.example.org
-spec:
-  group: custom-api.example.org
-  names:
-    kind: XTopicBucket
-    plural: xtopicbuckets
-```
+The XRD {{<hover label="xrd" line="6">}}spec{{</hover>}} contains all the
+information about the API including the 
+{{<hover label="xrd" line="7">}}group{{</hover>}},
+{{<hover label="xrd" line="12">}}version{{</hover>}},
+{{<hover label="xrd" line="9">}}kind{{</hover>}} and 
+{{<hover label="xrd" line="13">}}schema{{</hover>}}.
 
-{{<hint "note" >}}
-The _XRD_ {{<hover label="xrdGroup" line="6" >}}group{{</hover>}} matches the _composition_ {{<hover label="noteComp"
-line="5">}}apiVersion{{</hover>}} and the 
-_XRD_ {{<hover label="xrdGroup" line="8" >}}kind{{</hover>}} matches the _composition_ 
-{{<hover label="noteComp" line="6">}}compositeTypeRef.kind{{</hover>}}.
+The XRD's {{<hover label="xrd" line="5">}}name{{</hover>}} must be the
+combination of the {{<hover label="xrd" line="9">}}plural{{</hover>}} and 
+{{<hover label="xrd" line="7">}}group{{</hover>}}.
 
-```yaml {label="noteComp"}
-kind: Composition
-# Removed for brevity
-spec:
-  compositeTypeRef:
-    apiVersion: custom-api.example.org/v1alpha1
-    kind: XTopicBucket
-```
-{{< /hint >}}
+The {{<hover label="xrd" line="13">}}schema{{</hover>}} uses the
+{{<hover label="xrd" line="14">}}OpenAPIv3{{</hover>}} specification to define
+the API {{<hover label="xrd" line="17">}}spec{{</hover>}}.  
 
-### Set the API version
-In Kubernetes, all API endpoints have a version to show the stability of the API
-and track revisions. 
+The API defines a {{<hover label="xrd" line="20">}}location{{</hover>}} that
+must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either 
+{{<hover label="xrd" line="23">}}EU{{</hover>}} or 
+{{<hover label="xrd" line="24">}}US{{</hover>}}.
 
-Apply a version to the _XRD_ with a 
-{{<hover label="xrdVersion" line="11">}}versions.name{{</hover>}}. 
-This matches the 
-{{<hover label="noteComp"line="5">}}compositeTypeRef.apiVersion{{</hover>}}
+Apply this XRD to create the custom API in your Kubernetes cluster. 
 
-_XRDs_ require both
-{{<hover label="xrdVersion" line="12">}}versions.served{{</hover>}}
-and
-{{<hover label="xrdVersion" line="13">}}versions.referenceable{{</hover>}}.
-
-```yaml {label="xrdVersion"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xtopicbuckets.custom-api.example.org
-spec:
-  group: custom-api.example.org
-  names:
-    kind: XTopicBucket
-    plural: xtopicbuckets
-  versions:
-  - name: v1alpha1
-    served: true
-    referenceable: true
-```
-
-{{<hint "note" >}}
-For more information on defining versions in Kubernetes read the 
-[API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning) 
-section of the Kubernetes documentation.
-{{< /hint >}}
-
-### Create the API schema
-With an API endpoint named, now define the API schema, or what's allowed
-inside the `spec` of the new Kubernetes object.
-
-{{< hint "note" >}}
-_XRDs_ follow the Kubernetes 
-[_custom resource definition_ rules for schemas](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#specifying-a-structural-schema). 
-{{</hint >}}
-
-Place the API 
-{{< hover label="xrdSchema" line="8" >}}schema{{</hover>}}
-under the 
-{{< hover label="xrdSchema" line="7" >}}version.name{{</hover>}} 
-
-The _XRD_ type defines the next lines. They're always the same.
-
-<!-- vale write-good.TooWordy = NO -->
-<!-- allow "validate" -->
-{{< hover label="xrdSchema" line="9" >}}openAPIV3Schema{{</hover>}} specifies
-how the schema gets validated.
-<!-- vale write-good.TooWordy = YES -->
-
-Next, the entire API is an 
-{{< hover label="xrdSchema" line="10" >}}object{{</hover>}}
-with a
-{{< hover label="xrdSchema" line="11" >}}property{{</hover>}} of
-{{< hover label="xrdSchema" line="12" >}}spec{{</hover>}}.
-
-The 
-{{< hover label="xrdSchema" line="12" >}}spec{{</hover>}} is also an 
-{{< hover label="xrdSchema" line="13" >}}object{{</hover>}} with
-{{< hover label="xrdSchema" line="14" >}}properties{{</hover>}}.
-
-```yaml {label="xrdSchema"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-# Removed for brevity
-spec:
-  # Removed for brevity
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-```
-
-{{< hint "tip" >}}
-For more information on the values allowed in a _composite resource definition_ view its schema with
-`kubectl explain xrd`
-{{< /hint >}}
-
-Now, define the custom API. Your custom API continues under the last
-{{<hover label="xrdSchema" line="14">}}properties{{</hover>}} definition in the
-previous example.
-
-This custom API has one setting:
-<!-- vale Google.We = NO -->
-* {{<hover label="customAPI" line="4" >}}location{{</hover >}} - where to deploy
-the resources, a choice of "EU" or "US."
-
-
-Users can't change any other settings of the storage bucket or Pub/Sub topic. 
-
-The{{<hover label="customAPI" line="4" >}}location{{</hover >}}
-is a {{<hover label="customAPI" line="5" >}}string{{</hover >}}
-and matches the regular expression that's
-{{<hover label="customAPI" line="6" >}}oneOf{{</hover >}}
-{{<hover label="customAPI" line="7" >}}EU{{</hover >}}
-or
-{{<hover label="customAPI" line="8" >}}US{{</hover >}}.
-
-This API requires the setting 
-{{<hover label="customAPI" line="10" >}}location{{</hover >}}.
-
-
-```yaml {label="customAPI"}
-# Removed for brevity
-# schema.openAPIV3Schema.type.properties.spec
-properties:
-  location:
-    type: string
-    oneOf:
-      - pattern: '^EU$'
-      - pattern: '^US$'
-required:
-  - location
-```
-
-### Enable claims to the API
-Tell this _XRD_ to offer a _claim_ by defining the _claim_ API endpoint under
-the _XRD_ {{<hover label="XRDclaim" line="4">}}spec{{< /hover >}}.
-
-{{< hint "tip" >}}
-Crossplane recommends a _Claim_ 
-{{<hover label="XRDclaim" line="10" >}}kind{{</hover>}} match the 
-_Composite Resource Definition_ (XRD) 
-{{<hover label="XRDclaim" line="7" >}}kind{{</ hover>}},
-without the preceding `X`.
-{{< /hint >}}
-
-
-```yaml {label="XRDclaim"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-# Removed for brevity
-spec:
-# Removed for brevity
-  names:
-    kind: XTopicBucket
-    plural: xtopicbuckets
-  claimNames:
-    kind: TopicBucket
-    plural: topicbuckets
-```
-
-{{<hint "note" >}}
-The [Claims](#create-a-claim) section later in this guide discusses _claims_.
-{{< /hint >}}
-
-### Apply the composite resource definition
-Apply the complete _XRD_ to your Kubernetes cluster.
-
-
-```yaml {copy-lines="all"}
+```yaml {label="xrd",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xtopicbuckets.custom-api.example.org
+  name: pubsubs.queue.example.com
 spec:
-  group: custom-api.example.org
+  group: queue.example.com
   names:
-    kind: XTopicBucket
-    plural: xtopicbuckets
+    kind: PubSub
+    plural: pubsubs
   versions:
   - name: v1alpha1
-    served: true
-    referenceable: true
     schema:
       openAPIV3Schema:
         type: object
@@ -580,388 +251,319 @@ spec:
                   - pattern: '^US$'
             required:
               - location
+    served: true
+    referenceable: true
   claimNames:
-    kind: TopicBucket
-    plural: topicbuckets
+    kind: PubSubClaim
+    plural: pubsubclaims
 EOF
 ```
 
-Verify Kubernetes created the XRD with `kubectl get xrd`
+Adding the {{<hover label="xrd" line="29">}}claimNames{{</hover>}} allows users
+to access this API either at the cluster level with the 
+{{<hover label="xrd" line="9">}}pubsub{{</hover>}} endpoint or in a namespace
+with the 
+{{<hover label="xrd" line="29">}}pubsubclaim{{</hover>}} endpoint. 
 
-```shell {copy-lines="1",label="getXRD"}
+The namespace scoped API is a Crossplane _Claim_.
+
+{{<hint "tip" >}}
+For more details on the fields and options of Composite Resource Definitions
+read the 
+[XRD documentation]({{<ref "../concepts/composite-resource-definitions">}}). 
+{{< /hint >}}
+
+View the installed XRD with `kubectl get xrd`.  
+
+```shell {copy-lines="1"}
 kubectl get xrd
-NAME                                   ESTABLISHED   OFFERED   AGE
-xtopicbuckets.custom-api.example.org   True          True      9s
+NAME                        ESTABLISHED   OFFERED   AGE
+pubsubs.queue.example.com   True          True      7s
 ```
 
-## Create a composite resource
-Creating an _XRD_ allows the creation _composite resources_.
+View the new custom API endpoints with `kubectl api-resources | grep pubsub`
 
-A _composite resource_ uses the custom API created in the _XRD_.
-
-The _XRD_ maps the _composite resource_ values to the _composition_ template and
-creates new _managed resources_.
-
-Looking at part of the _XRD_:
-
-```yaml {label="xrdSnip"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-# Removed for brevity
-spec:
-  group: custom-api.example.org
-  names:
-    kind: XTopicBucket
-# Removed for brevity
-      spec:
-        type: object
-        properties:
-          location:
-            type: string
-            oneOf:
-              - pattern: '^EU$'
-              - pattern: '^US$'
+```shell {copy-lines="1",label="apiRes"}
+kubectl api-resources | grep pubsub
+pubsubclaims                 queue.example.com/v1alpha1             true         PubSubClaim
+pubsubs                      queue.example.com/v1alpha1             false        PubSub
 ```
 
-The _XRD_ {{<hover label="xrdSnip" line="5">}}group{{</hover>}}
-becomes the _composite resource_ 
-{{<hover label="xr" line="2">}}apiVersion{{</hover>}}.
+## Create a deployment template
 
-The _XRD_ {{<hover label="xrdSnip" line="7">}}kind{{</hover>}}
-is the _composite resource_ 
-{{<hover label="xr" line="3">}}kind{{</hover>}}
+When users access the custom API Crossplane takes their inputs and combines them
+with a template describing what infrastructure to deploy. Crossplane calls this
+template a _Composition_.
 
-The _XRD_ API {{<hover label="xrdSnip" line="9">}}spec{{</hover>}} defines the
-_composite resource_ {{<hover label="xr" line="6">}}spec{{</hover>}}.
+The {{<hover label="comp" line="3">}}Composition{{</hover>}} defines all the 
+cloud resources to deploy.
+Each entry in the template
+is a full resource definitions, defining all the resource settings and metadata
+like labels and annotations. 
 
-The _XRD_ {{<hover label="xrdSnip" line="11">}}properties{{</hover>}} section
-defines the options for the _composite resource_ 
-{{<hover label="xr" line="6">}}spec{{</hover>}}.
+This template creates a GCP
+{{<hover label="comp" line="10">}}Storage{{</hover>}}
+{{<hover label="comp" line="11">}}Bucket{{</hover>}} and a 
+{{<hover label="comp" line="25">}}PubSub{{</hover>}}
+{{<hover label="comp" line="26">}}Topic{{</hover>}}.
 
-The one option is {{<hover label="xrdSnip" line="12">}}location{{</hover>}} 
-and it can be either {{<hover label="xrdSnip" line="15">}}EU{{</hover>}} or 
-{{<hover label="xrdSnip" line="16">}}US{{</hover>}}. 
+Crossplane uses {{<hover label="comp" line="15">}}patches{{</hover>}} to apply
+the user's input to the resource template.  
+This Composition takes the user's 
+{{<hover label="comp" line="16">}}location{{</hover>}} input and uses it as the 
+{{<hover label="comp" line="14">}}location{{</hover>}} used in the individual 
+resource.
 
-This _composite resource_ uses 
-{{<hover label="xr" line="7">}}location: US{{</hover>}}.
-<!-- vale Google.We = YES -->
-### Apply the composite resource
+Apply this Composition to your cluster. 
 
-Apply the composite resource to the Kubernetes cluster. 
-
-```yaml {label="xr", copy-lines="all"}
+```yaml {label="comp",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
-apiVersion: custom-api.example.org/v1alpha1
-kind: XTopicBucket
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
 metadata:
-  name: my-composite-resource
+  name: topic-with-bucket
+spec:
+  resources:
+    - name: crossplane-quickstart-bucket
+      base:
+        apiVersion: storage.gcp.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider:
+            location: "US"
+      patches:
+        - fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "EU"
+                US: "US"
+    - name: crossplane-quickstart-topic
+      base:
+        apiVersion: pubsub.gcp.upbound.io/v1beta1
+        kind: Topic
+        spec:
+          forProvider:
+            messageStoragePolicy:
+              - allowedPersistenceRegions: 
+                - "us-central1"
+      patches:
+        - fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.messageStoragePolicy[*].allowedPersistenceRegions[*]"
+          transforms:
+            - type: map
+              map: 
+                EU: "europe-central2"
+                US: "us-central1"
+  compositeTypeRef:
+    apiVersion: queue.example.com/v1alpha1
+    kind: PubSub
+EOF
+```
+
+The {{<hover label="comp" line="40">}}compositeTypeRef{{</hover >}} defines
+which custom APIs can use this template to create resources.
+
+{{<hint "tip" >}}
+Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
+more information on configuring Compositions and all the available options.
+
+Read the 
+[Patch and Transform documentation]({{<ref "../concepts/patch-and-transform">}}) 
+for more information on how Crossplane uses patches to map user inputs to
+Composition resource templates.
+{{< /hint >}}
+
+View the Composition with `kubectl get composition`
+
+```shell {copy-lines="1"}
+kubectl get composition
+NAME                XR-KIND   XR-APIVERSION       AGE
+topic-with-bucket   PubSub    queue.example.com   3s
+```
+
+## Install the PubSub Provider
+
+Part 1 only installed the GCP Storage Provider. Deploying a PubSub Topic 
+requires the PubSub Provider as well. 
+
+Add the new Provider to the cluster. 
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp-pubsub
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.34.0
+EOF
+```
+
+View the new PubSub provider with `kubectl get providers`.
+
+```shell {copy-lines="1"}
+kubectl get providers
+NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
+provider-gcp-pubsub           True        False     xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.34.0    7s
+provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.34.0   4h
+upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.34.0    4h
+```
+
+## Access the custom API
+
+With the custom API (XRD) installed and associated to a resource template
+(Composition) users can access the API to create resources.
+
+Create a {{<hover label="xr" line="2">}}PubSub{{</hover>}} object to create the
+cloud resources.
+
+```yaml {copy-lines="all",label="xr"}
+cat <<EOF | kubectl apply -f -
+apiVersion: queue.example.com/v1alpha1
+kind: PubSub
+metadata:
+  name: my-pubsub-queue
 spec: 
   location: "US"
 EOF
 ```
 
-### Verify the composite resource
-Verify Crossplane created the _composite resource_ with `kubectl get xdatasetwithbucket`
+View the resource with `kubectl get pubsub`.
 
-{{<hint "tip" >}}
-Use `kubectl get <composite resource kind>` to view a specific `kind` of _composite resource_.  
-View all _composite resources_ with `kubectl get composite`.
+```shell {copy-lines="1"}
+kubectl get pubsub
+NAME              SYNCED   READY   COMPOSITION         AGE
+my-pubsub-queue   True     True    topic-with-bucket   2m12s
+```
+
+This object is a Crossplane _composite resource_ (also called an `XR`).  
+It's a
+single object representing the collection of resources created from the
+Composition template. 
+
+View the individual resources with `kubectl get managed`
+
+```shell {copy-lines="1"}
+kubectl get managed
+NAME                                                READY   SYNCED   EXTERNAL-NAME           AGE
+topic.pubsub.gcp.upbound.io/my-pubsub-queue-cjswx   True    True     my-pubsub-queue-cjswx   3m4s
+
+NAME                                                  READY   SYNCED   EXTERNAL-NAME           AGE
+bucket.storage.gcp.upbound.io/my-pubsub-queue-vljg9   True    True     my-pubsub-queue-vljg9   3m4s
+```
+
+Delete the resources with `kubectl delete pubsub`.
+
+```shell {copy-lines="1"}
+kubectl delete pubsub my-pubsub-queue
+pubsub.queue.example.com "my-pubsub-queue" deleted
+```
+
+Verify Crossplane deleted the resources with `kubectl get managed`
+
+{{<hint "note" >}}
+It may take up to 5 minutes to delete the resources.
 {{< /hint >}}
 
 ```shell {copy-lines="1"}
-kubectl get XTopicBucket
+kubectl get managed
+No resources found
+```
+
+## Using the API with namespaces
+
+Accessing the API `pubsub` happens at the cluster scope.  
+Most organizations
+isolate their users into namespaces.  
+
+A Crossplane _Claim_ is the custom API within a namespace.
+
+Creating a _Claim_ is just like accessing the custom API endpoint, but with the
+{{<hover label="claim" line="3">}}kind{{</hover>}} 
+from the custom API's `claimNames`.
+
+Create a new namespace to test create a Claim in. 
+
+```shell
+kubectl create namespace crossplane-test
+```
+
+Then create a Claim in the `crossplane-test` namespace.
+
+```yaml {label="claim",copy-lines="all"}
+cat <<EOF | kubectl apply -f -
+apiVersion: queue.example.com/v1alpha1
+kind: PubSubClaim
+metadata:  
+  name: my-pubsub-queue
+  namespace: crossplane-test
+spec: 
+  location: "US"
+EOF
+```
+View the Claim with `kubectl get claim -n crossplane-test`.
+
+```shell {copy-lines="1"}
+kubectl get claim -n crossplane-test
+NAME                SYNCED   READY   CONNECTION-SECRET   AGE
+my-pubsub-queue   True     True                        2m10s
+```
+
+The Claim automatically creates a composite resource, which creates the managed
+resources. 
+
+View the Crossplane created composite resource with `kubectl get composite`.
+
+```shell {copy-lines="1"}
+kubectl get composite
 NAME                    SYNCED   READY   COMPOSITION         AGE
-my-composite-resource   True     True    topic-with-bucket   2m3s
+my-pubsub-queue-7bm9n   True     True    topic-with-bucket   3m10s
 ```
 
-Both `SYNCED` and `READY` are `True` when Crossplane created the GCP resources.
-
-Now look at the GCP storage `bucket` and Pub/Sub `topic` _managed resources_ 
-with `kubectl get bucket` and `kubectl get topic`.
+Again, view the managed resources with `kubectl get managed`.
 
 ```shell {copy-lines="1"}
-kubectl get bucket
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-my-composite-resource-m6lbx   True    True     my-composite-resource-m6lbx   4m34s
+kubectl get managed
+NAME                                                      READY   SYNCED   EXTERNAL-NAME                 AGE
+topic.pubsub.gcp.upbound.io/my-pubsub-queue-7bm9n-6kdq4   True    True     my-pubsub-queue-7bm9n-6kdq4   3m22s
+
+NAME                                                        READY   SYNCED   EXTERNAL-NAME                 AGE
+bucket.storage.gcp.upbound.io/my-pubsub-queue-7bm9n-hhwx8   True    True     my-pubsub-queue-7bm9n-hhwx8   3m22s
 ```
+
+Deleting the Claim deletes all the Crossplane generated resources.
+
+`kubectl delete claim -n crossplane-test my-pubsub-queue`
 
 ```shell {copy-lines="1"}
-kubectl get topics
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-my-composite-resource-88vzp   True    True     my-composite-resource-88vzp   4m48s
+kubectl delete claim -n crossplane-test my-pubsub-queue
+pubsubclaim.queue.example.com "my-pubsub-queue" deleted
 ```
 
-The _composite resource_ automatically generated both _managed resources_.
-
-Using `kubectl describe` on a _managed resource_ shows the `Owner References` is
-the _composite resource_.
-
-```yaml {copy-lines="1"}
-kubectl describe bucket | grep "Owner References" -A5
-  Owner References:
-    API Version:           custom-api.example.org/v1alpha1
-    Block Owner Deletion:  true
-    Controller:            true
-    Kind:                  XTopicBucket
-    Name:                  my-composite-resource
-```
-
-Each _composite resource_ creates and owns a unique set of _managed resources_.
-If you create a second _composite resource_ Crossplane creates a new storage 
-`bucket` and Pub/Sub `topic`.
-
-```yaml {label="xr", copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: custom-api.example.org/v1alpha1
-kind: XTopicBucket
-metadata:
-  name: my-second-composite-resource
-spec: 
-  location: "US"
-EOF
-```
-
-Again, use `kubectl get XTopicBucket` to view both _composite resources_.
-
-```shell {copy-lines="1"}
-kubectl get XTopicBucket
-NAME                           SYNCED   READY   COMPOSITION         AGE
-my-composite-resource          True     True    topic-with-bucket   8m41s
-my-second-composite-resource   True     True    topic-with-bucket   2m4s
-```
-
-And see there are two `bucket` and two `topic` _managed resources_.
-
-```shell {copy-lines="1"}
-kubectl get bucket
-NAME                                 READY   SYNCED   EXTERNAL-NAME                        AGE
-my-composite-resource-m6lbx          True    True     my-composite-resource-m6lbx          9m18s
-my-second-composite-resource-rkhbd   True    True     my-second-composite-resource-rkhbd   2m41s
-```
-
-```shell {copy-lines="1"}
-kubectl get topic
-NAME                                 READY   SYNCED   EXTERNAL-NAME                        AGE
-my-composite-resource-88vzp          True    True     my-composite-resource-88vzp          9m31s
-my-second-composite-resource-4wv89   True    True     my-second-composite-resource-4wv89   2m54s
-```
-
-### Delete the composite resources
-Because the _composite resource_ is the `Owner` of the _managed resources_, when
-Crossplane deletes the _composite resource_, it also deletes the _managed resources_ automatically.
-
-Delete the new _composite resource_ with `kubectl delete XTopicBucket`.
-
-{{<hint "tip" >}}
-Delete a specific _composite resource_ with 
-`kubectl delete <composite kind> <name>` or
-`kubectl delete composite <name>`.
+{{<hint "note" >}}
+It may take up to 5 minutes to delete the resources.
 {{< /hint >}}
 
-Delete the second composition
-```shell
-kubectl delete XTopicBucket my-second-composite-resource
-```
-
-{{<hint "note">}}
-There may a delay in deleting the _managed resources_. Crossplane is making API
-calls to GCP and waits for GCP to confirm they deleted the resources before
-updating the state in Kubernetes.
-{{</hint >}}
-
-Now a single bucket and topic exist.
+Verify Crossplane deleted the composite resource with `kubectl get composite`.
 
 ```shell {copy-lines="1"}
-kubectl get bucket
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-my-composite-resource-m6lbx   True    True     my-composite-resource-m6lbx   11m
-```
-
-```shell {copy-lines="1"}
-kubectl get topic
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-my-composite-resource-88vzp   True    True     my-composite-resource-88vzp   11m
-```
-
-Delete the other _composite resource_ to remove the last `bucket` and `table`
-_managed resources_.
-
-```shell
-kubectl delete xtopicbucket my-composite-resource
-```
-
-_Composite resources_ are great for creating one or more related resources against
-a template, but all _composite resources_ exist at the Kubernetes "cluster
-level." There's no isolation between _composite resources_. Crossplane uses
-_claims_ to create resources with namespace isolation. 
-
-## Create a claim
-
-_Claims_, just like _composite resources_ use the custom API defined in the
-_XRD_. Unlike a _composite resource_, Crossplane can create _claims_ in a
-namespace.
-
-### Create a new Kubernetes namespace
-Create a new namespace with `kubectl create namespace`.
-
-```shell
-kubectl create namespace test
-```
-
-Look at the _XRD_ to see the parameters for the _claim_.
-A _claim_ uses the same {{<hover label="XRDclaim2" line="6" >}}group{{</hover>}}
-a _composite resource_ uses but a different 
-{{<hover label="XRDclaim2" line="8" >}}kind{{</hover>}}.
-
-```yaml {label="XRDclaim2"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-# Removed for brevity
-spec:
-# Removed for brevity
-  group: custom-api.example.org
-  claimNames:
-    kind: TopicBucket
-    plural: topicbuckets
-```
-
-Like the _composite resource_, create a new object with the 
-{{<hover label="claim" line="2" >}}custom-api.example.org{{</hover>}} API
-endpoint.
-
-The _XRD_
-{{<hover label="XRDclaim2" line="8" >}}claimNames.kind{{</hover>}} defines the
-{{<hover label="claim" line="3" >}}kind{{</hover>}}.
-
-The {{<hover label="claim" line="7" >}}spec{{</hover>}} uses the same
-API options as the _composite resource_.
-
-### Apply the claim
-Apply the _claim_ to your Kubernetes cluster.
-
-```yaml {label="claim", copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: custom-api.example.org/v1alpha1
-kind: TopicBucket
-metadata:
-  name: claimed-topic-with-bucket
-  namespace: test
-spec:
-  location: "US"
-EOF
-```
-
-### Verify the claim
-Verify Crossplane created the _claim_ with `kubectl get TopicBucket` in the `test`
-namespace.
-
-{{<hint "tip" >}}
-View claims with `kubectl get <kind>` or use `kubectl get claim` to view all
-_claims_.
-{{</hint >}}
-
-```shell {copy-lines="1"}
-kubectl get TopicBucket -n test
-NAME                        SYNCED   READY   CONNECTION-SECRET   AGE
-claimed-topic-with-bucket   True     True                        4m37s
-```
-
-When Crossplane creates a _claim_, a unique _composite resource_ is also
-created. View the new _composite resource_ with `kubectl get xtopicbucket`.
-
-```shell {copy-lines="1"}
-kubectl get xtopicbucket
-NAME                              SYNCED   READY   COMPOSITION         AGE
-claimed-topic-with-bucket-7k2lj   True     True    topic-with-bucket   4m58s
-```
-
-The _composite resource_ exists at the "cluster scope" while the _claim_ exists
-at the "namespace scope."
-
-Create a second namespace and a second claim.
-
-```shell {copy-lines="all"}
-kubectl create namespace test2
-cat <<EOF | kubectl apply -f -
-apiVersion: custom-api.example.org/v1alpha1
-kind: TopicBucket
-metadata:
-  name: second-claimed-topic-with-bucket
-  namespace: test2
-spec:
-  location: "US"
-EOF
-```
-
-View the _claims_ in all namespaces with `kubectl get topicbucket -A`
-
-```shell {copy-lines="1"}
-kubectl get topicbucket -A
-NAMESPACE   NAME                               SYNCED   READY   CONNECTION-SECRET   AGE
-test        claimed-topic-with-bucket          True     True                        8m48s
-test2       second-claimed-topic-with-bucket   True     True                        2m24s
-```
-
-Now look at the _composite resources_ at the cluster scope.
-
-```shell {copy-lines="1"}
-kubectl get xtopicbucket
-NAME                                     SYNCED   READY   COMPOSITION         AGE
-claimed-topic-with-bucket-7k2lj          True     True    topic-with-bucket   9m11s
-second-claimed-topic-with-bucket-d5x58   True     True    topic-with-bucket   2m47s
-```
-
-Crossplane created a second _composite resource_ for the second _claim_.
-
-Looking at the GCP storage `bucket` and Pub/Sub `topic` shows two of each 
-resource, one for each claim.
-
-```shell {copy-lines="1"}
-kubectl get bucket
-NAME                                           READY   SYNCED   EXTERNAL-NAME                                  AGE
-claimed-topic-with-bucket-7k2lj-qf2m6          True    True     claimed-topic-with-bucket-7k2lj-qf2m6          9m46s
-second-claimed-topic-with-bucket-d5x58-drlxr   True    True     second-claimed-topic-with-bucket-d5x58-drlxr   3m22s
-```
-
-```shell {copy-lines="1"}
-kubectl get topic
-NAME                                           READY   SYNCED   EXTERNAL-NAME                                  AGE
-claimed-topic-with-bucket-7k2lj-8xn7t          True    True     claimed-topic-with-bucket-7k2lj-8xn7t          9m59s
-second-claimed-topic-with-bucket-d5x58-ctkrp   True    True     second-claimed-topic-with-bucket-d5x58-ctkrp   3m35s
-```
-
-### Delete the claims
-Removing the _claims_ removes the _composite resources_ and the associated
-_managed resources_.
-
-```shell
-kubectl delete topicbucket claimed-topic-with-bucket -n test
-kubectl delete topicbucket second-claimed-topic-with-bucket -n test2
-```
-
-Verify Crossplane removed all the _managed resources_.
-
-```shell
-kubectl get bucket
+kubectl get composite
 No resources found
 ```
 
-```shell
-kubectl get table
+Verify Crossplane deleted the managed resources with `kubectl get managed`.
+
+```shell {copy-lines="1"}
+kubectl get managed
 No resources found
 ```
-
-Claims are powerful tools to give users resources in their own isolated
-namespace. But these examples haven't shown how the custom API can change
-the settings defined in the _composition_. This _composition patching_ applies
-the API settings when creating resources. 
-[Part 3]({{< ref "provider-gcp-part-3">}}) of this guide covers 
-_composition patches_ and making all this configuration portable in Crossplane 
-_packages_. 
 
 ## Next steps
-* [**Continue to part 3**]({{< ref "provider-gcp-part-3">}})** to create a learn
-  about _patching_ resources and creating Crossplane _packages_.
-* Explore GCP resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with Crossplane users and contributors.
+* Explore AWS resources that Crossplane can configure in the 
+  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
+  Crossplane users and contributors.
+* Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out what else you can do
+  with Crossplane. 
