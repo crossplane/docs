@@ -71,19 +71,19 @@
   .chroma .k, .chroma .kd, .chroma .kc, .chroma .kp, .chroma .kr, .chroma .kt, .chroma .no, .chroma .go {
     color: #{$tangerine-300};
   }
-  /* KeywordNamespace, NameTag, Operator, OperatorWord, GenericDeleted */
-  .chroma .kn, .chroma .nt, .chroma .o, .chroma .ow, .chroma .gd {
+  /* KeywordNamespace, NameTag, Operator, OperatorWord */
+  .chroma .kn, .chroma .nt, .chroma .o, .chroma .ow {
     color: #{$aqua-300};
   }
   /* Name, NameBuiltin, NameBuiltinPseudo, NameEntity, NameFunctionMagic, NameLabel, NameNamespace, NameProperty, NameVariable, NameVariableClass, NameVariableGlobal, NameVariableInstance, NameVariableMagic, Punctuation, Generic, GenericHeading, GenericError, GenericPrompt, GenericTraceback, GenericUnderline, TextWhitespace */
   .chroma .n, .chroma .nb, .chroma .bp, .chroma .ni, .chroma .fm, .chroma .nl, .chroma .nn, .chroma .py, .chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm, .chroma .p, .chroma .g, .chroma .gh, .chroma .gr, .chroma .gp, .chroma .gt, .chroma .gl, .chroma .w {
   }
-  /* NameAttribute, NameClass, NameDecorator, NameException, NameFunction, NameOther, GenericInserted */
-  .chroma .na, .chroma .nc, .chroma .nd, .chroma .ne, .chroma .nf, .chroma .nx, .chroma .gh {
+  /* NameAttribute, NameClass, NameDecorator, NameException, NameFunction, NameOther, GenericInserted, Unsure what GH is */
+  .chroma .na, .chroma .nc, .chroma .nd, .chroma .ne, .chroma .nf, .chroma .nx, .chroma .gi, .chroma .gh {
     color: #{$grass-300};
   }
-  /* Literal, LiteralStringEscape, LiteralNumber, LiteralNumberBin, LiteralNumberFloat, LiteralNumberHex, LiteralNumberInteger, LiteralNumberIntegerLong, LiteralNumberOct */
-  .chroma .l, .chroma .se, .chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo {
+  /* Literal, LiteralStringEscape, LiteralNumber, LiteralNumberBin, LiteralNumberFloat, LiteralNumberHex, LiteralNumberInteger, LiteralNumberIntegerLong, LiteralNumberOct, GenericDeleted */
+  .chroma .l, .chroma .se, .chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo, .chroma .gd {
     color: #{$salmon-300};
   }
   /* LiteralDate, LiteralString, LiteralStringAffix, LiteralStringBacktick, LiteralStringChar, LiteralStringDelimiter, LiteralStringDoc, LiteralStringDouble, LiteralStringHeredoc, LiteralStringInterpol, LiteralStringOther, LiteralStringRegex, LiteralStringSingle, LiteralStringSymbol */
