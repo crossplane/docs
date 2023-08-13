@@ -408,7 +408,7 @@ kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
 provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.35.0    7s
 provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0   4h
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.34.0    4h
+upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.35.0    4h
 ```
 
 ## Access the custom API
