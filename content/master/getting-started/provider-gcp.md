@@ -52,7 +52,7 @@ Verify the provider installed with `kubectl get providers`.
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
 provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0   14m
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.34.0    14m
+upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.35.0    14m
 ```
 
 The Storage Provider installs a second Provider, the
