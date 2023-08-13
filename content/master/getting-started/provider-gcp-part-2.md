@@ -10,7 +10,7 @@ aliases:
 This guide is part 2 of a series.  
 
 [**Part 1**]({{<ref "provider-gcp" >}}) covers
-to installing Crossplane and connect your Kubernetes cluster to Azure.
+to installing Crossplane and connect your Kubernetes cluster to GCP.
 
 {{< /hint >}}
 
@@ -406,7 +406,7 @@ View the new PubSub provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-pubsub           True        False     xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.35.0    7s
+provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.35.0    7s
 provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0   4h
 upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.34.0    4h
 ```
