@@ -36,7 +36,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.34.0
+  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0
 EOF
 ```
 
@@ -51,8 +51,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.34.0   14m
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.34.0    14m
+provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0   14m
+upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.35.0    14m
 ```
 
 The Storage Provider installs a second Provider, the
