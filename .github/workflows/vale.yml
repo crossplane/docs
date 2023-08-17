@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Vale
         env:
-          VALE_VERSION: "2.22.0"
+          VALE_VERSION: "2.28.2"
         run: wget https://github.com/errata-ai/vale/releases/download/v${{env.VALE_VERSION}}/vale_${{env.VALE_VERSION}}_Linux_64-bit.tar.gz && tar -xvzf vale_${{env.VALE_VERSION}}_Linux_64-bit.tar.gz
 
       - name: Run Vale
