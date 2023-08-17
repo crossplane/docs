@@ -33,8 +33,7 @@ Kubernetes API endpoint. These endpoints are
 
 {{< hint "note" >}}
 Instructions on building your own Provider are outside of the scope of this
-document. Read the Crossplane contributing [Provider Development
-Guide](https://github.com/crossplane/crossplane/blob/master/contributing/guide-provider-development.md)
+document. Read the Crossplane contributing [Provider Development Guide](https://github.com/crossplane/crossplane/blob/master/contributing/guide-provider-development.md)
 for more information.
 {{< /hint >}}
 
@@ -132,8 +131,7 @@ If you remove the Provider first, you must manually delete external resources
 through your cloud provider. Managed resources must be manually deleted by 
 removing their finalizers. 
 
-For more information on deleting abandoned resources read the [Crossplane
-troubleshooting guide]({{<ref "/knowledge-base/guides/troubleshoot#deleting-when-a-resource-hangs" >}}). 
+For more information on deleting abandoned resources read the [Crossplane troubleshooting guide]({{<ref "/knowledge-base/guides/troubleshoot#deleting-when-a-resource-hangs" >}}). 
 {{< /hint >}}
 
 ## Verify a Provider

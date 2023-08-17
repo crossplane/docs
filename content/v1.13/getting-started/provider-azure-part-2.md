@@ -137,7 +137,7 @@ is strongly recommended.
 This guide uses the group 
 {{<hover label="version" line="1">}}compute.example.com{{</hover>}}.
 
-Since this is the first version of the API, this guide uses the version
+Because this is the first version of the API, this guide uses the version
 {{<hover label="version" line="1">}}v1alpha1{{</hover>}}.
 
 ```yaml {label="version",copy-lines="none"}
@@ -146,7 +146,7 @@ apiVersion: compute.example.com/v1alpha1
 
 ### Define a kind
 
-The API group is a logical collection of related APIs. Within a group are
+The API group is a logical collection of related APIs. In a group are
 individual kinds representing different resources.
 
 For example a `compute` group may have a `VirtualMachine` and `BareMetal` kinds.
@@ -574,7 +574,7 @@ Accessing the API `VirtualMachine` happens at the cluster scope.
 Most organizations
 isolate their users into namespaces.  
 
-A Crossplane _Claim_ is the custom API within a namespace.
+A Crossplane _Claim_ is the custom API in a namespace.
 
 Creating a _Claim_ is just like accessing the custom API endpoint, but with the
 {{<hover label="claim" line="3">}}kind{{</hover>}} 

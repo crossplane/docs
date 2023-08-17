@@ -94,7 +94,7 @@ provider and configuration packages.
 * The _Composition controller_ installs and manages the
 Crossplane _Composite Resource Definitions_, _Compositions_ and _Claims_.
 
-### Crossplane-rbac-manager deployment
+### Crossplane RBAC manager deployment
 The `crossplane-rbac-manager` creates and manages Kubernetes _ClusterRoles_ for
 installed Crossplane _Provider_ and their _Custom Resource Definitions_.
 
@@ -126,16 +126,16 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `extraEnvVarsRBACManager` | Add custom environmental variables to the RBAC Manager pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
 | `extraVolumeMountsCrossplane` | Add custom `volumeMounts` to the Crossplane pod. | `{}` |
 | `extraVolumesCrossplane` | Add custom `volumes` to the Crossplane pod. | `{}` |
-| `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork`` grants the Crossplane Pod access to the host network namespace. | `false` |
+| `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork` grants the Crossplane Pod access to the host network namespace. | `false` |
 | `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
 | `image.repository` | Repository for the Crossplane pod image. | `"crossplane/crossplane"` |
-| `image.tag` | The Crossplane image tag. Defaults to the value of `appVersion` in Chart.yaml. | `""` |
+| `image.tag` | The Crossplane image tag. Defaults to the value of `appVersion` in `Chart.yaml`. | `""` |
 | `imagePullSecrets` | The imagePullSecret names to add to the Crossplane ServiceAccount. | `{}` |
 | `leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the Crossplane pod. | `true` |
 | `metrics.enabled` | Enable Prometheus path, port and scrape annotations and expose port 8080 for both the Crossplane and RBAC Manager pods. | `false` |
 | `nodeSelector` | Add `nodeSelectors` to the Crossplane pod deployment. | `{}` |
 | `packageCache.configMap` | The name of a ConfigMap to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
-| `packageCache.medium` | Set to `Memory` to hold the package cache in a RAM-backed file system. Useful for Crossplane development. | `""` |
+| `packageCache.medium` | Set to `Memory` to hold the package cache in a RAM backed file system. Useful for Crossplane development. | `""` |
 | `packageCache.pvc` | The name of a PersistentVolumeClaim to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
 | `packageCache.sizeLimit` | The size limit for the package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"20Mi"` |
 | `podSecurityContextCrossplane` | Add a custom `securityContext` to the Crossplane pod. | `{}` |
@@ -175,14 +175,14 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `webhooks.enabled` | Enable webhooks for Crossplane and installed Provider packages. | `true` |
 | `xfn.args` | Add custom arguments to the Composite functions runner container. | `[]` |
 | `xfn.cache.configMap` | The name of a ConfigMap to use as the Composite function runner package cache. Disables the default Composite function runner package cache `emptyDir` Volume. | `""` |
-| `xfn.cache.medium` | Set to `Memory` to hold the Composite function runner package cache in a RAM-backed file system. Useful for Crossplane development. | `""` |
+| `xfn.cache.medium` | Set to `Memory` to hold the Composite function runner package cache in a RAM backed file system. Useful for Crossplane development. | `""` |
 | `xfn.cache.pvc` | The name of a PersistentVolumeClaim to use as the Composite function runner package cache. Disables the default Composite function runner package cache `emptyDir` Volume. | `""` |
 | `xfn.cache.sizeLimit` | The size limit for the Composite function runner package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"1Gi"` |
 | `xfn.enabled` | Enable the alpha Composition functions (`xfn`) sidecar container. Also requires Crossplane `args` value `--enable-composition-functions` set. | `false` |
 | `xfn.extraEnvVars` | Add custom environmental variables to the Composite function runner container. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
 | `xfn.image.pullPolicy` | Composite function runner container image pull policy. | `"IfNotPresent"` |
 | `xfn.image.repository` | Composite function runner container image. | `"crossplane/xfn"` |
-| `xfn.image.tag` | Composite function runner container image tag. Defaults to the value of `appVersion` in Chart.yaml. | `""` |
+| `xfn.image.tag` | Composite function runner container image tag. Defaults to the value of `appVersion` in `Chart.yaml`. | `""` |
 | `xfn.resources.limits.cpu` | CPU resource limits for the Composite function runner container. | `"2000m"` |
 | `xfn.resources.limits.memory` | Memory resource limits for the Composite function runner container. | `"2Gi"` |
 | `xfn.resources.requests.cpu` | CPU resource requests for the Composite function runner container. | `"1000m"` |

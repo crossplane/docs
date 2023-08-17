@@ -18,7 +18,7 @@ APIs. Crossplane can even let you
 directly from Kubernetes. If it has an API, Crossplane can connect to it. 
 
 With Crossplane, platform teams can create new abstractions and custom
-APIs with the full power of Kubernetes policies, namespaces, role-based access
+APIs with the full power of Kubernetes policies, namespaces, role based access
 controls and more. Crossplane brings all your non-Kubernetes resources under
 one roof.
 
@@ -29,16 +29,18 @@ and use Kubernetes as the control plane for everything.
 
 {{< hint "tip" >}}
 **What's a control plane?**  
+<!-- vale Google.WordList = NO -->
 Control planes create and manage the lifecycle of resources. Control planes
 constantly _check_ that the intended resources exist, _report_ when the intended
 state doesn't match reality and _act_ to make things right. 
 
 Crossplane extends the Kubernetes control plane to be a **universal control
 plane** to check, report and act on any resource, anywhere. 
+<!-- vale Google.WordList = YES -->
 {{< /hint >}}
 
 
-# Get Started
+# Get started
 * [Install Crossplane]({{<ref "software/install">}}) in your Kubernetes cluster
 * Learn more about how Crossplane works in the 
 [Crossplane introduction]({{<ref "getting-started/introduction" >}})

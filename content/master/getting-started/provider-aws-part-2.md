@@ -132,7 +132,7 @@ is strongly recommended.
 This guide uses the group 
 {{<hover label="version" line="1">}}database.example.com{{</hover>}}.
 
-Since this is the first version of the API, this guide uses the version
+Because this is the first version of the API, this guide uses the version
 {{<hover label="version" line="1">}}v1alpha1{{</hover>}}.
 
 ```yaml {label="version",copy-lines="none"}
@@ -141,7 +141,7 @@ apiVersion: database.example.com/v1alpha1
 
 ### Define a kind
 
-The API group is a logical collection of related APIs. Within a group are
+The API group is a logical collection of related APIs. In a group are
 individual kinds representing different resources.
 
 For example a `database` group may have a `Relational` and `NoSQL` kinds.
@@ -283,11 +283,11 @@ Each entry in the template
 is a full resource definitions, defining all the resource settings and metadata
 like labels and annotations. 
 
-This template creates a GCP 
-{{<hover label="comp" line="13">}}storage{{</hover>}}
+This template creates an AWS 
+{{<hover label="comp" line="13">}}S3{{</hover>}}
 {{<hover label="comp" line="14">}}Bucket{{</hover>}} and a 
-{{<hover label="comp" line="33">}}Pubsub{{</hover>}}
-{{<hover label="comp" line="34">}}Topic{{</hover>}}.
+{{<hover label="comp" line="33">}}DynamoDB{{</hover>}}
+{{<hover label="comp" line="34">}}Table{{</hover>}}.
 
 Crossplane uses {{<hover label="comp" line="19">}}patches{{</hover>}} to apply
 the user's input to the resource template.  
@@ -319,7 +319,7 @@ spec:
             name: default
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "spec.location"
+          fromFieldPath: "location"
           toFieldPath: "spec.forProvider.region"
           transforms:
             - type: map
@@ -343,7 +343,7 @@ spec:
             hashKey: S3ID
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "location"
+          fromFieldPath: "spec.location"
           toFieldPath: "spec.forProvider.region"
           transforms:
             - type: map
@@ -473,7 +473,7 @@ Accessing the API `nosql` happens at the cluster scope.
 Most organizations
 isolate their users into namespaces.  
 
-A Crossplane _Claim_ is the custom API within a namespace.
+A Crossplane _Claim_ is the custom API in a namespace.
 
 Creating a _Claim_ is just like accessing the custom API endpoint, but with the
 {{<hover label="claim" line="3">}}kind{{</hover>}} 
