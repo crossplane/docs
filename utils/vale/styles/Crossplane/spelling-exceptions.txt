@@ -1,6 +1,7 @@
 /tab
 /tabs
 call-outs
+ClusterRoles`
 comma-seperated
 conformant
 cross-reference
