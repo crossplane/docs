@@ -2,62 +2,63 @@
 # Error: gitlab.Substitutions
 #
 # Checks for misused terms that should never be used at GitLab.
-# SubstitutionWarning.yml and SubstitionSuggestions.yml also exist.
+# SubstitutionWarning.yml also exists.
 #
-# For a list of all options, see https://docs.errata.ai/vale/styles
+# For a list of all options, see https://vale.sh/docs/topics/styles/
 extends: substitution
-message: 'Use "%s" instead of "%s".'
+message: "Use '%s' instead of '%s'."
 link: https://about.gitlab.com/handbook/communication/#top-misused-terms
 level: error
 ignorecase: true
 swap:
+  codequality: code quality
+  Customer [Pp]ortal: Customers Portal
+  disallow: prevent
+  frontmatter: front matter
+  GitLabber: GitLab team member
+  GitLabbers: GitLab team members
+  GitLab-shell: GitLab Shell
+  gitlab omnibus: Linux package
+  param: parameter
+  params: parameters
+  pg: PostgreSQL
   'postgres$': PostgreSQL
+  golang: Go
+  raketask: Rake task
+  raketasks: Rake tasks
+  rspec: RSpec
+  self hosted: self-managed
+  self-hosted: self-managed
+  styleguide: style guide
+  to login: to log in
+  can login: can log in
+  to log-in: to log in
+  can log-in: can log in
+  to signin: to sign in
+  can signin: can sign in
+  to sign-in: to sign in
+  can sign-in: can sign in
+  x509: X.509
+  yml: YAML
   admin user: administrator
   admin users: administrators
   administrator permission: administrator access
   administrator permissions: administrator access
   administrator role: administrator access
-  can log-in: can log in
-  can login: can log in
-  can sign-in: can sign in
-  can signin: can sign in
-  codequality: code quality
-  Customer [Pp]ortal: Customers Portal
+  the administrator access level: administrator access
   developer access: the Developer role
   developer permission: the Developer role
   developer permissions: the Developer role
-  disallow: prevent
-  frontmatter: front matter
-  gitlab omnibus: Omnibus GitLab
-  GitLab-shell: GitLab Shell
-  GitLabber: GitLab team member
-  GitLabbers: GitLab team members
   guest access: the Guest role
   guest permission: the Guest role
   guest permissions: the Guest role
-  json: JSON
-  kubernetes: Kubernetes
-  k8s: Kubernetes
   maintainer access: the Maintainer role
   maintainer permission: the Maintainer role
   maintainer permissions: the Maintainer role
   owner access: the Owner role
   owner permission: the Owner role
   owner permissions: the Owner role
-  param: parameter
-  params: parameters
-  pg: PostgreSQL
-  raketask: Rake task
-  raketasks: Rake tasks
   reporter access: the Reporter role
   reporter permission: the Reporter role
   reporter permissions: the Reporter role
-  rspec: RSpec
-  styleguide: style guide
-  the administrator access level: administrator access
-  to log-in: to log in
-  to login: to log in
-  to sign-in: to sign in
-  to signin: to sign in
-  x509: X.509
-  yaml: YAML
+  at least the Owner role: the Owner role
