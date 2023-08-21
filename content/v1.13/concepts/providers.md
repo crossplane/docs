@@ -86,7 +86,7 @@ helm install crossplane \
 crossplane-stable/crossplane \
 --namespace crossplane-system \
 --create-namespace \
---set provider.packages={xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0}
+--set provider.packages='{xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0}'
 ```
 
 ### Install from a private repository

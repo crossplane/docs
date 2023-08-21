@@ -274,7 +274,7 @@ at the table below.
 
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
-args={"--enable-composition-functions","--enable-composition-webhook-schema-validation"}`.
+args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
 
 ### Install pre-release Crossplane versions
 Install a pre-release versions of Crossplane from the `master` Crossplane Helm channel.
