@@ -1534,8 +1534,7 @@ patches:
       - type: string
         string:
           type: Format
-          format:
-            fmt: "the-field-%s"
+          fmt: "the-field-%s"
 ```
 
 #### Regular expression type
