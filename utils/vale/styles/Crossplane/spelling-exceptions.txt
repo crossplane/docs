@@ -1,6 +1,7 @@
 /tab
 /tabs
 call-outs
+ClusterRoles`
 comma-seperated
 conformant
 cross-reference
@@ -25,12 +26,14 @@ per-resource
 poll-interval
 pre-existing
 pre-provisioned
+pre-release
 race-conditions
 read-only
 resource-specific
 right-hand
 run-time
 step-by-step
+third-party
 top-level
 untrusted
 UpperCamelCase

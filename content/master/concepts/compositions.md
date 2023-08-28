@@ -135,7 +135,7 @@ the external resource name.
 #### Template a ProviderConfig
 
 Compositions can define a ProviderConfig like it defines managed resources.
-Generating a ProviderConfig may be useful in providing unique credentials to
+Generating a ProviderConfig can provide unique credentials to
 each deployment.
 
 
@@ -240,8 +240,7 @@ Composition, the resources defined by the
 the EKS {{<hover label="xcluster" line="13">}}cluster{{</hover >}}. 
 
 {{<hint "note" >}}
-This abbreviated example is from the Upbound [AWS Reference
-Platform](https://github.com/upbound/platform-ref-aws).
+This abbreviated example is from the Upbound [AWS Reference Platform](https://github.com/upbound/platform-ref-aws).
 
 View the complete Compositions in the reference platform's 
 [package directory](https://github.com/upbound/platform-ref-aws/blob/main/package/cluster/composition.yaml).
@@ -446,8 +445,7 @@ Most Compositions require customizing the fields of the resources. This can
 include applying unique passwords, modifying where to deploy resources,
 or applying labels or annotations. 
 
-The primary method to change resources is using a resource [patch and
-transform]({{<ref "./patch-and-transform" >}}). Patch and transforms allow
+The primary method to change resources is using a resource [patch and transform]({{<ref "./patch-and-transform" >}}). Patch and transforms allow
 matching specific input fields, modifying them and applying them to the managed
 resource. 
 
@@ -892,8 +890,7 @@ Read the
 for more information on restricting secret keys.
 {{< /hint >}}
 
-For more information on connection secrets read the [Connection Secrets
-knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 
 {{<hint "warning">}}
 You can't change the 
@@ -1007,7 +1004,7 @@ Compositions support matching resource fields by:
 #### Match a string
 
 {{<hover label="matchstring" line="11">}}MatchString{{</hover>}} considers the composed resource to be ready when the value of a
-field within that resource matches a specified string.
+field in that resource matches a specified string.
 
 {{<hint "note" >}}
 <!-- vale Google.WordList = NO -->
@@ -1042,7 +1039,7 @@ spec:
 #### Match an integer
 
 {{<hover label="matchint" line="11">}}MatchInteger{{</hover>}} considers the composed resource to be ready when the value of a
-field within that resource matches a specified integer.
+field in that resource matches a specified integer.
 
 {{<hint "note" >}}
 <!-- vale Google.WordList = NO -->

@@ -258,8 +258,8 @@ on what your OpenAPIv3 custom API can use.
 
 {{<hint "important" >}}
 
-Changing or expanding the XRD schema requires restarting the [Crossplane
-pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
+Changing or expanding the XRD schema requires restarting the 
+[Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
 ##### Required fields
@@ -351,8 +351,8 @@ object,
               - location
 ```
 
-The Swagger "[Describing
-Parameters](https://swagger.io/docs/specification/describing-parameters/)"
+The Swagger 
+"[Describing Parameters](https://swagger.io/docs/specification/describing-parameters/)"
 documentation has more examples. 
 
 ##### Crossplane reserved fields
@@ -415,8 +415,8 @@ field indicates which version of the schema Compositions use. Only one
 version can be `referenceable`. 
 
 {{< hint "note" >}}
-Changing which version is `referenceable:true` requires [updating the
-`compositeTypeRef.apiVersion`]({{<ref "./compositions#enabling-composite-resources" >}}) 
+Changing which version is `referenceable:true` requires 
+[updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#enabling-composite-resources" >}}) 
 of any Compositions referencing that XRD.
 {{< /hint >}}
 
@@ -427,8 +427,8 @@ of any Compositions referencing that XRD.
 Crossplane supports defining multiple `versions`, but the schema of each version
 can't change any existing fields, also called "making a breaking change."
 
-Breaking schema changes between versions requires the use of [conversion
-webhooks](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/#webhook-conversion).
+Breaking schema changes between versions requires the use of 
+[conversion webhooks](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/#webhook-conversion).
 
 New versions may define new optional parameters, but new required fields are
 a "breaking change."
@@ -496,8 +496,8 @@ spec:
 
 {{<hint "important" >}}
 
-Changing or expanding the XRD schema requires restarting the [Crossplane
-pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
+Changing or expanding the XRD schema requires restarting the 
+[Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
 ### Enable Claims
@@ -622,8 +622,8 @@ You can't change the `connectionSecretKeys` of an XRD. You must delete and
 recreate the XRD to change the `connectionSecretKeys`.
 {{</hint >}}
 
-For more information on connection secrets read the [Connection Secrets
-knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+For more information on connection secrets read the 
+[Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources and Claims.

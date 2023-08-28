@@ -20,6 +20,7 @@ PurgeCSS
 Upbound
 Upbound's
 Upjet
+UXP
 Velero
 VSCode
 Webpack

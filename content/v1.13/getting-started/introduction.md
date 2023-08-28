@@ -98,7 +98,7 @@ defines a
 [`bucket`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1) 
 resource for creating and managing AWS S3 storage buckets. 
 
-Within the `bucket` CRD is a
+In the `bucket` CRD is a
 [`spec.forProvider.region`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1#doc:spec-forProvider-region)
 value that defines which AWS region to deploy the bucket in.
 
@@ -147,8 +147,7 @@ Depending on the size of the API server and number of managed resources, this
 command may take minutes to return or may timeout. 
 
 For more information, read 
-[Kubernetes issue
-#111880](https://github.com/kubernetes/kubernetes/issues/111880)
+[Kubernetes issue #111880](https://github.com/kubernetes/kubernetes/issues/111880)
 and 
 [Crossplane issue #3459](https://github.com/crossplane/crossplane/issues/3459).
 {{< /hint >}}

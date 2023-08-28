@@ -79,3 +79,7 @@ kube-apiserver
 cluster-wide
 autoscaler
 DatabaseInstance
+ConfigMap
+imagePullSecret
+PersistentVolumeClaim
+PriorityClass

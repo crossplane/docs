@@ -276,8 +276,7 @@ updates the Roles to access the specific API endpoints in a Claim.
 
 {{< hint "note" >}}
 The specific details of the namespace Roles are beyond this guide. For more
-information read the [Composite Resource ClusterRole
-Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
+information read the [Composite Resource ClusterRole Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
 section of the RBAC Manager design document.
 {{< /hint >}}
 

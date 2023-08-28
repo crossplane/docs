@@ -35,8 +35,7 @@ Provider also define the available settings of a managed resource.
 Each managed resource is a unique API endpoint with their own
 group, kind and version. 
 
-For example the [Upbound AWS
-Provider](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/)
+For example the [Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/)
 defines the {{<hover label="gkv" line="2">}}Instance{{</hover>}} kind from the
 group {{<hover label="gkv" line="1">}}ec2.aws.upbound.io{{</hover>}}
 
@@ -650,8 +649,7 @@ call and receiving a response.
 If a Provider restarts before creating the `succeed` or `fail` annotations the
 Provider can't reconcile the manged resource. 
 
-Read Crossplane [issue
-#3037](https://github.com/crossplane/crossplane/issues/3037#issuecomment-1110142427)
+Read Crossplane [issue #3037](https://github.com/crossplane/crossplane/issues/3037#issuecomment-1110142427)
 for more details 
 {{< /hint >}}
 
