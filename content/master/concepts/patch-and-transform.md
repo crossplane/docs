@@ -1098,6 +1098,8 @@ Supported `toType` values:
 | `int` | A 32-bit integer value. | 
 | `int64` | A 64-bit integer value. | 
 | `string` | A string value. | 
+| `object` | An object. |
+| `array` | An array. |
 {{< /table >}}
 
 #### Converting strings to booleans
@@ -1144,6 +1146,58 @@ suffix support.
   convert:
    toType: float64
    format: quantity
+```
+
+#### Converting strings to objects
+
+Crossplane converts JSON strings to objects.
+
+Add {{<hover label="object" line="4">}}format: json{{</hover>}} to the 
+{{<hover label="object" line="1">}}convert{{</hover>}} object which is
+the only supported string format for this conversion.
+
+```yaml {label="object",copy-lines="all"}
+- type: convert
+  convert:
+   toType: object
+   format: json
+```
+
+{{< hint "tip" >}}
+This conversion is useful for patching keys in an object.
+{{< /hint >}}
+
+The following example adds a tag to a resource with a
+{{<hover label="patch-key" line="8">}}customized key{{</hover>}}:
+
+```yaml {label="patch-key",copy-lines="all"}
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.clusterName
+      toFieldPath: spec.forProvider.tags
+      transforms:
+      - type: string
+        string:
+          type: Format
+          fmt: '{"kubernetes.io/cluster/%s": "true"}'
+      - type: convert
+        convert:
+          toType: object
+          format: json
+```
+
+#### Converting strings to arrays
+
+Crossplane converts JSON strings to arrays.
+
+Add {{<hover label="array" line="4">}}format: json{{</hover>}} to the 
+{{<hover label="array" line="1">}}convert{{</hover>}} object which is
+the only supported string format for this conversion.
+
+```yaml {label="array",copy-lines="all"}
+- type: convert
+  convert:
+   toType: array
+   format: json
 ```
 
 ### Map transforms
@@ -1505,7 +1559,6 @@ converts the input based on one of the following conversion types:
 * `ToBase64` - Create a new base64 string from the input. 
 * `FromBase64` - Create a new text string from a base64 input.
 * `ToJson` - Convert the input string to valid JSON.
-* `FromJson` - Convert the input JSON string to an object.
 * `ToSha1` - Create a SHA-1 hash of the input string.
 * `ToSha256` - Create a SHA-256 hash of the input string.
 * `ToSha512` - Create a SHA-512 hash of the input string.
