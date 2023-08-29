@@ -98,7 +98,7 @@ aws_secret_access_key = $@<aws_secret_key>$@
 Save this text file as `aws-credentials.txt`.
 
 {{< hint type="note" >}}
-The [Configuration](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/docs/configuration) section of the Provider documentation describes other authentication methods.
+The [Authentication](https://docs.upbound.io/providers/provider-aws/authentication/) section of the AWS Provider documentation describes other authentication methods.
 {{< /hint >}}
 
 ### Create a Kubernetes secret with the AWS credentials
