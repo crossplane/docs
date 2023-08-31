@@ -1102,7 +1102,7 @@ spec:
 
 {{<hint "tip" >}}
 Checking {{<hover label="NonEmpty" line="11">}}NonEmpty{{</hover>}} doesn't
-require a `match` field.
+require setting any other fields.
 {{< /hint >}} 
 
 #### Always consider a resource ready
@@ -1191,7 +1191,7 @@ spec:
 ```
 {{<hint "tip" >}}
 Checking {{<hover label="matchTrue" line="11">}}MatchTrue{{</hover>}} doesn't
-require a `match` field.
+require setting any other fields.
 {{< /hint >}} 
 
 `MatchFalse` matches fields that express readiness with the value `false`.
@@ -1219,7 +1219,7 @@ spec:
 
 {{<hint "tip" >}}
 Checking {{<hover label="matchFalse" line="11">}}MatchFalse{{</hover>}} doesn't
-require a `match` field.
+require setting any other fields.
 {{< /hint >}} 
 
 ## Verify a Composition

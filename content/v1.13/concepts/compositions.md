@@ -1104,7 +1104,7 @@ spec:
 
 {{<hint "tip" >}}
 Checking {{<hover label="NonEmpty" line="11">}}NonEmpty{{</hover>}} doesn't
-require a `match` field.
+require setting any other fields.
 {{< /hint >}} 
 
 #### Always consider a resource ready
