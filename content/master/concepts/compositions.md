@@ -1164,10 +1164,10 @@ Two types of checks exist for matching boolean fields:
  * `MatchFalse`
 
 `MatchTrue` considers the composed resource to be ready when the value of a 
-field within that resource is `true`.
+field inside that resource is `true`.
 
 `MatchFalse` considers the composed resource to be ready when the value of a 
-field within that resource is `false`.
+field inside that resource is `false`.
 
 For example, consider 
 {{<hover label="matchTrue" line="7">}}my-resource{{</hover>}}, which is
