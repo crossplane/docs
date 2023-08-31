@@ -1131,14 +1131,14 @@ spec:
         - type: None
 ```
 
-#### Match a Condition
+#### Match a condition
 {{<hover label="condition" line="11">}}Condition{{</hover>}} considers the composed
 resource to be ready when it finds the expected condition type, with the
 expected status for it in its `status.conditions`.
 
 For example, consider 
-{{<hover label="condition" line="7">}}my-resource{{</hover>}}, which will be marked
-as ready if there is a condition of type 
+{{<hover label="condition" line="7">}}my-resource{{</hover>}}, which is
+ready if there is a condition of type 
 {{<hover label="condition" line="13">}}MyType{{</hover>}} with a status of
 {{<hover label="condition" line="14">}}Success{{</hover>}}.
 

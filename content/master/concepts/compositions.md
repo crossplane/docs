@@ -1129,14 +1129,14 @@ spec:
         - type: None
 ```
 
-#### Match a Condition
+#### Match a condition
 {{<hover label="condition" line="11">}}Condition{{</hover>}} considers the composed
 resource to be ready when it finds the expected condition type, with the
 expected status for it in its `status.conditions`.
 
 For example, consider 
-{{<hover label="condition" line="7">}}my-resource{{</hover>}}, which will be marked
-as ready if there is a condition of type 
+{{<hover label="condition" line="7">}}my-resource{{</hover>}}, which is
+ready if there is a condition of type 
 {{<hover label="condition" line="13">}}MyType{{</hover>}} with a status of
 {{<hover label="condition" line="14">}}Success{{</hover>}}.
 
@@ -1157,7 +1157,7 @@ spec:
             status: Success
 ```
 
-#### Match a Boolean
+#### Match a boolean
 
 Two types of checks exist for matching boolean fields:
  * `MatchTrue`
@@ -1170,8 +1170,8 @@ field within that resource is `true`.
 field within that resource is `false`.
 
 For example, consider 
-{{<hover label="matchTrue" line="7">}}my-resource{{</hover>}}, which will be marked
-as ready if 
+{{<hover label="matchTrue" line="7">}}my-resource{{</hover>}}, which is
+ready if 
 {{<hover label="matchTrue" line="12">}} status.atProvider.manifest.status.ready{{</hover>}}
 is {{<hover label="matchTrue" line="11">}}true{{</hover>}}.
 
@@ -1194,12 +1194,11 @@ Checking {{<hover label="matchTrue" line="11">}}MatchTrue{{</hover>}} doesn't
 require a `match` field.
 {{< /hint >}} 
 
-Alternatively, `MatchFalse` can be used for fields that express readiness with
-negative polarity.
+`MatchFalse` matches fields that express readiness with the value `false`.
 
 For example, consider 
-{{<hover label="matchFalse" line="7">}}my-resource{{</hover>}}, which will be marked
-as ready if 
+{{<hover label="matchFalse" line="7">}}my-resource{{</hover>}}, is
+ready if 
 {{<hover label="matchFalse" line="12">}} status.atProvider.manifest.status.pending{{</hover>}}
 is {{<hover label="matchFalse" line="11">}}false{{</hover>}}.
 
