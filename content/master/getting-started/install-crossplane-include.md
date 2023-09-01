@@ -1,5 +1,6 @@
 ---
 tocHidden: true
+searchExclude: true
 ---
 
 ## Install Crossplane
