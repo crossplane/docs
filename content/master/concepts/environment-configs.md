@@ -196,15 +196,75 @@ spec:
     - type: Selector
       selector: 
         matchLabels:
-          - key: my-label-key
+          - key: my-first-label-key
             type: Value
-            value: my-label-value
-          - key: my-label-key
+            value: my-first-label-value
+          - key: my-second-label-key
             type: FromCompositeFieldPath
             valueFromFieldPath: spec.parameters.deploy
   resources:
   # Removed for brevity
 ```
+
+By default, Crossplane errors out if a
+{{<hover label="byLabel" line="16">}}valueFromFieldPath{{</hover>}}
+field doesn't exist in the composite resource at runtime.  
+Set the
+{{<hover label="byLabelOptional" line="17">}}fromFieldPathPolicy{{</hover>}}
+field to `Optional` to ignore fields that don't exist. 
+
+```yaml {label="byLabelOptional",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-first-label-key
+              type: Value
+              value: my-first-label-value
+            - key: my-second-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
+Crossplane evaluates label selectors in order, so if a label set as optional
+isn't found, but if you already defined an explicit value for it, it uses that
+{{<hover label="byLabelOptionalDefault" line="16">}}default value{{</hover>}}
+instead.
+
+```yaml {label="byLabelOptionalDefault",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-first-label-key
+              type: Value
+              value: my-label-value
+            - key: my-second-label-key
+              type: Value
+              value: my-default-value
+            - key: my-second-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
 
 #### Manage selector results
 
