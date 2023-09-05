@@ -235,10 +235,18 @@ spec:
   # Removed for brevity
 ```
 
-Crossplane evaluates label selectors in order, so if a label set as optional
-isn't found, but if you already defined an explicit value for it, it uses that
-{{<hover label="byLabelOptionalDefault" line="16">}}default value{{</hover>}}
-instead.
+Set a default value for an optional label by setting the
+{{<hover label="byLabelOptionalDefault" line="15">}}value{{</hover>}} for the
+{{<hover label="byLabelOptionalDefault" line="14">}}key{{</hover>}} first, then
+define the
+{{<hover label="byLabelOptionalDefault" line="20">}}Optional{{</hover>}} label.
+
+For example, this Composition defines
+{{<hover label="byLabelOptionalDefault" line="16">}}value: my-default-value{{</hover>}}
+for the key {{<hover label="byLabelOptionalDefault" line="14">}}my-second-label-key{{</hover>}}.
+If the label
+{{<hover label="byLabelOptionalDefault" line="17">}}my-second-label-key{{</hover>}}
+exists, Crossplane uses the value from the label instead.
 
 ```yaml {label="byLabelOptionalDefault",copy-lines="all"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -265,6 +273,12 @@ spec:
   # Removed for brevity
 ```
 
+{{<hint "warning" >}}
+Crossplane applies values in order. The value of the last key defined always takes precedence.
+
+Defining the default value _after_ the label always overwrites the label
+value.
+{{< /hint >}}
 
 #### Manage selector results
 
