@@ -1000,6 +1000,8 @@ Compositions support matching resource fields by:
  * [integer match](#match-an-integer)
  * [non-empty match](#match-that-a-field-exists)
  * [always ready](#always-consider-a-resource-ready)
+ * [condition match](#match-a-condition)
+ * [boolean match](#match-a-boolean)
 
 #### Match a string
 
@@ -1100,7 +1102,7 @@ spec:
 
 {{<hint "tip" >}}
 Checking {{<hover label="NonEmpty" line="11">}}NonEmpty{{</hover>}} doesn't
-require a `match` field.
+require setting any other fields.
 {{< /hint >}} 
 
 #### Always consider a resource ready
@@ -1126,6 +1128,99 @@ spec:
       readinessChecks:
         - type: None
 ```
+
+#### Match a condition
+{{<hover label="condition" line="11">}}Condition{{</hover>}} considers the composed
+resource to be ready when it finds the expected condition type, with the
+expected status for it in its `status.conditions`.
+
+For example, consider 
+{{<hover label="condition" line="7">}}my-resource{{</hover>}}, which is
+ready if there is a condition of type 
+{{<hover label="condition" line="13">}}MyType{{</hover>}} with a status of
+{{<hover label="condition" line="14">}}Success{{</hover>}}.
+
+```yaml {label="condition",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  resources:
+  # Removed for Brevity
+    - name: my-resource
+      base:
+        # Removed for brevity
+      readinessChecks:
+        - type: MatchCondition
+          matchCondition:
+            type: MyType
+            status: Success
+```
+
+#### Match a boolean
+
+Two types of checks exist for matching boolean fields:
+ * `MatchTrue`
+ * `MatchFalse`
+
+`MatchTrue` considers the composed resource to be ready when the value of a 
+field inside that resource is `true`.
+
+`MatchFalse` considers the composed resource to be ready when the value of a 
+field inside that resource is `false`.
+
+For example, consider 
+{{<hover label="matchTrue" line="7">}}my-resource{{</hover>}}, which is
+ready if 
+{{<hover label="matchTrue" line="12">}} status.atProvider.manifest.status.ready{{</hover>}}
+is {{<hover label="matchTrue" line="11">}}true{{</hover>}}.
+
+```yaml {label="matchTrue",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  resources:
+  # Removed for Brevity
+    - name: my-resource
+      base:
+        # Removed for brevity
+      readinessChecks:
+        - type: MatchTrue
+          fieldPath: status.atProvider.manifest.status.ready
+```
+{{<hint "tip" >}}
+Checking {{<hover label="matchTrue" line="11">}}MatchTrue{{</hover>}} doesn't
+require setting any other fields.
+{{< /hint >}} 
+
+`MatchFalse` matches fields that express readiness with the value `false`.
+
+For example, consider 
+{{<hover label="matchFalse" line="7">}}my-resource{{</hover>}}, is
+ready if 
+{{<hover label="matchFalse" line="12">}} status.atProvider.manifest.status.pending{{</hover>}}
+is {{<hover label="matchFalse" line="11">}}false{{</hover>}}.
+
+```yaml {label="matchFalse",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  resources:
+  # Removed for Brevity
+    - name: my-resource
+      base:
+        # Removed for brevity
+      readinessChecks:
+        - type: MatchFalse
+          fieldPath: status.atProvider.manifest.status.pending
+```
+
+{{<hint "tip" >}}
+Checking {{<hover label="matchFalse" line="11">}}MatchFalse{{</hover>}} doesn't
+require setting any other fields.
+{{< /hint >}} 
 
 ## Verify a Composition
 
