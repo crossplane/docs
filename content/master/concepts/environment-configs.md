@@ -206,6 +206,35 @@ spec:
   # Removed for brevity
 ```
 
+By default, Crossplane errors out if the
+{{<hover label="byLabel" line="16">}}valueFromFieldPath{{</hover>}}
+field doesn't exist at runtime in the composite resource, for example if it's
+marked as optional. You can change this behavior with the
+{{<hover label="byLabelOptional" line="17">}}fromFieldPathPolicy{{</hover>}} field.
+
+```yaml {label="byLabelOptional",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-label-key
+              type: Value
+              value: my-label-value
+            - key: my-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
+
 #### Manage selector results
 
 Selecting environments by labels may return more than one environment.  
