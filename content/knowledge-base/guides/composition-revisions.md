@@ -39,20 +39,6 @@ update your XRs to leverage the latest `Composition` settings at your own pace.
 This enables you to [canary] changes to your infrastructure, or to roll back
 some XRs to previous `Composition` settings without rolling back all XRs.
 
-## Enabling Composition Revisions
-
-Composition Revisions are an alpha feature. They are not yet recommended for
-production use, and are disabled by default. Start Crossplane with the
-`--enable-composition-revisions` flag to enable Composition Revision support.
-
-```console
-kubectl create namespace crossplane-system
-helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --set args='{--enable-composition-revisions}'
-```
-
-See the [getting started guide][install-guide] for more information on
-installing Crossplane.
-
 ## Using Composition Revisions
 
 When you enable Composition Revisions three things happen:
