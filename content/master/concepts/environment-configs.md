@@ -196,15 +196,89 @@ spec:
     - type: Selector
       selector: 
         matchLabels:
-          - key: my-label-key
+          - key: my-first-label-key
             type: Value
-            value: my-label-value
-          - key: my-label-key
+            value: my-first-label-value
+          - key: my-second-label-key
             type: FromCompositeFieldPath
             valueFromFieldPath: spec.parameters.deploy
   resources:
   # Removed for brevity
 ```
+
+By default, Crossplane errors out if a
+{{<hover label="byLabel" line="16">}}valueFromFieldPath{{</hover>}}
+field doesn't exist in the composite resource at runtime.  
+Set the
+{{<hover label="byLabelOptional" line="17">}}fromFieldPathPolicy{{</hover>}}
+field to `Optional` to ignore fields that don't exist. 
+
+```yaml {label="byLabelOptional",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-first-label-key
+              type: Value
+              value: my-first-label-value
+            - key: my-second-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
+Set a default value for an optional label by setting the
+{{<hover label="byLabelOptionalDefault" line="15">}}value{{</hover>}} for the
+{{<hover label="byLabelOptionalDefault" line="14">}}key{{</hover>}} first, then
+define the
+{{<hover label="byLabelOptionalDefault" line="20">}}Optional{{</hover>}} label.
+
+For example, this Composition defines
+{{<hover label="byLabelOptionalDefault" line="16">}}value: my-default-value{{</hover>}}
+for the key {{<hover label="byLabelOptionalDefault" line="14">}}my-second-label-key{{</hover>}}.
+If the label
+{{<hover label="byLabelOptionalDefault" line="17">}}my-second-label-key{{</hover>}}
+exists, Crossplane uses the value from the label instead.
+
+```yaml {label="byLabelOptionalDefault",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-first-label-key
+              type: Value
+              value: my-label-value
+            - key: my-second-label-key
+              type: Value
+              value: my-default-value
+            - key: my-second-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
+{{<hint "warning" >}}
+Crossplane applies values in order. The value of the last key defined always takes precedence.
+
+Defining the default value _after_ the label always overwrites the label
+value.
+{{< /hint >}}
 
 #### Manage selector results
 
