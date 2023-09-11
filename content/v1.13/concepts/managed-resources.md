@@ -268,8 +268,6 @@ metadata:
   name: example-config
 spec:
   args: 
-    - --max-reconcile-rate=20
-    - --provider-ttl=250
     - --enable-management-policies
 ```
 
