@@ -261,7 +261,7 @@ in a
 [ControllerConfig]({{<ref "./providers#controller-configuration" >}}) as an
 argument in the `spec`.
 
-```yaml {copy-lines="9"}
+```yaml {copy-lines="all"}
 apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
 metadata:
