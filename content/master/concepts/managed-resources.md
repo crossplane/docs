@@ -253,10 +253,22 @@ the `managementPolicies` list.
 The managed resource `initProvider` option is an alpha feature related to
 [managementPolicies]({{<ref "./managed-resources#managementpolicies" >}}).
 
+{{< /hint >}}
+
 Enable the `initProvider` in a provider with `--enable-management-policies`
 in a
-[ControllerConfig]({{<ref "./providers#controller-configuration" >}}).
-{{< /hint >}}
+[ControllerConfig]({{<ref "./providers#controller-configuration" >}}) as an
+argument in the `spec`.
+
+```yaml {copy-lines="9"}
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: example-config
+spec:
+  args: 
+    - --enable-management-policies
+```
 
 The
 {{<hover label="initProvider" line="7">}}initProvider{{</hover>}} defines
