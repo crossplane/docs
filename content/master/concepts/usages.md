@@ -14,8 +14,8 @@ as follows:
 2. Deletion ordering by ensuring that a resource isn't deleted before the 
    deletion of its dependent resources.
 
-See the [Usage for Deletion Protection](#usage-for-deletion-protection) for the
-first use case and the [Usage for Deletion Ordering](#usage-for-deletion-ordering)
+See the section [Usage for Deletion Protection](#usage-for-deletion-protection) for the
+first use case and the section [Usage for Deletion Ordering](#usage-for-deletion-ordering)
 for the second one.
 
 ## Enable usages
@@ -64,6 +64,18 @@ for protection and the {{<hover label="order" line="11">}}by{{</hover>}} field
 defines the using resource. Both fields are optional, but at least one of them
 must be provided.
 <!-- vale write-good.Passive = YES -->
+
+{{<hint "important" >}}
+<!-- vale write-good.Passive = NO -->
+Usage relationships can be defined between `Managed Resources` and `Composites`.
+<!-- vale write-good.TooWordy = NO -->
+However, a `Composite` as the using resource (`spec.by`) would be ineffective
+unless the `compositeDeletePolicy` `Foreground` is used because it wouldn't block
+deletion of its child resources before its own deletion with the default deletion
+policy `Background`.
+<!-- vale write-good.TooWordy = YES -->
+<!-- vale write-good.Passive = YES -->
+{{< /hint >}}
 
 ### Usage for deletion protection
 
@@ -140,7 +152,7 @@ spec:
           baz: qux
 ```
 
-Once the `Usage` controller resolves the selectors, it persists the resource
+After the `Usage` controller resolves the selectors, it persists the resource
 name in the 
 {{<hover label="selectors-resolved" line="10">}}resourceRef.name{{</hover>}}
 field. The following example shows the `Usage` resource after the resolution of
@@ -220,3 +232,17 @@ spec:
             resourceSelector:
               matchControllerRef: true
 ```
+
+{{<hint "tip" >}}
+
+<!-- vale write-good.Passive = NO -->
+When there are multiple resources of same type in a Composition, the
+{{<hover label="composition" line="18">}}Usage{{</hover>}} resource must
+uniquely identify the resource in use or the using one. This could be
+accomplished by using extra labels and combining
+{{<hover label="composition" line="24">}}matchControllerRef{{</hover>}}
+with a `matchLabels` selector. Another alternative is patching `resourceRef.name`
+directly with the help of `ToCompositeFieldPath` and `FromCompositeFieldPath`
+or `ToEnvironmentFieldPath` and `FromEnvironmentFieldPath` type patches. 
+<!-- vale write-good.Passive = YES -->
+{{< /hint >}}
