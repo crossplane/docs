@@ -134,7 +134,7 @@ resource in the Provider.
 For example, a AWS VPC object named `my-test-vpc` has the external name
 `vpc-01353cfe93950a8ff`.
 
-```shell {copy-lines="1"
+```shell {copy-lines="1"}
 kubectl get vpc
 NAME            READY   SYNCED   EXTERNAL-NAME           AGE
 my-test-vpc     True    True     vpc-01353cfe93950a8ff   49m
@@ -261,7 +261,7 @@ in a
 [ControllerConfig]({{<ref "./providers#controller-configuration" >}}) as an
 argument in the `spec`.
 
-```yaml
+```yaml {copy-lines="9"
 apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
 metadata:
