@@ -596,7 +596,41 @@ spec:
   # Removed for Brevity
 ```
 
-Inside the {{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
+<!-- these two sections are duplicated in the environment-configs doc --> 
+
+##### Patch a composite resource
+To patch the composite resource use the 
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} object inside of the 
+{{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
+
+Use the 
+{{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
+data from the EnvironmentConfig to the composite resource.  
+Use the 
+{{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
+data from the composite resource to the EnvironmentConfig.
+
+```yaml {label="xrpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+      patches:
+      - type: ToCompositeFieldPath
+        fromFieldPath: tags
+        toFieldPath: metadata.labels[envTag]
+      - type: FromCompositeFieldPath
+        fromFieldPath: metadata.name
+        toFieldPath: newEnvironmentKey
+```
+
+Individual resources can use any data written to the EnvironmentConfig.
+
+##### Patch an individual resource
+To patch an individual resource, inside the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} object of the 
 resource, use 
 {{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
 data from the resource to the EnvironmentConfig.  

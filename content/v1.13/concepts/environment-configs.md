@@ -12,6 +12,20 @@ patches can read from and write to an environment.
 Crossplane supports multiple EnvironmentConfigs, each acting as a unique
 data store. 
 
+A Composition defines access to one or more EnvironmentConfigs.  
+
+When Crossplane creates a composite resource, Crossplane creates a unique copy
+of the defined EnvironmentConfigs for that composite resource.  
+
+The composite resource can read and write data to their unique 
+EnvironmentConfig.
+
+{{<hint "important" >}}
+EnvironmentConfigs are unique to each composite resource.  
+A composite resource can't read data in an EnvironmentConfig written by another
+composite resource.
+{{< /hint >}}
+
 ## Enable EnvironmentConfigs
 EnvironmentConfigs are an alpha feature. Alpha features aren't enabled by
 default.
@@ -75,19 +89,16 @@ data:
     - item2
 ```
 
-## Patching with EnvironmentConfigs
+<!-- vale Google.Headings = NO -->
+## Select an EnvironmentConfig
+<!-- vale Google.Headings = YES -->
 
-To patch data from or to an EnvironmentConfig, reference the EnvironmentConfig
+Select the EnvironmentConfig to use
 inside a Composition's 
 {{<hover label="comp" line="6">}}environment{{</hover>}} field.
 
 The {{<hover label="comp" line="7">}}environmentConfigs{{</hover>}} field is a
 list of environments this Composition can use. 
-
-{{<hint "tip" >}}
-Read about EnvironmentConfig patch types in the 
-[Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
-{{< /hint >}}
 
 Select an environment by 
 {{<hover label="comp" line="8">}}Reference{{</hover>}} or 
@@ -297,7 +308,94 @@ The environments selected by
 {{<hover label="maxMatch" line="18">}}matchLabels{{</hover>}} are then merged
 into any other environments listed in the 
 {{<hover label="maxMatch" line="7">}}environmentConfigs{{</hover>}}.
+
 <!--
 TODO: Add Policies
-TODO: Add webhook validations
 -->
+
+
+## Patching with EnvironmentConfigs
+
+When Crossplane creates a composite resource, Crossplane creates a unique copy  
+of the EnvironmentConfig for the composite resource. 
+
+The composite resource can read or write data between the EnvironmentConfig and
+composite resource or between the EnvironmentConfig and individual resources
+defined inside the composite resource. 
+
+{{<hint "tip" >}}
+Read about EnvironmentConfig patch types in the 
+[Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
+{{< /hint >}}
+
+<!-- these two sections are duplicated in the compositions doc --> 
+
+### Patching a composite resource
+
+To patch a composite resource use the 
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} object inside of a
+Composition's 
+{{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
+
+Use the 
+{{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
+data from the EnvironmentConfig to the composite resource.  
+Use the 
+{{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
+data from the composite resource to the EnvironmentConfig.
+
+```yaml {label="xrpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+      patches:
+      - type: ToCompositeFieldPath
+        fromFieldPath: tags
+        toFieldPath: metadata.labels[envTag]
+      - type: FromCompositeFieldPath
+        fromFieldPath: metadata.name
+        toFieldPath: newEnvironmentKey
+```
+
+Individual resources can use any data written to the EnvironmentConfig.
+
+##### Patch an individual resource
+
+To patch an individual resource, inside the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} object of the 
+resource, use 
+{{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
+data from the resource to the EnvironmentConfig.  
+Use {{<hover label="envpatch" line="20">}}FromEnvironmentFieldPath{{</hover>}}
+to copy data to the resource from the EnvironmentConfig.
+
+```yaml {label="envpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+  resources:
+  # Removed for Brevity
+    - name: vpc
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        spec:
+          forProvider:
+            cidrBlock: 172.16.0.0/16
+      patches:
+        - type: ToEnvironmentFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: vpcId
+        - type: FromEnvironmentFieldPath
+          fromFieldPath: tags
+          toFieldPath: spec.forProvider.tags
+```
+
+The [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation has
+more information on patching individual resources.

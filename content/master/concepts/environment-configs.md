@@ -12,6 +12,20 @@ patches can read from and write to an environment.
 Crossplane supports multiple EnvironmentConfigs, each acting as a unique
 data store. 
 
+A Composition defines access to one or more EnvironmentConfigs.  
+
+When Crossplane creates a composite resource, Crossplane creates a unique copy
+of the defined EnvironmentConfigs for that composite resource.  
+
+The composite resource can read and write data to their unique 
+EnvironmentConfig.
+
+{{<hint "important" >}}
+EnvironmentConfigs are unique to each composite resource.  
+A composite resource can't read data in an EnvironmentConfig written by another
+composite resource.
+{{< /hint >}}
+
 ## Enable EnvironmentConfigs
 EnvironmentConfigs are an alpha feature. Alpha features aren't enabled by
 default.
@@ -75,19 +89,16 @@ data:
     - item2
 ```
 
-## Patching with EnvironmentConfigs
+<!-- vale Google.Headings = NO -->
+## Select an EnvironmentConfig
+<!-- vale Google.Headings = YES -->
 
-To patch data from or to an EnvironmentConfig, reference the EnvironmentConfig
+Select the EnvironmentConfig to use
 inside a Composition's 
 {{<hover label="comp" line="6">}}environment{{</hover>}} field.
 
 The {{<hover label="comp" line="7">}}environmentConfigs{{</hover>}} field is a
 list of environments this Composition can use. 
-
-{{<hint "tip" >}}
-Read about EnvironmentConfig patch types in the 
-[Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
-{{< /hint >}}
 
 Select an environment by 
 {{<hover label="comp" line="8">}}Reference{{</hover>}} or 
@@ -196,89 +207,15 @@ spec:
     - type: Selector
       selector: 
         matchLabels:
-          - key: my-first-label-key
+          - key: my-label-key
             type: Value
-            value: my-first-label-value
-          - key: my-second-label-key
+            value: my-label-value
+          - key: my-label-key
             type: FromCompositeFieldPath
             valueFromFieldPath: spec.parameters.deploy
   resources:
   # Removed for brevity
 ```
-
-By default, Crossplane errors out if a
-{{<hover label="byLabel" line="16">}}valueFromFieldPath{{</hover>}}
-field doesn't exist in the composite resource at runtime.  
-Set the
-{{<hover label="byLabelOptional" line="17">}}fromFieldPathPolicy{{</hover>}}
-field to `Optional` to ignore fields that don't exist. 
-
-```yaml {label="byLabelOptional",copy-lines="all"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: example-composition
-spec:
-  environment:
-    environmentConfigs:
-      - type: Selector
-        selector:
-          matchLabels:
-            - key: my-first-label-key
-              type: Value
-              value: my-first-label-value
-            - key: my-second-label-key
-              type: FromCompositeFieldPath
-              valueFromFieldPath: spec.parameters.deploy
-              fromFieldPathPolicy: Optional
-  resources:
-  # Removed for brevity
-```
-
-Set a default value for an optional label by setting the
-{{<hover label="byLabelOptionalDefault" line="15">}}value{{</hover>}} for the
-{{<hover label="byLabelOptionalDefault" line="14">}}key{{</hover>}} first, then
-define the
-{{<hover label="byLabelOptionalDefault" line="20">}}Optional{{</hover>}} label.
-
-For example, this Composition defines
-{{<hover label="byLabelOptionalDefault" line="16">}}value: my-default-value{{</hover>}}
-for the key {{<hover label="byLabelOptionalDefault" line="14">}}my-second-label-key{{</hover>}}.
-If the label
-{{<hover label="byLabelOptionalDefault" line="17">}}my-second-label-key{{</hover>}}
-exists, Crossplane uses the value from the label instead.
-
-```yaml {label="byLabelOptionalDefault",copy-lines="all"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: example-composition
-spec:
-  environment:
-    environmentConfigs:
-      - type: Selector
-        selector:
-          matchLabels:
-            - key: my-first-label-key
-              type: Value
-              value: my-label-value
-            - key: my-second-label-key
-              type: Value
-              value: my-default-value
-            - key: my-second-label-key
-              type: FromCompositeFieldPath
-              valueFromFieldPath: spec.parameters.deploy
-              fromFieldPathPolicy: Optional
-  resources:
-  # Removed for brevity
-```
-
-{{<hint "warning" >}}
-Crossplane applies values in order. The value of the last key defined always takes precedence.
-
-Defining the default value _after_ the label always overwrites the label
-value.
-{{< /hint >}}
 
 #### Manage selector results
 
@@ -371,7 +308,94 @@ The environments selected by
 {{<hover label="maxMatch" line="18">}}matchLabels{{</hover>}} are then merged
 into any other environments listed in the 
 {{<hover label="maxMatch" line="7">}}environmentConfigs{{</hover>}}.
+
 <!--
 TODO: Add Policies
-TODO: Add webhook validations
 -->
+
+
+## Patching with EnvironmentConfigs
+
+When Crossplane creates a composite resource, Crossplane creates a unique copy  
+of the EnvironmentConfig for the composite resource. 
+
+The composite resource can read or write data between the EnvironmentConfig and
+composite resource or between the EnvironmentConfig and individual resources
+defined inside the composite resource. 
+
+{{<hint "tip" >}}
+Read about EnvironmentConfig patch types in the 
+[Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
+{{< /hint >}}
+
+<!-- these two sections are duplicated in the compositions doc --> 
+
+### Patching a composite resource
+
+To patch a composite resource use the 
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} object inside of a
+Composition's 
+{{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
+
+Use the 
+{{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
+data from the EnvironmentConfig to the composite resource.  
+Use the 
+{{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
+data from the composite resource to the EnvironmentConfig.
+
+```yaml {label="xrpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+      patches:
+      - type: ToCompositeFieldPath
+        fromFieldPath: tags
+        toFieldPath: metadata.labels[envTag]
+      - type: FromCompositeFieldPath
+        fromFieldPath: metadata.name
+        toFieldPath: newEnvironmentKey
+```
+
+Individual resources can use any data written to the EnvironmentConfig.
+
+##### Patch an individual resource
+
+To patch an individual resource, inside the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} object of the 
+resource, use 
+{{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
+data from the resource to the EnvironmentConfig.  
+Use {{<hover label="envpatch" line="20">}}FromEnvironmentFieldPath{{</hover>}}
+to copy data to the resource from the EnvironmentConfig.
+
+```yaml {label="envpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+  resources:
+  # Removed for Brevity
+    - name: vpc
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        spec:
+          forProvider:
+            cidrBlock: 172.16.0.0/16
+      patches:
+        - type: ToEnvironmentFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: vpcId
+        - type: FromEnvironmentFieldPath
+          fromFieldPath: tags
+          toFieldPath: spec.forProvider.tags
+```
+
+The [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation has
+more information on patching individual resources.

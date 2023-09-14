@@ -135,7 +135,7 @@ the external resource name.
 #### Template a ProviderConfig
 
 Compositions can define a ProviderConfig like it defines managed resources.
-Generating a ProviderConfig can provide unique credentials to
+Generating a ProviderConfig may be useful in providing unique credentials to
 each deployment.
 
 
@@ -240,7 +240,8 @@ Composition, the resources defined by the
 the EKS {{<hover label="xcluster" line="13">}}cluster{{</hover >}}. 
 
 {{<hint "note" >}}
-This abbreviated example is from the Upbound [AWS Reference Platform](https://github.com/upbound/platform-ref-aws).
+This abbreviated example is from the Upbound 
+[AWS Reference Platform](https://github.com/upbound/platform-ref-aws).
 
 View the complete Compositions in the reference platform's 
 [package directory](https://github.com/upbound/platform-ref-aws/blob/main/package/cluster/composition.yaml).
@@ -445,9 +446,10 @@ Most Compositions require customizing the fields of the resources. This can
 include applying unique passwords, modifying where to deploy resources,
 or applying labels or annotations. 
 
-The primary method to change resources is using a resource [patch and transform]({{<ref "./patch-and-transform" >}}). Patch and transforms allow
-matching specific input fields, modifying them and applying them to the managed
-resource. 
+The primary method to change resources is using a resource 
+[patch and transform]({{<ref "./patch-and-transform" >}}). Patch and transforms 
+allow matching specific input fields, modifying them and applying them to the 
+managed resource. 
 
 {{<hint "important" >}}
 The details of creating patch and transforms and their options are in the 
@@ -594,7 +596,41 @@ spec:
   # Removed for Brevity
 ```
 
-Inside the {{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
+<!-- these two sections are duplicated in the environment-configs doc --> 
+
+##### Patch a composite resource
+To patch the composite resource use the 
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} object inside of the 
+{{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
+
+Use the 
+{{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
+data from the EnvironmentConfig to the composite resource.  
+Use the 
+{{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
+data from the composite resource to the EnvironmentConfig.
+
+```yaml {label="xrpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+      patches:
+      - type: ToCompositeFieldPath
+        fromFieldPath: tags
+        toFieldPath: metadata.labels[envTag]
+      - type: FromCompositeFieldPath
+        fromFieldPath: metadata.name
+        toFieldPath: newEnvironmentKey
+```
+
+Individual resources can use any data written to the EnvironmentConfig.
+
+##### Patch an individual resource
+To patch an individual resource, inside the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} object of the 
 resource, use 
 {{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
 data from the resource to the EnvironmentConfig.  
@@ -890,7 +926,8 @@ Read the
 for more information on restricting secret keys.
 {{< /hint >}}
 
-For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+For more information on connection secrets read the 
+[Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 
 {{<hint "warning">}}
 You can't change the 
