@@ -550,8 +550,8 @@ spec:
 
 #### Patch with EnvironmentConfigs 
 
-Crossplane uses EnvironmentConfigs as an in-memory data store. Compositions can
-read and write from this data store as part of the patch process. 
+Crossplane uses EnvironmentConfigs to create in-memory data stores. Compositions 
+can read and write from this data store as part of the patch process. 
 
 {{<hint "important" >}}
 EnvironmentConfigs are an alpha feature. Alpha features aren't enabled by
@@ -559,7 +559,7 @@ default.
 {{< /hint >}}
 
  EnvironmentConfigs can predefine data that Compositions can use
- or a Composite Resource can write data to the EnvironmentConfig for other
+ or a Composite Resource can write data to their in-memory environment for other
  resources to read. 
 
 <!-- vale off -->
@@ -569,10 +569,9 @@ Read the [EnvironmentConfigs]({{<ref "./environment-configs" >}}) page for
 more information on using EnvironmentConfigs.
 {{< /hint >}}
 
-To apply a patch using EnvironmentConfigs, first define which EnvironmentConfig
+To apply a patch using EnvironmentConfigs, first define which EnvironmentConfigs
 to use with 
-{{<hover label="envselect"
-line="6">}}environment.environmentConfigs{{</hover>}}. 
+{{<hover label="envselect" line="6">}}environment.environmentConfigs{{</hover>}}. 
 
 <!-- vale Google.Quotes = NO -->
 <!-- vale gitlab.SentenceLength = NO -->
@@ -580,7 +579,7 @@ line="6">}}environment.environmentConfigs{{</hover>}}.
 Use either a
 [reference]({{<ref "./managed-resources#matching-by-name-reference" >}})
 or a [selector]({{<ref "./managed-resources#matching-by-selector" >}}) to
-identify the EnvironmentConfig to use.
+identify the EnvironmentConfigs to use.
 <!-- vale Google.Quotes = YES -->
 
 ```yaml {label="envselect",copy-lines="none"}
@@ -599,16 +598,16 @@ spec:
 <!-- these two sections are duplicated in the environment-configs doc --> 
 
 ##### Patch a composite resource
-To patch the composite resource use the 
-{{< hover label="xrpatch" line="7">}}patches{{</hover>}} object inside of the 
+To patch the composite resource use
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} inside of the 
 {{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
 
 Use the 
 {{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
-data from the EnvironmentConfig to the composite resource.  
+data from the in-memory environment to the composite resource.  
 Use the 
 {{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
-data from the composite resource to the EnvironmentConfig.
+data from the composite resource to the in-memory environment.
 
 ```yaml {label="xrpatch",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -626,16 +625,16 @@ spec:
         toFieldPath: newEnvironmentKey
 ```
 
-Individual resources can use any data written to the EnvironmentConfig.
+Individual resources can use any data written to their in-memory environment.
 
 ##### Patch an individual resource
 To patch an individual resource, inside the 
-{{<hover label="envpatch" line="16">}}patches{{</hover>}} object of the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
 resource, use 
 {{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
-data from the resource to the EnvironmentConfig.  
+data from the resource to the in-memory environment.  
 Use {{<hover label="envpatch" line="20">}}FromEnvironmentFieldPath{{</hover>}}
-to copy data to the resource from the EnvironmentConfig.
+to copy data to the resource from the in-memory environment.
 
 ```yaml {label="envpatch",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
