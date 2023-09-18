@@ -81,8 +81,7 @@ object, including the `metadata`, `spec` or `status` fields.
 Field selectors can be a string matching a field name or an array index, in
 brackets. Field names may use a `.` character to select child elements.
 
-
-{{< expand "Example field selectors" >}}
+#### Example field selectors
 Here are some example selectors from a composite resource object.
 {{<table "table" >}}
 | Selector | Selected element | 
@@ -118,7 +117,6 @@ spec:
     name: my-example-claim-978mh-rv5nm
   # Removed for brevity
 ```
-{{< /expand >}}
 
 ## Reuse a patch
 
@@ -296,6 +294,17 @@ Labels:       crossplane.io/composite=my-example-claim-jp7rx
 ## Types of patches
 Crossplane supports multiple patch types, each using a different source for data
 and applying the patch to a different location. 
+
+{{<hint "important" >}}
+
+This section describes patches applied to individual resources inside a
+Composition.  
+
+For information about applying patches to an entire composite resource with a
+Composition's `environment.patches` read the 
+[Environment Configurations]({{<ref "environment-configs" >}}) documentation.
+
+{{< /hint >}}
 
 Summary of Crossplane patches
 {{< table "table table-hover" >}}
@@ -797,10 +806,6 @@ For example, use the desired
 apply it as the environment's
 {{<hover label="toEnvField" line="14">}}key1{{</hover>}}.
 
-{{< hint "important" >}}
-The environment's key must already exist. Patches can't create new environment
-keys. 
-{{< /hint >}}
 
 ```yaml {label="toEnvField",copy-lines="9-11"}
 apiVersion: apiextensions.crossplane.io/v1

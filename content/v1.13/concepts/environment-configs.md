@@ -6,11 +6,27 @@ alphaVersion: "1.11"
 description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in patching Compositions"
 ---
 
-A Crossplane EnvironmentConfig is an in-memory data store. Composition 
-patches can read from and write to an environment.
+A Crossplane EnvironmentConfig is a cluster scoped 
+[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like 
+resource used
+by Compositions. Compositions can use the environment to store information from
+individual resources or to apply [patches]({{<ref "patch-and-transform">}}).
 
 Crossplane supports multiple EnvironmentConfigs, each acting as a unique
 data store. 
+
+When Crossplane creates a composite resource, Crossplane merges all the 
+EnvironmentConfigs referenced in the associated Composition and creates a unique
+in-memory environment for that composite resource.
+
+The composite resource can read and write data to their unique 
+in-memory environment.
+
+{{<hint "important" >}}
+The in-memory environment is unique to each composite resource.  
+A composite resource can't read data in another composite resource's
+environment. 
+{{< /hint >}}
 
 ## Enable EnvironmentConfigs
 EnvironmentConfigs are an alpha feature. Alpha features aren't enabled by
@@ -75,19 +91,16 @@ data:
     - item2
 ```
 
-## Patching with EnvironmentConfigs
+<!-- vale Google.Headings = NO -->
+## Select an EnvironmentConfig
+<!-- vale Google.Headings = YES -->
 
-To patch data from or to an EnvironmentConfig, reference the EnvironmentConfig
+Select the EnvironmentConfigs to use
 inside a Composition's 
 {{<hover label="comp" line="6">}}environment{{</hover>}} field.
 
 The {{<hover label="comp" line="7">}}environmentConfigs{{</hover>}} field is a
 list of environments this Composition can use. 
-
-{{<hint "tip" >}}
-Read about EnvironmentConfig patch types in the 
-[Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
-{{< /hint >}}
 
 Select an environment by 
 {{<hover label="comp" line="8">}}Reference{{</hover>}} or 
@@ -297,7 +310,91 @@ The environments selected by
 {{<hover label="maxMatch" line="18">}}matchLabels{{</hover>}} are then merged
 into any other environments listed in the 
 {{<hover label="maxMatch" line="7">}}environmentConfigs{{</hover>}}.
+
 <!--
 TODO: Add Policies
-TODO: Add webhook validations
 -->
+
+
+## Patching with EnvironmentConfigs
+
+When Crossplane creates or updates a composite resource, Crossplane 
+merges all the specified EnvironmentConfigs into an in-memory environment.
+
+The composite resource can read or write data between the EnvironmentConfig and
+composite resource or between the EnvironmentConfig and individual resources
+defined inside the composite resource. 
+
+{{<hint "tip" >}}
+Read about EnvironmentConfig patch types in the 
+[Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
+{{< /hint >}}
+
+<!-- these two sections are duplicated in the compositions doc --> 
+
+##### Patch a composite resource
+To patch the composite resource use
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} inside of the 
+{{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
+
+Use the 
+{{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
+data from the in-memory environment to the composite resource.  
+Use the 
+{{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
+data from the composite resource to the in-memory environment.
+
+```yaml {label="xrpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+      patches:
+      - type: ToCompositeFieldPath
+        fromFieldPath: tags
+        toFieldPath: metadata.labels[envTag]
+      - type: FromCompositeFieldPath
+        fromFieldPath: metadata.name
+        toFieldPath: newEnvironmentKey
+```
+
+Individual resources can use any data written to the in-memory environment.
+
+##### Patch an individual resource
+To patch an individual resource, inside the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
+resource, use 
+{{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
+data from the resource to the in-memory environment.  
+Use {{<hover label="envpatch" line="20">}}FromEnvironmentFieldPath{{</hover>}}
+to copy data to the resource from the in-memory environment.
+
+```yaml {label="envpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+  resources:
+  # Removed for Brevity
+    - name: vpc
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        spec:
+          forProvider:
+            cidrBlock: 172.16.0.0/16
+      patches:
+        - type: ToEnvironmentFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: vpcId
+        - type: FromEnvironmentFieldPath
+          fromFieldPath: tags
+          toFieldPath: spec.forProvider.tags
+```
+
+The [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation has
+more information on patching individual resources.

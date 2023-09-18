@@ -135,7 +135,7 @@ the external resource name.
 #### Template a ProviderConfig
 
 Compositions can define a ProviderConfig like it defines managed resources.
-Generating a ProviderConfig can provide unique credentials to
+Generating a ProviderConfig may be useful in providing unique credentials to
 each deployment.
 
 
@@ -240,7 +240,8 @@ Composition, the resources defined by the
 the EKS {{<hover label="xcluster" line="13">}}cluster{{</hover >}}. 
 
 {{<hint "note" >}}
-This abbreviated example is from the Upbound [AWS Reference Platform](https://github.com/upbound/platform-ref-aws).
+This abbreviated example is from the Upbound 
+[AWS Reference Platform](https://github.com/upbound/platform-ref-aws).
 
 View the complete Compositions in the reference platform's 
 [package directory](https://github.com/upbound/platform-ref-aws/blob/main/package/cluster/composition.yaml).
@@ -445,9 +446,10 @@ Most Compositions require customizing the fields of the resources. This can
 include applying unique passwords, modifying where to deploy resources,
 or applying labels or annotations. 
 
-The primary method to change resources is using a resource [patch and transform]({{<ref "./patch-and-transform" >}}). Patch and transforms allow
-matching specific input fields, modifying them and applying them to the managed
-resource. 
+The primary method to change resources is using a resource 
+[patch and transform]({{<ref "./patch-and-transform" >}}). Patch and transforms 
+allow matching specific input fields, modifying them and applying them to the 
+managed resource. 
 
 {{<hint "important" >}}
 The details of creating patch and transforms and their options are in the 
@@ -548,8 +550,8 @@ spec:
 
 #### Patch with EnvironmentConfigs 
 
-Crossplane uses EnvironmentConfigs as an in-memory data store. Compositions can
-read and write from this data store as part of the patch process. 
+Crossplane uses EnvironmentConfigs to create in-memory data stores. Compositions 
+can read and write from this data store as part of the patch process. 
 
 {{<hint "important" >}}
 EnvironmentConfigs are an alpha feature. Alpha features aren't enabled by
@@ -557,7 +559,7 @@ default.
 {{< /hint >}}
 
  EnvironmentConfigs can predefine data that Compositions can use
- or a Composite Resource can write data to the EnvironmentConfig for other
+ or a Composite Resource can write data to their in-memory environment for other
  resources to read. 
 
 <!-- vale off -->
@@ -567,10 +569,9 @@ Read the [EnvironmentConfigs]({{<ref "./environment-configs" >}}) page for
 more information on using EnvironmentConfigs.
 {{< /hint >}}
 
-To apply a patch using EnvironmentConfigs, first define which EnvironmentConfig
+To apply a patch using EnvironmentConfigs, first define which EnvironmentConfigs
 to use with 
-{{<hover label="envselect"
-line="6">}}environment.environmentConfigs{{</hover>}}. 
+{{<hover label="envselect" line="6">}}environment.environmentConfigs{{</hover>}}. 
 
 <!-- vale Google.Quotes = NO -->
 <!-- vale gitlab.SentenceLength = NO -->
@@ -578,7 +579,7 @@ line="6">}}environment.environmentConfigs{{</hover>}}.
 Use either a
 [reference]({{<ref "./managed-resources#matching-by-name-reference" >}})
 or a [selector]({{<ref "./managed-resources#matching-by-selector" >}}) to
-identify the EnvironmentConfig to use.
+identify the EnvironmentConfigs to use.
 <!-- vale Google.Quotes = YES -->
 
 ```yaml {label="envselect",copy-lines="none"}
@@ -594,12 +595,46 @@ spec:
   # Removed for Brevity
 ```
 
-Inside the {{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
+<!-- these two sections are duplicated in the environment-configs doc --> 
+
+##### Patch a composite resource
+To patch between the composite resource and the in-memory environment use
+{{< hover label="xrpatch" line="7">}}patches{{</hover>}} inside of the 
+{{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
+
+Use the 
+{{< hover label="xrpatch" line="5">}}ToCompositeFieldPath{{</hover>}} to copy
+data from the in-memory environment to the composite resource.  
+Use the 
+{{< hover label="xrpatch" line="5">}}FromCompositeFieldPath{{</hover>}} to copy
+data from the composite resource to the in-memory environment.
+
+```yaml {label="xrpatch",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  environment:
+  # Removed for Brevity
+      patches:
+      - type: ToCompositeFieldPath
+        fromFieldPath: tags
+        toFieldPath: metadata.labels[envTag]
+      - type: FromCompositeFieldPath
+        fromFieldPath: metadata.name
+        toFieldPath: newEnvironmentKey
+```
+
+Individual resources can use any data written to their in-memory environment.
+
+##### Patch an individual resource
+To patch an individual resource, inside the 
+{{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
 resource, use 
 {{<hover label="envpatch" line="17">}}ToEnvironmentFieldPath{{</hover>}} to copy
-data from the resource to the EnvironmentConfig.  
+data from the resource to the in-memory environment.  
 Use {{<hover label="envpatch" line="20">}}FromEnvironmentFieldPath{{</hover>}}
-to copy data to the resource from the EnvironmentConfig.
+to copy data to the resource from the in-memory environment.
 
 ```yaml {label="envpatch",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -890,7 +925,8 @@ Read the
 for more information on restricting secret keys.
 {{< /hint >}}
 
-For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+For more information on connection secrets read the 
+[Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
 
 {{<hint "warning">}}
 You can't change the 
