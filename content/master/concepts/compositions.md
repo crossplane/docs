@@ -598,7 +598,7 @@ spec:
 <!-- these two sections are duplicated in the environment-configs doc --> 
 
 ##### Patch a composite resource
-To patch the composite resource use
+To patch between the composite resource and the in-memory environment use
 {{< hover label="xrpatch" line="7">}}patches{{</hover>}} inside of the 
 {{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
 

@@ -6,17 +6,18 @@ alphaVersion: "1.11"
 description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in patching Compositions"
 ---
 
-A Crossplane EnvironmentConfig is an in-memory data store. Composition 
-patches can read from and write to an environment.
+A Crossplane EnvironmentConfig is a cluster scoped 
+[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like 
+resource used
+by Compositions. Compositions can use the environment to store information from
+individual resources or to apply [patches]({{<ref "patch-and-transform">}}).
 
 Crossplane supports multiple EnvironmentConfigs, each acting as a unique
 data store. 
 
-A Composition defines access to one or more EnvironmentConfigs.  
-
-When Crossplane creates a composite resource, Crossplane merges all referenced
-EnvironmentConfigs and creates a unique in-memory environment
-for that composite resource.  
+When Crossplane creates a composite resource, Crossplane merges all the 
+EnvironmentConfigs referenced in the associated Composition and creates a unique
+in-memory environment for that composite resource.
 
 The composite resource can read and write data to their unique 
 in-memory environment.
@@ -94,7 +95,7 @@ data:
 ## Select an EnvironmentConfig
 <!-- vale Google.Headings = YES -->
 
-Select the EnvironmentConfig to use
+Select the EnvironmentConfigs to use
 inside a Composition's 
 {{<hover label="comp" line="6">}}environment{{</hover>}} field.
 
@@ -317,8 +318,8 @@ TODO: Add Policies
 
 ## Patching with EnvironmentConfigs
 
-When Crossplane creates a composite resource, Crossplane creates a unique copy  
-of the EnvironmentConfig for the composite resource. 
+When Crossplane creates or updates a composite resource, Crossplane 
+merges all the specified EnvironmentConfigs into an in-memory environment.
 
 The composite resource can read or write data between the EnvironmentConfig and
 composite resource or between the EnvironmentConfig and individual resources

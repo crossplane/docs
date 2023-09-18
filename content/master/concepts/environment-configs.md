@@ -7,7 +7,8 @@ description: "Environment Configurations or EnvironmentConfigs are an in-memory 
 ---
 
 A Crossplane EnvironmentConfig is a cluster scoped 
-[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/) used
+[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like 
+resource used
 by Compositions. Compositions can use the environment to store information from
 individual resources or to apply [patches]({{<ref "patch-and-transform">}}).
 
