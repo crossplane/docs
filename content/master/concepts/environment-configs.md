@@ -6,6 +6,11 @@ alphaVersion: "1.11"
 description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in patching Compositions"
 ---
 
+<!--
+TODO: Add Policies
+-->
+
+
 A Crossplane EnvironmentConfig is a cluster scoped 
 [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like 
 resource used
@@ -311,10 +316,83 @@ The environments selected by
 into any other environments listed in the 
 {{<hover label="maxMatch" line="7">}}environmentConfigs{{</hover>}}.
 
-<!--
-TODO: Add Policies
--->
+#### Optional selector labels
+By default, Crossplane issues an error if a
+{{<hover label="byLabelOptional" line="16">}}valueFromFieldPath{{</hover>}}
+field doesn't exist in the composite resource.  
 
+Add
+{{<hover label="byLabelOptional" line="17">}}fromFieldPathPolicy{{</hover>}}
+as {{<hover label="byLabelOptional" line="17">}}Optional{{</hover>}} 
+to ignore a field if it doesn't exist.
+
+```yaml {label="byLabelOptional",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-first-label-key
+              type: Value
+              value: my-first-label-value
+            - key: my-second-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
+
+Set a default value for an optional label by setting the default
+{{<hover label="byLabelOptionalDefault" line="15">}}value{{</hover>}} for the
+{{<hover label="byLabelOptionalDefault" line="14">}}key{{</hover>}} first, then
+define the
+{{<hover label="byLabelOptionalDefault" line="20">}}Optional{{</hover>}} label.
+
+For example, this Composition defines
+{{<hover label="byLabelOptionalDefault" line="16">}}value: my-default-value{{</hover>}}
+for the key {{<hover label="byLabelOptionalDefault" line="14">}}my-second-label-key{{</hover>}}.
+If the label
+{{<hover label="byLabelOptionalDefault" line="17">}}my-second-label-key{{</hover>}}
+exists, Crossplane uses the value from the label instead.
+
+```yaml {label="byLabelOptionalDefault",copy-lines="all"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-composition
+spec:
+  environment:
+    environmentConfigs:
+      - type: Selector
+        selector:
+          matchLabels:
+            - key: my-first-label-key
+              type: Value
+              value: my-label-value
+            - key: my-second-label-key
+              type: Value
+              value: my-default-value
+            - key: my-second-label-key
+              type: FromCompositeFieldPath
+              valueFromFieldPath: spec.parameters.deploy
+              fromFieldPathPolicy: Optional
+  resources:
+  # Removed for brevity
+```
+
+{{<hint "warning" >}}
+Crossplane applies values in order. The value of the last key defined always takes precedence.
+
+Defining the default value _after_ the label always overwrites the label
+value.
+{{< /hint >}}
 
 ## Patching with EnvironmentConfigs
 
@@ -330,9 +408,9 @@ Read about EnvironmentConfig patch types in the
 [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation.
 {{< /hint >}}
 
-<!-- these two sections are duplicated in the compositions doc --> 
+<!-- these two sections are duplicated in the compositions doc with different header depths --> 
 
-##### Patch a composite resource
+### Patch a composite resource
 To patch the composite resource use
 {{< hover label="xrpatch" line="7">}}patches{{</hover>}} inside of the 
 {{< hover label="xrpatch" line="5">}}environment{{</hover>}}.
@@ -362,7 +440,7 @@ spec:
 
 Individual resources can use any data written to the in-memory environment.
 
-##### Patch an individual resource
+### Patch an individual resource
 To patch an individual resource, inside the 
 {{<hover label="envpatch" line="16">}}patches{{</hover>}} of the 
 resource, use 
@@ -398,3 +476,5 @@ spec:
 
 The [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation has
 more information on patching individual resources.
+
+<!-- End duplicated content -->
