@@ -319,7 +319,7 @@ spec:
             name: default
       patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "location"
+          fromFieldPath: "spec.location"
           toFieldPath: "spec.forProvider.region"
           transforms:
             - type: map
