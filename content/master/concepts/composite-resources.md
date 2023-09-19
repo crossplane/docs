@@ -234,7 +234,9 @@ kind: xMyDatabase
 metadata:
   name: my-composite-resource
 spec:
-  compositionRevisionRef: my-composition-b5aa1eb
+  compositionUpdatePolicy: Manual
+  compositionRevisionRef:
+    name: my-composition-b5aa1eb
   # Removed for brevity
 ```
 
