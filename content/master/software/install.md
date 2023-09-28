@@ -99,7 +99,7 @@ The `crossplane-rbac-manager` creates and manages Kubernetes _ClusterRoles_ for
 installed Crossplane _Provider_ and their _Custom Resource Definitions_.
 
 The 
-[Crossplane RBAC Manger design document](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md) 
+[Crossplane RBAC Manager design document](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md) 
 has more information on the installed _ClusterRoles_.
 
 ## Installation options
