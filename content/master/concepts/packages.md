@@ -136,7 +136,7 @@ To build a Provider package, navigate to the package root directory and execute
 the following command:
 
 ```
-kubectl crossplane build provider
+crossplane build provider
 ```
 
 If the Provider package is valid, you will see a file with the `.xpkg`
@@ -187,7 +187,7 @@ To build a Configuration package, navigate to the package root directory and
 execute the following command:
 
 ```
-kubectl crossplane build configuration
+crossplane build configuration
 ```
 
 If the Provider package is valid, you will see a file with the `.xpkg`
@@ -201,13 +201,13 @@ registry is not specified they will be pushed to Docker Hub.
 To push a Provider package, execute the following command:
 
 ```
-kubectl crossplane push provider xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.22.0
+crossplane push provider xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.22.0
 ```
 
 To push a Configuration package, execute the following command:
 
 ```
-kubectl crossplane push configuration xpkg.upbound.io/crossplane-contrib/my-org-infra:v0.1.0
+crossplane push configuration xpkg.upbound.io/crossplane-contrib/my-org-infra:v0.1.0
 ```
 
 > Note: Both of the above commands assume a single `.xpkg` file exists in the
@@ -222,13 +222,13 @@ Packages can be installed into a Crossplane cluster using the Crossplane CLI.
 To install a Provider package, execute the following command:
 
 ```
-kubectl crossplane install provider xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.22.0
+crossplane install provider xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.22.0
 ```
 
 To install a Configuration package, execute the following command:
 
 ```
-kubectl crossplane install configuration xpkg.upbound.io/crossplane-contrib/my-org-infra:v0.1.0
+crossplane install configuration xpkg.upbound.io/crossplane-contrib/my-org-infra:v0.1.0
 ```
 
 Packages can also be installed manually by creating a `Provider` or

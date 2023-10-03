@@ -768,16 +768,17 @@ extension.
 wget "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh"
 chmod +x install.sh
 ./install.sh
+sudo mv crossplane /usr/local/bin
 ```
 
-Follow the directions and move the `kubectl-crossplane` binary to the correct
+Follow the directions and move the `crossplane` binary to the correct
 directory. 
 
-Verify the Crossplane command-line installed with `kubectl crossplane --help`
+Verify the Crossplane command-line installed with `crossplane --help`
 
 ```shell {copy-lines="1"}
-kubectl crossplane --help
-Usage: kubectl crossplane <command>
+crossplane --help
+Usage: crossplane <command>
 
 A command line tool for interacting with Crossplane.
 
@@ -790,11 +791,11 @@ Flags:
 
 ### Build a configuration package
 
-Use the `kubectl crossplane` command to create an `.xpkg` file containing the
+Use the `crossplane` CLI to create an `.xpkg` file containing the
 custom APIs and Crossplane configuration.
 
 ```shell
-kubectl crossplane build configuration -f crossplane-azure-quickstart/ --name="crossplane-azure-quickstart"
+crossplane build configuration -f crossplane-azure-quickstart/ --name="crossplane-azure-quickstart"
 ```
 
 Now an `.xpkg` OCI image is inside the `crossplane-azure-quickstart` directory.
