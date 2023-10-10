@@ -1,6 +1,7 @@
 ---
 title: Configuration Packages
 description: "Packages combine multiple Crossplane resources into a single, portable, OCI image."
+altTitle: "Crossplane Packages"
 ---
 
 A _Configuration_ package is an 
