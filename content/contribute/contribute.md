@@ -12,8 +12,8 @@ Clone the documentation and use [Hugo](https://gohugo.io/) to
 build the Crossplane documentation site locally for development and testing. 
 
 ### Clone the docs repository
-Clone the [Crossplane docs
-repository](https://github.com/crossplane/docs) with
+Clone the 
+[Crossplane docs repository](https://github.com/crossplane/docs) with
 
 ```command
 git clone https://github.com/crossplane/docs.git
