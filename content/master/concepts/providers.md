@@ -145,7 +145,7 @@ settings.
 
 Use a {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} to
 define when Crossplane should download the Provider package to the local
-Crossplane [package cache](#package-cache).
+Crossplane package cache.
 
 The `packagePullPolicy` options are: 
 * `IfNotPresent` - (**default**) Only download the package if it isn't in the cache.
@@ -211,7 +211,7 @@ By default the Crossplane [`packagePullPolicy`](#provider-pull-policy) doesn't
 download new Provider versions, even if they're available.
 {{< /hint >}}
 
-Read the [Provider package revision](#provider-package-revisions) section for
+Read the [Provider upgrade](#upgrade-a-provider) section for
 more information on the use of package revisions.
 
 #### Package revision history limit
@@ -222,7 +222,7 @@ Crossplane creates a new _revision_.
 By default Crossplane maintains one _Inactive_ revision. 
 
 {{<hint "note" >}}
-Read the [Provider package revision](#provider-revisions) section for
+Read the [Provider upgrade](#upgrade-a-provider) section for
 more information on the use of package revisions.
 {{< /hint >}}
 
@@ -287,7 +287,7 @@ dependencies.
 
 #### Ignore dependencies
 
-By default Crossplane installs any [dependencies](#provider-dependencies) listed
+By default Crossplane installs any [dependencies](#manage-dependencies) listed
 in a Provider package. 
 
 Crossplane can ignore a Provider package's dependencies with 
@@ -328,6 +328,54 @@ spec:
   ignoreCrossplaneConstraints: true
 # Removed for brevity
 ```
+
+### Manage dependencies
+
+Providers packages may include dependencies on other packages including
+Configurations or other Providers. 
+
+If Crossplane can't meet the dependencies of a Provider package the Provider
+reports `HEALTHY` as `False`. 
+
+For example, this installation of the Upbound AWS reference platform is
+`HEALTHY: False`.
+
+```shell {copy-lines="1"}
+kubectl get providers
+NAME              INSTALLED   HEALTHY   PACKAGE                                           AGE
+provider-aws-s3   True        False     xpkg.upbound.io/upbound/provider-aws-s3:v0.41.0   12s
+```
+
+To see more information on why the Provider isn't `HEALTHY` use 
+{{<hover label="depend" line="1">}}kubectl describe providerrevisions{{</hover>}}.
+
+```yaml {copy-lines="1",label="depend"}
+kubectl describe providerrevisions
+Name:         provider-aws-s3-92206523fff4
+API Version:  pkg.crossplane.io/v1
+Kind:         ProviderRevision
+Spec:
+  Desired State:                  Active
+  Image:                          xpkg.upbound.io/upbound/provider-aws-s3:v0.41.0
+  Revision:                       1
+Status:
+  Conditions:
+    Last Transition Time:  2023-10-10T21:06:39Z
+    Reason:                UnhealthyPackageRevision
+    Status:                False
+    Type:                  Healthy
+  Controller Ref:
+    Name:
+Events:
+  Type     Reason             Age                From                                         Message
+  ----     ------             ----               ----                                         -------
+  Warning  LintPackage        41s (x3 over 47s)  packages/providerrevision.pkg.crossplane.io  incompatible Crossplane version: package is not compatible with Crossplane version (v1.10.0)
+```
+
+The {{<hover label="depend" line="17">}}Events{{</hover>}} show a 
+{{<hover label="depend" line="20">}}Warning{{</hover>}} with a message that the
+current version of Crossplane doesn't meet the Configuration package 
+requirements.
 
 ## Upgrade a Provider
 
