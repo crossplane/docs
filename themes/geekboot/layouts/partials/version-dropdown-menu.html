@@ -38,8 +38,12 @@
         {{ $master_url := replaceRE "v[0-9].[0-9]" "master" .Permalink }}
         {{/*  Iterate over the ordered list of available versions. */}}
         {{ range $sorted_list }}
+            {{ $matchingTitle := $.Title }}
+            {{ if $.Params.altTitle }}
+                {{ $matchingTitle = $.Params.altTitle }}
+            {{ end }}
             {{/*  For a version, see if there is a page with an identical title to the page we're on. If not use the page at /content/v<version>  */}}
-            {{ $versionPage :=  index (where (where $.Site.Pages "Title" $.Title) ".Page.Params.version" .) 0 | default ($.Site.GetPage (printf "v%s" .)) }}
+            {{ $versionPage :=  index (where (where $.Site.Pages "Title" $matchingTitle) ".Page.Params.version" .) 0 | default ($.Site.GetPage (printf "v%s" .)) }}
             {{/*  If the version is master get the master page since "vmaster" doesn't exist  */}}
             {{ if not $versionPage }}
                 {{ $versionPage = $.Site.GetPage "master" }}
