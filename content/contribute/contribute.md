@@ -143,3 +143,18 @@ more.
 To hide a page from the left-hand navigation use `tocHidden: true` in the front
 matter of the page. The docs website skips pages with `tocHidden:true` when
 building the menu.
+
+### Changing page titles
+
+The version dropdown list that links the same page in different versions 
+together looks for pages with a matching title.
+
+If a page title changes use the front matter value `altTitle:` and a value of 
+the old page title.
+
+For example, if an older title was "Original Title" the new page would use:
+
+```yaml
+title: New Title
+altTitle: Original Title
+```
