@@ -149,7 +149,7 @@ spec:
 
 Use a {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} to
 define when Crossplane should download the Configuration package to the local
-Crossplane [package cache](#package-cache).
+Crossplane package cache.
 
 The `packagePullPolicy` options are: 
 * `IfNotPresent` - (**default**) Only download the package if it isn't in the cache.
@@ -394,6 +394,11 @@ Events:
   ----     ------       ----               ----                                              -------
   Warning  LintPackage  29s (x2 over 29s)  packages/configurationrevision.pkg.crossplane.io  incompatible Crossplane version: package is not compatible with Crossplane version (v1.12.0)
 ```
+
+The {{<hover label="depend" line="18">}}Events{{</hover>}} show a 
+{{<hover label="depend" line="21">}}Warning{{</hover>}} with a message that the
+current version of Crossplane doesn't meet the Configuration package 
+requirements.
 
 ## Create a Configuration
 
