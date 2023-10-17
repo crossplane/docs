@@ -11,13 +11,13 @@ A _Configuration_ package is an
 and any required [Providers]({{<ref "./providers">}})
 representing a set of custom APIs and resources. 
 
-Configuration packages makes your Crossplane configuration fully portable. 
+Configuration packages make your Crossplane configuration fully portable. 
 
 {{<hint "important" >}}
 Crossplane [Providers]({{<ref "./providers">}}) and 
 [Functions]({{<ref "./composition-functions">}}) are also Crossplane packages.  
 
-This document describes configuration packages.  
+This document describes how to install and manage configuration packages.  
 
 Refer to the 
 [Provider]({{<ref "./providers">}}) and 
@@ -28,8 +28,8 @@ details on their usage of packages.
 ## Install a Configuration
 
 Install a Configuration with a Crossplane 
-{{<hover line="2" label="install">}}Configuration{{</hover>}} object setting the 
-{{<hover line="6" label="install">}}spec.package{{</hover>}} value to the
+{{<hover line="2" label="install">}}Configuration{{</hover>}} object by setting 
+the {{<hover line="6" label="install">}}spec.package{{</hover>}} value to the
 location of the configuration package.
 
 For example to install the 
@@ -121,8 +121,7 @@ platform-ref-aws-3ac761211893   True      1          xpkg.upbound.io/upbound/pla
 Only a single revision is active at a time. The active revision determines the
 available resources, including Compositions and Composite Resource Definitions. 
 
-By default Crossplane keeps only a single _Inactive_ revision. Change the number
-of older revisions by setting the 
+By default Crossplane keeps only a single _Inactive_ revision.
 
 Change the number of revisions Crossplane maintains with a Configuration package 
 {{<hover label="revHistory" line="6">}}revisionHistoryLimit{{</hover>}}. 
@@ -220,41 +219,6 @@ download new Configuration versions, even if they're available.
 
 Read the [Configuration package revision](#configuration-revisions) 
 section for more information on the use of package revisions.
-
-#### Package revision history limit
-
-When Crossplane installs a different version of the same Configuration package 
-Crossplane creates a new _revision_. 
-
-By default Crossplane maintains one _Inactive_ revision. 
-
-{{<hint "note" >}}
-Read the [Configuration package revision](#configuration-revisions) section for
-more information on the use of package revisions.
-{{< /hint >}}
-
-Change the number of revisions Crossplane maintains with a Configuration Package 
-{{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}}. 
-
-The {{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}}
-field is an integer.  
-The default value is `1`.  
-Disable storing revisions by setting 
-{{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}} 
-to `0`.
-
-For example, to change the default setting and store 10 revisions use 
-{{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit: 10{{</hover>}}.
-
-```yaml {label="revHistoryLimit"}
-apiVersion: pkg.crossplane.io/v1
-kind: Configuration
-metadata:
-  name: platform-ref-aws
-spec:
-  revisionHistoryLimit: 10
-# Removed for brevity
-```
 
 #### Install a Configuration from a private registry
 
@@ -442,10 +406,10 @@ Crossplane API group.
 
 Specify any other Configurations, Functions or Providers in the 
 {{<hover label="cfgMeta" line="7">}}dependsOn{{</hover>}} list.  
-Optionally you can require a specific or minimum package version with the 
+Optionally, you can require a specific or minimum package version with the 
 {{<hover label="cfgMeta" line="9">}}version{{</hover>}} option.
 
-You may also define a specific or minimum version of Crossplane for this
+You can also define a specific or minimum version of Crossplane for this
 Configuration with the 
 {{<hover label="cfgMeta" line="11">}}crossplane.version{{</hover>}} option. 
 
