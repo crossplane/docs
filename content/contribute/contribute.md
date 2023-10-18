@@ -12,8 +12,8 @@ Clone the documentation and use [Hugo](https://gohugo.io/) to
 build the Crossplane documentation site locally for development and testing. 
 
 ### Clone the docs repository
-Clone the [Crossplane docs
-repository](https://github.com/crossplane/docs) with
+Clone the 
+[Crossplane docs repository](https://github.com/crossplane/docs) with
 
 ```command
 git clone https://github.com/crossplane/docs.git
@@ -143,3 +143,18 @@ more.
 To hide a page from the left-hand navigation use `tocHidden: true` in the front
 matter of the page. The docs website skips pages with `tocHidden:true` when
 building the menu.
+
+### Changing page titles
+
+The version dropdown list that links the same page in different versions 
+together looks for pages with a matching title.
+
+If a page title changes use the front matter value `matchTitle:` and a value of 
+the old page title.
+
+For example, if an older title was "Original Title" the new page would use:
+
+```yaml
+title: New Title
+matchTitle: Original Title
+```
