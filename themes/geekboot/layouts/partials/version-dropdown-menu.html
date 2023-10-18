@@ -39,8 +39,8 @@
         {{/*  Iterate over the ordered list of available versions. */}}
         {{ range $sorted_list }}
             {{ $matchingTitle := $.Title }}
-            {{ if $.Params.altTitle }}
-                {{ $matchingTitle = $.Params.altTitle }}
+            {{ if $.Params.matchTitle }}
+                {{ $matchingTitle = $.Params.matchTitle }}
             {{ end }}
             {{/*  For a version, see if there is a page with an identical title to the page we're on. If not use the page at /content/v<version>  */}}
             {{ $versionPage :=  index (where (where $.Site.Pages "Title" $matchingTitle) ".Page.Params.version" .) 0 | default ($.Site.GetPage (printf "v%s" .)) }}

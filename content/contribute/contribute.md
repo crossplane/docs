@@ -149,12 +149,12 @@ building the menu.
 The version dropdown list that links the same page in different versions 
 together looks for pages with a matching title.
 
-If a page title changes use the front matter value `altTitle:` and a value of 
+If a page title changes use the front matter value `matchTitle:` and a value of 
 the old page title.
 
 For example, if an older title was "Original Title" the new page would use:
 
 ```yaml
 title: New Title
-altTitle: Original Title
+matchTitle: Original Title
 ```
