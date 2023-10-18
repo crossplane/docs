@@ -21,6 +21,7 @@ exceptions:
   - compositeTypeRef
   - Composition
   - Compositions
+  - Configuration
   - Cosmos
   - Crossplane
   - Docker
