@@ -2,14 +2,15 @@
 title: Configuration Packages
 description: "Packages combine multiple Crossplane resources into a single, portable, OCI image."
 altTitle: "Crossplane Packages"
+weight: 200
 ---
 
 A _Configuration_ package is an 
 [OCI container images](https://opencontainers.org/) containing a collection of
 [Compositions]({{<ref "./compositions" >}}), 
 [Composite Resource Definitions]({{<ref "./composite-resource-definitions" >}})
-and any required [Providers]({{<ref "./providers">}}) or 
-[Functions]({{<ref "./composition-functions" >}}).
+and any required [Providers]({{<ref "./providers">}})
+representing a set of custom APIs and resources. 
 
 Configuration packages make your Crossplane configuration fully portable. 
 
@@ -182,21 +183,19 @@ spec:
 # Removed for brevity
 ```
 
-#### Revision activation policy
+#### Upgrade policy
 
-The `Active` package revision
-is the package controller actively reconciling resources. 
-
-By default Crossplane sets the most recently installed package revision as 
-`Active`.
+Crossplane automatically upgrades a Configuration the to the latest version 
+available in the package cache. 
 
 Control the Configuration upgrade behavior with a
 {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}}.
 
 The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}} 
 options are:
-* `Automatic` - (**default**) Automatically activate the last installed configuration.
-* `Manual` - Don't automatically activate a configuration. 
+* `Automatic` - (**default**) Automatically use the latest Configuration version
+  available in the cache. 
+* `Manual` - Require the current Configuration in use to be manually set. 
 
 For example, to change the upgrade behavior to require manual upgrades, set 
 {{<hover label="revision" line="6">}}revisionActivationPolicy: Manual{{</hover>}}.
@@ -211,6 +210,16 @@ spec:
 # Removed for brevity
 ```
 
+{{<hint "important" >}}
+Crossplane only upgrades a Configuration if a newer version is in the package 
+cache.   
+By default the Crossplane 
+[`packagePullPolicy`](#configuration-package-pull-policy) doesn't
+download new Configuration versions, even if they're available.
+{{< /hint >}}
+
+Read the [Configuration package revision](#configuration-revisions) 
+section for more information on the use of package revisions.
 
 #### Install a Configuration from a private registry
 
@@ -302,8 +311,6 @@ spec:
 Verify a Configuration with 
 {{<hover label="verify" line="1">}}kubectl get configuration{{</hover >}}.
 
-A working configuration reports `Installed` and `Healthy` as `True`.
-
 ```shell {label="verify",copy-lines="1"}
 kubectl get configuration
 NAME               INSTALLED   HEALTHY   PACKAGE                                           AGE
@@ -313,7 +320,7 @@ platform-ref-aws   True        True      xpkg.upbound.io/upbound/platform-ref-aw
 ### Manage dependencies
 
 Configuration packages may include dependencies on other packages including
-Functions, Providers or other Configurations. 
+Providers or other Configurations. 
 
 If Crossplane can't meet the dependencies of a Configuration the Configuration
 reports `HEALTHY` as `False`. 
@@ -380,9 +387,7 @@ for package requirements when building packages with third-party tools.
 A Configuration package requires a `crossplane.yaml` file and may include
 Composition and CompositeResourceDefinition files. 
 
-<!-- vale Google.Headings = NO -->
 ### The crossplane.yaml file
-<!-- vale Google.Headings = YES -->
 
 To build a Configuration package using the Crossplane CLI, create a file
 named 
@@ -442,7 +447,7 @@ include in the package.
 {{<hint "important" >}}
 You must ignore any other YAML files with `--ignore=<file_list>`.  
 For
-example, `crossplane build configuration -f test-directory --ignore=".tmp/*"`.
+example, `crossplane build configuration -f test-directory --ignore=".tmp/*,other-file.yaml"`.
 
 Including YAML files that aren't Compositions or CompositeResourceDefinitions, 
 including Claims isn't supported.

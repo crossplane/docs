@@ -137,13 +137,13 @@ h3, h4, h5, h6 {
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 8px;
-  padding-bottom: 8px;   
+  padding-bottom: 8px;
 }
 .table.table-sm td {
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 8px;
-  padding-bottom: 8px;  
+  padding-bottom: 8px;
 }
 
 
@@ -162,4 +162,9 @@ h3, h4, h5, h6 {
 .ga-tag{
   color: var(--toc-font-color);
 
+}
+
+.rn-summary-meta,.rn-page-meta{
+  margin-top: -1.5rem !important;
+  margin-bottom: 1.5rem !important;
 }

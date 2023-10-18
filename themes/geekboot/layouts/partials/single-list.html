@@ -71,7 +71,32 @@
               {{ partialCached "old-version-alert" . .Section }}
             {{ end }}
           {{ end }}
-          {{ .Content }}
+
+          {{ if eq $.Params.Product "Release Notes" }}
+            {{ range .Pages.Reverse }}
+              {{ if not .Page.Params.released }}
+                {{ errorf (printf "Release Notes Page %q requires 'released' Front Matter." .Page.File.Path ) }}
+              {{ end }}
+              {{ if not .Page.Params.Title }}
+                {{ errorf (printf "Release Notes Page %q requires 'released' Front Matter." .Page.File.Path ) }}
+              {{ end }}
+              <h2>{{ .Title}}</h2>
+              <div class="rn-summary-meta">
+                Released: {{ .Page.Params.released }} -
+                <a href="https://github.com/crossplane/crossplane/releases/tag/{{.Title}}">GitHub</a>
+              </div>
+              {{ .Summary | markdownify }}
+              <a href="{{.Permalink}}">Full {{.Title}} release notes</a>
+            {{ end }}
+          {{ else }}
+            {{ if $.Params.releaseNotes }}
+            <div class="rn-page-meta">
+              Released: {{ .Page.Params.released }} -
+              <a href="https://github.com/crossplane/crossplane/releases/tag/{{.Title}}">GitHub</a>
+            </div>
+            {{ end }}
+            {{ .Content }}
+          {{ end }}
         </div>
     </main>
   </div>
