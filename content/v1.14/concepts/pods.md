@@ -76,7 +76,7 @@ status of deployed resources and correcting any "drift." After checking a
 resource Crossplane waits some time and checks again.
 
 Crossplane monitors resources through a Kubernetes 
-_[watch](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)_
+[_watch_](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)
 or through periodic polling. Some resources may be both watched and polled. 
 
 Crossplane requests that the API server notifies Crossplane of any changes on
@@ -215,14 +215,14 @@ permissions over cluster wide Crossplane resources.
 <!-- allow "admin" -->
 ##### crossplane-admin
 <!-- vale Google.WordList = YES -->
-
+<!-- vale Crossplane.Spelling = NO -->
 The `crossplane-admin` ClusterRole has the following permissions:
   * full access to all Crossplane types
   * full access to all secrets and namespaces (even those unrelated to Crossplane)
   * read-only access to all cluster RBAC roles, CustomResourceDefinitions and
     events
   * ability to bind RBAC roles to other entities. 
-
+<!-- vale Crossplane.Spelling = YES -->
 View the full RBAC policy with 
 
 ```shell
@@ -276,8 +276,7 @@ updates the Roles to access the specific API endpoints in a Claim.
 
 {{< hint "note" >}}
 The specific details of the namespace Roles are beyond this guide. For more
-information read the [Composite Resource ClusterRole
-Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
+information read the [Composite Resource ClusterRole Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
 section of the RBAC Manager design document.
 {{< /hint >}}
 
@@ -326,8 +325,13 @@ Running multiple Crossplane pods without leader election is unsupported.
 Change Crossplane pod settings either before installing Crossplane by editing
 the Helm `values.yml` file or after installation by editing the `Deployment`.
 
-The full list of configuration options are available in the 
-[Crossplane Install]({{<ref "../software/install">}}) section. 
+The full list of 
+[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+and 
+[feature flags]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+are available in the 
+[Crossplane Install]({{<ref "../software/install">}}) 
+section. 
 
 {{< hint "note" >}}
 
