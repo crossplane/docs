@@ -30,7 +30,7 @@ defining webhook configurations.
 The core CRDs installed by the init container include: 
 * CompositeResourceDefinitions, Compositions, Configurations and Providers
 * Locks to manage package dependencies
-* ControllerConfigs to apply settings to installed Providers
+* DeploymentRuntimeConfigs to apply settings to installed Providers
 * StoreConfigs for connecting external secret stores like 
 [HashiCorp Vault](https://www.vaultproject.io/)
 

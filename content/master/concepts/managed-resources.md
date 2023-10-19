@@ -490,7 +490,7 @@ secrets store like [HashiCorp Vault](https://www.vaultproject.io/).
 
 Using `publishConnectionDetailsTo` requires enabling Crossplane 
 External Secrets Stores (ESS). Enable ESS inside a Provider with a
-[ControllerConfig]({{<ref "providers#controller-configuration" >}}) and
+[DeploymentRuntimeConfig]({{<ref "providers#runtime-configuration" >}}) and
 in Crossplane with the `--enable-external-secret-stores` argument.
 
 {{< hint "note" >}}

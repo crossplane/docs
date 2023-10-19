@@ -595,15 +595,8 @@ Apply `ProviderConfig` objects to managed resources.
 The Crossplane community deprecated the `ControllerConfig` type in v1.11 to
 announce that there are no further enhancements.
 Applying a Controller configuration generates a deprecation warning.
-<!-- vale Crossplane.Spelling = NO -->
-<!-- vale gitlab.SubstitutionWarning = NO -->
-<!-- allow runtime config -->
-Controller configurations are still supported until there is a replacement type
-in a future Crossplane version. You can read more about the design of the
-[Package Runtime Config](https://github.com/crossplane/crossplane/blob/master/design/one-pager-package-runtime-config.md)
-which is a future replacement.
-<!-- vale Crossplane.Spelling = YES -->
-<!-- vale gitlab.SubstitutionWarning = YES -->
+[Runtime configuration]({{<ref "#runtime-configuration" >}}) is the
+replacement for Controller configuration and is available in v1.14+.
 {{< /hint >}}
 
 Applying a Crossplane `ControllerConfig` to a Provider changes the settings of
@@ -617,6 +610,160 @@ Provider's pod enabling optional services. For example, enabling
 for a Provider.
 
 Each Provider determines their supported set of `args`.
+
+### Runtime configuration
+
+{{<hint "important" >}}
+Deployment runtime configs are a beta feature. It is on by default and could be
+disabled by passing `--enable-deployment-runtime-configs=false` to the Crossplane
+deployment.
+{{< /hint >}}
+
+Runtime configuration is a generalized mechanism for configuring runtime for
+Crossplane packages with a runtime, e.g. `Providers` and `Functions`. It
+replaces the deprecated `ControllerConfig` type and is available in v1.14+.
+
+With its default configuration, Crossplane uses Kubernetes Deployments to
+deploy runtimes for packages, more specifically, a controller for a `Provider`
+or a gRPC server for a `Function`. It is possible to configure the runtime
+manifest by applying a `DeploymentRuntimeConfig` and referencing it in the
+`Provider` or `Function` object.
+
+Different than `ControllerConfig`, `DeploymentRuntimeConfig` embed the whole
+Kubernetes Deployment spec, which allows for more flexibility in configuring
+the runtime. Refer to the [design document](https://github.com/crossplane/crossplane/blob/2c5e7f07ba9e3d83d1c85169bbde685de8514ab8/design/one-pager-package-runtime-config.md)
+for more details.
+
+As an example, to enable the external secret stores alpha feature for a `Provider`
+by adding the `--enable-external-secret-stores` argument to the controller,
+one can apply the following:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp-iam
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp-iam:v0.37.0
+  runtimeConfigRef:
+    name: enable-ess
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: enable-ess
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+            - name: package-runtime
+              args:
+                - --enable-external-secret-stores
+```
+
+Please note that, the container name `package-runtime` is reserved for the
+package runtime container. If you are using a different container name, it
+will be introduced as a sidecar container instead of the modifying the
+package runtime container.
+
+The package manager will be opiniated about some of the fields to ensure
+the runtime is working properly and overlay them on top of what is provided
+in the runtime config. For example, it will default the replica count
+to 1 if not set or override the label selectors to make sure the Deployment
+and Service match. It will also inject any necessary environment variables,
+ports as well as volumes and volume mounts.
+
+The `Provider` or `Functions`'s `spec.runtimeConfigRef.name` field defaults
+to `default`, which means the default runtime configuration will be used if
+not specified. Crossplane will ensure there is always a default runtime
+configuration in the cluster, but not modify it if it already exists. This
+will allow users to customize the default runtime configuration to their needs.
+
+{{<hint "tip" >}}
+
+Since `DeploymentRuntimeConfig` uses the same schema as K8s' `Deployment` spec,
+you may need to pass empty values to satisfy the schema validation.
+For example, if you just want to change the `replicas` field, you would
+need to pass the following and it is fine:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: multi-replicas
+spec:
+  deploymentTemplate:
+    spec:
+      replicas: 2
+      selector: {}
+      template: {}
+```
+
+{{< /hint >}}
+
+#### Configuring Runtime Deployment spec
+
+Using the Deployment spec provided in the `DeploymentRuntimeConfig` as base,
+the package manager builds the Deployment spec for the package runtime with
+the following rules:
+- Injects the package runtime container as the first container in the
+  `containers` array, with name `package-runtime`.
+- If not provided, defaults with the following:
+  - `spec.replicas` as 1.
+  - Image pull policy as `IfNotPresent`.
+  - Pod Security Context as:
+    ```yaml
+    runAsNonRoot: true
+    runAsUser: 2000
+    runAsGroup: 2000
+    ```
+  - Security Context for the runtime container as:
+    ```yaml
+    allowPrivilegeEscalation: false
+    privileged: false
+    runAsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 2000
+    ```
+- Applies the following:
+  - **Sets** `metadata.namespace` as Crossplane namespace.
+  - **Sets** `metadata.ownerReferences` such that the deployment owned by the package revision.
+  - **Sets** `spec.selectors` using generated labels.
+  - **Sets** `spec.serviceAccount` with the created **Service Account**.
+  - **Adds** pull secrets provided in the Package spec as image pull secrets, `spec.packagePullSecrets`.
+  - **Sets** the **Image Pull Policy** with the value provided in the Package spec, `spec.packagePullPolicy`.
+  - **Adds** necessary **Ports** to the runtime container.
+  - **Adds** necessary **Environments** to the runtime container.
+  - Mounts TLS secrets by **adding** necessary **Volumes**, **Volume Mounts** and **Environments** to the runtime container.
+
+#### Configuring Metadata of runtime resources
+
+`DeploymentRuntimeConfig` also enables configuring the following metadata of
+Runtime resources, namely `Deployment`, `ServiceAccount` and `Service`:
+- name
+- labels
+- annotations
+
+The following example shows how to configure the name of the ServiceAccount
+and the labels of the Deployment:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: my-runtime-config
+spec:
+  deploymentTemplate:
+    metadata:
+      labels:
+        my-label: my-value
+  serviceAccountTemplate:
+    metadata:
+      name: my-service-account
+```
 
 ### Provider configuration
 

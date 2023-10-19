@@ -57,18 +57,23 @@ After installing Crossplane use `kubectl get crds` to view the Crossplane
 installed CRDs.
 
 ```shell
-kubectl get crds
-NAME                                                     
-compositeresourcedefinitions.apiextensions.crossplane.io 
-compositionrevisions.apiextensions.crossplane.io         
-compositions.apiextensions.crossplane.io                 
-configurationrevisions.pkg.crossplane.io                 
-configurations.pkg.crossplane.io                         
-controllerconfigs.pkg.crossplane.io                      
-locks.pkg.crossplane.io                                  
-providerrevisions.pkg.crossplane.io                      
-providers.pkg.crossplane.io                              
-storeconfigs.secrets.crossplane.io                       
+❯ kubectl get crd
+NAME                                                    
+compositeresourcedefinitions.apiextensions.crossplane.io
+compositionrevisions.apiextensions.crossplane.io        
+compositions.apiextensions.crossplane.io                
+configurationrevisions.pkg.crossplane.io                
+configurations.pkg.crossplane.io                        
+controllerconfigs.pkg.crossplane.io                     
+deploymentruntimeconfigs.pkg.crossplane.io              
+environmentconfigs.apiextensions.crossplane.io          
+functionrevisions.pkg.crossplane.io                     
+functions.pkg.crossplane.io                             
+locks.pkg.crossplane.io                                 
+providerrevisions.pkg.crossplane.io                     
+providers.pkg.crossplane.io                             
+storeconfigs.secrets.crossplane.io                      
+usages.apiextensions.crossplane.io                                        
 ```
 {{< /expand >}}
 
