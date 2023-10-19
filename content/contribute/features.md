@@ -310,3 +310,5 @@ A second example tab.
 
 Both `tab` and `tabs` require opening and closing tags. Unclosed tags causes
 Hugo to fail.
+
+## Shortcodes
