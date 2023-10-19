@@ -265,8 +265,8 @@ at the table below.
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-revisions` |Enable support for CompositionRevisions |
+| Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
-| Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
