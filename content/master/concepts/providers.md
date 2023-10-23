@@ -121,7 +121,7 @@ configuring the Crossplane Pod settings in the
 Provide the name of the Provider's `.xpkg` file and set 
 {{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
 
-For example, to install a locally downloaded version of Provider AWS set the 
+For example, to install a locally stored version of Provider AWS set the 
 {{<hover label="offline" line="6">}}package{{</hover>}} to the local filename
 and set the Provider's 
 {{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.

@@ -8,8 +8,8 @@ A _Configuration_ package is an
 [OCI container images](https://opencontainers.org/) containing a collection of
 [Compositions]({{<ref "./compositions" >}}), 
 [Composite Resource Definitions]({{<ref "./composite-resource-definitions" >}})
-and any required [Providers]({{<ref "./providers">}})
-representing a set of custom APIs and resources. 
+and any required [Providers]({{<ref "./providers">}}) or 
+[Functions]({{<ref "./composition-functions" >}}).
 
 Configuration packages make your Crossplane configuration fully portable. 
 
@@ -81,7 +81,7 @@ configuring the Crossplane Pod settings in the
 Provide the name of the Configuration's `.xpkg` file and set 
 {{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
 
-For example, to install a locally downloaded version of 
+For example, to install a locally stored version of 
 Upbound AWS reference platform set the 
 {{<hover label="offline" line="6">}}package{{</hover>}} to the local filename
 and set the Configuration's
@@ -310,6 +310,8 @@ spec:
 Verify a Configuration with 
 {{<hover label="verify" line="1">}}kubectl get configuration{{</hover >}}.
 
+A working configuration reports `Installed` and `Healthy` as `True`.
+
 ```shell {label="verify",copy-lines="1"}
 kubectl get configuration
 NAME               INSTALLED   HEALTHY   PACKAGE                                           AGE
@@ -319,7 +321,7 @@ platform-ref-aws   True        True      xpkg.upbound.io/upbound/platform-ref-aw
 ### Manage dependencies
 
 Configuration packages may include dependencies on other packages including
-Providers or other Configurations. 
+Functions, Providers or other Configurations. 
 
 If Crossplane can't meet the dependencies of a Configuration the Configuration
 reports `HEALTHY` as `False`. 
@@ -386,7 +388,9 @@ for package requirements when building packages with third-party tools.
 A Configuration package requires a `crossplane.yaml` file and may include
 Composition and CompositeResourceDefinition files. 
 
+<!-- vale Google.Headings = NO -->
 ### The crossplane.yaml file
+<!-- vale Google.Headings = YES -->
 
 To build a Configuration package using the Crossplane CLI, create a file
 named 
@@ -446,7 +450,7 @@ include in the package.
 {{<hint "important" >}}
 You must ignore any other YAML files with `--ignore=<file_list>`.  
 For
-example, `crossplane build configuration -f test-directory --ignore=".tmp/*,other-file.yaml"`.
+example, `crossplane build configuration -f test-directory --ignore=".tmp/*"`.
 
 Including YAML files that aren't Compositions or CompositeResourceDefinitions, 
 including Claims isn't supported.
