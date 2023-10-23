@@ -244,7 +244,7 @@ This abbreviated example is from the Upbound
 [AWS Reference Platform](https://github.com/upbound/platform-ref-aws).
 
 View the complete Compositions in the reference platform's 
-[package directory](https://github.com/upbound/platform-ref-aws/blob/main/package/cluster/composition.yaml).
+[package directory](https://github.com/upbound/platform-ref-aws/blob/main/apis/cluster/composition.yaml).
 {{</hint >}}
 
 #### Cross-resource references
