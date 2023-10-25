@@ -1,8 +1,7 @@
 ---
 title: "Contributing Guide"
-weight: -1
+weight: 100
 cascade:
-    version: "0"
     docs: false
     product: "Contributing Guide"
 ---

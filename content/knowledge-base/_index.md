@@ -1,8 +1,7 @@
 ---
 title: Knowledge Base
-weight: -1
+weight: 50
 cascade:
-    version: "0"
     docs: false
     product: "Knowledge Base"
 ---
