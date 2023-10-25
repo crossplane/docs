@@ -664,47 +664,34 @@ spec:
 The [EnvironmentConfigs]({{<ref "./environment-configs" >}}) page has 
 more information on EnvironmentConfigs options and usage.
 
-### Use composition functions
+### Use Composition Functions
 
-Composition functions (or just functions, for short) are custom programs that
-template Crossplane resources. You can write a function to template resources
+Composition functions (or just Functions, for short) are custom programs that
+template Crossplane resources. You can write a Function to template resources
 using a general purpose programming language like Go or Python. Using a general
-purpose programming language allows a function to use more advanced logic to
+purpose programming language allows a Function to use more advanced logic to
 template resources, like loops and conditionals.
 
 {{<hint "important" >}}
-Composition functions is a beta feature. Crossplane enables beta functions by
-default. The
-[Composition Functions]({{<ref "./composition-functions#disable-composition-functions">}})
-page explains how to disable composition functions.
+Composition functions are a beta feature. 
 {{< /hint >}}
 
-To use composition functions set the Composition 
-{{<hover label="xfn" line="6">}}mode{{</hover>}} to
-{{<hover label="xfn" line="6">}}Pipeline{{</hover>}}.
+To use composition functions define a {{<hover label="xfn"
+line="7">}}pipeline{{</hover>}} of steps inside the Composition {{<hover
+label="xfn" line="4">}}spec{{</hover>}}. Each {{<hover label="xfn"
+line="8">}}step{{</hover>}} calls a Function. You can't specify resource
+templates using the `resources` field when you specify a pipeline of Functions.
+You must set the Composition {{<hover label="xfn" line="6">}}mode{{</hover>}} to
+`Pipeline` to use Functions.
 
-Define a {{<hover label="xfn" line="7">}}pipeline{{</hover>}} of 
-{{<hover label="xfn" line="8">}}steps{{</hover>}}. Each 
-{{<hover label="xfn" line="8">}}step{{</hover>}} calls a Function.  
-
-Each {{<hover label="xfn" line="8">}}step{{</hover>}} uses a 
-{{<hover label="xfn" line="9">}}functionRef{{</hover>}} to reference the
-{{<hover label="xfn" line="10">}}name{{</hover>}} of the Function to call. 
-
-Some Functions also allow you to specify an 
-{{<hover label="xfn" line="11">}}input{{</hover>}}.  
-The function defines the
-{{<hover label="xfn" line="13">}}kind{{</hover>}} of input.
-
-{{<hint "important" >}}
-Compositions using {{<hover label="xfn" line="6">}}mode: Pipeline{{</hover>}} 
-can't specify resource templates with a `resources` field. 
-
-Use function "Patch and Transform" to create resource templates.
-{{< /hint >}}
+Each {{<hover label="xfn" line="8">}}step{{</hover>}} must specify the {{<hover
+label="xfn" line="10">}}name{{</hover>}} of the Function to call. Some Functions
+also allow you to specify an {{<hover label="xfn" line="11">}}input{{</hover>}}.
+Different Functions each have a different {{<hover label="xfn"
+line="13">}}kind{{</hover>}} of input.
 
 This example uses Function Patch and Transform. Function Patch and Transform is
-a function that implements Crossplane resource templates. You can use Function
+a Function that implements Crossplane resource templates. You can use Function
 Patch and Transform to specify resource templates in a pipeline with other
 Functions.
 
@@ -1338,6 +1325,11 @@ If using `mode: Resources`:
 * Readiness checks using `matchString` aren't empty.
 * Readiness checks using `matchInteger` isn't `0`.
 * Readiness checks requiring a `fieldPath` value provide it.
+
+If using `mode: Pipeline` (Composition Functions):
+
+* The `pipeline` field isn't empty.
+* No duplicate step names.
 
 If using `mode: Pipeline` (Composition Functions):
 
