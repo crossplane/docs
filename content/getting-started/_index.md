@@ -1,5 +1,5 @@
 ---
-title: Getting Started
+title: Get Started
 weight: 1
 description: An introduction to Crossplane and Crossplane quickstart guides.
 ---

@@ -84,3 +84,160 @@
     }
   }
 }
+
+// Styling related to the left-side global navigation
+
+// Custom modifications to built-in bootstrap tooling for the left-hand-nav/a
+#left-nav-menu {
+  overflow-y: scroll;
+  height: auto;
+  position: sticky;
+  top: 40px;
+  max-height: 100vh;
+  padding-bottom: 60px;
+
+}
+
+.left-sidebar-nav{
+  grid-area: left-sidebar-nav;
+
+  flex-grow: 1 !important;
+
+  @include media-breakpoint-down(xl) {
+      margin-top: 65px;
+  }
+
+  &.offcanvas-xl {
+      background: #FFFFFF !important;
+  }
+
+  .left-offset {
+      min-width: 28px;
+  }
+}
+
+// search results display clones of the left side-nav content
+// the styles below will apply to both the side-nav and the search results
+
+$nav-section-lr-padding: 12px;
+$nested-offset: 12px;
+$font-size: 14px;
+
+#search-results, #left-nav-menu {
+    .list-group {
+
+        // Remove unwanted default list-group stylings
+        --bs-list-group-border-radius: 0;
+        --bs-list-group-item-padding-x: 0;
+        --bs-list-group-border-width: 0;
+
+        // Default nav item state
+        --bs-list-group-action-hover-bg: #F2F2F4;
+
+        // Clicked on nav menu item
+        --bs-list-group-action-active-color: #{$aqua-400};
+        --bs-list-group-action-active-bg: #{$aqua-100};
+
+        // Active nav menu item
+        --bs-list-group-active-color: #{$aqua-400};
+        --bs-list-group-active-bg: #{$aqua-100};
+        --bs-accordion-border-radius: 4;
+
+        --bs-list-group-item-padding-y: 10px;
+
+        // The expand/collapse nav button uses the bootstrap accordion components
+        .accordion {
+            --bs-accordion-bg: transparent;
+            --bs-accordion-active-bg: transparent;
+            --bs-accordion-btn-padding-y: 10px;
+            --bs-accordion-btn-padding-x: 2px;
+            --bs-accordion-border-color: transparent;
+            --bs-accordion-border-width: 0;
+
+            &::after {
+                background-image: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="UTF-8"%3F><svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Chevron-Down</title><g id="Chevron-Down" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="chevron-up" transform="translate(6, 6.0006) scale(1, -1) translate(-6, -6.0006)translate(0.7482, 3)" fill="%23686A7C" fill-rule="nonzero"><path d="M4.7220701,0.219726562 C5.01503885,-0.0732421875 5.49081981,-0.0732421875 5.78378856,0.219726562 L10.2837886,4.71972656 C10.5767573,5.01269531 10.5767573,5.48847628 10.2837886,5.78144503 C9.99081981,6.07441378 9.51503885,6.07441378 9.2220701,5.78144503 L5.25175774,1.81113267 L1.28144538,5.77910185 C0.988476634,6.0720706 0.512695312,6.0720706 0.219726562,5.77910185 C-0.0732421875,5.4861331 -0.0732421875,5.01035213 0.219726562,4.71738338 L4.71972656,0.217383385 L4.7220701,0.219726562 Z" id="Path"></path></g></g></svg>');
+            }
+
+        }
+
+        .accordion-button{
+            --bs-accordion-btn-icon-width: 16px;
+            // size of the grey box containing the chevron
+            width: 22px;
+            height: 22px;
+            border: none;
+
+            &:after{
+                margin-left: 1px;
+            }
+        }
+
+        &.top-level {
+            padding: 32px 28px 0px;
+        }
+    }
+
+    .nav-parent-container{
+        font-weight: 800;
+        font-size: .9rem;
+        align-items: center;
+        border-radius: 8px;
+        padding: 8px $nav-section-lr-padding;
+
+        &:not(.disabled):hover{
+            background-color: #{$fog-50};
+            cursor: pointer;
+        }
+
+        &.disabled {
+            pointer-events: none;
+        }
+
+        .nav-parent-title {
+            font-size: $font-size;
+        }
+    }
+
+    .nav-child-container {
+        .nav-child{
+            align-items: center;
+            border-radius: 8px;
+            padding-left: calc(#{$nav-section-lr-padding} + #{$nested-offset});
+            padding-right: $nav-section-lr-padding;
+
+            &.active {
+                font-weight: 600;
+            }
+        }
+
+        .subpages .nav-child {
+            padding-left: calc(#{$nav-section-lr-padding} + (#{$nested-offset * 2}));
+            padding-right: $nav-section-lr-padding;
+        }
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+        font-size: $font-size;
+    }
+
+    .subheader {
+        cursor: pointer;
+
+        .subheader-title {
+            font-size: $font-size;
+            color: var(--body-font-color);
+        }
+    }
+
+    .button-container{
+        padding-left: 0px;
+    }
+
+    .left-offset {
+        &.hide {
+            opacity: 0;
+        }
+    }
+}

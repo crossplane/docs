@@ -1,6 +1,6 @@
 ---
-title: "Overview"
-weight: 13
+title: "Crossplane v1.13"
+weight: 10
 cascade:
     version: "1.13"
 ---
