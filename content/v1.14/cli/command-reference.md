@@ -365,14 +365,52 @@ spec:
 {{< table "table table-sm table-striped">}}
 | Short flag   | Long flag                             | Description                                           |
 | ------------ | -------------                         | ------------------------------                        |
-|              | `--context-files=KEY=FILENAME;...`    | A semicolon separated list of files to load for function "contexts." |
-|              | `--context-values=KEY=JSON-VALUE;...` | A semicolon separated list of key-value pairs to load for function "contexts."                                                    |
+|              | `--context-files=<key>=<file>;<key>=<file>`    | A semicolon separated list of files to load for function "contexts." |
+|              | `--context-values=<key>=<value>;<key>=<value>` | A semicolon separated list of key-value pairs to load for function "contexts."                                                    |
 | `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
-| `-o`         | `--observed-resources=`               |                                                     |
+| `-o`         | `--observed-resources=<directory or file>`               | Provide artificial managed resource data to the function.                                                    |
 |              | `--timeout=`                          | Amount of time to wait for a function to finish.                    |
 {{< /table >}}
 
 #### Provide function context
 
 The `--context-files` and `--context-values` flags can provide data 
-to a function's `context`. 
+to a function's `context`.  
+The context is JSON formatted data.
+
+#### Include function results
+
+If a function produces Kubernetes events with statuses use the 
+`--include-function-results` to print them along with the managed resource 
+outputs. 
+
+#### Mock existing resources
+
+Provide mocked, or artificial data representing a managed resource with 
+`--observed-resources`. The `crossplane beta render` command treats the 
+provided inputs as if they were resources in a Crossplane cluster. 
+
+A function can reference and manipulate the included resource as part of 
+running the function.
+
+The `observed-resources` may be a single YAML file with multiple resources or a 
+directory of YAML files representing multiple resources.
+
+Inside the YAML file include an 
+{{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
+{{<hover label="apiVersion" line="1">}}kind{{</hover>}},
+{{<hover label="apiVersion" line="1">}}metadata{{</hover>}} and
+{{<hover label="apiVersion" line="1">}}spec{{</hover>}}.
+
+```yaml {label="or"}
+apiVersion: example.org/v1alpha1
+kind: ComposedResource
+metadata:
+  name: test-render-b
+  annotations:
+    crossplane.io/composition-resource-name: resource-b
+spec:
+  coolerField: "I'm cooler!"
+```
+
+The schema of the resource isn't validated and may contain any data.
