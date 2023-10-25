@@ -302,7 +302,7 @@ dedicated control planes to many tenants within a single organization.
 
 
 <!-- Named Links -->
-[managed resources]: {{<ref "../../master/concepts/managed-resources" >}}
+[managed resources]: {{<ref "../../v1.13/concepts/managed-resources" >}}
 [RBAC]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 [Composition]: {{<ref "../../v1.12/concepts/composition" >}}
 [CustomResourceDefinitions]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
@@ -311,7 +311,7 @@ dedicated control planes to many tenants within a single organization.
 [Gatekeeper]: https://open-policy-agent.github.io/gatekeeper/website/docs/
 [here]: https://youtu.be/TaF0_syejXc
 [Multiple Source Field patching]: https://github.com/crossplane/crossplane/pull/2093
-[Configuration packages]: {{<ref "../../master/concepts/packages" >}}
+[Configuration packages]: {{<ref "../../v1.13/concepts/packages" >}}
 [OCI images]: https://github.com/opencontainers/image-spec
 [EKS Cluster]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/latest/resources/eks.aws.crossplane.io/Cluster/v1beta1
 [provider-aws]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws

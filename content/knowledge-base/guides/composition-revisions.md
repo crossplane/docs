@@ -133,7 +133,7 @@ spec:
     name: db-conn
 ```
 
-[composition-type]: {{<ref "../../master/concepts/compositions" >}}
-[Compositions]: {{<ref "../../master/concepts/compositions" >}}
+[composition-type]: {{<ref "../../v1.13/concepts/compositions" >}}
+[Compositions]: {{<ref "../../v1.13/concepts/compositions" >}}
 [canary]: https://martinfowler.com/bliki/CanaryRelease.html
 [install-guide]: {{<ref "../../master/software/install" >}}

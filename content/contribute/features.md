@@ -173,13 +173,6 @@ Crossplane recommends using the [Hugo ref shortcode](https://gohugo.io/content-m
 with the path of the file relative to `/content` for the link location.
 
 For example, to link to the `master` release index page use
-<!-- vale off -->
-```markdown
-[master branch documentation]({{</* ref "master/_index.md" */>}})
-```
-<!-- vale on -->
-
-<!-- [master branch documentation]({{<ref "master/_index.md" >}}) -->
 
 The `ref` value is of the markdown file, including `.md` extension.
 

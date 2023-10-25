@@ -5,14 +5,14 @@ description: "How to create and manage connection details across Crossplane mana
 ---
 
 Using connection details in Crossplane requires the following components:
-* Defining the `writeConnectionSecretToRef.name` in a [Claim]({{<ref "/master/concepts/claims#claim-connection-secrets">}}).
-* Defining the `writeConnectionSecretsToNamespace` value in the [Composition]({{<ref "/master/concepts/compositions#composite-resource-combined-secret">}}).
+* Defining the `writeConnectionSecretToRef.name` in a [Claim]({{<ref "/v1.13/concepts/claims#claim-connection-secrets">}}).
+* Defining the `writeConnectionSecretsToNamespace` value in the [Composition]({{<ref "/v1.13/concepts/compositions#composite-resource-combined-secret">}}).
 * Define the `writeConnectionSecretToRef` name and namespace for each resource in the
-  [Composition]({{<ref "/master/concepts/compositions#composed-resource-secrets">}}).
+  [Composition]({{<ref "/v1.13/concepts/compositions#composed-resource-secrets">}}).
 * Define the list of secret keys produced by each composed resource with `connectionDetails` in the
-  [Composition]({{<ref "/master/concepts/compositions#define-secret-keys">}}).
+  [Composition]({{<ref "/v1.13/concepts/compositions#define-secret-keys">}}).
 * Optionally, define the `connectionSecretKeys` in a 
-  [CompositeResourceDefinition]({{<ref "/master/concepts/composite-resource-definitions#manage-connection-secrets">}}).
+  [CompositeResourceDefinition]({{<ref "/v1.13/concepts/composite-resource-definitions#manage-connection-secrets">}}).
 
 {{<hint "note">}}
 This guide discusses creating Kubernetes secrets.  
@@ -23,7 +23,7 @@ with an external secret store.
 {{</hint >}}
 
 ## Background
-When a [Provider]({{<ref "/master/concepts/providers">}}) creates a managed
+When a [Provider]({{<ref "/v1.13/concepts/providers">}}) creates a managed
 resource, the resource may generate resource-specific details. These details can include 
 usernames, passwords or connection details like an IP address.  
 
@@ -37,10 +37,10 @@ detail_ from a managed resource.
 <!-- vale gitlab.SentenceLength = NO -->
 <!-- wordy because of type names -->
 When a managed resource is part of a 
-[Composition]({{<ref "/master/concepts/compositions">}}), the Composition, 
-[Composite Resource Definition]({{<ref "/master/concepts/composite-resource-definitions">}}) 
+[Composition]({{<ref "/v1.13/concepts/compositions">}}), the Composition, 
+[Composite Resource Definition]({{<ref "/v1.13/concepts/composite-resource-definitions">}}) 
 and optionally, the 
-[Claim]({{<ref "/master/concepts/claims">}}) define what details are visible
+[Claim]({{<ref "/v1.13/concepts/claims">}}) define what details are visible
 and where they're stored. 
 <!-- vale gitlab.SentenceLength = YES -->
 
@@ -191,9 +191,9 @@ spec:
 <!-- under 25 words -->
 When a managed resource creates connection secrets, Crossplane can write the 
 secrets to a 
-[Kubernetes secret]({{<ref "/master/concepts/managed-resources#publish-secrets-to-kubernetes">}})
+[Kubernetes secret]({{<ref "/v1.13/concepts/managed-resources#publish-secrets-to-kubernetes">}})
 or an 
-[external secret store]({{<ref "/master/concepts/managed-resources#publish-secrets-to-an-external-secrets-store">}}).
+[external secret store]({{<ref "/v1.13/concepts/managed-resources#publish-secrets-to-an-external-secrets-store">}}).
 <!-- vale gitlab.SentenceLength = YES -->
 <!-- vale gitlab.Substitutions = YES -->
 
@@ -201,7 +201,7 @@ Creating an individual managed resource shows the connection secrets the
 resource creates. 
 
 {{<hint "note" >}}
-Read the [managed resources]({{<ref "/master/concepts/managed-resources">}})
+Read the [managed resources]({{<ref "/v1.13/concepts/managed-resources">}})
 documentation for more information on configuring resources and storing
 connection secrets for individual resources. 
 {{< /hint >}}

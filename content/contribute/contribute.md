@@ -60,8 +60,6 @@ Crossplane documentation has three content sections:
   how to contribute to the Crossplane documentation.
 * The [Knowledge Base]({{<ref "/knowledge-base" >}}) is for content related to
   Crossplane integrations, in-depth articles or how-to guides. 
-* [User documentation]({{<ref "/master" >}}) are for generic documentation,
-  commonly version-specific. 
 
 #### User documentation vs knowledge base articles
 User documentation includes both _conceptual_ and _procedural_ instructions.
