@@ -664,12 +664,12 @@ spec:
 The [EnvironmentConfigs]({{<ref "./environment-configs" >}}) page has 
 more information on EnvironmentConfigs options and usage.
 
-### Use Composition Functions
+### Use composition functions
 
-Composition functions (or just Functions, for short) are custom programs that
-template Crossplane resources. You can write a Function to template resources
+Composition functions (or just functions, for short) are custom programs that
+template Crossplane resources. You can write a function to template resources
 using a general purpose programming language like Go or Python. Using a general
-purpose programming language allows a Function to use more advanced logic to
+purpose programming language allows a function to use more advanced logic to
 template resources, like loops and conditionals.
 
 {{<hint "important" >}}
@@ -680,7 +680,7 @@ To use composition functions define a {{<hover label="xfn"
 line="7">}}pipeline{{</hover>}} of steps inside the Composition {{<hover
 label="xfn" line="4">}}spec{{</hover>}}. Each {{<hover label="xfn"
 line="8">}}step{{</hover>}} calls a Function. You can't specify resource
-templates using the `resources` field when you specify a pipeline of Functions.
+templates using the `resources` field when you specify a pipeline of functions.
 You must set the Composition {{<hover label="xfn" line="6">}}mode{{</hover>}} to
 `Pipeline` to use Functions.
 
@@ -691,7 +691,7 @@ Different Functions each have a different {{<hover label="xfn"
 line="13">}}kind{{</hover>}} of input.
 
 This example uses Function Patch and Transform. Function Patch and Transform is
-a Function that implements Crossplane resource templates. You can use Function
+a function that implements Crossplane resource templates. You can use Function
 Patch and Transform to specify resource templates in a pipeline with other
 Functions.
 
