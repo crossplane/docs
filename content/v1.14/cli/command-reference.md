@@ -398,9 +398,9 @@ directory of YAML files representing multiple resources.
 
 Inside the YAML file include an 
 {{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
-{{<hover label="apiVersion" line="1">}}kind{{</hover>}},
-{{<hover label="apiVersion" line="1">}}metadata{{</hover>}} and
-{{<hover label="apiVersion" line="1">}}spec{{</hover>}}.
+{{<hover label="apiVersion" line="2">}}kind{{</hover>}},
+{{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
+{{<hover label="apiVersion" line="7">}}spec{{</hover>}}.
 
 ```yaml {label="or"}
 apiVersion: example.org/v1alpha1
