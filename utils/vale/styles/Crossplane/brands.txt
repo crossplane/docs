@@ -5,6 +5,7 @@ Commonmark
 Geekdocs
 Goldmark
 Grammarly
+Graphviz
 HashiCorp
 instant.page
 Kustomize
