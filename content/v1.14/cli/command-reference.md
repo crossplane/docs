@@ -318,7 +318,7 @@ The `crossplane beta render` command doesn't apply
 {{< /hint >}}
 
 The `crossplane beta render` command connects to the locally running Docker 
-Engine to pull and run composite functions. 
+Engine to pull and run composition functions. 
 
 {{<hint "important">}} 
 Running `crossplane beta render` requires [Docker](https://www.docker.com/).
@@ -424,10 +424,6 @@ spec:
 
 The schema of the resource isn't validated and may contain any data.
 
-#### Modify composition function settings
-
-Composition functions run with the `crossplane beta render` command support 
-configuration options to improve function development.
 
 ### beta trace
 
