@@ -414,3 +414,168 @@ spec:
 ```
 
 The schema of the resource isn't validated and may contain any data.
+
+### beta trace
+
+Use the `crossplane beta trace` command to display a visual relationship of
+Crossplane objects. The `trace` command supports claims, compositions or
+managed resources. 
+
+The command requires a resource type and a resource name.  
+
+`crossplane beta trace <resource kind> <resource name>`
+
+For example to view a resource named `my-claim` of type `example.crossplane.io`:  
+`crossplane beta trace example.crossplane.io my-claim`
+
+By default the `crossplane beta trace` command uses the Kubernetes 
+configuration defined in `~/.kube/config`.  
+
+Define a custom Kubernetes configuration file location with the environmental 
+variable `KUBECONFIG`.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale flags `dot` as an error but only the trailing tick. -->
+| Short flag   | Long flag                   | Description                                                                        |
+| ------------ | -------------               | ------------------------------                                                     |
+| `-n`         | `--namespace`               | The namespace of the resource.                                                     |
+| `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. |
+| `-s`         | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+#### Output options
+
+By default `crossplane beta trace` prints directly to the terminal, limiting the
+"Ready" condition and "Status" messages to 64 characters.
+
+The following an example output a "cluster" claim from the AWS reference 
+platform, which includes multiple Compositions and composed resources: 
+
+```shell {copy-lines="1"}
+crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws
+NAME                                                              SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                True     True    Available
+└─ XCluster/platform-ref-aws-mlnwb                                True     True    Available
+   ├─ XNetwork/platform-ref-aws-mlnwb-6nvkx                       True     True    Available
+   │  ├─ VPC/platform-ref-aws-mlnwb-ckblr                         True     True    Available
+   │  ├─ InternetGateway/platform-ref-aws-mlnwb-r7w47             True     True    Available
+   │  ├─ Subnet/platform-ref-aws-mlnwb-lhr4h                      True     True    Available
+   │  ├─ Subnet/platform-ref-aws-mlnwb-bss4b                      True     True    Available
+   │  ├─ Subnet/platform-ref-aws-mlnwb-fzbxx                      True     True    Available
+   │  ├─ Subnet/platform-ref-aws-mlnwb-vxbf4                      True     True    Available
+   │  ├─ RouteTable/platform-ref-aws-mlnwb-cs9nl                  True     True    Available
+   │  ├─ Route/platform-ref-aws-mlnwb-vpxdg                       True     True    Available
+   │  ├─ MainRouteTableAssociation/platform-ref-aws-mlnwb-sngx5   True     True    Available
+   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-hprsp       True     True    Available
+   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-shb8f       True     True    Available
+   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-hvb2h       True     True    Available
+   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-m58vl       True     True    Available
+   │  ├─ SecurityGroup/platform-ref-aws-mlnwb-xxbl2               True     True    Available
+   │  ├─ SecurityGroupRule/platform-ref-aws-mlnwb-7qt56           True     True    Available
+   │  └─ SecurityGroupRule/platform-ref-aws-mlnwb-szgxp           True     True    Available
+   ├─ XEKS/platform-ref-aws-mlnwb-fqjzz                           True     True    Available
+   │  ├─ Role/platform-ref-aws-mlnwb-gmpqv                        True     True    Available
+   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-t6rct        True     True    Available
+   │  ├─ Cluster/platform-ref-aws-mlnwb-crrt8                     True     True    Available
+   │  ├─ ClusterAuth/platform-ref-aws-mlnwb-dgn6f                 True     True    Available
+   │  ├─ Role/platform-ref-aws-mlnwb-tdnx4                        True     True    Available
+   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-qzljh        True     True    Available
+   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-l64q2        True     True    Available
+   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-xn2px        True     True    Available
+   │  ├─ NodeGroup/platform-ref-aws-mlnwb-4sfss                   True     True    Available
+   │  ├─ OpenIDConnectProvider/platform-ref-aws-mlnwb-h26xx       True     True    Available
+   │  └─ ProviderConfig/platform-ref-aws                          -        -
+   └─ XServices/platform-ref-aws-mlnwb-bgndx                      True     True    Available
+      ├─ Release/platform-ref-aws-mlnwb-bcj7r                     True     True    Available
+      └─ Release/platform-ref-aws-mlnwb-7hfkv                     True     True    Available
+```
+
+#### Wide outputs
+Print the entire "Ready" or "Status" message if they're longer than 
+64 characters with `--output=wide`. 
+
+For example, the output truncates the "Status" message that's too long. 
+
+```shell {copy-lines="1"
+crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws
+NAME                                                              SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                True     False   Waiting: ...resource claim is waiting for composite resource to become Ready
+```
+
+Use `--output=wide` to see the full message.
+
+```shell {copy-lines="1"
+crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws --output=wide
+NAME                                                              SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                True     False   Waiting: Composite resource claim is waiting for composite resource to become Ready
+```
+
+#### Graphviz dot file output
+
+Use the `--output=dot` to print out a textual 
+[Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. 
+
+Save the output and export it or the output directly to Graphviz `dot` to 
+render an image. 
+
+For example, to save the output as a `graph.png` file use 
+`dot -Tpng -o graph.png`.
+
+`crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws -o dot | dot -Tpng -o graph.png`
+
+#### Print connection secrets
+
+Use `-s` to print any connection secret names along with the other resources.
+
+{{<hint "important">}}
+The `crossplane beta trace` command doesn't print secret values.
+{{< /hint >}}
+
+The output includes both the secret name along with the secret's namespace.
+
+```shell
+NAME                                                                        SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                          True     True    Available
+└─ XCluster/platform-ref-aws-mlnwb                                          True     True    Available
+   ├─ XNetwork/platform-ref-aws-mlnwb-6nvkx                                 True     True    Available
+   │  ├─ SecurityGroupRule/platform-ref-aws-mlnwb-szgxp                     True     True    Available
+   │  └─ Secret/3f11c30b-dd94-4f5b-aff7-10fe4318ab1f (upbound-system)       -        -
+   ├─ XEKS/platform-ref-aws-mlnwb-fqjzz                                     True     True    Available
+   │  ├─ OpenIDConnectProvider/platform-ref-aws-mlnwb-h26xx                 True     True    Available
+   │  └─ Secret/9666eccd-929c-4452-8658-c8c881aee137-eks (upbound-system)   -        -
+   ├─ XServices/platform-ref-aws-mlnwb-bgndx                                True     True    Available
+   │  ├─ Release/platform-ref-aws-mlnwb-7hfkv                               True     True    Available
+   │  └─ Secret/d0955929-892d-40c3-b0e0-a8cabda55895 (upbound-system)       -        -
+   └─ Secret/9666eccd-929c-4452-8658-c8c881aee137 (upbound-system)          -        -
+```
+
+### beta xpkg init
+
+The `crossplane beta xpkg init` command populates the current directory with 
+files to build a package. 
+
+Provide a name to use for the package and the package template to start from 
+with the command  
+`crossplane beta xpkg init <name> <template>`
+
+The `<name>` input isn't used. 
+
+The `<template>` value may be one of three well known templates:
+* `function-template-go` - A template to build Crossplane [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
+* `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
+* `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
+
+Instead of a well known template the `<template>` value can be a git repository 
+URL.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag     | Description                                                                                      |
+| ------------ | ------------- | ------------------------------                                                                   |
+| `-d`         | `--directory` | The directory to create and load the template files into. Uses the current directory by default. |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
