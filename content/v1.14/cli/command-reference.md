@@ -91,7 +91,7 @@ Include YAML files demonstrating how to use the package with `--examples-root`.
 #### Include a runtime image
 
 Functions and Providers require YAML files describing their dependencies and 
-settings as well as a container image for the function or provider controller.
+settings as well as a container image for their runtime.
 
 Using `--embed-runtime-image-name` downloads a specified container image and 
 includes the image inside the function or provider package.
