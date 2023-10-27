@@ -130,6 +130,51 @@ same settings for Providers and their managed resources. Applying the
 `--max-reconcile-rate` to Crossplane only controls the rate for
 core Crossplane resources. 
 {{< /hint >}}
+
+##### Enable real time Compositions
+
+With real time compositions enabled Crossplane watches every composed resource
+with a Kubernetes watch. Crossplane receives events from the
+Kubernetes API server when a composed resource changes. For example, when
+a provider sets the `Ready` condition to `true`.
+
+{{<hint "important" >}}
+Real time compositions are an alpha feature. Alpha features aren't enabled by
+default. 
+{{< /hint >}}
+
+With real time compositions enabled, Crossplane doesn't use the `--poll-interval`
+settings. 
+
+Enable real time compositions support by
+[changing the Crossplane pod setting]({{<ref "./pods#change-pod-settings">}})
+and enabling  
+{{<hover label="deployment" line="12">}}--enable-realtime-compositions{{</hover>}}
+argument.
+
+```yaml {label="deployment",copy-lines="12"}
+$ kubectl edit deployment crossplane --namespace crossplane-system
+apiVersion: apps/v1
+kind: Deployment
+spec:
+# Removed for brevity
+  template:
+    spec:
+      containers:
+      - args:
+        - core
+        - start
+        - --enable-realtime-compositions
+```
+
+{{<hint "tip" >}}
+
+The [Crossplane install guide]({{<ref "../software/install#feature-flags">}})
+describes enabling feature flags like
+{{<hover label="deployment" line="12">}}--enable-realtime-compositions{{</hover>}}
+with Helm.
+{{< /hint >}}
+
 ##### Reconcile retry rate
 
 The `--max-reconcile-rate` setting configures the number of times per second
