@@ -438,6 +438,10 @@ The command requires a resource type and a resource name.
 For example to view a resource named `my-claim` of type `example.crossplane.io`:  
 `crossplane beta trace example.crossplane.io my-claim`
 
+The command also accepts Kubernetes CLI style `<kind>/<name>` input.  
+For example,  
+`crossplane beta trace example.crossplane.io/my-claim`
+
 By default the `crossplane beta trace` command uses the Kubernetes 
 configuration defined in `~/.kube/config`.  
 
