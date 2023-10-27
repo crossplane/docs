@@ -1290,8 +1290,8 @@ Composition.
 
 ## Composition validation
 
-When creating a Composition Crossplane automatically validates specific
-parameters in the Composition.
+When creating a Composition, Crossplane automatically validates its integrity,
+checking that the Composition is well formed, for example:
 
 * All resources either use a `name` or don't. Compositions can't use both named
   and unnamed resources.
@@ -1310,41 +1310,48 @@ parameters in the Composition.
 
 ### Composition schema aware validation
 
-On top of the preceding logical validation, Crossplane performs schema aware
-validation on the resources in a Composition, checking that `patches`,
-`readinessChecks` and `connectionDetails` are valid according to the involved
-resources' schemas, for example checking that the source/destination field of a
-patch is a valid field according to the source/destination resource's schema and
-that types match, if defined, taking into account transforms.
+Crossplane also performs schema aware
+validation of Compositions. Schema validation checks that `patches`, 
+`readinessChecks` and `connectionDetails` are valid according to the resource 
+schemas. For example, checking that the source and destination fields of a patch 
+are valid according to the source and destination resource schema.
 
 {{<hint "note" >}}
-Composition schema aware validation is a beta feature, so Crossplane
-enables it by default. You can disable it by setting the
+Composition schema aware validation is a beta feature. Crossplane enables
+beta features by default. 
+
+Disable schema aware validation by setting the
 `--enable-composition-webhook-schema-validation=false` flag on the Crossplane
-pod.
+pod.  
+
 The [Crossplane Pods]({{<ref "./pods#edit-the-deployment">}}) page has
 more information on enabling Crossplane flags.
 {{< /hint >}}
 
 #### Schema aware validation modes
 
-Logical validation errors always result in a rejection of the Composition.
-
-You can configure how Crossplane should handle both missing involved resources'
-schemas and actual schema aware validation errors.
+<!-- vale alex.ProfanityUnlikely = NO -->
+Crossplane always rejects Compositions in case of integrity errors.
+<!-- vale alex.ProfanityUnlikely = Yes -->
+	
+Set the schema aware validation mode to configure how Crossplane handles both
+missing resource schemas and schema aware validation errors.
 
 {{<hint "note" >}}
-In case of any involved resource schema missing, Crossplane skips schema aware
-validation altogether.
+If a resource schema is missing, Crossplane skips schema aware validation
+but still returns an error for integrity errors and a warning or an error
+for the missing schemas.
 {{< /hint >}}
 
 The following modes are available:
 
-| Mode     | Missing Schema | Schema aware Error | Logical Error |
-| -------- | -------------- |--------------------| ------------- |
-| `warn`   | Warning        | Warning            | Error         |
-| `loose`  | Warning        | Error              | Error         |
-| `strict` | Error          | Error              | Error         |
+{{< table "table table-sm table-striped" >}}
+| Mode     | Missing Schema | Schema Aware Error | Integrity Error |
+| -------- | -------------- |--------------------|-----------------|
+| `warn`   | Warning        | Warning            | Error           |
+| `loose`  | Warning        | Error              | Error           |
+| `strict` | Error          | Error              | Error           |
+{{< /table >}}
 
 Change the validation mode for a Composition with the
 {{<hover label="mode" line="5">}}crossplane.io/composition-schema-aware-validation-mode{{</hover>}} 
@@ -1352,7 +1359,8 @@ annotation.
 
 If not specified, the default mode is `warn`.
 
-For example, to enable `loose` mode checking:
+For example, to enable `loose` mode checking set the annotation value to 
+{{<hover label="mode" line="5">}}loose{{</hover>}}.
 
 ```yaml {copy-lines="none",label="mode"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -1366,11 +1374,14 @@ spec:
 ```
 
 {{<hint "important" >}}
-Modes also apply to Compositions defined by Configuration packages, look at
-Crossplane's logs for warnings in case of issues. The default is just to warn,
-so unless the Configuration explicitly set a different mode, Crossplane creates
-the Composition even in case of errors, but you should still check warnings as
-they can surface bugs in the Configuration or in the schema aware validation
-logic, and either the author of the Configuration or the Crossplane team should
-fix it, respectively.
+Validation modes also apply to Compositions defined by Configuration packages.
+
+Depending on the mode configured in the Composition, schema aware validation
+issues may result in warnings or the rejection of the Composition.
+
+View the Crossplane logs for validation warnings.
+
+Crossplane sets a Configuration as unhealthy if there are validation errors.
+View the Configuration details with `kubectl describe configuration` to see the
+specific errors.
 {{< /hint >}}
