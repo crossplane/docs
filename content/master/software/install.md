@@ -251,6 +251,7 @@ at the table below.
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
+| Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
 {{< /table >}}
 {{< /expand >}}
 
