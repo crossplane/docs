@@ -28,6 +28,8 @@ float64
 Go
 gRPC
 imagePullSecret
+Go
+gRPC
 JSONPath
 key-pair
 key-value
