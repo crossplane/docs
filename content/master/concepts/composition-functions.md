@@ -198,12 +198,53 @@ You can preview the output of any composition that uses composition functions
 using the Crossplane CLI. You don't need a Crossplane control plane to do
 this. The Crossplane CLI uses Docker Engine to run functions.
 
+
+{{<hint "tip">}}
+See the [Crossplane CLI docs](https://github.com/crossplane/docs/pull/584) to
+learn how to install and use the Crossplane CLI.
+{{< /hint >}}
+
+{{<hint "important">}}
+Running `crossplane beta render` requires [Docker](https://www.docker.com).
+{{< /hint >}}
+
+Provide a composite resource, composition and composition functions to render
+the output locally. 
+
 ```shell
 crossplane beta render xr.yaml composition.yaml functions.yaml
 ```
 
-Provide a composite resource, composition and composition functions to render
-the output locally. 
+`crossplane beta render` prints resources as YAML to stdout. It prints the
+composite resource first, followed by the resources the composition functions
+created.
+
+```yaml
+---
+apiVersion: example.crossplane.io/v1
+kind: XBucket
+metadata:
+  name: example-render
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  annotations:
+    crossplane.io/composition-resource-name: storage-bucket
+  generateName: example-render-
+  labels:
+    crossplane.io/composite: example-render
+  ownerReferences:
+  - apiVersion: example.crossplane.io/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: XBucket
+    name: example-render
+    uid: ""
+spec:
+  forProvider:
+    region: us-east-2
+```
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files used in the example">}}
 
@@ -266,43 +307,56 @@ spec:
 ```
 {{</expand>}}
 
-`crossplane beta render` prints resources as YAML to stdout. It prints the
-composite resource first, followed by the resources the composition functions
-created.
+The Crossplane CLI uses Docker Engine to run functions. You can change how the
+Crossplane CLI run a function by adding an annotation in `functions.yaml`. Add
+the `render.crossplane.io/runtime` annotation to a Function to change how it's
+run.
 
-```yaml
----
-apiVersion: example.crossplane.io/v1
-kind: XBucket
+`crossplane beta render` supports two `render.crossplane.io/runtime` values:
+
+* `Docker` (the default) connects to Docker Engine. It uses Docker to pull and
+  run function runtimes.
+* `Development` connects to a function runtime you have run manually.
+
+When you use the {{<hover label="development" line="6">}}Development{{</hover>}}
+runtime the Crossplane CLI ignores the Function's {{<hover label="development"
+line="8">}}package{{</hover>}}. Instead it expects you to make sure the function
+is listening on localhost port 9443. The function must be listening without gRPC
+transport security. Most function SDKs let you run a function with the
+`--insecure` flag to disable transport security. For example you can run a Go
+function locally using `go run . --insecure`.
+
+```yaml {label="development"}
+apiVersion: pkg.crossplane.io/v1beta1
+kind: Function
 metadata:
-  name: example-render
----
-apiVersion: s3.aws.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  annotations:
-    crossplane.io/composition-resource-name: storage-bucket
-  generateName: example-render-
-  labels:
-    crossplane.io/composite: example-render
-  ownerReferences:
-  - apiVersion: example.crossplane.io/v1
-    blockOwnerDeletion: true
-    controller: true
-    kind: XBucket
-    name: example-render
-    uid: ""
+  name: function-patch-and-transform
+  annotation:
+    render.crossplane.io/runtime: Development
 spec:
-  forProvider:
-    region: us-east-2
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 ```
 
-{{<hint "important">}}
-Running `crossplane beta render` requires [Docker](https://www.docker.com).
+{{<hint "tip">}}
+Use the `Development` runtime when you
+[write a composition function](#write-a-composition-function) to test your
+function end-to-end.
+{{</hint>}}
 
-See the [Crossplane CLI docs](https://github.com/crossplane/docs/pull/584) to
-learn how to install and use the Crossplane CLI.
-{{< /hint >}}
+`crossplane beta render` also supports the following Function annotations. These
+annotations affect how it runs Functions:
+
+* `render.crossplane.io/runtime-docker-cleanup` - When using the `Docker`
+runtime this annotation specifies whether the CLI should stop the function
+container after it calls the function. It supports the values `Stop`, to stop
+the container, and `Orphan`, to leave it running.
+* `render.crossplane.io/runtime-docker-pull-policy` - When using the `Docker`
+  runtime this annotation specifies when the CLI should pull the Function's
+  package. It supports the values `Always`, `Never`, and `IfNotPresent`.
+* `render.crossplane.io/runtime-development-target` - When using the
+  `Development` runtime this annotation tells the CLI to connect to a Function
+  running at the specified target. It uses
+  [gRPC target syntax](https://github.com/grpc/grpc/blob/v1.59.1/doc/naming.md).
 
 ## Write a composition function
 
@@ -363,9 +417,9 @@ spec:
 To write a composition function, you:
 
 1. Create the function from a template.
-1. Edit the template to add your function's logic.
-1. Test your function.
-1. Build your function, and push it to a package registry.
+1. Edit the template to add the function's logic.
+1. [Test the function](#test-a-composition-that-uses-functions).
+1. Build the function, and push it to a package registry.
 
 You use the [Crossplane CLI](https://github.com/crossplane/docs/pull/584) to
 create, test, build, and push a function. For example,
@@ -387,6 +441,10 @@ sha256:2c31b0f7a34b34ba5b0b2dacc94c360d18aca1b99f56ca4f40a1f26535a7c1c4
 
 # Package the function.
 $ crossplane xpkg build -f package --embed-runtime-image=runtime
+
+# Test the function.
+$ go run . --insecure
+$ crossplane beta render xr.yaml composition.yaml functions.yaml
 
 # Push the function package to xpkg.upbound.io.
 $ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.1.0
