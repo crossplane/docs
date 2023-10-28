@@ -34,7 +34,7 @@ Install a Function with a Crossplane
 location of the function package.
 
 
-For example, to install Function Patch and Transform,
+For example, to install [Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform),
 
 ```yaml {label="install"}
 apiVersion: pkg.crossplane.io/v1beta1
@@ -111,10 +111,11 @@ line="10">}}function-patch-and-transform{{</hover>}}.
 Some Functions allow you to specify an {{<hover label="single"
 line="11">}}input{{</hover>}}. Different Functions each have a different
 {{<hover label="single" line="13">}}kind{{</hover>}} of input. This example uses
-Function Patch and Transform. Function Patch and Transform is a function that
-implements Crossplane resource templates. Its input kind is `Resources`, and it
-accepts [Patch and Transform]({{<ref "./patch-and-transform">}}) {{<hover
-label="single" line="14">}}resources{{</hover>}} as input.
+[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform).
+Function Patch and Transform is a function that implements Crossplane resource
+templates. Its input kind is `Resources`, and it accepts
+[Patch and Transform]({{<ref "./patch-and-transform">}}) {{<hover label="single"
+line="14">}}resources{{</hover>}} as input.
 
 ```yaml {label="single",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -324,8 +325,11 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 ```
 
 Some people design composition functions for you to use them with any kind of
-composite resource. Function Patch and Transform and Function Auto Ready work
-with any kind of composite resource.
+composite resource.
+[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform)
+and
+[Function Auto Ready](https://github.com/crossplane-contrib/function-auto-ready)
+work with any kind of composite resource.
 
 Another common pattern is to write a composition function specific to one kind
 of composite resource. The function contains all the logic needed to tell
