@@ -3,7 +3,6 @@
 call-outs
 ClusterRoles`
 comma-separated
-comma-seperated
 conformant
 cross-reference
 Cross-resource
