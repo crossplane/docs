@@ -4,7 +4,7 @@
     command = "hugo --minify "
 
 [build.environment]
-  HUGO_VERSION = "0.114.0"
+  HUGO_VERSION = "0.119.0"
 
 [[redirects]]
 from = "/docs/*"

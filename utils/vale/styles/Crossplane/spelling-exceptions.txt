@@ -2,7 +2,7 @@
 /tabs
 call-outs
 ClusterRoles`
-comma-seperated
+comma-separated
 conformant
 cross-reference
 Cross-resource

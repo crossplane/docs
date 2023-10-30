@@ -65,6 +65,7 @@ UnknownPackageRevisionHealth
 XCluster
 XNetwork
 xpkg
+xpkg.upbound.io
 XR
 XRC
 XRD

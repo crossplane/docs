@@ -15,13 +15,17 @@ exceptions:
   - ClusterRoles
   - Code
   - Composite Resource
+  - Composite resource
+  - composite resource
   - Composite Resource Definitions
   - Composite Resources
+  - composite resources
   - CompositeResourceDefinition
   - compositeTypeRef
   - Composition
   - Compositions
   - Configuration
+  - configuration
   - Cosmos
   - Crossplane
   - Docker
@@ -41,11 +45,15 @@ exceptions:
   - Marketplace
   - MongoDB
   - Pod
+  - pod
   - Provider
+  - provider
   - ProviderConfig
+  - crossplane.yaml
   - Pub/Sub
   - PubSub
   - REPL
+  - RBAC
   - StoreConfig
   - Studio
   - TypeScript
@@ -55,3 +63,4 @@ exceptions:
   - Visual
   - VS
   - Windows
+  - XRD
