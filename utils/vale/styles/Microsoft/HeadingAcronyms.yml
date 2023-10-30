@@ -8,10 +8,11 @@ tokens:
 exceptions:
   - API
   - AWS
+  - CLI
+  - CSS
   - GCP
   - JSON
   - RBAC
-  - CSS
   - SCSS
   - XRD
   - XRDs

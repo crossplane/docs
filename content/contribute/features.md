@@ -123,9 +123,9 @@ Hugo to fail.
 
 ## Images
 All images are in `/content/media`.  
-Crossplane supports standard [Markdown image
-syntax](https://www.markdownguide.org/basic-syntax/#images-1) but using the
-`img` shortcode is strongly recommended.
+Crossplane supports standard 
+[Markdown image syntax](https://www.markdownguide.org/basic-syntax/#images-1) 
+but using the `img` shortcode is strongly recommended.
 
 Images using the shortcode are automatically converted to `webp` image format,
 compressed and use responsive image sizing. 
@@ -157,8 +157,9 @@ Which generates this responsive image (change your browser size to see it change
 {{<img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="small" >}}
 
 ## Links
-Crossplane docs support standard [Markdown
-links](https://www.markdownguide.org/basic-syntax/#links) but Crossplane prefers link shortcodes
+Crossplane docs support standard 
+[Markdown links](https://www.markdownguide.org/basic-syntax/#links) 
+but Crossplane prefers link shortcodes
 for links between docs pages. Using shortcodes prevents incorrect link creation
 and notifies which links to change after moving a page.
 
@@ -187,8 +188,9 @@ If the `ref` value points to a page that doesn't exist, Hugo fails to start.
 
 ### Linking to external sites
 Minimize linking to external sites. When linking to any page outside of
-`crossplane.io` use standard [markdown link
-syntax](https://www.markdownguide.org/basic-syntax/#links) without using the
+`crossplane.io` use standard 
+[markdown link syntax](https://www.markdownguide.org/basic-syntax/#links) 
+without using the
 `ref` shortcode.
 
 For example, 
