@@ -120,7 +120,9 @@ variable `KUBECONFIG`.
 Specify the package kind, package file and optionally a name to give the package 
 inside Crossplane.
 
-`crossplane xpkg install <package-kind> <registry URL package name and tag> [<optional-name>`
+`crossplane xpkg install <package-kind> <registry URL package name and tag> [<optional-name>]`
+
+The `<package-kind>` is either a `configuration`, `function` or `provider`.
 
 For example, to install version 0.42.0 of the 
 [AWS S3 provider](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.42.0):
@@ -197,7 +199,10 @@ to push packages and create private repositories.
 
 #### Authentication options
 
-The `crossplane xkpg login` command can use a username and password or Upbound API token.
+The `crossplane xpkg login` command can use a username and password or Upbound API token.
+
+By default, `crossplane xpkg login` without arguments, prompts for a username
+and password. 
 
 Provide a username and password with the `--username` and `--password` flags or
 set the environmental variable `UP_USER` for a username or `UP_PASSWORD` for the
@@ -298,7 +303,7 @@ variable `KUBECONFIG`.
 Specify the package kind, package file and optionally the name of the package 
 already installed in Crossplane.
 
-`crossplane xpkg update <package-kind> <registry package name and tag> [<optional-name>`
+`crossplane xpkg update <package-kind> <registry package name and tag> [<optional-name>]`
 
 The package file must be an organization, image and tag on the `xpkg.upbound.io`
 registry on [Upbound Marketplace](https://marketplace.upbound.io/).
@@ -325,7 +330,9 @@ any [composition functions]({{<ref "../concepts/composition-functions">}}).
 
 {{< hint "important" >}}
 The `crossplane beta render` command doesn't apply 
-[composition patches]({{<ref "../concepts/compositions#changing-resource-fields">}}).
+[patch and transform composition patches]({{<ref "../concepts/patch-and-transform">}}).
+
+The command only supports function "patch and transforms."
 {{< /hint >}}
 
 The `crossplane beta render` command connects to the locally running Docker 
@@ -404,7 +411,7 @@ If a function produces Kubernetes events with statuses use the
 `--include-function-results` to print them along with the managed resource 
 outputs. 
 
-#### Mock existing resources
+#### Mock managed resources
 
 Provide mocked, or artificial data representing a managed resource with 
 `--observed-resources`. The `crossplane beta render` command treats the 
@@ -586,7 +593,7 @@ Provide a name to use for the package and the package template to start from
 with the command  
 `crossplane beta xpkg init <name> <template>`
 
-The `<name>` input isn't used. 
+The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
 The `<template>` value may be one of three well known templates:
 * `function-template-go` - A template to build Crossplane [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.

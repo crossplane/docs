@@ -10,7 +10,7 @@ Crossplane.
 The Crossplane CLI includes:
 * tools to build, install, update and push Crossplane Packages
 * standalone Composition Function testing and rendering without the need to access a Kubernetes cluster running Crossplane
-* visual dependency mapping across Compositions, Composite Resources and Managed Resources
+* troubleshoot Crossplane Compositions, Composite Resources and Managed Resources
 
 ## Installing the CLI
 
@@ -33,7 +33,10 @@ curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/master/install
 [The script](https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh)
 detects your CPU architecture and downloads the latest stable release.
 
-Manually download a binary from the Crossplane releases repository at 
+{{<expand "Manually install the Crossplane CLI" >}}
+
+If you don't want to run shell script you can manually download a binary from 
+the Crossplane releases repository at 
 https://releases.crossplane.io/stable/current/bin
 
 {{<hint "important" >}}
@@ -45,6 +48,7 @@ The `crossplane` binary is the Kubernetes Crossplane pod image.
 {{< /hint >}}
 
 Move the binary to a location in your `$PATH`, for example `/usr/local/bin`.
+{{< /expand >}}
 
 ### Download other CLI versions
 
