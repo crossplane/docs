@@ -592,10 +592,14 @@ Apply `ProviderConfig` objects to managed resources.
 ### Controller configuration
 
 {{< hint "important" >}}
-The Crossplane community deprecated the `ControllerConfig` type in v1.11 to
-announce that there are no further enhancements.
-Applying a Controller configuration generates a deprecation warning.
-[Runtime configuration]({{<ref "#runtime-configuration" >}}) is the
+<!-- vale write-good.Passive = NO -->
+<!-- vale gitlab.FutureTense = NO -->
+The `ControllerConfig` type was deprecated in v1.11 and will be removed in
+a future release.
+<!-- vale write-good.Passive = YES -->
+<!-- vale gitlab.FutureTense = YES -->
+
+[`DeploymentRuntimeConfig`]({{<ref "#runtime-configuration" >}}) is the
 replacement for Controller configuration and is available in v1.14+.
 {{< /hint >}}
 
