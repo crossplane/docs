@@ -1,1026 +1,700 @@
 ---
 title: Composition Functions
-state: alpha
+state: beta
 alphaVersion: "1.11"
+betaVersion: "1.14"
 weight: 80
-description: "Composition Functions or XFNs allow for complex Composition patches"
+description: "Composition Functions allow you to template resources using general-purpose programming languages"
 aliases: 
   - /knowledge-base/guides/composition-functions
 ---
 
-<!-- TODO: XFN only use read-only filesystem.
-https://github.com/crossplane/crossplane/issues/4182
--->
+Composition functions (or just functions, for short) are custom programs that
+template Crossplane resources. Crossplane calls composition functions to
+determine what resources it should create when you create a composite resource
+(XR). You can write a function to template resources using a general purpose
+programming language like Go or Python. Using a general purpose programming
+language allows a Function to use more advanced logic to template resources,
+like loops and conditionals.
 
-Composition Functions allow you to supplement or replace your Compositions with
-advanced logic not implementable through available patching strategies. 
+You can build a function using general purpose programming languages such as Go
+or Python. The Crossplane community has also built functions that let you
+template Crossplane resources using [CUE](https://cuelang.org), Helm-like
+[Go templates](https://pkg.go.dev/text/template) or
+[Patch and Transforms]({{<ref "./patch-and-transform">}}).
+
+## Install a composition function
+
+Installing a Function creates a function pod. Crossplane sends requests to this
+pod to ask it what resources to create when you create a composite resource.
+
+Install a Function with a Crossplane
+{{<hover label="install" line="2">}}Function{{</hover >}} object setting the
+{{<hover label="install" line="6">}}spec.package{{</hover >}} value to the
+location of the function package.
 
 
-You can build a Function using general-purpose programming
-languages such as Go or Python, or relevant tools such as Helm, 
-[Kustomize](https://kustomize.io/), or
-[CUE](https://cuelang.org/).  
+For example, to install [Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform),
 
-Functions complement contemporary "Patch and Transform" (P&T) style
-Composition. It's possible to use only P&T, only Functions, or a mix of both in
-the same Composition.
+```yaml {label="install"}
+apiVersion: pkg.crossplane.io/v1beta1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+```
+
+{{< hint "tip" >}}
+Functions are Crossplane Packages. Read more about Packages in the
+[Packages documentation]({{<ref "packages" >}}).
+{{< /hint >}}
+
+By default, the Function pod installs in the same namespace as Crossplane
+(`crossplane-system`).
+
+## Verify a composition function
+
+View the status of a Function with `kubectl get functions`
+
+During the install a Function reports `INSTALLED` as `True` and `HEALTHY` as
+`Unknown`.
+
+```shell {copy-lines="1"}
+kubectl get functions
+NAME                              INSTALLED   HEALTHY   PACKAGE                                                                  AGE
+function-patch-and-transform      True        Unknown   xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4   10s
+```
+
+After the Function install completes and it's ready for use the `HEALTHY` status
+reports `True`.
+
+## Use a function in a composition
+
+Crossplane calls a Function to determine what resources it should create when
+you create a composite resource. The Function also tells Crossplane what to do
+with these resources when a you update or delete a composite resource.
+
+When Crossplane calls a Function it sends it the current state of the composite
+resource. It also sends it the current state of any managed resources the
+composite resource owns.
+
+Crossplane knows what Function to call when a composite resource changes by
+looking at the Composition the composite resource uses.
+
+{{<expand "Confused about Composite Resources and Compositions?" >}}
+Crossplane has four core components that users commonly mix up:
+
+* [Composition]({{<ref "./compositions">}}) - A template to define how to create
+  resources.
+* [CompositeResourceDefinition]({{<ref "./composite-resource-definitions">}})
+  (`XRD`) - A custom API specification. 
+* [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
+  using the custom API defined in a CompositeResourceDefinition. XRs use the
+  Composition template to create new managed resources. 
+* [Claim]({{<ref "./claims" >}}) (`XRC`) - Like a Composite Resource, but with
+  namespace scoping. 
+{{</expand >}}
+
+To use composition functions set the Composition 
+{{<hover label="single" line="6">}}mode{{</hover>}} to
+{{<hover label="single" line="6">}}Pipeline{{</hover>}}.
+
+Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of 
+{{<hover label="single" line="8">}}steps{{</hover>}}. Each 
+{{<hover label="single" line="8">}}step{{</hover>}} calls a Function.  
+
+Each {{<hover label="single" line="8">}}step{{</hover>}} uses a 
+{{<hover label="single" line="9">}}functionRef{{</hover>}} to reference the
+{{<hover label="single" line="10">}}name{{</hover>}} of the Function to call. 
+
+{{<hint "important" >}}
+Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}} 
+can't specify resource templates with a `resources` field. 
+
+Use function "Patch and Transform" to create resource templates.
+{{< /hint >}}
+
+
+Some Functions also allow you to specify an 
+{{<hover label="single" line="11">}}input{{</hover>}}.  
+The function defines the
+{{<hover label="single" line="13">}}kind{{</hover>}} of input.
+
+This example uses
+[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform).  
+Function Patch and Transform implements Crossplane resource
+templates.  
+The input kind is {{<hover label="single" line="13">}}Resources{{</hover>}}, 
+and it accepts [Patch and Transform]({{<ref "./patch-and-transform">}}) 
+{{<hover label="single" line="14">}}resources{{</hover>}} as input.
+
+```yaml {label="single",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  # Removed for Brevity
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: storage-bucket
+        base:
+          apiVersion: s3.aws.upbound.io/v1beta1
+          kind: Bucket
+          spec:
+            forProvider:
+              region: "us-east-2"
+```
+
+
+## Use a pipeline of functions in a composition
+
+Crossplane can ask more than one Function what to do when a composite resource
+changes. When a Composition has a pipeline of two or more steps, Crossplane
+calls them all. It calls them in the order they appear in the pipeline.
+
+Crossplane passes each Function in the pipeline the result of the previous
+Function. This enables powerful combinations of Functions. In this example,
+Crossplane calls {{<hover label="double" line="10">}}function-cue{{</hover>}} to
+create an S3 bucket. Crossplane then passes the bucket to 
+{{<hover label="double" line="23">}}function-auto-ready{{</hover>}}, which marks the
+composite resource as ready when the bucket becomes ready.
+
+```yaml {label="double",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  # Removed for Brevity
+  mode: Pipeline
+  pipeline:
+  - step: cue-export-resources
+    functionRef:
+      name: function-cue
+    input:
+      apiVersion: cue.fn.crossplane.io/v1beta1
+      kind: CUEInput
+      name: storage-bucket
+      export:
+        target: Resources
+        value: |
+          apiVersion: "s3.aws.upbound.io/v1beta1"
+          kind: "Bucket"
+          spec: forProvider: region: "us-east-2"
+  - step: automatically-detect-readiness
+    functionRef:
+      name: function-auto-ready
+```
+
+## Test a composition that uses functions
+
+You can preview the output of any composition that uses composition functions
+using the Crossplane CLI. You don't need a Crossplane control plane to do
+this. The Crossplane CLI uses Docker Engine to run functions.
+
+
+{{<hint "tip">}}
+See the [Crossplane CLI docs](https://github.com/crossplane/docs/pull/584) to
+learn how to install and use the Crossplane CLI.
+{{< /hint >}}
+
+{{<hint "important">}}
+Running `crossplane beta render` requires [Docker](https://www.docker.com).
+{{< /hint >}}
+
+Provide a composite resource, composition and composition functions to render
+the output locally. 
+
+```shell
+crossplane beta render xr.yaml composition.yaml functions.yaml
+```
+
+`crossplane beta render` prints resources as YAML to stdout. It prints the
+composite resource first, followed by the resources the composition functions
+created.
+
+```yaml
+---
+apiVersion: example.crossplane.io/v1
+kind: XBucket
+metadata:
+  name: example-render
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  annotations:
+    crossplane.io/composition-resource-name: storage-bucket
+  generateName: example-render-
+  labels:
+    crossplane.io/composite: example-render
+  ownerReferences:
+  - apiVersion: example.crossplane.io/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: XBucket
+    name: example-render
+    uid: ""
+spec:
+  forProvider:
+    region: us-east-2
+```
+
+{{<expand "The xr.yaml, composition.yaml and function.yaml files used in the example">}}
+
+You can recreate the output below using by running `crossplane beta render` with
+these files.
+
+The `xr.yaml` file contains the composite resource to render:
+
+```yaml
+apiVersion: example.crossplane.io/v1
+kind: XBucket
+metadata:
+  name: example-render
+spec:
+  bucketRegion: us-east-2
+```
+
+The `composition.yaml` file contains the Composition to use to render the
+composite resource:
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: example
+  name: example-render
 spec:
   compositeTypeRef:
-    apiVersion: database.example.org/v1alpha1
-    kind: XPostgreSQLInstance
-  functions:
-  - name: my-cool-Function
-    type: Container
-    container:
-      image: xpkg.upbound.io/my-cool-Function:0.1.0
+    apiVersion: example.crossplane.io/v1
+    kind: XBucket
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: storage-bucket
+        base:
+          apiVersion: s3.aws.upbound.io/v1beta1
+          kind: Bucket
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.bucketRegion
+          toFieldPath: spec.forProvider.region
 ```
 
-A Composition Function is a short-lived OCI container that tells Crossplane how
-to reconcile a Composite Resource (XR). The preceding example shows a minimal
-`Composition` that uses a Composition Function. Note that it has a `functions`
-array rather than the typical P&T style array of `resources`.
+The `functions.yaml` file contains the Functions the Composition references in
+its pipeline steps:
 
-## Enabling functions
+```yaml
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+```
+{{</expand>}}
 
-Enable support for Composition Functions by enabling the alpha feature flag in Crossplane with `helm install --args`.
+The Crossplane CLI uses Docker Engine to run functions. You can change how the
+Crossplane CLI run a function by adding an annotation in `functions.yaml`. Add
+the `render.crossplane.io/runtime` annotation to a Function to change how it's
+run.
+
+`crossplane beta render` supports two `render.crossplane.io/runtime` values:
+
+* `Docker` (the default) connects to Docker Engine. It uses Docker to pull and
+  run a function runtime.
+* `Development` connects to a function runtime you have run manually.
+
+When you use the {{<hover label="development" line="6">}}Development{{</hover>}}
+runtime the Crossplane CLI ignores the Function's {{<hover label="development"
+line="8">}}package{{</hover>}}. Instead it expects you to make sure the function
+is listening on localhost port 9443. The function must be listening without gRPC
+transport security. Most function SDKs let you run a function with the
+`--insecure` flag to disable transport security. For example you can run a Go
+function locally using `go run . --insecure`.
+
+```yaml {label="development"}
+apiVersion: pkg.crossplane.io/v1beta1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+  annotation:
+    render.crossplane.io/runtime: Development
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+```
+
+{{<hint "tip">}}
+Use the `Development` runtime when you
+[write a composition function](#write-a-composition-function) to test your
+function end-to-end.
+{{</hint>}}
+
+`crossplane beta render` also supports the following Function annotations. These
+annotations affect how it runs Functions:
+
+* `render.crossplane.io/runtime-docker-cleanup` - When using the `Docker`
+runtime this annotation specifies whether the CLI should stop the function
+container after it calls the function. It supports the values `Stop`, to stop
+the container, and `Orphan`, to leave it running.
+* `render.crossplane.io/runtime-docker-pull-policy` - When using the `Docker`
+  runtime this annotation specifies when the CLI should pull the Function's
+  package. It supports the values `Always`, `Never`, and `IfNotPresent`.
+* `render.crossplane.io/runtime-development-target` - When using the
+  `Development` runtime this annotation tells the CLI to connect to a Function
+  running at the specified target. It uses
+  [gRPC target syntax](https://github.com/grpc/grpc/blob/v1.59.1/doc/naming.md).
+
+## Write a composition function
+
+Composition functions let you replace complicated Compositions with code written
+in your programming language of choice. Crossplane has tools, software
+development kits (SDKs) and templates to help you write a function.
+
+
+<!-- vale write-good.Passive = NO -->
+Here's an example of a tiny, hello world function. This example is written in
+[Go](https://go.dev).
+<!-- vale write-good.Passive = YES -->
+
+```go
+func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
+        rsp := response.To(req, response.DefaultTTL)
+        response.Normal(rsp, "Hello world!")
+        return rsp, nil
+}
+```
+
+Some people design composition functions for you to use them with any kind of
+composite resource.
+[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform)
+and
+[Function Auto Ready](https://github.com/crossplane-contrib/function-auto-ready)
+work with any kind of composite resource.
+
+Another common pattern is to write a composition function specific to one kind
+of composite resource. The function contains all the logic needed to tell
+Crossplane what resources to create when you create a composite resource. When
+you write a composition function like this, your Composition can be small. It
+just tells Crossplane what function to run when you create, update, or delete a
+composite resource.
+
+This Composition tells Crossplane to call {{<hover label="dedicated"
+line="13">}}function-xr-xbucket{{</hover>}} whenever you create, update, or
+delete an {{<hover label="dedicated" line="8">}}XBucket{{</hover>}} composite
+resource. `function-xr-xbucket` is hard coded to handle `XBucket` composite
+resources.
+
+```yaml {label="dedicated"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-bucket-function
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: XBucket
+  mode: Pipeline
+  pipeline:
+  - step: handle-xbucket-xr
+    functionRef:
+      name: function-xr-xbucket
+```
+
+To write a composition function, you:
+
+1. Create the function from a template.
+1. Edit the template to add the function's logic.
+1. [Test the function](#test-a-composition-that-uses-functions).
+1. Build the function, and push it to a package registry.
+
+You use the [Crossplane CLI](https://github.com/crossplane/docs/pull/584) to
+create, test, build, and push a function. For example,
+
+```shell {copy-lines=none}
+# Create the function from a template.
+crossplane beta xpkg init function-example function-template-go
+Initialized package "function-example" in directory "/home/negz/control/negz/function-example" from https://github.com/crossplane/function-template-go/tree/91a1a5eed21964ff98966d72cc6db6f089ad63f4 (main)
+
+$ ls
+Dockerfile  fn.go  fn_test.go  go.mod  go.sum  input  LICENSE  main.go  package  README.md  renovate.json
+
+# Edit the template to add your function's logic
+$ vim fn.go
+
+# Build the function.
+$ docker build . --quiet --tag runtime
+sha256:2c31b0f7a34b34ba5b0b2dacc94c360d18aca1b99f56ca4f40a1f26535a7c1c4
+
+# Package the function.
+$ crossplane xpkg build -f package --embed-runtime-image=runtime
+
+# Test the function.
+$ go run . --insecure
+$ crossplane beta render xr.yaml composition.yaml functions.yaml
+
+# Push the function package to xpkg.upbound.io.
+$ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.1.0
+```
+
+{{<hint "tip">}}
+Crossplane has
+[language specific guides]({{<ref "../../knowledge-base/guides">}}) to writing
+a composition function. Refer to the guide for your preferred language for a
+more detailed guide to writing a function.
+{{</hint>}}
+
+When you're writing a composition function it's useful to know how composition
+functions work. Read the next section to learn
+[how composition functions work](#how-composition-functions-work).
+
+## How composition functions work
+
+Each composition function is actually a [gRPC](https://grpc.io) server. gRPC is
+a high performance, open source remote procedure call (RPC) framework. When you
+[install a function](#install-a-composition-function) Crossplane deploys the
+function as a gRPC server. Crossplane encrypts and authenticates all gRPC
+communication.
+
+You don't have to be a gRPC expert to write a function. Crossplane's function
+SDKs setup gRPC for you. It's useful to understand how Crossplane calls your
+function though, and how your function should respond.
+
+```mermaid
+sequenceDiagram
+    User->>+API Server: Create composite resource
+    Crossplane Pod->>+API Server: Observe composite resource
+    Crossplane Pod->>+Function Pod: gRPC RunFunctionRequest
+    Function Pod->>+Crossplane Pod: gRPC RunFunctionResponse
+    Crossplane Pod->>+API Server: Apply desired composed resources
+```
+
+When you create, update, or delete a composite resource that uses composition
+functions Crossplane calls each function in the order they appear in the
+Composition's pipeline. Crossplane calls each function by sending it a gRPC
+RunFunctionRequest. The function must respond with a gRPC RunFunctionResponse.
+
+{{<hint "tip">}}
+You can find detailed schemas for the RunFunctionRequest and RunFunctionResponse
+RPCs in the [Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1beta1).
+{{</hint>}}
+
+When Crossplane calls a function it includes four important things in the
+RunFunctionRequest.
+
+1. The __observed state__ of the composite resource, and any composed resources.
+1. The __desired state__ of the composite resource, and any composed resources.
+1. The function's __input__.
+1. The function pipeline's __context__.
+
+A function's main job is to update the __desired state__ and return it to
+Crossplane. It does this by returning a RunFunctionResponse.
+
+Most composition functions read the observed state of the composite resource,
+and use it to add composed resources to the desired state. This tells Crossplane
+which composed resources it should create or update.
+
+{{<hint "tip">}}
+<!-- vale write-good.Weasel = NO -->
+<!-- Disable Weasel to say "usually", which is correct in this context. -->
+A _composed_ resource is a resource created by a composite resource. Composed
+resources are usually Crossplane managed resources (MRs), but they can be any
+kind of Crossplane resource. For example a composite resource could also create
+a ProviderConfig, or another kind of composite resource. 
+<!-- vale write-good.Weasel = YES -->
+{{</hint>}}
+
+### Observed state
+
+When you create a composite resource like this one, Crossplane _observes_ it and
+sends it to the composition function as part of the observed state.
+
+```yaml
+apiVersion: example.crossplane.io/v1
+kind: XBucket
+metadata:
+  name: example-render
+spec:
+  bucketRegion: us-east-2
+```
+
+If any composed resources already exist, Crossplane observes them and sends them
+to your function to as part of the observed state.
+
+Crossplane also observes the connection details of your composite resource and
+any composed resources. It sends them to your function as part of the observed
+state.
+
+Crossplane observes the composite resource and any composed resources once,
+right before it starts calling the functions in the pipeline. This means that
+Crossplane sends every function in the pipeline the same observed state.
+
+### Desired state
+
+Desired state is the set of the changes the function pipeline wants to make to
+the composite resource and any composed resources. When a function adds composed
+resources to the desired state Crossplane creates them.
+
+A function can change:
+
+* The `status` of the composite resource.
+* The `metadata` and `spec` of any composed resource.
+
+A function can also change the connection details and readiness of the composite
+resource. A function indicates that the composite resource is ready by telling
+Crossplane whether its composed resources are ready. When the function pipeline
+tells Crossplane that all composed resources are ready, Crossplane marks the
+composite resource as ready.
+
+A function can't change:
+
+* The `metadata` or `spec` of the composite resource.
+* The `status` of any composed resource.
+* The connection details of any composed resource.
+
+A pipeline of functions _accumulates_ desired state. This means that each
+function builds upon the desired state of previous functions in the pipeline.
+Crossplane sends a function the desired state accumulated by all previous
+functions in the pipeline. The function adds to or updates the desired state and
+then passes it on. When the last function in the pipeline has run, Crossplane
+applies the desired state it returns.
+
+{{<hint "important">}}
+A function __must__ copy all desired state from its RunFunctionRequest to its
+RunFunctionResponse. If a function adds a resource to its desired state the next
+function must copy it to its desired state. If it doesn't, Crossplane doesn't
+apply the resource. If the resource exists, Crossplane deletes it.
+
+A function can _intentionally_ choose not to copy parts of the desired state.
+For example a function may choose not to copy a desired resource to prevent that
+resource from existing.
+
+Most function SDKs handle copying desired state automatically.
+{{</hint>}}
+
+A function should only add the fields it cares about to the desired state. It
+should add these fields every time Crossplane calls it. If a function adds a
+field to the desired state once, but doesn't add it the next time it's called,
+Crossplane deletes the field. The same is true for composed resources. If a
+function adds a composed resource to the desired state, but doesn't add it the
+next time it's called, Crossplane deletes the composed resource.
+
+{{<hint "tip">}}
+Crossplane uses
+[server side apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/)
+to apply the desired state returned by a function pipeline. In server side apply
+terminology, the desired state is a _fully specified intent_.
+{{</hint>}}
+
+For example, if all a function wants is to make sure an S3 bucket in region
+`us-east-2` exists, it should add this resource to its desired composed
+resources.
+
+```yaml
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+spec:
+  forProvider:
+    region: us-east-2
+```
+
+Even if the Bucket already exists and has other `spec` fields, or a `status`,
+`name`, `labels`, etc the function should omit them. The function should only
+include the fields it has an opinion about. Crossplane takes care of applying
+the fields the function cares about, merging them with the existing Bucket.
+
+{{<hint "tip">}}
+Composition functions don't actually use YAML for desired and observed
+resources. This example uses YAML for illustration purposes only.
+{{</hint>}}
+
+### Function input
+
+If a Composition includes {{<hover label="input" line="14">}}input{{</hover>}}
+Crossplane sends it to the function. Input is a useful way to provide extra
+configuration to a function. Supporting input is optional. Not all functions
+support input.
+
+```yaml {label="input",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-render
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: XBucket
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: storage-bucket
+        base:
+          apiVersion: s3.aws.upbound.io/v1beta1
+          kind: Bucket
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.bucketRegion
+          toFieldPath: spec.forProvider.region
+```
+
+{{<hint "important">}}
+Crossplane doesn't validate function input. It's a good idea for a function to
+validate its own input.
+{{</hint>}}
+
+### Function pipeline context
+
+Sometimes two functions in a pipeline want to share information with each other
+that isn't desired state. Functions can use context for this. Any function can
+write to the pipeline context. Crossplane passes the context to all following
+functions. When Crossplane has called all functions it discards the pipeline
+context.
+
+Crossplane can write context too. If you enable the alpha
+[composition environment]({{<ref "environment-configs">}}) feature Crossplane
+writes the environment to the top-level context field
+`apiextensions.crossplane.io/environment`.
+
+## Disable composition functions
+
+Crossplane enables composition functions by default. Disable support for
+composition functions by disabling the beta feature flag in Crossplane with
+`helm install --args`.
 
 ```shell
 helm install crossplane --namespace crossplane-system crossplane-stable/crossplane \
     --create-namespace \
-    --set "args='{--debug,--enable-composition-functions}'" \
-    --set "xfn.enabled=true" \
-    --set "xfn.args='{--debug}'"
+    --set "args='{--enable-composition-functions=false}'"
 ```
 
-The preceding Helm command installs Crossplane with the Composition Functions
-feature flag enabled, and with the reference _xfn_ Composition Function runner
-deployed as a sidecar container. Confirm Composition Functions were enabled by
+The preceding Helm command installs Crossplane with the composition functions
+feature flag disabled. Confirm you have disabled composition functions by
 looking for a log line:
 
 ```shell {copy-lines="1"}
  kubectl -n crossplane-system logs -l app=crossplane
-{"level":"info","ts":1674535093.36186,"logger":"crossplane","msg":"Alpha feature enabled","flag":"EnableAlphaCompositionFunctions"}
+{"level":"info","ts":1674535093.36186,"logger":"crossplane","msg":"Beta feature enabled","flag":"EnableBetaCompositionFunctions"}
 ```
 
-You should see the log line emitted shortly after Crossplane starts.
-
-
-## Using functions
-
-To use Composition Functions you must:
-
-1. Find one or more Composition Functions, or write your own.
-2. Create a `Composition` that uses your Functions.
-3. Create an XR that uses your `Composition`.
-
-Your XRs, claims, and providers don't need to be updated or otherwise aware
-of Composition Functions to use them. They need only use a `Composition` that
-includes one or more entries in its `spec.functions` array.
-
-Composition Functions are designed to be run in a pipeline, so you can 'stack'
-several of them together. Each Function is passed the output of the previous
-Function as its input. Functions can also be used in conjunction with P&T
-Composition (a `spec.resources` array). 
-
-In the following example P&T Composition composes an RDS instance. A pipeline of
-(hypothetical) Composition Functions then mutates the desired RDS instance by
-adding a randomly generated password, and composes an RDS security group.
-
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: example
-spec:
-  compositeTypeRef:
-    apiVersion: database.example.org/v1alpha1
-    kind: XPostgreSQLInstance
-  resources:
-    - name: rds-instance
-      base:
-        apiVersion: rds.aws.upbound.io/v1beta1
-        kind: Instance
-        spec:
-          forProvider:
-            dbName: exmaple
-            instanceClass: db.t3.micro
-            region: us-west-2
-            skipFinalSnapshot: true
-            username: exampleuser
-            engine: postgres
-            engineVersion: "12"
-      patches:
-        - fromFieldPath: spec.parameters.storageGB
-          toFieldPath: spec.forProvider.allocatedStorage
-      connectionDetails:
-        - type: FromFieldPath
-          name: username
-          fromFieldPath: spec.forProvider.username
-        - type: FromConnectionSecretKey
-          name: password
-          fromConnectionSecretKey: attribute.password
-  functions:
-  - name: rds-instance-password
-    type: Container
-    container:
-      image: xpkg.upbound.io/provider-aws-xfns/random-rds-password:v0.1.0
-  - name: compose-dbsecuritygroup
-    type: Container
-    container:
-      image: xpkg.upbound.io/example-org/compose-rds-securitygroup:v0.9.0
-```
-
-
-Use `kubectl explain` to explore the configuration options available when using
-Composition Functions, or take a look at the following example.
-
-{{< expand "View Composition Function configuration options" >}}
-```shell {copy-lines="1"}
-kubectl explain composition.spec.functions
-KIND:     Composition
-VERSION:  apiextensions.crossplane.io/v1
-
-RESOURCE: Functions <[]Object>
-
-DESCRIPTION:
-     Functions is list of Composition Functions that will be used when a
-     composite resource referring to this composition is created. At least one
-     of resources and Functions must be specified. If both are specified the
-     resources will be rendered first, then passed to the Functions for further
-     processing. THIS IS AN ALPHA FIELD. Do not use it in production. It is not
-     honored unless the relevant Crossplane feature flag is enabled, and may be
-     changed or removed without notice.
-
-     A Function represents a Composition Function.
-
-FIELDS:
-   config       <>
-     Config is an optional, arbitrary Kubernetes resource (i.e. a resource with
-     an apiVersion and kind) that will be passed to the Composition Function as
-     the 'config' block of its FunctionIO.
-
-   container    <Object>
-     Container configuration of this Function.
-
-   name <string> -required-
-     Name of this Function. Must be unique within its Composition.
-
-   type <string> -required-
-     Type of this Function.
-```
-{{< /expand >}}
-
-{{< expand "An example of most Composition Function configuration options" >}}
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: example
-spec:
-  compositeTypeRef:
-    apiVersion: database.example.org/v1alpha1
-    kind: XPostgreSQLInstance
-  functions:
-  - name: my-cool-Function
-    # Currently only Container is supported. Other types may be added in future.
-    type: Container
-    # Configuration specific to type: Container.
-    container:
-      # The OCI image to pull and run.
-      image: xkpg.io/my-cool-Function:0.1.0
-      # Whether to pull the Function image Never, Always, or IfNotPresent.
-      imagePullPolicy: IfNotPresent
-      # Note that only resource limits are supported - not requests.
-      # The Function will be run with the specified resource limits, specified
-      # in Kubernetes-style resource.Quantity form.
-      resources:
-        limits:
-          # Defaults to 128Mi
-          memory: 64Mi
-          # Defaults to 100m (a 10th of a core)
-          cpu: 250m
-      # Defaults to 'Isolated' - an isolated network namespace with no network
-      # access. Use 'Runner' to allow a Function access to the runner's (the xfn
-      # container's) network namespace.
-      network:
-        policy: Runner
-      # How long the Function may run before it's killed. Defaults to 20s.
-      # Keep in mind the Function pipeline is typically invoked once every
-      # 30 to 60 seconds - sometimes more frequently during error conditions.
-      timeout: 30s
-    # An arbitrary Kubernetes resource. Passed to the Function as the config
-    # block of its FunctionIO. Doesn't need to exist as a Custom Resource (CR),
-    # since this resource doesn't exist by itself in the API server but must be
-    # a valid Kubernetes resource (have an apiVersion and kind).
-    config:
-      apiVersion: database.example.org/v1alpha1
-      kind: Config
-      metadata:
-        name: cloudsql
-      spec:
-        version: POSTGRES_9_6
-```
-{{< /expand >}}
-
-Use `kubectl describe <xr-kind> <xr-name>` to debug Composition Functions. Look
-for status conditions and events. Most Functions will emit events associated
-with the XR if they experience issues.
-
-## Building a function
-
- Crossplane doesn't have opinions about how a Composition Function is
- implemented. Functions must:
-
- * Be packaged as an OCI image, where the `ENTRYPOINT` is the Function.
- * Accept input in the form of a `FunctionIO` document on stdin.
- * Return the `FunctionIO` they were passed, optionally mutated, on stdout.
- * Run within the constraints specified by the Composition that includes them,
-   such as timeouts, compute, network access.
-
-This means Functions may be written using a general-purpose programming language
-like Python, Go, or TypeScript. They may also be implemented using a shell
-script, or an existing tool like Helm or Kustomize.
-
-### FunctionIO
-
-When a Composition Function runner like `xfn` runs your Function it will write
-`FunctionIO` to its stdin. A `FunctionIO` is a Kubernetes style YAML manifest.
-It's not a custom resource (it never gets created in the API server) but it
-follows Kubernetes conventions.
-
-A `FunctionIO` consists of:
-
-* An optional, arbitrary `config` object.
-* The `observed` state of the XR, any existing composed resources, and their connection details.
-* The `desired` state of the XR and any composed resources.
-* Optional `results` of the Function pipeline.
-
-Here's a brief example of a `FunctionIO`:
-
-```yaml
-apiVersion: apiextensions.crossplane.io/v1alpha1
-kind: FunctionIO
-config:
-  apiVersion: database.example.org/v1alpha1
-  kind: Config
-  metadata:
-    name: cloudsql
-  spec:
-    version: POSTGRES_9_6
-observed:
-  composite:
-    resource:
-      apiVersion: database.example.org/v1alpha1
-      kind: XPostgreSQLInstance
-      metadata:
-        name: platform-ref-gcp-db-p9wrj
-    connectionDetails:
-    - name: privateIP
-      value: 10.135.0.3
-  resources:
-  - name: db-instance
-    resource:
-      apiVersion: sql.gcp.upbound.io/v1beta1
-      kind: DatabaseInstance
-      metadata:
-        name: platform-ref-gcp-db-p9wrj-tvvtg
-    connectionDetails:
-    - name: privateIP
-      value: 10.135.0.3
-desired:
-  composite:
-    resource:
-      apiVersion: database.example.org/v1alpha1
-      kind: XPostgreSQLInstance
-      metadata:
-        name: platform-ref-gcp-db-p9wrj
-    connectionDetails:
-    - name: privateIP
-      value: 10.135.0.3
-  resources:
-  - name: db-instance
-    resource:
-      apiVersion: sql.gcp.upbound.io/v1beta1
-      kind: DatabaseInstance
-      metadata:
-        name: platform-ref-gcp-db-p9wrj-tvvtg
-  - name: db-user
-    resource:
-      apiVersion: sql.gcp.upbound.io/v1beta1
-      kind: User
-      metadata:
-        name: platform-ref-gcp-db-p9wrj-z8lpz
-    connectionDetails:
-    - name: password
-      type: FromValue
-      value: very-secret
-    readinessChecks:
-    - type: None
-results:
-- severity: Normal
-  message: "Successfully composed GCP SQL user"
-```
-
-The `config` object is copied from the `Composition`. It will match what's
-passed as your Function's `config` in the `Functions` array. It must be a valid
-Kubernetes object - have an `apiVersion` and `kind`.
-
-The `observed` state of the XR and any existing composed resources reflects the
-observed state at the beginning of a reconcile, before any Composition happens.
-Your Function will only see composite and composed resources that _actually
-exist_ in the API server in the `observed` state. The `observed` state also
-includes any observed connection details. Initial function invocations
-might see empty connection details, but once external resources are created,
-connection details will be passed to the functions. Access to the connection
-details enables us to implement quite sophisticated tweaks on composed resources.
-
-For example, if a composition is declared on two or more resources, it is possible
-to use one resource's connection details to update another. This ability is not available
-with any of the available patch types available.
-
-The `desired` state of the XR and composed resources is how your Function tells
-Crossplane what it should do. Crossplane 'bootstraps' the initial desired state
-passed to a Function pipeline with:
-
-* A copy of the observed state of the composite resource (XR).
-* A copy of the observed state of any existing composed resources produced
-  from the `resources` array.
-* Any new composed resources or modifications to observed resources produced
-  from the `resources` array.
-
-{{< hint "note" >}}
-The initial desired state doesn't include any copies of observed resources
-produced by the function pipeline. When using multiple functions each function
-passes their desired resources output as input to the next pipeline function.
-{{< /hint >}}
-
-When adding a new desired resource to the `desired.resources` array you don't
-need to:
-
-* Update the XR's resource references.
-* Add any composition annotations like `crossplane.io/composite-resource-name`.
-* Set the XR as a controller/owner reference of the desired resource.
-
-Crossplane will take care of all of these for you. It won't do anything else,
-including setting a sensible `metadata.name` for the new composed resource -
-this is up to your Function.
-
-Finally, the `results` array allows your Function to surface events and debug
-logs on the XR. Results support the following severities:
-
-* `Normal` emits a debug log and a `Normal` event associated with the XR.
-* `Warning` emits a debug log and a `Warning` event associated with the XR.
-* `Fatal` stops the Composition process before applying any changes.
-
-When Crossplane encounters a `Fatal` result it will finish running the
-Composition Function pipeline. Crossplane will then return an error without
-applying any changes to the API server. Crossplane surfaces this error as a
-`Warning` event, a debug log, and by setting the `Synced` status condition of
-the XR to "False".
-
-The preceding example is heavily edited for brevity. Expand the following
-example for a more detailed, realistic, and commented example of a `FunctionIO`.
-
-{{< expand "A more detailed example" >}}
-In this example a `XPostgreSQLInstance` XR has one existing composed resource -
-`db-instance`. The composition Function returns a `desired` object with one new
-composed resource, a `db-user`, to tell Crossplane it should also create a
-database user.
-
-```yaml
-apiVersion: apiextensions.crossplane.io/v1alpha1
-kind: FunctionIO
-config:
-  apiVersion: database.example.org/v1alpha1
-  kind: Config
-  metadata:
-    name: cloudsql
-  spec:
-    version: POSTGRES_9_6
-observed:
-  # The observed state of the Composite Resource.
-  composite:
-    resource:
-      apiVersion: database.example.org/v1alpha1
-      kind: XPostgreSQLInstance
-      metadata:
-        creationTimestamp: "2023-01-27T23:47:12Z"
-        finalizers:
-        - composite.apiextensions.crossplane.io
-        generateName: platform-ref-gcp-db-
-        generation: 5
-        labels:
-          crossplane.io/claim-name: platform-ref-gcp-db
-          crossplane.io/claim-namespace: default
-          crossplane.io/composite: platform-ref-gcp-db-p9wrj
-        name: platform-ref-gcp-db-p9wrj
-        resourceVersion: "6817"
-        uid: 96623f41-be2e-4eda-84d4-9668b48e284d
-      spec:
-        claimRef:
-          apiVersion: database.example.org/v1alpha1
-          kind: PostgreSQLInstance
-          name: platform-ref-gcp-db
-          namespace: default
-        compositionRef:
-          name: xpostgresqlinstances.database.example.org
-        compositionRevisionRef:
-          name: xpostgresqlinstances.database.example.org-eb6c684
-        compositionUpdatePolicy: Automatic
-        parameters:
-          storageGB: 10
-        resourceRefs:
-        - apiVersion: sql.gcp.upbound.io/v1beta1
-          kind: DatabaseInstance
-          name: platform-ref-gcp-db-p9wrj-tvvtg
-        writeConnectionSecretToRef:
-          name: 96623f41-be2e-4eda-84d4-9668b48e284d
-          namespace: upbound-system
-      status:
-        conditions:
-        - lastTransitionTime: "2023-01-27T23:47:12Z"
-          reason: ReconcileSuccess
-          status: "True"
-          type: Synced
-        - lastTransitionTime: "2023-01-28T00:09:12Z"
-          reason: Creating
-          status: "False"
-          type: Ready
-        connectionDetails:
-          lastPublishedTime: "2023-01-28T00:08:12Z"
-    # Any observed Composite Resource connection details.
-    connectionDetails:
-    - name: privateIP
-      value: 10.135.0.3
-  # The observed state of any existing Composed Resources.
-  resources:
-  - name: db-instance
-    resource:
-      apiVersion: sql.gcp.upbound.io/v1beta1
-      kind: DatabaseInstance
-      metadata:
-        annotations:
-          crossplane.io/composition-resource-name: db-instance
-          crossplane.io/external-name: platform-ref-gcp-db-p9wrj-tvvtg
-        creationTimestamp: "2023-01-27T23:47:12Z"
-        finalizers:
-        - finalizer.managedresource.crossplane.io
-        generateName: platform-ref-gcp-db-p9wrj-
-        generation: 80
-        labels:
-          crossplane.io/claim-name: platform-ref-gcp-db
-          crossplane.io/claim-namespace: default
-          crossplane.io/composite: platform-ref-gcp-db-p9wrj
-        name: platform-ref-gcp-db-p9wrj-tvvtg
-        ownerReferences:
-        - apiVersion: database.example.org/v1alpha1
-          blockOwnerDeletion: true
-          controller: true
-          kind: XPostgreSQLInstance
-          name: platform-ref-gcp-db-p9wrj
-          uid: 96623f41-be2e-4eda-84d4-9668b48e284d
-        resourceVersion: "7992"
-        uid: 43919834-fdce-427e-85d9-d03eab9501f1
-      spec:
-        forProvider:
-          databaseVersion: POSTGRES_13
-          deletionProtection: false
-          project: example
-          region: us-west2
-          settings:
-          - diskSize: 10
-            ipConfiguration:
-            - privateNetwork: projects/example/global/networks/platform-ref-gcp-cluster
-              privateNetworkRef:
-                name: platform-ref-gcp-cluster
-            tier: db-f1-micro
-        providerConfigRef:
-          name: default
-        writeConnectionSecretToRef:
-          name: 96623f41-be2e-4eda-84d4-9668b48e284d-gcp-postgresql
-          namespace: upbound-system
-      status:
-        atProvider:
-          connectionName: example:us-west2:platform-ref-gcp-db-p9wrj-tvvtg
-          firstIpAddress: 34.102.103.85
-          id: platform-ref-gcp-db-p9wrj-tvvtg
-          privateIpAddress: 10.135.0.3
-          publicIpAddress: 34.102.103.85
-          settings:
-          - version: 1
-        conditions:
-        - lastTransitionTime: "2023-01-28T00:07:30Z"
-          reason: Available
-          status: "True"
-          type: Ready
-        - lastTransitionTime: "2023-01-27T23:47:14Z"
-          reason: ReconcileSuccess
-          status: "True"
-          type: Synced
-    # Any observed composed resource connection details.
-    connectionDetails:
-    - name: privateIP
-      value: 10.135.0.3
-desired:
-  # The observed state of the Composite Resource.
-  composite:
-    resource:
-      apiVersion: database.example.org/v1alpha1
-      kind: XPostgreSQLInstance
-      metadata:
-        creationTimestamp: "2023-01-27T23:47:12Z"
-        finalizers:
-        - composite.apiextensions.crossplane.io
-        generateName: platform-ref-gcp-db-
-        generation: 5
-        labels:
-          crossplane.io/claim-name: platform-ref-gcp-db
-          crossplane.io/claim-namespace: default
-          crossplane.io/composite: platform-ref-gcp-db-p9wrj
-        name: platform-ref-gcp-db-p9wrj
-        resourceVersion: "6817"
-        uid: 96623f41-be2e-4eda-84d4-9668b48e284d
-      spec:
-        claimRef:
-         e apiVersion: database.example.org/v1alpha1
-          kind: PostgreSQLInstance
-          name: platform-ref-gcp-db
-          namespace: default
-        compositionRef:
-          name: xpostgresqlinstances.database.example.org
-        compositionRevisionRef:
-          name: xpostgresqlinstances.database.example.org-eb6c684
-        compositionUpdatePolicy: Automatic
-        parameters:
-          storageGB: 10
-        resourceRefs:
-        - apiVersion: sql.gcp.upbound.io/v1beta1
-          kind: DatabaseInstance
-          name: platform-ref-gcp-db-p9wrj-tvvtg
-        writeConnectionSecretToRef:
-          name: 96623f41-be2e-4eda-84d4-9668b48e284d
-          namespace: upbound-system
-      status:
-        conditions:
-        - lastTransitionTime: "2023-01-27T23:47:12Z"
-          reason: ReconcileSuccess
-          status: "True"
-          type: Synced
-        - lastTransitionTime: "2023-01-28T00:09:12Z"
-          reason: Creating
-          status: "False"
-          type: Ready
-        connectionDetails:
-          lastPublishedTime: "2023-01-28T00:08:12Z"
-    # Any desired Composite Resource connection details. Your Composition
-    # Function can add new entries to this array and Crossplane will record them
-    # as the XR's connection details.
-    connectionDetails:
-    - name: privateIP
-      value: 10.135.0.3
-  # The desired composed resources.
-  resources:
-  # This db-instance matches the entry in observed. Functions must include any
-  # observed resources in their desired resources array. If you omit an observed
-  # resource from the desired resources array Crossplane will delete it.
-  # Crossplane will 'bootstrap' the desired state passed to the Function
-  # pipeline by copying all observed resources into the desired resources array.
-  - name: db-instance
-    resource:
-      apiVersion: sql.gcp.upbound.io/v1beta1
-      kind: DatabaseInstance
-      metadata:
-        annotations:
-          crossplane.io/composition-resource-name: DBInstance
-          crossplane.io/external-name: platform-ref-gcp-db-p9wrj-tvvtg
-        creationTimestamp: "2023-01-27T23:47:12Z"
-        finalizers:
-        - finalizer.managedresource.crossplane.io
-        generateName: platform-ref-gcp-db-p9wrj-
-        generation: 80
-        labels:
-          crossplane.io/claim-name: platform-ref-gcp-db
-          crossplane.io/claim-namespace: default
-          crossplane.io/composite: platform-ref-gcp-db-p9wrj
-        name: platform-ref-gcp-db-p9wrj-tvvtg
-        ownerReferences:
-        - apiVersion: database.example.org/v1alpha1
-          blockOwnerDeletion: true
-          controller: true
-          kind: XPostgreSQLInstance
-          name: platform-ref-gcp-db-p9wrj
-          uid: 96623f41-be2e-4eda-84d4-9668b48e284d
-        resourceVersion: "7992"
-        uid: 43919834-fdce-427e-85d9-d03eab9501f1
-      spec:
-        forProvider:
-          databaseVersion: POSTGRES_13
-          deletionProtection: false
-          project: example
-          region: us-west2
-          settings:
-          - diskSize: 10
-            ipConfiguration:
-            - privateNetwork: projects/example/global/networks/platform-ref-gcp-cluster
-              privateNetworkRef:
-                name: platform-ref-gcp-cluster
-            tier: db-f1-micro
-        providerConfigRef:
-          name: default
-        writeConnectionSecretToRef:
-          name: 96623f41-be2e-4eda-84d4-9668b48e284d-gcp-postgresql
-          namespace: upbound-system
-      status:
-        atProvider:
-          connectionName: example:us-west2:platform-ref-gcp-db-p9wrj-tvvtg
-          firstIpAddress: 34.102.103.85
-          id: platform-ref-gcp-db-p9wrj-tvvtg
-          privateIpAddress: 10.135.0.3
-          publicIpAddress: 34.102.103.85
-          settings:
-          - version: 1
-        conditions:
-        - lastTransitionTime: "2023-01-28T00:07:30Z"
-          reason: Available
-          status: "True"
-          type: Ready
-        - lastTransitionTime: "2023-01-27T23:47:14Z"
-          reason: ReconcileSuccess
-          status: "True"
-          type: Synced
-  # This db-user is a desired composed resource that doesn't yet exist. This
-  # Composition Function is requesting it be created.
-  - name: db-user
-    resource:
-      apiVersion: sql.gcp.upbound.io/v1beta1
-      kind: User
-      metadata:
-        annotations:
-          crossplane.io/composition-resource-name: db-user
-          crossplane.io/external-name: platform-ref-gcp-db-p9wrj-z8lpz
-        creationTimestamp: "2023-01-27T23:47:12Z"
-        finalizers:
-        - finalizer.managedresource.crossplane.io
-        generateName: platform-ref-gcp-db-p9wrj-
-        generation: 115
-        labels:
-          crossplane.io/claim-name: platform-ref-gcp-db
-          crossplane.io/claim-namespace: default
-          crossplane.io/composite: platform-ref-gcp-db-p9wrj
-        name: platform-ref-gcp-db-p9wrj-z8lpz
-        ownerReferences:
-        - apiVersion: database.example.org/v1alpha1
-          blockOwnerDeletion: true
-          controller: true
-          kind: XPostgreSQLInstance
-          name: platform-ref-gcp-db-p9wrj
-          uid: 96623f41-be2e-4eda-84d4-9668b48e284d
-        resourceVersion: "9951"
-        uid: ab5dafbe-2bc8-47ea-8b5b-9bcb40183e45
-      spec:
-        forProvider:
-          instance: platform-ref-gcp-db-p9wrj-tvvtg
-          project: example
-        providerConfigRef:
-          name: default
-    # Any desired connection details for the new db-user composed resource.
-    # Desired connection details can be FromValue, FromFieldPath, or
-    # FromConnectionSecretKey, just like their P&T Composition equivalents.
-    connectionDetails:
-    - name: password
-      type: FromValue
-      value: very-secret
-    # Any desired readiness checks for the new db-user composed resource.
-    # Desired readiness checks can be NonEmpty, MatchString, MatchInteger, or
-    # None, just like their P&T Composition equivalents.    
-    readinessChecks:
-    - type: None
-# An optional array of results.
-results:
-- severity: Normal
-  message: "Successfully composed GCP SQL user"
-```
-{{< /expand >}}
-
-### An example Function
-
-You can write a Composition Function using any programming language that can be
-containerized, or existing tools like Helm or Kustomize.
-
-Here's a Python Composition Function that doesn't create any new desired
-resources, but instead annotates any existing desired resources with a quote.
-Because this function accesses the internet it needs to be run with the `Runner`
-network policy.
-
-```python
-import sys
-
-import requests
-import yaml
-
-ANNOTATION_KEY_AUTHOR = "quotable.io/author"
-ANNOTATION_KEY_QUOTE = "quotable.io/quote"
-
-
-def get_quote() -> tuple[str, str]:
-    """Get a quote from quotable.io"""
-    rsp = requests.get("https://api.quotable.io/random")
-    rsp.raise_for_status()
-    j = rsp.json()
-    return (j["author"], j["content"])
-
-
-def read_Functionio() -> dict:
-    """Read the FunctionIO from stdin."""
-    return yaml.load(sys.stdin.read(), yaml.Loader)
-
-
-def write_Functionio(Functionio: dict):
-    """Write the FunctionIO to stdout and exit."""
-    sys.stdout.write(yaml.dump(Functionio))
-    sys.exit(0)
-
-
-def result_warning(Functionio: dict, message: str):
-    """Add a warning result to the supplied FunctionIO."""
-    if "results" not in Functionio:
-        Functionio["results"] = []
-    Functionio["results"].append({"severity": "Warning", "message": message})
-
-
-def main():
-    """Annotate all desired composed resources with a quote from quotable.io"""
-    try:
-        Functionio = read_Functionio()
-    except yaml.parser.ParserError as err:
-        sys.stdout.write("cannot parse FunctionIO: {}\n".format(err))
-        sys.exit(1)
-
-    # Return early if there are no desired resources to annotate.
-    if "desired" not in Functionio or "resources" not in Functionio["desired"]:
-        write_Functionio(Functionio)
-
-    # If we can't get our quote, add a warning and return early.
-    try:
-        quote, author = get_quote()
-    except requests.exceptions.RequestException as err:
-        result_warning(Functionio, "Cannot get quote: {}".format(err))
-        write_Functionio(Functionio)
-
-    # Annotate all desired resources with our quote.
-    for r in Functionio["desired"]["resources"]:
-        if "resource" not in r:
-            # This shouldn't happen - add a warning and continue.
-            result_warning(
-                Functionio,
-                "Desired resource {name} missing resource body".format(
-                    name=r.get("name", "unknown")
-                ),
-            )
-            continue
-
-        if "metadata" not in r["resource"]:
-            r["resource"]["metadata"] = {}
-
-        if "annotations" not in r["resource"]["metadata"]:
-            r["resource"]["metadata"]["annotations"] = {}
-
-        if ANNOTATION_KEY_QUOTE in r["resource"]["metadata"]["annotations"]:
-            continue
-
-        r["resource"]["metadata"]["annotations"][ANNOTATION_KEY_AUTHOR] = author
-        r["resource"]["metadata"]["annotations"][ANNOTATION_KEY_QUOTE] = quote
-
-    write_Functionio(Functionio)
-
-
-if __name__ == "__main__":
-    main()
-```
-
-Building this function requires its `requirements.txt` and a `Dockerfile`:
-
-{{< expand "The Function's requirements" >}}
-```python
-certifi==2022.12.7
-charset-normalizer==3.0.1
-click==8.1.3
-idna==3.4
-pathspec==0.10.3
-platformdirs==2.6.2
-PyYAML==6.0
-requests==2.28.2
-tomli==2.0.1
-urllib3==1.26.14
-```
-{{< /expand >}}
-
-{{< expand "The Function's Dockerfile" >}}
-```Dockerfile
-FROM debian:11-slim AS build
-RUN apt-get update && \
-    apt-get install --no-install-suggests --no-install-recommends --yes python3-venv && \
-    python3 -m venv /venv && \
-    /venv/bin/pip install --upgrade pip setuptools wheel
-
-FROM build AS build-venv
-COPY requirements.txt /requirements.txt
-RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
-
-FROM gcr.io/distroless/python3-debian11
-COPY --from=build-venv /venv /venv
-COPY . /app
-WORKDIR /app
-ENTRYPOINT ["/venv/bin/python3", "main.py"]
-```
-{{< /expand >}}
-
-Create and push the Function just like you would any Docker image.
-
-Build the function.
-
-```shell {copy-lines="1"}
-docker build .
-Sending build context to Docker daemon  38.99MB
-Step 1/10 : FROM debian:11-slim AS build
- ---> 4810399f6c13
-Step 2/10 : RUN apt-get update &&     apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc && python3 -m venv /venv &&     /venv/bin/pip install --upgrade pip setuptools wheel
- ---> Using cache
- ---> 9b34960c88d7
-Step 3/10 : FROM build AS build-venv
- ---> 9b34960c88d7
-Step 4/10 : COPY requirements.txt /requirements.txt
- ---> Using cache
- ---> fae19dad52af
-Step 5/10 : RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
- ---> Using cache
- ---> f4b811c75812
-Step 6/10 : FROM gcr.io/distroless/python3-debian11
- ---> 2a0e74a2b005
-Step 7/10 : COPY --from=build-venv /venv /venv
- ---> Using cache
- ---> cf727d3f20d3
-Step 8/10 : COPY . /app
- ---> a044aef45e32
-Step 9/10 : WORKDIR /app
- ---> Running in d08a6144815b
-Removing intermediate container d08a6144815b
- ---> 7250f5aa653e
-Step 10/10 : ENTRYPOINT ["/venv/bin/python3", "main.py"]
- ---> Running in 3f4d9dc55bad
-Removing intermediate container 3f4d9dc55bad
- ---> bfd2f920c591
-Successfully built bfd2f920c591
-```
-
-Tag the function.
-```shell
-docker tag bfd2f920c591 example-org/xfn-quotable-simple:v0.1.0
-```
-
-Push the function.
-
-```shell {copy-lines="1"}
-docker push xpkg.upbound.io/example-org/xfn-quotable-simple:v0.1.0
-The push refers to repository [xpkg.upbound.io/example-org/xfn-quotable-simple]
-cf6d94b88843: Pushed
-77646fd315d2: Mounted from example-org/xfn-quotable
-50630ee42b6e: Mounted from example-org/xfn-quotable
-7e2cf97ed8c4: Mounted from example-org/xfn-quotable
-96e320b34b54: Mounted from example-org/xfn-quotable
-fba4381f2bb7: Mounted from example-org/xfn-quotable
-v0.1.0: digest: sha256:d8a6404e5fe38936aa8dadd861fea35ede0aded6168d501052f91cdabab0135e size: 1584
-```
-
-You can now use this Function in your Composition. The following example will
-create an `RDSInstance` using P&T Composition, then run the Function to annotate
-it with a quote.
-
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: example
-spec:
-  compositeTypeRef:
-    apiVersion: database.example.org/v1alpha1
-    kind: XPostgreSQLInstance
-  resources:
-    - name: rds-instance
-      base:
-        apiVersion: rds.aws.upbound.io/v1beta1
-        kind: Instance
-        spec:
-          forProvider:
-            dbName: example
-            instanceClass: db.t3.micro
-            region: us-west-2
-            skipFinalSnapshot: true
-            username: exampleuser
-            engine: postgres
-            engineVersion: "12"
-      patches:
-        - fromFieldPath: spec.parameters.storageGB
-          toFieldPath: spec.forProvider.allocatedStorage
-      connectionDetails:
-        - type: FromFieldPath
-          name: username
-          fromFieldPath: spec.forProvider.username
-        - type: FromConnectionSecretKey
-          name: password
-          fromConnectionSecretKey: attribute.password
-  functions:
-  - name: quotable
-    type: Container
-    container:
-      image: xpkg.upbound.io/example-org/xfn-quotable-simple:v0.1.0
-      network:
-        policy: Runner
-```
-
-### Tips for new functions
-
-Here are some things to keep in mind when building a Composition Function:
-
-* Your Function may be running as part of a pipeline. This means your Function
-  _must_ pass through any desired state that it's unconcerned with. If your
-  Function is passed a desired composed resource and doesn't return that
-  composed resource in its output, it will be deleted. Crossplane considers the
-  desired state of the XR and any composed resources to be whatever `FunctionIO`
-  is returned by the last Function in the pipeline.
-* Crossplane won't set a `metadata.name` for your desired resources resources.
-  It's a good practice to match P&T Composition's behavior by setting
-  `metadata.generateName: "name-of-the-xr-"` for any new desired resources.
-* Don't add new entries to the desired resources array every time your function
-  is invoked. Remember to check whether your desired resource is already in the
-  `observed` and/or `desired` objects. You may need to update it rather than
-  create it.
-* Don't bypass providers. Composition Functions are designed to tell Crossplane
-  how to orchestrate managed resources - not to directly orchestrate external
-  systems.
-* Include your function name and version in any results you return to aid in
-  debugging.
-* Write tests for your function. Pass it a `FunctionIO` on stdin in and ensure
-  it returns the expected `FunctionIO` on stdout.
-* Keep your Functions fast and lightweight. Remember that Crossplane runs them
-  approximately once every 30-60 seconds.
-
-## The xfn runner
-
-Composition Function runners are designed to be pluggable. Each time Crossplane
-needs to invoke a Composition Function it makes a gRPC call to a configurable
-endpoint. The default, reference Composition Function runner is named `xfn`.
-
-{{< hint "note" >}}
-The default runner endpoint is `unix-abstract:crossplane/fn/default.sock`. It's
-possible to run Functions using a different endpoint, for example:
-
-```yaml
-  functions:
-  - name: my-cool-Function
-    type: Container
-    container:
-      image: xkpg.io/my-cool-Function:0.1.0
-      runner:
-        endpoint: unix-abstract:/your/custom/runner.sock
-```
-
-Currently Crossplane uses unauthenticated, unencrypted gRPC requests to run
-Functions, so requests shouldn't be sent over the network. Encryption and
-authentication will be added in a future release.
-{{< /hint >}}
-
-`xfn` runs as a sidecar container within the Crossplane pod. It runs each
-Composition Function as a nested [rootless container][rootless-containers].
-
-{{< img src="media/composition-functions-xfn-runner.png" alt="Crossplane running Functions using xfn via gRPC" size="tiny" >}}
-
-The Crossplane Helm chart deploys `xfn` with:
-
-* The [`Unconfined` seccomp profile][kubernetes-seccomp].
-* The `CAP_SETUID` and `CAP_SETGID` capabilities.
-
-The `Unconfined` seccomp profile allows Crossplane to make required syscalls
-such as `unshare` and `mount` that are not allowed by most `RuntimeDefault`
-profiles. It's possible to run `xfn` with nearly the same restrictions as most
-`RuntimeDefault` profiles by authoring a custom `Localhost` profile. Refer to
-the [seccomp documentation][kubernetes-seccomp] for information on how to do so.
-
-Granting `CAP_SETUID` and `CAP_SETGID` allows `xfn` to create Function
-containers that support up to 65,536 UIDs and GIDs. If `xfn` is run without
-these capabilities it will be restricted to creating Function containers that
-support only UID and GID 0.
-
-Regardless of capabilities `xfn` always runs each Composition Function as an
-unprivileged user. That user will appear to be root inside the Composition
-Function container thanks to [`user_namespaces(7)`].
-
-[rootless-containers]: https://rootlesscontaine.rs
-[kubernetes-seccomp]: https://kubernetes.io/docs/tutorials/security/seccomp/
-[`user_namespaces(7)`]: https://man7.org/linux/man-pages/man7/user_namespaces.7.html
+If you don't see the log line emitted when Crossplane starts, you have disabled
+composition functions.

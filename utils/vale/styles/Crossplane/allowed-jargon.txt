@@ -6,6 +6,7 @@ base64
 bool
 boolean
 booleans
+Buf
 CI
 CLI
 cluster-wide
@@ -20,6 +21,8 @@ Enum
 Env
 ESS
 float64
+Go
+gRPC
 JSONPath
 key-pair
 kube-apiserver
@@ -34,6 +37,8 @@ OCI
 proselint
 RBAC
 SCSS
+SDK
+SDKs
 semver
 ServiceAccount
 ServiceAccounts
@@ -61,6 +66,8 @@ SHA-256
 SHA-512
 base64
 RBAC
+RPC
+RPCs
 ServiceAccounts
 ServiceAccount
 ClusterRole

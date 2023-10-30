@@ -127,37 +127,6 @@ serviceAccount:
 tolerations: []
 webhooks:
   enabled: true
-xfn:
-  args: []
-  cache:
-    configMap: ""
-    medium: ""
-    pvc: ""
-    sizeLimit: 1Gi
-  enabled: false
-  extraEnvVars: {}
-  image:
-    pullPolicy: IfNotPresent
-    repository: crossplane/xfn
-    tag: ""
-  resources:
-    limits:
-      cpu: 2000m
-      memory: 2Gi
-    requests:
-      cpu: 1000m
-      memory: 1Gi
-  securityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      add:
-      - SETUID
-      - SETGID
-    readOnlyRootFilesystem: true
-    runAsGroup: 65532
-    runAsUser: 65532
-    seccompProfile:
-      type: Unconfined
 
 HOOKS:
 MANIFEST:
