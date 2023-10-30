@@ -368,7 +368,7 @@ development kits (SDKs) and templates to help you write a function.
 
 <!-- vale write-good.Passive = NO -->
 Here's an example of a tiny, hello world function. This example is written in
-Go.
+[Go](https://go.dev).
 <!-- vale write-good.Passive = YES -->
 
 ```go
