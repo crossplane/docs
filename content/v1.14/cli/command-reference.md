@@ -93,8 +93,15 @@ Include YAML files demonstrating how to use the package with `--examples-root`.
 Functions and Providers require YAML files describing their dependencies and 
 settings as well as a container image for their runtime.
 
-Using `--embed-runtime-image-name` downloads a specified container image and 
+Using `--embed-runtime-image-name` runs a specified image and 
 includes the image inside the function or provider package.
+
+{{<hint "note" >}}
+Images referenced with `--embed-runtime-image-name` must be in the local Docker 
+cache.  
+
+Use `docker pull` to download a missing image.
+{{< /hint >}}
 
 The `--embed-runtime-image-tarball` flag includes a local OCI image tarball 
 inside the function or provider package.
@@ -113,10 +120,7 @@ variable `KUBECONFIG`.
 Specify the package kind, package file and optionally a name to give the package 
 inside Crossplane.
 
-`crossplane xpkg install <package-kind> <registry package name and tag> [<optional-name>`
-
-The package file must be an organization, image and tag on the `xpkg.upbound.io`
-registry on [Upbound Marketplace](https://marketplace.upbound.io/).
+`crossplane xpkg install <package-kind> <registry URL package name and tag> [<optional-name>`
 
 For example, to install version 0.42.0 of the 
 [AWS S3 provider](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.42.0):
@@ -262,6 +266,13 @@ For example, to push a local package named `my-package` to
 `crossplane-docs/my-package:v0.14.0` use:
 
 `crossplane xpkg push -f my-package.xpkg crossplane-docs/my-package:v0.14.0`
+
+To push to another package registry, like [DockerHub](https://hub.docker.com/) 
+provide the full URL along with the package name. 
+
+For example, to push a local package named `my-package` to 
+DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
+`crossplane xpkg push -f my-package.xpkg index.docker.io/crossplane-docs/my-package:v0.14.0`.
 
 #### Flags
 
