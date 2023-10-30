@@ -594,7 +594,7 @@ next time it's called, Crossplane deletes the composed resource.
 
 {{<hint "tip">}}
 Crossplane uses
-[server side apply](https://kubernetes.io/docs/reference/using-api/apply/)
+[server side apply](https://kubernetes.io/docs/reference/using-api/server-side-apply/)
 to apply the desired state returned by a function pipeline. In server side apply
 terminology, the desired state is a _fully specified intent_.
 {{</hint>}}
