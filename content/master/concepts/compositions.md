@@ -679,19 +679,29 @@ default. The
 page explains how to disable composition functions.
 {{< /hint >}}
 
-To use composition functions define a {{<hover label="xfn"
-line="7">}}pipeline{{</hover>}} of steps inside the Composition {{<hover
-label="xfn" line="4">}}spec{{</hover>}}. Each {{<hover label="xfn"
-line="8">}}step{{</hover>}} calls a Function. You can't specify resource
-templates using the `resources` field when you specify a pipeline of functions.
-You must set the Composition {{<hover label="xfn" line="6">}}mode{{</hover>}} to
-`Pipeline` to use Functions.
+To use composition functions set the Composition 
+{{<hover label="xfn" line="6">}}mode{{</hover>}} to
+{{<hover label="xfn" line="6">}}Pipeline{{</hover>}}.
 
-Each {{<hover label="xfn" line="8">}}step{{</hover>}} must specify the {{<hover
-label="xfn" line="10">}}name{{</hover>}} of the Function to call. Some Functions
-also allow you to specify an {{<hover label="xfn" line="11">}}input{{</hover>}}.
-Different Functions each have a different {{<hover label="xfn"
-line="13">}}kind{{</hover>}} of input.
+Define a {{<hover label="xfn" line="7">}}pipeline{{</hover>}} of 
+{{<hover label="xfn" line="8">}}steps{{</hover>}}. Each 
+{{<hover label="xfn" line="8">}}step{{</hover>}} calls a Function.  
+
+Each {{<hover label="xfn" line="8">}}step{{</hover>}} uses a 
+{{<hover label="xfn" line="9">}}functionRef{{</hover>}} to reference the
+{{<hover label="xfn" line="10">}}name{{</hover>}} of the Function to call. 
+
+Some Functions also allow you to specify an 
+{{<hover label="xfn" line="11">}}input{{</hover>}}.  
+The function defines the
+{{<hover label="xfn" line="13">}}kind{{</hover>}} of input.
+
+{{<hint "important" >}}
+Compositions using {{<hover label="xfn" line="6">}}mode: Pipeline{{</hover>}} 
+can't specify resource templates with a `resources` field. 
+
+Use function "Patch and Transform" to create resource templates.
+{{< /hint >}}
 
 This example uses Function Patch and Transform. Function Patch and Transform is
 a function that implements Crossplane resource templates. You can use Function

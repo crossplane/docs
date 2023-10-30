@@ -96,26 +96,38 @@ Crossplane has four core components that users commonly mix up:
   namespace scoping. 
 {{</expand >}}
 
-You must set the Composition {{<hover label="single" line="6">}}mode{{</hover>}}
-to `Pipeline` to use a Function. To use a Function, add a {{<hover
-label="single" line="7">}}pipeline{{</hover>}} of steps inside your Composition
-{{<hover label="single" line="4">}}spec{{</hover>}}.
+To use composition functions set the Composition 
+{{<hover label="single" line="6">}}mode{{</hover>}} to
+{{<hover label="single" line="6">}}Pipeline{{</hover>}}.
 
-The pipeline must have a step {{<hover label="single"
-line="8">}}step{{</hover>}} that calls the Function. The {{<hover label="single"
-line="8">}}step{{</hover>}} must specify the {{<hover label="single"
-line="10">}}name{{</hover>}} of the Function to call. Here the step references
-the name {{<hover label="single"
-line="10">}}function-patch-and-transform{{</hover>}}.
+Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of 
+{{<hover label="single" line="8">}}steps{{</hover>}}. Each 
+{{<hover label="single" line="8">}}step{{</hover>}} calls a Function.  
 
-Some Functions allow you to specify an {{<hover label="single"
-line="11">}}input{{</hover>}}. Different Functions each have a different
-{{<hover label="single" line="13">}}kind{{</hover>}} of input. This example uses
-[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform).
-Function Patch and Transform is a function that implements Crossplane resource
-templates. Its input kind is `Resources`, and it accepts
-[Patch and Transform]({{<ref "./patch-and-transform">}}) {{<hover label="single"
-line="14">}}resources{{</hover>}} as input.
+Each {{<hover label="single" line="8">}}step{{</hover>}} uses a 
+{{<hover label="single" line="9">}}functionRef{{</hover>}} to reference the
+{{<hover label="single" line="10">}}name{{</hover>}} of the Function to call. 
+
+{{<hint "important" >}}
+Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}} 
+can't specify resource templates with a `resources` field. 
+
+Use function "Patch and Transform" to create resource templates.
+{{< /hint >}}
+
+
+Some Functions also allow you to specify an 
+{{<hover label="single" line="11">}}input{{</hover>}}.  
+The function defines the
+{{<hover label="single" line="13">}}kind{{</hover>}} of input.
+
+This example uses
+[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform).  
+Function Patch and Transform implements Crossplane resource
+templates.  
+The input kind is {{<hover label="single" line="13">}}Resources{{</hover>}}, 
+and it accepts [Patch and Transform]({{<ref "./patch-and-transform">}}) 
+{{<hover label="single" line="14">}}resources{{</hover>}} as input.
 
 ```yaml {label="single",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -141,11 +153,6 @@ spec:
               region: "us-east-2"
 ```
 
-{{<hint "important">}}
-You can't specify resource templates using the Composition's `spec.resources`
-field when you use composition functions. When a Composition's `spec.mode` is
-`Pipeline` you can only specify `spec.pipeline`.
-{{< /hint >}}
 
 ## Use a pipeline of functions in a composition
 
@@ -153,18 +160,12 @@ Crossplane can ask more than one Function what to do when a composite resource
 changes. When a Composition has a pipeline of two or more steps, Crossplane
 calls them all. It calls them in the order they appear in the pipeline.
 
-<!-- vale Microsoft.Auto = NO -->
-<!--
-  This linter does not allow "auto-ready", which is part of the name of the
-  function.
--->
 Crossplane passes each Function in the pipeline the result of the previous
 Function. This enables powerful combinations of Functions. In this example,
 Crossplane calls {{<hover label="double" line="10">}}function-cue{{</hover>}} to
-create an S3 bucket. Crossplane then passes the bucket to {{<hover
-label="double" line="23">}}function-auto-ready{{</hover>}}, which marks the
+create an S3 bucket. Crossplane then passes the bucket to 
+{{<hover label="double" line="23">}}function-auto-ready{{</hover>}}, which marks the
 composite resource as ready when the bucket becomes ready.
-<!-- vale Microsoft.Auto = YES -->
 
 ```yaml {label="double",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -315,7 +316,7 @@ run.
 `crossplane beta render` supports two `render.crossplane.io/runtime` values:
 
 * `Docker` (the default) connects to Docker Engine. It uses Docker to pull and
-  run function runtimes.
+  run a function runtime.
 * `Development` connects to a function runtime you have run manually.
 
 When you use the {{<hover label="development" line="6">}}Development{{</hover>}}
