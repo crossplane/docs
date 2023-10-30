@@ -182,10 +182,13 @@ spec:
 # Removed for brevity
 ```
 
-#### Upgrade policy
+#### Revision activation policy
 
-Crossplane automatically upgrades a Configuration the to the latest version 
-available in the package cache. 
+The `Active` package revision
+is the package controller actively reconciling resources. 
+
+By default Crossplane sets the most recently installed package revision as 
+`Active`.
 
 Control the Configuration upgrade behavior with a
 {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}}.
