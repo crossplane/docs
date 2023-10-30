@@ -592,10 +592,14 @@ Apply `ProviderConfig` objects to managed resources.
 ### Controller configuration
 
 {{< hint "important" >}}
-The Crossplane community deprecated the `ControllerConfig` type in v1.11 to
-announce that there are no further enhancements.
-Applying a Controller configuration generates a deprecation warning.
-[Runtime configuration]({{<ref "#runtime-configuration" >}}) is the
+<!-- vale write-good.Passive = NO -->
+<!-- vale gitlab.FutureTense = NO -->
+The `ControllerConfig` type was deprecated in v1.11 and will be removed in
+a future release.
+<!-- vale write-good.Passive = YES -->
+<!-- vale gitlab.FutureTense = YES -->
+
+[`DeploymentRuntimeConfig`]({{<ref "#runtime-configuration" >}}) is the
 replacement for Controller configuration and is available in v1.14+.
 {{< /hint >}}
 
@@ -614,22 +618,23 @@ Each Provider determines their supported set of `args`.
 ### Runtime configuration
 
 {{<hint "important" >}}
-Deployment runtime configs are a beta feature. It is on by default and could be
-disabled by passing `--enable-deployment-runtime-configs=false` to the Crossplane
-deployment.
+`DeploymentRuntimeConfigs` is a beta feature. 
+
+It's on by default, and you could disable it by passing
+`--enable-deployment-runtime-configs=false` to the Crossplane deployment.
 {{< /hint >}}
 
 Runtime configuration is a generalized mechanism for configuring runtime for
-Crossplane packages with a runtime, e.g. `Providers` and `Functions`. It
+Crossplane packages with a runtime, namely `Providers` and `Functions`. It
 replaces the deprecated `ControllerConfig` type and is available in v1.14+.
 
 With its default configuration, Crossplane uses Kubernetes Deployments to
-deploy runtimes for packages, more specifically, a controller for a `Provider`
-or a gRPC server for a `Function`. It is possible to configure the runtime
+deploy runtime for packages, more specifically, a controller for a `Provider`
+or a gRPC server for a `Function`. It's possible to configure the runtime
 manifest by applying a `DeploymentRuntimeConfig` and referencing it in the
 `Provider` or `Function` object.
 
-Different than `ControllerConfig`, `DeploymentRuntimeConfig` embed the whole
+Different from `ControllerConfig`, `DeploymentRuntimeConfig` embed the whole
 Kubernetes Deployment spec, which allows for more flexibility in configuring
 the runtime. Refer to the [design document](https://github.com/crossplane/crossplane/blob/2c5e7f07ba9e3d83d1c85169bbde685de8514ab8/design/one-pager-package-runtime-config.md)
 for more details.
@@ -664,30 +669,35 @@ spec:
                 - --enable-external-secret-stores
 ```
 
-Please note that, the container name `package-runtime` is reserved for the
-package runtime container. If you are using a different container name, it
-will be introduced as a sidecar container instead of the modifying the
+Please note that, the packages manager uses  `package-runtime` as the name of
+the runtime container. When you use a different container name, the package
+manager introduces it as a sidecar container instead of modifying the
 package runtime container.
 
-The package manager will be opiniated about some of the fields to ensure
-the runtime is working properly and overlay them on top of what is provided
-in the runtime config. For example, it will default the replica count
+<!-- vale write-good.Passive = NO -->
+The package manager is opinionated about some fields to ensure
+<!-- vale write-good.Passive = YES -->
+the runtime is working and overlay them on top of the values
+in the runtime configuration. For example, it defaults the replica count
 to 1 if not set or override the label selectors to make sure the Deployment
-and Service match. It will also inject any necessary environment variables,
+and Service match. It also injects any necessary environment variables,
 ports as well as volumes and volume mounts.
 
 The `Provider` or `Functions`'s `spec.runtimeConfigRef.name` field defaults
-to `default`, which means the default runtime configuration will be used if
-not specified. Crossplane will ensure there is always a default runtime
-configuration in the cluster, but not modify it if it already exists. This
-will allow users to customize the default runtime configuration to their needs.
+<!-- vale write-good.Passive = NO -->
+to value `default`, which means the default runtime configuration is used if
+<!-- vale write-good.Passive = YES -->
+not specified. Crossplane ensures there is always a default runtime
+configuration in the cluster, but not change it if it already exists. This
+allows users to customize the default runtime configuration to their needs.
 
 {{<hint "tip" >}}
-
-Since `DeploymentRuntimeConfig` uses the same schema as K8s' `Deployment` spec,
-you may need to pass empty values to satisfy the schema validation.
+<!-- vale gitlab.SubstitutionWarning = NO -->
+Since `DeploymentRuntimeConfig` uses the same schema as Kubernetes `Deployment`
+<!-- vale gitlab.SubstitutionWarning = YES -->
+spec, you may need to pass empty values to bypass the schema validation.
 For example, if you just want to change the `replicas` field, you would
-need to pass the following and it is fine:
+need to pass the following and it's fine:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
@@ -704,7 +714,7 @@ spec:
 
 {{< /hint >}}
 
-#### Configuring Runtime Deployment spec
+#### Configuring runtime deployment spec
 
 Using the Deployment spec provided in the `DeploymentRuntimeConfig` as base,
 the package manager builds the Deployment spec for the package runtime with
@@ -739,7 +749,7 @@ the following rules:
   - **Adds** necessary **Environments** to the runtime container.
   - Mounts TLS secrets by **adding** necessary **Volumes**, **Volume Mounts** and **Environments** to the runtime container.
 
-#### Configuring Metadata of runtime resources
+#### Configuring metadata of runtime resources
 
 `DeploymentRuntimeConfig` also enables configuring the following metadata of
 Runtime resources, namely `Deployment`, `ServiceAccount` and `Service`:

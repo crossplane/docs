@@ -11,6 +11,7 @@ CompositeResourceDefinitions
 composition.yaml
 composition.yaml
 CompositionRevisions
+config
 ControllerConfig
 ControllerConfigs
 CRDs
@@ -28,6 +29,8 @@ Crossplane's
 definition.yaml
 definition.yaml
 deletionPolicy
+DeploymentRuntimeConfig
+DeploymentRuntimeConfigs
 EnvironmentConfig
 EnvironmentConfigs
 external-name

@@ -246,7 +246,7 @@ at the table below.
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-revisions` |Enable support for CompositionRevisions. |
-| Beta | `--enable-deployment-runtime-configs` |Enable support for Deployment Runtime Configs. |
+| Beta | `--enable-deployment-runtime-configs` |Enable support for Deployment Runtime Configurations. |
 | Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
 | Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
