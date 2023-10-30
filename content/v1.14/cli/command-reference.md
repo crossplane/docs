@@ -279,6 +279,7 @@ For example, to push a local package named `my-package` to
 DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
 `crossplane xpkg push -f my-package.xpkg index.docker.io/crossplane-docs/my-package:v0.14.0`.
 
+
 #### Flags
 
 {{< table "table table-sm table-striped">}}
@@ -286,9 +287,6 @@ DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
 | ------------ | -------------          | ------------------------------                |
 | `-f`         | `--package-files=PATH` | A comma-separated list of xpkg files to push. |
 {{< /table >}}
-
-For example, to push a package named `my-configuration` use  
-`crossplane xpkg push -f my-configuration.xpkg`
 
 ### xpkg update
 
