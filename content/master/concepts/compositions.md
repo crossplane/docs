@@ -673,7 +673,10 @@ purpose programming language allows a function to use more advanced logic to
 template resources, like loops and conditionals.
 
 {{<hint "important" >}}
-Composition functions are a beta feature. 
+Composition functions is a beta feature. Crossplane enables beta functions by
+default. The
+[Composition Functions]({{<ref "./composition-functions#disable-composition-functions">}})
+page explains how to disable composition functions.
 {{< /hint >}}
 
 To use composition functions define a {{<hover label="xfn"
