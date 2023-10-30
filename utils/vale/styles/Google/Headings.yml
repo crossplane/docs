@@ -25,6 +25,7 @@ exceptions:
   - Composition
   - Compositions
   - Configuration
+  - configuration
   - Cosmos
   - Crossplane
   - Docker
