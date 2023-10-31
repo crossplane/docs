@@ -124,11 +124,12 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `deploymentStrategy` | The deployment strategy for the Crossplane and RBAC Manager pods. | `"RollingUpdate"` |
 | `extraEnvVarsCrossplane` | Add custom environmental variables to the Crossplane pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
 | `extraEnvVarsRBACManager` | Add custom environmental variables to the RBAC Manager pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
+| `extraObjects` | To add arbitrary Kubernetes Objects during a Helm Install | `[]` |
 | `extraVolumeMountsCrossplane` | Add custom `volumeMounts` to the Crossplane pod. | `{}` |
 | `extraVolumesCrossplane` | Add custom `volumes` to the Crossplane pod. | `{}` |
 | `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork` grants the Crossplane Pod access to the host network namespace. | `false` |
 | `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
-| `image.repository` | Repository for the Crossplane pod image. | `"crossplane/crossplane"` |
+| `image.repository` | Repository for the Crossplane pod image. | `"xpkg.upbound.io/crossplane/crossplane"` |
 | `image.tag` | The Crossplane image tag. Defaults to the value of `appVersion` in `Chart.yaml`. | `""` |
 | `imagePullSecrets` | The imagePullSecret names to add to the Crossplane ServiceAccount. | `{}` |
 | `leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the Crossplane pod. | `true` |
@@ -173,26 +174,6 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `serviceAccount.customAnnotations` | Add custom `annotations` to the Crossplane ServiceAccount. | `{}` |
 | `tolerations` | Add `tolerations` to the Crossplane pod deployment. | `[]` |
 | `webhooks.enabled` | Enable webhooks for Crossplane and installed Provider packages. | `true` |
-| `xfn.args` | Add custom arguments to the Composite functions runner container. | `[]` |
-| `xfn.cache.configMap` | The name of a ConfigMap to use as the Composite function runner package cache. Disables the default Composite function runner package cache `emptyDir` Volume. | `""` |
-| `xfn.cache.medium` | Set to `Memory` to hold the Composite function runner package cache in a RAM backed file system. Useful for Crossplane development. | `""` |
-| `xfn.cache.pvc` | The name of a PersistentVolumeClaim to use as the Composite function runner package cache. Disables the default Composite function runner package cache `emptyDir` Volume. | `""` |
-| `xfn.cache.sizeLimit` | The size limit for the Composite function runner package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"1Gi"` |
-| `xfn.enabled` | Enable the alpha Composition functions (`xfn`) sidecar container. Also requires Crossplane `args` value `--enable-composition-functions` set. | `false` |
-| `xfn.extraEnvVars` | Add custom environmental variables to the Composite function runner container. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
-| `xfn.image.pullPolicy` | Composite function runner container image pull policy. | `"IfNotPresent"` |
-| `xfn.image.repository` | Composite function runner container image. | `"crossplane/xfn"` |
-| `xfn.image.tag` | Composite function runner container image tag. Defaults to the value of `appVersion` in `Chart.yaml`. | `""` |
-| `xfn.resources.limits.cpu` | CPU resource limits for the Composite function runner container. | `"2000m"` |
-| `xfn.resources.limits.memory` | Memory resource limits for the Composite function runner container. | `"2Gi"` |
-| `xfn.resources.requests.cpu` | CPU resource requests for the Composite function runner container. | `"1000m"` |
-| `xfn.resources.requests.memory` | Memory resource requests for the Composite function runner container. | `"1Gi"` |
-| `xfn.securityContext.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the Composite function runner container. | `false` |
-| `xfn.securityContext.capabilities.add` | Set Linux capabilities for the Composite function runner container. The default values allow the container to create an unprivileged user namespace for running Composite function containers. | `["SETUID","SETGID"]` |
-| `xfn.securityContext.readOnlyRootFilesystem` | Set the Composite function runner container root file system as read-only. | `true` |
-| `xfn.securityContext.runAsGroup` | The group ID used by the Composite function runner container. | `65532` |
-| `xfn.securityContext.runAsUser` | The user ID used by the Composite function runner container. | `65532` |
-| `xfn.securityContext.seccompProfile.type` | Apply a `seccompProfile` to the Composite function runner container. The default value allows the Composite function runner container permissions to use the `unshare` syscall. | `"Unconfined"` |
 {{< /table >}}
 {{< /expand >}}
 <!-- vale gitlab.Substitutions = YES -->
@@ -265,11 +246,12 @@ at the table below.
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-revisions` |Enable support for CompositionRevisions |
+| Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
-| Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
+| Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
 {{< /table >}}
 {{< /expand >}}
 
