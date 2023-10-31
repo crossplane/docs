@@ -43,10 +43,14 @@ InactivePackageRevision
 initProvider
 LateInitialize
 managementPolicies
+MR
+MRs
 PatchSet
 PatchSets
 ProviderConfig
 ProviderConfigs
+RunFunctionRequest
+RunFunctionResponse
 StoreConfig
 StoreConfigs
 ToCompositeFieldPath

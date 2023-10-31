@@ -16,12 +16,12 @@ Composition Functions allow you to supplement or replace your Compositions with
 advanced logic not implementable through available patching strategies. 
 
 
-You can build a Function using general purpose programming
+You can build a Function using general-purpose programming
 languages such as Go or Python, or relevant tools such as Helm, 
 [Kustomize](https://kustomize.io/), or
 [CUE](https://cuelang.org/).  
 
-Functions compliment contemporary "Patch and Transform" (P&T) style
+Functions complement contemporary "Patch and Transform" (P&T) style
 Composition. It's possible to use only P&T, only Functions, or a mix of both in
 the same Composition.
 
@@ -243,7 +243,7 @@ with the XR if they experience issues.
  * Run within the constraints specified by the Composition that includes them,
    such as timeouts, compute, network access.
 
-This means Functions may be written using a general purpose programming language
+This means Functions may be written using a general-purpose programming language
 like Python, Go, or TypeScript. They may also be implemented using a shell
 script, or an existing tool like Helm or Kustomize.
 

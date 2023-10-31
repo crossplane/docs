@@ -326,14 +326,14 @@ to a managed resource to determine what permissions
 Crossplane has over the resource.
 
 For example, give Crossplane permission to create and delete an external resource,
-but not make any changes set the policies to
-{{<hover label="managementPol1" line="4">}}["Create", "Delete"]{{</hover>}}.
+but not make any changes, set the policies to
+{{<hover label="managementPol1" line="4">}}["Create", "Delete", "Observe"]{{</hover>}}.
 
 ```yaml {label="managementPol1"}
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Subnet
 spec:
-  managementPolicies: ["Create", "Delete"]
+  managementPolicies: ["Create", "Delete", "Observe"]
   forProvider:
     # Removed for brevity
 ```

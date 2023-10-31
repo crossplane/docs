@@ -178,7 +178,7 @@ resources. The _Composition_ is only a template for a collection of _managed
 resources_ and their settings. A _Composite Resource_ creates the specific resources.
 
 {{< hint "note" >}}
-The [_Composite Resources_]({{<ref "#composite-resources">}})_ section discusses
+The [_Composite Resources_]({{<ref "#composite-resources">}}) section discusses
 _Composite Resources_.
 {{< /hint >}}
 
