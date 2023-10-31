@@ -195,9 +195,8 @@ Control the Configuration upgrade behavior with a
 
 The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}} 
 options are:
-* `Automatic` - (**default**) Automatically use the latest Configuration version
-  available in the cache. 
-* `Manual` - Require the current Configuration in use to be manually set. 
+* `Automatic` - (**default**) Automatically activate the last installed configuration.
+* `Manual` - Don't automatically activate a configuration. 
 
 For example, to change the upgrade behavior to require manual upgrades, set 
 {{<hover label="revision" line="6">}}revisionActivationPolicy: Manual{{</hover>}}.
@@ -212,16 +211,6 @@ spec:
 # Removed for brevity
 ```
 
-{{<hint "important" >}}
-Crossplane only upgrades a Configuration if a newer version is in the package 
-cache.   
-By default the Crossplane 
-[`packagePullPolicy`](#configuration-package-pull-policy) doesn't
-download new Configuration versions, even if they're available.
-{{< /hint >}}
-
-Read the [Configuration package revision](#configuration-revisions) 
-section for more information on the use of package revisions.
 
 #### Install a Configuration from a private registry
 

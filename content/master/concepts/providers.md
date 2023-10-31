@@ -191,9 +191,8 @@ Control the Provider upgrade behavior with a
 
 The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}} 
 options are:
-* `Automatic` - (**default**) Automatically use the latest Provider version
-  available in the cache. 
-* `Manual` - Require the current Provider in use to be manually set. 
+* `Automatic` - (**default**) Automatically activate the last installed Provider.
+* `Manual` - Don't automatically activate a Provider.
 
 For example, to change the upgrade behavior to require manual upgrades, set 
 {{<hover label="revision" line="6">}}revisionActivationPolicy: Manual{{</hover>}}.
@@ -207,15 +206,6 @@ spec:
   revisionActivationPolicy: Manual
 # Removed for brevity
 ```
-
-{{<hint "important" >}}
-Crossplane only upgrades a Provider if a newer version is in the package cache.   
-By default the Crossplane [`packagePullPolicy`](#provider-pull-policy) doesn't
-download new Provider versions, even if they're available.
-{{< /hint >}}
-
-Read the [Provider upgrade](#upgrade-a-provider) section for
-more information on the use of package revisions.
 
 #### Package revision history limit
 
