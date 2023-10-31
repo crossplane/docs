@@ -600,7 +600,7 @@ a future release.
 <!-- vale gitlab.FutureTense = YES -->
 
 [`DeploymentRuntimeConfig`]({{<ref "#runtime-configuration" >}}) is the
-replacement for Controller configuration and is available in v1.14+.
+replacement for Controller configuration and is available in v1.14.
 {{< /hint >}}
 
 Applying a Crossplane `ControllerConfig` to a Provider changes the settings of
@@ -620,11 +620,11 @@ Each Provider determines their supported set of `args`.
 {{<hint "important" >}}
 `DeploymentRuntimeConfigs` is a beta feature. 
 
-It's on by default, and you could disable it by passing
+It's on by default, and you can disable it by passing
 `--enable-deployment-runtime-configs=false` to the Crossplane deployment.
 {{< /hint >}}
 
-Runtime configuration is a generalized mechanism for configuring runtime for
+Runtime configuration is a generalized mechanism for configuring the runtime for
 Crossplane packages with a runtime, namely `Providers` and `Functions`. It
 replaces the deprecated `ControllerConfig` type and is available in v1.14+.
 
@@ -634,10 +634,13 @@ or a gRPC server for a `Function`. It's possible to configure the runtime
 manifest by applying a `DeploymentRuntimeConfig` and referencing it in the
 `Provider` or `Function` object.
 
+{{<hint "note" >}}
 Different from `ControllerConfig`, `DeploymentRuntimeConfig` embed the whole
 Kubernetes Deployment spec, which allows for more flexibility in configuring
 the runtime. Refer to the [design document](https://github.com/crossplane/crossplane/blob/2c5e7f07ba9e3d83d1c85169bbde685de8514ab8/design/one-pager-package-runtime-config.md)
 for more details.
+{{< /hint >}}
+
 
 As an example, to enable the external secret stores alpha feature for a `Provider`
 by adding the `--enable-external-secret-stores` argument to the controller,
@@ -669,7 +672,7 @@ spec:
                 - --enable-external-secret-stores
 ```
 
-Please note that, the packages manager uses  `package-runtime` as the name of
+Please note that the packages manager uses  `package-runtime` as the name of
 the runtime container. When you use a different container name, the package
 manager introduces it as a sidecar container instead of modifying the
 package runtime container.
@@ -679,16 +682,16 @@ The package manager is opinionated about some fields to ensure
 <!-- vale write-good.Passive = YES -->
 the runtime is working and overlay them on top of the values
 in the runtime configuration. For example, it defaults the replica count
-to 1 if not set or override the label selectors to make sure the Deployment
+to 1 if not set and overrides the label selectors to make sure the Deployment
 and Service match. It also injects any necessary environment variables,
 ports as well as volumes and volume mounts.
 
 The `Provider` or `Functions`'s `spec.runtimeConfigRef.name` field defaults
-<!-- vale write-good.Passive = NO -->
-to value `default`, which means the default runtime configuration is used if
-<!-- vale write-good.Passive = YES -->
-not specified. Crossplane ensures there is always a default runtime
-configuration in the cluster, but not change it if it already exists. This
+to value `default`, which means Crossplane uses the default runtime configuration
+if not specified. Crossplane ensures there is always a default runtime
+<!-- vale gitlab.FutureTense = NO -->
+configuration in the cluster, but won't change it if it already exists. This
+<!-- vale gitlab.FutureTense = YES -->
 allows users to customize the default runtime configuration to their needs.
 
 {{<hint "tip" >}}
@@ -697,7 +700,7 @@ Since `DeploymentRuntimeConfig` uses the same schema as Kubernetes `Deployment`
 <!-- vale gitlab.SubstitutionWarning = YES -->
 spec, you may need to pass empty values to bypass the schema validation.
 For example, if you just want to change the `replicas` field, you would
-need to pass the following and it's fine:
+need to pass the following:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
@@ -716,7 +719,7 @@ spec:
 
 #### Configuring runtime deployment spec
 
-Using the Deployment spec provided in the `DeploymentRuntimeConfig` as base,
+Using the Deployment spec provided in the `DeploymentRuntimeConfig` as a base,
 the package manager builds the Deployment spec for the package runtime with
 the following rules:
 - Injects the package runtime container as the first container in the
