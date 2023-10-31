@@ -81,7 +81,7 @@ configuring the Crossplane Pod settings in the
 Provide the name of the Configuration's `.xpkg` file and set 
 {{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
 
-For example, to install a locally downloaded version of 
+For example, to install a locally stored version of 
 Upbound AWS reference platform set the 
 {{<hover label="offline" line="6">}}package{{</hover>}} to the local filename
 and set the Configuration's

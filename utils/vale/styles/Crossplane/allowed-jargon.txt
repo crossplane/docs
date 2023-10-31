@@ -30,6 +30,7 @@ gRPC
 imagePullSecret
 Go
 gRPC
+imagePullSecret
 JSONPath
 key-pair
 key-value
