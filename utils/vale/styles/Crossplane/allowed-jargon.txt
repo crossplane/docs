@@ -7,6 +7,7 @@ base64
 bool
 boolean
 booleans
+Buf
 CI
 CLI
 cluster-wide
@@ -24,6 +25,8 @@ Enum
 Env
 ESS
 float64
+Go
+gRPC
 imagePullSecret
 JSONPath
 key-pair
@@ -40,7 +43,11 @@ PersistentVolumeClaim
 PriorityClass
 proselint
 RBAC
+RPC
+RPCs
 SCSS
+SDK
+SDKs
 semver
 ServiceAccount
 ServiceAccounts
