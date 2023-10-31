@@ -14,6 +14,8 @@ exceptions:
   - CLI
   - ClusterRoles
   - Code
+  - composition function
+  - composition functions
   - Composite Resource
   - Composite resource
   - composite resource
