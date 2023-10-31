@@ -36,10 +36,11 @@ These endpoints are
 
 ## Install a Provider
 
-Installing a provider creates a Provider pod that's responsible for installing
-the Provider's APIs into the Kubernetes cluster. Providers constantly watch the
-state of the desired managed resources and create any external resources that
-are missing.
+Installing a provider creates new Kubernetes resources representing the 
+Provider's APIs. Installing a provider also creates a Provider pod that's 
+responsible for reconciling the Provider's APIs into the Kubernetes cluster. 
+Providers constantly watch the state of the desired managed resources and create 
+any external resources that are missing.
 
 Install a Provider with a Crossplane
 {{<hover label="install" line="2">}}Provider{{</hover >}} object setting the
