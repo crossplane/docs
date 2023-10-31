@@ -9,7 +9,6 @@ CombineToEnvironment
 CompositeResourceDefinition
 CompositeResourceDefinitions
 composition.yaml
-composition.yaml
 CompositionRevisions
 config
 ControllerConfig
@@ -18,15 +17,10 @@ CRDs
 Crossplane
 crossplane-admin
 crossplane-browse
-crossplane-browse
-crossplane-edit
 crossplane-edit
 crossplane-view
-crossplane-view
-crossplane.yaml
 crossplane.yaml
 Crossplane's
-definition.yaml
 definition.yaml
 deletionPolicy
 DeploymentRuntimeConfig
@@ -40,8 +34,6 @@ FromCompositeFieldPath
 FromEnvironmentFieldPath
 fromFieldPath
 HealthyPackageRevision
-HealthyPackageRevision
-InactivePackageRevision
 InactivePackageRevision
 initProvider
 LateInitialize
