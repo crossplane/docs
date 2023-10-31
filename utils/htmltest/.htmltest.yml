@@ -7,4 +7,4 @@ IgnoreURLs:
   - "github.com/crossplane/docs/tree/master/content/(.*).md" # Ignore the links to "view this source"
   - "www.googletagmanager.com/*" # Ignore google tag manager
   - "twitter.com/*" # Ignore twitter links since they send to login page
-
+  - "https://releases.crossplane.io/stable/current/bin" # S3 bucket listing always returns 404 status even with directory listing
