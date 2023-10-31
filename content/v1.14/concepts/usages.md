@@ -189,7 +189,7 @@ spec:
           baz: qux
 ```
 
-## Usage in a composition
+## Usage in a Composition
 
 A typical use case for Usages is to define a deletion ordering between the
 resources in a Composition. The Usages support
