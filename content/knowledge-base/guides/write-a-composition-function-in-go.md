@@ -800,7 +800,7 @@ crossplane xpkg build \
 
 {{<hint "tip">}}
 Crossplane packages are special OCI images. Read more about packages in the
-[packages documentation]{{<ref "../../master/concepts/packages">}}.
+[packages documentation]({{<ref "../../master/concepts/packages">}}).
 {{</hint>}}
 
 Push both package files to a registry. Pushing both files to one tag in the
