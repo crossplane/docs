@@ -135,7 +135,7 @@ For example, to install version 0.42.0 of the
 | ------------ | -------------                                    | ------------------------------                                                                  |
 |              | `--runtime-config=<runtime config name>`         | Install the package with a runtime configuration.                                               |
 | `-m`         | `--manual-activation`                            | Set the `revisionActiviationPolicy` to `Manual`.                                                |
-|              | `--package-pull-secrets=<list of secrets>`       | A comma-seperated list of Kubernetes secrets to use for authenticating to the package registry. |
+|              | `--package-pull-secrets=<list of secrets>`       | A comma-separated list of Kubernetes secrets to use for authenticating to the package registry. |
 | `-r`         | `--revision-history-limit=<number of revisions>` | Set the `revisionHistoryLimit`. Defaults to `1`.                                                |
 | `-w`         | `--wait=<number of seconds>`                     | Number of seconds to wait for a package to install.                                             |
 

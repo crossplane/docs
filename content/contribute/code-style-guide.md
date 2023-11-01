@@ -170,7 +170,7 @@ metadata:
 ```
 ````
 
-Combining copying and highlighting in a single comma-seperated annotation. 
+Combining copying and highlighting in a single comma-separated annotation. 
 ````yaml {copy-lines="2-5", hl_lines="2-3"}
 ```yaml {copy-lines="2-5", hl_lines="2-3"}
 apiVersion: pkg.crossplane.io/v1
