@@ -77,9 +77,9 @@ build or test a composition function.
 
 ## Initialize the function from a template
 
-Use the Crossplane CLI's `crossplane beta xpkg init` command to initialize a new
-function named function-xbuckets. When you run this command the CLI
-initializes your function using the
+Use the `crossplane beta xpkg init` command to initialize a new function named
+function-xbuckets. When you run this command the CLI initializes your function
+using the
 [function-template-go](https://github.com/crossplane/function-template-go)
 GitHub repository as a template.
 
@@ -737,7 +737,8 @@ Read the composition functions documentation to learn more about
 You build a function in two stages. First you build the function's runtime. This
 is the Open Container Initiative (OCI) image Crossplane uses to run your
 function. You then embed that runtime in a package, and push it to a package
-registry. The Crossplane CLI's default package registry is xpkg.upbound.io.
+registry. The Crossplane CLI uses xpkg.upbound.io as its default package
+registry.
 
 A function supports a single platform, like `linux/amd64`, by default. You can
 support multiple platforms by building a runtime and package for each platform,
