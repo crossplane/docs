@@ -801,8 +801,9 @@ Crossplane packages are special OCI images. Read more about packages in the
 {{</hint>}}
 
 Push both package files to a registry. Pushing both files to one tag in the
-registry creates a multi-platform package that runs on both `linux/arm64` and
-`linux/amd64` hosts.
+registry creates a
+[multi-platform](https://docs.docker.com/build/building/multi-platform/)
+package that runs on both `linux/arm64` and `linux/amd64` hosts.
 
 ```shell
 crossplane xpkg push \
