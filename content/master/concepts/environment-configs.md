@@ -1,6 +1,6 @@
 ---
 title: Environment Configurations
-weight: 90
+weight: 75
 state: alpha
 alphaVersion: "1.11"
 description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in patching Compositions"
