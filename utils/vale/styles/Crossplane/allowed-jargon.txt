@@ -39,6 +39,7 @@ kube-controller-manager
 kubeconfig
 kubectl
 minikube
+multi-platform
 namespace
 namespaced
 namespaces
