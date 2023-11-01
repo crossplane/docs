@@ -193,7 +193,7 @@ crossplane-stable/crossplane \
 --set image.pullPolicy=Always
 ```
 
-Helm supports comma-seperated arguments.
+Helm supports comma-separated arguments.
 
 For example, to change the image pull policy and number of replicas:
 
