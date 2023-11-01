@@ -154,7 +154,7 @@ returns an error if the `wait` time expires before the package is `HEALTHY`.
 #### Require manual package activation
 
 Set the package to require 
-[manual activation]({{<ref "../concepts/packages#upgrade-policy" >}}), 
+[manual activation]({{<ref "../concepts/packages#revision-activation-policy" >}}), 
 preventing an automatic upgrade of a package with `--manual-activation`
 
 #### Authenticate to a private registry
