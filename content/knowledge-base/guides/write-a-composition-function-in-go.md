@@ -430,11 +430,11 @@ for the SDK.
 You can test your function by adding unit tests, and by using the `crossplane
 beta render` command. It's a good idea to do both.
 
-Go has rich support for unit testing. When you initialize a function from
-function-template-go it adds some unit tests to `fn_test.go`. These tests
-follow Go's [recommendations](https://github.com/golang/go/wiki/TestComments).
-They use only [`pkg/testing`](https://pkg.go.dev/testing) from the Go standard
-library and [`google/go-cmp`](https://pkg.go.dev/github.com/google/go-cmp/cmp).
+Go has rich support for unit testing. When you initialize a function from the
+template it adds some unit tests to `fn_test.go`. These tests follow Go's
+[recommendations](https://github.com/golang/go/wiki/TestComments). They use only
+[`pkg/testing`](https://pkg.go.dev/testing) from the Go standard library and
+[`google/go-cmp`](https://pkg.go.dev/github.com/google/go-cmp/cmp).
 
 To add test cases, update the `cases` map in `TestRunFunction`. Expand the below
 block to view the full `fn_test.go` file for the function.
@@ -821,9 +821,9 @@ up continuous integration (CI) using
 lint, test, and build your function. You can see how the template configures CI
 by reading `.github/workflows/ci.yaml`.
 
-The CI workflow can automatically push packages to xpkg.upbound.io. For this to
-work you must create a repository at https://marketplace.upbound.io. Give the CI
-workflow access to push to the Marketplace by creating an API token and
+The CI workflow can automatically push packages to `xpkg.upbound.io`. For this
+to work you must create a repository at https://marketplace.upbound.io. Give the
+CI workflow access to push to the Marketplace by creating an API token and
 [adding it to your repository](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 Save your API token access ID as a secret named `XPKG_ACCESS_ID` and your API
 token as a secret named `XPKG_TOKEN`.
