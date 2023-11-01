@@ -4,13 +4,25 @@
     command = "hugo --minify "
 
 [build.environment]
-  HUGO_VERSION = "0.114.0"    
+  HUGO_VERSION = "0.119.0"
 
 [[redirects]]
 from = "/docs/*"
 to = "/:splat"
 status = 302
 
+# Redirects for EOL versions
+[[redirects]]
+from = "/v1.11/*"
+to = "/latest/:splat"
+status = 302
+
+[[redirects]]
+from = "/v1.10/*"
+to = "/latest/:splat"
+status = 302
+
+# Redirects for pre-Hugo docs
 [[redirects]]
 from = "/v1.9/concepts/managed-resources.html"
 to = "/latest/concepts/managed-resources"
@@ -44,4 +56,4 @@ status = 302
 # Dev should be set under [context.dev.environment] instead.
 [dev]
     command = "hugo server"
-    port = 8888    
+    port = 8888

@@ -1,54 +1,27 @@
 ---
-title: Azure Quickstart 
-weight: 110
+tocHidden: true
+searchExclude: true
 ---
-
-Connect Crossplane to Azure to create and manage cloud resources from Kubernetes 
-with the 
-[Upbound Azure Provider](https://marketplace.upbound.io/providers/upbound/provider-azure).
-
-This guide is in three parts:
-* Part 1 walks through installing Crossplane, configuring the provider to
-authenticate to Azure and creating a _Managed Resource_ in Azure directly from 
-your Kubernetes cluster. This shows Crossplane can communicate with Azure.
-* [Part 2]({{< ref "provider-azure-part-2" >}}) creates a 
-_Composite Resource Definition_ (XRD), _Composite Resource_ (XR) and a _Claim_
-(XRC) to show how to create and use custom APIs.
-* [Part 3]({{< ref "provider-azure-part-3" >}}) demonstrates how to patch
-_Compositions_ with values used in a _Claim_ and how to build a Crossplane
-_Package_ to make a Crossplane platform portable and reusable.
-
-## Prerequisites
-This quickstart requires:
-* a Kubernetes cluster with at least 6 GB of RAM
-* permissions to create pods and secrets in the Kubernetes cluster
-* [Helm](https://helm.sh/) version `v3.2.0` or later
-* an Azure account with permissions to create an 
-  [Azure Virtual Machine](https://learn.microsoft.com/en-us/azure/virtual-machines/) 
-  and
-  [Virtual Network](https://learn.microsoft.com/en-us/azure/virtual-network/)
-* an Azure account with permissions to create an Azure [service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) and an [Azure resource group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
 
 ## Install Crossplane
 
 Crossplane installs into an existing Kubernetes cluster. 
 
 {{< hint type="tip" >}}
-If you don't have a Kubernetes cluster create one locally with 
-[Kind](https://kind.sigs.k8s.io/).
+If you don't have a Kubernetes cluster create one locally with [Kind](https://kind.sigs.k8s.io/).
 {{< /hint >}}
 
 
 ### Install the Crossplane Helm chart
 
-Helm enables Crossplane to install all its Kubernetes components through a 
-_Helm Chart_.
+Helm enables Crossplane to install all its Kubernetes components through a _Helm Chart_.
 
 Enable the Crossplane Helm Chart repository:
 
 ```shell
 helm repo add \
-crossplane-stable https://charts.crossplane.io/stable && helm repo update
+crossplane-stable https://charts.crossplane.io/stable
+helm repo update
 ```
 
 Run the Helm dry-run to see all the Crossplane components Helm installs.
@@ -67,11 +40,11 @@ crossplane-stable/crossplane \
 --dry-run --debug \
 --namespace crossplane-system \
 --create-namespace
-install.go:193: [debug] Original chart version: ""
-install.go:210: [debug] CHART PATH: /home/vagrant/.cache/helm/repository/crossplane-1.10.1.tgz
+install.go:200: [debug] Original chart version: ""
+install.go:217: [debug] CHART PATH: /home/vagrant/.cache/helm/repository/crossplane-1.13.0.tgz
 
 NAME: crossplane
-LAST DEPLOYED: Thu Jan 19 15:52:08 2023
+LAST DEPLOYED: Fri Jul 28 13:57:41 2023
 NAMESPACE: crossplane-system
 STATUS: pending-install
 REVISION: 1
@@ -81,7 +54,7 @@ USER-SUPPLIED VALUES:
 
 COMPUTED VALUES:
 affinity: {}
-args: {}
+args: []
 configuration:
   packages: []
 customAnnotations: {}
@@ -89,19 +62,23 @@ customLabels: {}
 deploymentStrategy: RollingUpdate
 extraEnvVarsCrossplane: {}
 extraEnvVarsRBACManager: {}
+extraVolumeMountsCrossplane: {}
+extraVolumesCrossplane: {}
+hostNetwork: false
 image:
   pullPolicy: IfNotPresent
   repository: crossplane/crossplane
-  tag: v1.10.1
+  tag: ""
 imagePullSecrets: {}
 leaderElection: true
 metrics:
   enabled: false
 nodeSelector: {}
 packageCache:
+  configMap: ""
   medium: ""
   pvc: ""
-  sizeLimit: 5Mi
+  sizeLimit: 20Mi
 podSecurityContextCrossplane: {}
 podSecurityContextRBACManager: {}
 priorityClassName: ""
@@ -109,15 +86,17 @@ provider:
   packages: []
 rbacManager:
   affinity: {}
-  args: {}
+  args: []
   deploy: true
   leaderElection: true
-  managementPolicy: All
+  managementPolicy: Basic
   nodeSelector: {}
   replicas: 1
   skipAggregatedClusterRoles: false
-  tolerations: {}
-registryCaBundleConfig: {}
+  tolerations: []
+registryCaBundleConfig:
+  key: ""
+  name: ""
 replicas: 1
 resourcesCrossplane:
   limits:
@@ -145,9 +124,40 @@ securityContextRBACManager:
   runAsUser: 65532
 serviceAccount:
   customAnnotations: {}
-tolerations: {}
+tolerations: []
 webhooks:
+  enabled: true
+xfn:
+  args: []
+  cache:
+    configMap: ""
+    medium: ""
+    pvc: ""
+    sizeLimit: 1Gi
   enabled: false
+  extraEnvVars: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: crossplane/xfn
+    tag: ""
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      add:
+      - SETUID
+      - SETGID
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsUser: 65532
+    seccompProfile:
+      type: Unconfined
 
 HOOKS:
 MANIFEST:
@@ -157,30 +167,45 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rbac-manager
+  namespace: crossplane-system
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 ---
 # Source: crossplane/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: crossplane
+  namespace: crossplane-system
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
+---
+# Source: crossplane/templates/secret.yaml
+# The reason this is created empty and filled by the init container is that it's
+# mounted by the actual container, so if it wasn't created by Helm, then the
+# deployment wouldn't be deployed at all with secret to mount not found error.
+# In addition, Helm would delete this secret after uninstallation so the new
+# installation of Crossplane would use its own certificate.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webhook-tls-secret
+  namespace: crossplane-system
+type: Opaque
 ---
 # Source: crossplane/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -189,13 +214,13 @@ metadata:
   name: crossplane
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -208,13 +233,13 @@ metadata:
   name: crossplane:system:aggregate-to-crossplane
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
     crossplane.io/scope: "system"
     rbac.crossplane.io/aggregate-to-crossplane: "true"
 rules:
@@ -308,13 +333,13 @@ metadata:
   name: crossplane:allowed-provider-permissions
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -327,13 +352,13 @@ metadata:
   name: crossplane-rbac-manager
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 - apiGroups:
   - ""
@@ -353,6 +378,18 @@ rules:
   - get
   - list
   - watch
+# The RBAC manager creates a series of RBAC roles for each namespace it sees.
+# These RBAC roles are controlled (in the owner reference sense) by the namespace.
+# The RBAC manager needs permission to set finalizers on Namespaces in order to
+# create resources that block their deletion when the
+# OwnerReferencesPermissionEnforcement admission controller is enabled.
+# See https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
+- apiGroups:
+  - ""
+  resources:
+  - namespaces/finalizers
+  verbs:
+  - update
 - apiGroups:
   - apiextensions.crossplane.io
   resources:
@@ -361,6 +398,18 @@ rules:
   - get
   - list
   - watch
+# The RBAC manager creates a series of RBAC cluster roles for each XRD it sees.
+# These cluster roles are controlled (in the owner reference sense) by the XRD.
+# The RBAC manager needs permission to set finalizers on XRDs in order to
+# create resources that block their deletion when the
+# OwnerReferencesPermissionEnforcement admission controller is enabled.
+# See https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
+- apiGroups:
+  - apiextensions.crossplane.io
+  resources:
+  - compositeresourcedefinitions/finalizers
+  verbs:
+  - update
 - apiGroups:
   - pkg.crossplane.io
   resources:
@@ -369,6 +418,18 @@ rules:
   - get
   - list
   - watch
+# The RBAC manager creates a series of RBAC cluster roles for each ProviderRevision
+# it sees. These cluster roles are controlled (in the owner reference sense) by the
+# ProviderRevision. The RBAC manager needs permission to set finalizers on
+# ProviderRevisions in order to create resources that block their deletion when the
+# OwnerReferencesPermissionEnforcement admission controller is enabled.
+# See https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
+- apiGroups:
+  - pkg.crossplane.io
+  resources:
+  - providerrevisions/finalizers
+  verbs:
+  - update
 - apiGroups:
   - apiextensions.k8s.io
   resources:
@@ -425,13 +486,13 @@ metadata:
   name: crossplane-admin
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -444,13 +505,13 @@ metadata:
   name: crossplane-edit
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -463,13 +524,13 @@ metadata:
   name: crossplane-view
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -482,13 +543,13 @@ metadata:
   name: crossplane-browse
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
@@ -502,13 +563,13 @@ metadata:
   labels:
     rbac.crossplane.io/aggregate-to-admin: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane administrators have access to view events.
 - apiGroups: [""]
@@ -537,7 +598,7 @@ rules:
   verbs: ["*"]
 - apiGroups:
   - pkg.crossplane.io
-  resources: [providers, configurations, providerrevisions, configurationrevisions]
+  resources: [locks, providers, configurations, providerrevisions, configurationrevisions]
   verbs: ["*"]
 # Crossplane administrators have access to view CRDs in order to debug XRDs.
 - apiGroups: [apiextensions.k8s.io]
@@ -552,13 +613,13 @@ metadata:
   labels:
     rbac.crossplane.io/aggregate-to-edit: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane editors have access to view events.
 - apiGroups: [""]
@@ -580,7 +641,7 @@ rules:
   verbs: ["*"]
 - apiGroups:
   - pkg.crossplane.io
-  resources: [providers, configurations, providerrevisions, configurationrevisions]
+  resources: [locks, providers, configurations, providerrevisions, configurationrevisions]
   verbs: ["*"]
 ---
 # Source: crossplane/templates/rbac-manager-managed-clusterroles.yaml
@@ -591,13 +652,13 @@ metadata:
   labels:
     rbac.crossplane.io/aggregate-to-view: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane viewers have access to view events.
 - apiGroups: [""]
@@ -614,7 +675,7 @@ rules:
   verbs: [get, list, watch]
 - apiGroups:
   - pkg.crossplane.io
-  resources: [providers, configurations, providerrevisions, configurationrevisions]
+  resources: [locks, providers, configurations, providerrevisions, configurationrevisions]
   verbs: [get, list, watch]
 ---
 # Source: crossplane/templates/rbac-manager-managed-clusterroles.yaml
@@ -625,13 +686,13 @@ metadata:
   labels:
     rbac.crossplane.io/aggregate-to-browse: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane browsers have access to view events.
 - apiGroups: [""]
@@ -656,13 +717,13 @@ metadata:
     rbac.crossplane.io/aggregate-to-ns-admin: "true"
     rbac.crossplane.io/base-of-ns-admin: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane namespace admins have access to view events.
 - apiGroups: [""]
@@ -693,13 +754,13 @@ metadata:
     rbac.crossplane.io/aggregate-to-ns-edit: "true"
     rbac.crossplane.io/base-of-ns-edit: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane namespace editors have access to view events.
 - apiGroups: [""]
@@ -720,13 +781,13 @@ metadata:
     rbac.crossplane.io/aggregate-to-ns-view: "true"
     rbac.crossplane.io/base-of-ns-view: "true"
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 rules:
 # Crossplane namespace viewers have access to view events.
 - apiGroups: [""]
@@ -740,13 +801,13 @@ metadata:
   name: crossplane
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -763,13 +824,13 @@ metadata:
   name: crossplane-rbac-manager
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -786,13 +847,13 @@ metadata:
   name: crossplane-admin
   labels:
     app: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -802,21 +863,47 @@ subjects:
   kind: Group
   name: crossplane:masters
 ---
-# Source: crossplane/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
+# Source: crossplane/templates/service.yaml
+apiVersion: v1
+kind: Service
 metadata:
-  name: crossplane
+  name: crossplane-webhooks
+  namespace: crossplane-system
   labels:
     app: crossplane
     release: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
+spec:
+  selector:
+    app: crossplane
+    release: crossplane
+  ports:
+  - protocol: TCP
+    port: 9443
+    targetPort: 9443
+---
+# Source: crossplane/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crossplane
+  namespace: crossplane-system
+  labels:
+    app: crossplane
+    release: crossplane
+    helm.sh/chart: crossplane-1.13.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: cloud-infrastructure-controller
+    app.kubernetes.io/part-of: crossplane
+    app.kubernetes.io/name: crossplane
+    app.kubernetes.io/instance: crossplane
+    app.kubernetes.io/version: "1.13.0"
 spec:
   replicas: 1
   selector:
@@ -830,19 +917,20 @@ spec:
       labels:
         app: crossplane
         release: crossplane
-        helm.sh/chart: crossplane-1.10.1
+        helm.sh/chart: crossplane-1.13.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: cloud-infrastructure-controller
         app.kubernetes.io/part-of: crossplane
         app.kubernetes.io/name: crossplane
         app.kubernetes.io/instance: crossplane
-        app.kubernetes.io/version: "1.10.1"
+        app.kubernetes.io/version: "1.13.0"
     spec:
       securityContext:
         {}
       serviceAccountName: crossplane
+      hostNetwork: false
       initContainers:
-        - image: crossplane/crossplane:v1.10.1
+        - image: "crossplane/crossplane:v1.13.0"
           args:
           - core
           - init
@@ -861,6 +949,16 @@ spec:
             runAsGroup: 65532
             runAsUser: 65532
           env:
+          - name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane-init
+                resource: limits.cpu
+          - name: GOMEMLIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane-init
+                resource: limits.memory
           - name: POD_NAMESPACE
             valueFrom:
               fieldRef:
@@ -869,8 +967,18 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.serviceAccountName
+          - name: "WEBHOOK_TLS_SECRET_NAME"
+            value: webhook-tls-secret
+          - name: "WEBHOOK_SERVICE_NAME"
+            value: crossplane-webhooks
+          - name: "WEBHOOK_SERVICE_NAMESPACE"
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: "WEBHOOK_SERVICE_PORT"
+            value: "9443"
       containers:
-      - image: crossplane/crossplane:v1.10.1
+      - image: "crossplane/crossplane:v1.13.0"
         args:
         - core
         - start
@@ -883,42 +991,76 @@ spec:
             requests:
               cpu: 100m
               memory: 256Mi
+        ports:
+        - name: webhooks
+          containerPort: 9443
         securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             runAsGroup: 65532
             runAsUser: 65532
         env:
+          - name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane
+                resource: limits.cpu
+          - name: GOMEMLIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane
+                resource: limits.memory
           - name: POD_NAMESPACE
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          - name: POD_SERVICE_ACCOUNT
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.serviceAccountName
           - name: LEADER_ELECTION
             value: "true"
+          - name: "WEBHOOK_TLS_SECRET_NAME"
+            value: webhook-tls-secret
+          - name: "WEBHOOK_TLS_CERT_DIR"
+            value: /webhook/tls
         volumeMounts:
           - mountPath: /cache
             name: package-cache
+          - mountPath: /webhook/tls
+            name: webhook-tls-secret
       volumes:
       - name: package-cache
         emptyDir:
           medium:
-          sizeLimit: 5Mi
+          sizeLimit: 20Mi
+      - name: webhook-tls-secret
+        secret:
+          # NOTE(muvaf): The tls.crt is used both by the server (requires it to
+          # be a single cert) and the caBundle fields of webhook configs and CRDs
+          # which can accept a whole bundle of certificates. In order to meet
+          # the requirements of both, we require a single certificate instead of
+          # a bundle.
+          # It's assumed that initializer generates this anyway, so it should be
+          # fine.
+          secretName: webhook-tls-secret
 ---
 # Source: crossplane/templates/rbac-manager-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: crossplane-rbac-manager
+  namespace: crossplane-system
   labels:
     app: crossplane-rbac-manager
     release: crossplane
-    helm.sh/chart: crossplane-1.10.1
+    helm.sh/chart: crossplane-1.13.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: cloud-infrastructure-controller
     app.kubernetes.io/part-of: crossplane
     app.kubernetes.io/name: crossplane
     app.kubernetes.io/instance: crossplane
-    app.kubernetes.io/version: "1.10.1"
+    app.kubernetes.io/version: "1.13.0"
 spec:
   replicas: 1
   selector:
@@ -932,19 +1074,19 @@ spec:
       labels:
         app: crossplane-rbac-manager
         release: crossplane
-        helm.sh/chart: crossplane-1.10.1
+        helm.sh/chart: crossplane-1.13.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: cloud-infrastructure-controller
         app.kubernetes.io/part-of: crossplane
         app.kubernetes.io/name: crossplane
         app.kubernetes.io/instance: crossplane
-        app.kubernetes.io/version: "1.10.1"
+        app.kubernetes.io/version: "1.13.0"
     spec:
       securityContext:
         {}
       serviceAccountName: rbac-manager
       initContainers:
-      - image: crossplane/crossplane:v1.10.1
+      - image: "crossplane/crossplane:v1.13.0"
         args:
         - rbac
         - init
@@ -962,12 +1104,23 @@ spec:
             readOnlyRootFilesystem: true
             runAsGroup: 65532
             runAsUser: 65532
+        env:
+          - name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane-init
+                resource: limits.cpu
+          - name: GOMEMLIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane-init
+                resource: limits.memory
       containers:
-      - image: crossplane/crossplane:v1.10.1
+      - image: "crossplane/crossplane:v1.13.0"
         args:
         - rbac
         - start
-        - --manage=All
+        - --manage=Basic
         - --provider-clusterrole=crossplane:allowed-provider-permissions
         imagePullPolicy: IfNotPresent
         name: crossplane
@@ -984,6 +1137,16 @@ spec:
             runAsGroup: 65532
             runAsUser: 65532
         env:
+          - name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane
+                resource: limits.cpu
+          - name: GOMEMLIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: crossplane
+                resource: limits.memory
           - name: LEADER_ELECTION
             value: "true"
 
@@ -992,10 +1155,10 @@ Release: crossplane
 
 Chart Name: crossplane
 Chart Description: Crossplane is an open source Kubernetes add-on that enables platform teams to assemble infrastructure from multiple vendors, and expose higher level self-service APIs for application teams to consume.
-Chart Version: 1.10.1
-Chart Application Version: 1.10.1
+Chart Version: 1.13.0
+Chart Application Version: 1.13.0
 
-Kube Version: v1.24.9
+Kube Version: v1.27.4
 ```
 {{< /expand >}}
 
@@ -1017,14 +1180,15 @@ crossplane-d4cd8d784-ldcgb                1/1     Running   0          54s
 crossplane-rbac-manager-84769b574-6mw6f   1/1     Running   0          54s
 ```
 
-Installing Crossplane creates new Kubernetes API end-points. Look at the new API 
-end-points with `kubectl api-resources  | grep crossplane`.
+Installing Crossplane creates new Kubernetes API end-points.  
+Look at the new API end-points with `kubectl api-resources  | grep crossplane`.
 
 ```shell  {label="grep",copy-lines="1"}
 kubectl api-resources  | grep crossplane
 compositeresourcedefinitions      xrd,xrds     apiextensions.crossplane.io/v1         false        CompositeResourceDefinition
-compositionrevisions                           apiextensions.crossplane.io/v1alpha1   false        CompositionRevision
-compositions                                   apiextensions.crossplane.io/v1         false        Composition
+compositionrevisions              comprev      apiextensions.crossplane.io/v1         false        CompositionRevision
+compositions                      comp         apiextensions.crossplane.io/v1         false        Composition
+environmentconfigs                envcfg       apiextensions.crossplane.io/v1alpha1   false        EnvironmentConfig
 configurationrevisions                         pkg.crossplane.io/v1                   false        ConfigurationRevision
 configurations                                 pkg.crossplane.io/v1                   false        Configuration
 controllerconfigs                              pkg.crossplane.io/v1alpha1             false        ControllerConfig
@@ -1033,218 +1197,3 @@ providerrevisions                              pkg.crossplane.io/v1             
 providers                                      pkg.crossplane.io/v1                   false        Provider
 storeconfigs                                   secrets.crossplane.io/v1alpha1         false        StoreConfig
 ```
-
-## Install the Azure provider
-
-Install the provider into the Kubernetes cluster with a Kubernetes configuration 
-file. 
-
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: upbound-provider-azure
-spec:
-  package: xpkg.upbound.io/upbound/provider-azure:v0.32.0
-EOF
-```
-
-The Crossplane {{< hover label="provider" line="3" >}}Provider{{</hover>}} 
-Custom Resource Definitions tells Kubernetes how to
-connect to the provider.
-
-Verify the provider installed with `kubectl get providers`. 
-
-{{< hint type="note" >}}
-It may take up to five minutes for the provider to list `HEALTHY` as `True`. 
-{{< /hint >}}
-
-```shell {copy-lines="1"}
-kubectl get providers
-NAME                     INSTALLED   HEALTHY   PACKAGE                                          AGE
-upbound-provider-azure   True        True      xpkg.upbound.io/upbound/provider-azure:v0.32.0   22m
-```
-
-A provider installs their own Kubernetes _Custom Resource Definitions_ (CRDs). 
-These CRDs allow you to create Azure resources directly inside Kubernetes.
-
-You can view the new CRDs with `kubectl get crds`. Every CRD maps to a unique 
-Azure service Crossplane can provision and manage.
-
-
-{{< hint type="tip" >}}
-See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
-{{< /hint >}}
-
-## Create a Kubernetes secret for Azure
-The provider requires credentials to create and manage Azure resources. 
-Providers use a Kubernetes _Secret_ to connect the credentials to the provider.
-
-This guide generates an Azure service principal JSON file and saves it as a 
-Kubernetes _Secret_.
-
-{{< hint type="note" >}}
-Other authentication methods exist and are beyond the scope of this guide. The 
-[Provider documentation](https://github.com/upbound/provider-azure/blob/main/AUTHENTICATION.md) 
-contains information on alternative authentication methods. 
-{{< /hint >}}
-
-### Install the Azure command-line
-Generating an [authentication file](https://docs.microsoft.com/en-us/azure/developer/go/azure-sdk-authorization#use-file-based-authentication) requires the Azure command-line.  
-Follow the documentation from Microsoft to [Download and install the Azure command-line](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
-
-Log in to the Azure command-line.
-
-```command
-az login
-```
-### Create an Azure service principal
-Follow the Azure documentation to [find your Subscription ID](https://docs.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id) from the Azure Portal.
-
-Using the Azure command-line and provide your Subscription ID create a service principal and authentication file.
-
-{{< editCode >}}
-```console {copy-lines="all"}
-az ad sp create-for-rbac \
---sdk-auth \
---role Owner \
---scopes /subscriptions/$$<subscription_id>$$
-```
-{{< /editCode >}}
-
-Save your Azure JSON output as `azure-credentials.json`.
-
-{{< hint type="note" >}}
-The Azure Provider 
-[Authentication documentation](https://github.com/upbound/provider-azure/blob/main/AUTHENTICATION.md)
-describes other authentication methods.
-{{< /hint >}}
-
-### Create a Kubernetes secret with the Azure credentials
-A Kubernetes generic secret has a name and contents. Use {{< hover label="kube-create-secret" line="1">}}kubectl create secret{{< /hover >}} to generate the secret object named {{< hover label="kube-create-secret" line="2">}}azure-secret{{< /hover >}} in the {{< hover label="kube-create-secret" line="3">}}crossplane-system{{</ hover >}} namespace.  
-
-<!-- vale gitlab.Substitutions = NO -->
-<!-- ignore .json file name -->
-Use the {{< hover label="kube-create-secret" line="4">}}--from-file={{</hover>}} argument to set the value to the contents of the  {{< hover label="kube-create-secret" line="4">}}azure-credentials.json{{< /hover >}} file.
-<!-- vale gitlab.Substitutions = YES -->
-```shell {label="kube-create-secret",copy-lines="all"}
-kubectl create secret \
-generic azure-secret \
--n crossplane-system \
---from-file=creds=./azure-credentials.json
-```
-
-View the secret with `kubectl describe secret`
-
-{{< hint type="note" >}}
-The size may be larger if there are extra blank spaces in your text file.
-{{< /hint >}}
-
-```shell {copy-lines="1"}
-kubectl describe secret azure-secret -n crossplane-system
-Name:         azure-secret
-Namespace:    crossplane-system
-Labels:       <none>
-Annotations:  <none>
-
-Type:  Opaque
-
-Data
-====
-creds:  629 bytes
-```
-
-## Create a ProviderConfig
-A `ProviderConfig` customizes the settings of the Azure Provider.  
-
-Apply the {{< hover label="providerconfig" line="5">}}ProviderConfig{{</ hover >}} with the command:
-```yaml {label="providerconfig",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: azure.upbound.io/v1beta1
-metadata:
-  name: default
-kind: ProviderConfig
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: azure-secret
-      key: creds
-EOF
-```
-
-This attaches the Azure credentials, saved as a Kubernetes secret, as a {{< hover label="providerconfig" line="9">}}secretRef{{</ hover>}}.
-
-The {{< hover label="providerconfig" line="11">}}spec.credentials.secretRef.name{{< /hover >}} value is the name of the Kubernetes secret containing the Azure credentials in the {{< hover label="providerconfig" line="10">}}spec.credentials.secretRef.namespace{{< /hover >}}.
-
-
-## Create a managed resource
-A _managed resource_ is anything Crossplane creates and manages outside of the 
-Kubernetes cluster. This example creates an Azure Virtual Network with 
-Crossplane. The Virtual Network is a _managed resource_.
-
-{{< hint type="note" >}}
-Add your Azure Resource Group name. Follow the Azure documentation to 
-[create a resource group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
-if you don't have one.
-{{< /hint >}}
-
-{{< editCode >}}
-```yaml {label="xr"}
-cat <<EOF | kubectl create -f -
-apiVersion: network.azure.upbound.io/v1beta1
-kind: VirtualNetwork
-metadata:
-  name: crossplane-quickstart-network
-spec:
-  forProvider:
-    addressSpace:
-      - 10.0.0.0/16
-    location: "Sweden Central"
-    resourceGroupName: docs
-EOF
-```
-{{< /editCode >}}
-
-The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
-{{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
-
-The {{< hover label="xr" line="10">}}spec.forProvider.location{{< /hover >}} 
-tells Azure which location to use when deploying the resource. 
-
-Use `kubectl get virtualnetwork.network` to verify Crossplane created the
-Azure Virtual Network.
-
-{{< hint type="tip" >}}
-Crossplane created the virtual network when the values `READY` and `SYNCED` are `True`.  
-This may take up to 5 minutes.  
-{{< /hint >}}
-
-```shell {copy-lines="1"}
-kubectl get virtualnetwork.network
-NAME                            READY   SYNCED   EXTERNAL-NAME                   AGE
-crossplane-quickstart-network   True    True     crossplane-quickstart-network   10m
-```
-
-## Delete the managed resource
-Before shutting down your Kubernetes cluster, delete the virtual network just 
-created.
-
-Use `kubectl delete virtualnetwork.network` to delete the virtual network. 
-
-
-```shell {copy-lines="1"}
-kubectl delete virtualnetwork.network crossplane-quickstart-network
-virtualnetwork.network.azure.upbound.io "crossplane-quickstart-network" deleted
-```
-
-## Next steps
-* **[Continue to part 2]({{< ref "provider-azure-part-2">}})** to create a 
-  Crossplane _Composite Resource_ and _Claim_.
-* Explore Azure resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
-  Crossplane users and contributors.

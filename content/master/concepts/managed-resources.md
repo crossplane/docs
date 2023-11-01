@@ -308,8 +308,9 @@ spec:
 ### managementPolicies
 <!-- vale on --> 
 
-{{<hint "important" >}}
-The managed resource `managementPolicies` option is an alpha feature.
+{{<hint "note" >}}
+The managed resource `managementPolicies` option is a beta feature. Crossplane enables
+beta features by default. 
 
 The Provider determines support for management policies.  
 Refer to the Provider's documentation to see if the Provider supports

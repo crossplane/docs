@@ -28,8 +28,12 @@ float64
 Go
 gRPC
 imagePullSecret
+Go
+gRPC
+imagePullSecret
 JSONPath
 key-pair
+key-value
 kube-apiserver
 kube-controller-manager
 kubeconfig

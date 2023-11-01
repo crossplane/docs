@@ -30,7 +30,7 @@ defining webhook configurations.
 The core CRDs installed by the init container include: 
 * CompositeResourceDefinitions, Compositions, Configurations and Providers
 * Locks to manage package dependencies
-* ControllerConfigs to apply settings to installed Providers
+* DeploymentRuntimeConfigs to apply settings to installed Providers and Functions
 * StoreConfigs for connecting external secret stores like 
 [HashiCorp Vault](https://www.vaultproject.io/)
 
@@ -76,7 +76,7 @@ status of deployed resources and correcting any "drift." After checking a
 resource Crossplane waits some time and checks again.
 
 Crossplane monitors resources through a Kubernetes 
-_[watch](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)_
+[_watch_](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)
 or through periodic polling. Some resources may be both watched and polled. 
 
 Crossplane requests that the API server notifies Crossplane of any changes on
@@ -130,6 +130,51 @@ same settings for Providers and their managed resources. Applying the
 `--max-reconcile-rate` to Crossplane only controls the rate for
 core Crossplane resources. 
 {{< /hint >}}
+
+##### Enable real time Compositions
+
+With real time compositions enabled Crossplane watches every composed resource
+with a Kubernetes watch. Crossplane receives events from the
+Kubernetes API server when a composed resource changes. For example, when
+a provider sets the `Ready` condition to `true`.
+
+{{<hint "important" >}}
+Real time compositions are an alpha feature. Alpha features aren't enabled by
+default. 
+{{< /hint >}}
+
+With real time compositions enabled, Crossplane doesn't use the `--poll-interval`
+settings. 
+
+Enable real time compositions support by
+[changing the Crossplane pod setting]({{<ref "./pods#change-pod-settings">}})
+and enabling  
+{{<hover label="deployment" line="12">}}--enable-realtime-compositions{{</hover>}}
+argument.
+
+```yaml {label="deployment",copy-lines="12"}
+$ kubectl edit deployment crossplane --namespace crossplane-system
+apiVersion: apps/v1
+kind: Deployment
+spec:
+# Removed for brevity
+  template:
+    spec:
+      containers:
+      - args:
+        - core
+        - start
+        - --enable-realtime-compositions
+```
+
+{{<hint "tip" >}}
+
+The [Crossplane install guide]({{<ref "../software/install#feature-flags">}})
+describes enabling feature flags like
+{{<hover label="deployment" line="12">}}--enable-realtime-compositions{{</hover>}}
+with Helm.
+{{< /hint >}}
+
 ##### Reconcile retry rate
 
 The `--max-reconcile-rate` setting configures the number of times per second
@@ -215,14 +260,14 @@ permissions over cluster wide Crossplane resources.
 <!-- allow "admin" -->
 ##### crossplane-admin
 <!-- vale Google.WordList = YES -->
-
+<!-- vale Crossplane.Spelling = NO -->
 The `crossplane-admin` ClusterRole has the following permissions:
   * full access to all Crossplane types
   * full access to all secrets and namespaces (even those unrelated to Crossplane)
   * read-only access to all cluster RBAC roles, CustomResourceDefinitions and
     events
   * ability to bind RBAC roles to other entities. 
-
+<!-- vale Crossplane.Spelling = YES -->
 View the full RBAC policy with 
 
 ```shell
@@ -276,8 +321,7 @@ updates the Roles to access the specific API endpoints in a Claim.
 
 {{< hint "note" >}}
 The specific details of the namespace Roles are beyond this guide. For more
-information read the [Composite Resource ClusterRole
-Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
+information read the [Composite Resource ClusterRole Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
 section of the RBAC Manager design document.
 {{< /hint >}}
 
@@ -326,8 +370,13 @@ Running multiple Crossplane pods without leader election is unsupported.
 Change Crossplane pod settings either before installing Crossplane by editing
 the Helm `values.yml` file or after installation by editing the `Deployment`.
 
-The full list of configuration options are available in the 
-[Crossplane Install]({{<ref "../software/install">}}) section. 
+The full list of 
+[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+and 
+[feature flags]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+are available in the 
+[Crossplane Install]({{<ref "../software/install">}}) 
+section. 
 
 {{< hint "note" >}}
 

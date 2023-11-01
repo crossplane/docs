@@ -7,14 +7,16 @@ Crossplane connects your Kubernetes cluster to external,
 non-Kubernetes resources, and allows platform teams to build custom Kubernetes
 APIs to consume those resources.
 
+<!-- vale gitlab.SentenceLength = NO -->
 Crossplane creates Kubernetes
-[CustomResourceDefinitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
+[Custom Resource Definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
 (`CRDs`) to represent the external resources as native 
 [Kubernetes objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/). 
 As native Kubernetes objects, you can use standard commands like `kubectl create`
 and `kubectl describe`. The full 
 [Kubernetes API](https://kubernetes.io/docs/reference/using-api/) is available
 for every Crossplane resource. 
+<!-- vale gitlab.SentenceLength = YES -->
 
 Crossplane also acts as a
 [Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/)
@@ -37,7 +39,7 @@ This table provides a summary of Crossplane components and their roles.
 {{< table "table table-hover table-sm">}}
 | Component | Abbreviation | Scope | Summary |
 | --- | --- | --- | ---- | 
-| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes CustomResourceDefinitions for an external service. |
+| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
 | [ProviderConfig]({{<ref "#provider-configurations">}}) | `PC` | cluster | Applies settings for a _Provider_. |
 | [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A Provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
 | [Composition]({{<ref "#compositions">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
@@ -48,7 +50,7 @@ This table provides a summary of Crossplane components and their roles.
 
 ## The Crossplane Pod
 When installed in a Kubernetes cluster Crossplane creates an initial set of
-CustomResourceDefinitions (`CRDs`) of the core Crossplane components. 
+Custom Resource Definitions (`CRDs`) of the core Crossplane components. 
 
 {{< expand "View the initial Crossplane CRDs" >}}
 After installing Crossplane use `kubectl get crds` to view the Crossplane
@@ -91,12 +93,12 @@ compute instances or S3 storage buckets.
 
 The Provider defines the Kubernetes API definition for the external resource.
 For example, the 
-[Upbound Provider-AWS](https://marketplace.upbound.io/providers/upbound/provider-aws/)
+[Upbound Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-aws/)
 defines a 
 [`bucket`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1) 
 resource for creating and managing AWS S3 storage buckets. 
 
-Within the `bucket` CRD is a
+In the `bucket` CRD is a
 [`spec.forProvider.region`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1#doc:spec-forProvider-region)
 value that defines which AWS region to deploy the bucket in.
 
@@ -145,8 +147,7 @@ Depending on the size of the API server and number of managed resources, this
 command may take minutes to return or may timeout. 
 
 For more information, read 
-[Kubernetes issue
-#111880](https://github.com/kubernetes/kubernetes/issues/111880)
+[Kubernetes issue #111880](https://github.com/kubernetes/kubernetes/issues/111880)
 and 
 [Crossplane issue #3459](https://github.com/crossplane/crossplane/issues/3459).
 {{< /hint >}}
@@ -177,7 +178,7 @@ resources. The _Composition_ is only a template for a collection of _managed
 resources_ and their settings. A _Composite Resource_ creates the specific resources.
 
 {{< hint "note" >}}
-The _[Composite Resources]({{<ref "#composite-resources">}})_ section discusses
+The [_Composite Resources_]({{<ref "#composite-resources">}}) section discusses
 _Composite Resources_.
 {{< /hint >}}
 
@@ -260,7 +261,7 @@ _Composite Resource Definitions_ (`XRDs`) create custom Kubernetes APIs used by
 _Claims_ and _Composite Resources_.
 
 {{< hint "note" >}}
-The _[Claims]({{<ref "#claims">}})_ section discusses
+The [_Claims_]({{<ref "#claims">}}) section discusses
 _Claims_.
 {{< /hint >}}
 
@@ -402,7 +403,7 @@ while _Composite Resources_ are cluster scoped.
 **Why does namespace scope matter?**  
 Having namespace scoped _Claims_ allows multiple teams, using unique namespaces,
 to create the same types of resources, independent of each other. The compute
-resources of team-A are unique to the compute resources of team-B.
+resources of team A are unique to the compute resources of team B.
 
 Directly creating _Composite Resources_ requires cluster-wide permissions,
 shared with all teams.   
