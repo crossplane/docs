@@ -120,7 +120,6 @@ You must make some changes before you start adding code:
 
 * Edit `package/crossplane.yaml` to change the package's name.
 * Edit `go.mod` to change the Go module's name.
-* Delete the `input` and `package/input` directories.
 
 Name your package `function-xbuckets`.
 
@@ -128,20 +127,25 @@ The name of your module depends on where you want to keep your function code. If
 you push Go code to GitHub, you can use your GitHub username. For example
 `module github.com/negz/function-xbuckets`.
 
+The function in this guide doesn't use an input type. For this function you
+should delete the `input` and `package/input` directories.
+
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
 [composition functions]({{<ref "../../master/concepts/composition-functions">}})
-documentation explains how to pass an input to a composition function. This
-function doesn't use an input, so you should delete the `input` directory.
+documentation explains how to pass an input to a composition function.
 
-You should also delete the `package/input` directory. It contains an OpenAPI
-schema automatically generated from the structs in the `input` directory.
+The `package/input` directory contains an OpenAPI schema generated from the
+structs in the `input` directory.
 
-{{<hint "tip">}}
-If you're writing a function that does use an input type, rename the type from
-`Input` to something more specific to your function. For example
-Function Patch and Transform names its input type `Resources`. Rename the API
-version too by updating the `// +groupName` comment at the top of `input.go`.
+{{<hint "important">}}
+If you're writing a function that does use an input type, don't delete the
+`input` and `package/input` directories.
+
+Instead rename the type from `Input` to something more specific to your
+function. For example Function Patch and Transform names its input type
+`Resources`. Rename the API version too by updating the `// +groupName` comment
+at the top of `input.go`.
 
 When you edit files under the `input` directory you must update some generated
 files by running `go generate`. See `input/generate.go` for details.
