@@ -201,7 +201,7 @@ this. The Crossplane CLI uses Docker Engine to run functions.
 
 
 {{<hint "tip">}}
-See the [Crossplane CLI docs](https://github.com/crossplane/docs/pull/584) to
+See the [Crossplane CLI docs]({{<ref "../cli">}}) to
 learn how to install and use the Crossplane CLI.
 {{< /hint >}}
 
