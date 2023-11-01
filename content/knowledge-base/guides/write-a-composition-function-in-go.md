@@ -421,7 +421,7 @@ working with the `RunFunctionRequest` and `RunFunctionResponse` types easier.
 
 {{<hint "tip">}}
 Read the
-[Go package documentation](https://pkg.go.dev/github.com/crossplane/function-sdk-go).
+[Go package documentation](https://pkg.go.dev/github.com/crossplane/function-sdk-go)
 for the SDK.
 {{</hint>}}
 
