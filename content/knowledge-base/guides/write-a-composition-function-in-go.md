@@ -51,7 +51,7 @@ refer to the function in the present tense, because it doesn't exist yet.
 -->
 An `XBuckets` XR has a region and an array of bucket names. The function will
 create an Amazon Web Services (AWS) S3 bucket for each entry in the names array.
-<!-- vale gitlab.FutureTense = NO -->
+<!-- vale gitlab.FutureTense = YES -->
 
 To write a function in Go you:
 
@@ -78,7 +78,7 @@ build or test a composition function.
 ## Initialize the function from a template
 
 Use the `crossplane beta xpkg init` command to initialize a new function. When
-you run this command the CLI initializes your function using
+you run this command it initializes your function using
 [this GitHub repository](https://github.com/crossplane/function-template-go)
 as a template.
 
