@@ -11,7 +11,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts](/latest/concepts/composition-functions)
+[concepts]({{<ref "../../master/concepts/composition-functions">}})
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -22,7 +22,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work](/latest/concepts/composition-functions#how-composition-functions-work)
+[how composition functions work]({{<ref "../../master/concepts/composition-functions#how-composition-functions-work">}})
 before following this guide.
 {{< /hint >}}
 
@@ -131,9 +131,10 @@ you push Go code to GitHub, you can use your GitHub username. For example
 
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
-[composition functions](/latest/concepts/composition-functions) documentation
-explains how to pass an input to a composition function. function-xbuckets
-doesn't use an input, so you should delete the `input` directory.
+[composition functions]({{<ref "../../master/concepts/composition-functions">}})
+documentation explains how to pass an input to a composition function.
+function-xbuckets doesn't use an input, so you should delete the `input`
+directory.
 
 You should also delete the `package/input` directory. It contains an OpenAPI
 schema automatically generated from the structs in the `input` directory.
@@ -730,7 +731,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions](/latest/concepts/composition-functions#test-a-composition-that-uses-functions).
+[testing composition functions]({{<ref "../../master/concepts/composition-functions#test-a-composition-that-uses-functions">}}).
 {{</hint>}}
 
 ## Build and push the function to a package registry
@@ -747,7 +748,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation](/latest/concepts/composition-functions)
+[composition functions documentation]({{<ref "../../master/concepts/composition-functions">}}).
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
@@ -798,7 +799,7 @@ crossplane xpkg build \
 
 {{<hint "tip">}}
 Crossplane packages are special OCI images. Read more about packages in the
-[packages documentation](/latest/concepts/packages).
+[packages documentation]{{<ref "../../master/concepts/packages">}}.
 {{</hint>}}
 
 Push both package files to a registry. Pushing both files to one tag in the
