@@ -201,7 +201,7 @@ this. The Crossplane CLI uses Docker Engine to run functions.
 
 
 {{<hint "tip">}}
-See the [Crossplane CLI docs](https://github.com/crossplane/docs/pull/584) to
+See the [Crossplane CLI docs]({{<ref "../cli">}}) to
 learn how to install and use the Crossplane CLI.
 {{< /hint >}}
 
@@ -422,7 +422,7 @@ To write a composition function, you:
 1. [Test the function](#test-a-composition-that-uses-functions).
 1. Build the function, and push it to a package registry.
 
-You use the [Crossplane CLI](https://github.com/crossplane/docs/pull/584) to
+You use the [Crossplane CLI]({{<ref "../cli">}}) to
 create, test, build, and push a function. For example,
 
 ```shell {copy-lines=none}
