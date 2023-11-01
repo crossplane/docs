@@ -16,7 +16,7 @@ page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
 programming language. Using a general purpose programming language allows a
-Function to use more advanced logic to template resources, like loops and
+function to use more advanced logic to template resources, like loops and
 conditionals. This guide explains how to write a composition function in
 [Go](https://go.dev).
 
@@ -77,11 +77,10 @@ build or test a composition function.
 
 ## Initialize the function from a template
 
-Use the `crossplane beta xpkg init` command to initialize a new function named
-function-xbuckets. When you run this command the CLI initializes your function
-using the
-[function-template-go](https://github.com/crossplane/function-template-go)
-GitHub repository as a template.
+Use the `crossplane beta xpkg init` command to initialize a new function. When
+you run this command the CLI initializes your function using
+[this GitHub repository](https://github.com/crossplane/function-template-go)
+as a template.
 
 ```shell
 crossplane beta xpkg init function-xbuckets function-template-go -d function-xbuckets
@@ -132,9 +131,8 @@ you push Go code to GitHub, you can use your GitHub username. For example
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
 [composition functions]({{<ref "../../master/concepts/composition-functions">}})
-documentation explains how to pass an input to a composition function.
-function-xbuckets doesn't use an input, so you should delete the `input`
-directory.
+documentation explains how to pass an input to a composition function. This
+function doesn't use an input, so you should delete the `input` directory.
 
 You should also delete the `package/input` directory. It contains an OpenAPI
 schema automatically generated from the structs in the `input` directory.
@@ -142,7 +140,7 @@ schema automatically generated from the structs in the `input` directory.
 {{<hint "tip">}}
 If you're writing a function that does use an input type, rename the type from
 `Input` to something more specific to your function. For example
-function-patch-and-transform names its input type `Resources`. Rename the API
+Function Patch and Transform names its input type `Resources`. Rename the API
 version too by updating the `// +groupName` comment at the top of `input.go`.
 
 When you edit files under the `input` directory you must update some generated
@@ -405,23 +403,22 @@ The code uses the `v1beta1.Bucket` type from
 advantage of writing a function in Go is that you can compose resources using
 the same strongly typed structs Crossplane uses in its providers.
 
-You must
-get the provider-aws Go to use this type:
+You must get the AWS Provider Go module to use this type:
 
 ```shell
 go get github.com/upbound/provider-aws@v0.43.0
 ```
 
-Crossplane provides a software development kit (SDK) named
-[function-sdk-go](https://github.com/crossplane/function-sdk-go) for writing
-composition functions in [Go](https://go.dev). The function-xbuckets code uses
-utilities from function-sdk-go. In particular the `request` and `response`
-packages make working with the `RunFunctionRequest` and `RunFunctionResponse`
-types easier.
+Crossplane provides a
+[software development kit](https://github.com/crossplane/function-sdk-go) (SDK)
+for writing composition functions in [Go](https://go.dev). This function uses
+utilities from the SDK. In particular the `request` and `response` packages make
+working with the `RunFunctionRequest` and `RunFunctionResponse` types easier.
 
 {{<hint "tip">}}
-Read the Go package documentation for function-sdk-go at
-[pkg.go.dev](https://pkg.go.dev/github.com/crossplane/function-sdk-go).
+Read the
+[Go package documentation](https://pkg.go.dev/github.com/crossplane/function-sdk-go).
+for the SDK.
 {{</hint>}}
 
 ## Test the function end-to-end
@@ -436,7 +433,7 @@ They use only [`pkg/testing`](https://pkg.go.dev/testing) from the Go standard
 library and [`google/go-cmp`](https://pkg.go.dev/github.com/google/go-cmp/cmp).
 
 To add test cases, update the `cases` map in `TestRunFunction`. Expand the below
-block to view the full `fn_test.go` file for function-xbuckets.
+block to view the full `fn_test.go` file for the function.
 
 {{<expand "The full fn_test.go file" >}}
 ```go
@@ -557,7 +554,7 @@ func TestRunFunction(t *testing.T) {
 ```
 {{</expand>}}
 
-Run the function-xbuckets unit tests using the `go test` command:
+Run the unit tests using the `go test` command:
 
 ```shell
 go test -v -cover .
@@ -570,7 +567,7 @@ coverage: 52.6% of statements
 ok      github.com/negz/function-xbuckets       0.016s  coverage: 52.6% of statements
 ```
 
-You can preview the output of a Composition that uses function-xbuckets using
+You can preview the output of a Composition that uses this function using
 the Crossplane CLI. You don't need a Crossplane control plane to do this.
 
 Create a directory under `function-xbuckets` named `examples`, and add the
@@ -632,7 +629,7 @@ spec:
 ```
 {{</expand>}}
 
-Note that the Function in functions.yaml uses the
+Note that the Function in `functions.yaml` uses the
 {{<hover label="development" line="6">}}Development{{</hover>}}
 runtime. This tells `crossplane beta render` that your function is running
 locally. It connects to your locally running function instead of using Docker to
@@ -739,7 +736,7 @@ Read the composition functions documentation to learn more about
 You build a function in two stages. First you build the function's runtime. This
 is the Open Container Initiative (OCI) image Crossplane uses to run your
 function. You then embed that runtime in a package, and push it to a package
-registry. The Crossplane CLI uses xpkg.upbound.io as its default package
+registry. The Crossplane CLI uses `xpkg.upbound.io` as its default package
 registry.
 
 A function supports a single platform, like `linux/amd64`, by default. You can
