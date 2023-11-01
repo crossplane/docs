@@ -413,9 +413,10 @@ go get github.com/upbound/provider-aws@v0.43.0
 
 Crossplane provides a software development kit (SDK) named
 [function-sdk-go](https://github.com/crossplane/function-sdk-go) for writing
-composition functions in Go. The function-xbuckets code uses utilities from
-function-sdk-go. In particular the `request` and `response` packages make
-working with the `RunFunctionRequest` and `RunFunctionResponse` types easier.
+composition functions in [Go](https://go.dev). The function-xbuckets code uses
+utilities from function-sdk-go. In particular the `request` and `response`
+packages make working with the `RunFunctionRequest` and `RunFunctionResponse`
+types easier.
 
 {{<hint "tip">}}
 Read the Go package documentation for function-sdk-go at
