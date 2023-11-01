@@ -132,7 +132,7 @@ you push Go code to GitHub, you can use your GitHub username. For example
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
 [composition functions](/latest/concepts/composition-functions) documentation
-explains how to pass an input to a composition function. function-xbucket
+explains how to pass an input to a composition function. function-xbuckets
 doesn't use an input, so you should delete the `input` directory.
 
 You should also delete the `package/input` directory. It contains an OpenAPI
@@ -555,7 +555,7 @@ func TestRunFunction(t *testing.T) {
 ```
 {{</expand>}}
 
-Run the function-xbucket unit tests using the `go test` command:
+Run the function-xbuckets unit tests using the `go test` command:
 
 ```shell
 go test -v -cover .
