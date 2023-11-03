@@ -431,8 +431,9 @@ spec:
 
 ### Build the package
 
-Create the package using the Crossplane CLI command 
-`crossplane build configuration -f <directory>`.
+Create the package using the 
+[Crossplane CLI]({{<ref "../cli">}}) command 
+`crossplane xpkg build -f <directory>`.
 
 Where the `<directory>` is the directory containing the `crossplane.yaml` file
 and any Composition or CompositeResourceDefinition YAML files.
@@ -443,7 +444,7 @@ include in the package.
 {{<hint "important" >}}
 You must ignore any other YAML files with `--ignore=<file_list>`.  
 For
-example, `crossplane build configuration -f test-directory --ignore=".tmp/*"`.
+example, `crossplane xpkg build -f test-directory --ignore=".tmp/*"`.
 
 Including YAML files that aren't Compositions or CompositeResourceDefinitions, 
 including Claims isn't supported.
@@ -471,7 +472,7 @@ For example, to build a package from a directory named `test-directory` and
 generate a package named `test-package.xpkg` use the command:
 
 ```shell
-crossplane build configuration -f test-directory --name=test-package
+crossplane xpkg build -f test-directory --name=test-package
 ```
 
 Crossplane automatically adds the `.xpkg` extension.  
