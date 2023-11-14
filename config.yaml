@@ -43,6 +43,10 @@ module:
       - "**/**.jpg"
       - "**/**.jpeg"
       - "**/**.gif"
+  - source: content
+    target: data/crds/
+    includeFiles:
+      - "**/**.yaml"
 
 security:
   funcs:
