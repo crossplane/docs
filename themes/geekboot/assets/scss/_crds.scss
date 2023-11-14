@@ -1,0 +1,85 @@
+.crds {
+
+  button {
+    background-color: inherit !important;
+    border: none;
+    text-align: left;
+  }
+
+  .expand-button {
+    width: 17px;
+    height: 17px;
+    background-color: #{$fog-100} !important;
+    border-radius: 4px;
+    opacity: 1;
+    background-size: 11px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: 14px;
+
+
+    &:not(.collapsed){
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/><g stroke="white"></g></svg>');
+      background-color: #{$aqua-600} !important;
+    }
+
+    &.collapsed {
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256C432 260.4 428.4 264 424 264h-192v192c0 4.422-3.578 8.006-8 8.006S216 460.4 216 456v-192h-192c-4.422 0-8-3.572-8-7.994C16 251.6 19.58 248 24 248h192v-192c0-4.422 3.578-7.994 8-7.994S232 51.58 232 56v192h192C428.4 248 432 251.6 432 256z"/></svg>');
+    }
+
+  }
+
+  .crd-root-row{
+    border-bottom: 1px solid #{$fog-150};
+    padding-bottom: 11px;
+  }
+
+  .description{
+    padding-top: 5px;
+    padding-left: 27px;
+    color: #{$fog-600};
+  }
+
+  .crd-child-container{
+    padding-left: 17px;
+  }
+
+  .dataType {
+    font-weight: 800;
+    border-radius: 4px;
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 14px;
+
+  &.required {
+    color: #{$fog-0};
+    background-color: #{$fog-800};
+  }
+
+  &.string {
+    color: #{$grass-700};
+    border-color: #{$grass-700};
+  }
+
+  &.object {
+      color: #{$tangerine-700};
+      border-color: #{$tangerine-700};
+  }
+
+  &.boolean {
+    color: #{$sun-600};
+    border-color: #{$sun-600};
+  }
+
+  &.integer {
+    color: #{$salmon-600};
+    border-color: #{$salmon-600};
+  }
+  }
+
+}
