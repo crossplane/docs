@@ -112,6 +112,11 @@ background-color: rgba(255,255,255, 1);
     }
   }
 
+  .crd-header-row{
+    font-weight: 800;
+    color: #{$fog-600};
+  }
+
   button {
     background-color: inherit !important;
     border: none;
