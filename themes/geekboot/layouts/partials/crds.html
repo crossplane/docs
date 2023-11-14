@@ -1,4 +1,16 @@
-<div class="crds">
+<div class="crds container">
+
+    <div class="row crd-header-row">
+        <div class="col">Kind</div>
+        <div class="col">Group</div>
+        <div class="col">
+            <div class="row">
+                <div class="col">Version</div>
+                <div class="col"><a href="#">Expand All</a></div>
+                <div class="col"><a href="#">Collapse All</a></div>
+            </div>
+        </div>
+    </div>
 
     {{/* Each level is a map with the key being the directory name */}}
     {{/* $Site.Data.crds /$version/crds/yaml */}}
@@ -20,15 +32,24 @@
         {{ end }}
 
         {{/* the crd-root-row is a top level CRD row */}}
-        <div class="crd-root-row">
+        <div class="crd-root-row row">
+            <div class="col">
+                {{/* Plus/Minus Button */}}
+                <button class="expand-button collapsed" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
 
-            {{/* Plus/Minus Button */}}
-            <button class="expand-button collapsed" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
-
-            {{/* CRD name text */}}
-            <button class="crd-root collapsed" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-                <div class="kind">{{ $kind }}</div>
-            </button>
+                {{/* CRD name text */}}
+                <button class="crd-root collapsed" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
+                    <span class="kind">{{ $kind }}</span>
+                </button>
+            </div>
+            <div class="col">{{ $group }}</div>
+            <div class="col">
+                <div class="row">
+                    <div class="col">{{ $version }}</div>
+                    <div class="col"><a href="#">Expand All</a></div>
+                    <div class="col"><a href="#">Collapse All</a></div>
+                </div>
+            </div>
 
             {{/* The container to show/hide with information related to the CRD */}}
             <div class="collapse crd-expand" id="{{$kind}}">
@@ -114,3 +135,27 @@
         {{ end }} {{/* range $k,$v */}}
     {{ end }} {{/* if/else */}}
 {{ end }} {{/* define */}}
+
+
+<script>
+
+function sortIt(sortOn="kind"){
+
+    var toSort = document.getElementById('crds').children;
+    toSort = Array.prototype.slice.call(toSort, 0);
+
+    toSort.sort(function(a, b) {
+        var aord = a.dataset.sortOn;
+        var bord = b.dataset.sortOn;
+
+        return (aord.localeCompare(bord));
+    });
+
+    var parent = document.getElementById('crds');
+    parent.innerHTML = "";
+
+    for(var i = 0, l = toSort.length; i < l; i++) {
+        parent.appendChild(toSort[i]);
+    }
+}
+</script>
