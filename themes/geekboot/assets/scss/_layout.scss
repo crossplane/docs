@@ -41,6 +41,17 @@
     grid-template-rows: auto 1fr;
     grid-template-columns: 4fr 1fr;
   }
+
+  &.no-toc{
+
+    @include media-breakpoint-up(lg) {
+      grid-template-areas:
+        "intro   toc"
+        "content content" !important;
+      grid-template-rows: auto 1fr;
+      grid-template-columns: 4fr 1fr;
+    }
+  }
 }
 
 .bd-intro {
