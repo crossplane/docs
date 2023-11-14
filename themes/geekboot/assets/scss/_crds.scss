@@ -1,5 +1,10 @@
 .crds {
 
+  .crd-header-row{
+    font-weight: 800;
+    color: #{$fog-600};
+  }
+
   button {
     background-color: inherit !important;
     border: none;
@@ -29,7 +34,7 @@
 
   }
 
-  .crd-root-row{
+  .crd-root-row, .crd-header-row{
     border-bottom: 1px solid #{$fog-150};
     padding-bottom: 11px;
   }
