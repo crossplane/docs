@@ -1,0 +1,116 @@
+<div class="crds">
+
+    {{/* Each level is a map with the key being the directory name */}}
+    {{/* $Site.Data.crds /$version/crds/yaml */}}
+    {{ range  $filename,$contents := index $.Site.Data.crds (printf "v%s" .Page.Params.version) "crds" "yaml" }}
+        {{ $kind := .spec.names.kind }}
+        {{ $group := .spec.group }}
+        {{ $version := "" }}
+        {{ $schema := (dict ) }}
+        {{ $dataType := "" }}
+
+
+        {{/* Iterate over each version and find the "storage: true" version */}}
+        {{ range  .spec.versions }}
+            {{ if index . "storage" }}
+                {{ $version = .name }}
+                {{ $schema = index . "schema" "openAPIV3Schema" }}
+                {{ $dataType = $schema.type }}
+            {{ end }}
+        {{ end }}
+
+        {{/* the crd-root-row is a top level CRD row */}}
+        <div class="crd-root-row">
+
+            {{/* Plus/Minus Button */}}
+            <button class="expand-button collapsed" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
+
+            {{/* CRD name text */}}
+            <button class="crd-root collapsed" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
+                <div class="kind">{{ $kind }}</div>
+            </button>
+
+            {{/* The container to show/hide with information related to the CRD */}}
+            <div class="collapse crd-expand" id="{{$kind}}">
+                <div class="description">
+                    {{ $schema.description }}
+                </div>
+                <div class="crd-children">
+                    {{ template "buildCRD" (dict "schema" $schema "isFirst" true "kind" $kind "requiredFields" $schema.properties.spec.required) }}
+                </div>
+            </div>
+        </div>
+    {{ end }}
+
+</div>
+
+
+{{ define "buildCRD" }}
+
+    {{ $requiredFields := .requiredFields }}
+
+    {{/* The first field (spec) has a different schema compared to the child nodes */}}
+    {{ if .isFirst }}
+        <div class="crd-child-container">
+            {{/* Plus/Minus Button */}}
+            <button class="expand-button collapsed" data-bs-toggle="collapse" data-bs-target="#{{.kind}}-spec" type="button" aria-expanded="false" aria-controls="{{.kind}}-spec"></button>
+
+            {{/* CRD name text */}}
+            <button class="crd-root collapsed" data-bs-toggle="collapse" data-bs-target="#{{.kind}}-spec" type="button" aria-expanded="false" aria-controls="{{.kind}}-spec">
+                <div>
+                    <span class="kind">spec</span>
+                    <span class="dataType {{.schema.properties.spec.type }}">{{.schema.properties.spec.type }}</span>
+                </div>
+            </button>
+
+            {{/* The container to show/hide with information related to the CRD */}}
+            <div class="collapse crd-expand" id="{{.kind}}-spec">
+                <div class="description">
+                    {{ .schema.properties.spec.description | markdownify }}
+                </div>
+                <div class="crd-children">
+                    {{ template "buildCRD" (dict "schema" .schema.properties.spec.properties "isFirst" false "kind" .kind "requiredFields" $requiredFields) }}
+                </div>
+            </div>
+        </div>
+
+    {{ else }}
+        {{/* Iterate over all child CRD elements */}}
+        {{ range $k,$v := .schema }}
+            {{ $dataType := $v.type }}
+            {{ $dataTypeStyle := $dataType }}
+
+            {{ if eq $dataType "array" }}
+                {{ $dataTypeStyle = $v.items.type }}
+                {{ $dataType = (printf "[ ]%s" $v.items.type) }}
+            {{ end }}
+
+            <div class="crd-child-container">
+
+                {{/* Plus/Minus Button */}}
+                <button class="expand-button collapsed" data-bs-toggle="collapse" data-bs-target="#{{$k}}-{{.kind}}" type="button" aria-expanded="false" aria-controls="{{$k}}-{{.kind}}"></button>
+
+                {{/* CRD name text */}}
+                <button class="crd-root collapsed" data-bs-toggle="collapse" data-bs-target="#{{$k}}-{{.kind}}" type="button" aria-expanded="false" aria-controls="{{$k}}-{{.kind}}">
+                    <div>
+                        <span class="kind">{{ $k }}</span>
+                        <span class="dataType {{ $dataTypeStyle }}">{{ $dataType }}</span>
+                        {{if in $requiredFields $k}}<span class="dataType required">required</span>{{end }}
+                    </div>
+                </button>
+
+                {{/* The container to show/hide with information related to the CRD */}}
+                <div class="collapse crd-expand" id="{{$k}}-{{.kind}}">
+                    <div class="description">
+                        {{$v.description | markdownify }}
+                    </div>
+                    {{ if $v.properties }}
+                        <div class="crd-children">
+                            {{ template "buildCRD" (dict "schema" $v.properties "requiredFields" $v.required "kind" $k ) }}
+                        </div>
+                    {{ end }}
+                </div>
+            </div>
+        {{ end }} {{/* range $k,$v */}}
+    {{ end }} {{/* if/else */}}
+{{ end }} {{/* define */}}
