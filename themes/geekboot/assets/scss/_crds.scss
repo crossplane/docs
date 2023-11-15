@@ -1,8 +1,58 @@
 .crds {
 
+  .col {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+  }
+
+  .expand-link,.collapse-link {
+    text-align: right;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+
   .crd-header-row{
     font-weight: 800;
     color: #{$fog-600};
+    padding-bottom: 10px;
+    cursor: pointer;
+
+    .sortable {
+      vertical-align: middle !important;
+
+      &.sorted {
+        color: #{$aqua-600};
+      }
+
+    }
+
+    .sort-icon {
+      margin-left: 6px;
+      display: inline-block;
+      vertical-align: middle !important;
+      width: 16px;
+      height: 16px;
+      opacity: 1;
+      filter: invert(58%) sepia(50%) saturate(566%) hue-rotate(122deg) brightness(88%) contrast(85%);
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &.sort-icon-down{
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M151.6 469.6C145.5 476.2 137 480 128 480s-17.5-3.8-23.6-10.4l-88-96c-11.9-13-11.1-33.3 2-45.2s33.3-11.1 45.2 2L96 365.7V64c0-17.7 14.3-32 32-32s32 14.3 32 32V365.7l32.4-35.4c11.9-13 32.2-13.9 45.2-2s13.9 32.2 2 45.2l-88 96zM320 32h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128H544c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>');
+      }
+
+      &.sort-icon-up{
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M151.6 42.4C145.5 35.8 137 32 128 32s-17.5 3.8-23.6 10.4l-88 96c-11.9 13-11.1 33.3 2 45.2s33.3 11.1 45.2-2L96 146.3V448c0 17.7 14.3 32 32 32s32-14.3 32-32V146.3l32.4 35.4c11.9 13 32.2 13.9 45.2 2s13.9-32.2 2-45.2l-88-96zM320 480h32c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128H544c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32z"/></svg>');
+      }
+
+    }
+
+    .col {
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+
+    }
   }
 
   button {
@@ -20,7 +70,6 @@
     background-size: 11px;
     background-repeat: no-repeat;
     background-position: center;
-    margin-top: 14px;
 
 
     &:not(.collapsed){
@@ -36,23 +85,34 @@
 
   .crd-root-row, .crd-header-row{
     border-bottom: 1px solid #{$fog-150};
-    padding-bottom: 11px;
+  }
+
+  .kind {
+    font-weight: 800 !important;
+    padding-right: 10px;
+  }
+
+  .kind-link{
+    > a > svg {
+      height: 12px;
+    }
   }
 
   .description{
     padding-top: 5px;
     padding-left: 27px;
+    padding-bottom: 15px;
     color: #{$fog-600};
   }
 
   .crd-child-container{
     padding-left: 17px;
+    padding-bottom: 15px;
   }
 
   .dataType {
     font-weight: 800;
     border-radius: 4px;
-    margin-left: 10px;
     padding-left: 5px;
     padding-right: 5px;
     padding-top: 2px;
@@ -60,6 +120,7 @@
     border-style: solid;
     border-width: 1px;
     font-size: 14px;
+    margin-right: 5px;
 
   &.required {
     color: #{$fog-0};
