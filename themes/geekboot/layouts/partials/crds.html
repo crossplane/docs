@@ -8,8 +8,8 @@
         <div class="col">
             <div class="row">
                 <div class="col sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-                <div class="col expand-link"><a href="#">Expand All</a></div>
-                <div class="col collapse-link"><a href="#">Collapse All</a></div>
+                <div class="col expand-link" onclick="clickAll('.crds [aria-expanded=\'false\']')"><a href="#">Expand All</a></div>
+                <div class="col collapse-link" onclick="clickAll('.crds [aria-expanded=\'true\']')"><a href="#">Collapse All</a></div>
             </div>
         </div>
     </div>
@@ -49,8 +49,8 @@
                 <div class="col align-middle">
                     <div class="row align-middle">
                         <div class="col align-middle pt-0">{{ $version }}</div>
-                        <div class="col align-middle pt-0 expand-link"><a href="#">Expand All</a></div>
-                        <div class="col align-middle pt-0 collapse-link"><a href="#">Collapse All</a></div>
+                        <div class="col align-middle pt-0 expand-link" onclick="clickAll('[data-kind=\'{{ $kind }}\'] [aria-expanded=\'false\']')"><a href="#">Expand All</a></div>
+                        <div class="col align-middle pt-0 collapse-link" onclick="clickAll('[data-kind=\'{{ $kind }}\'] [aria-expanded=\'true\']')"><a href="#">Collapse All</a></div>
                     </div>
                 </div>
 
@@ -146,6 +146,14 @@
 
 <script>
 
+function clickAll(selector){
+    var elems = document.querySelectorAll(selector);
+    var index = 0, length = elems.length;
+    for ( ; index < length; index++) {
+        elems[index].click();
+    }
+}
+
 function sortIt(sortOn="kind"){
 
 
@@ -154,6 +162,9 @@ function sortIt(sortOn="kind"){
 
     for(var i = 0; i < titleElements.length; i++){
         if(titleElements[i].children[0].dataset.sort === sortOn){
+
+            titleElements[i].classList.add("sorted");
+
             // If we can't see the first element then sort natural
             if(titleElements[i].children[1].classList.contains("d-none")){
                 titleElements[i].children[1].classList.remove("d-none");
@@ -168,8 +179,9 @@ function sortIt(sortOn="kind"){
             }
         }
         else {
-            titleElements[i].children[2].classList.add("d-none");
+            titleElements[i].classList.remove("sorted");
             titleElements[i].children[1].classList.add("d-none");
+            titleElements[i].children[2].classList.add("d-none");
         }
 
 
