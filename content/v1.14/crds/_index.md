@@ -1,6 +1,7 @@
 ---
 title: Crossplane API
 weight: 400
+description: "API details for Crossplane's core types"
 cascade: 
     product: crds
 ---
