@@ -214,11 +214,10 @@ function sortIt(sortOn="kind"){
 }
 
 document.addEventListener("DOMContentLoaded", function(event){
-    //sortIt();
+    sortIt();
 
     var hash = window.location.hash.replace("#","");
 
-    //#Provider-spec-runtimeConfigRef-name
 
     // A hash on this page means they linked directly to an API object
     if(hash.length > 0){
@@ -227,14 +226,14 @@ document.addEventListener("DOMContentLoaded", function(event){
         var lastHash = "";
         var queryString = "";
 
+        // set an event listener on the last element to scroll it into view when expanded.
         lastElement = document.getElementById(hash);
         lastElement.addEventListener('shown.bs.collapse', event => {
             var top = lastElement.offsetTop;
             window.scrollTo(0, top);
         })
 
-        //[data-bs-target='#Provider']
-
+        // loop through the parent elements and click them to expand
         var workingHash = [];
         for(index in hashes){
             workingHash.push(hashes[index]);
