@@ -78,26 +78,27 @@
 
     {{/* The first field (spec) has a different schema compared to the child nodes */}}
     {{ if .isFirst }}
+        {{ $elemID := (printf "%s-spec" .kind) }}
         <div class="crd-child-container align-middle">
             {{/* Plus/Minus Button */}}
-            <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{.kind}}-spec" type="button" aria-expanded="false" aria-controls="{{.kind}}-spec"></button>
+            <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
 
             {{/* CRD name text */}}
-            <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{.kind}}-spec" type="button" aria-expanded="false" aria-controls="{{.kind}}-spec">
+            <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
                 <div>
                     <span class="kind align-middle">spec</span>
                     <span class="dataType {{.schema.properties.spec.type }} align-middle">{{.schema.properties.spec.type }}</span>
-                    <span class="kind-link"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
+                    <span class="kind-link"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
                 </div>
             </button>
 
             {{/* The container to show/hide with information related to the CRD */}}
-            <div class="collapse crd-expand" id="{{.kind}}-spec">
+            <div class="collapse crd-expand" id="{{ $elemID }}">
                 <div class="description">
                     {{ .schema.properties.spec.description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" .schema.properties.spec.properties "isFirst" false "kind" .kind "requiredFields" $requiredFields) }}
+                    {{ template "buildCRD" (dict "schema" .schema.properties.spec.properties "isFirst" false "kind" (printf "%s-spec" .kind) "requiredFields" $requiredFields) }}
                 </div>
             </div>
         </div>
@@ -107,7 +108,7 @@
         {{ range $k,$v := .schema }}
             {{ $dataType := $v.type }}
             {{ $dataTypeStyle := $dataType }}
-
+            {{ $elemID := (printf "%s-%s" $.kind $k) }}
             {{ if eq $dataType "array" }}
                 {{ $dataTypeStyle = $v.items.type }}
                 {{ $dataType = (printf "[ ]%s" $v.items.type) }}
@@ -116,26 +117,26 @@
             <div class="crd-child-container align-middle">
 
                 {{/* Plus/Minus Button */}}
-                <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$k}}-{{.kind}}" type="button" aria-expanded="false" aria-controls="{{$k}}-{{.kind}}"></button>
+                <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}"></button>
 
                 {{/* CRD name text */}}
-                <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$k}}-{{.kind}}" type="button" aria-expanded="false" aria-controls="{{$k}}-{{.kind}}">
+                <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}">
                     <div>
                         <span class="kind align-middle">{{ $k }}</span>
                         <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
                         {{if in $requiredFields $k}}<span class="dataType required align-middle">required</span>{{end }}
-                        <span class="kind-link"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
+                        <span class="kind-link"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
                     </div>
                 </button>
 
                 {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand" id="{{$k}}-{{.kind}}">
+                <div class="collapse crd-expand" id="{{$elemID}}">
                     <div class="description">
                         {{$v.description | markdownify }}
                     </div>
                     {{ if $v.properties }}
                         <div class="crd-children align-middle">
-                            {{ template "buildCRD" (dict "schema" $v.properties "requiredFields" $v.required "kind" $k ) }}
+                            {{ template "buildCRD" (dict "schema" $v.properties "requiredFields" $v.required "kind" $elemID ) }}
                         </div>
                     {{ end }}
                 </div>
@@ -212,6 +213,37 @@ function sortIt(sortOn="kind"){
 
 }
 
-window.onload = sortIt();
+document.addEventListener("DOMContentLoaded", function(event){
+    //sortIt();
+
+    var hash = window.location.hash.replace("#","");
+
+    //#Provider-spec-runtimeConfigRef-name
+
+    // A hash on this page means they linked directly to an API object
+    if(hash.length > 0){
+
+        var hashes = hash.split("-");
+        var lastHash = "";
+        var queryString = "";
+
+        lastElement = document.getElementById(hash);
+        lastElement.addEventListener('shown.bs.collapse', event => {
+            var top = lastElement.offsetTop;
+            window.scrollTo(0, top);
+        })
+
+        //[data-bs-target='#Provider']
+
+        var workingHash = [];
+        for(index in hashes){
+            workingHash.push(hashes[index]);
+            var queryString = "[data-bs-target='#" + workingHash.join("-") + "']";
+            var elem = document.querySelector(queryString);
+            elem.click();
+        }
+    }
+})
+
 
 </script>
