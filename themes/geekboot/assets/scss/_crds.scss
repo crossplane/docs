@@ -1,18 +1,24 @@
-.crds {
+@mixin vertical-bar {
+  content: "";
+  position: absolute;
+  background-color: #2ca998;
+  width: 3px;
+}
 
+.crds {
   .col {
     padding-top: 10px;
     padding-bottom: 10px;
-
   }
 
-  .expand-link,.collapse-link {
+  .expand-link,
+  .collapse-link {
     text-align: right;
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
 
-  .crd-header-row{
+  .crd-header-row {
     font-weight: 800;
     color: #{$fog-600};
     padding-bottom: 10px;
@@ -24,7 +30,6 @@
       &.sorted {
         color: #{$aqua-600};
       }
-
     }
 
     .sort-icon {
@@ -34,24 +39,23 @@
       width: 16px;
       height: 16px;
       opacity: 1;
-      filter: invert(58%) sepia(50%) saturate(566%) hue-rotate(122deg) brightness(88%) contrast(85%);
+      filter: invert(58%) sepia(50%) saturate(566%) hue-rotate(122deg)
+        brightness(88%) contrast(85%);
       background-repeat: no-repeat;
       background-position: center;
 
-      &.sort-icon-down{
+      &.sort-icon-down {
         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M151.6 469.6C145.5 476.2 137 480 128 480s-17.5-3.8-23.6-10.4l-88-96c-11.9-13-11.1-33.3 2-45.2s33.3-11.1 45.2 2L96 365.7V64c0-17.7 14.3-32 32-32s32 14.3 32 32V365.7l32.4-35.4c11.9-13 32.2-13.9 45.2-2s13.9 32.2 2 45.2l-88 96zM320 32h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128H544c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>');
       }
 
-      &.sort-icon-up{
+      &.sort-icon-up {
         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M151.6 42.4C145.5 35.8 137 32 128 32s-17.5 3.8-23.6 10.4l-88 96c-11.9 13-11.1 33.3 2 45.2s33.3 11.1 45.2-2L96 146.3V448c0 17.7 14.3 32 32 32s32-14.3 32-32V146.3l32.4 35.4c11.9 13 32.2 13.9 45.2 2s13.9-32.2 2-45.2l-88-96zM320 480h32c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128H544c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32z"/></svg>');
       }
-
     }
 
     .col {
       padding-top: 0px !important;
       padding-bottom: 0px !important;
-
     }
   }
 
@@ -70,20 +74,27 @@
     background-size: 11px;
     background-repeat: no-repeat;
     background-position: center;
+    position: relative;
 
-
-    &:not(.collapsed){
+    &:not(.collapsed) {
       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/><g stroke="white"></g></svg>');
       background-color: #{$aqua-600} !important;
+
+      &::after {
+        @include vertical-bar;
+        height: 22px;
+        top: 17px;
+        left: 7px;
+      }
     }
 
     &.collapsed {
       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256C432 260.4 428.4 264 424 264h-192v192c0 4.422-3.578 8.006-8 8.006S216 460.4 216 456v-192h-192c-4.422 0-8-3.572-8-7.994C16 251.6 19.58 248 24 248h192v-192c0-4.422 3.578-7.994 8-7.994S232 51.58 232 56v192h192C428.4 248 432 251.6 432 256z"/></svg>');
     }
-
   }
 
-  .crd-root-row, .crd-header-row{
+  .crd-root-row,
+  .crd-header-row {
     border-bottom: 1px solid #{$fog-150};
   }
 
@@ -92,22 +103,46 @@
     padding-right: 10px;
   }
 
-  .kind-link{
+  .kind-link {
     > a > svg {
       height: 12px;
     }
   }
 
-  .description{
+  .description {
     padding-top: 5px;
     padding-left: 27px;
     padding-bottom: 15px;
     color: #{$fog-600};
   }
 
-  .crd-child-container{
+  .crd-child-container {
     padding-left: 17px;
     padding-bottom: 15px;
+  }
+
+  .crd-root-row {
+    > .crd-expand {
+      &::before {
+        left: 19px !important;
+      }
+    }
+  }
+
+  .crd-expand {
+    position: relative;
+
+    &::before {
+      @include vertical-bar;
+      height: 100%;
+      top: 0px;
+      left: 7px;
+    }
+
+    transition: margin 0ms;
+    &.show {
+      margin-bottom: 10px;
+    }
   }
 
   .dataType {
@@ -122,30 +157,29 @@
     font-size: 14px;
     margin-right: 5px;
 
-  &.required {
-    color: #{$fog-0};
-    background-color: #{$fog-800};
-  }
+    &.required {
+      color: #{$fog-0};
+      background-color: #{$fog-800};
+    }
 
-  &.string {
-    color: #{$grass-700};
-    border-color: #{$grass-700};
-  }
+    &.string {
+      color: #{$grass-700};
+      border-color: #{$grass-700};
+    }
 
-  &.object {
+    &.object {
       color: #{$tangerine-700};
       border-color: #{$tangerine-700};
-  }
+    }
 
-  &.boolean {
-    color: #{$sun-600};
-    border-color: #{$sun-600};
-  }
+    &.boolean {
+      color: #{$sun-600};
+      border-color: #{$sun-600};
+    }
 
-  &.integer {
-    color: #{$salmon-600};
-    border-color: #{$salmon-600};
+    &.integer {
+      color: #{$salmon-600};
+      border-color: #{$salmon-600};
+    }
   }
-  }
-
 }
