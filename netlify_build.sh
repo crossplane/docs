@@ -11,6 +11,8 @@ cat config.yaml
 
 if [ "$CONTEXT" = "production" ]; then
 hugo --minify --baseURL https://docs.crossplane.io/
+elif [ "$CONTEXT" = "deploy-preview" ]; then
+hugo --minify --baseURL $DEPLOY_PRIME_URL
 else
 hugo --minify --baseURL https://deploy-preview-$REVIEW_ID--crossplane.netlify.app/
 fi
