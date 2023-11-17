@@ -1,6 +1,6 @@
 {{ .Content }}
 
-<div class="crds container">
+<div class="crds">
 
     <div class="row crd-header-row" id="crd-header-row">
         <div class="col sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
@@ -8,8 +8,8 @@
         <div class="col">
             <div class="row">
                 <div class="col sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-                <div class="col expand-link" onclick="clickAll('.crds [aria-expanded=\'false\']')"><a href="#">Expand All</a></div>
-                <div class="col collapse-link" onclick="clickAll('.crds [aria-expanded=\'true\']')"><a href="#">Collapse All</a></div>
+                <div class="col expand-link" onclick="clickAll('')"><a href="#">Expand All</a></div>
+                <div class="col collapse-link" onclick="clickAll('')"><a href="#">Collapse All</a></div>
             </div>
         </div>
     </div>
@@ -21,16 +21,23 @@
         {{ $kind := .spec.names.kind }}
         {{ $group := .spec.group }}
         {{ $version := "" }}
-        {{ $schema := (dict ) }}
-        {{ $dataType := "" }}
-
+        {{ $description := "" }}
+        {{ $schemaScratch := newScratch }}
+        {{ $schemaWithStatus := dict }}
 
         {{/* Iterate over each version and find the "storage: true" version */}}
         {{ range  .spec.versions }}
             {{ if index . "storage" }}
                 {{ $version = .name }}
-                {{ $schema = index . "schema" "openAPIV3Schema" }}
-                {{ $dataType = $schema.type }}
+
+                {{ $schemaScratch.Set "oAPI" (index . "schema" "openAPIV3Schema" "properties") }}
+                {{ $description = (index . "schema" "openAPIV3Schema" "description") }}
+
+                {{ $schemaScratch.DeleteInMap "oAPI" "apiVersion" }}
+                {{ $schemaScratch.DeleteInMap "oAPI" "kind" }}
+                {{ $schemaScratch.DeleteInMap "oAPI" "metadata" }}
+                {{ $schemaScratch.DeleteInMap "oAPI" "description" }}
+                {{ $schemaWithStatus = $schemaScratch.Get "oAPI" }}
             {{ end }}
         {{ end }}
 
@@ -57,14 +64,15 @@
                 {{/* The container to show/hide with information related to the CRD */}}
                 <div class="collapse crd-expand" id="{{$kind}}">
                     <div class="description">
-                        {{ $schema.description }}
+                        {{ $description }}
                     </div>
-                    <div class="crd-children">
-                        {{ template "buildCRD" (dict "schema" $schema "isFirst" true "kind" $kind "requiredFields" $schema.properties.spec.required) }}
-                    </div>
+                    {{ range $key,$schema := $schemaWithStatus }}
+                        <div class="crd-children">
+                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required) }}
+                        </div>
+                    {{ end }}
                 </div>
             </div>
-
     {{ end }}
     </div>
 
@@ -74,11 +82,28 @@
 
 {{ define "buildCRD" }}
 
-    {{ $requiredFields := .requiredFields }}
-
     {{/* The first field (spec) has a different schema compared to the child nodes */}}
     {{ if .isFirst }}
-        {{ $elemID := (printf "%s-spec" .kind) }}
+        {{ $elemID := (printf "%s-%s" .kind .key) }}
+
+        {{ $dataTypeStyle := .schema.type }}
+        {{ $dataType := .schema.type }}
+        {{ $description := .schema.description }}
+        {{ $properties := .schema.properties }}
+        {{ $required := .schema.required }}
+
+        {{ if eq .schema.type "array" }}
+            {{ if .schema.items }}
+                {{ $dataType = (printf "[ ]%s" .schema.items.type) }}
+                {{ $dataTypeStyle = .schema.items.type }}
+                {{ $description = .schema.items.description }}
+                {{ $properties = .schema.items.properties }}
+                {{ $required = .schema.items.required }}
+            {{ else }}
+                {{ $dataType = (printf "[ ]%s" .schema.type) }}
+            {{ end }}
+        {{ end }}
+
         <div class="crd-child-container align-middle">
             {{/* Plus/Minus Button */}}
             <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
@@ -86,8 +111,8 @@
             {{/* CRD name text */}}
             <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
                 <div>
-                    <span class="kind align-middle">spec</span>
-                    <span class="dataType {{.schema.properties.spec.type }} align-middle">{{.schema.properties.spec.type }}</span>
+                    <span class="kind align-middle">{{ .key }}</span>
+                    <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
                     <span class="kind-link"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
                 </div>
             </button>
@@ -95,36 +120,63 @@
             {{/* The container to show/hide with information related to the CRD */}}
             <div class="collapse crd-expand" id="{{ $elemID }}">
                 <div class="description">
-                    {{ .schema.properties.spec.description | markdownify }}
+                    {{ $description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" .schema.properties.spec.properties "isFirst" false "kind" (printf "%s-spec" .kind) "requiredFields" $requiredFields) }}
+                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" (printf "%s-spec" .kind) "requiredFields" $required) }}
                 </div>
             </div>
         </div>
 
     {{ else }}
+
         {{/* Iterate over all child CRD elements */}}
-        {{ range $k,$v := .schema }}
-            {{ $dataType := $v.type }}
+        {{ range $key,$contents := .schema }}
+
+            {{ $dataType := $contents.type }}
             {{ $dataTypeStyle := $dataType }}
-            {{ $elemID := (printf "%s-%s" $.kind $k) }}
-            {{ if eq $dataType "array" }}
-                {{ $dataTypeStyle = $v.items.type }}
-                {{ $dataType = (printf "[ ]%s" $v.items.type) }}
+            {{ $elemID := (printf "%s-%s" $.kind $key) }}
+
+            {{ $dataTypeStyle := $contents.type }}
+            {{ $dataType := $contents.type }}
+            {{ $description := $contents.description }}
+            {{ $properties := $contents.properties }}
+            {{ $required := $.requiredFields }}
+
+            {{ if eq $contents.type "array" }}
+                {{ if $contents.items }}
+                    {{ $dataType = (printf "[ ]%s" $contents.items.type) }}
+                    {{ $dataTypeStyle = $contents.items.type }}
+
+                    {{/* Some "items" don't have nested elements. */}}
+                    {{/* For example CompositeResourceDefinitions.Spec.ClaimNames.categories */}}
+                    {{ if $contents.items.description }}
+                        {{ $description = $contents.items.description }}
+                    {{ end }}
+
+                    {{ if $contents.items.properties }}
+                        {{ $properties = $contents.items.properties }}
+                    {{ end }}
+
+                    {{ if $contents.items.required}}
+                        {{ $required = $contents.items.required }}
+                    {{ end }}
+
+                {{ else }}
+                    {{ $dataType = (printf "[ ]%s" $contents.type) }}
+                {{ end }}
             {{ end }}
 
             <div class="crd-child-container align-middle">
-
                 {{/* Plus/Minus Button */}}
                 <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}"></button>
 
                 {{/* CRD name text */}}
                 <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}">
                     <div>
-                        <span class="kind align-middle">{{ $k }}</span>
+                        <span class="kind align-middle">{{ $key }}</span>
                         <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
-                        {{if in $requiredFields $k}}<span class="dataType required align-middle">required</span>{{end }}
+                        {{if in $.requiredFields $key}}<span class="dataType required align-middle">required</span>{{ end }}
                         <span class="kind-link"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
                     </div>
                 </button>
@@ -132,117 +184,117 @@
                 {{/* The container to show/hide with information related to the CRD */}}
                 <div class="collapse crd-expand" id="{{$elemID}}">
                     <div class="description">
-                        {{$v.description | markdownify }}
+                        {{$description | markdownify }}
                     </div>
-                    {{ if $v.properties }}
+                    {{ if $properties }}
                         <div class="crd-children align-middle">
-                            {{ template "buildCRD" (dict "schema" $v.properties "requiredFields" $v.required "kind" $elemID ) }}
+                            {{ template "buildCRD" (dict "schema" $properties "requiredFields" $required "kind" $elemID) }}
                         </div>
                     {{ end }}
                 </div>
             </div>
-        {{ end }} {{/* range $k,$v */}}
+        {{ end }} {{/* range $key,$contents */}}
     {{ end }} {{/* if/else */}}
 {{ end }} {{/* define */}}
 
 <script>
 
-function clickAll(selector){
-    var elems = document.querySelectorAll(selector);
-    var index = 0, length = elems.length;
-    for ( ; index < length; index++) {
-        elems[index].click();
+    function clickAll(selector){
+        var elems = document.querySelectorAll(selector);
+        var index = 0, length = elems.length;
+        for ( ; index < length; index++) {
+            elems[index].click();
+        }
     }
-}
 
-function sortIt(sortOn="kind"){
+    function sortIt(sortOn="kind"){
 
 
-    var titleElements = document.getElementsByClassName("sortable");
-    var reverseSort = false;
+        var titleElements = document.getElementsByClassName("sortable");
+        var reverseSort = false;
 
-    for(var i = 0; i < titleElements.length; i++){
-        if(titleElements[i].children[0].dataset.sort === sortOn){
+        for(var i = 0; i < titleElements.length; i++){
+            if(titleElements[i].children[0].dataset.sort === sortOn){
 
-            titleElements[i].classList.add("sorted");
+                titleElements[i].classList.add("sorted");
 
-            // If we can't see the first element then sort natural
-            if(titleElements[i].children[1].classList.contains("d-none")){
-                titleElements[i].children[1].classList.remove("d-none");
+                // If we can't see the first element then sort natural
+                if(titleElements[i].children[1].classList.contains("d-none")){
+                    titleElements[i].children[1].classList.remove("d-none");
+                    titleElements[i].children[2].classList.add("d-none");
+                }
+                // Otherwise, the first element is visible and the second isn't.
+                // Make it visible and reverse sort
+                else if(titleElements[i].children[2].classList.contains("d-none")){
+                    titleElements[i].children[2].classList.remove("d-none");
+                    titleElements[i].children[1].classList.add("d-none");
+                    reverseSort = true
+                }
+            }
+            else {
+                titleElements[i].classList.remove("sorted");
+                titleElements[i].children[1].classList.add("d-none");
                 titleElements[i].children[2].classList.add("d-none");
             }
-            // Otherwise, the first element is visible and the second isn't.
-            // Make it visible and reverse sort
-            else if(titleElements[i].children[2].classList.contains("d-none")){
-                titleElements[i].children[2].classList.remove("d-none");
-                titleElements[i].children[1].classList.add("d-none");
-                reverseSort = true
+
+
+        }
+
+        // element sorting from https://jsfiddle.net/fkling/nXkDp/
+        var toSort = document.getElementById('crd-rows-container').children;
+        toSort = Array.prototype.slice.call(toSort, 0);
+
+        toSort.sort(function(a, b) {
+            var aord = a.dataset[sortOn];
+            var bord = b.dataset[sortOn];
+
+            if(reverseSort){
+                return (bord.localeCompare(aord));
+            }
+            else {
+                return (aord.localeCompare(bord));
+            }
+        });
+
+        var parent = document.getElementById('crd-rows-container');
+        parent.innerHTML = "";
+
+        for(var i = 0, l = toSort.length; i < l; i++) {
+            parent.appendChild(toSort[i]);
+        }
+
+    }
+
+    document.addEventListener("DOMContentLoaded", function(event){
+        sortIt();
+
+        var hash = window.location.hash.replace("#","");
+
+
+        // A hash on this page means they linked directly to an API object
+        if(hash.length > 0){
+
+            var hashes = hash.split("-");
+            var lastHash = "";
+            var queryString = "";
+
+            // set an event listener on the last element to scroll it into view when expanded.
+            lastElement = document.getElementById(hash);
+            lastElement.addEventListener('shown.bs.collapse', event => {
+                var top = lastElement.offsetTop;
+                window.scrollTo(0, top);
+            })
+
+            // loop through the parent elements and click them to expand
+            var workingHash = [];
+            for(index in hashes){
+                workingHash.push(hashes[index]);
+                var queryString = "[data-bs-target='#" + workingHash.join("-") + "']";
+                var elem = document.querySelector(queryString);
+                elem.click();
             }
         }
-        else {
-            titleElements[i].classList.remove("sorted");
-            titleElements[i].children[1].classList.add("d-none");
-            titleElements[i].children[2].classList.add("d-none");
-        }
-
-
-    }
-
-    // element sorting from https://jsfiddle.net/fkling/nXkDp/
-    var toSort = document.getElementById('crd-rows-container').children;
-    toSort = Array.prototype.slice.call(toSort, 0);
-
-    toSort.sort(function(a, b) {
-        var aord = a.dataset[sortOn];
-        var bord = b.dataset[sortOn];
-
-        if(reverseSort){
-            return (bord.localeCompare(aord));
-        }
-        else {
-            return (aord.localeCompare(bord));
-        }
-    });
-
-    var parent = document.getElementById('crd-rows-container');
-    parent.innerHTML = "";
-
-    for(var i = 0, l = toSort.length; i < l; i++) {
-        parent.appendChild(toSort[i]);
-    }
-
-}
-
-document.addEventListener("DOMContentLoaded", function(event){
-    sortIt();
-
-    var hash = window.location.hash.replace("#","");
-
-
-    // A hash on this page means they linked directly to an API object
-    if(hash.length > 0){
-
-        var hashes = hash.split("-");
-        var lastHash = "";
-        var queryString = "";
-
-        // set an event listener on the last element to scroll it into view when expanded.
-        lastElement = document.getElementById(hash);
-        lastElement.addEventListener('shown.bs.collapse', event => {
-            var top = lastElement.offsetTop;
-            window.scrollTo(0, top);
-        })
-
-        // loop through the parent elements and click them to expand
-        var workingHash = [];
-        for(index in hashes){
-            workingHash.push(hashes[index]);
-            var queryString = "[data-bs-target='#" + workingHash.join("-") + "']";
-            var elem = document.querySelector(queryString);
-            elem.click();
-        }
-    }
-})
+    })
 
 
 </script>
