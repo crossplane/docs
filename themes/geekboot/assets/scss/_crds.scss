@@ -118,13 +118,20 @@
 
   .crd-child-container {
     padding-left: 17px;
-    padding-bottom: 15px;
+
+    &:not(:last-of-type) {
+      padding-bottom: 15px;
+    }
   }
 
   .crd-root-row {
     > .crd-expand {
       &::before {
         left: 19px !important;
+      }
+
+      &.show {
+        margin-bottom: 15px;
       }
     }
   }
@@ -140,9 +147,6 @@
     }
 
     transition: margin 0ms;
-    &.show {
-      margin-bottom: 10px;
-    }
   }
 
   .dataType {
