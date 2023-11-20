@@ -8,8 +8,8 @@
         <div class="col">
             <div class="row">
                 <div class="col sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-                <div class="col expand-link" onclick="showAll()"><a href="#">Expand All</a></div>
-                <div class="col collapse-link" onclick="hideAll()"><a href="#">Collapse All</a></div>
+                <div class="col expand-link" onclick="showAll('.collapse')"><a href="#">Expand All</a></div>
+                <div class="col collapse-link" onclick="hideAll('.collapse')"><a href="#">Collapse All</a></div>
             </div>
         </div>
     </div>
@@ -49,26 +49,26 @@
 
                     {{/* CRD name text */}}
                     <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-                        <span class="kind align-middle">{{ $kind }}</span>
+                        <span class="align-middle {{ $kind }}">{{ $kind }}</span>
                     </button>
                 </div>
                 <div class="col">{{ $group }}</div>
                 <div class="col align-middle">
                     <div class="row align-middle">
                         <div class="col align-middle pt-0">{{ $version }}</div>
-                        <div class="col align-middle pt-0 expand-link" onclick="clickAll('[data-kind=\'{{ $kind }}\'] [aria-expanded=\'false\']')"><a href="#">Expand All</a></div>
-                        <div class="col align-middle pt-0 collapse-link" onclick="clickAll('[data-kind=\'{{ $kind }}\'] [aria-expanded=\'true\']')"><a href="#">Collapse All</a></div>
+                        <div class="col align-middle pt-0 expand-link" onclick="showAll('.{{ $kind }}')"><a href="#">Expand All</a></div>
+                        <div class="col align-middle pt-0 collapse-link" onclick="hideAll('.{{ $kind }}')"><a href="#">Collapse All</a></div>
                     </div>
                 </div>
 
                 {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand" id="{{$kind}}">
+                <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
                     <div class="description">
                         {{ $description }}
                     </div>
                     {{ range $key,$schema := $schemaWithStatus }}
                         <div class="crd-children">
-                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required) }}
+                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind) }}
                         </div>
                     {{ end }}
                 </div>
@@ -117,12 +117,12 @@
             </button>
             <span class="kind-link" data-clipboard-text="#{{$elemID}}"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
             {{/* The container to show/hide with information related to the CRD */}}
-            <div class="collapse crd-expand" id="{{ $elemID }}">
+            <div class="collapse crd-expand {{.rootKind}}" id="{{ $elemID }}">
                 <div class="description">
                     {{ $description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" (printf "%s-spec" .kind) "requiredFields" $required) }}
+                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" (printf "%s-spec" .kind) "requiredFields" $required "rootKind" .rootKind) }}
                 </div>
             </div>
         </div>
@@ -181,13 +181,13 @@
                 <span class="kind-link" data-clipboard-text="#{{$elemID}}"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
 
                 {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand" id="{{$elemID}}">
+                <div class="collapse crd-expand {{$.rootKind}}" id="{{$elemID}}">
                     <div class="description">
                         {{$description | markdownify }}
                     </div>
                     {{ if $properties }}
                         <div class="crd-children align-middle">
-                            {{ template "buildCRD" (dict "schema" $properties "requiredFields" $required "kind" $elemID) }}
+                            {{ template "buildCRD" (dict "schema" $properties "requiredFields" $required "kind" $elemID "rootKind" $.rootKind) }}
                         </div>
                     {{ end }}
                 </div>
@@ -198,16 +198,16 @@
 
 <script>
 
-    function showAll(){
-        var elems = document.querySelectorAll(".collapse");
+    function showAll(type){
+        var elems = document.querySelectorAll(type);
         var index = 0, length = elems.length;
         for ( ; index < length; index++) {
             elems[index].classList.add("show");
         }
     }
 
-    function hideAll(){
-        var elems = document.querySelectorAll(".collapse");
+    function hideAll(type){
+        var elems = document.querySelectorAll(type);
         var index = 0, length = elems.length;
         for ( ; index < length; index++) {
             elems[index].classList.remove("show");
