@@ -219,6 +219,22 @@
 <script>
 
     function showAll(type){
+        var elems = document.querySelectorAll(type);
+        var index = 0, length = elems.length;
+        for ( ; index < length; index++) {
+            elems[index].classList.add("show");
+        }
+    }
+
+    function hideAll(type){
+        var elems = document.querySelectorAll(type);
+        var index = 0, length = elems.length;
+        for ( ; index < length; index++) {
+            elems[index].classList.remove("show");
+        }
+    }
+
+    function showAll(type){
         if(type === "all"){
             var root = document;
         }
