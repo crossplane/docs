@@ -11,8 +11,10 @@ cat config.yaml
 
 if [ "$CONTEXT" = "production" ]; then
 hugo --minify --baseURL https://docs.crossplane.io/
-elif [ "$CONTEXT" = "deploy-preview" ]; then
+elif [ "$CONTEXT" = "branch-deploy" ]; then
+echo "Building branch deploy with URL $DEPLOY_PRIME_URL"
 hugo --minify --baseURL $DEPLOY_PRIME_URL
 else
+echo "Building other deploy $CONTEXT with URL https://deploy-preview-$REVIEW_ID--crossplane.netlify.app/"
 hugo --minify --baseURL https://deploy-preview-$REVIEW_ID--crossplane.netlify.app/
 fi
