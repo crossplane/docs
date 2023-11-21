@@ -1,5 +1,26 @@
 {{ .Content }}
 
+<div id="search-panel" class="crdSearch search-panel container" >
+    <div class="search-group d-flex flex-row">
+        <div class="search-box flex-grow-1" id="search-box">
+            <label class="">
+                <input
+                    type="text"
+                    class="form-control  search-input"
+                    id="search-input"
+                    placeholder="Search the APIs"
+                    maxlength="64"
+                    data-site-base-url="{{ .Site.BaseURL }}"
+                    data-site-lang="en"
+                    >
+            </label>
+        </div>
+        <div class="close-search d-none" id="close-search">
+            {{partial "icons/x.svg" (dict "width" "12px" "height" "12px" "class" "grey-icon")}}
+        </div>
+    </div>
+</div>
+
 <div class="crds">
 
     <div class="row crd-header-row" id="crd-header-row">
@@ -8,8 +29,8 @@
         <div class="col">
             <div class="row">
                 <div class="col sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-                <div class="col expand-link" onclick="showAll('.collapse')"><a href="#">Expand All</a></div>
-                <div class="col collapse-link" onclick="hideAll('.collapse')"><a href="#">Collapse All</a></div>
+                <div class="col expand-link" onclick="showAll('all')"><a href="#">Expand All</a></div>
+                <div class="col collapse-link" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
             </div>
         </div>
     </div>
@@ -43,21 +64,21 @@
 
             {{/* the crd-root-row is a top level CRD row */}}
             <div class="crd-root-row row align-middle" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
-                <div class="col align-middle">
+                <div class="col align-middle expand-buttons">
                     {{/* Plus/Minus Button */}}
                     <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
 
                     {{/* CRD name text */}}
                     <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-                        <span class="align-middle {{ $kind }}">{{ $kind }}</span>
+                        <span class="align-middle {{ $kind }}"><a name="{{ $kind }}">{{ $kind }}</a></span>
                     </button>
                 </div>
-                <div class="col">{{ $group }}</div>
-                <div class="col align-middle">
+                <div class="col group-name">{{ $group }}</div>
+                <div class="col align-middle version-etc">
                     <div class="row align-middle">
                         <div class="col align-middle pt-0">{{ $version }}</div>
-                        <div class="col align-middle pt-0 expand-link" onclick="showAll('.{{ $kind }}')"><a href="#">Expand All</a></div>
-                        <div class="col align-middle pt-0 collapse-link" onclick="hideAll('.{{ $kind }}')"><a href="#">Collapse All</a></div>
+                        <div class="col align-middle pt-0 expand-link" onclick="showAll('.{{ $kind }}')">Expand All</div>
+                        <div class="col align-middle pt-0 collapse-link" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
                     </div>
                 </div>
 
@@ -68,7 +89,7 @@
                     </div>
                     {{ range $key,$schema := $schemaWithStatus }}
                         <div class="crd-children">
-                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind) }}
+                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
                         </div>
                     {{ end }}
                 </div>
@@ -81,7 +102,6 @@
 
 
 {{ define "buildCRD" }}
-
     {{/* The first field (spec) has a different schema compared to the child nodes */}}
     {{ if .isFirst }}
         {{ $elemID := (printf "%s-%s" .kind .key) }}
@@ -104,7 +124,7 @@
             {{ end }}
         {{ end }}
 
-        <div class="crd-child-container align-middle">
+        <div class="crd-child-container align-middle expand-buttons">
             {{/* Plus/Minus Button */}}
             <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
 
@@ -115,14 +135,14 @@
                     <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
                 </div>
             </button>
-            <span class="kind-link" data-clipboard-text="#{{$elemID}}"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
+            <span class="kind-link" data-bs-content="Link Copied!" data-clipboard-text="{{.permalink}}#{{$elemID}}"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
             {{/* The container to show/hide with information related to the CRD */}}
-            <div class="collapse crd-expand {{.rootKind}}" id="{{ $elemID }}">
+            <div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
                 <div class="description">
                     {{ $description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" (printf "%s-spec" .kind) "requiredFields" $required "rootKind" .rootKind) }}
+                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" $elemID "requiredFields" $required "rootKind" .rootKind "permalink" .permalink ) }}
                 </div>
             </div>
         </div>
@@ -166,7 +186,7 @@
                 {{ end }}
             {{ end }}
 
-            <div class="crd-child-container align-middle">
+            <div class="crd-child-container align-middle expand-buttons expand-buttons">
                 {{/* Plus/Minus Button */}}
                 <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}"></button>
 
@@ -178,7 +198,7 @@
                         {{if in $.requiredFields $key}}<span class="dataType required align-middle">required</span>{{ end }}
                     </div>
                 </button>
-                <span class="kind-link" data-clipboard-text="#{{$elemID}}"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
+                <span class="kind-link" data-clipboard-text="{{.permalink}}#{{$elemID}}"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
 
                 {{/* The container to show/hide with information related to the CRD */}}
                 <div class="collapse crd-expand {{$.rootKind}}" id="{{$elemID}}">
@@ -187,7 +207,7 @@
                     </div>
                     {{ if $properties }}
                         <div class="crd-children align-middle">
-                            {{ template "buildCRD" (dict "schema" $properties "requiredFields" $required "kind" $elemID "rootKind" $.rootKind) }}
+                            {{ template "buildCRD" (dict "schema" $properties "requiredFields" $required "kind" $elemID "rootKind" $.rootKind "permalink" .permalink ) }}
                         </div>
                     {{ end }}
                 </div>
@@ -199,27 +219,50 @@
 <script>
 
     function showAll(type){
-        var elems = document.querySelectorAll(type);
-        var index = 0, length = elems.length;
-        for ( ; index < length; index++) {
-            elems[index].classList.add("show");
+        if(type === "all"){
+            var root = document;
         }
+        else{
+            var typeElem = document.querySelector(type);
+            var root = typeElem.closest(".crd-root-row")
+
+        }
+
+        var buttons = root.querySelectorAll(".expand-buttons > button");
+        var hiddenElems = root.querySelectorAll(".crd-expand");
+
+        for(var i = 0; i < buttons.length; i++){
+            buttons[i].classList.remove("collapsed");
+        }
+
+        for(var i = 0; i < hiddenElems.length; i++){
+            hiddenElems[i].classList.remove("collapse");
+            hiddenElems[i].classList.add("show");
+        }
+
     }
 
     function hideAll(type){
-        var elems = document.querySelectorAll(type);
-        var index = 0, length = elems.length;
-        for ( ; index < length; index++) {
-            elems[index].classList.remove("show");
+        if(type === "all"){
+            var root = document;
         }
-    }
+        else{
+            var typeElem = document.querySelector(type);
+            var root = typeElem.closest(".crd-root-row")
+        }
 
-    function clickAll(selector){
-        var elems = document.querySelectorAll(selector);
-        var index = 0, length = elems.length;
-        for ( ; index < length; index++) {
-            elems[index].click();
+        var buttons = root.querySelectorAll(".expand-buttons > button");
+        var hiddenElems = root.querySelectorAll(".crd-expand");
+
+        for(var i = 0; i < buttons.length; i++){
+            buttons[i].classList.add("collapsed");
         }
+
+        for(var i = 0; i < hiddenElems.length; i++){
+            hiddenElems[i].classList.add("collapse");
+            hiddenElems[i].classList.remove("show");
+        }
+
     }
 
     function sortIt(sortOn="kind"){
@@ -285,8 +328,7 @@
 
         var hash = window.location.hash.replace("#","");
 
-
-        // A hash on this page means they linked directly to an API object
+         // hash on this page means they linked directly to an API object
         if(hash.length > 0){
 
             var hashes = hash.split("-");
@@ -294,20 +336,18 @@
             var queryString = "";
 
             // set an event listener on the last element to scroll it into view when expanded.
-            lastElement = document.getElementById(hash);
-            lastElement.addEventListener('shown.bs.collapse', event => {
-                var top = lastElement.offsetTop;
-                window.scrollTo(0, top);
-            })
+            var lastElement = document.getElementById(hash);
 
             // loop through the parent elements and click them to expand
             var workingHash = [];
             for(index in hashes){
                 workingHash.push(hashes[index]);
-                var queryString = "[data-bs-target='#" + workingHash.join("-") + "']";
-                var elem = document.querySelector(queryString);
-                elem.click();
+                document.querySelector("#" + workingHash.join("-")).classList.add("show");
             }
+
+            console.log(document.querySelector("#" + workingHash.join("-")).parentNode);
+            document.querySelector("#" + workingHash.join("-")).parentNode.classList.add("anchor-target");
+            //document.querySelector('[data-bs-target="' + workingHash[0] + ']').classList
         }
     })
 
