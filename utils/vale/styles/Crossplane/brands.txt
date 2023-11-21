@@ -18,6 +18,7 @@ PostCSS
 postcss-lightningcss
 postcss-sort-media-queries
 PostgreSQL
+Protobuf
 PurgeCSS
 Upbound
 Upbound's
