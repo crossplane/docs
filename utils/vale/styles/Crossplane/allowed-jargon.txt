@@ -18,6 +18,7 @@ ConfigMap
 CRD
 CSS
 CUE
+CVEs
 DatabaseInstance
 docs-specific
 emptyDir
@@ -25,9 +26,6 @@ Enum
 Env
 ESS
 float64
-Go
-gRPC
-imagePullSecret
 Go
 gRPC
 imagePullSecret
@@ -65,12 +63,10 @@ SLAs
 stdin
 stdout
 Subnet
-subnet
 subnets
 Substrings
 syscall
+TLS
 tolerations
 VM
 YAML
-gRPC
-TLS

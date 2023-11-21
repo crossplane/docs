@@ -5,7 +5,58 @@
   width: 3px;
 }
 
+.crdSearch {
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+  padding-right: 80px;
+
+
+  .search-box {
+    border-radius: 7px;
+border: 2px solid rgba(243,243,243, 1);
+border: 1px solid rgba(206,207,207, 1);
+opacity: 1;
+background-color: rgba(255,255,255, 1);
+
+    label {
+      width: 100%;
+      position: relative;
+
+    }
+
+    label:before {
+      content: "";
+      position: absolute;
+      margin-top: 7px;
+      margin-bottom: 7px;
+      margin-left: 11px;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 21px;
+      width: 14px;
+      fill: #{$fog-600};
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M504.1 471l-134-134C399.1 301.5 415.1 256.8 415.1 208c0-114.9-93.13-208-208-208S-.0002 93.13-.0002 208S93.12 416 207.1 416c48.79 0 93.55-16.91 129-45.04l134 134C475.7 509.7 481.9 512 488 512s12.28-2.344 16.97-7.031C514.3 495.6 514.3 480.4 504.1 471zM48 208c0-88.22 71.78-160 160-160s160 71.78 160 160s-71.78 160-160 160S48 296.2 48 208z"/></svg>');
+    }
+
+    input {
+      padding-left: 34px;
+    }
+}
+}
+
 .crds {
+  padding-right: 80px;
+
+  & :target {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  /* can't use :target because the parent node needs padding */
+  .anchor-target {
+    padding-top: 60px !important;
+  }
+
   .col {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -16,6 +67,8 @@
     text-align: right;
     padding-left: 0px !important;
     padding-right: 0px !important;
+    color: var(--content-link-color);
+    cursor: pointer;
   }
 
   .crd-header-row {
@@ -30,6 +83,48 @@
       &.sorted {
         color: #{$aqua-600};
       }
+    }
+
+    .sort-icon {
+      margin-left: 6px;
+      display: inline-block;
+      vertical-align: middle !important;
+      width: 16px;
+      height: 16px;
+      opacity: 1;
+      filter: invert(58%) sepia(50%) saturate(566%) hue-rotate(122deg)
+        brightness(88%) contrast(85%);
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &.sort-icon-down {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M151.6 469.6C145.5 476.2 137 480 128 480s-17.5-3.8-23.6-10.4l-88-96c-11.9-13-11.1-33.3 2-45.2s33.3-11.1 45.2 2L96 365.7V64c0-17.7 14.3-32 32-32s32 14.3 32 32V365.7l32.4-35.4c11.9-13 32.2-13.9 45.2-2s13.9 32.2 2 45.2l-88 96zM320 32h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128H544c17.7 0 32 14.3 32 32s-14.3 32-32 32H320c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>');
+      }
+
+      &.sort-icon-up {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M151.6 42.4C145.5 35.8 137 32 128 32s-17.5 3.8-23.6 10.4l-88 96c-11.9 13-11.1 33.3 2 45.2s33.3 11.1 45.2-2L96 146.3V448c0 17.7 14.3 32 32 32s32-14.3 32-32V146.3l32.4 35.4c11.9 13 32.2 13.9 45.2 2s13.9-32.2 2-45.2l-88-96zM320 480h32c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32zm0-128H544c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-17.7 0-32 14.3-32 32s14.3 32 32 32z"/></svg>');
+      }
+    }
+
+    .col {
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+    }
+  }
+
+  .crd-header-row {
+    font-weight: 800;
+    color: #{$fog-600};
+    padding-bottom: 10px;
+    cursor: pointer;
+
+    .sortable {
+      vertical-align: middle !important;
+
+      &.sorted {
+        color: #{$aqua-600};
+      }
+
     }
 
     .sort-icon {
@@ -146,7 +241,7 @@
       left: 7px;
     }
 
-    transition: margin 0ms;
+    // transition: margin 0ms;
   }
 
   .dataType {
