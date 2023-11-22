@@ -57,6 +57,32 @@
     --search-box-background: var(--body-background);
     --result-path: var(--body-background);
 
+    // API Page
+    --sort-up: url("/img/sort-up-light.svg");
+    --sort-down: url("/img/sort-down-light.svg");
+    --expand-box-background: #{$fog-100};
+    --minus-svg: url("/img/minus-white.svg");
+    --plus-svg: url("/img/plus-black.svg");
+    --crd-header-color: #{$fog-600};
+    --crd-row-border: #{$fog-600};
+    --crd-description-color: #{$fog-600};
+    --link-icon-fill: #{$fog-400};
+
+    --required-color: #{$fog-0};
+    --required-background: #{$fog-800};
+
+    --string-color: #{$grass-700};
+    --string-border: #{$grass-700};
+
+    --object-color: #{$tangerine-700};
+    --object-border-color: #{$tangerine-700};
+
+    --boolean-color: #{$sun-600};
+    --boolean-border-color: #{$sun-600};
+
+    --integer-color: #{$salmon-600};
+    --integer-border-color: #{$salmon-600};
+
     // Override Bootstrap accordion colors in the body
     .accordion {
         --bs-accordion-border-color: #{$fog-400};
@@ -105,7 +131,7 @@
 
     // Tab Colors
     .nav-tabs{
-        
+
         &:not(.nav-link){
             border-bottom: 2px solid #{$fog-200};
         }

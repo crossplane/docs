@@ -1,25 +1,5 @@
 {{ .Content }}
 
-<div id="search-panel" class="crdSearch search-panel container" >
-    <div class="search-group d-flex flex-row">
-        <div class="search-box flex-grow-1" id="search-box">
-            <label class="">
-                <input
-                    type="text"
-                    class="form-control  search-input"
-                    id="search-input"
-                    placeholder="Search the APIs"
-                    maxlength="64"
-                    data-site-base-url="{{ .Site.BaseURL }}"
-                    data-site-lang="en"
-                    >
-            </label>
-        </div>
-        <div class="close-search d-none" id="close-search">
-            {{partial "icons/x.svg" (dict "width" "12px" "height" "12px" "class" "grey-icon")}}
-        </div>
-    </div>
-</div>
 
 <div class="crds">
 
@@ -38,7 +18,7 @@
     <div id="crd-rows-container">
     {{/* Each level is a map with the key being the directory name */}}
     {{/* $Site.Data.crds /$version/crds/yaml */}}
-    {{ range  $filename,$contents := index $.Site.Data.crds (printf "v%s" .Page.Params.version) "crds" "yaml" }}
+    {{ range index $.Site.Data.crds (printf "v%s" .Page.Params.version) "crds" "yaml" }}
         {{ $kind := .spec.names.kind }}
         {{ $group := .spec.group }}
         {{ $version := "" }}
@@ -70,7 +50,7 @@
 
                     {{/* CRD name text */}}
                     <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-                        <span class="align-middle {{ $kind }}"><a name="{{ $kind }}">{{ $kind }}</a></span>
+                        <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
                     </button>
                 </div>
                 <div class="col group-name">{{ $group }}</div>
@@ -87,6 +67,7 @@
                     <div class="description">
                         {{ $description }}
                     </div>
+
                     {{ range $key,$schema := $schemaWithStatus }}
                         <div class="crd-children">
                             {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
