@@ -113,28 +113,112 @@ Crossplane installs packages from a local package cache. By
 default the Crossplane package cache is an 
 [emptyDir volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir). 
 
-Configure Crossplane to use a 
-[PersistentVolumeClaim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
-to use a storage location containing the Provider image. Read more about
-configuring the Crossplane Pod settings in the 
-[Crossplane install documentation]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}).
+To configure Crossplane for offline installation:
 
-Provide the name of the Provider's `.xpkg` file and set 
-{{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
+1. **Understand `emptyDir` Volume:**
+   The Crossplane package cache is, by default, stored in an [`emptyDir` volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir). An `emptyDir` is a temporary storage volume created in a pod's memory or on a node's disk. It's initially empty and can be used to share files between containers in the same pod.
 
-For example, to install a locally stored version of Provider AWS set the 
-{{<hover label="offline" line="6">}}package{{</hover>}} to the local filename
-and set the Provider's 
-{{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
+2. **Configure with PersistentVolumeClaim (PVC):**
+   Follow the [Crossplane install documentation]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) for configuring Crossplane to use a PersistentVolumeClaim (PVC) for a storage location containing the Provider image.
 
-```yaml {label="offline"}
+3. **Configure Pull Policy for Offline Installation:**
+   In your Provider CR, ensure you set the `package` to the local filename, and set `packagePullPolicy: Never`:
+   
+   ```yaml
+   apiVersion: pkg.crossplane.io/v1
+   kind: Provider
+   metadata:
+     name: offline-provider-aws
+   spec:
+     package: provider-aws
+     packagePullPolicy: Never
+   
+4. **Troubleshooting Tips:**
+
+   Issue: Crossplane not recognizing package changes
+   Solution: Ensure the correct package is mounted and accessible by Crossplane. Check file permissions and verify the path configuration.
+
+    
+**Example: Configuring Crossplane with a PersistentVolumeClaim (PVC):**
+Follow this example to configure Crossplane using a PersistentVolumeClaim (PVC) for a storage location containing the Provider image.
+
+```bash
+CACHE_PATH="localpackage-cache"
+
+# Extract package and move it to the cache path
+up xpkg xp-extract xpkg.upbound.io/upbound/provider-aws:v0.44.0
+mv out.gz "${CACHE_PATH}/provider-aws.gz"
+chmod 644 "${CACHE_PATH}/provider-aws.gz"
+docker tag xpkg.upbound.io/upbound/provider-aws:v0.44.0 provider-aws
+
+# Note: Ensure your image is saved in the local cache path on the host.
+
+# Define Kind cluster configuration with extra mounts
+kind create cluster --name=cluster --wait=5m --image=${KIND_NODE_IMAGE} --config=- <<EOF
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraMounts:
+  - hostPath: "${CACHE_PATH}/"
+    containerPath: /cache
+EOF
+
+# Load Docker image into Kind cluster
+kind load docker-image provider-aws --name=cluster
+
+# Create crossplane-system namespace
+create ns crossplane-system
+
+# Create PersistentVolume and PersistentVolumeClaim
+kubectl create -f - <<EOF
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: package-cache
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/cache"
+EOF
+
+kubectl create -f - <<EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: package-cache
+  namespace: crossplane-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: package-cache
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 1Mi
+EOF
+
+# Install Crossplane with Helm from the stable channel
+helm repo add --force-update crossplane-stable https://charts.crossplane.io/stable/
+helm repo update crossplane-stable
+chart_version=$(helm search repo crossplane-stable/crossplane | awk 'FNR == 2 {print $2}')
+helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --version ${chart_version} --set packageCache.pvc=package-cache
+
+# Install Provider using kubectl apply
+kubectl create -f - <<EOF
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: offline-provider-aws
+  name: provider-aws
 spec:
   package: provider-aws
   packagePullPolicy: Never
+EOF
 ```
 
 ### Installation options
