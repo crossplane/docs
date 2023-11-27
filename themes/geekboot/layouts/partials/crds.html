@@ -307,29 +307,30 @@
     document.addEventListener("DOMContentLoaded", function(event){
         sortIt();
 
+        scrollToAnchor();
+    })
+
+    function scrollToAnchor(){
         var hash = window.location.hash.replace("#","");
 
          // hash on this page means they linked directly to an API object
         if(hash.length > 0){
 
             var hashes = hash.split("-");
-            var lastHash = "";
-            var queryString = "";
 
             // set an event listener on the last element to scroll it into view when expanded.
             var lastElement = document.getElementById(hash);
+            lastElement.closest(".crd-child-container").classList.add("anchor-target");
 
             // loop through the parent elements and click them to expand
             var workingHash = [];
-            for(index in hashes){
+            for(var index = 0; index < hashes.length; index++){
                 workingHash.push(hashes[index]);
                 document.querySelector("#" + workingHash.join("-")).classList.add("show");
             }
 
-            console.log(document.querySelector("#" + workingHash.join("-")).parentNode);
-            document.querySelector("#" + workingHash.join("-")).parentNode.classList.add("anchor-target");
-            //document.querySelector('[data-bs-target="' + workingHash[0] + ']').classList
+
         }
-    })
+    }
 
 </script>
