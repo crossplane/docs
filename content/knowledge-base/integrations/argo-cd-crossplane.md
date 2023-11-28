@@ -16,11 +16,30 @@ how Argo CD tracks resources. With Crossplane, you need to configure Argo CD
 to use Annotation based resource tracking. See the [Argo CD docs](https://argo-cd.readthedocs.io/en/latest/user-guide/resource_tracking/) for additional detail.
  
 ### Configuring Argo CD with Crossplane
- 
-To configure Argo CD for Annotation resource tracking and Health Status, edit the `argocd-cm` `ConfigMap`
-in the `argocd` `Namespace`. Add `application.resourceTrackingMethod: annotation`
-to the data section as below:
 
+#### Set Resource Tracking Method
+
+In oder for Argo CD to correctly track an Application resources that contain Crossplane related object it needs
+to be configured to use the annotation mechanism.
+
+To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
+```yaml
+apiVersion: v1
+kind: ConfigMap
+data:
+  application.resourceTrackingMethod: annotation
+```
+
+#### Set Health Status
+
+Argo CD has a built-in health assessment for Kubernetes resources. Some checks are supported by the community directly
+in Argo's [repository](https://github.com/argoproj/argo-cd/tree/master/resource_customizations). For example the `Provider`
+from `pkg.crossplane.io` has already been declared which means there no further configuration needed.
+
+Argo CD also enable customising these checks per instance, and that's the mechanism used to provide support
+of Provider's CRDs
+
+To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -106,7 +125,36 @@ data:
         return health_status
 ```
 
-On the next Argo CD sync, Crossplane `Claims` and `Composite Resources` will
-be considered synchronized with status and will not trigger auto-pruning.
+#### Set Resource Exclusion
+
+Crossplane providers generates a `ProviderConfigUsage` for each of the managed resource (MR) it handles. This resource
+enable representing the relationship between MR and a ProviderConfig so that controller can use it as finalizer when a
+ProviderConfig is deleted. End-user of Crossplane are not expected to interact with this resource.
+
+Argo CD UI reactivity can be impacted as the number of resource and types grow. To help keep this number low we
+recommend hiding all `ProviderConfigUsage` resources from Argo CD UI.
+
+To configure resource exclusion  edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
+```yaml
+apiVersion: v1
+kind: ConfigMap
+data:
+    resource.exclusions: |
+      - apiGroups:
+        - "*"
+        kinds:
+        - ProviderConfigUsage
+```
+
+The use of `"*"` as apiGroups will enable the mechanism for all Crossplane Providers.
+
+#### Increase K8s Client QPS
+
+As the number of CRDs grow on a control plane it will increase the amount of queries Argo CD Application Controller
+needs to send to the Kubernetes API. If this is the case you can increase the rate limits of the Argo CD Kubernetes client.
 
 Set the environment variable `ARGOCD_K8S_CLIENT_QPS` to `300` for improved compatibility with a large number of CRDs.
+
+The default value of `ARGOCD_K8S_CLIENT_QPS` is 50, modifying the value will also update `ARGOCD_K8S_CLIENT_BURST` as it
+is default to `ARGOCD_K8S_CLIENT_QPS` x 2.
+
