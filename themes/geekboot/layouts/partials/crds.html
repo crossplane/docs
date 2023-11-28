@@ -4,15 +4,11 @@
 <div class="crds">
 
     <div class="row crd-header-row" id="crd-header-row">
-        <div class="col sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col sortable" onclick="sortIt('group')"><span data-sort="group">Group</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col">
-            <div class="row">
-                <div class="col sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-                <div class="col expand-link" onclick="showAll('all')"><a href="#">Expand All</a></div>
-                <div class="col collapse-link" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
-            </div>
-        </div>
+        <div class="col col-xl-4 col-8 sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
+        <div class="col col-lg-3 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
+        <div class="col col-lg-1 mobile-hidden  sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
+        <div class="col col-2 expand-link text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
+        <div class="col col-2 collapse-link text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
     </div>
 
     <div id="crd-rows-container">
@@ -44,7 +40,7 @@
 
             {{/* the crd-root-row is a top level CRD row */}}
             <div class="crd-root-row row align-middle" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
-                <div class="col align-middle expand-buttons">
+                <div class="col col-xl-4 col-8 align-middle expand-buttons">
                     {{/* Plus/Minus Button */}}
                     <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
 
@@ -53,17 +49,15 @@
                         <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
                     </button>
                 </div>
-                <div class="col group-name">{{ $group }}</div>
-                <div class="col align-middle version-etc">
-                    <div class="row align-middle">
-                        <div class="col align-middle pt-0">{{ $version }}</div>
-                        <div class="col align-middle pt-0 expand-link" onclick="showAll('.{{ $kind }}')">Expand All</div>
-                        <div class="col align-middle pt-0 collapse-link" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
-                    </div>
-                </div>
+                <div class="col col-lg-3 mobile-hidden col-2 group-name text-truncate">{{ $group }}</div>
+                <div class="col col-lg-1 mobile-hidden col-2">{{ $version }}</div>
+                <div class="col col-2 align-middle expand-link text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
+                <div class="col col-2 align-middle collapse-link text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
+
 
                 {{/* The container to show/hide with information related to the CRD */}}
                 <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
+                    <div class="mobile-group mobile-show">{{$group}}/{{$version}}</div>
                     <div class="description">
                         {{ $description }}
                     </div>
@@ -94,6 +88,7 @@
         {{ $required := .schema.required }}
 
         {{ if eq .schema.type "array" }}
+
             {{ if .schema.items }}
                 {{ $dataType = (printf "[ ]%s" .schema.items.type) }}
                 {{ $dataTypeStyle = .schema.items.type }}
@@ -307,29 +302,30 @@
     document.addEventListener("DOMContentLoaded", function(event){
         sortIt();
 
+        scrollToAnchor();
+    })
+
+    function scrollToAnchor(){
         var hash = window.location.hash.replace("#","");
 
          // hash on this page means they linked directly to an API object
         if(hash.length > 0){
 
             var hashes = hash.split("-");
-            var lastHash = "";
-            var queryString = "";
 
             // set an event listener on the last element to scroll it into view when expanded.
             var lastElement = document.getElementById(hash);
+            lastElement.closest(".crd-child-container").classList.add("anchor-target");
 
             // loop through the parent elements and click them to expand
             var workingHash = [];
-            for(index in hashes){
+            for(var index = 0; index < hashes.length; index++){
                 workingHash.push(hashes[index]);
                 document.querySelector("#" + workingHash.join("-")).classList.add("show");
             }
 
-            console.log(document.querySelector("#" + workingHash.join("-")).parentNode);
-            document.querySelector("#" + workingHash.join("-")).parentNode.classList.add("anchor-target");
-            //document.querySelector('[data-bs-target="' + workingHash[0] + ']').classList
+
         }
-    })
+    }
 
 </script>
