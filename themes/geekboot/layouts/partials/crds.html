@@ -7,8 +7,8 @@
         <div class="col col-xl-4 col-8 sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-lg-3 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-lg-1 mobile-hidden  sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col col-2 expand-link" onclick="showAll('all')"><a href="#">Expand All</a></div>
-        <div class="col col-2 collapse-link" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
+        <div class="col col-2 expand-link text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
+        <div class="col col-2 collapse-link text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
     </div>
 
     <div id="crd-rows-container">
@@ -51,12 +51,13 @@
                 </div>
                 <div class="col col-lg-3 mobile-hidden col-2 group-name">{{ $group }}</div>
                 <div class="col col-lg-1 mobile-hidden col-2">{{ $version }}</div>
-                <div class="col col-2 align-middle expand-link" onclick="showAll('.{{ $kind }}')">Expand All</div>
-                <div class="col col-2 align-middle collapse-link" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
+                <div class="col col-2 align-middle expand-link text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
+                <div class="col col-2 align-middle collapse-link text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
 
 
                 {{/* The container to show/hide with information related to the CRD */}}
                 <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
+                    <div class="mobile-group mobile-show">{{$group}}/{{$version}}</div>
                     <div class="description">
                         {{ $description }}
                     </div>

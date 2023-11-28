@@ -13,9 +13,20 @@
       display: none;
     }
 
+    .mobile-show{
+      padding-left: 27px;
+      color: var(--crd-description-color);
+      font-weight: 700;
+      padding-bottom: 24px;
+    }
+
   }
   @include media-breakpoint-up(xl) {
     padding-right: 80px;
+
+    .mobile-show{
+      display: none;
+    }
   }
 
   padding-top: 24px;
