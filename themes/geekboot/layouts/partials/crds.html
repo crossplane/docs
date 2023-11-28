@@ -49,7 +49,7 @@
                         <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
                     </button>
                 </div>
-                <div class="col col-lg-3 mobile-hidden col-2 group-name">{{ $group }}</div>
+                <div class="col col-lg-3 mobile-hidden col-2 group-name text-truncate">{{ $group }}</div>
                 <div class="col col-lg-1 mobile-hidden col-2">{{ $version }}</div>
                 <div class="col col-2 align-middle expand-link text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
                 <div class="col col-2 align-middle collapse-link text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
@@ -88,6 +88,7 @@
         {{ $required := .schema.required }}
 
         {{ if eq .schema.type "array" }}
+
             {{ if .schema.items }}
                 {{ $dataType = (printf "[ ]%s" .schema.items.type) }}
                 {{ $dataTypeStyle = .schema.items.type }}
