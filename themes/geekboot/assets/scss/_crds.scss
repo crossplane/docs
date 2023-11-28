@@ -6,7 +6,18 @@
 }
 
 .crds {
-  padding-right: 80px;
+  @include media-breakpoint-down(xl) {
+    padding-right: 0px;
+
+    .mobile-hidden{
+      display: none;
+    }
+
+  }
+  @include media-breakpoint-up(xl) {
+    padding-right: 80px;
+  }
+
   padding-top: 24px;
 
   .expansion-link{
@@ -39,8 +50,6 @@
   .expand-link,
   .collapse-link {
     text-align: right;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
     color: var(--content-link-color);
     cursor: pointer;
   }
@@ -215,4 +224,16 @@
       border-color: var(--integer-border-color);
     }
   }
+
+      // Mobile View
+@include media-breakpoint-down(xxl) {
+}
+
+// Desktop View
+@include media-breakpoint-up(xxl) {
+
+
+}
+
+
 }
