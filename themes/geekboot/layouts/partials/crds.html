@@ -3,12 +3,13 @@
 
 <div class="crds">
 
+    <!-- Kind | Group | Version | Expand | Collapse header -->
     <div class="row crd-header-row" id="crd-header-row">
         <div class="col col-xl-4 col-8 sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-lg-3 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-lg-1 mobile-hidden  sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col col-2 expand-link text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
-        <div class="col col-2 collapse-link text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
+        <div class="col col-2 expand-link mobile-hidden text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
+        <div class="col col-2 collapse-link mobile-hidden text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
     </div>
 
     <div id="crd-rows-container">
@@ -19,8 +20,10 @@
         {{ $group := .spec.group }}
         {{ $version := "" }}
         {{ $description := "" }}
-        {{ $schemaScratch := newScratch }}
-        {{ $schemaWithStatus := dict }}
+        {{ $schemaScratch := newScratch }}     {{/* Temporary variable used to prune fields from the larger spec */}}
+        {{ $schemaWithStatus := dict }}        {{/* The pruned schema to work with */}}
+
+        {{ $bigName := gt (len $kind) 24 }}    {{/* Long names overrun the display and cause problems. This allows for applying custom styles */}}
 
         {{/* Iterate over each version and find the "storage: true" version */}}
         {{ range  .spec.versions }}
@@ -28,8 +31,9 @@
                 {{ $version = .name }}
 
                 {{ $schemaScratch.Set "oAPI" (index . "schema" "openAPIV3Schema" "properties") }}
-                {{ $description = (index . "schema" "openAPIV3Schema" "description") }}
 
+                {{/* Pull out the top-level Kind description and delete unnecessary fields */}}
+                {{ $description = (index . "schema" "openAPIV3Schema" "description") }}
                 {{ $schemaScratch.DeleteInMap "oAPI" "apiVersion" }}
                 {{ $schemaScratch.DeleteInMap "oAPI" "kind" }}
                 {{ $schemaScratch.DeleteInMap "oAPI" "metadata" }}
@@ -39,8 +43,10 @@
         {{ end }}
 
             {{/* the crd-root-row is a top level CRD row */}}
-            <div class="crd-root-row row align-middle" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
-                <div class="col col-xl-4 col-8 align-middle expand-buttons">
+            <div class="crd-root-row row align-middle {{ if $bigName }}bigName-row{{end}} " data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
+
+                {{/* Collapse/Expand Button and Kind name */}}
+                <div class="col col-xl-4 col-8 align-middle expand-buttons {{if $bigName}}bigName-col{{end}} ">
                     {{/* Plus/Minus Button */}}
                     <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
 
@@ -49,22 +55,26 @@
                         <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
                     </button>
                 </div>
-                <div class="col col-lg-3 mobile-hidden col-2 group-name text-truncate">{{ $group }}</div>
-                <div class="col col-lg-1 mobile-hidden col-2">{{ $version }}</div>
-                <div class="col col-2 align-middle expand-link text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
-                <div class="col col-2 align-middle collapse-link text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
+
+                {{/* If the CRD name is longer than 24 characters hide the other fields, regardless of viewport size */}}
+                <div class="{{ if $bigName }}d-none{{end}} col col-lg-3 col-2 mobile-hidden group-name text-truncate">{{ $group }}</div>
+                <div class="{{ if $bigName }}d-none{{end}} col col-lg-1 col-2 mobile-hidden ">{{ $version }}</div>
+                <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle expand-link mobile-hidden text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
+                <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle collapse-link mobile-hidden text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
 
 
                 {{/* The container to show/hide with information related to the CRD */}}
                 <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
-                    <div class="mobile-group mobile-show">{{$group}}/{{$version}}</div>
-                    <div class="description">
-                        {{ $description }}
-                    </div>
+                    {{/* If the group and version are hidden from the row, display them here */}}
+                    <div class="{{if $bigName }}bigNameGroup{{end}} mobile-group mobile-show">{{$group}}/{{$version}}</div>
 
-                    {{ range $key,$schema := $schemaWithStatus }}
+                    {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
+                    <div class="description {{if $bigName}}bigName-reset{{end}}">{{ $description | markdownify}}</div>
+
+                    {{/* Loop over the fields in the pruned Schema and generate their content */}}
+                    {{ range $field,$schema := $schemaWithStatus }}
                         <div class="crd-children">
-                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
+                            {{ template "buildCRD" (dict "field" $field "schema" $schema "isFirst" true "rootKind" $kind "permalink" $.Page.Permalink) }}
                         </div>
                     {{ end }}
                 </div>
@@ -75,9 +85,10 @@
 
 
 {{ define "buildCRD" }}
-    {{/* The first field (spec) has a different schema compared to the child nodes */}}
+
+    {{/* The first field (spec or status) has a different schema compared to the child nodes */}}
     {{ if .isFirst }}
-        {{ $elemID := (printf "%s-%s" .kind .key) }}
+        {{ $elemID := (printf "%s-%s" .rootKind .field) }}
 
         {{ $dataTypeStyle := .schema.type }}
         {{ $dataType := .schema.type }}
@@ -85,6 +96,7 @@
         {{ $properties := .schema.properties }}
         {{ $required := .schema.required }}
 
+        {{/* Special handling for arrays to check if it's a list of 'items' */}}
         {{ if eq .schema.type "array" }}
             {{ if .schema.items }}
                 {{ $dataType = (printf "[ ]%s" .schema.items.type) }}
@@ -104,18 +116,22 @@
             {{/* CRD name text */}}
             <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
                 <div>
-                    <span class="kind align-middle">{{ .key }}</span>
+                    <span class="kind align-middle">{{ .field }}</span>
                     <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
                 </div>
             </button>
+
+            {{/* Anchor link icon */}}
             <span class="kind-link" data-bs-content="Link Copied!" data-clipboard-text="{{.permalink}}#{{$elemID}}"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
+
+
             {{/* The container to show/hide with information related to the CRD */}}
             <div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
                 <div class="description">
                     {{ $description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" $elemID "requiredFields" $required "rootKind" .rootKind "permalink" .permalink ) }}
+                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kindList" $elemID "requiredFields" $required "rootKind" .rootKind "permalink" .permalink ) }}
                 </div>
             </div>
         </div>
@@ -125,9 +141,11 @@
         {{/* Iterate over all child CRD elements */}}
         {{ range $key,$contents := .schema }}
 
+            {{ $bigName := gt (len $key) 24 }}
+
             {{ $dataType := $contents.type }}
             {{ $dataTypeStyle := $dataType }}
-            {{ $elemID := (printf "%s-%s" $.kind $key) }}
+            {{ $elemID := (printf "%s-%s" $.kindList $key) }}
 
             {{ $dataTypeStyle := $contents.type }}
             {{ $dataType := $contents.type }}
@@ -135,6 +153,7 @@
             {{ $properties := $contents.properties }}
             {{ $required := $.requiredFields }}
 
+            {{/* enum fields handle "oneOf" type data lists */}}
             {{ $enum := false }}
             {{ $enumOf := "" }}
             {{ $enumTypes := dict }}
@@ -177,7 +196,7 @@
                 {{ end }}
             {{ end }}
 
-            <div class="crd-child-container align-middle expand-buttons expand-buttons">
+            <div class="crd-child-container align-middle expand-buttons expand-buttons {{if $bigName}}bigName-row{{end}}">
                 {{/* Plus/Minus Button */}}
                 <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}"></button>
 
@@ -185,6 +204,8 @@
                 <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}">
                     <div>
                         <span class="kind align-middle">{{ $key }}</span>
+
+                        {{/* An enum puts the data types inside the "One of" border box. */}}
                         {{ if $enum }}
                             <span class="enum">{{$enumOf}}
                                 {{ range $contents.anyOf }}
@@ -200,10 +221,12 @@
                         {{if in $.requiredFields $key}}<span class="dataType required align-middle">required</span>{{ end }}
                     </div>
                 </button>
+
+                {{/* Link icon */}}
                 <span class="kind-link" data-clipboard-text="{{.permalink}}#{{$elemID}}"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
 
                 {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand {{$.rootKind}}" id="{{$elemID}}">
+                <div class="collapse crd-expand {{$.rootKind}} {{if $bigName}}bigName-reset{{end}}" id="{{$elemID}}">
                     <div class="description">
                         {{$description | markdownify }}
                     </div>
@@ -228,6 +251,7 @@
      * @param {string} type - a CSS query selector or "all"
      */
     function showAll(type){
+
         if(type === "all"){
             var root = document;
         }
@@ -354,7 +378,6 @@
     // on page load sort the fields and expand and scroll to the anchor if it's set.
     document.addEventListener("DOMContentLoaded", function(event){
         sortIt();
-
         scrollToAnchor();
     })
 
