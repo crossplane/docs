@@ -194,6 +194,13 @@
 
 <script>
 
+    /**
+     * Add the "show" class and remove the "collapse" class from all elements
+     * matching the 'type' queryselector.
+     *
+     * Alternatively the type `all` will apply to all elements.
+     * @param {string} type - a CSS query selector or "all"
+     */
     function showAll(type){
         if(type === "all"){
             var root = document;
@@ -204,9 +211,13 @@
 
         }
 
+
         var buttons = root.querySelectorAll(".expand-buttons > button");
         var hiddenElems = root.querySelectorAll(".crd-expand");
 
+        // This works by changing the classes bootstrap uses.
+        // It would be more accurate to click() or invoke the bootstrap JS API.
+        // This has major performance problems for large APIs and isn't used.
         for(var i = 0; i < buttons.length; i++){
             buttons[i].classList.remove("collapsed");
         }
@@ -218,6 +229,13 @@
 
     }
 
+    /**
+     * Add the "collapse" class and remove the "show" class from all elements
+     * matching the 'type' queryselector.
+     *
+     * Alternatively the type `all` will apply to all elements.
+     * @param {string} type - a CSS query selector or "all"
+     */
     function hideAll(type){
         if(type === "all"){
             var root = document;
@@ -230,6 +248,9 @@
         var buttons = root.querySelectorAll(".expand-buttons > button");
         var hiddenElems = root.querySelectorAll(".crd-expand");
 
+        // This works by changing the classes bootstrap uses.
+        // It would be more accurate to click() or invoke the bootstrap JS API.
+        // This has major performance problems for large APIs and isn't used.
         for(var i = 0; i < buttons.length; i++){
             buttons[i].classList.add("collapsed");
         }
@@ -241,12 +262,20 @@
 
     }
 
+    /**
+     * Sorts the API by 'kind', 'group' or 'version'.
+     *
+     * @param {string} sortOn - One of "kind", "group" or "version"
+     */
     function sortIt(sortOn="kind"){
 
-
+        // only look at elements labeled as "stortable"
         var titleElements = document.getElementsByClassName("sortable");
+
+        // natural or reverse sort?
         var reverseSort = false;
 
+        // iterate over the sortable items and set the proper sort icon
         for(var i = 0; i < titleElements.length; i++){
             if(titleElements[i].children[0].dataset.sort === sortOn){
 
@@ -270,8 +299,6 @@
                 titleElements[i].children[1].classList.add("d-none");
                 titleElements[i].children[2].classList.add("d-none");
             }
-
-
         }
 
         // element sorting from https://jsfiddle.net/fkling/nXkDp/
@@ -296,9 +323,9 @@
         for(var i = 0, l = toSort.length; i < l; i++) {
             parent.appendChild(toSort[i]);
         }
-
     }
 
+    // on page load sort the fields and expand and scroll to the anchor if it's set.
     document.addEventListener("DOMContentLoaded", function(event){
         sortIt();
 
