@@ -1,0 +1,12 @@
+{{ $.Scratch.Add "index" slice }}
+
+{{ range .Site.RegularPages }}
+    {{ if or (eq .Page.Params.version "1.14") (eq .Page.Params.product "Knowledge Base") }}
+        {{- $.Scratch.Add "index" (dict "title" .Title "url" .RelPermalink "content" .Plain ) -}}
+    {{ end }}
+
+{{ end }}
+
+
+{{- $.Scratch.Get "index" | jsonify -}}
+
