@@ -23,7 +23,7 @@
         {{ $schemaScratch := newScratch }}     {{/* Temporary variable used to prune fields from the larger spec */}}
         {{ $schemaWithStatus := dict }}        {{/* The pruned schema to work with */}}
 
-        {{ $bigName := gt (len $kind) 24 }}    {{/* Long names overrun the display and cause problems. This allows for applying custom styles */}}
+        {{ $bigName := gt (len $kind) 32 }}    {{/* Long names overrun the display and cause problems. This allows for applying custom styles */}}
 
         {{/* Iterate over each version and find the "storage: true" version */}}
         {{ range  .spec.versions }}
@@ -72,9 +72,9 @@
                     <div class="description {{if $bigName}}bigName-reset{{end}}">{{ $description | markdownify}}</div>
 
                     {{/* Loop over the fields in the pruned Schema and generate their content */}}
-                    {{ range $field,$schema := $schemaWithStatus }}
+                    {{ range $key,$schema := $schemaWithStatus }}
                         <div class="crd-children">
-                            {{ template "buildCRD" (dict "field" $field "schema" $schema "isFirst" true "rootKind" $kind "permalink" $.Page.Permalink) }}
+                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
                         </div>
                     {{ end }}
                 </div>
@@ -85,10 +85,9 @@
 
 
 {{ define "buildCRD" }}
-
-    {{/* The first field (spec or status) has a different schema compared to the child nodes */}}
+    {{/* The first field (spec) has a different schema compared to the child nodes */}}
     {{ if .isFirst }}
-        {{ $elemID := (printf "%s-%s" .rootKind .field) }}
+        {{ $elemID := (printf "%s-%s" .kind .key) }}
 
         {{ $dataTypeStyle := .schema.type }}
         {{ $dataType := .schema.type }}
@@ -116,7 +115,7 @@
             {{/* CRD name text */}}
             <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
                 <div>
-                    <span class="kind align-middle">{{ .field }}</span>
+                    <span class="kind align-middle">{{ .key }}</span>
                     <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
                 </div>
             </button>
@@ -131,7 +130,7 @@
                     {{ $description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kindList" $elemID "requiredFields" $required "rootKind" .rootKind "permalink" .permalink ) }}
+                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" $elemID "requiredFields" $required "rootKind" .rootKind "permalink" .permalink ) }}
                 </div>
             </div>
         </div>
@@ -145,7 +144,7 @@
 
             {{ $dataType := $contents.type }}
             {{ $dataTypeStyle := $dataType }}
-            {{ $elemID := (printf "%s-%s" $.kindList $key) }}
+            {{ $elemID := (printf "%s-%s" $.kind $key) }}
 
             {{ $dataTypeStyle := $contents.type }}
             {{ $dataType := $contents.type }}

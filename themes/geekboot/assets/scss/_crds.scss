@@ -9,14 +9,6 @@
 
   padding-top: 24px;
 
-  .bigNameGroup {
-    padding-left: 27px;
-    color: var(--crd-description-color);
-    font-weight: 700;
-    padding-bottom: 24px;
-    display: block !important;
-  }
-
   @include media-breakpoint-down(xl) {
     padding-right: 0px;
 
@@ -41,6 +33,13 @@
     }
   }
 
+  .bigNameGroup {
+    padding-left: 27px;
+    color: var(--crd-description-color);
+    font-weight: 700;
+    padding-bottom: 24px;
+    display: block !important;
+  }
 
   .expansion-link {
     font-family: "Avenir-Heavy";
@@ -69,19 +68,18 @@
     padding-bottom: 10px;
   }
 
+  .expand-link,
+  .collapse-link {
+    text-align: right;
+    color: var(--content-link-color);
+    cursor: pointer;
+  }
 
   .crd-header-row {
     font-weight: 800;
     color: var(--crd-header-color);
     padding-bottom: 10px;
     cursor: pointer;
-
-    >.expand-link,
-    >.collapse-link {
-      text-align: right;
-      color: var(--content-link-color);
-      cursor: pointer;
-    }
 
     .sortable {
       vertical-align: middle !important;
