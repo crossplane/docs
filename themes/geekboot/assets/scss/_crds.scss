@@ -6,14 +6,17 @@
 }
 
 .crds {
+
+  padding-top: 24px;
+
   @include media-breakpoint-down(xl) {
     padding-right: 0px;
 
-    .mobile-hidden{
+    .mobile-hidden {
       display: none;
     }
 
-    .mobile-show{
+    .mobile-show {
       padding-left: 27px;
       color: var(--crd-description-color);
       font-weight: 700;
@@ -21,22 +24,29 @@
     }
 
   }
+
   @include media-breakpoint-up(xl) {
     padding-right: 80px;
 
-    .mobile-show{
+    .mobile-show {
       display: none;
     }
   }
 
-  padding-top: 24px;
+  .bigNameGroup {
+    padding-left: 27px;
+    color: var(--crd-description-color);
+    font-weight: 700;
+    padding-bottom: 24px;
+    display: block !important;
+  }
 
-  .expansion-link{
+  .expansion-link {
     font-family: "Avenir-Heavy";
     font-weight: 900;
     color: var(--body-font-color);
 
-    &:hover{
+    &:hover {
       text-decoration: none !important;
       color: var(--body-font-color);
     }
@@ -77,7 +87,6 @@
       &.sorted {
         color: var(--content-link-color);
       }
-
     }
 
     .sort-icon {
@@ -144,6 +153,18 @@
     border-bottom: 1px solid var(--crd-row-border);
   }
 
+  .crd-root-row {
+    >.crd-expand {
+      &::before {
+        left: 19px !important;
+      }
+
+      &.show {
+        margin-bottom: 15px;
+      }
+    }
+  }
+
   .kind {
     font-weight: 800 !important;
     padding-right: 10px;
@@ -151,7 +172,7 @@
   }
 
   .kind-link {
-    > a > svg {
+    >a>svg {
       height: 12px;
       fill: var(--link-icon-fill);
     }
@@ -173,18 +194,6 @@
     }
   }
 
-  .crd-root-row {
-    > .crd-expand {
-      &::before {
-        left: 19px !important;
-      }
-
-      &.show {
-        margin-bottom: 15px;
-      }
-    }
-  }
-
   .crd-expand {
     position: relative;
 
@@ -198,7 +207,8 @@
     // transition: margin 0ms;
   }
 
-  .dataType {
+  .dataType,
+  .enum {
     font-weight: 800;
     border-radius: 4px;
     padding-left: 5px;
@@ -209,42 +219,50 @@
     border-width: 1px;
     font-size: 14px;
     margin-right: 5px;
-
-    &.required {
-      color: var(--required-color);
-      background-color: var(--required-background);
-    }
-
-    &.string {
-      color: var(--string-color);
-      border-color: var(--string-border-color);
-    }
-
-    &.object {
-      color: var(--object-color);
-      border-color: var(--object-border-color);
-    }
-
-    &.boolean {
-      color: var(--boolean-color);
-      border-color: var(--boolean-border-color);
-    }
-
-    &.integer {
-      color: var(--integer-color);
-      border-color: var(--integer-border-color);
-    }
   }
 
-      // Mobile View
-@include media-breakpoint-down(xxl) {
-}
+  .enum {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
 
-// Desktop View
-@include media-breakpoint-up(xxl) {
+  .required {
+    color: var(--required-color);
+    background-color: var(--required-background);
+  }
 
+  .string {
+    color: var(--string-color);
+    border-color: var(--string-border-color);
+  }
 
-}
+  .object {
+    color: var(--object-color);
+    border-color: var(--object-border-color);
+  }
 
+  .boolean {
+    color: var(--boolean-color);
+    border-color: var(--boolean-border-color);
+  }
+
+  .integer {
+    color: var(--integer-color);
+    border-color: var(--integer-border-color);
+  }
+
+  .bigName-row {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .bigName-col {
+    display: inline-block;
+    float: none;
+  }
+
+  .bigName-reset {
+    white-space: initial;
+  }
 
 }
