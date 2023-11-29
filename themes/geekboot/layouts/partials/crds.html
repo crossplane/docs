@@ -43,10 +43,10 @@
         {{ end }}
 
             {{/* the crd-root-row is a top level CRD row */}}
-            <div class="crd-root-row row align-middle {{ if $bigName }}bigName-row{{end}} " data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
+            <div class="crd-root-row crd-container row align-middle bigName-row " data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
                 {{/* Collapse/Expand Button and Kind name */}}
-                <div class="col col-xl-4 col-8 align-middle expand-buttons {{if $bigName}}bigName-col{{end}} ">
+                <div class="col col-xl-4 col-8 align-middle expand-buttons bigName-col">
                     {{/* Plus/Minus Button */}}
                     <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
 
@@ -69,7 +69,7 @@
                     <div class="{{if $bigName }}bigNameGroup{{end}} mobile-group mobile-show">{{$group}}/{{$version}}</div>
 
                     {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
-                    <div class="description {{if $bigName}}bigName-reset{{end}}">{{ $description | markdownify}}</div>
+                    <div class="description bigName-reset">{{ $description | markdownify}}</div>
 
                     {{/* Loop over the fields in the pruned Schema and generate their content */}}
                     {{ range $key,$schema := $schemaWithStatus }}
@@ -108,7 +108,7 @@
             {{ end }}
         {{ end }}
 
-        <div class="crd-child-container align-middle expand-buttons">
+        <div class="crd-child-container crd-container align-middle expand-buttons">
             {{/* Plus/Minus Button */}}
             <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
 
@@ -126,7 +126,7 @@
 
             {{/* The container to show/hide with information related to the CRD */}}
             <div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
-                <div class="description">
+                <div class="description bigName-reset">
                     {{ $description | markdownify }}
                 </div>
                 <div class="crd-children align-middle">
@@ -195,7 +195,7 @@
                 {{ end }}
             {{ end }}
 
-            <div class="crd-child-container align-middle expand-buttons expand-buttons {{if $bigName}}bigName-row{{end}}">
+            <div class="crd-child-container crd-container align-middle expand-buttons expand-buttons bigName-row">
                 {{/* Plus/Minus Button */}}
                 <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}"></button>
 
@@ -225,7 +225,7 @@
                 <span class="kind-link" data-clipboard-text="{{.permalink}}#{{$elemID}}"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
 
                 {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand {{$.rootKind}} {{if $bigName}}bigName-reset{{end}}" id="{{$elemID}}">
+                <div class="collapse crd-expand {{$.rootKind}} bigName-reset" id="{{$elemID}}">
                     <div class="description">
                         {{$description | markdownify }}
                     </div>
@@ -242,6 +242,18 @@
 
 <script>
 
+    function boxCloser(){
+        boxes = document.querySelectorAll(".crd-expand");
+
+        for(var index = 0; index < boxes.length; index++){
+            boxes[index].addEventListener("click", function (e){
+                if (e.offsetX < this.offsetWidth){
+                    //hideAll("#" + this.id);
+                }
+            });
+        }
+    }
+
     /**
      * Add the "show" class and remove the "collapse" class from all elements
      * matching the 'type' queryselector.
@@ -256,7 +268,7 @@
         }
         else{
             var typeElem = document.querySelector(type);
-            var root = typeElem.closest(".crd-root-row")
+            var root = typeElem.closest(".crd-container")
 
         }
 
@@ -291,9 +303,8 @@
         }
         else{
             var typeElem = document.querySelector(type);
-            var root = typeElem.closest(".crd-root-row")
+            var root = typeElem.closest(".crd-container")
         }
-
         var buttons = root.querySelectorAll(".expand-buttons > button");
         var hiddenElems = root.querySelectorAll(".crd-expand");
 
