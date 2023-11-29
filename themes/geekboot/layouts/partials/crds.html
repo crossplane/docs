@@ -247,9 +247,7 @@
 
         for(var index = 0; index < boxes.length; index++){
             boxes[index].addEventListener("click", function (e){
-                console.log(e.offsetX + " - " + this.offsetWidth);
                 if (e.offsetX < this.offsetWidth){
-                    console.log(this.id);
                     //hideAll("#" + this.id);
                 }
             });
@@ -307,7 +305,6 @@
             var typeElem = document.querySelector(type);
             var root = typeElem.closest(".crd-container")
         }
-        console.log(typeElem);
         var buttons = root.querySelectorAll(".expand-buttons > button");
         var hiddenElems = root.querySelectorAll(".crd-expand");
 
