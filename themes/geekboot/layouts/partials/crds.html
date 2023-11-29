@@ -71,8 +71,6 @@
             </div>
     {{ end }}
     </div>
-
-
 </div>
 
 
@@ -88,7 +86,6 @@
         {{ $required := .schema.required }}
 
         {{ if eq .schema.type "array" }}
-
             {{ if .schema.items }}
                 {{ $dataType = (printf "[ ]%s" .schema.items.type) }}
                 {{ $dataTypeStyle = .schema.items.type }}
@@ -138,6 +135,24 @@
             {{ $properties := $contents.properties }}
             {{ $required := $.requiredFields }}
 
+            {{ $enum := false }}
+            {{ $enumOf := "" }}
+            {{ $enumTypes := dict }}
+
+            {{ if $contents.oneOf }}
+                {{ $enum = true }}
+                {{ $enumOf = "One of" }}
+                {{ $enumTypes := $contents.oneOf }}
+            {{ else if $contents.anyOf }}
+                {{ $enum = true }}
+                {{ $enumOf = "Any of" }}
+                {{ $enumTypes := $contents }}
+            {{ else if $contents.allOf }}
+                {{ $enum = true }}
+                {{ $enumOf = "All of" }}
+                {{ $enumTypes := $contents.allOf }}
+            {{ end }}
+
             {{ if eq $contents.type "array" }}
                 {{ if $contents.items }}
                     {{ $dataType = (printf "[ ]%s" $contents.items.type) }}
@@ -170,7 +185,18 @@
                 <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}">
                     <div>
                         <span class="kind align-middle">{{ $key }}</span>
-                        <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
+                        {{ if $enum }}
+                            <span class="enum">{{$enumOf}}
+                                {{ range $contents.anyOf }}
+                                {{ range . }}
+                                    <span class="dataType {{ . }}  align-middle">{{ . }}</span>
+                                {{ end }}
+                                {{ end }}
+                            </span>
+
+                        {{ else }}
+                            <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
+                        {{ end }}
                         {{if in $.requiredFields $key}}<span class="dataType required align-middle">required</span>{{ end }}
                     </div>
                 </button>

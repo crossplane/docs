@@ -198,7 +198,7 @@
     // transition: margin 0ms;
   }
 
-  .dataType {
+  .dataType, .enum {
     font-weight: 800;
     border-radius: 4px;
     padding-left: 5px;
@@ -209,31 +209,37 @@
     border-width: 1px;
     font-size: 14px;
     margin-right: 5px;
+  }
 
-    &.required {
-      color: var(--required-color);
-      background-color: var(--required-background);
-    }
+  .enum {
 
-    &.string {
-      color: var(--string-color);
-      border-color: var(--string-border-color);
-    }
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
 
-    &.object {
-      color: var(--object-color);
-      border-color: var(--object-border-color);
-    }
+  .required {
+    color: var(--required-color);
+    background-color: var(--required-background);
+  }
 
-    &.boolean {
-      color: var(--boolean-color);
-      border-color: var(--boolean-border-color);
-    }
+  .string {
+    color: var(--string-color);
+    border-color: var(--string-border-color);
+  }
 
-    &.integer {
-      color: var(--integer-color);
-      border-color: var(--integer-border-color);
-    }
+  .object {
+    color: var(--object-color);
+    border-color: var(--object-border-color);
+  }
+
+  .boolean {
+    color: var(--boolean-color);
+    border-color: var(--boolean-border-color);
+  }
+
+  .integer {
+    color: var(--integer-color);
+    border-color: var(--integer-border-color);
   }
 
       // Mobile View
