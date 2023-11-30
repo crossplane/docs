@@ -4,7 +4,7 @@
 <div class="crds">
 
     <!-- Kind | Group | Version | Expand | Collapse header -->
-    <div class="row crd-header-row" id="crd-header-row">
+    <div class="row crd-header-row bigName-row" id="crd-header-row">
         <div class="col col-xl-4 col-8 sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-lg-3 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-lg-1 mobile-hidden  sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
@@ -43,7 +43,7 @@
         {{ end }}
 
             {{/* the crd-root-row is a top level CRD row */}}
-            <div class="crd-root-row crd-container row align-middle bigName-row " data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
+            <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
                 {{/* Collapse/Expand Button and Kind name */}}
                 <div class="col col-xl-4 col-8 align-middle expand-buttons bigName-col">
