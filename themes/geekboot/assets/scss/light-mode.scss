@@ -4,6 +4,7 @@
     --body-font-color: #{$fog-1000};
     --content-link-color: #{$aqua-700};
     --anchor-link-color: #{$fog-600};
+    --rss-icon-fill: #{$aqua-600};
 
     // Add underline to light mode small font links due to being similar color to main text
     p > a, .admonition-content > a, li > a, td > a, .home-link-description > a {

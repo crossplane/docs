@@ -267,7 +267,8 @@ kind: Instance
 spec:
   forProvider:
     # Removed for brevity
-  providerConfigRef: user-keys
+  providerConfigRef:
+    name: user-keys
 ```
 
 ```yaml {label="pc"}

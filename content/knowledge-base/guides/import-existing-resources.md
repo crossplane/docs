@@ -48,8 +48,8 @@ Provider.
 apiVersion: compute.gcp.crossplane.io/v1beta1
 kind: Network
 metadata:
+  name: imported-network
   annotations:
-    name: imported-network
     crossplane.io/external-name: my-existing-network
 ```
 
@@ -71,8 +71,8 @@ overwrites the existing values.
 apiVersion: compute.gcp.crossplane.io/v1beta1
 kind: Network
 metadata:
+  name: imported-network
   annotations:
-    name: imported-network
     crossplane.io/external-name: my-existing-network
 spec:
   forProvider: {}
@@ -192,20 +192,20 @@ fields with the values from the external resource.
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
+  name: my-imported-database
   annotations:
-    crossplane.io/external-name: existing-database-instance
-  name: existing-database-instance
+    crossplane.io/external-name: my-external-database
 spec:
   managementPolicies: ["Observe"]
   forProvider:
     region: us-central1
 status:
   atProvider:
-    connectionName: crossplane-playground:us-central1:existing-database-instance
+    connectionName: crossplane-playground:us-central1:my-external-database
     databaseVersion: POSTGRES_14
     deletionProtection: true
     firstIpAddress: 35.184.74.79
-    id: existing-database-instance
+    id: my-external-database
     publicIpAddress: 35.184.74.79
     region: us-central1
     # Removed for brevity
@@ -250,9 +250,9 @@ Manually copy the important `spec.atProvider` values to `spec.forProvider`.
 apiVersion: sql.gcp.upbound.io/v1beta1
 kind: DatabaseInstance
 metadata:
+  name: my-imported-database
   annotations:
-    crossplane.io/external-name: existing-database-instance
-  name: existing-database-instance
+    crossplane.io/external-name: my-external-database
 spec:
   managementPolicies: ["*"]
   forProvider:

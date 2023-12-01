@@ -48,6 +48,7 @@ proselint
 RBAC
 RPC
 RPCs
+RSS
 SCSS
 SDK
 SDKs
