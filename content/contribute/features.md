@@ -312,3 +312,15 @@ A second example tab.
 
 Both `tab` and `tabs` require opening and closing tags. Unclosed tags causes
 Hugo to fail.
+
+## API documentation
+
+The API documentation is auto generated from the Crossplane YAML files from the 
+[cluster/crds](https://github.com/crossplane/crossplane/tree/master/cluster/crds) 
+directory. 
+
+Place any updated files in the `/content/<version>/api/yaml` folder to update or 
+generate new API documentation.
+
+The logic for parsing the YAML is in 
+`/themes/geekboot/layouts/partials/crds.html`.
