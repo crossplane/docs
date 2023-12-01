@@ -1,6 +1,5 @@
 {{ .Content }}
 
-
 <div class="crds">
 
     <!-- Kind | Group | Version | Expand | Collapse header -->
@@ -15,7 +14,8 @@
     <div id="crd-rows-container">
     {{/* Each level is a map with the key being the directory name */}}
     {{/* $Site.Data.crds /$version/crds/yaml */}}
-    {{ range index $.Site.Data.crds (printf "v%s" .Page.Params.version) "crds" "yaml" }}
+    {{ range index $.Site.Data.crds (printf "v%s" .Page.Params.version) "api" "yaml" }}
+
         {{ $kind := .spec.names.kind }}
         {{ $group := .spec.group }}
         {{ $version := "" }}
