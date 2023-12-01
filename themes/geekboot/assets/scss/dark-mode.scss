@@ -50,6 +50,32 @@
     --search-box-background: var(--body-background);
     --result-path: var(--body-background);
 
+    // API Page
+    --sort-up: url("/img/sort-up-light.svg");
+    --sort-down: url("/img/sort-down-light.svg");
+    --expand-box-background: #{$fog-800};
+    --minus-svg: url("/img/minus-white.svg");
+    --plus-svg: url("/img/plus-150.svg");
+    --crd-header-color: #{$fog-400};
+    --crd-row-border: #{$fog-800};
+    --crd-description-color: #{$fog-400};
+    --link-icon-fill: #{$fog-600};
+
+    --required-color: #{$fog-1000};
+    --required-background: #{$fog-200};
+
+    --string-color: #{$grass-300};
+    --string-border: #{$grass-300};
+
+    --object-color: #{$tangerine-300};
+    --object-border-color: #{$tangerine-300};
+
+    --boolean-color: #{$sun-300};
+    --boolean-border-color: #{$sun-300};
+
+    --integer-color: #{$salmon-300};
+    --integer-border-color: #{$salmon-300};
+
     // Override Bootstrap accordion colors in the body
     .accordion {
         --bs-accordion-border-color: #{$fog-500};
