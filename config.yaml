@@ -8,7 +8,16 @@ uglyurls: false
 disableKinds:
   - taxonomy
   - term
-  - RSS
+
+outputs:
+  home:
+  - html
+  section:
+  - html
+  - rss
+  taxonomy:
+  term:
+
 
 ignoreFiles:
 - README.md
