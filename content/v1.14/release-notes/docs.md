@@ -12,14 +12,11 @@ removed: 🗑️
 moved: 🗺️
 -->
 
-<<<<<<< HEAD
 ## December 1, 2023
 
 ### New features 🎉
 * Added [API documentation]({{<ref "../api">}}) for Crossplane core types. 
 
-=======
->>>>>>> 6feb7ce (add RSS support for release notes. Resolves #629 (#638))
 ## November 30, 2023
 
 ### New features 🎉
