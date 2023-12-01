@@ -52,6 +52,10 @@ module:
       - "**/**.jpg"
       - "**/**.jpeg"
       - "**/**.gif"
+  - source: content
+    target: data/crds/
+    includeFiles:
+      - "**/api/**.yaml"
 
 security:
   funcs:

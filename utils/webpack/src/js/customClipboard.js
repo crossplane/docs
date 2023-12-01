@@ -1,6 +1,9 @@
 // Customize clipboard.js
 import * as ClipboardJS from 'clipboard';
 
+// copy API links to the clipboard
+const crdURLCopier = new ClipboardJS('.kind-link');
+
 // Most of the following is directly from the Bootstrap Website.
 // https://github.com/twbs/bootstrap/blob/main/site/assets/js/code-examples.js
 const btnHtml = [
