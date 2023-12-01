@@ -12,6 +12,11 @@ removed: 🗑️
 moved: 🗺️
 -->
 
+## November 30, 2023
+
+### New features 🎉
+* Added RSS support for Crossplane release notes. 
+
 ## November 1, 2023
 
 ### New content 🎉
