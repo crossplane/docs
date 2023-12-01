@@ -55,7 +55,7 @@ module:
   - source: content
     target: data/crds/
     includeFiles:
-      - "**/crds/**.yaml"
+      - "**/api/**.yaml"
 
 security:
   funcs:
