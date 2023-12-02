@@ -732,7 +732,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions](https://docs.crossplane.io/latest/composition-functions#test-a-composition-that-uses-functions).
+[testing composition functions](https://docs.crossplane.io/latest/concepts/composition-functions#test-a-composition-that-uses-functions).
 {{</hint>}}
 
 ## Build and push the function to a package registry
