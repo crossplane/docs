@@ -271,7 +271,7 @@ The `crossplane-admin` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:admin
+kubectl describe clusterrole crossplane-admin
 ```
 
 ##### crossplane-edit
@@ -285,7 +285,7 @@ The `crossplane-edit` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:edit
+kubectl describe clusterrole crossplane-edit
 ```
 
 ##### crossplane-view
@@ -298,20 +298,20 @@ The `crossplane-view` ClusterRole has the following permissions:
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:view
+kubectl describe clusterrole crossplane-view
 ```
 
 ##### crossplane-browse
 
 The `crossplane-browse` ClusterRole has the following permissions:
 
-  * read-only access to all Crossplane types
-  * read-only access to all namespaces and events (even those unrelated to Crossplane).
+  * read-only access to Crossplane compositions and XRDs. This allows resource claim
+    creators to discover and select an appropriate composition.
 
 View the full RBAC policy with 
 
 ```shell
-kubectl describe clusterrole crossplane:browse
+kubectl describe clusterrole crossplane-browse
 ```
 
 #### Crossplane Roles
