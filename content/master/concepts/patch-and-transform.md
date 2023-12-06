@@ -1269,7 +1269,7 @@ The annotation applied to the managed resource is
 $ kubectl describe bucket
 Name:         my-example-claim-twx7n-ndb2f
 Annotations:  crossplane.io/composition-resource-name: bucket1
-              myLabel: firstField
+              myAnnotation: firstField
 # Removed for brevity.
 ```
 
