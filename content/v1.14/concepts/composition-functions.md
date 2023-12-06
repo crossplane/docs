@@ -452,10 +452,8 @@ $ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.
 ```
 
 {{<hint "tip">}}
-Crossplane has
-[language specific guides]({{<ref "../../knowledge-base/guides">}}) to writing
-a composition function. Refer to the guide for your preferred language for a
-more detailed guide to writing a function.
+Crossplane has a 
+[guide to writing a composition function in Go]({{<ref "../../knowledge-base/guides/write-a-composition-function-in-go">}}). 
 {{</hint>}}
 
 When you're writing a composition function it's useful to know how composition
