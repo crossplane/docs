@@ -1169,7 +1169,7 @@ If Crossplane finds the value, Crossplane puts
 the mapped value in the {{<hover label="map" line="4">}}toFieldPath{{</hover>}}.
 
 {{<hint "note" >}}
-Crossplane ignores the patch if the value isn't found.
+Crossplane throws an error for the patch if the value isn't found.
 {{< /hint >}}
 
 {{<hover label="map" line="3">}}spec.field1{{</hover>}} is the string
