@@ -136,13 +136,13 @@ To configure Crossplane for offline installation:
 4. **Troubleshooting Tips:**
 
    Issue: Crossplane not recognizing package changes
-   Solution: Ensure the correct package is mounted and accessible by Crossplane. Check file permissions and verify the path configuration.
+   Solution: ensure the correct package is mounted and accessible by Crossplane. Check file permissions and verify the path configuration.
 
     
-**Example: Configuring Crossplane with a PersistentVolumeClaim (PVC):**
+**Example: configuring Crossplane with a PersistentVolumeClaim (PVC):**
 Follow this example to configure Crossplane using a PersistentVolumeClaim (PVC) for a storage location containing the Provider image.
 
-```bash
+```shell
 CACHE_PATH="localpackage-cache"
 
 # Extract package and move it to the cache path
