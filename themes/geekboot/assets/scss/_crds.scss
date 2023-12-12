@@ -265,4 +265,47 @@
     white-space: initial;
   }
 
+  .bigName-row-padding {
+    padding-left: 39px; // description padding (27) + bs-margin (12)
+  }
+
+  .yaml-link-padding {
+    padding-left: 27px; //description padding
+  }
+
+  .yaml-svg{
+    background-image: url("/img/download.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 4px;
+    opacity: 1;
+    background-size: 16px;
+    height: 24px;
+    width: 24px;
+
+  }
+
+  .up-button-container {
+    cursor: pointer;
+    margin-left: 12px;
+
+    >a span {
+      text-decoration: none !important;
+
+    }
+
+    .up-button {
+      color: var(--body-font-color);
+      background-color: #{$aqua-600} !important;
+      background-image: url("/img/arrow-up-white.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 4px;
+      opacity: 1;
+      background-size: 12px;
+      height: 16px;
+      width: 16px;
+      margin-left: 8px;
+    }
+  }
 }
