@@ -283,6 +283,9 @@ number of returned environments with
 {{<hover label="maxMatch" line="11">}}maxMatch{{</hover>}} and define the
 maximum number of environments returned. 
 
+Use `minMatch` and define the minimum 
+number of environments returned.
+
 The Composition sorts the returned environments alphabetically by name. Sort the
 environments on a different field with 
 {{<hover label="maxMatch" line="12">}}sortByFieldPath{{</hover>}} and define
