@@ -5,8 +5,7 @@
     <!-- Kind | Group | Version | Expand | Collapse header -->
     <div class="row crd-header-row bigName-row" id="crd-header-row">
         <div class="col col-xl-4 col-8 sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col col-lg-3 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col col-lg-1 mobile-hidden  sortable" onclick="sortIt('version')"><span data-sort="version" >Version</span><span class="version-sort sort-icon sort-icon-down d-none"></span><span class="version-sort sort-icon sort-icon-up d-none"></span></div>
+        <div class="col col-lg-4 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group/Version</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
         <div class="col col-2 expand-link mobile-hidden text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
         <div class="col col-2 collapse-link mobile-hidden text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
     </div>
@@ -14,75 +13,91 @@
     <div id="crd-rows-container">
     {{/* Each level is a map with the key being the directory name */}}
     {{/* $Site.Data.crds /$version/crds/yaml */}}
-    {{ range index $.Site.Data.crds .Section "api" "yaml" }}
+    {{ range $filename,$content := index $.Site.Data.crds .Section "api" "yaml" }}
+        {{ with $content }}
+            {{ $url := .ResourceType }}
+            {{ $kind := .spec.names.kind }}
+            {{ $group := .spec.group }}
+            {{ $version := "" }}
+            {{ $description := "" }}
+            {{ $schemaScratch := newScratch }}     {{/* Temporary variable used to prune fields from the larger spec */}}
+            {{ $schemaWithStatus := dict }}        {{/* The pruned schema to work with */}}
 
-        {{ $kind := .spec.names.kind }}
-        {{ $group := .spec.group }}
-        {{ $version := "" }}
-        {{ $description := "" }}
-        {{ $schemaScratch := newScratch }}     {{/* Temporary variable used to prune fields from the larger spec */}}
-        {{ $schemaWithStatus := dict }}        {{/* The pruned schema to work with */}}
+            {{ $bigName := gt (len $kind) 32 }}    {{/* Long names overrun the display and cause problems. This allows for applying custom styles */}}
 
-        {{ $bigName := gt (len $kind) 32 }}    {{/* Long names overrun the display and cause problems. This allows for applying custom styles */}}
+            {{/* Iterate over each version and find the "storage: true" version */}}
+            {{ range  .spec.versions }}
+                {{ if index . "storage" }}
+                    {{ $version = .name }}
 
-        {{/* Iterate over each version and find the "storage: true" version */}}
-        {{ range  .spec.versions }}
-            {{ if index . "storage" }}
-                {{ $version = .name }}
+                    {{ $schemaScratch.Set "oAPI" (index . "schema" "openAPIV3Schema" "properties") }}
 
-                {{ $schemaScratch.Set "oAPI" (index . "schema" "openAPIV3Schema" "properties") }}
-
-                {{/* Pull out the top-level Kind description and delete unnecessary fields */}}
-                {{ $description = (index . "schema" "openAPIV3Schema" "description") }}
-                {{ $schemaScratch.DeleteInMap "oAPI" "apiVersion" }}
-                {{ $schemaScratch.DeleteInMap "oAPI" "kind" }}
-                {{ $schemaScratch.DeleteInMap "oAPI" "metadata" }}
-                {{ $schemaScratch.DeleteInMap "oAPI" "description" }}
-                {{ $schemaWithStatus = $schemaScratch.Get "oAPI" }}
+                    {{/* Pull out the top-level Kind description and delete unnecessary fields */}}
+                    {{ $description = (index . "schema" "openAPIV3Schema" "description") }}
+                    {{ $schemaScratch.DeleteInMap "oAPI" "apiVersion" }}
+                    {{ $schemaScratch.DeleteInMap "oAPI" "kind" }}
+                    {{ $schemaScratch.DeleteInMap "oAPI" "metadata" }}
+                    {{ $schemaScratch.DeleteInMap "oAPI" "description" }}
+                    {{ $schemaWithStatus = $schemaScratch.Get "oAPI" }}
+                {{ end }}
             {{ end }}
-        {{ end }}
 
-            {{/* the crd-root-row is a top level CRD row */}}
-            <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
+                {{/* the crd-root-row is a top level CRD row */}}
+                <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
-                {{/* Collapse/Expand Button and Kind name */}}
-                <div class="col col-xl-4 col-8 align-middle expand-buttons bigName-col">
-                    {{/* Plus/Minus Button */}}
-                    <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
+                    {{/* Collapse/Expand Button and Kind name */}}
+                    <div class="col col-xl-4 col-10 align-middle expand-buttons bigName-col">
+                        {{/* Plus/Minus Button */}}
+                        <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
 
-                    {{/* CRD name text */}}
-                    <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-                        <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
-                    </button>
-                </div>
+                        {{/* CRD name text */}}
+                        <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
+                            <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
+                        </button>
+                    </div>
 
-                {{/* If the CRD name is longer than 24 characters hide the other fields, regardless of viewport size */}}
-                <div class="{{ if $bigName }}d-none{{end}} col col-lg-3 col-2 mobile-hidden group-name text-truncate">{{ $group }}</div>
-                <div class="{{ if $bigName }}d-none{{end}} col col-lg-1 col-2 mobile-hidden ">{{ $version }}</div>
-                <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle expand-link mobile-hidden text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
-                <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle collapse-link mobile-hidden text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
+                    {{/* If the CRD name is longer than 24 characters hide the other fields, regardless of viewport size */}}
+                    <div class="{{ if $bigName }}d-none{{end}} col col-lg-4 col-2 mobile-hidden group-name text-truncate">{{ $group }}/{{ $version }} </div>
+                    <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle expand-link mobile-hidden text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
+                    <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle collapse-link mobile-hidden text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
 
+                    {{/* The container to show/hide with information related to the CRD */}}
+                    <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
+                        {{ if $bigName }}
+                            <div class="row">
+                                <div class="col col-4 bigName-row-padding mobile-hidden"><a class="icon-link" href="yaml/{{$filename}}.yaml"><span class="yaml-svg"></span>YAML</a></div>
+                                <div class="mobile-hidden col col-4">{{$group}}/{{$version}}</div>
+                                <div class="col col-2 align-middle expand-link text-truncate mobile-hidden" onclick="showAll('.{{ $kind }}')">Expand All</div>
+                                <div class="col col-2 align-middle collapse-link text-truncate mobile-hidden" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
+                            </div>
+                        {{ else }}
+                            <div class="yaml-link-padding mobile-hidden"><a class="icon-link" href="yaml/{{$filename}}.yaml"><span class="yaml-svg"></span>YAML</a></div>
+                        {{ end }}
 
-                {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
-                    {{/* If the group and version are hidden from the row, display them here */}}
-                    <div class="{{if $bigName }}bigNameGroup{{end}} mobile-group mobile-show">{{$group}}/{{$version}}</div>
+                            <div class="mobile-show ">{{$group}}/{{$version}}</div>
 
-                    {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
-                    <div class="description bigName-reset">{{ $description | markdownify}}</div>
+                        {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
+                        <div class="description bigName-reset">
+                            {{ $description | markdownify}}</div>
 
-                    {{/* Loop over the fields in the pruned Schema and generate their content */}}
-                    {{ range $key,$schema := $schemaWithStatus }}
-                        <div class="crd-children">
-                            {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
+                        {{/* Loop over the fields in the pruned Schema and generate their content */}}
+                        {{ range $key,$schema := $schemaWithStatus }}
+                            <div class="crd-children">
+                                {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
+                            </div>
+                        {{ end }}
+                        <div class="up-button-container mobile-hidden">
+                                <a href="#content">
+                                <button type="button" class="up-button btn" title="Back to top"></button>
+                                <span>Back to top</span>
+                                </a>
                         </div>
-                    {{ end }}
+                    </div>
                 </div>
-            </div>
+            {{ end }}
     {{ end }}
     </div>
 </div>
-
 
 {{ define "buildCRD" }}
     {{/* The first field (spec) has a different schema compared to the child nodes */}}
@@ -242,15 +257,21 @@
 
 <script>
 
-    function boxCloser(){
-        boxes = document.querySelectorAll(".crd-expand");
+    function getCRDElements(type){
 
-        for(var index = 0; index < boxes.length; index++){
-            boxes[index].addEventListener("click", function (e){
-                if (e.offsetX < this.offsetWidth){
-                    //hideAll("#" + this.id);
-                }
-            });
+        if(type === "all"){
+            var root = document;
+        }
+        else{
+            var typeElem = document.querySelector(type);
+            var root = typeElem.closest(".crd-container")
+        }
+        var buttons = root.querySelectorAll(".expand-buttons > button");
+        var hiddenElems = root.querySelectorAll(".crd-expand");
+
+        return {
+            "buttons": buttons,
+            "hiddenElems": hiddenElems
         }
     }
 
@@ -263,18 +284,9 @@
      */
     function showAll(type){
 
-        if(type === "all"){
-            var root = document;
-        }
-        else{
-            var typeElem = document.querySelector(type);
-            var root = typeElem.closest(".crd-container")
-
-        }
-
-
-        var buttons = root.querySelectorAll(".expand-buttons > button");
-        var hiddenElems = root.querySelectorAll(".crd-expand");
+        var crdElements = getCRDElements(type);
+        var buttons = crdElements["buttons"];
+        var hiddenElems = crdElements["hiddenElems"];
 
         // This works by changing the classes bootstrap uses.
         // It would be more accurate to click() or invoke the bootstrap JS API.
@@ -298,15 +310,10 @@
      * @param {string} type - a CSS query selector or "all"
      */
     function hideAll(type){
-        if(type === "all"){
-            var root = document;
-        }
-        else{
-            var typeElem = document.querySelector(type);
-            var root = typeElem.closest(".crd-container")
-        }
-        var buttons = root.querySelectorAll(".expand-buttons > button");
-        var hiddenElems = root.querySelectorAll(".crd-expand");
+
+        var crdElements = getCRDElements(type);
+        var buttons = crdElements["buttons"];
+        var hiddenElems = crdElements["hiddenElems"];
 
         // This works by changing the classes bootstrap uses.
         // It would be more accurate to click() or invoke the bootstrap JS API.
@@ -393,6 +400,10 @@
 
     function scrollToAnchor(){
         var hash = window.location.hash.replace("#","");
+
+        if(hash === "content"){
+            return
+        }
 
          // hash on this page means they linked directly to an API object
         if(hash.length > 0){
