@@ -433,7 +433,7 @@ spec:
 
 Create the package using the 
 [Crossplane CLI]({{<ref "../cli">}}) command 
-`crossplane xpkg build -f <directory>`.
+`crossplane xpkg build --package-root=<directory>`.
 
 Where the `<directory>` is the directory containing the `crossplane.yaml` file
 and any Composition or CompositeResourceDefinition YAML files.
@@ -444,7 +444,7 @@ include in the package.
 {{<hint "important" >}}
 You must ignore any other YAML files with `--ignore=<file_list>`.  
 For
-example, `crossplane xpkg build -f test-directory --ignore=".tmp/*"`.
+example, `crossplane xpkg build --package-root=test-directory --ignore=".tmp/*"`.
 
 Including YAML files that aren't Compositions or CompositeResourceDefinitions, 
 including Claims isn't supported.
@@ -466,22 +466,18 @@ metadata:
 # Removed for brevity
 ```
 
-Specify the output file with `--name=<filename>` option.
+Specify the output file with `--output=<filename>.xpkg` option.
 
 For example, to build a package from a directory named `test-directory` and
-generate a package named `test-package.xpkg` use the command:
+generate a package named `test-package.xpkg` in the current working directory,
+use the command:
 
 ```shell
-crossplane xpkg build -f test-directory --name=test-package
+crossplane xpkg build --package-root=test-directory --output=test-package.xpkg
 ```
-
-Crossplane automatically adds the `.xpkg` extension.  
-
-Crossplane places the package in the provided directory, in this example,
-`test-directory`.
 
 ```shell
-ls test-directory
-composition.yml  crossplane.yaml  compositeresourcedefinition.yml  test-package.xpkg  
+ls -1 ./
+test-directory
+test-package.xpkg
 ```
-
