@@ -44,7 +44,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.37.0
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.46.0
 EOF
 ```
 
@@ -80,6 +80,36 @@ spec:
 EOF
 ```
 {{</expand >}}
+
+## Install the DynamoDB Provider
+
+Part 1 only installed the AWS S3 Provider. This section deploys an S3 bucket 
+along with a DynamoDB Table.  
+Deploying a DynamoDB Table requires the DynamoDB Provider as well. 
+
+Add the new Provider to the cluster. 
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-dynamodb
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v0.37.0
+EOF
+```
+
+View the new DynamoDB provider with `kubectl get providers`.
+
+
+```shell {copy-lines="1"}
+kubectl get providers
+NAME                          INSTALLED   HEALTHY   PACKAGE                                                 AGE
+provider-aws-dynamodb         True        True      xpkg.upbound.io/upbound/provider-aws-dynamodb:v0.37.0   13m
+provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.37.0         14m
+upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.37.0     14m
+```
 
 ## Create a custom API
 
@@ -377,34 +407,7 @@ NAME                 XR-KIND   XR-APIVERSION                   AGE
 dynamo-with-bucket   NoSQL     database.example.com/v1alpha1   3s
 ```
 
-## Install the DynamoDB Provider
 
-Part 1 only installed the AWS S3 Provider. Deploying a DynamoDB Table requires
-the DynamoDB Provider as well. 
-
-Add the new Provider to the cluster. 
-
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-aws-dynamodb
-spec:
-  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v0.37.0
-EOF
-```
-
-View the new DynamoDB provider with `kubectl get providers`.
-
-
-```shell {copy-lines="1"}
-kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                                 AGE
-provider-aws-dynamodb         True        True      xpkg.upbound.io/upbound/provider-aws-dynamodb:v0.37.0   13m
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.37.0         14m
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.37.0     14m
-```
 
 ## Access the custom API
 
