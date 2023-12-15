@@ -35,6 +35,7 @@ exceptions:
   - DynamoDB
   - Emmet
   - EnvironmentConfigs
+  - GCP
   - gRPC
   - Hashicorpterms
   - Helm
