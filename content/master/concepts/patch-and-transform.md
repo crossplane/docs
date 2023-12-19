@@ -1551,6 +1551,7 @@ String transforms support the following
 
 * [Convert](#string-convert)
 * [Format](#string-format)
+* [Join](#join)
 * [Regexp](#regular-expression-type)
 * [TrimPrefix](#trim-prefix)
 * [TrimSuffix](#trim-suffix)
@@ -1595,6 +1596,26 @@ patches:
         string:
           type: Format
           fmt: "the-field-%s"
+```
+
+#### Join
+
+The {{<hover label="typeJoin" line="8">}}type: Join{{</hover>}} joins all
+values in the input array into a string using the given separator.
+
+This transform only works with array inputs.
+
+```yaml {label="typeJoin"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.parameters.inputList
+    toFieldPath: spec.targetJoined
+    transforms:
+      - type: string
+        string:
+          type: Join
+          join:
+            separator: ","
 ```
 
 #### Regular expression type
