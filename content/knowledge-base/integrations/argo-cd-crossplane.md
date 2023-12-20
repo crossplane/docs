@@ -19,7 +19,7 @@ to use Annotation based resource tracking. See the [Argo CD docs](https://argo-c
 
 #### Set Resource Tracking Method
 
-In oder for Argo CD to correctly track an Application resources that contain Crossplane related object it needs
+In order for Argo CD to correctly track Application resources that contain Crossplane related objects it needs
 to be configured to use the annotation mechanism.
 
 To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
@@ -37,7 +37,7 @@ in Argo's [repository](https://github.com/argoproj/argo-cd/tree/master/resource_
 from `pkg.crossplane.io` has already been declared which means there no further configuration needed.
 
 Argo CD also enable customising these checks per instance, and that's the mechanism used to provide support
-of Provider's CRDs
+of Provider's CRDs.
 
 To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
 ```yaml
@@ -128,8 +128,8 @@ data:
 #### Set Resource Exclusion
 
 Crossplane providers generates a `ProviderConfigUsage` for each of the managed resource (MR) it handles. This resource
-enable representing the relationship between MR and a ProviderConfig so that controller can use it as finalizer when a
-ProviderConfig is deleted. End-user of Crossplane are not expected to interact with this resource.
+enable representing the relationship between MR and a ProviderConfig so that the controller can use it as finalizer when a
+ProviderConfig is deleted. End-users of Crossplane are not expected to interact with this resource.
 
 Argo CD UI reactivity can be impacted as the number of resource and types grow. To help keep this number low we
 recommend hiding all `ProviderConfigUsage` resources from Argo CD UI.
