@@ -4,53 +4,70 @@ weight: 100
 description: Understand Crossplane's core components
 ---
 
-Crossplane introduces multiple building blocks that enable you to provision,
-compose, and consume infrastructure using the Kubernetes API. These individual
-concepts work together to allow for powerful separation of concern between
-different personas in an organization, meaning that each member of a team
-interacts with Crossplane at an appropriate level of abstraction.
+Crossplane extends Kubernetes allowing Kubernetes to create and manage
+resources external to Kubernetes. Crossplane enables platform engineers to
+create custom APIs and abstractions combining both native Kubernetes
+resources and cloud resources under a single control plane.
 
-## Packages
+Crossplane uses multiple core components to manage the various elements of
+building and managing external resources through Kubernetes. 
 
-[Packages] allow Crossplane to be extended to include new functionality. This
-typically looks like bundling a set of Kubernetes [CRDs] and [controllers] that
-represent and manage external infrastructure (i.e. a provider), then installing
-them into a cluster where Crossplane is running. Crossplane handles making sure
-any new CRDs do not conflict with existing ones, as well as manages the RBAC and
-security of new packages. Packages are not strictly required to be providers,
-but it is the most common use-case for packages at this time.
+* [**The Crossplane pods**]({{<ref "./pods">}}) include the core Crossplane pod and
+  Crossplane RBAC manager pod. Together these pods manage all Crossplane
+  components and resources. 
 
-## Providers
+* [**Providers**]({{<ref "./providers">}}) connect Kubernetes to any external
+  provider, like AWS, Azure or GCP. Providers translate Kubernetes native
+  manifests and API calls into external API calls. Providers are responsible for
+  creating, deleting and managing the lifecycle of their resources.
 
-Providers are packages that enable Crossplane to provision infrastructure on an
-external service. They bring CRDs (i.e. managed resources) that map one-to-one
-to external infrastructure resources, as well as controllers to manage the
-life-cycle of those resources. You can read more about providers, including how
-to install and configure them, in the [providers documentation].
+* [**Managed resources**]({{<ref "./managed-resources">}}) are Kubernetes objects
+  representing things the Provider created outside of Kubernetes. Creating a
+  managed resource in Kubernetes requires a Provider to create a resource.
+  Deleting a managed resource requires a Provider to delete the associated
+  external resource.
 
-## Managed Resources
+* [**Compositions**]({{<ref "./composite-resources">}}) are a template of managed
+  resources. Compositions describe more complex deployments, combining multiple
+  managed resources and any resource customizations, like the size of a database
+  or the cloud provider region.
 
-Managed resources are Kubernetes custom resources that represent infrastructure
-primitives. Managed resources with an API version of `v1beta1` or higher support
-every field that the cloud provider does for the given resource. You can find
-the Managed Resources and their API specifications for each provider on
-the [Upbound Marketplace] and learn more in the [managed resources documentation].
+* [**Composite Resource Definitions**]({{<ref "./composite-resource-definitions">}})
+  represent a custom API, created by platform engineers and consumed by
+  developers or end users. Composite resource definitions use an OpenAPIv3
+  schema to further extend Kubernetes with custom API endpoints, revisions and
+  more. 
 
-## Composite Resources
+* [**Composite Resources**]({{<ref "./composite-resources">}}) represent all the
+  objects created by a user calling the custom API. Every time a user access the
+  custom API Crossplane creates a single Composite Resource and links all
+  the related managed resources to it. 
 
-A composite resource (XR) is a special kind of custom resource that is defined
-by a `CompositeResourceDefinition`. It composes one or more managed resources
-into a higher level infrastructure unit. Composite resources are infrastructure
-operator facing, but may optionally offer an application developer facing
-composite resource claim that acts as a proxy for a composite resource. You can
-learn more about all of these concepts in the [composition documentation].
+* [**Claims**]({{<ref "./claims">}}) are like Composite Resources, but exist
+  in a Kubernetes namespace. Every Claim links to a single cluster scoped
+  Composite Resource. 
 
-<!-- Named Links -->
+* [**Patches and Transforms**]({{<ref "./patch-and-transform">}}) allow platform
+  engineers to change user inputs to their custom API and affect how Crossplane
+  creates resources. Patches and transforms allow for flexible and
+  abstract inputs like `big` or `encrypted` to have specific meanings when
+  creating the actual managed resources.
 
-[Packages]: {{<ref "packages" >}}
-[CRDs]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
-[controllers]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-controllers
-[providers documentation]: {{<ref "providers" >}}
-[Upbound Marketplace]: https://marketplace.upbound.io
-[managed resources documentation]: {{<ref "managed-resources" >}}
-[composition documentation]: {{<ref "./compositions" >}}
+* [**EnvironmentConfigs**]({{<ref "./environment-configs">}}) are an in-memory
+  data store, like a Kubernetes ConfigMap. EnvironmentConfigs are useful for
+  custom resource mapping or storing and retrieving data across Claims and
+  Composite Resources. 
+
+* [**Composition functions**]({{<ref "./composition-functions">}}) are a container
+  of your own custom code which can read, write and change any Crossplane
+  resource. Composition functions are incredibly powerful tools allowing for
+  loops and conditional patching or resource generation.
+
+* [**Usages**]({{<ref "./usages">}}) defining critical resources or custom
+  dependency mappings. Usages can prevent Crossplane from deleting or can
+  ensure that a parent resource waits for Crossplane to delete all child 
+  resources first. 
+
+* [**Packages**]({{<ref "./packages">}}) are a convenient way to package up an
+  entire custom platform and define any other Crossplane related requirements.
+  Packages define how to install Providers, custom APIs or composition functions.
