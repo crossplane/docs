@@ -45,7 +45,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.40.0
+  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.41.0
 EOF
 ```
 
@@ -112,7 +112,7 @@ kind: Provider
 metadata:
   name: provider-gcp-pubsub
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.40.0
+  package: xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.41.0
 EOF
 ```
 
@@ -121,9 +121,9 @@ View the new PubSub provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.40.0    39s
-provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.40.0   13m
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.40.0    12m
+provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.41.0    39s
+provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.41.0   13m
+upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.41.0    12m
 ```
 
 

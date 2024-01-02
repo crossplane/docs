@@ -37,7 +37,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.47.0
 EOF
 ```
 
@@ -52,8 +52,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.46.0       97s
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.46.0   88s
+provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.47.0       97s
+upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.47.0   88s
 ```
 
 The S3 Provider installs a second Provider, the
@@ -67,7 +67,7 @@ Every CRD maps to a unique AWS service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.46.0).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.47.0).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
