@@ -37,7 +37,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.37.0
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.47.0
 EOF
 ```
 
@@ -52,8 +52,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.37.0       2m53s
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.37.0   2m48s
+provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.47.0       97s
+upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.47.0   88s
 ```
 
 The S3 Provider installs a second Provider, the
@@ -67,7 +67,7 @@ Every CRD maps to a unique AWS service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.37.0).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.47.0).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
@@ -184,12 +184,11 @@ Any unique name is acceptable.
 {{< /hint >}}
 
 ```yaml {label="xr"}
-bucket=$(echo "crossplane-bucket-"$(head -n 4096 /dev/urandom | openssl sha1 | tail -c 10))
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl create -f -
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: $bucket
+  generateName: crossplane-bucket-
 spec:
   forProvider:
     region: us-east-2
@@ -222,8 +221,8 @@ This may take up to 5 minutes.
 
 ```shell {copy-lines="1"}
 kubectl get buckets
-NAME                          READY   SYNCED   EXTERNAL-NAME                 AGE
-crossplane-bucket-45eed4ae0   True    True     crossplane-bucket-45eed4ae0   61s
+NAME                      READY   SYNCED   EXTERNAL-NAME             AGE
+crossplane-bucket-hhdzh   True    True     crossplane-bucket-hhdzh   5s
 ```
 
 ## Delete the managed resource
@@ -232,8 +231,8 @@ Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
 Use `kubectl delete bucket <bucketname>` to remove the bucket.
 
 ```shell {copy-lines="1"}
-kubectl delete bucket $bucket
-bucket.s3.aws.upbound.io "crossplane-bucket-45eed4ae0" deleted
+kubectl delete bucket crossplane-bucket-hhdzh
+bucket.s3.aws.upbound.io "crossplane-bucket-hhdzh" deleted
 ```
 
 ## Next steps

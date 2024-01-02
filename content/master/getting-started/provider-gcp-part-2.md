@@ -47,7 +47,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0
+  package: xpkg.upbound.io/upbound/provider-gcp-storage:v0.41.0
 EOF
 ```
 
@@ -98,6 +98,36 @@ EOF
 {{< /editCode >}}
 
 {{</expand >}}
+
+## Install the PubSub Provider
+
+Part 1 only installed the GCP Storage Provider. This section deploys a 
+PubSub Topic along with a GCP storage bucket.  
+First install the GCP PubSub Provider.
+
+Add the new Provider to the cluster. 
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp-pubsub
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.41.0
+EOF
+```
+
+View the new PubSub provider with `kubectl get providers`.
+
+```shell {copy-lines="1"}
+kubectl get providers
+NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
+provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.41.0    39s
+provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.41.0   13m
+upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.41.0    12m
+```
+
 
 ## Create a custom API
 
@@ -284,7 +314,7 @@ pubsubs.queue.example.com   True          True      7s
 View the new custom API endpoints with `kubectl api-resources | grep pubsub`
 
 ```shell {copy-lines="1",label="apiRes"}
-kubectl api-resources | grep pubsub
+kubectl api-resources | grep queue.example
 pubsubclaims                 queue.example.com/v1alpha1             true         PubSubClaim
 pubsubs                      queue.example.com/v1alpha1             false        PubSub
 ```
@@ -350,7 +380,7 @@ spec:
                 - "us-central1"
       patches:
         - fromFieldPath: "spec.location"
-          toFieldPath: "spec.forProvider.messageStoragePolicy[*].allowedPersistenceRegions[*]"
+          toFieldPath: "spec.forProvider.messageStoragePolicy[0].allowedPersistenceRegions[0]"
           transforms:
             - type: map
               map: 
@@ -381,34 +411,6 @@ View the Composition with `kubectl get composition`
 kubectl get composition
 NAME                XR-KIND   XR-APIVERSION       AGE
 topic-with-bucket   PubSub    queue.example.com   3s
-```
-
-## Install the PubSub Provider
-
-Part 1 only installed the GCP Storage Provider. Deploying a PubSub Topic 
-requires the PubSub Provider as well. 
-
-Add the new Provider to the cluster. 
-
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-gcp-pubsub
-spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.35.0
-EOF
-```
-
-View the new PubSub provider with `kubectl get providers`.
-
-```shell {copy-lines="1"}
-kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v0.35.0    7s
-provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v0.35.0   4h
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v0.35.0    4h
 ```
 
 ## Access the custom API
@@ -538,7 +540,7 @@ Deleting the Claim deletes all the Crossplane generated resources.
 `kubectl delete claim -n crossplane-test my-pubsub-queue`
 
 ```shell {copy-lines="1"}
-kubectl delete claim -n crossplane-test my-pubsub-queue
+kubectl delete pubsubclaim my-pubsub-queue -n crossplane-test
 pubsubclaim.queue.example.com "my-pubsub-queue" deleted
 ```
 
