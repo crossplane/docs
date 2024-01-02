@@ -72,12 +72,12 @@
 
         svg.sidebar-icon.plus {
           display: block !important;
-          filter: var(--btn-close-filter);
+          color: var(--body-font-color);
           opacity: 1;
         }
         svg.sidebar-icon.x {
           display: none !important;
-          filter: var(--btn-close-filter);
+          color: var(--body-font-color);
           opacity: 1;
         }
       }
@@ -85,12 +85,12 @@
 
         svg.sidebar-icon.plus {
           display: none !important;
-          filter: var(--btn-close-filter);
+          color: var(--body-font-color);
           opacity: 1;
         }
         svg.sidebar-icon.x {
           display: block !important;
-          filter: var(--btn-close-filter);
+          color: var(--body-font-color);
           opacity: 1;
         }
       }
