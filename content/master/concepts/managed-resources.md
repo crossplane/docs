@@ -644,7 +644,7 @@ call and receiving a response.
 
 {{<hint "note" >}}
 If a Provider restarts before creating the `succeed` or `fail` annotations the
-Provider can't reconcile the manged resource. 
+Provider can't reconcile the managed resource. 
 
 Read Crossplane [issue #3037](https://github.com/crossplane/crossplane/issues/3037#issuecomment-1110142427)
 for more details 
