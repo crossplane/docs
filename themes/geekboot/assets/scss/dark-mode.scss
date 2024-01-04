@@ -8,7 +8,7 @@
 
     // Single code lines inside text. Code blocks are in _code_theme_dark.scss
     --code-background: #{$fog-0}30;
-    --code-color: #{$fog-0};
+//    --code-color: #{$fog-0};
     --code-line-number-color: #{$aqua-400};
 
     //Tabs
@@ -113,7 +113,7 @@
     }
     .table {
         border: 1px solid #{$fog-700};
-        --bs-table-hover-bg: #{$fog-1000};
+        --bs-table-hover-bg: #{$fog-100};
     }
     .table-striped > tbody > tr:nth-of-type(odd) > *, .table-striped-columns > :not(caption) > tr > :nth-child(even) {
         --bs-table-accent-bg: #{$fog-950};
