@@ -354,7 +354,7 @@ resource = {"apiVersion": "example.org/v1", "kind": "Composed", ...}
 rsp.desired.resources["new-resource"].resource.update(resource)
 ```
 
-Refer to the protobuf
+Refer to the Protocol Buffers
 [Python Generated Code Guide](https://protobuf.dev/reference/python/python-generated/#fields)
 for further details.
 {{</hint>}}
