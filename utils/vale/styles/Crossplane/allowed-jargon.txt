@@ -44,6 +44,7 @@ namespaces
 OCI
 PersistentVolumeClaim
 PriorityClass
+protobuf
 proselint
 RBAC
 RPC
