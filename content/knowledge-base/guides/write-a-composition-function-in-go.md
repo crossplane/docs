@@ -16,7 +16,7 @@ page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
 programming language. Using a general purpose programming language allows a
-function to use more advanced logic to template resources, like loops and
+function to use advanced logic to template resources, like loops and
 conditionals. This guide explains how to write a composition function in
 [Go](https://go.dev).
 
@@ -67,7 +67,7 @@ This guide covers each of these steps in detail.
 
 To write a function in Go you need:
 
-* [Go](https://go.dev/dl/) 1.21 or newer. The guide uses Go 1.21.
+* [Go](https://go.dev/dl/) v1.21 or newer. The guide uses Go v1.21.
 * [Docker Engine](https://docs.docker.com/engine/). This guide uses Engine v24.
 * The [Crossplane CLI](https://docs.crossplane.io/latest/cli) v1.14 or newer. This guide uses Crossplane
   CLI v1.14.
@@ -82,8 +82,8 @@ you run this command it initializes your function using
 [this GitHub repository](https://github.com/crossplane/function-template-go)
 as a template.
 
-```shell
-crossplane beta xpkg init function-xbuckets function-template-go -d function-xbuckets
+```shell {copy-lines=1}
+crossplane beta xpkg init function-xbuckets function-template-go -d function-xbuckets 
 Initialized package "function-xbuckets" in directory "/home/negz/control/negz/function-xbuckets" from https://github.com/crossplane/function-template-go/tree/91a1a5eed21964ff98966d72cc6db6f089ad63f4 (main)
 ```
 
@@ -91,7 +91,7 @@ The `crossplane beta init xpkg` command creates a directory named
 `function-xbuckets`. When you run the command the new directory should look like
 this:
 
-```shell
+```shell {copy-lines=1}
 ls function-xbuckets
 Dockerfile  fn.go  fn_test.go  go.mod  go.sum  input/  LICENSE  main.go  package/  README.md  renovate.json
 ```
@@ -574,7 +574,7 @@ ok      github.com/negz/function-xbuckets       0.016s  coverage: 52.6% of state
 You can preview the output of a Composition that uses this function using
 the Crossplane CLI. You don't need a Crossplane control plane to do this.
 
-Create a directory under `function-xbuckets` named `examples`, and add the
+Create a directory under `function-xbuckets` named `example`, and add the
 three files `xr.yaml`, `composition.yaml`, and `functions.yaml`.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
@@ -754,12 +754,12 @@ to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
 
-```shell
+```shell {copy-lines="1"}
 docker build . --quiet --platform=linux/amd64 --tag runtime-amd64
 sha256:fdf40374cc6f0b46191499fbc1dbbb05ddb76aca854f69f2912e580cfe624b4b
 ```
 
-```shell
+```shell {copy-lines="1"}
 docker build . --quiet --platform=linux/arm64 --tag runtime-arm64
 sha256:cb015ceabf46d2a55ccaeebb11db5659a2fb5e93de36713364efcf6d699069af
 ```
