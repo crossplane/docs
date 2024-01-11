@@ -479,7 +479,7 @@ if __name__ == "__main__":
 
 Run the unit tests using `hatch run`:
 
-```shell
+```shell {copy-lines="1"}
 hatch run test:unit
 .
 ----------------------------------------------------------------------
