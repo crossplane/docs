@@ -18,9 +18,6 @@ practices, third-party integrations and Crossplane-related how-tos.
   and using Crossplane.
 * [Integrations]({{<ref "integrations" >}}) are topics using Crossplane with
   third-party tools like [Vault](https://www.vaultproject.io/).
-* [Installing and Upgrading]({{< ref "install" >}}) provides more
-  information for upgrading or managing Crossplane software beyond the basic
-  conditions covered in the standard documentation. 
 
 ## Contribute an article
 Contributions to the Knowledge Base are always welcome. Knowledge Base articles
