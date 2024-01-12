@@ -43,6 +43,10 @@ from = "/v1.9/getting-started/install-configure"
 to = "/latest/software/install/"
 status = 302
 
+# Redirects for deleted pages/sections
+from = "/knowledge-base/install/**"
+to = "/latest/software/"
+status = 302
 
 [context.deploy-preview]
     command = "bash netlify_build.sh"
