@@ -154,27 +154,21 @@ method in `function/fn.py`. When you first open the file it contains a "hello
 world" function.
 
 ```python {label="hello-world"}
-class FunctionRunner(grpcv1beta1.FunctionRunnerService):
-    def __init__(self):
-        self.log = logging.get_logger()
+async def RunFunction(self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1beta1.RunFunctionResponse:
+    log = self.log.bind(tag=req.meta.tag)
+    log.info("Running function")
 
-    async def RunFunction(
-        self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext
-    ) -> fnv1beta1.RunFunctionResponse:
-        log = self.log.bind(tag=req.meta.tag)
-        log.info("Running function")
+    rsp = response.to(req)
 
-        rsp = response.to(req)
+    example = ""
+    if "example" in req.input:
+        example = req.input["example"]
 
-        example = ""
-        if "example" in req.input:
-            example = req.input["example"]
+    # TODO: Add your function logic here!
+    response.normal(rsp, f"I was run with input {example}!")
+    log.info("I was run!", input=example)
 
-        # TODO: Add your function logic here!
-        response.normal(rsp, f"I was run with input {example}!")
-        log.info("I was run!", input=example)
-
-        return rsp
+    return rsp
 ```
 
 All Python composition functions have a `RunFunction` method. Crossplane passes
@@ -193,42 +187,36 @@ for `RunFunctionRequest` and `RunFunctionResponse` in the
 Edit the `RunFunction` method to replace it with this code.
 
 ```python
-class FunctionRunner(grpcv1beta1.FunctionRunnerService):
-    def __init__(self):
-        self.log = logging.get_logger()
+async def RunFunction(self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1beta1.RunFunctionResponse:
+    log = self.log.bind(tag=req.meta.tag)
+    log.info("Running function")
 
-    async def RunFunction(
-        self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext
-    ) -> fnv1beta1.RunFunctionResponse:
-        log = self.log.bind(tag=req.meta.tag)
-        log.info("Running function")
+    rsp = response.to(req)
 
-        rsp = response.to(req)
+    region = req.observed.composite.resource["spec"]["region"]
+    names = req.observed.composite.resource["spec"]["names"]
 
-        region = req.observed.composite.resource["spec"]["region"]
-        names = req.observed.composite.resource["spec"]["names"]
-
-        for name in names:
-            rsp.desired.resources[f"xbuckets-{name}"].resource.update(
-                {
-                    "apiVersion": "s3.aws.upbound.io/v1beta1",
-                    "kind": "Bucket",
-                    "metadata": {
-                        "annotations": {
-                            "crossplane.io/external-name": name,
-                        },
+    for name in names:
+        rsp.desired.resources[f"xbuckets-{name}"].resource.update(
+            {
+                "apiVersion": "s3.aws.upbound.io/v1beta1",
+                "kind": "Bucket",
+                "metadata": {
+                    "annotations": {
+                        "crossplane.io/external-name": name,
                     },
-                    "spec": {
-                        "forProvider": {
-                            "region": region,
-                        },
+                },
+                "spec": {
+                    "forProvider": {
+                        "region": region,
                     },
-                }
-            )
+                },
+            }
+        )
 
-        log.info("Added desired buckets", region=region, count=len(names))
+    log.info("Added desired buckets", region=region, count=len(names))
 
-        return rsp
+    return rsp
 ```
 
 Expand the below block to view the full `fn.py`, including imports and
