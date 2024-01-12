@@ -53,13 +53,13 @@ An `XBuckets` XR has a region and an array of bucket names. The function will
 create an Amazon Web Services (AWS) S3 bucket for each entry in the names array.
 <!-- vale gitlab.FutureTense = YES -->
 
-To write a function in Go you:
+To write a function in Go:
 
-1. Install the tools you need to write the function
-1. Initialize the function from a template
-1. Edit the template to add the function's logic
-1. Test the function end-to-end
-1. Build and push the function to a package repository
+1. [Install the tools you need to write the function](#install-the-tools-you-need-to-write-the-function)
+1. [Initialize the function from a template](#initialize-the-function-from-a-template)
+1. [Edit the template to add the function's logic](#edit-the-template-to-add-the-functions-logic)
+1. [Test the function end-to-end](#test-the-function-end-to-end)
+1. [Build and push the function to a package repository](#build-and-push-the-function-to-a-package-registry)
 
 This guide covers each of these steps in detail.
 
@@ -72,14 +72,16 @@ To write a function in Go you need:
 * The [Crossplane CLI](https://docs.crossplane.io/latest/cli) v1.14 or newer. This guide uses Crossplane
   CLI v1.14.
 
+{{<hint "note">}}
 You don't need access to a Kubernetes cluster or a Crossplane control plane to
 build or test a composition function.
+{{</hint>}}
 
 ## Initialize the function from a template
 
 Use the `crossplane beta xpkg init` command to initialize a new function. When
 you run this command it initializes your function using
-[this GitHub repository](https://github.com/crossplane/function-template-go)
+[a GitHub repository](https://github.com/crossplane/function-template-go)
 as a template.
 
 ```shell {copy-lines=1}
@@ -110,9 +112,9 @@ some other files in the template:
 This tip talks about future plans for Crossplane.
 -->
 In v1.14 of the Crossplane CLI `crossplane beta xpkg init` just clones a
-template GitHub repository. In a future release the command will automate tasks
-like replacing the template name with the new function's name. See Crossplane
-issue [#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
+template GitHub repository. A future CLI release will automate tasks like
+replacing the template name with the new function's name. See Crossplane issue
+[#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
@@ -138,14 +140,12 @@ documentation explains how to pass an input to a composition function.
 The `package/input` directory contains an OpenAPI schema generated from the
 structs in the `input` directory.
 
-{{<hint "important">}}
-If you're writing a function that does use an input type, don't delete the
-`input` and `package/input` directories.
+{{<hint "tip">}}
+If you're writing a function that uses an input, edit the input to meet your
+function's requirements.
 
-Instead rename the type from `Input` to something more specific to your
-function. For example Function Patch and Transform names its input type
-`Resources`. Rename the API version too by updating the `// +groupName` comment
-at the top of `input.go`.
+Change the input's kind and API group. Don't use `Input` and
+`template.fn.crossplane.io`. Instead use something meaningful to your function.
 
 When you edit files under the `input` directory you must update some generated
 files by running `go generate`. See `input/generate.go` for details.
@@ -182,6 +182,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 All Go composition functions have a `RunFunction` method. Crossplane passes
 everything the function needs to run in a
 {{<hover label="hello-world" line="1">}}RunFunctionRequest{{</hover>}} struct.
+
 The function tells Crossplane what resources it should compose by returning a
 {{<hover label="hello-world" line="13">}}RunFunctionResponse{{</hover>}} struct.
 
@@ -194,7 +195,7 @@ using [Protocol Buffers](http://protobuf.dev). You can find detailed schemas for
 
 Edit the `RunFunction` method to replace it with this code.
 
-```go
+```go {hl_lines="4-56"}
 func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
 	rsp := response.To(req, response.DefaultTTL)
 
@@ -427,8 +428,8 @@ for the SDK.
 
 ## Test the function end-to-end
 
-You can test your function by adding unit tests, and by using the `crossplane
-beta render` command. It's a good idea to do both.
+Test your function by adding unit tests, and by using the `crossplane beta
+render` command.
 
 Go has rich support for unit testing. When you initialize a function from the
 template it adds some unit tests to `fn_test.go`. These tests follow Go's
@@ -574,8 +575,10 @@ ok      github.com/negz/function-xbuckets       0.016s  coverage: 52.6% of state
 You can preview the output of a Composition that uses this function using
 the Crossplane CLI. You don't need a Crossplane control plane to do this.
 
-Create a directory under `function-xbuckets` named `example`, and add the
-three files `xr.yaml`, `composition.yaml`, and `functions.yaml`.
+Create a directory under `function-xbuckets` named `example` and create
+Composite Resource, Composition and Function YAML files.
+
+Expand the following block to see example files.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
 
@@ -597,6 +600,8 @@ spec:
   - crossplane-functions-example-c
 ```
 
+<br />
+
 The `composition.yaml` file contains the Composition to use to render the
 composite resource:
 
@@ -616,6 +621,8 @@ spec:
       name: function-xbuckets
 ```
 
+<br />
+
 The `functions.yaml` file contains the Functions the Composition references in
 its pipeline steps:
 
@@ -633,7 +640,7 @@ spec:
 ```
 {{</expand>}}
 
-Note that the Function in `functions.yaml` uses the
+The Function in `functions.yaml` uses the
 {{<hover label="development" line="6">}}Development{{</hover>}}
 runtime. This tells `crossplane beta render` that your function is running
 locally. It connects to your locally running function instead of using Docker to
@@ -648,16 +655,17 @@ metadata:
     render.crossplane.io/runtime: Development
 ```
 
-Use `go run` to run your function locally. The
-{{<hover label="run" line="1">}}--insecure{{</hover>}}
-flag tells the function to run without encryption or authentication. You should
-only use it during testing and development. The
-{{<hover label="run" line="1">}}--debug{{</hover>}} flag tells the function to
-print debug log statements.
+Use `go run` to run your function locally.
 
 ```shell {label="run"}
 go run . --insecure --debug
 ```
+
+{{<hint "warning">}}
+The {{<hover label="run" line="1">}}insecure{{</hover>}} flag tells the function
+to run without encryption or authentication. Only use it during testing and
+development.
+{{</hint>}}
 
 In a separate terminal, run `crossplane beta render`. 
 

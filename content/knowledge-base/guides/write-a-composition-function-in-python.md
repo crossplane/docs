@@ -53,13 +53,13 @@ An `XBuckets` XR has a region and an array of bucket names. The function will
 create an Amazon Web Services (AWS) S3 bucket for each entry in the names array.
 <!-- vale gitlab.FutureTense = YES -->
 
-To write a function in Python you:
+To write a function in Python:
 
-1. Install the tools you need to write the function
-1. Initialize the function from a template
-1. Edit the template to add the function's logic
-1. Test the function end-to-end
-1. Build and push the function to a package repository
+1. [Install the tools you need to write the function](#install-the-tools-you-need-to-write-the-function)
+1. [Initialize the function from a template](#initialize-the-function-from-a-template)
+1. [Edit the template to add the function's logic](#edit-the-template-to-add-the-functions-logic)
+1. [Test the function end-to-end](#test-the-function-end-to-end)
+1. [Build and push the function to a package repository](#build-and-push-the-function-to-a-package-registry)
 
 This guide covers each of these steps in detail.
 
@@ -73,14 +73,16 @@ To write a function in Python you need:
 * The [Crossplane CLI](https://docs.crossplane.io/latest/cli) v1.14 or newer. This guide uses Crossplane
   CLI v1.14.
 
+{{<hint "note">}}
 You don't need access to a Kubernetes cluster or a Crossplane control plane to
 build or test a composition function.
+{{</hint>}}
 
 ## Initialize the function from a template
 
 Use the `crossplane beta xpkg init` command to initialize a new function. When
 you run this command it initializes your function using
-[this GitHub repository](https://github.com/crossplane/function-template-python)
+[a GitHub repository](https://github.com/crossplane/function-template-python)
 as a template.
 
 ```shell {copy-lines=1}
@@ -117,33 +119,28 @@ know about some other files in the template:
 This tip talks about future plans for Crossplane.
 -->
 In v1.14 of the Crossplane CLI `crossplane beta xpkg init` just clones a
-template GitHub repository. In a future release the command will automate tasks
-like replacing the template name with the new function's name. See Crossplane
-issue [#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
+template GitHub repository. A future CLI release will automate tasks like
+replacing the template name with the new function's name. See Crossplane issue
+[#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
 Edit `package/crossplane.yaml` to change the package's name before you start
 adding code. Name your package `function-xbuckets`.
 
-Some functions accept a configuration input. You configure the input when you
-write a Composition that uses the function. The `package/input` directory
-defines the OpenAPI schema for the a function's input. 
+The `package/input` directory defines the OpenAPI schema for the a function's
+input. The function in this guide doesn't accept an input. Delete the
+`package/input` directory.   
 
-The function in this guide doesn't accept an input. For this function you
-should delete the `package/input` directory. The
-[composition functions](https://docs.crossplane.io/latest/concepts/composition-functions)
-documentation explains more the input to a composition function.
+The [composition functions](https://docs.crossplane.io/latest/concepts/composition-functions)
+documentation explains composition function inputs.
 
-{{<hint "important">}}
-If you're writing a function that does use an input type, don't delete the
-`package/input` directory. Instead edit the file to be specific to your
-function.
+{{<hint "tip">}}
+If you're writing a function that uses an input, edit the input YAML file to
+meet your function's requirements.
 
-The kind `Input` is a placeholder value. The API group
-`template.fn.crossplane.io` is, too. Change the kind and API group to something
-meaningful to your function. Edit the `openAPIV3Schema` to represent your
-function's input schema.
+Change the input's kind and API group. Don't use `Input` and
+`template.fn.crossplane.io`. Instead use something meaningful to your function.
 {{</hint>}}
 
 ## Edit the template to add the function's logic
@@ -173,20 +170,14 @@ async def RunFunction(self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.Servi
 
 All Python composition functions have a `RunFunction` method. Crossplane passes
 everything the function needs to run in a
-{{<hover label="hello-world" line="7">}}RunFunctionRequest{{</hover>}} object.
-The function tells Crossplane what resources it should compose by returning a
-{{<hover label="hello-world" line="22">}}RunFunctionResponse{{</hover>}} object.
+{{<hover label="hello-world" line="1">}}RunFunctionRequest{{</hover>}} object.
 
-{{<hint "tip">}}
-Crossplane generates the `RunFunctionRequest` and `RunFunctionResponse` objects
-using [Protocol Buffers](https://protobuf.dev). You can find detailed schemas
-for `RunFunctionRequest` and `RunFunctionResponse` in the
-[Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1beta1).
-{{</hint>}}
+The function tells Crossplane what resources it should compose by returning a
+{{<hover label="hello-world" line="15">}}RunFunctionResponse{{</hover>}} object.
 
 Edit the `RunFunction` method to replace it with this code.
 
-```python
+```python {hl_lines="7-28"}
 async def RunFunction(self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1beta1.RunFunctionResponse:
     log = self.log.bind(tag=req.meta.tag)
     log.info("Running function")
@@ -304,14 +295,13 @@ This code:
 1. Adds one desired S3 bucket for each bucket name.
 1. Returns the desired S3 buckets in a `RunFunctionResponse`.
 
-
-
-{{<hint "tip">}}
 Crossplane provides a
 [software development kit](https://github.com/crossplane/function-sdk-python)
 (SDK) for writing composition functions in Python. This function uses utilities
-from the SDK. Read the
-[documentation](https://crossplane.github.io/function-sdk-python) for the SDK.
+from the SDK.
+
+{{<hint "tip">}}
+Read [the Python Function SDK documentation](https://crossplane.github.io/function-sdk-python).
 {{</hint>}}
 
 {{<hint "important">}}
@@ -321,8 +311,7 @@ The Python SDK automatically generates the `RunFunctionRequest` and
 [Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1beta1).
 
 The fields of the generated Python objects behave similarly to builtin Python
-types like dictionaries and lists. You should be aware that there are some
-differences.
+types like dictionaries and lists. Be aware that there are some differences.
 
 Notably, you access the map of observed and desired resources like a dictionary
 but you can't add a new desired resource by assigning to a map key. Instead,
@@ -349,8 +338,8 @@ for further details.
 
 ## Test the function end-to-end
 
-You can test your function by adding unit tests, and by using the `crossplane
-beta render` command. It's a good idea to do both.
+Test your function by adding unit tests, and by using the `crossplane beta
+render` command.
 
 When you initialize a function from the
 template it adds some unit tests to `tests/test_fn.py`. These tests use the
@@ -481,15 +470,15 @@ OK
 artifacts like wheels. It also manages virtual environments, similar
 to `virtualenv` or `venv`. The `hatch run` command creates a virtual environment
 and runs a command in that environment.
-
-You configure Hatch using `pyproject.toml`.
 {{</hint>}}
 
 You can preview the output of a Composition that uses this function using
 the Crossplane CLI. You don't need a Crossplane control plane to do this.
 
-Create a directory under `function-xbuckets` named `example`, and add the
-three files `xr.yaml`, `composition.yaml`, and `functions.yaml`.
+Create a directory under `function-xbuckets` named `example` and create
+Composite Resource, Composition and Function YAML files.
+
+Expand the following block to see example files.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
 
@@ -511,6 +500,8 @@ spec:
   - crossplane-functions-example-c
 ```
 
+<br />
+
 The `composition.yaml` file contains the Composition to use to render the
 composite resource:
 
@@ -530,6 +521,8 @@ spec:
       name: function-xbuckets
 ```
 
+<br />
+
 The `functions.yaml` file contains the Functions the Composition references in
 its pipeline steps:
 
@@ -547,7 +540,7 @@ spec:
 ```
 {{</expand>}}
 
-Note that the Function in `functions.yaml` uses the
+The Function in `functions.yaml` uses the
 {{<hover label="development" line="6">}}Development{{</hover>}}
 runtime. This tells `crossplane beta render` that your function is running
 locally. It connects to your locally running function instead of using Docker to
@@ -562,13 +555,16 @@ metadata:
     render.crossplane.io/runtime: Development
 ```
 
-Use `hatch run development` to run your function locally. This tells the
-function to run without encryption or authentication. You should only use it
-during testing and development.
+Use `hatch run development` to run your function locally.
 
 ```shell {label="run"}
 hatch run development
 ```
+
+{{<hint "warning">}}
+`hatch run development` runs the function without encryption or authentication.
+Only use it during testing and development.
+{{</hint>}}
 
 In a separate terminal, run `crossplane beta render`. 
 
