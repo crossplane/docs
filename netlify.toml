@@ -43,6 +43,7 @@ from = "/v1.9/getting-started/install-configure"
 to = "/latest/software/install/"
 status = 302
 
+[[redirects]]
 # Redirects for deleted pages/sections
 from = "/knowledge-base/install/**"
 to = "/latest/software/"
