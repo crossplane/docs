@@ -53,6 +53,25 @@ data:
           message = "Provisioning ..."
         }
 
+        local function contains (table, val)
+          for i, v in ipairs(table) do
+            if v == val then
+              return true
+            end
+          end
+          return false
+        end
+
+        local has_no_status = {
+          "ProviderConfigUsage"
+        }
+
+        if obj.status == nil and contains(has_no_status, obj.kind) then
+          health_status.status = "Healthy"
+          health_status.message = "Resource is up-to-date."
+          return health_status
+        end
+
         if obj.status == nil or obj.status.conditions == nil then
           return health_status
         end
@@ -92,6 +111,27 @@ data:
           message = "Provisioning ..."
         }
 
+        local function contains (table, val)
+          for i, v in ipairs(table) do
+            if v == val then
+              return true
+            end
+          end
+          return false
+        end
+
+        local has_no_status = {
+          "Composition",
+          "CompositionRevision",
+          "DeploymentRuntimeConfig",
+          "ControllerConfig"
+        }
+        if obj.status == nil and contains(has_no_status, obj.kind) then
+            health_status.status = "Healthy"
+            health_status.message = "Resource is up-to-date."
+          return health_status
+        end
+
         if obj.status == nil or obj.status.conditions == nil then
           return health_status
         end
@@ -113,7 +153,7 @@ data:
             end
           end
 
-          if condition.type == "Ready" then
+          if contains({"Ready", "Healthy", "Offered", "Established"}, condition.type) then
             if condition.status == "True" then
               health_status.status = "Healthy"
               health_status.message = "Resource is up-to-date."
