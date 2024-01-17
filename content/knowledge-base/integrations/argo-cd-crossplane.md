@@ -39,8 +39,11 @@ from `pkg.crossplane.io` has already been declared which means there no further 
 Argo CD also enable customising these checks per instance, and that's the mechanism used to provide support
 of Provider's CRDs.
 
-To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
-```yaml
+To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace`.
+{{<hint "note">}}
+{{<hover label="argocfg" line="22">}} ProviderConfig{{</hover>}} may have no status or a `status.users` field.
+{{</hint>}}
+```yaml {label="argocfg"}
 apiVersion: v1
 kind: ConfigMap
 data:
@@ -63,7 +66,7 @@ data:
         end
 
         local has_no_status = {
-          "ProviderConfig", --ProviderConfig may have no status, or it may have a status.users field
+          "ProviderConfig",
           "ProviderConfigUsage"
         }
 
