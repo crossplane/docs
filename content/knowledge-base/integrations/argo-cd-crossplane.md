@@ -63,6 +63,7 @@ data:
         end
 
         local has_no_status = {
+          "ProviderConfig", --ProviderConfig may have no status, or it may have a status.users field
           "ProviderConfigUsage"
         }
 
@@ -73,6 +74,11 @@ data:
         end
 
         if obj.status == nil or obj.status.conditions == nil then
+          if obj.kind == "ProviderConfig" and obj.status.users != nil then
+            health_status.status = "Healthy"
+            health_status.message = "Resource is in use."
+            return health_status
+          end
           return health_status
         end
 
