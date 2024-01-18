@@ -90,7 +90,6 @@ rbacManager:
   args: []
   deploy: true
   leaderElection: true
-  managementPolicy: Basic
   nodeSelector: {}
   replicas: 1
   skipAggregatedClusterRoles: false
