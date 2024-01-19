@@ -243,11 +243,9 @@ The RBAC manager container preforms the following tasks:
   them to control their managed resources
 * allowing the `crossplane` ServiceAccount to create managed resources
 * creating ClusterRoles to access Crossplane resources in all namespaces
-* creating Roles to access Crossplane resources in specific namespaces
 
 Use the [ClusterRoles]({{<ref "#crossplane-clusterroles">}}) to grant access to all Crossplane resources in the
 cluster.  
-Use the [Roles]({{<ref "#crossplane-roles" >}}) to only grant access to Crossplane Claims. 
 
 #### Crossplane ClusterRoles
 
@@ -313,27 +311,6 @@ View the full RBAC policy with
 ```shell
 kubectl describe clusterrole crossplane-browse
 ```
-
-#### Crossplane Roles
-By default the RBAC manager creates three Roles in every namespace. These Roles 
-grant access to Claims in a specific namespace. The RBAC manager dynamically 
-updates the Roles to access the specific API endpoints in a Claim. 
-
-{{< hint "note" >}}
-The specific details of the namespace Roles are beyond this guide. For more
-information read the [Composite Resource ClusterRole Mechanics](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md#composite-resource-clusterrole-mechanics)
-section of the RBAC Manager design document.
-{{< /hint >}}
-
-You can disable these namespace specific roles by configuring the RBAC manager
-with `--manage=Basic`.
-
-
-{{< hint "note" >}}
-
-Instructions for changing Crossplane pod settings during installation are in the
-[Crossplane Install]({{<ref "../software/install">}}) section. 
-{{< /hint >}}
 
 ## Leader election
 
