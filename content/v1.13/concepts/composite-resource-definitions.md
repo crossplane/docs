@@ -631,17 +631,31 @@ XRDs can set default parameters for composite resources and Claims.
 <!-- vale off -->
 #### defaultCompositeDeletePolicy
 <!-- vale on -->
-The `defaultCompositeDeletePolicy` defines the deletion policy for composite
-resources and claims. 
+The `defaultCompositeDeletePolicy` defines the default value for the claim's 
+`compositeDeletePolicy` property if the user does not specify a value when the
+claim is created. The `compositeDeletePolicy` is used by the claim controller to specify
+the propagation policy when the controller deletes the associated composite.
+The `compositeDeletePolicy` does not apply to standalone composites that are created
+without claims.
 
-Using a `defaultCompositeDeletePolicy: Background` policy deletes 
-the composite resource or Claim and relies on Kubernetes to delete the remaining
-dependent objects, like managed resources or secrets. 
+Using a `defaultCompositeDeletePolicy: Background` policy causes the CRD for the claim to be
+created with the default value `Background` for the `compositeDeletePolicy` property.
+When a claim is deleted and has the `compositeDeletePolicy` property set to `Background` 
+the claim controller deletes the composite resource using the propagation policy `background`
+and returns immediately, relying on Kubernetes to delete the remaining child objects,
+like managed resources, nested composites, secrets, etc.
 
-Using `defaultCompositeDeletePolicy: Foreground` causes Kubernetes to attach a
-`foregroundDeletion` finalizer to the composite resource or Claim. Kubernetes
-deletes all the dependent objects before deleting the composite resource or
-Claim. 
+Using `defaultCompositeDeletePolicy: Foreground` causes the CRD for the claim to be created with
+the `compositeDeletePolicy` default value `Foreground`.  When a claim is deleted and has the
+`compositeDeletePolicy` property set to `Foreground` the controller
+deletes the associated composite using the propagation policy `foreground`.  This causes Kubernetes
+to use foreground cascading deletion which ensures that all child resources are deleted before the
+parent resource is deleted. Kubernetes deletes all the dependent objects before deleting the
+composite resource.  The deletion of the claim suspends until the composite
+and all associated child resources have been deleted.
+
+The user can override the `defaultCompositeDeletePolicy` when creating a claim by including
+the `spec.compositeDeletePolicy` attribute with either the `Background` or `Foreground` values.
 
 The default value is `defaultCompositeDeletePolicy: Background`. 
 

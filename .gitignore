@@ -42,6 +42,10 @@ Zone.Identifier
 ######################
 .vscode/*
 
+# PyCharm #
+######################
+.idea/
+
 # Common Python Venv #
 ######################
 venv/*
