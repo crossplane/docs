@@ -635,7 +635,7 @@ The `defaultCompositeDeletePolicy` defines the default value for the claim's
 `compositeDeletePolicy` property if the user doesn't specify a value when creating
 the claim. The claim controller uses the `compositeDeletePolicy` property to specify
 the propagation policy when deleting the associated composite.
-The `compositeDeletePolicy` doesn't apply to standalone composites that do not have
+The `compositeDeletePolicy` doesn't apply to standalone composites that don't have
 associated claims.
 
 Using a `defaultCompositeDeletePolicy: Background` policy causes the CRD for the claim to have
@@ -649,10 +649,8 @@ Using `defaultCompositeDeletePolicy: Foreground` causes the CRD for the claim to
 the `compositeDeletePolicy` default value `Foreground`. When a deleted claim has the
 `compositeDeletePolicy` property set to `Foreground` the controller
 deletes the associated composite using the propagation policy `foreground`. This causes Kubernetes
-to use foreground cascading deletion which ensures that all child resources are deleted before the
-parent resource. Kubernetes deletes all the dependent objects before deleting the
-composite resource. The deletion of the claim suspends until the composite
-and all associated child resources are deleted.
+to use foreground cascading deletion which deletes all child resources before deleting the
+parent resource. The claim controller waits for the composite deletion to finish before returning.
 
 When creating a claim the user can override the `defaultCompositeDeletePolicy` by including
 the `spec.compositeDeletePolicy` property with either the `Background` or `Foreground` value.
