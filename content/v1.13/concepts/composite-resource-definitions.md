@@ -643,7 +643,7 @@ the default value `Background` for the `compositeDeletePolicy` property.
 When a deleted claim has the `compositeDeletePolicy` property set to `Background` 
 the claim controller deletes the composite resource using the propagation policy `background`
 and returns, relying on Kubernetes to delete the remaining child objects,
-like managed resources, nested composites, secrets, etc.
+like managed resources, nested composites and secrets.
 
 Using `defaultCompositeDeletePolicy: Foreground` causes the CRD for the claim to have
 the `compositeDeletePolicy` default value `Foreground`. When a deleted claim has the
