@@ -658,7 +658,7 @@ Use `kubectl get` to view the annotations on a managed resource. For example, an
 AWS VPC resource:
 
 ```yaml {label="creation" copy-lines="2-9"}
-$ kubectl get vpc my-vpc
+$ kubectl get -o yaml vpc my-vpc
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: VPC
 metadata:
