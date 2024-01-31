@@ -752,7 +752,7 @@ external system.
 
 Remove the `crossplane.io/external-create-pending` annotation from the managed
 resource after you're sure no leaked resource exists. This tells the provider to
-resume reconciliation of the managed resource.
+resume reconciliation of and recreate the managed resource.
 {{</hint>}}
 
 Providers also use the creation annotations to avoid leaking resources.
