@@ -712,14 +712,6 @@ Events:
   Warning  CannotInitializeManagedResource  29m (x19 over 19h)  managed/queue.sqs.aws.crossplane.io  cannot determine creation result - remove the crossplane.io/external-create-pending annotation if it is safe to proceed
 ```
 
-{{<hint "important">}}
-The safest thing for a provider to do when it detects that it might have leaked
-a resource is to stop and wait for human intervention.
-
-This ensures the provider doesn't create duplicates of the leaked resource.
-Duplicate resources can be costly and dangerous.
-{{</hint>}}
-
 Providers use the creation annotations to detect that they might have leaked a
 resource.
 
@@ -738,6 +730,14 @@ The provider knows it might have leaked a resource because it updates all the
 resource's annotations at the same time. If the provider couldn't update the
 creation annotations after it created the resource, it also couldn't update the
 `crossplane.io/external-name` annotation.
+
+{{<hint "important">}}
+The safest thing for a provider to do when it detects that it might have leaked
+a resource is to stop and wait for human intervention.
+
+This ensures the provider doesn't create duplicates of the leaked resource.
+Duplicate resources can be costly and dangerous.
+{{</hint>}}
 
 {{<hint "tip">}}
 If a resource has a `cannot determine creation result` error, inspect the
