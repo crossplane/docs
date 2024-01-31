@@ -653,7 +653,6 @@ Providers set three creation annotations to avoid and detect leaked resources:
 * `crossplane.io/external-create-failed` - The last time the provider failed to
   create the resource.
 
-
 Use `kubectl get` to view the annotations on a managed resource. For example, an
 AWS VPC resource:
 
@@ -681,9 +680,9 @@ Some external systems don't let a provider specify a resource's name when the
 provider creates it. Instead the external system generates an nondeterministic
 name and returns it to the provider.
 
-When the external system generates the resource's name, it's critical that the
-provider saves it to the managed resource's `crossplane.io/external-name`
-annotation. If it doesn't, it leaks the resource.
+When the external system generates the resource's name, the provider attempts to
+save it to the managed resource's `crossplane.io/external-name` annotation. If
+it doesn't, it _leaks_ the resource.
 
 A provider can't guarantee that it can save the annotation. The provider could
 restart or lose network connectivity between creating the resource and saving
