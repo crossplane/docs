@@ -671,7 +671,7 @@ metadata:
 
 A provider uses the
 {{<hover label="creation" line="7">}}crossplane.io/external-name{{</hover>}}
-annotation to find a resource in an external system, for example AWS.
+annotation to lookup a managed resource in an external system.
 
 If the provider can't find a managed resource in an external system, it thinks
 the resource doesn't exist. When the provider thinks a resource doesn't exist
