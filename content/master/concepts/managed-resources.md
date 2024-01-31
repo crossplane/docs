@@ -635,7 +635,8 @@ my-rds-instance      True    True     my-custom-name       11m
 
 ### Creation annotations
 
-In some rare situations a provider can forget that it created a resource. When
+When an external system like AWS generates nondeterministic resource names it's
+possible for a provider to create a resource but not record that it did. When
 this happens the provider can't manage the resource.
 
 {{<hint "tip">}}
