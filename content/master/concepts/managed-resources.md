@@ -740,8 +740,8 @@ creation annotations after it created the resource, it also couldn't update the
 `crossplane.io/external-name` annotation.
 
 {{<hint "tip">}}
-Inspect the external system when resources have a `cannot determine creation
-result` error.
+If a resource has a `cannot determine creation result` error, inspect the
+external system.
 
 Use the timestamp from the `crossplane.io/external-create-pending` annotation to
 determine when the provider might have leaked a resource. Look for resources
