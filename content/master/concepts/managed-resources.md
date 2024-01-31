@@ -678,8 +678,8 @@ the resource doesn't exist. When the provider thinks a resource doesn't exist
 it creates the resource.
 
 Some external systems don't let a provider specify a resource's name when the
-provider creates it. Instead the external system generates an unpredictable name
-and returns it to the provider.
+provider creates it. Instead the external system generates an nondeterministic
+name and returns it to the provider.
 
 When the external system generates the resource's name, it's critical that the
 provider saves it to the managed resource's `crossplane.io/external-name`
