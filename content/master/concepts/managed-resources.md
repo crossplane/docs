@@ -672,9 +672,9 @@ A provider uses the
 {{<hover label="creation" line="7">}}crossplane.io/external-name{{</hover>}}
 annotation to lookup a managed resource in an external system.
 
-If the provider can't find a managed resource in an external system, it thinks
-the resource doesn't exist. When the provider thinks a resource doesn't exist
-it creates the resource.
+The provider looks up the resource in the external system to determine if it
+exists, and if it matches the managed resource's desired state. If the provider
+can't find the resource, it creates it.
 
 Some external systems don't let a provider specify a resource's name when the
 provider creates it. Instead the external system generates an nondeterministic
@@ -688,14 +688,20 @@ A provider can't guarantee that it can save the annotation. The provider could
 restart or lose network connectivity between creating the resource and saving
 the annotation.
 
-{{<hint "important">}}
-Anytime an external system generates a resource's name there is a risk the
-provider could leak the resource.
-{{</hint>}}
-
 A provider can detect that it might have leaked a resource. If the provider
 thinks it might have leaked a resource, it stops reconciling it until you tell
 the provider it's safe to proceed.
+
+{{<hint "important">}}
+Anytime an external system generates a resource's name there is a risk the
+provider could leak the resource.
+
+The safest thing for a provider to do when it detects that it might have leaked
+a resource is to stop and wait for human intervention.
+
+This ensures the provider doesn't create duplicates of the leaked resource.
+Duplicate resources can be costly and dangerous.
+{{</hint>}}
 
 When a provider thinks it might have leaked a resource it creates a `cannot
 determine creation result` event associated with the managed resource. Use
@@ -730,14 +736,6 @@ The provider knows it might have leaked a resource because it updates all the
 resource's annotations at the same time. If the provider couldn't update the
 creation annotations after it created the resource, it also couldn't update the
 `crossplane.io/external-name` annotation.
-
-{{<hint "important">}}
-The safest thing for a provider to do when it detects that it might have leaked
-a resource is to stop and wait for human intervention.
-
-This ensures the provider doesn't create duplicates of the leaked resource.
-Duplicate resources can be costly and dangerous.
-{{</hint>}}
 
 {{<hint "tip">}}
 If a resource has a `cannot determine creation result` error, inspect the
