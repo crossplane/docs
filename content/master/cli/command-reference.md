@@ -593,19 +593,36 @@ with the command
 
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
-The `<template>` value may be one of three well known templates:
-* `function-template-go` - A template to build Crossplane [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
+The `<template>` value may be one of four well known templates:
+* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
+* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
 * `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
 
 Instead of a well known template the `<template>` value can be a git repository 
 URL.
 
+#### NOTES.txt
+
+If the template repo contains a `NOTES.txt` file in its root directory, the
+`crossplane beta xpkg init` command prints the contents of the file to the
+terminal after populating the directory with the template files. This can be
+useful for providing additional information about the template.
+
+#### init.sh
+
+If the template repo contains an `init.sh` file in its root directory, the
+`crossplane beta xpkg init` command starts a dialogue after populating the
+directory with the template files. The dialogue prompts the user if they want
+to view or run the script. The initialization script can be used to perform
+additional personalization of the template.
+
 #### Flags
 {{< table "table table-sm table-striped">}}
-| Short flag   | Long flag     | Description                                                                                      |
-| ------------ | ------------- | ------------------------------                                                                   |
-| `-d`         | `--directory` | The directory to create and load the template files into. Uses the current directory by default. |
+| Short flag   | Long flag               | Description                                                                                      |
+| ------------ | ----------------------- | ------------------------------                                                                   |
+| `-d`         | `--directory`           | The directory to create and load the template files into. Uses the current directory by default. |
+| `-r`         | `--run-init-script`     | Run the init.sh script without prompting, if it exists.                                                        |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
