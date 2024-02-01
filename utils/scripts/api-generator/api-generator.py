@@ -310,17 +310,9 @@ def cliArguments():
         "-v", "--verbose", action="store_true", help="Print verbose logging"
     )
 
-    args =  parser.parse_args([
-        "-d",
-        '-crd',
-        '/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds',
-        '-desc',
-        '/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions',
-        '-v'
-    ])
-    #args = parser.parse_args()
+    args = parser.parse_args()
 
-    # verbose = args.verbose
+    verbose = args.verbose
     errors = False
     crdPath = args.crdPath[0]
     descDir = args.descriptionDirectory[0]
