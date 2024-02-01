@@ -13,7 +13,7 @@
     <div id="crd-rows-container">
     {{/* Each level is a map with the key being the directory name */}}
     {{/* $Site.Data.crds /$version/crds/yaml */}}
-    {{ range $filename,$content := index $.Site.Data.crds .Section "api" "yaml" }}
+    {{ range $filename,$content := index $.Site.Data.crds .Section "api" "crds" }}
         {{ with $content }}
             {{ $url := .ResourceType }}
             {{ $kind := .spec.names.kind }}
