@@ -624,7 +624,7 @@ kind: RDSInstance
 metadata:
   name: my-rds-instance  
   annotations: 
-    crossplane.io/external-name: my-custom-namee
+    crossplane.io/external-name: my-custom-name
 ```
 
 ```shell {copy-lines="1"}
@@ -635,21 +635,143 @@ my-rds-instance      True    True     my-custom-name       11m
 
 ### Creation annotations
 
-Providers create new managed resources with the
-`crossplane.io/external-create-pending` annotation.
+When an external system like AWS generates nondeterministic resource names it's
+possible for a provider to create a resource but not record that it did. When
+this happens the provider can't manage the resource.
 
-The Provider applies the `crossplane.io/external-create-succeeded` or
-`crossplane.io/external-create-failed` annotation after making the external API
-call and receiving a response. 
+{{<hint "tip">}}
+Crossplane calls resources that a provider creates but doesn't manage _leaked
+resources_.
+{{</hint>}}
 
-{{<hint "note" >}}
-If a Provider restarts before creating the `succeed` or `fail` annotations the
-Provider can't reconcile the managed resource. 
+Providers set three creation annotations to avoid and detect leaked resources:
 
-Read Crossplane [issue #3037](https://github.com/crossplane/crossplane/issues/3037#issuecomment-1110142427)
-for more details 
-{{< /hint >}}
+* {{<hover label="creation" line="8">}}crossplane.io/external-create-pending{{</hover>}} -
+  The last time the provider was about to create the resource.
+* {{<hover label="creation" line="9">}}crossplane.io/external-create-succeeded{{</hover>}} -
+  The last time the provider successfully created the resource.
+* `crossplane.io/external-create-failed` - The last time the provider failed to
+  create the resource.
 
+Use `kubectl get` to view the annotations on a managed resource. For example, an
+AWS VPC resource:
+
+```yaml {label="creation" copy-lines="2-9"}
+$ kubectl get -o yaml vpc my-vpc
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: VPC
+metadata:
+  name: my-vpc
+  annotations:
+    crossplane.io/external-name: vpc-1234567890abcdef0
+    crossplane.io/external-create-pending: "2023-12-18T21:48:06Z"
+    crossplane.io/external-create-succeeded: "2023-12-18T21:48:40Z"
+```
+
+A provider uses the
+{{<hover label="creation" line="7">}}crossplane.io/external-name{{</hover>}}
+annotation to lookup a managed resource in an external system.
+
+The provider looks up the resource in the external system to determine if it
+exists, and if it matches the managed resource's desired state. If the provider
+can't find the resource, it creates it.
+
+Some external systems don't let a provider specify a resource's name when the
+provider creates it. Instead the external system generates an nondeterministic
+name and returns it to the provider.
+
+When the external system generates the resource's name, the provider attempts to
+save it to the managed resource's `crossplane.io/external-name` annotation. If
+it doesn't, it _leaks_ the resource.
+
+A provider can't guarantee that it can save the annotation. The provider could
+restart or lose network connectivity between creating the resource and saving
+the annotation.
+
+A provider can detect that it might have leaked a resource. If the provider
+thinks it might have leaked a resource, it stops reconciling it until you tell
+the provider it's safe to proceed.
+
+{{<hint "important">}}
+Anytime an external system generates a resource's name there is a risk the
+provider could leak the resource.
+
+The safest thing for a provider to do when it detects that it might have leaked
+a resource is to stop and wait for human intervention.
+
+This ensures the provider doesn't create duplicates of the leaked resource.
+Duplicate resources can be costly and dangerous.
+{{</hint>}}
+
+When a provider thinks it might have leaked a resource it creates a `cannot
+determine creation result` event associated with the managed resource. Use
+`kubectl describe` to see the event.
+
+```shell {copy-lines="1"}
+kubectl describe queue my-sqs-queue
+
+# Removed for brevity
+
+Events:
+  Type     Reason                           Age                 From                                 Message
+  ----     ------                           ----                ----                                 -------
+  Warning  CannotInitializeManagedResource  29m (x19 over 19h)  managed/queue.sqs.aws.crossplane.io  cannot determine creation result - remove the crossplane.io/external-create-pending annotation if it is safe to proceed
+```
+
+Providers use the creation annotations to detect that they might have leaked a
+resource.
+
+Each time a provider reconciles a managed resource it checks the resource's
+creation annotations. If the provider sees a create pending time that's more
+recent than the most recent create succeeded or create failed time, it knows
+that it might have leaked a resource.
+
+{{<hint "note">}}
+Providers don't remove the creation annotations. They use the timestamps to
+determine which is most recent. It's normal for a managed resource to have
+several creation annotations.
+{{</hint>}}
+
+The provider knows it might have leaked a resource because it updates all the
+resource's annotations at the same time. If the provider couldn't update the
+creation annotations after it created the resource, it also couldn't update the
+`crossplane.io/external-name` annotation.
+
+{{<hint "tip">}}
+If a resource has a `cannot determine creation result` error, inspect the
+external system.
+
+Use the timestamp from the `crossplane.io/external-create-pending` annotation to
+determine when the provider might have leaked a resource. Look for resources
+created around this time.
+
+If you find a leaked resource, and it's safe to do so, delete it from the
+external system.
+
+Remove the `crossplane.io/external-create-pending` annotation from the managed
+resource after you're sure no leaked resource exists. This tells the provider to
+resume reconciliation of and recreate the managed resource.
+{{</hint>}}
+
+Providers also use the creation annotations to avoid leaking resources.
+
+When a provider writes the `crossplane.io/external-create-pending` annotation it
+knows it's reconciling the latest version of the managed resource. The write
+would fail if the provider was reconciling an old version of the managed
+resource.
+
+If the provider reconciled an old version with an outdated
+`crossplane.io/external-name` annotation it could mistakenly determine that the
+resource didn't exist. The provider would create a new resource, and leak the
+existing one.
+
+Some external systems have a delay between when a provider creates a resource
+and when the system reports that it exists. The provider uses the most recent
+create succeeded time to account for this delay.
+
+If the provider didn't account for the delay, it could mistakenly determine
+that the resource didn't exist. The provider would create a new resource, and
+leak the existing one.
 
 ### Paused
 Manually applying the `crossplane.io/paused` annotation causes the Provider to
