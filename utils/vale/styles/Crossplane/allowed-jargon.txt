@@ -72,3 +72,5 @@ TLS
 tolerations
 VM
 YAML
+NOTES.txt
+init.sh
