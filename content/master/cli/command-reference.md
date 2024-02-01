@@ -135,7 +135,7 @@ For example, to install version 0.42.0 of the
 | ------------ | -------------                                    | ------------------------------                                                                  |
 |              | `--runtime-config=<runtime config name>`         | Install the package with a runtime configuration.                                               |
 | `-m`         | `--manual-activation`                            | Set the `revisionActiviationPolicy` to `Manual`.                                                |
-|              | `--package-pull-secrets=<list of secrets>`       | A comma-seperated list of Kubernetes secrets to use for authenticating to the package registry. |
+|              | `--package-pull-secrets=<list of secrets>`       | A comma-separated list of Kubernetes secrets to use for authenticating to the package registry. |
 | `-r`         | `--revision-history-limit=<number of revisions>` | Set the `revisionHistoryLimit`. Defaults to `1`.                                                |
 | `-w`         | `--wait=<number of seconds>`                     | Number of seconds to wait for a package to install.                                             |
 
@@ -604,18 +604,18 @@ URL.
 
 #### NOTES.txt
 
-If the template repo contains a `NOTES.txt` file in its root directory, the
-`crossplane beta xpkg init` command prints the contents of the file to the
+If the template repository contains a `NOTES.txt` file in its root directory,
+the `crossplane beta xpkg init` command prints the contents of the file to the
 terminal after populating the directory with the template files. This can be
-useful for providing additional information about the template.
+useful for providing information about the template.
 
 #### init.sh
 
-If the template repo contains an `init.sh` file in its root directory, the
-`crossplane beta xpkg init` command starts a dialogue after populating the
-directory with the template files. The dialogue prompts the user if they want
-to view or run the script. The initialization script can be used to perform
-additional personalization of the template.
+If the template repository contains an `init.sh` file in its root directory, the
+`crossplane beta xpkg init` command starts a dialog after populating the
+directory with the template files. The dialog prompts the user if they want
+to view or run the script. Use the initialization script to automatically
+personalize the template.
 
 #### Flags
 {{< table "table table-sm table-striped">}}
