@@ -375,8 +375,8 @@ def main():
             for crd in crdFiles:
                 hasDiffs = compareDescriptions(args["crd"] + "/" + crd, args["desc"])
 
-                if hasDiffs:
-                    exit(1)
+            if hasDiffs:
+                exit(1)
         else:
             exit(compareDescriptions(args["crd"], args["desc"]))
 
