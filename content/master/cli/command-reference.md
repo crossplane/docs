@@ -135,7 +135,7 @@ For example, to install version 0.42.0 of the
 | ------------ | -------------                                    | ------------------------------                                                                  |
 |              | `--runtime-config=<runtime config name>`         | Install the package with a runtime configuration.                                               |
 | `-m`         | `--manual-activation`                            | Set the `revisionActiviationPolicy` to `Manual`.                                                |
-|              | `--package-pull-secrets=<list of secrets>`       | A comma-seperated list of Kubernetes secrets to use for authenticating to the package registry. |
+|              | `--package-pull-secrets=<list of secrets>`       | A comma-separated list of Kubernetes secrets to use for authenticating to the package registry. |
 | `-r`         | `--revision-history-limit=<number of revisions>` | Set the `revisionHistoryLimit`. Defaults to `1`.                                                |
 | `-w`         | `--wait=<number of seconds>`                     | Number of seconds to wait for a package to install.                                             |
 
@@ -615,12 +615,12 @@ As Crossplane evolves, its APIs and resources may change. To help with the
 migration to the new APIs and resources, the `crossplane beta convert` command
 converts a Crossplane resource to a new version or kind.
 
-Currently supported conversions:
+Supported conversions:
 * ControllerConfig to DeploymentRuntimeConfig
 * P&T Composition to Function Pipeline Composition
 
 The command argument is a YAML file containing a single Crossplane resource. If
-not specified or `-`, stdin will be used. The command outputs the converted 
+not specified or `-`, it uses stdin. The command outputs the converted
 resource to stdout or a file.
 
 #### beta convert deployment-runtime
@@ -630,9 +630,9 @@ ControllerConfig to a DeploymentRuntimeConfig.
 
 #### Flags
 {{< table "table table-sm table-striped">}}
-| Short flag   | Long flag       | Description                                                                                   |
-| ------------ | --------------- | ------------------------------                                                                |
-| `-o`         | `--output-file` | The file to write the generated DeploymentRuntimeConfig to. If not set, stdout will be used.  |
+| Short flag   | Long flag       | Description                                                                                 |
+| ------------ | --------------- | ------------------------------                                                              |
+| `-o`         | `--output-file` | The file to write the generated DeploymentRuntimeConfig to. If not set, outputs to stdout.  |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
@@ -643,10 +643,10 @@ P&T Composition to a Function Pipeline Composition.
 
 #### Flags
 {{< table "table table-sm table-striped">}}
-| Short flag   | Long flag         | Description                                                                                   |
-| ------------ | ----------------- | ------------------------------                                                                |
-| `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. If not set, stdout will be used.  |
-| `-f`         | `--function-name` | FunctionRefName to use. Defaults to function-patch-and-transform.                             |
+| Short flag   | Long flag         | Description                                                                                 |
+| ------------ | ----------------- | ------------------------------                                                              |
+| `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. If not set, outputs to stdout.  |
+| `-f`         | `--function-name` | FunctionRefName to use. Defaults to function-patch-and-transform.                           |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 

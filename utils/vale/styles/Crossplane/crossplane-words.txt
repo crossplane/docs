@@ -64,3 +64,8 @@ XRD
 XRD's
 XRDs
 XRs
+P&T
+deployment-runtime
+pipeline-composition
+FunctionRefName
+function-patch-and-transform
