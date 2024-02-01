@@ -609,3 +609,44 @@ URL.
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
+### beta convert
+
+As Crossplane evolves, its APIs and resources may change. To help with the 
+migration to the new APIs and resources, the `crossplane beta convert` command
+converts a Crossplane resource to a new version or kind.
+
+Currently supported conversions:
+* ControllerConfig to DeploymentRuntimeConfig
+* P&T Composition to Function Pipeline Composition
+
+The command argument is a YAML file containing a single Crossplane resource. If
+not specified or `-`, stdin will be used. The command outputs the converted 
+resource to stdout or a file.
+
+#### beta convert deployment-runtime
+
+The `crossplane beta convert deployment-runtime` command converts a 
+ControllerConfig to a DeploymentRuntimeConfig.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag       | Description                                                                                   |
+| ------------ | --------------- | ------------------------------                                                                |
+| `-o`         | `--output-file` | The file to write the generated DeploymentRuntimeConfig to. If not set, stdout will be used.  |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+#### beta convert pipeline-composition
+
+The `crossplane beta convert pipeline-composition` command converts a
+P&T Composition to a Function Pipeline Composition.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag         | Description                                                                                   |
+| ------------ | ----------------- | ------------------------------                                                                |
+| `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. If not set, stdout will be used.  |
+| `-f`         | `--function-name` | FunctionRefName to use. Defaults to function-patch-and-transform.                             |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
