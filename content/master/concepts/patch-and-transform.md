@@ -827,15 +827,6 @@ kind: Composition
 Because the environment is in-memory, there is no command to confirm the patch
 wrote the value to the environment.
 
-{{<hint "important">}}
-The 
-{{<hover label="toEnvField" line="12">}}ToEnvironmentFieldPath{{</hover>}}
-patch happens **before** creating a resource.  
-The 
-{{<hover label="toEnvField" line="13">}}fromFieldPath{{</hover>}} can't
-read from the `atProvider` or `Status` fields.
-{{< /hint >}}
-
 
 <!-- vale Google.Headings = NO -->
 ### CombineFromEnvironment
