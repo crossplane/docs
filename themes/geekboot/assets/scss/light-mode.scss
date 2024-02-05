@@ -118,16 +118,19 @@
     .table td {
         border-top: 1px solid #{$fog-200};
     }
-    .table {
+
+    .table-responsive {
         border: 1px solid #{$fog-200};
-        --bs-table-hover-bg: #{$fog-0};
     }
+
+    // Dark Stripe
     .table-striped > tbody > tr:nth-of-type(odd) > *, .table-striped-columns > :not(caption) > tr > :nth-child(even) {
-        --bs-table-accent-bg: #{$fog-50};
-        color: #{$fog-1000};
+        background-color: #{$fog-50} !important;
     }
+
+    // Light Stripe
     .table-striped > tbody > tr:nth-of-type(even) > *, .table-striped-columns > :not(caption) > tr > :nth-child(odd) {
-        --bs-table-hover-bg: #{$fog-0} !important;
+
     }
 
     // Tab Colors
