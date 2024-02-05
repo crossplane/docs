@@ -1,0 +1,2 @@
+description:
+    The patterns that should be tested against the input string. Patterns are tested in order. The value of the first match is used as result of this transform.

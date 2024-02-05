@@ -10,7 +10,8 @@ import yaml
 verbose = False
 
 
-def mapDescriptions(data, sep=".", _prefix="", keys=None, writeEmpty=False):
+def mapDescriptions(data: any, sep: str = ".", _prefix: str = "", keys:list = None, writeEmpty: bool = False) -> list:
+    """ Recursively process the data object and grab all "x.description" keys """
     # Inspired by https://github.com/fa1zali/yaml_keygen
 
     if keys is None:
@@ -25,15 +26,13 @@ def mapDescriptions(data, sep=".", _prefix="", keys=None, writeEmpty=False):
 
         if len(prefixParts) == 3:  # e.g., <kind>.properties.spec
             key = prefixParts[2]
-            if key == "spec":
+            if key == "spec" or key == "status":
                 desc = False
                 try:
                     keys.append({f"{_prefix}{sep}description": data["description"]})
                 except KeyError:
                     if writeEmpty:
                         keys.append({f"{_prefix}{sep}description": ""})
-            if key == "status":
-                return keys
 
         # write the description before iterating to make it easier to determine if an object is missing a description
         elif "description" in data.keys() or writeEmpty:
@@ -60,34 +59,40 @@ def mapDescriptions(data, sep=".", _prefix="", keys=None, writeEmpty=False):
     return keys
 
 
-def processSchema(kind, schema, writeEmpty=True):
+def processSchema(kind: str, schema: dict, writeEmpty: bool = True) -> dict:
     """Process a CRD schema. Returns a list of description keys}
 
-    kind - root schema Key, CRD "kind".
-    schema - YAML schema to process
+    kind - root schema key. The CRD "kind".
+    schema - dict schema from YAML to process
+    writeEmpty - if a key doesn't have a description, create a description key if True anyway.
     """
 
     return mapDescriptions(schema, _prefix=kind, writeEmpty=writeEmpty)
 
 
-def parseCRDFile(yamlFile):
-    """Given a CRD file path return the active schema"""
+def parseCRDFile(yamlFile: str) -> dict:
+    """Given a string path to a CRD YAML file return a dict of:
+    kind: String of the CRD kind
+    version: String of the active (storage=True) version
+    schema: Dict of the entire active CRD schema
+    """
 
     with open(yamlFile, "r") as file:
         f = yaml.safe_load(file)
 
     kind = f["spec"]["names"]["kind"]
+    group = f["spec"]["group"]
 
     for version in f["spec"]["versions"]:
         if not version["storage"]:
             continue
 
         schema = version["schema"]["openAPIV3Schema"]
-        return {"kind": kind, "schema": schema}
+        return {"group": group, "kind": kind, "schema": schema, "version": version["name"]}
 
 
-def getFiles(inputDir):
-    """Given a directory, return the list of files it contains, excluding subdirectories"""
+def getFiles(inputDir: str) -> list:
+    """Given a string directorypath, return the list of files it contains, excluding subdirectories"""
 
     fileNames = []
 
@@ -97,51 +102,11 @@ def getFiles(inputDir):
     return fileNames
 
 
-def removeProperties(key):
-    """
-    Given a string of
-        x.y.properties.z.properties
-    Remove all instances of "properties" and reassemble the string.
-    """
-
-    splitKey = key.split(".")
-    if len(splitKey) > 4:
-        # delete <kind>.properties.spec.properties
-        del splitKey[:3]
-
-    splitKey = list(filter(lambda a: a != "properties", splitKey))
-    key = ".".join(splitKey)
-
-    return key
-
-
-def getTruncatedName(fileName, truncateTo=6):
-    parts = fileName.split(".")
-    tempName = []
-
-    # Preserve the first key
-    tempName.append(parts[0])
-
-    for part in parts[2:]:
-        # Preserve the final key
-        if len(tempName) == len(parts) - 1:
-            tempName.append(part)
-        else:
-            tempName.append(part[:truncateTo])
-
-    newName = ".".join(tempName)
-
-    # If the new name is still too long and we can truncate further, try it
-    if len(newName) > 200 and truncateTo > 1:
-        getTruncatedName(newName, truncateTo=truncateTo - 1)
-
-    return newName
-
-
-def writeDescriptions(crdDir, descDir):
+def writeDescriptions(crdDir: str, descDir: str) -> None:
     """Read in a directory of CRDs and generate unique description markdown files."""
 
     verbose = True
+    totalDescriptions = 0
 
     files = getFiles(crdDir)
 
@@ -152,20 +117,17 @@ def writeDescriptions(crdDir, descDir):
     if not descDir[-1] == "/":
         descDir = descDir + "/"
 
-    totalDescriptions = 0
-
     for crdFile in files:
-        crdDescriptions = {}
-        crd = {}
-        crdDirName = ""
-        keySet = set()
         if verbose:
             print(f"\nParsing file {crdFile}")
 
         crd = parseCRDFile(crdDir + crdFile)
+
         crdDescriptions = processSchema(crd["kind"], crd["schema"])
-        crdDirName = descDir + crdFile[:-5] + "/"  # Drop ".yaml"
-        Path(crdDirName).mkdir(parents=True, exist_ok=True)
+        crdGroupDir = f"{descDir}{crd['group']}"
+        crdKindDir = f"{crdGroupDir}/{crd['kind']}"
+
+        Path(crdKindDir).mkdir(parents=True, exist_ok=True)
 
         if verbose:
             print(f"Found {len(crdDescriptions)} keys to process")
@@ -173,39 +135,20 @@ def writeDescriptions(crdDir, descDir):
 
         for item in crdDescriptions:
             for key in item.keys():
-                originalKey = key
+                if len(key.split(".")) > 2:
+                    targetDir = f"{crdGroupDir}/{key.replace('.', '/').replace('/description', '')}"
+                    Path(targetDir).mkdir(parents=True, exist_ok=True)
+                else:
+                    targetDir = crdKindDir
 
-                key = removeProperties(key)
+                with open(f"{targetDir}/description.yaml", "w") as f:
+                    try:
+                        f.write("description:\n")
+                        f.write(f"    {item[key]}")
+                    except KeyError:
+                        f.write("description:")
 
-                # Deep keys or long property names can generate filenames too long for an OS
-                # This truncates long names to be <kind>.spec.forP.blah... (for characters from each field)
-                truncated = False
-                if len(key) > 200:
-                    truncated = True
-
-                    key = getTruncatedName(key)
-
-                    if verbose:
-                        print(f"\nTruncating \n\t{originalKey} \nto \n\t{key}")
-
-                    if len(key) > 250:
-                        print("Error:")
-                        print(f"\tLength of {crdFile} key")
-                        print("\t{oldDesc}")
-                        print("\tis too long to process")
-                        exit(1)
-
-                    if key in keySet:
-                        print("Warning:")
-                        print(f"\CRD file {crdFile} key")
-                        print(f"\t{originalKey}")
-                        print("\tmatches an existing key.")
-                        if truncated:
-                            print("\tPossible truncated key conflict:")
-                            print(f"\t{key}")
-
-                with open(crdDirName + key + ".md", "w") as f:
-                    f.write(f"<!-- kind: {originalKey} -->\n {item[originalKey]}")
+                totalDescriptions += 1
 
     if verbose:
         print("\n")
@@ -213,20 +156,44 @@ def writeDescriptions(crdDir, descDir):
     print(f"Wrote {totalDescriptions} descriptions from {len(files)} files.")
 
 
-def compareDescriptions(crdFile, descDir):
+def compareDescriptions(crdFile: str, descDir: str) -> bool:
     if verbose:
         print(f"Comparing CRD files\n\t{crdFile}\n\t{descDir}\n\t")
 
     diffs = False
 
-    crd = parseCRDFile(crdFile)
+    # Process the CRD file and add each description key to a set
     crdDescriptions = set()
-
+    crd = parseCRDFile(crdFile)
     for item in processSchema(crd["kind"], crd["schema"], writeEmpty=False):
         for k in item.keys():
             crdDescriptions.add(k)
 
     descFiles = set()
+
+    # Determine the subdirectories from the original CRD file.
+    crdGroupDir = f"{descDir}/{crd['group']}"
+    crdKindDir = f"{crdGroupDir}/{crd['kind']}"
+
+    crdKindPath = Path(crdKindDir)
+
+    yamlFiles = list(crdKindPath.glob("**/*.yaml"))
+
+    for description in yamlFiles:
+        print(str(description))
+        #descFiles.add(description.replace('/', '.'))
+
+    pass
+
+    # for item in crdDescriptions:
+    #     for key in item.keys():
+    #         if len(key.split(".")) > 2:
+    #             targetDir = f"{crdGroupDir}/{key.replace('.', '/').replace('/description', '')}"
+    #             Path(targetDir).mkdir(parents=True, exist_ok=True)
+    #         else:
+    #             targetDir = crdKindDir
+
+
     descSubDir = os.path.basename(crdFile.split(".yaml")[0])
     filenameMap = {}
 
@@ -265,7 +232,7 @@ def compareDescriptions(crdFile, descDir):
     return diffs
 
 
-def cliArguments():
+def cliArguments() -> dict:
     global verbose
 
     parser = argparse.ArgumentParser(
@@ -310,7 +277,13 @@ def cliArguments():
         "-v", "--verbose", action="store_true", help="Print verbose logging"
     )
 
-    args = parser.parse_args()
+    #args = parser.parse_args()
+    args = parser.parse_args([
+        "-w",
+        "-crd",
+        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds",
+        "-desc",
+        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions"])
 
     verbose = args.verbose
     errors = False
@@ -355,30 +328,41 @@ def cliArguments():
 
 
 def main():
-    args = cliArguments()
+    crd = parseCRDFile("/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds/apiextensions.crossplane.io_compositeresourcedefinitions.yaml")
 
-    if verbose:
-        print(f"Arguments: {args}")
-        print()
+    crdDescriptions = processSchema(crd["kind"], crd["schema"])
+    # for key in crdDescriptions:
+    #     print(key)
+    # writeDescriptions("/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds", "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions")
 
-    if args["write"]:
-        if verbose:
-            print("Writing descriptions...\n")
-        writeDescriptions(args["crd"], args["desc"])
+    compareDescriptions("/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds/apiextensions.crossplane.io_compositeresourcedefinitions.yaml",
+                        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions")
 
-    if args["diff"]:
-        if verbose:
-            print("Comparing descriptions...\n")
 
-        if os.path.isdir(args["crd"]):
-            crdFiles = getFiles(args["crd"])
-            for crd in crdFiles:
-                hasDiffs = compareDescriptions(args["crd"] + "/" + crd, args["desc"])
+    # args = cliArguments()
 
-            if hasDiffs:
-                exit(1)
-        else:
-            exit(compareDescriptions(args["crd"], args["desc"]))
+    # if verbose:
+    #     print(f"Arguments: {args}")
+    #     print()
+
+    # if args["write"]:
+    #     if verbose:
+    #         print("Writing descriptions...\n")
+    #     writeDescriptions(args["crd"], args["desc"])
+
+    # if args["diff"]:
+    #     if verbose:
+    #         print("Comparing descriptions...\n")
+
+    #     if os.path.isdir(args["crd"]):
+    #         crdFiles = getFiles(args["crd"])
+    #         for crd in crdFiles:
+    #             hasDiffs = compareDescriptions(args["crd"] + "/" + crd, args["desc"])
+
+    #         if hasDiffs:
+    #             exit(1)
+    #     else:
+    #         exit(compareDescriptions(args["crd"], args["desc"]))
 
 
 if __name__ == "__main__":

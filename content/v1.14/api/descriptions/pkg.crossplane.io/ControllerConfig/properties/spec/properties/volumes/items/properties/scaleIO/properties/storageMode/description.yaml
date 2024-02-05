@@ -1,0 +1,2 @@
+description:
+    storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.

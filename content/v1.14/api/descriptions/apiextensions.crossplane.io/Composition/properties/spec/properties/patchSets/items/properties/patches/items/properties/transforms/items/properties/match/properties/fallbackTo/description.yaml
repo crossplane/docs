@@ -1,0 +1,2 @@
+description:
+    Determines to what value the transform should fallback if no pattern matches.

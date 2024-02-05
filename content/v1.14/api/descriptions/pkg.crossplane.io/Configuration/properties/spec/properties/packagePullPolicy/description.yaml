@@ -1,0 +1,2 @@
+description:
+    PackagePullPolicy defines the pull policy for the package. Default is IfNotPresent.

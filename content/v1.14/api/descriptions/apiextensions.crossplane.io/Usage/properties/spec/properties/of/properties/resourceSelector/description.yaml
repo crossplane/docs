@@ -1,0 +1,2 @@
+description:
+    Selector to the resource. This field will be ignored if ResourceRef is set.

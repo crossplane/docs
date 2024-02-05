@@ -1,0 +1,2 @@
+description:
+    A StoreConfig configures how Crossplane controllers should store connection details.

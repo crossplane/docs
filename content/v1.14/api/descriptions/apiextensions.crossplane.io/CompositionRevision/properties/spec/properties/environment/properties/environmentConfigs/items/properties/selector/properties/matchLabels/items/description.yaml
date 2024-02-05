@@ -1,0 +1,2 @@
+description:
+    An EnvironmentSourceSelectorLabelMatcher acts like a k8s label selector but can draw the label value from a different path.
