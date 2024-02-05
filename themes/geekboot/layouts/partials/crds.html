@@ -15,9 +15,9 @@
     {{/* $Site.Data.crds /$version/crds/yaml */}}
     {{ range $filename,$content := index $.Site.Data.crds .Section "api" "crds" }}
         {{ with $content }}
-            {{ $url := .ResourceType }}
             {{ $kind := .spec.names.kind }}
             {{ $group := .spec.group }}
+
             {{ $version := "" }}
             {{ $description := "" }}
             {{ $schemaScratch := newScratch }}     {{/* Temporary variable used to prune fields from the larger spec */}}
@@ -42,6 +42,7 @@
                 {{ end }}
             {{ end }}
 
+                <div>{{ range $k,$v := $schemaWithStatus }} {{$k}}{{end}} </div>
                 {{/* the crd-root-row is a top level CRD row */}}
                 <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
