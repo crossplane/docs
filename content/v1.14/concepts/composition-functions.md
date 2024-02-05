@@ -332,7 +332,7 @@ apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
 metadata:
   name: function-patch-and-transform
-  annotation:
+  annotations:
     render.crossplane.io/runtime: Development
 spec:
   package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
