@@ -115,7 +115,13 @@ h3, h4, h5, h6 {
   border-radius: 6px;
   border-collapse: separate;
   border-spacing: 0px;
+  margin-bottom: 0px !important;
 }
+
+.table-responsive {
+  margin-bottom: 1rem;
+}
+
 // Hide bottom borders and wider padding for header items
 .table th {
   border-bottom: none;
