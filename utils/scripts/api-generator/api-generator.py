@@ -20,6 +20,8 @@ def mapDescriptions(data: any, sep: str = ".", _prefix: str = "", keys:list = No
     # Keys to universally ignore
     # Defer more specific key filtering to the output consumer.
     excludedKeys = set(("additionalProperties", "required"))
+    if _prefix == "CompositeResourceDefinition.properties.spec.properties.versions.items.properties.additionalPrinterColumns.items.properties":
+        pass
 
     if isinstance(data, dict):
         prefixParts = _prefix.split(sep)
@@ -34,15 +36,22 @@ def mapDescriptions(data: any, sep: str = ".", _prefix: str = "", keys:list = No
                     if writeEmpty:
                         keys.append({f"{_prefix}{sep}description": ""})
 
-        # write the description before iterating to make it easier to determine if an object is missing a description
-        elif "description" in data.keys() or writeEmpty:
-            if "description" in data.keys():
-                desc = data["description"]
-            else:
-                desc = ""
-            # "properties" never has a description and shouldn't have one.
-            if not prefixParts[len(prefixParts) - 1] == "properties":
-                keys.append({f"{_prefix}{sep}description": desc})
+        else:
+            writeDesc = False
+
+            try:
+                if not isinstance(data["description"], dict):
+                    desc = data["description"]
+                    writeDesc = True
+            except (KeyError,TypeError):
+                if writeEmpty:
+                    desc = ""
+                    writeDesc = True
+
+            if writeDesc:
+                # "properties" never has a description and shouldn't have one.
+                if not prefixParts[len(prefixParts) - 1] == "properties":
+                    keys.append({f"{_prefix}{sep}description": desc})
 
         for k, v in data.items():
             # Ignore "type" when it defines a datatype, but it can also be a valid spec parameter
@@ -136,7 +145,8 @@ def writeDescriptions(crdDir: str, descDir: str) -> None:
         for item in crdDescriptions:
             for key in item.keys():
                 if len(key.split(".")) > 2:
-                    targetDir = f"{crdGroupDir}/{key.replace('.', '/').replace('/description', '')}"
+                    # Remove the ending "/description" to get the destination directory path
+                    targetDir = f"{crdGroupDir}/{key.replace('.', '/')[:-len('/description')]}"
                     Path(targetDir).mkdir(parents=True, exist_ok=True)
                 else:
                     targetDir = crdKindDir
@@ -169,7 +179,7 @@ def compareDescriptions(crdFile: str, descDir: str) -> bool:
         for k in item.keys():
             crdDescriptions.add(k)
 
-    descFiles = set()
+    fileDescriptions = set()
 
     # Determine the subdirectories from the original CRD file.
     crdGroupDir = f"{descDir}/{crd['group']}"
@@ -180,59 +190,45 @@ def compareDescriptions(crdFile: str, descDir: str) -> bool:
     yamlFiles = list(crdKindPath.glob("**/*.yaml"))
 
     for description in yamlFiles:
-        print(str(description))
-        #descFiles.add(description.replace('/', '.'))
-
-    pass
-
-    # for item in crdDescriptions:
-    #     for key in item.keys():
-    #         if len(key.split(".")) > 2:
-    #             targetDir = f"{crdGroupDir}/{key.replace('.', '/').replace('/description', '')}"
-    #             Path(targetDir).mkdir(parents=True, exist_ok=True)
-    #         else:
-    #             targetDir = crdKindDir
-
-
-    descSubDir = os.path.basename(crdFile.split(".yaml")[0])
-    filenameMap = {}
-
-    # The crdFile path is the same name as the directory for the description files
-    for descFile in getFiles(descDir + "/" + descSubDir):
-        with open(descDir + "/" + descSubDir + "/" + descFile, "r") as f:
-            line = f.readline()
-            try:
-                # split on "--", get "kind: <kind>.properties.spec..."
-                # strip and split on "kind:" to get the path string
-                kind = line.split("--")[1].strip().split("kind:")[1].strip()
-                descFiles.add(kind)
-                filenameMap[kind] = descFile
-            except IndexError:
-                print("Warning: unable to determine description endpoint.")
-                print(f"\t{descFile}")
+        # remove the parent directory
+        # split on the filename suffix to remove it
+        # Replace the directory "/" with "."
+        fileDescriptions.add(
+            str(description).split(crdGroupDir)[1].split(description.suffix)[0].lstrip("/").replace("/",".")
+        )
 
     # try:
-    crdDiff = crdDescriptions.difference(descFiles)
-    descDiff = descFiles.difference(crdDescriptions)
+    crdDiff = crdDescriptions.difference(fileDescriptions)
+    fileDiff = fileDescriptions.difference(crdDescriptions)
 
     if crdDiff:
         diffs = True
         print("CRD keys missing description files:")
         for desc in crdDiff:
-            print(f"\t{desc}")
+            descAsPath = desc.replace(".","/")
+            print(f"\t{crdGroupDir}/{descAsPath}.yaml")
         print("")
 
-    if descDiff:
-        diffs = True
-        print("Description files without matching CRD descriptions:")
-        for desc in descDiff:
-            print(f"\t{descDir}/{descSubDir}/{filenameMap[desc]}")
-        print("")
+    if fileDiff:
+        # If there are CRDs without description fields, that's not an error.
+        if verbose:
+            print("Description files without matching CRD descriptions:")
+            for desc in fileDiff:
+                descAsPath = desc.replace(".","/")
+                print(f"\t{crdGroupDir}/{descAsPath}.yaml")
+            print("")
+
+    if not diffs:
+        print(f"No diffs between \n{crdFile} and \n{descDir}\n")
 
     return diffs
 
 
 def cliArguments() -> dict:
+    """
+    Build the CLI arguments and return the arguments and values.
+    """
+
     global verbose
 
     parser = argparse.ArgumentParser(
@@ -277,13 +273,7 @@ def cliArguments() -> dict:
         "-v", "--verbose", action="store_true", help="Print verbose logging"
     )
 
-    #args = parser.parse_args()
-    args = parser.parse_args([
-        "-w",
-        "-crd",
-        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds",
-        "-desc",
-        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions"])
+    args = parser.parse_args()
 
     verbose = args.verbose
     errors = False
@@ -328,41 +318,31 @@ def cliArguments() -> dict:
 
 
 def main():
-    crd = parseCRDFile("/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds/apiextensions.crossplane.io_compositeresourcedefinitions.yaml")
 
-    crdDescriptions = processSchema(crd["kind"], crd["schema"])
-    # for key in crdDescriptions:
-    #     print(key)
-    # writeDescriptions("/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds", "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions")
+    args = cliArguments()
 
-    compareDescriptions("/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds/apiextensions.crossplane.io_compositeresourcedefinitions.yaml",
-                        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions")
+    if verbose:
+        print(f"Arguments: {args}")
+        print()
 
+    if args["write"]:
+        if verbose:
+            print("Writing descriptions...\n")
+        writeDescriptions(args["crd"], args["desc"])
 
-    # args = cliArguments()
+    if args["diff"]:
+        if verbose:
+            print("Comparing descriptions...\n")
 
-    # if verbose:
-    #     print(f"Arguments: {args}")
-    #     print()
+        if os.path.isdir(args["crd"]):
+            crdFiles = getFiles(args["crd"])
+            for crd in crdFiles:
+                hasDiffs = compareDescriptions(args["crd"] + "/" + crd, args["desc"])
 
-    # if args["write"]:
-    #     if verbose:
-    #         print("Writing descriptions...\n")
-    #     writeDescriptions(args["crd"], args["desc"])
-
-    # if args["diff"]:
-    #     if verbose:
-    #         print("Comparing descriptions...\n")
-
-    #     if os.path.isdir(args["crd"]):
-    #         crdFiles = getFiles(args["crd"])
-    #         for crd in crdFiles:
-    #             hasDiffs = compareDescriptions(args["crd"] + "/" + crd, args["desc"])
-
-    #         if hasDiffs:
-    #             exit(1)
-    #     else:
-    #         exit(compareDescriptions(args["crd"], args["desc"]))
+            if hasDiffs:
+                exit(1)
+        else:
+            exit(compareDescriptions(args["crd"], args["desc"]))
 
 
 if __name__ == "__main__":
