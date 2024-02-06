@@ -107,33 +107,18 @@
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23FFFFFF'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
     }
 
-    // This is the selector bootstrap uses for table styling
-    .table :not(caption) > * > * {
-        background-color: var(--body-background) !important;
+    .table {
+        --bs-table-bg: var(--body-background);
+        --bs-table-color-state: var(--body-font-color);
+        --bs-table-striped-color: #{$fog-800};
+        --bs-table-striped-bg: #{$fog-800};
+    }
+
+    .table-hover > tbody > tr:hover > * {
+        background-color: #{$fog-700};
         color: var(--body-font-color);
     }
 
-    .table td {
-        border-top: 1px solid #{$fog-200};
-    }
-
-    .table-responsive {
-        border: 1px solid #{$fog-200};
-    }
-
-    .table td {
-        border-top: 1px solid #{$fog-300};
-    }
-
-    // Dark stripe
-    .table-striped > tbody > tr:nth-of-type(odd) > *, .table-striped-columns > :not(caption) > tr > :nth-child(even) {
-        background-color: #{$fog-500} !important;
-    }
-
-    // Light stripe
-    .table-striped > tbody > tr:nth-of-type(even) > *, .table-striped-columns > :not(caption) > tr > :nth-child(odd) {
-        background-color: #{$fog-800} !important;
-    }
 
     // Add border to top nav and footer
     .docs-navbar {

@@ -120,6 +120,9 @@ h3, h4, h5, h6 {
 
 .table-responsive {
   margin-bottom: 1rem;
+  border: 1px solid #{$fog-200};
+  background-color: var(--body-background) !important;
+  color: var(--body-font-color);
 }
 
 // Hide bottom borders and wider padding for header items
@@ -137,6 +140,7 @@ h3, h4, h5, h6 {
   padding-right: 24px;
   padding-top: 12px;
   padding-bottom: 12px;
+  border-top: 1px solid #{$fog-300};
 }
 // Decrease padding for small tables
 .table.table-sm th {
@@ -152,17 +156,14 @@ h3, h4, h5, h6 {
   padding-bottom: 8px;
 }
 
+.table a{
+  color: var(--content-link-color);
+}
 
 // Color theme toggle
 .form-check-input:checked {
   background-color: #{$aqua-700};
   border-color: #{$aqua-700};
-}
-
-.table {
-  color: var(--font-body-color);
-  // Override bootstrap defaults to support dark mode
-  --bs-table-hover-color: var(--font-body-color);
 }
 
 .ga-tag{
