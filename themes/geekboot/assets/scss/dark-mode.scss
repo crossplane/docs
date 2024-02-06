@@ -107,21 +107,18 @@
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23FFFFFF'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
     }
 
-    // Tables
-    .table td {
-        border-top: 1px solid #{$fog-700};
-    }
     .table {
-        border: 1px solid #{$fog-700};
-        --bs-table-hover-bg: #{$fog-100};
+        --bs-table-bg: var(--body-background);
+        --bs-table-color-state: var(--body-font-color);
+        --bs-table-striped-color: #{$fog-800};
+        --bs-table-striped-bg: #{$fog-800};
     }
-    .table-striped > tbody > tr:nth-of-type(odd) > *, .table-striped-columns > :not(caption) > tr > :nth-child(even) {
-        --bs-table-accent-bg: #{$fog-950};
-        color: #{$fog-0};
+
+    .table-hover > tbody > tr:hover > * {
+        background-color: #{$fog-700};
+        color: var(--body-font-color);
     }
-    .table-striped > tbody > tr:nth-of-type(even) > *, .table-striped-columns > :not(caption) > tr > :nth-child(odd) {
-        --bs-table-hover-bg: #{$fog-1000} !important;
-    }
+
 
     // Add border to top nav and footer
     .docs-navbar {
@@ -152,11 +149,6 @@
                 color: #{$fog-0};
             }
         }
-    }
-
-    //Striped table font color
-    .table-striped-columns > :not(caption) > tr > :nth-child(even){
-        color: inherit !important;
     }
 }
 

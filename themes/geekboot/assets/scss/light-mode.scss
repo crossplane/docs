@@ -115,19 +115,16 @@
     }
 
     // Tables
-    .table td {
-        border-top: 1px solid #{$fog-200};
-    }
     .table {
-        border: 1px solid #{$fog-200};
-        --bs-table-hover-bg: #{$fog-0};
+        --bs-table-bg: var(--body-background);
+        --bs-table-color-state: var(--body-font-color);
+        --bs-table-striped-color: #{$fog-50};
+        --bs-table-striped-bg: #{$fog-50};
     }
-    .table-striped > tbody > tr:nth-of-type(odd) > *, .table-striped-columns > :not(caption) > tr > :nth-child(even) {
-        --bs-table-accent-bg: #{$fog-50};
-        color: #{$fog-1000};
-    }
-    .table-striped > tbody > tr:nth-of-type(even) > *, .table-striped-columns > :not(caption) > tr > :nth-child(odd) {
-        --bs-table-hover-bg: #{$fog-0} !important;
+
+    .table-hover > tbody > tr:hover > * {
+        background-color: #{$fog-50};
+        color: var(--body-font-color);
     }
 
     // Tab Colors
