@@ -179,31 +179,34 @@ def writeDescriptions(crdDir: str, descDir: str, output: str) -> None:
                     else:
                         targetDir = crdKindDir
 
+                    escapedDesc = item[key].replace("\"","\'")
+
                     with open(f"{targetDir}/description.yaml", "w") as f:
                         try:
                             f.write("description:\n")
-                            f.write(f"    {item[key]}")
+                            f.write(f"    \"{escapedDesc}\"")
                         except KeyError:
                             f.write("description:")
         elif output == "md":
-                Path(crdGroupDir).mkdir(parents=True, exist_ok=True)
-                outputLines = []
-                outputLines.append(f"# {crd['kind']}.{crd['group']}/{crd['version']}")
+            Path(crdGroupDir).mkdir(parents=True, exist_ok=True)
+            outputLines = []
+            outputLines.append(f"# {crd['kind']}.{crd['group']}/{crd['version']}")
 
-                outputLines.append("| Endpoint | Description |")
-                outputLines.append("| --- | --- | ")
-                for item in crdDescriptions:
-                    for key in item.keys():
-                        endpoint = key[:-len(".description")]
-                        outputLines.append(f"| {endpoint} | {item[key]} |")
+            outputLines.append("| Endpoint | Description |")
+            outputLines.append("| --- | --- | ")
+            for item in crdDescriptions:
+                for key in item.keys():
+                    endpoint = key[:-len(".description")]
+                    #XCluster.properties.spec.properties.parameters
+                    outputLines.append(f"| {endpoint} | {item[key]} |")
 
-                with open(f"{crdKindDir}.md", "w") as xr:
-                    xr.write("\n".join(outputLines))
+            with open(f"{crdKindDir}.md", "w") as xr:
+                xr.write("\n".join(outputLines))
 
-                if "claim" in crd:
-                    outputLines[0] = f"# {crd['claim']}.{crd['group']}/{crd['version']}"
-                    with open(f"{crdGroupDir}/{crd['claim']}.md", "w") as claim:
-                        claim.write("\n".join(outputLines))
+            if "claim" in crd:
+                outputLines[0] = f"# {crd['claim']}.{crd['group']}/{crd['version']}"
+                with open(f"{crdGroupDir}/{crd['claim']}.md", "w") as claim:
+                    claim.write("\n".join(outputLines))
 
                 totalDescriptions += 1
 
@@ -332,7 +335,17 @@ def cliArguments() -> dict:
         "-v", "--verbose", action="store_true", help="Print verbose logging"
     )
 
-    args = parser.parse_args()
+    # args = parser.parse_args()
+    args = parser.parse_args([
+        "-w",
+        "-crd",
+        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/crds",
+        "-desc",
+        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions",
+        "-o",
+        "yml",
+        "-v"
+        ])
 
     verbose = args.verbose
     errors = False
@@ -366,11 +379,6 @@ def cliArguments() -> dict:
     elif not os.path.isdir(descDir):
         print("Error: Description path must be a directory")
         errors = True
-
-    # CRD input must be a directory with -w
-    # if args.writeDescriptions and not os.path.isdir(crdPath):
-    #     print("Error: CRD path must be a directory with -w")
-    #     errors = True
 
     if args.output:
         output = args.output[0].lower()
