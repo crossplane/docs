@@ -332,17 +332,7 @@ def cliArguments() -> dict:
         "-v", "--verbose", action="store_true", help="Print verbose logging"
     )
 
-    # args = parser.parse_args()
-    args = parser.parse_args([
-        "-w",
-        "-crd",
-        "/Users/plumbis/git/platform-ref-aws/apis/cluster/",
-        "-desc",
-        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions",
-        "-o",
-        "yml",
-        "-v"
-        ])
+    args = parser.parse_args()
 
     verbose = args.verbose
     errors = False
