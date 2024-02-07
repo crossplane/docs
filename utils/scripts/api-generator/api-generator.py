@@ -90,14 +90,35 @@ def parseCRDFile(yamlFile: str) -> dict:
         f = yaml.safe_load(file)
 
     kind = f["spec"]["names"]["kind"]
+
     group = f["spec"]["group"]
 
+    if "claimNames" in f["spec"]:
+        claim = f["spec"]["claimNames"]["kind"]
+
     for version in f["spec"]["versions"]:
-        if not version["storage"]:
-            continue
+        try:
+            if not version["storage"]:
+                continue
+        except KeyError:
+            # We should rely on 'storage: true' but XRDs may not have a storage key
+            if not version["served"]:
+                continue
 
         schema = version["schema"]["openAPIV3Schema"]
-        return {"group": group, "kind": kind, "schema": schema, "version": version["name"]}
+
+        returnDict =  {
+            "group": group,
+            "kind": kind,
+            "schema": schema,
+            "version": version["name"]
+        }
+
+        try:
+            returnDict["claim"] = claim
+            return returnDict
+        except:
+            return returnDict
 
 
 def getFiles(inputDir: str) -> list:
@@ -105,58 +126,84 @@ def getFiles(inputDir: str) -> list:
 
     fileNames = []
 
-    for path, dir, file in walk(inputDir):
-        fileNames.extend(file)
+    for path, dir, files in walk(inputDir):
+        for yml in files:
+            if Path(yml).suffix.lower() not in [".yaml", ".yml"]:
+                continue
+            with open(f"{path}/{yml}", "r") as file:
+                f = yaml.safe_load(file)
+
+                try:
+                    kind = f["kind"]
+                except KeyError:
+                    continue
+
+                if kind not in ["CompositeResourceDefinition", "CustomResourceDefinition"]:
+                    continue
+
+                # Wrap it in Path object to normalize slashes in the path
+                fileNames.append(str(Path(f"{path}/{yml}")))
 
     return fileNames
 
 
-def writeDescriptions(crdDir: str, descDir: str) -> None:
+def writeDescriptions(crdDir: str, descDir: str, output: str) -> None:
     """Read in a directory of CRDs and generate unique description markdown files."""
 
-    verbose = True
     totalDescriptions = 0
 
     files = getFiles(crdDir)
-
-    # Ensure both source and destinations are directories
-    if not crdDir[-1] == "/":
-        crdDir = crdDir + "/"
-
-    if not descDir[-1] == "/":
-        descDir = descDir + "/"
 
     for crdFile in files:
         if verbose:
             print(f"\nParsing file {crdFile}")
 
-        crd = parseCRDFile(crdDir + crdFile)
+        crd = parseCRDFile(crdFile)
 
         crdDescriptions = processSchema(crd["kind"], crd["schema"])
         crdGroupDir = f"{descDir}{crd['group']}"
         crdKindDir = f"{crdGroupDir}/{crd['kind']}"
 
-        Path(crdKindDir).mkdir(parents=True, exist_ok=True)
-
         if verbose:
             print(f"Found {len(crdDescriptions)} keys to process")
             totalDescriptions += len(crdDescriptions)
 
-        for item in crdDescriptions:
-            for key in item.keys():
-                if len(key.split(".")) > 2:
-                    # Remove the ending "/description" to get the destination directory path
-                    targetDir = f"{crdGroupDir}/{key.replace('.', '/')[:-len('/description')]}"
-                    Path(targetDir).mkdir(parents=True, exist_ok=True)
-                else:
-                    targetDir = crdKindDir
+        if output == "yaml":
+            Path(crdKindDir).mkdir(parents=True, exist_ok=True)
+            for item in crdDescriptions:
+                for key in item.keys():
+                    if len(key.split(".")) > 2:
+                        # Remove the ending "/description" to get the destination directory path
+                        targetDir = f"{crdGroupDir}/{key.replace('.', '/')[:-len('/description')]}"
+                        Path(targetDir).mkdir(parents=True, exist_ok=True)
+                    else:
+                        targetDir = crdKindDir
 
-                with open(f"{targetDir}/description.yaml", "w") as f:
-                    try:
-                        f.write("description:\n")
-                        f.write(f"    {item[key]}")
-                    except KeyError:
-                        f.write("description:")
+                    with open(f"{targetDir}/description.yaml", "w") as f:
+                        try:
+                            f.write("description:\n")
+                            f.write(f"    {item[key]}")
+                        except KeyError:
+                            f.write("description:")
+        elif output == "md":
+                Path(crdGroupDir).mkdir(parents=True, exist_ok=True)
+                outputLines = []
+                outputLines.append(f"# {crd['kind']}.{crd['group']}/{crd['version']}")
+
+                outputLines.append("| Endpoint | Description |")
+                outputLines.append("| --- | --- | ")
+                for item in crdDescriptions:
+                    for key in item.keys():
+                        endpoint = key[:-len(".description")]
+                        outputLines.append(f"| {endpoint} | {item[key]} |")
+
+                with open(f"{crdKindDir}.md", "w") as xr:
+                    xr.write("\n".join(outputLines))
+
+                if "claim" in crd:
+                    outputLines[0] = f"# {crd['claim']}.{crd['group']}/{crd['version']}"
+                    with open(f"{crdGroupDir}/{crd['claim']}.md", "w") as claim:
+                        claim.write("\n".join(outputLines))
 
                 totalDescriptions += 1
 
@@ -270,10 +317,32 @@ def cliArguments() -> dict:
     )
 
     parser.add_argument(
+        "-o",
+        "--output",
+        metavar="markdown or yaml",
+        type=str,
+        nargs=1,
+        required=False,
+        default="yaml",
+        help="Create either a yaml or markdown output."
+    )
+
+
+    parser.add_argument(
         "-v", "--verbose", action="store_true", help="Print verbose logging"
     )
 
-    args = parser.parse_args()
+    # args = parser.parse_args()
+    args = parser.parse_args([
+        "-w",
+        "-crd",
+        "/Users/plumbis/git/platform-ref-aws/apis/cluster/",
+        "-desc",
+        "/Users/plumbis/git/crossplane-docs/content/v1.14/api/descriptions",
+        "-o",
+        "yml",
+        "-v"
+        ])
 
     verbose = args.verbose
     errors = False
@@ -285,6 +354,13 @@ def cliArguments() -> dict:
     if crdPath == descDir:
         print("Error: CRD path and description directory can't be the same path")
         exit(1)
+
+    # Ensure both source and destinations are directories
+    if not crdPath[-1] == "/":
+        crdPath = crdPath + "/"
+
+    if not descDir[-1] == "/":
+        descDir = descDir + "/"
 
     # Valiate that the file/directories exist
     crdExists = os.path.exists(crdPath)
@@ -302,9 +378,19 @@ def cliArguments() -> dict:
         errors = True
 
     # CRD input must be a directory with -w
-    if args.writeDescriptions and not os.path.isdir(crdPath):
-        print("Error: CRD path must be a directory with -w")
-        errors = True
+    # if args.writeDescriptions and not os.path.isdir(crdPath):
+    #     print("Error: CRD path must be a directory with -w")
+    #     errors = True
+
+    if args.output:
+        output = args.output[0].lower()
+        if output in ["md", "markdown"]:
+            output = "md"
+        elif output in ["yaml", "yml"]:
+            output = "yaml"
+        else:
+            print("Error: Output must be markdown or yaml")
+            errors = True
 
     if errors:
         exit(1)
@@ -314,6 +400,7 @@ def cliArguments() -> dict:
             "diff": args.diff,
             "crd": crdPath,
             "desc": descDir,
+            "output" : output
         }
 
 
@@ -328,7 +415,7 @@ def main():
     if args["write"]:
         if verbose:
             print("Writing descriptions...\n")
-        writeDescriptions(args["crd"], args["desc"])
+        writeDescriptions(args["crd"], args["desc"], args["output"])
 
     if args["diff"]:
         if verbose:
