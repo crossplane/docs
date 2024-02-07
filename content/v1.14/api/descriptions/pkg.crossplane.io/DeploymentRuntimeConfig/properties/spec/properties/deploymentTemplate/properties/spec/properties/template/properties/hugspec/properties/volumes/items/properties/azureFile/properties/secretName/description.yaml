@@ -1,2 +1,2 @@
 description:
-    secretName is the  name of secret that contains Azure Storage Account Name and Key
+    "secretName is the  name of secret that contains Azure Storage Account Name and Key"

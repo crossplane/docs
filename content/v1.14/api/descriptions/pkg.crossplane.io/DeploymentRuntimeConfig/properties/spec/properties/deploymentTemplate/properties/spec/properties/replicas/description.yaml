@@ -1,2 +1,2 @@
 description:
-    Number of desired pods. This is a pointer to distinguish between explicit zero and not specified. Defaults to 1.
+    "Number of desired pods. This is a pointer to distinguish between explicit zero and not specified. Defaults to 1."

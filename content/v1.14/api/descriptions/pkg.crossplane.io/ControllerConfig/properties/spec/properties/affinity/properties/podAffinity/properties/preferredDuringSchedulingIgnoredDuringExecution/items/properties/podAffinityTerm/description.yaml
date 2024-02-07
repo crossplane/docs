@@ -1,2 +1,2 @@
 description:
-    Required. A pod affinity term, associated with the corresponding weight.
+    "Required. A pod affinity term, associated with the corresponding weight."

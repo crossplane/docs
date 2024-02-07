@@ -1,2 +1,2 @@
 description:
-    The deployment strategy to use to replace existing pods with new ones.
+    "The deployment strategy to use to replace existing pods with new ones."

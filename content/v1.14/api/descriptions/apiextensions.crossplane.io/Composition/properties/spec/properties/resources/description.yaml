@@ -1,3 +1,3 @@
 description:
-    Resources is a list of resource templates that will be used when a composite resource referring to this composition is created. 
- Resources are only used by the "Resources" mode of Composition. They are ignored by other modes.
+    "Resources is a list of resource templates that will be used when a composite resource referring to this composition is created. 
+ Resources are only used by the 'Resources' mode of Composition. They are ignored by other modes."

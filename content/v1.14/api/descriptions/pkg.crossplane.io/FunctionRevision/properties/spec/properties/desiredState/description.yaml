@@ -1,2 +1,2 @@
 description:
-    DesiredState of the PackageRevision. Can be either Active or Inactive.
+    "DesiredState of the PackageRevision. Can be either Active or Inactive."

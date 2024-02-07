@@ -1,2 +1,2 @@
 description:
-    DefaultCompositionRef refers to the Composition resource that will be used in case no composition selector is given.
+    "DefaultCompositionRef refers to the Composition resource that will be used in case no composition selector is given."

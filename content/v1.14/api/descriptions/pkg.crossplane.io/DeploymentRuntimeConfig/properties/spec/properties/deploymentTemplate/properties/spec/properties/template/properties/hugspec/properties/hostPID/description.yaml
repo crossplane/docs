@@ -1,2 +1,2 @@
 description:
-    Use the host's pid namespace. Optional: Default to false.
+    "Use the host's pid namespace. Optional: Default to false."

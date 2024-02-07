@@ -1,2 +1,2 @@
 description:
-    Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
+    "Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false."

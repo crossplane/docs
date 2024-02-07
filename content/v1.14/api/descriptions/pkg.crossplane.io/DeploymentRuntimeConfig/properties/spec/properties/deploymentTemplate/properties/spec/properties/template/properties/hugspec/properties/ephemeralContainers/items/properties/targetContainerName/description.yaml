@@ -1,3 +1,3 @@
 description:
-    If set, the name of the container from PodSpec that this ephemeral container targets. The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container. If not set then the ephemeral container uses the namespaces configured in the Pod spec. 
- The container runtime must implement support for this feature. If the runtime does not support namespace targeting then the result of setting this field is undefined.
+    "If set, the name of the container from PodSpec that this ephemeral container targets. The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container. If not set then the ephemeral container uses the namespaces configured in the Pod spec. 
+ The container runtime must implement support for this feature. If the runtime does not support namespace targeting then the result of setting this field is undefined."

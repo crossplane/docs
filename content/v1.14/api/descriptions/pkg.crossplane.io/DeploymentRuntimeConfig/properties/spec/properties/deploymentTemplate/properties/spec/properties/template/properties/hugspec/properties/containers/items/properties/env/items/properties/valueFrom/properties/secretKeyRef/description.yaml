@@ -1,2 +1,2 @@
 description:
-    Selects a key of a secret in the pod's namespace
+    "Selects a key of a secret in the pod's namespace"

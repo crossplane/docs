@@ -1,2 +1,2 @@
 description:
-    Regexp to match against the input string. Is required if `type` is `regexp`.
+    "Regexp to match against the input string. Is required if `type` is `regexp`."

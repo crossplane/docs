@@ -1,2 +1,2 @@
 description:
-    singular is the singular name of the resource. It must be all lowercase. Defaults to lowercased `kind`.
+    "singular is the singular name of the resource. It must be all lowercase. Defaults to lowercased `kind`."

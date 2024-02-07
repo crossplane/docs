@@ -1,2 +1,2 @@
 description:
-    listKind is the serialized kind of the list for this resource. Defaults to "`kind`List".
+    "listKind is the serialized kind of the list for this resource. Defaults to '`kind`List'."
