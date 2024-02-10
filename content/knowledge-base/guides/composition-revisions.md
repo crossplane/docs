@@ -1,8 +1,5 @@
 ---
 title: Composition Revisions
-state: beta
-alphaVersion: "1.4"
-betaVersion: "1.11"
 ---
 
 This guide discusses the use of "Composition Revisions" to safely make and roll
