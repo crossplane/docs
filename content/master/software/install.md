@@ -254,6 +254,7 @@ at the table below.
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
 | Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
+| Alpha | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
 {{< /table >}}
 {{< /expand >}}
 
