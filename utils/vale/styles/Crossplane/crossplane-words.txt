@@ -64,3 +64,4 @@ XRD
 XRD's
 XRDs
 XRs
+function-patch-and-transform

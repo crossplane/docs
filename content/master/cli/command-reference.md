@@ -626,3 +626,46 @@ personalize the template.
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
+### beta convert
+
+As Crossplane evolves, its APIs and resources may change. To help with the 
+migration to the new APIs and resources, the `crossplane beta convert` command
+converts a Crossplane resource to a new version or kind.
+
+The Crossplane CLI supported the following conversions:
+* [ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
+  to [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}})
+* [Composition patch and transforms]({{<ref "../concepts/compositions#changing-resource-fields">}})
+  to [Function Pipeline Composition]({{< ref "../concepts/compositions#use-composition-functions">}})
+
+The command argument is a YAML file containing a single Crossplane resource.  
+Don't provide a file argument or use `-` to use stdin.   
+The command outputs the converted resource to stdout or a file.
+
+#### beta convert `deployment-runtime`
+
+The `crossplane beta convert deployment-runtime` command converts a 
+ControllerConfig to a DeploymentRuntimeConfig.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag       | Description                                                                                |
+| ------------ | --------------- | ------------------------------                                                             |
+| `-o`         | `--output-file` | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+#### beta convert `pipeline-composition`
+
+The `crossplane beta convert pipeline-composition` command converts a
+Composition patch and transform to a Composition Pipeline Function.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag         | Description                                                                                |
+| ------------ | ----------------- | ------------------------------                                                             |
+| `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
+| `-f`         | `--function-name` | `functionRef.name` to use. Defaults to name "function-patch-and-transform."                |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
