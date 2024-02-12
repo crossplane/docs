@@ -1,0 +1,29 @@
+{{ $excludedKeys := (slice  "additionalProperties" "description" "required" "type") }}
+{{ $rootKey := partial "apiBuilder/getRootKey" .schema }}
+
+{{ $required := in .schema.requiredKeys $rootKey }}
+<b>{{ $rootKey }} - {{ index .schema.properties $rootKey "type" }}</b> {{if $required}} <i>Required</i>{{end}}<br />
+{{ index .schema.properties $rootKey "description" }}
+<br /><br />
+{{ range $k,$v := index .schema.properties $rootKey }}
+{{printf "%s %s" $rootKey $k}}
+    {{ if not (in $k $excludedKeys) }}
+        {{/*  {{ partial "apiBuilder/processSpec" (dict "schema" (index $.schema.properties $.rootKey $k) )  }}  */}}
+    {{ end }}
+
+{{ end }}
+
+{{/*  {{ $status := .properties.status }}
+
+{{ index $schema.properties $rootKey "description" }}
+<br /><br />
+{{ $requiredVals := index $schema.properties $rootKey "required" }}
+
+<br /><br />
+{{range $k,$v := (index $schema.properties $rootKey) }}
+    ++++  {{ $k }}<br />
+{{ end }}
+
+{{ if $status}}
+    status<br />
+{{ end }}  */}}

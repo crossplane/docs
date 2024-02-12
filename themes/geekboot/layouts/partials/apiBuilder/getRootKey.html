@@ -1,0 +1,10 @@
+{{/* Pass in a Schema and return the key that isn't one of "apiVersion", "kind", "metadata" or "status". */}}
+{{ $schemaRoot := "" }}
+{{ $excludedKeys := (slice  "apiVersion" "kind" "metadata" "status") }}
+{{ range $key,$val := .properties }}
+    {{ if not (in $excludedKeys $key) }}
+        {{ $schemaRoot = $key }}
+    {{ end }}
+{{ end }}
+
+{{ return $schemaRoot }}

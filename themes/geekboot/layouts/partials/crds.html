@@ -9,252 +9,42 @@
         <div class="col col-2 expand-link mobile-hidden text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
         <div class="col col-2 collapse-link mobile-hidden text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
     </div>
+    <div>
+        {{ $crdFiles := index $.Site.Data.crds .Section "api" "crds" }}
+        {{ $descFiles := index $.Site.Data.crds .Section "api" "descriptions" }}
 
+
+        {{ range $fileName, $crdContent := $crdFiles }}
+            {{ $group   := $crdContent.spec.group }}
+            {{ $kind    := $crdContent.spec.names.kind }}
+
+            {{ $descDir := index $descFiles $group $kind }}
+            {{ $description := $descDir.description.description }}
+
+            {{/* Find the active version. We prefer the "storage: true" value but use "served: true" as a backup */}}
+            {{ $versionAndSchema := partial "apiBuilder/getVersionAndSchema" $crdContent.spec }}
+            {{ $schema := $versionAndSchema.schema.openAPIV3Schema }}
+
+            {{ $version := $versionAndSchema.version }}
+            {{ $type := $schema.type }}
+
+            {{ $kind }} - {{ $version }} <br />
+            {{ $description }}<br /><br />
+
+
+            {{ partial "apiBuilder/processSpec" (dict "schema" $schema "requiredKeys" slice ) }}
+
+            <hr/>
+
+
+        {{ end}}
+
+
+    <div>
     <div id="crd-rows-container">
-    {{/* Each level is a map with the key being the directory name */}}
-    {{/* $Site.Data.crds /$version/crds/yaml */}}
-    {{ range $filename,$content := index $.Site.Data.crds .Section "api" "crds" }}
-        {{ with $content }}
-            {{ $kind := .spec.names.kind }}
-            {{ $group := .spec.group }}
 
-            {{ $version := "" }}
-            {{ $description := "" }}
-            {{ $schemaScratch := newScratch }}     {{/* Temporary variable used to prune fields from the larger spec */}}
-            {{ $schemaWithStatus := dict }}        {{/* The pruned schema to work with */}}
 
-            {{ $bigName := gt (len $kind) 32 }}    {{/* Long names overrun the display and cause problems. This allows for applying custom styles */}}
-
-            {{/* Iterate over each version and find the "storage: true" version */}}
-            {{ range  .spec.versions }}
-                {{ if index . "storage" }}
-                    {{ $version = .name }}
-
-                    {{ $schemaScratch.Set "oAPI" (index . "schema" "openAPIV3Schema" "properties") }}
-
-                    {{/* Pull out the top-level Kind description and delete unnecessary fields */}}
-                    {{ $description = (index . "schema" "openAPIV3Schema" "description") }}
-                    {{ $schemaScratch.DeleteInMap "oAPI" "apiVersion" }}
-                    {{ $schemaScratch.DeleteInMap "oAPI" "kind" }}
-                    {{ $schemaScratch.DeleteInMap "oAPI" "metadata" }}
-                    {{ $schemaScratch.DeleteInMap "oAPI" "description" }}
-                    {{ $schemaWithStatus = $schemaScratch.Get "oAPI" }}
-                {{ end }}
-            {{ end }}
-
-                <div>{{ range $k,$v := $schemaWithStatus }} {{$k}}{{end}} </div>
-                {{/* the crd-root-row is a top level CRD row */}}
-                <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
-
-                    {{/* Collapse/Expand Button and Kind name */}}
-                    <div class="col col-xl-4 col-10 align-middle expand-buttons bigName-col">
-                        {{/* Plus/Minus Button */}}
-                        <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}"></button>
-
-                        {{/* CRD name text */}}
-                        <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-                            <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
-                        </button>
-                    </div>
-
-                    {{/* If the CRD name is longer than 24 characters hide the other fields, regardless of viewport size */}}
-                    <div class="{{ if $bigName }}d-none{{end}} col col-lg-4 col-2 mobile-hidden group-name text-truncate">{{ $group }}/{{ $version }} </div>
-                    <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle expand-link mobile-hidden text-truncate" onclick="showAll('.{{ $kind }}')">Expand All</div>
-                    <div class="{{ if $bigName }}d-none{{end}} col col-2 align-middle collapse-link mobile-hidden text-truncate" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
-
-                    {{/* The container to show/hide with information related to the CRD */}}
-                    <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
-                        {{ if $bigName }}
-                            <div class="row">
-                                <div class="col col-4 bigName-row-padding mobile-hidden"><a class="icon-link" href="yaml/{{$filename}}.yaml"><span class="yaml-svg"></span>YAML</a></div>
-                                <div class="mobile-hidden col col-4">{{$group}}/{{$version}}</div>
-                                <div class="col col-2 align-middle expand-link text-truncate mobile-hidden" onclick="showAll('.{{ $kind }}')">Expand All</div>
-                                <div class="col col-2 align-middle collapse-link text-truncate mobile-hidden" onclick="hideAll('.{{ $kind }}')">Collapse All</div>
-                            </div>
-                        {{ else }}
-                            <div class="yaml-link-padding mobile-hidden"><a class="icon-link" href="yaml/{{$filename}}.yaml"><span class="yaml-svg"></span>YAML</a></div>
-                        {{ end }}
-
-                            <div class="mobile-show ">{{$group}}/{{$version}}</div>
-
-                        {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
-                        <div class="description bigName-reset">
-                            {{ $description | markdownify}}</div>
-
-                        {{/* Loop over the fields in the pruned Schema and generate their content */}}
-                        {{ range $key,$schema := $schemaWithStatus }}
-                            <div class="crd-children">
-                                {{ template "buildCRD" (dict "key" $key "schema" $schema "isFirst" true "kind" $kind "requiredFields" .required "rootKind" $kind "permalink" $.Page.Permalink) }}
-                            </div>
-                        {{ end }}
-                        <div class="up-button-container mobile-hidden">
-                                <a href="#content">
-                                <button type="button" class="up-button btn" title="Back to top"></button>
-                                <span>Back to top</span>
-                                </a>
-                        </div>
-                    </div>
-                </div>
-            {{ end }}
-    {{ end }}
     </div>
-</div>
-
-{{ define "buildCRD" }}
-    {{/* The first field (spec) has a different schema compared to the child nodes */}}
-    {{ if .isFirst }}
-        {{ $elemID := (printf "%s-%s" .kind .key) }}
-
-        {{ $dataTypeStyle := .schema.type }}
-        {{ $dataType := .schema.type }}
-        {{ $description := .schema.description }}
-        {{ $properties := .schema.properties }}
-        {{ $required := .schema.required }}
-
-        {{/* Special handling for arrays to check if it's a list of 'items' */}}
-        {{ if eq .schema.type "array" }}
-            {{ if .schema.items }}
-                {{ $dataType = (printf "[ ]%s" .schema.items.type) }}
-                {{ $dataTypeStyle = .schema.items.type }}
-                {{ $description = .schema.items.description }}
-                {{ $properties = .schema.items.properties }}
-                {{ $required = .schema.items.required }}
-            {{ else }}
-                {{ $dataType = (printf "[ ]%s" .schema.type) }}
-            {{ end }}
-        {{ end }}
-
-        <div class="crd-child-container crd-container align-middle expand-buttons">
-            {{/* Plus/Minus Button */}}
-            <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
-
-            {{/* CRD name text */}}
-            <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
-                <div>
-                    <span class="kind align-middle">{{ .key }}</span>
-                    <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
-                </div>
-            </button>
-
-            {{/* Anchor link icon */}}
-            <span class="kind-link" data-bs-content="Link Copied!" data-clipboard-text="{{.permalink}}#{{$elemID}}"><a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
-
-
-            {{/* The container to show/hide with information related to the CRD */}}
-            <div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
-                <div class="description bigName-reset">
-                    {{ $description | markdownify }}
-                </div>
-                <div class="crd-children align-middle">
-                    {{ template "buildCRD" (dict "schema" $properties "isFirst" false "kind" $elemID "requiredFields" $required "rootKind" .rootKind "permalink" .permalink ) }}
-                </div>
-            </div>
-        </div>
-
-    {{ else }}
-
-        {{/* Iterate over all child CRD elements */}}
-        {{ range $key,$contents := .schema }}
-
-            {{ $bigName := gt (len $key) 24 }}
-
-            {{ $dataType := $contents.type }}
-            {{ $dataTypeStyle := $dataType }}
-            {{ $elemID := (printf "%s-%s" $.kind $key) }}
-
-            {{ $dataTypeStyle := $contents.type }}
-            {{ $dataType := $contents.type }}
-            {{ $description := $contents.description }}
-            {{ $properties := $contents.properties }}
-            {{ $required := $.requiredFields }}
-
-            {{/* enum fields handle "oneOf" type data lists */}}
-            {{ $enum := false }}
-            {{ $enumOf := "" }}
-            {{ $enumTypes := dict }}
-
-            {{ if $contents.oneOf }}
-                {{ $enum = true }}
-                {{ $enumOf = "One of" }}
-                {{ $enumTypes := $contents.oneOf }}
-            {{ else if $contents.anyOf }}
-                {{ $enum = true }}
-                {{ $enumOf = "Any of" }}
-                {{ $enumTypes := $contents }}
-            {{ else if $contents.allOf }}
-                {{ $enum = true }}
-                {{ $enumOf = "All of" }}
-                {{ $enumTypes := $contents.allOf }}
-            {{ end }}
-
-            {{ if eq $contents.type "array" }}
-                {{ if $contents.items }}
-                    {{ $dataType = (printf "[ ]%s" $contents.items.type) }}
-                    {{ $dataTypeStyle = $contents.items.type }}
-
-                    {{/* Some "items" don't have nested elements. */}}
-                    {{/* For example CompositeResourceDefinitions.Spec.ClaimNames.categories */}}
-                    {{ if $contents.items.description }}
-                        {{ $description = $contents.items.description }}
-                    {{ end }}
-
-                    {{ if $contents.items.properties }}
-                        {{ $properties = $contents.items.properties }}
-                    {{ end }}
-
-                    {{ if $contents.items.required}}
-                        {{ $required = $contents.items.required }}
-                    {{ end }}
-
-                {{ else }}
-                    {{ $dataType = (printf "[ ]%s" $contents.type) }}
-                {{ end }}
-            {{ end }}
-
-            <div class="crd-child-container crd-container align-middle expand-buttons expand-buttons bigName-row">
-                {{/* Plus/Minus Button */}}
-                <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}"></button>
-
-                {{/* CRD name text */}}
-                <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$elemID}}" type="button" aria-expanded="false" aria-controls="{{$elemID}}">
-                    <div>
-                        <span class="kind align-middle">{{ $key }}</span>
-
-                        {{/* An enum puts the data types inside the "One of" border box. */}}
-                        {{ if $enum }}
-                            <span class="enum">{{$enumOf}}
-                                {{ range $contents.anyOf }}
-                                {{ range . }}
-                                    <span class="dataType {{ . }}  align-middle">{{ . }}</span>
-                                {{ end }}
-                                {{ end }}
-                            </span>
-
-                        {{ else }}
-                            <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
-                        {{ end }}
-                        {{if in $.requiredFields $key}}<span class="dataType required align-middle">required</span>{{ end }}
-                    </div>
-                </button>
-
-                {{/* Link icon */}}
-                <span class="kind-link" data-clipboard-text="{{$.permalink}}#{{$elemID}}"><a href="#{{$elemID}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a></span>
-
-                {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand {{$.rootKind}} bigName-reset" id="{{$elemID}}">
-                    <div class="description">
-                        {{$description | markdownify }}
-                    </div>
-                    {{ if $properties }}
-                        <div class="crd-children align-middle">
-                            {{ template "buildCRD" (dict "schema" $properties "requiredFields" $required "kind" $elemID "rootKind" $.rootKind "permalink" $.permalink ) }}
-                        </div>
-                    {{ end }}
-                </div>
-            </div>
-        {{ end }} {{/* range $key,$contents */}}
-    {{ end }} {{/* if/else */}}
-{{ end }} {{/* define */}}
 
 <script>
 
@@ -426,4 +216,5 @@
         }
     }
 
+    document.onLoad(showAll('.CompositeResourceDefinition'))
 </script>
