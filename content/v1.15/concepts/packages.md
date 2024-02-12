@@ -33,6 +33,15 @@ Install a Configuration with a Crossplane
 the {{<hover line="6" label="install">}}spec.package{{</hover>}} value to the
 location of the configuration package.
 
+{{< hint "important" >}}
+Beginning with Crossplane version 1.15.0 Crossplane uses the Upbound Marketplace
+Crossplane package registry at `xpkg.upbound.io` by default for downloading and
+installing packages. 
+
+Specify the full domain name with the `package` or change the default Crossplane
+registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
+{{< /hint >}}
+
 For example to install the 
 [Upbound AWS reference platform](https://marketplace.upbound.io/configurations/upbound/platform-ref-aws/v0.6.0), 
 

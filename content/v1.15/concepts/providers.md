@@ -47,6 +47,15 @@ Install a Provider with a Crossplane
 {{<hover label="install" line="6">}}spec.package{{</hover >}} value to the
 location of the provider package.
 
+{{< hint "important" >}}
+Beginning with Crossplane version 1.15.0 Crossplane uses the Upbound Marketplace
+Crossplane package registry at `xpkg.upbound.io` by default for downloading and
+installing packages. 
+
+Specify the full domain name with the `package` or change the default Crossplane
+registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
+{{< /hint >}}
+
 For example, to install the
 [AWS Community Provider](https://github.com/crossplane-contrib/provider-aws),
 
