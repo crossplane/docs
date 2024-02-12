@@ -20,8 +20,6 @@ def mapDescriptions(data: any, sep: str = ".", _prefix: str = "", keys:list = No
     # Keys to universally ignore
     # Defer more specific key filtering to the output consumer.
     excludedKeys = set(("additionalProperties", "required"))
-    if _prefix == "CompositeResourceDefinition.properties.spec.properties.versions.items.properties.additionalPrinterColumns.items.properties":
-        pass
 
     if isinstance(data, dict):
         prefixParts = _prefix.split(sep)
