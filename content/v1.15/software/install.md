@@ -16,15 +16,8 @@ If you don't have a Kubernetes cluster create one locally with [Kind](https://ki
 
 ## Install Crossplane
 
-Install Crossplane using the Crossplane published _Helm chart_. 
+Install Crossplane using the Crossplane published _Helm chart_.
 
-{{< hint "important" >}}
-Starting with Crossplane release v1.15.0 Crossplane installs from the Upbound
-Marketplace at `xpkg.upbound.io` instead of DockerHub. 
-
-Use the Helm argument `--set args='{"--registry=index.docker.io"}'` to install 
-Crossplane from a DockerHub registry. 
-{{< /hint >}}
 
 ### Add the Crossplane Helm repository
 
@@ -267,6 +260,15 @@ at the table below.
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
 args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
+
+#### Change the default package registry
+
+Beginning with Crossplane version 1.15.0 Crossplane downloads packages from the
+[Upbound Marketplace](https://marketplace.upbound.io) at `xpkg.upbound.io` 
+instead of DockerHub. 
+
+Change the default registry location during the Crossplane install with 
+`--set args='{"--registry=index.docker.io"}'`.
 
 ### Install pre-release Crossplane versions
 Install a pre-release versions of Crossplane from the `master` Crossplane Helm channel.
