@@ -2,7 +2,7 @@
 title: "Overview"
 weight: -1
 cascade:
-    version: "v1.15"
+    version: "1.15"
 ---
 
 {{< img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
