@@ -110,6 +110,7 @@ chart.
 
 Apply customizations with the command line or with a Helm _values_ file. 
 
+<!-- Generated from Helm README at https://github.com/crossplane/crossplane/blob/master/cluster/charts/crossplane/README.md -->
 <!-- vale gitlab.Substitutions = NO -->
 <!-- allow lowercase yaml -->
 {{<expand "All Crossplane customization options" >}}
