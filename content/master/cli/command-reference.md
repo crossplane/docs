@@ -648,7 +648,7 @@ Composition patch and transform to a Composition Pipeline Function.
 | Short flag   | Long flag         | Description                                                                                |
 | ------------ | ----------------- | ------------------------------                                                             |
 | `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
-| `-f`         | `--function-name` | `functionRef.name` to use. Defaults to name "function-patch-and-transform".                |
+| `-f`         | `--function-name` | `functionRef.name` to use. Defaults to name "function-patch-and-transform."                |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
