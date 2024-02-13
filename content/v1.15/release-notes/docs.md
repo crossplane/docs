@@ -12,15 +12,17 @@ removed: 🗑️
 moved: 🗺️
 -->
 
-## February 22, 2024
+## February 15, 2024
 
 <!-- ### New features 🎉 -->
 
 ### Updated content 🏗️
 
-* Expanded managed resource 
-[creation annotations]({{<ref "../concepts/managed-resources#reation-annotations">}})
-details. 
+* New content for [v1.15.0 release]({{<ref "./1.15.0.md" >}}).
 
 ### Removed content 🗑️ 
-* Removed end of support v1.12 documentation. Content archived on GitHub.
+* Removed end of support v1.12 documentation. Content 
+[archived on GitHub](https://github.com/crossplane/docs/releases/tag/v1.12-archive).
+
+### 🔨 Docs fixes
+* Fixed issues related to displaying tables in darkmode.
