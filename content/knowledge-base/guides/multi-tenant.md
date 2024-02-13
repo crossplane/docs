@@ -304,7 +304,7 @@ dedicated control planes to many tenants within a single organization.
 <!-- Named Links -->
 [managed resources]: {{<ref "../../master/concepts/managed-resources" >}}
 [RBAC]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
-[Composition]: {{<ref "../../v1.12/concepts/composition" >}}
+[Composition]: {{<ref "../../master/concepts/compositions" >}}
 [CustomResourceDefinitions]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 [Open Policy Agent]: https://www.openpolicyagent.org/
 [Rego]: https://www.openpolicyagent.org/docs/latest/policy-language/
