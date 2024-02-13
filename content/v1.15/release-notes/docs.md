@@ -25,4 +25,4 @@ moved: 🗺️
 [archived on GitHub](https://github.com/crossplane/docs/releases/tag/v1.12-archive).
 
 ### 🔨 Docs fixes
-* Fixed issues related to displaying tables in darkmode.
+* Fixed issues related to displaying tables in dark mode.
