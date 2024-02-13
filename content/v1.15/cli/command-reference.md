@@ -519,12 +519,18 @@ Follow the installation instructions on the
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
+The Kubernetes metrics server may take some time to collect data for the
+`crossplane beta top` command. Before the metrics server is ready, 
+running the `top` command may produce an error, for example,
+
+`crossplane: error: error adding metrics to pod, check if metrics-server is running or wait until metrics are available for the pod: the server is currently unable to handle the request (get pods.metrics.k8s.io crossplane-contrib-provider-helm-b4cc4c2c8db3-6d787f9686-qzmz2)`
+
 
 ### beta trace
 
 Use the `crossplane beta trace` command to display a visual relationship of
-Crossplane objects. The `trace` command supports claims, compositions or
-managed resources. 
+Crossplane objects. The `trace` command supports claims, compositions, 
+functions, managed resources or packages. 
 
 The command requires a resource type and a resource name.  
 
@@ -551,7 +557,10 @@ variable `KUBECONFIG`.
 | ------------ | -------------               | ------------------------------                                                     |
 | `-n`         | `--namespace`               | The namespace of the resource.                                                     |
 | `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. |
-| `-s`         | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
+|              | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
+|              | `--show-package-dependencies <filter>` | Show package dependencies. Options are `all` to show every dependency, `unique` to only print a package once or `none` to not print any dependencies. By default the `trace` command uses `--show-package-dependencies unique`.                |
+|              | `--show-package-revisions <output>`    | Print package revision versions. Options are `active`, showing only the active revisions, `all` showing all revisions or `none` to print not print any revisions.                 |
+|              | `--show-package-runtime-configs` | Print DeploymentRuntimeConfig dependencies.                |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
@@ -565,41 +574,39 @@ platform, which includes multiple Compositions and composed resources:
 
 ```shell {copy-lines="1"}
 crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws
-NAME                                                              SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                True     True    Available
-└─ XCluster/platform-ref-aws-mlnwb                                True     True    Available
-   ├─ XNetwork/platform-ref-aws-mlnwb-6nvkx                       True     True    Available
-   │  ├─ VPC/platform-ref-aws-mlnwb-ckblr                         True     True    Available
-   │  ├─ InternetGateway/platform-ref-aws-mlnwb-r7w47             True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-lhr4h                      True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-bss4b                      True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-fzbxx                      True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-vxbf4                      True     True    Available
-   │  ├─ RouteTable/platform-ref-aws-mlnwb-cs9nl                  True     True    Available
-   │  ├─ Route/platform-ref-aws-mlnwb-vpxdg                       True     True    Available
-   │  ├─ MainRouteTableAssociation/platform-ref-aws-mlnwb-sngx5   True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-hprsp       True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-shb8f       True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-hvb2h       True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-m58vl       True     True    Available
-   │  ├─ SecurityGroup/platform-ref-aws-mlnwb-xxbl2               True     True    Available
-   │  ├─ SecurityGroupRule/platform-ref-aws-mlnwb-7qt56           True     True    Available
-   │  └─ SecurityGroupRule/platform-ref-aws-mlnwb-szgxp           True     True    Available
-   ├─ XEKS/platform-ref-aws-mlnwb-fqjzz                           True     True    Available
-   │  ├─ Role/platform-ref-aws-mlnwb-gmpqv                        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-t6rct        True     True    Available
-   │  ├─ Cluster/platform-ref-aws-mlnwb-crrt8                     True     True    Available
-   │  ├─ ClusterAuth/platform-ref-aws-mlnwb-dgn6f                 True     True    Available
-   │  ├─ Role/platform-ref-aws-mlnwb-tdnx4                        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-qzljh        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-l64q2        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-xn2px        True     True    Available
-   │  ├─ NodeGroup/platform-ref-aws-mlnwb-4sfss                   True     True    Available
-   │  ├─ OpenIDConnectProvider/platform-ref-aws-mlnwb-h26xx       True     True    Available
-   │  └─ ProviderConfig/platform-ref-aws                          -        -
-   └─ XServices/platform-ref-aws-mlnwb-bgndx                      True     True    Available
-      ├─ Release/platform-ref-aws-mlnwb-bcj7r                     True     True    Available
-      └─ Release/platform-ref-aws-mlnwb-7hfkv                     True     True    Available
+NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE    STATUS
+Configuration/platform-ref-aws                                                     v0.9.0    True        True      -        HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network                                 v0.7.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1         v0.7.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-database                                v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-database-3112f0a765c5        v0.5.0    -           True      Active   HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-rds                                            v0.47.0   True        True      -        HealthyPackageRevision
+│     └─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v0.47.0   -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-eks                                     v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-eks-83c9d65f4a47             v0.5.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-eks                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-iam                                            v0.47.0   True        True      -        HealthyPackageRevision
+│     └─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v0.47.0   -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-app                                         v0.2.0    True        True      -        HealthyPackageRevision
+│  └─ ConfigurationRevision/upbound-configuration-app-5d95726dba8c                 v0.2.0    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-observability-oss                           v0.2.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-observability-oss-a51529457ad7   v0.2.0    -           True      Active   HealthyPackageRevision
+│  └─ Provider/grafana-provider-grafana                                            v0.8.0    True        True      -        HealthyPackageRevision
+│     └─ ProviderRevision/grafana-provider-grafana-ac529c8ce1c6                    v0.8.0    -           True      Active   HealthyPackageRevision
+└─ Configuration/upbound-configuration-gitops-flux                                 v0.2.0    True        True      -        HealthyPackageRevision
+   └─ ConfigurationRevision/upbound-configuration-gitops-flux-2e80ec62738d         v0.2.0    -           True      Active   HealthyPackageRevision
 ```
 
 #### Wide outputs
@@ -646,6 +653,7 @@ The `crossplane beta trace` command doesn't print secret values.
 The output includes both the secret name along with the secret's namespace.
 
 ```shell
+crossplane beta trace configuration platform-ref-aws -s
 NAME                                                                        SYNCED   READY   STATUS
 Cluster/platform-ref-aws (default)                                          True     True    Available
 └─ XCluster/platform-ref-aws-mlnwb                                          True     True    Available
@@ -659,6 +667,138 @@ Cluster/platform-ref-aws (default)                                          True
    │  ├─ Release/platform-ref-aws-mlnwb-7hfkv                               True     True    Available
    │  └─ Secret/d0955929-892d-40c3-b0e0-a8cabda55895 (upbound-system)       -        -
    └─ Secret/9666eccd-929c-4452-8658-c8c881aee137 (upbound-system)          -        -
+```
+
+#### Print package dependencies
+
+Use the `--show-package-dependencies` flag to include more information about
+package dependencies.
+
+By default `crossplane beta trace` uses `--show-package-dependencies unique` to
+include a required package only once in the output.
+
+Use `--show-package-dependencies all` to see every package requiring the same
+dependency. 
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-dependencies all
+NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE    STATUS
+Configuration/platform-ref-aws                                                     v0.9.0    True        True      -        HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network                                 v0.7.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1         v0.7.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-database                                v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-database-3112f0a765c5        v0.5.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-rds                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Configuration/upbound-configuration-aws-network                              v0.7.0    True        True      -        HealthyPackageRevision
+│     ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1      v0.7.0    -           True      Active   HealthyPackageRevision
+│     ├─ Provider/upbound-provider-aws-ec2                                         v0.47.0   True        True      -        HealthyPackageRevision
+│     │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v0.47.0   -           True      Active   HealthyPackageRevision
+│     │  └─ Provider/upbound-provider-family-aws                                   v1.0.0    True        True      -        HealthyPackageRevision
+│     │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v1.0.0    -           True      Active   HealthyPackageRevision
+│     └─ Function/upbound-function-patch-and-transform                             v0.2.1    True        True      -        HealthyPackageRevision
+│        └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715     v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-eks                                     v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-eks-83c9d65f4a47             v0.5.0    -           True      Active   HealthyPackageRevision
+│  ├─ Configuration/upbound-configuration-aws-network                              v0.7.0    True        True      -        HealthyPackageRevision
+│  │  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1      v0.7.0    -           True      Active   HealthyPackageRevision
+│  │  ├─ Provider/upbound-provider-aws-ec2                                         v0.47.0   True        True      -        HealthyPackageRevision
+│  │  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  │  └─ Provider/upbound-provider-family-aws                                   v1.0.0    True        True      -        HealthyPackageRevision
+│  │  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v1.0.0    -           True      Active   HealthyPackageRevision
+│  │  └─ Function/upbound-function-patch-and-transform                             v0.2.1    True        True      -        HealthyPackageRevision
+│  │     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715     v0.2.1    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-eks                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-iam                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-app                                         v0.2.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-app-5d95726dba8c                 v0.2.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-observability-oss                           v0.2.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-observability-oss-a51529457ad7   v0.2.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/grafana-provider-grafana                                            v0.8.0    True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/grafana-provider-grafana-ac529c8ce1c6                    v0.8.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+└─ Configuration/upbound-configuration-gitops-flux                                 v0.2.0    True        True      -        HealthyPackageRevision
+   ├─ ConfigurationRevision/upbound-configuration-gitops-flux-2e80ec62738d         v0.2.0    -           True      Active   HealthyPackageRevision
+   ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+   │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+   └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+      └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+```
+
+Use `--show-package-dependencies none` to hide all dependencies.
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-dependencies none
+NAME                                                     VERSION   INSTALLED   HEALTHY   STATE    STATUS
+Configuration/platform-ref-aws                           v0.9.0    True        True      -        HealthyPackageRevision
+└─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899   v0.9.0    -           True      Active   HealthyPackageRevision
+```
+
+#### Print package revisions
+
+By default the `crossplane beta trace` command only shows the package revisions
+actively in use. To view both active and inactive revisions use
+`--show-package-revisions all`.
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-revisions all
+NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE      STATUS
+Configuration/platform-ref-aws                                                     v0.9.0    True        True      -          HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-ad01153c1179                             v0.8.0    -           True      Inactive   HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active     HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network                                 v0.2.0    True        True      -          HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-network-288fcd1b88dd         v0.2.0    -           True      Active     HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-ec2                                            v1.0.0    True        True      -          HealthyPackageRevision
+│     ├─ ProviderRevision/upbound-provider-aws-ec2-5cfd948d082f                    v1.0.0    -           True      Active     HealthyPackageRevision
+│     └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -          HealthyPackageRevision
+│        └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active     HealthyPackageRevision
+# Removed for brevity
+```
+
+To hide all revisions use `--show-package-revision none`.
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-revisions none
+NAME                                                       VERSION   INSTALLED   HEALTHY   STATE   STATUS
+Configuration/platform-ref-aws                             v0.9.0    True        True      -       HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network         v0.2.0    True        True      -       HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-ec2                    v1.0.0    True        True      -       HealthyPackageRevision
+│     └─ Provider/upbound-provider-family-aws              v1.0.0    True        True      -       HealthyPackageRevision
+# Removed for brevity
 ```
 
 ### beta xpkg init
