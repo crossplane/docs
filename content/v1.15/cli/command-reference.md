@@ -320,6 +320,48 @@ flags, options or outputs in future releases.
 Crossplane maintainers may promote or remove commands under `beta` in future 
 releases.
 
+
+### beta convert
+
+As Crossplane evolves, its APIs and resources may change. To help with the 
+migration to the new APIs and resources, the `crossplane beta convert` command
+converts a Crossplane resource to a new version or kind.
+
+Use the `crossplane beta convert` command to convert an existing
+[ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
+to a [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}}) 
+or a Composition using [patch and transforms]({{<ref "../concepts/patch-and-transform">}}) 
+to a 
+[Composition pipeline function]({{< ref "../concepts/compositions#use-composition-functions" >}}).
+
+Provide the `crossplane beta convert` command the conversion type, the input
+file and optionally, an output file. By default the command writes the output to
+standard out. 
+
+For example, to convert a ControllerConfig to a DeploymentRuntimeConfig use 
+`crossplane beta convert deployment-runtime`. For example,
+
+`crossplane beta convert deployment-runtime controllerConfig.yaml -o deploymentConfig.yaml`
+
+To convert a Composition using patch and transforms to a pipeline function, use
+`crossplane beta convert pipeline-composition`.  
+
+Optionally, use the `-f` flag to provide the name of the function.  
+By default the function name is "function-patch-and-transform."
+
+`crossplane beta convert pipeline-composition oldComposition.yaml -o newComposition.yaml -f patchFunctionName`
+
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag       | Description                                                                                |
+| ------------ | --------------- | ------------------------------                                                             |
+| `-o`         | `--output-file` | The output YAML file to write. Outputs to stdout by default.  |
+| `-f`         | `--function-name` | The name of the new function. Defaults to `function-patch-and-transform`. |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+
 ### beta render 
 
 The `crossplane beta render` command previews the output of a 
@@ -439,6 +481,43 @@ spec:
 ```
 
 The schema of the resource isn't validated and may contain any data.
+
+### beta top
+
+The command `crossplane beta top` shows CPU and memory usage of Crossplane
+related pods. 
+
+```shell
+crossplane beta top 
+TYPE         NAMESPACE   NAME                                                       CPU(cores)   MEMORY
+crossplane   default     crossplane-f98f9ddfd-tnm46                                 4m           32Mi
+crossplane   default     crossplane-rbac-manager-74ff459b88-94p8p                   4m           14Mi
+provider     default     provider-aws-s3-1f1a3fb08cbc-5c49d84447-sggrq              3m           108Mi
+provider     default     upbound-provider-family-aws-48b3b5ccf964-76c9686b6-bgg65   2m           89Mi
+```
+
+{{<hint "important" >}}
+Using `crossplane beta top` requires the Kubernetes 
+[metrics server](https://github.com/kubernetes-sigs/metrics-server) enabled on 
+the cluster running Crossplane before using `crossplane beta top`. 
+
+Follow the installation instructions on the 
+[metrics-server GitHub page](https://github.com/kubernetes-sigs/metrics-server#installation).
+{{< /hint >}}
+
+
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale flags `dot` as an error but only the trailing tick. -->
+| Short flag   | Long flag                   | Description                                                                        |
+| ------------ | -------------               | ------------------------------                                                     |
+| `-n`         | `--namespace`               | The namespace where the Crossplane pod runs. Default is `crossplane-system`.                                                    |
+| `-s`         | `--summary`                 | Print a summary of all Crossplane pods along with the output.                |
+|              | `--verbose`                 | Print verbose logging information with the output.                                                     |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
 
 
 ### beta trace
@@ -626,46 +705,5 @@ personalize the template.
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
-### beta convert
 
-As Crossplane evolves, its APIs and resources may change. To help with the 
-migration to the new APIs and resources, the `crossplane beta convert` command
-converts a Crossplane resource to a new version or kind.
-
-The Crossplane CLI supported the following conversions:
-* [ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
-  to [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}})
-* [Composition patch and transforms]({{<ref "../concepts/compositions#changing-resource-fields">}})
-  to [Function Pipeline Composition]({{< ref "../concepts/compositions#use-composition-functions">}})
-
-The command argument is a YAML file containing a single Crossplane resource.  
-Don't provide a file argument or use `-` to use stdin.   
-The command outputs the converted resource to stdout or a file.
-
-#### beta convert `deployment-runtime`
-
-The `crossplane beta convert deployment-runtime` command converts a 
-ControllerConfig to a DeploymentRuntimeConfig.
-
-#### Flags
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag       | Description                                                                                |
-| ------------ | --------------- | ------------------------------                                                             |
-| `-o`         | `--output-file` | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
-<!-- vale Crossplane.Spelling = YES -->
-{{< /table >}}
-
-#### beta convert `pipeline-composition`
-
-The `crossplane beta convert pipeline-composition` command converts a
-Composition patch and transform to a Composition Pipeline Function.
-
-#### Flags
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag         | Description                                                                                |
-| ------------ | ----------------- | ------------------------------                                                             |
-| `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
-| `-f`         | `--function-name` | `functionRef.name` to use. Defaults to name "function-patch-and-transform."                |
-<!-- vale Crossplane.Spelling = YES -->
-{{< /table >}}
 
