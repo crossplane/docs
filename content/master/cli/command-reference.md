@@ -388,6 +388,7 @@ spec:
 |              | `--context-files=<key>=<file>,<key>=<file>`    | A comma separated list of files to load for function "contexts." |
 |              | `--context-values=<key>=<value>,<key>=<value>` | A comma separated list of key-value pairs to load for function "contexts."                                                    |
 | `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
+| `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
 | `-o`         | `--observed-resources=<directory or file>`               | Provide artificial managed resource data to the function.                                                    |
 |              | `--timeout=`                          | Amount of time to wait for a function to finish.                    |
 {{< /table >}}
@@ -408,6 +409,15 @@ The context is JSON formatted data.
 If a function produces Kubernetes events with statuses use the 
 `--include-function-results` to print them along with the managed resource 
 outputs. 
+
+#### Include the composite resource 
+
+Composition functions can only change the `status` field of a composite 
+resource. By default, the `crossplane beta render` command only prints the
+`status` field with `metadata.name`.  
+
+Use `--include-full-xr` to print the full composite resource, 
+including the `spec` and `metadata` fields.
 
 #### Mock managed resources
 
