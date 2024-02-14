@@ -594,6 +594,7 @@ with the command
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
 The `<template>` value may be one of four well known templates:
+* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../concepts/packages">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
 * `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
 * `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
