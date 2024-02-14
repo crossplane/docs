@@ -480,6 +480,11 @@ sequenceDiagram
     Crossplane Pod->>+API Server: Observe composite resource
     Crossplane Pod->>+Function Pod: gRPC RunFunctionRequest
     Function Pod->>+Crossplane Pod: gRPC RunFunctionResponse
+    loop Extra resources needed?
+      Crossplane Pod->>+API Server: Get Extra resources
+      Crossplane Pod->>+Function Pod: gRPC RunFunctionRequest
+      Function Pod->>+Crossplane Pod: gRPC RunFunctionResponse
+    end
     Crossplane Pod->>+API Server: Apply desired composed resources
 ```
 
@@ -493,8 +498,8 @@ You can find detailed schemas for the RunFunctionRequest and RunFunctionResponse
 RPCs in the [Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1beta1).
 {{</hint>}}
 
-When Crossplane calls a function it includes four important things in the
-RunFunctionRequest.
+When Crossplane calls a function the first time it includes four important
+things in the RunFunctionRequest.
 
 1. The __observed state__ of the composite resource, and any composed resources.
 1. The __desired state__ of the composite resource, and any composed resources.
@@ -507,6 +512,18 @@ Crossplane. It does this by returning a RunFunctionResponse.
 Most composition functions read the observed state of the composite resource,
 and use it to add composed resources to the desired state. This tells Crossplane
 which composed resources it should create or update.
+
+If the function needs __extra resources__ to determine the desired state it can
+request any cluster-scoped resource Crossplane already has access to, either by
+by name or labels through the returned RunFunctionResponse. Crossplane then
+calls the function again including the requested __extra resources__ and the
+__context__ returned by the Function itself alongside the same __input__,
+__observed__ and __desired state__ of the previous RunFunctionRequest. Functions
+can iteratively request __extra resources__ if needed, but to avoid endlessly
+looping Crossplane limits the number of iterations to 5. Crossplane considers
+the function satisfied as soon as the __extra resources__ requests become
+stable, so the Function returns the same exact request two times in a row.
+Crossplane errors if stability isn't reached after 5 iterations.
 
 {{<hint "tip">}}
 <!-- vale write-good.Weasel = NO -->
@@ -698,3 +715,29 @@ looking for a log line:
 
 If you don't see the log line emitted when Crossplane starts, you have disabled
 composition functions.
+
+## Disable extra resources
+
+Crossplane enables __extra resources__ by default, allowing Functions to get access
+to any cluster-scoped resource Crossplane already has access to. Disable support
+for __extra resources__, while keeping composition functions enabled, by disabling
+the beta feature flag in Crossplane with `helm install --args`.
+
+```shell
+helm install crossplane --namespace crossplane-system crossplane-stable/crossplane \
+    --create-namespace \
+    --set "args='{--enable-composition-functions-extra-resources=false}'"
+```
+
+The preceding Helm command installs Crossplane with the extra resources
+feature flag disabled. Confirm you have disabled composition functions by
+looking for a log line:
+
+```shell {copy-lines="1"}
+ kubectl -n crossplane-system logs -l app=crossplane
+{"level":"info","ts":1674535093.36186,"logger":"crossplane","msg":"Beta feature enabled","flag":"EnableBetaCompositionFunctionsExtraResources"}
+```
+
+If you don't see the log line emitted when Crossplane starts, you have disabled
+__extra resources__ for composition functions, which means requests by functions for __extra
+resources__ are just ignored.
