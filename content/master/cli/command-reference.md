@@ -819,10 +819,11 @@ personalize the template.
 #### Flags
 {{< table "table table-sm table-striped">}}
 | Short flag   | Long flag               | Description                                                                                      |
-| ------------ | ----------------------- | ------------------------------                                                                   |
+
+| ------------ | ----------------------- | ------------------------------|
+| `-b`         | `--ref-name`            | The branch or tag to clone from the template repository.                                         |
 | `-d`         | `--directory`           | The directory to create and load the template files into. Uses the current directory by default. |
 | `-r`         | `--run-init-script`     | Run the init.sh script without prompting, if it exists.                                          |
-| `-b`         | `--ref-name`            | The branch or tag to clone from the template repository.                                         |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
