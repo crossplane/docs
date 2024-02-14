@@ -10,6 +10,7 @@ booleans
 Buf
 CI
 CLI
+cluster-scoped
 cluster-wide
 ClusterRole
 ClusterRoles
