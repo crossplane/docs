@@ -70,11 +70,6 @@ building and managing external resources through Kubernetes.
   custom resource mapping or storing and retrieving data across Claims and
   Composite Resources. 
 
-* [**Usages**]({{<ref "./usages">}}) defining critical resources or custom
-  dependency mappings. Usages can prevent Crossplane from deleting or can
-  ensure that a parent resource waits for Crossplane to delete all child 
-  resources first. 
-
 * [**Packages**]({{<ref "./packages">}}) are a convenient way to package up an
   entire custom platform and define any other Crossplane related requirements.
   Packages define how to install Providers, custom APIs or composition functions.
