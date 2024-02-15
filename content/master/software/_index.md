@@ -1,5 +1,5 @@
 ---
-title: Install, Uninstall and Upgrade
+title: Install and Uninstall Crossplane
 weight: 300
 description: Manage Crossplane installations
 ---

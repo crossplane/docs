@@ -320,22 +320,526 @@ flags, options or outputs in future releases.
 Crossplane maintainers may promote or remove commands under `beta` in future 
 releases.
 
-### beta validate
 
-The `crossplane beta validate` command validates [compositions]({{<ref "../concepts/compositions">}}) against provider or XRD schema using the Kubernetes API server's validation library.
+### beta convert
 
-The validate command enables the following validation scenarios:
+As Crossplane evolves, its APIs and resources may change. To help with the 
+migration to the new APIs and resources, the `crossplane beta convert` command
+converts a Crossplane resource to a new version or kind.
 
-- Validate any Crossplane resource against any schema (provider, XRD).
-- Use the output of the render command to validate function-based compositions.
-- When validating resources against provider schemas, the command downloads and
-  caches the providers' CRDs to make future runs much faster.
-- Work with Kubernetes CEL validation rules to enable validation of complex business rules expressed in the composition resources definitions (XRDs).
-- Pass an entire directory with schema files and validate all the Crossplane.
-  resources against the schemas.
+Use the `crossplane beta convert` command to convert an existing
+[ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
+to a [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}}) 
+or a Composition using [patch and transforms]({{<ref "../concepts/patch-and-transform">}}) 
+to a 
+[Composition pipeline function]({{< ref "../concepts/compositions#use-composition-functions" >}}).
+
+Provide the `crossplane beta convert` command the conversion type, the input
+file and optionally, an output file. By default the command writes the output to
+standard out. 
+
+For example, to convert a ControllerConfig to a DeploymentRuntimeConfig use 
+`crossplane beta convert deployment-runtime`. For example,
+
+`crossplane beta convert deployment-runtime controllerConfig.yaml -o deploymentConfig.yaml`
+
+To convert a Composition using patch and transforms to a pipeline function, use
+`crossplane beta convert pipeline-composition`.  
+
+Optionally, use the `-f` flag to provide the name of the function.  
+By default the function name is "function-patch-and-transform."
+
+`crossplane beta convert pipeline-composition oldComposition.yaml -o newComposition.yaml -f patchFunctionName`
+
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag       | Description                                                                                |
+| ------------ | --------------- | ------------------------------                                                             |
+| `-o`         | `--output-file` | The output YAML file to write. Outputs to stdout by default.  |
+| `-f`         | `--function-name` | The name of the new function. Defaults to `function-patch-and-transform`. |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+
+### beta render 
+
+The `crossplane beta render` command previews the output of a 
+[composite resource]({{<ref "../concepts/composite-resources">}}) after applying 
+any [composition functions]({{<ref "../concepts/composition-functions">}}).
 
 {{< hint "important" >}}
-The `crossplane beta validate` command performs all validation offline without requiring a running cluster.
+The `crossplane beta render` command doesn't apply 
+[patch and transform composition patches]({{<ref "../concepts/patch-and-transform">}}).
+
+The command only supports function "patch and transforms."
+{{< /hint >}}
+
+The `crossplane beta render` command connects to the locally running Docker 
+Engine to pull and run composition functions. 
+
+{{<hint "important">}} 
+Running `crossplane beta render` requires [Docker](https://www.docker.com/).
+{{< /hint >}}
+
+Provide a composite resource, composition and composition function YAML 
+definition with the command to render the output locally. 
+
+For example, 
+`crossplane beta render xr.yaml composition.yaml function.yaml`
+
+The output includes the original composite resource followed by the generated 
+managed resources. 
+
+{{<expand "An example render output" >}}
+```yaml
+---
+apiVersion: nopexample.org/v1
+kind: XBucket
+metadata:
+  name: test-xrender
+status:
+  bucketRegion: us-east-2
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  annotations:
+    crossplane.io/composition-resource-name: my-bucket
+  generateName: test-xrender-
+  labels:
+    crossplane.io/composite: test-xrender
+  ownerReferences:
+  - apiVersion: nopexample.org/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: XBucket
+    name: test-xrender
+    uid: ""
+spec:
+  forProvider:
+    region: us-east-2
+```
+{{< /expand >}}
+
+#### Flags
+
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag                             | Description                                           |
+| ------------ | -------------                         | ------------------------------                        |
+|              | `--context-files=<key>=<file>,<key>=<file>`    | A comma separated list of files to load for function "contexts." |
+|              | `--context-values=<key>=<value>,<key>=<value>` | A comma separated list of key-value pairs to load for function "contexts."                                                    |
+| `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
+| `-o`         | `--observed-resources=<directory or file>`               |
+Provide artificial managed resource data to the function.
+|
+| `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
+|              | `--timeout=`                          | Amount of time to wait for a function to finish.                    |
+{{< /table >}}
+
+The `crossplane beta render` command relies on standard 
+[Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables) 
+to connect to the local Docker engine and run composition functions. 
+
+
+#### Provide function context
+
+The `--context-files` and `--context-values` flags can provide data 
+to a function's `context`.  
+The context is JSON formatted data.
+
+#### Include function results
+
+If a function produces Kubernetes events with statuses use the 
+`--include-function-results` to print them along with the managed resource 
+outputs. 
+
+#### Include the composite resource 
+
+Composition functions can only change the `status` field of a composite 
+resource. By default, the `crossplane beta render` command only prints the
+`status` field with `metadata.name`.  
+
+Use `--include-full-xr` to print the full composite resource, 
+including the `spec` and `metadata` fields.
+
+#### Mock managed resources
+
+Provide mocked, or artificial data representing a managed resource with 
+`--observed-resources`. The `crossplane beta render` command treats the 
+provided inputs as if they were resources in a Crossplane cluster. 
+
+A function can reference and manipulate the included resource as part of 
+running the function.
+
+The `observed-resources` may be a single YAML file with multiple resources or a 
+directory of YAML files representing multiple resources.
+
+Inside the YAML file include an 
+{{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
+{{<hover label="apiVersion" line="2">}}kind{{</hover>}},
+{{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
+{{<hover label="apiVersion" line="7">}}spec{{</hover>}}.
+
+```yaml {label="or"}
+apiVersion: example.org/v1alpha1
+kind: ComposedResource
+metadata:
+  name: test-render-b
+  annotations:
+    crossplane.io/composition-resource-name: resource-b
+spec:
+  coolerField: "I'm cooler!"
+```
+
+The schema of the resource isn't validated and may contain any data.
+
+### beta top
+
+The command `crossplane beta top` shows CPU and memory usage of Crossplane
+related pods. 
+
+```shell
+crossplane beta top 
+TYPE         NAMESPACE   NAME                                                       CPU(cores)   MEMORY
+crossplane   default     crossplane-f98f9ddfd-tnm46                                 4m           32Mi
+crossplane   default     crossplane-rbac-manager-74ff459b88-94p8p                   4m           14Mi
+provider     default     provider-aws-s3-1f1a3fb08cbc-5c49d84447-sggrq              3m           108Mi
+provider     default     upbound-provider-family-aws-48b3b5ccf964-76c9686b6-bgg65   2m           89Mi
+```
+
+{{<hint "important" >}}
+Using `crossplane beta top` requires the Kubernetes 
+[metrics server](https://github.com/kubernetes-sigs/metrics-server) enabled on 
+the cluster running Crossplane before using `crossplane beta top`. 
+
+Follow the installation instructions on the 
+[metrics-server GitHub page](https://github.com/kubernetes-sigs/metrics-server#installation).
+{{< /hint >}}
+
+
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale flags `dot` as an error but only the trailing tick. -->
+| Short flag   | Long flag                   | Description                                                                        |
+| ------------ | -------------               | ------------------------------                                                     |
+| `-n`         | `--namespace`               | The namespace where the Crossplane pod runs. Default is `crossplane-system`.                                                    |
+| `-s`         | `--summary`                 | Print a summary of all Crossplane pods along with the output.                |
+|              | `--verbose`                 | Print verbose logging information with the output.                                                     |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+The Kubernetes metrics server may take some time to collect data for the
+`crossplane beta top` command. Before the metrics server is ready, 
+running the `top` command may produce an error, for example,
+
+`crossplane: error: error adding metrics to pod, check if metrics-server is running or wait until metrics are available for the pod: the server is currently unable to handle the request (get pods.metrics.k8s.io crossplane-contrib-provider-helm-b4cc4c2c8db3-6d787f9686-qzmz2)`
+
+
+### beta trace
+
+Use the `crossplane beta trace` command to display a visual relationship of
+Crossplane objects. The `trace` command supports claims, compositions, 
+functions, managed resources or packages. 
+
+The command requires a resource type and a resource name.  
+
+`crossplane beta trace <resource kind> <resource name>`
+
+For example to view a resource named `my-claim` of type `example.crossplane.io`:  
+`crossplane beta trace example.crossplane.io my-claim`
+
+The command also accepts Kubernetes CLI style `<kind>/<name>` input.  
+For example,  
+`crossplane beta trace example.crossplane.io/my-claim`
+
+By default the `crossplane beta trace` command uses the Kubernetes 
+configuration defined in `~/.kube/config`.  
+
+Define a custom Kubernetes configuration file location with the environmental 
+variable `KUBECONFIG`.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale flags `dot` as an error but only the trailing tick. -->
+| Short flag   | Long flag                   | Description                                                                        |
+| ------------ | -------------               | ------------------------------                                                     |
+| `-n`         | `--namespace`               | The namespace of the resource.                                                     |
+| `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. |
+|              | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
+|              | `--show-package-dependencies <filter>` | Show package dependencies. Options are `all` to show every dependency, `unique` to only print a package once or `none` to not print any dependencies. By default the `trace` command uses `--show-package-dependencies unique`.                |
+|              | `--show-package-revisions <output>`    | Print package revision versions. Options are `active`, showing only the active revisions, `all` showing all revisions or `none` to print not print any revisions.                 |
+|              | `--show-package-runtime-configs` | Print DeploymentRuntimeConfig dependencies.                |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
+
+#### Output options
+
+By default `crossplane beta trace` prints directly to the terminal, limiting the
+"Ready" condition and "Status" messages to 64 characters.
+
+The following an example output a "cluster" claim from the AWS reference 
+platform, which includes multiple Compositions and composed resources: 
+
+```shell {copy-lines="1"}
+crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws
+NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE    STATUS
+Configuration/platform-ref-aws                                                     v0.9.0    True        True      -        HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network                                 v0.7.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1         v0.7.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-database                                v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-database-3112f0a765c5        v0.5.0    -           True      Active   HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-rds                                            v0.47.0   True        True      -        HealthyPackageRevision
+│     └─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v0.47.0   -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-eks                                     v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-eks-83c9d65f4a47             v0.5.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-eks                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-iam                                            v0.47.0   True        True      -        HealthyPackageRevision
+│     └─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v0.47.0   -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-app                                         v0.2.0    True        True      -        HealthyPackageRevision
+│  └─ ConfigurationRevision/upbound-configuration-app-5d95726dba8c                 v0.2.0    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-observability-oss                           v0.2.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-observability-oss-a51529457ad7   v0.2.0    -           True      Active   HealthyPackageRevision
+│  └─ Provider/grafana-provider-grafana                                            v0.8.0    True        True      -        HealthyPackageRevision
+│     └─ ProviderRevision/grafana-provider-grafana-ac529c8ce1c6                    v0.8.0    -           True      Active   HealthyPackageRevision
+└─ Configuration/upbound-configuration-gitops-flux                                 v0.2.0    True        True      -        HealthyPackageRevision
+   └─ ConfigurationRevision/upbound-configuration-gitops-flux-2e80ec62738d         v0.2.0    -           True      Active   HealthyPackageRevision
+```
+
+#### Wide outputs
+Print the entire "Ready" or "Status" message if they're longer than 
+64 characters with `--output=wide`. 
+
+For example, the output truncates the "Status" message that's too long. 
+
+```shell {copy-lines="1"
+crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws
+NAME                                                              SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                True     False   Waiting: ...resource claim is waiting for composite resource to become Ready
+```
+
+Use `--output=wide` to see the full message.
+
+```shell {copy-lines="1"
+crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws --output=wide
+NAME                                                              SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                True     False   Waiting: Composite resource claim is waiting for composite resource to become Ready
+```
+
+#### Graphviz dot file output
+
+Use the `--output=dot` to print out a textual 
+[Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. 
+
+Save the output and export it or the output directly to Graphviz `dot` to 
+render an image. 
+
+For example, to save the output as a `graph.png` file use 
+`dot -Tpng -o graph.png`.
+
+`crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws -o dot | dot -Tpng -o graph.png`
+
+#### Print connection secrets
+
+Use `-s` to print any connection secret names along with the other resources.
+
+{{<hint "important">}}
+The `crossplane beta trace` command doesn't print secret values.
+{{< /hint >}}
+
+The output includes both the secret name along with the secret's namespace.
+
+```shell
+crossplane beta trace configuration platform-ref-aws -s
+NAME                                                                        SYNCED   READY   STATUS
+Cluster/platform-ref-aws (default)                                          True     True    Available
+└─ XCluster/platform-ref-aws-mlnwb                                          True     True    Available
+   ├─ XNetwork/platform-ref-aws-mlnwb-6nvkx                                 True     True    Available
+   │  ├─ SecurityGroupRule/platform-ref-aws-mlnwb-szgxp                     True     True    Available
+   │  └─ Secret/3f11c30b-dd94-4f5b-aff7-10fe4318ab1f (upbound-system)       -        -
+   ├─ XEKS/platform-ref-aws-mlnwb-fqjzz                                     True     True    Available
+   │  ├─ OpenIDConnectProvider/platform-ref-aws-mlnwb-h26xx                 True     True    Available
+   │  └─ Secret/9666eccd-929c-4452-8658-c8c881aee137-eks (upbound-system)   -        -
+   ├─ XServices/platform-ref-aws-mlnwb-bgndx                                True     True    Available
+   │  ├─ Release/platform-ref-aws-mlnwb-7hfkv                               True     True    Available
+   │  └─ Secret/d0955929-892d-40c3-b0e0-a8cabda55895 (upbound-system)       -        -
+   └─ Secret/9666eccd-929c-4452-8658-c8c881aee137 (upbound-system)          -        -
+```
+
+#### Print package dependencies
+
+Use the `--show-package-dependencies` flag to include more information about
+package dependencies.
+
+By default `crossplane beta trace` uses `--show-package-dependencies unique` to
+include a required package only once in the output.
+
+Use `--show-package-dependencies all` to see every package requiring the same
+dependency. 
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-dependencies all
+NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE    STATUS
+Configuration/platform-ref-aws                                                     v0.9.0    True        True      -        HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network                                 v0.7.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1         v0.7.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-database                                v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-database-3112f0a765c5        v0.5.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-rds                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Configuration/upbound-configuration-aws-network                              v0.7.0    True        True      -        HealthyPackageRevision
+│     ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1      v0.7.0    -           True      Active   HealthyPackageRevision
+│     ├─ Provider/upbound-provider-aws-ec2                                         v0.47.0   True        True      -        HealthyPackageRevision
+│     │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v0.47.0   -           True      Active   HealthyPackageRevision
+│     │  └─ Provider/upbound-provider-family-aws                                   v1.0.0    True        True      -        HealthyPackageRevision
+│     │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v1.0.0    -           True      Active   HealthyPackageRevision
+│     └─ Function/upbound-function-patch-and-transform                             v0.2.1    True        True      -        HealthyPackageRevision
+│        └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715     v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-eks                                     v0.5.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-eks-83c9d65f4a47             v0.5.0    -           True      Active   HealthyPackageRevision
+│  ├─ Configuration/upbound-configuration-aws-network                              v0.7.0    True        True      -        HealthyPackageRevision
+│  │  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1      v0.7.0    -           True      Active   HealthyPackageRevision
+│  │  ├─ Provider/upbound-provider-aws-ec2                                         v0.47.0   True        True      -        HealthyPackageRevision
+│  │  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  │  └─ Provider/upbound-provider-family-aws                                   v1.0.0    True        True      -        HealthyPackageRevision
+│  │  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v1.0.0    -           True      Active   HealthyPackageRevision
+│  │  └─ Function/upbound-function-patch-and-transform                             v0.2.1    True        True      -        HealthyPackageRevision
+│  │     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715     v0.2.1    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-eks                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-iam                                            v0.47.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v0.47.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-app                                         v0.2.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-app-5d95726dba8c                 v0.2.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+├─ Configuration/upbound-configuration-observability-oss                           v0.2.0    True        True      -        HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-observability-oss-a51529457ad7   v0.2.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
+│  ├─ Provider/grafana-provider-grafana                                            v0.8.0    True        True      -        HealthyPackageRevision
+│  │  └─ ProviderRevision/grafana-provider-grafana-ac529c8ce1c6                    v0.8.0    -           True      Active   HealthyPackageRevision
+│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+└─ Configuration/upbound-configuration-gitops-flux                                 v0.2.0    True        True      -        HealthyPackageRevision
+   ├─ ConfigurationRevision/upbound-configuration-gitops-flux-2e80ec62738d         v0.2.0    -           True      Active   HealthyPackageRevision
+   ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
+   │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
+   └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
+      └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
+```
+
+Use `--show-package-dependencies none` to hide all dependencies.
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-dependencies none
+NAME                                                     VERSION   INSTALLED   HEALTHY   STATE    STATUS
+Configuration/platform-ref-aws                           v0.9.0    True        True      -        HealthyPackageRevision
+└─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899   v0.9.0    -           True      Active   HealthyPackageRevision
+```
+
+#### Print package revisions
+
+By default the `crossplane beta trace` command only shows the package revisions
+actively in use. To view both active and inactive revisions use
+`--show-package-revisions all`.
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-revisions all
+NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE      STATUS
+Configuration/platform-ref-aws                                                     v0.9.0    True        True      -          HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-ad01153c1179                             v0.8.0    -           True      Inactive   HealthyPackageRevision
+├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active     HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network                                 v0.2.0    True        True      -          HealthyPackageRevision
+│  ├─ ConfigurationRevision/upbound-configuration-aws-network-288fcd1b88dd         v0.2.0    -           True      Active     HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-ec2                                            v1.0.0    True        True      -          HealthyPackageRevision
+│     ├─ ProviderRevision/upbound-provider-aws-ec2-5cfd948d082f                    v1.0.0    -           True      Active     HealthyPackageRevision
+│     └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -          HealthyPackageRevision
+│        └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active     HealthyPackageRevision
+# Removed for brevity
+```
+
+To hide all revisions use `--show-package-revision none`.
+
+```shell
+crossplane beta trace configuration platform-ref-aws --show-package-revisions none
+NAME                                                       VERSION   INSTALLED   HEALTHY   STATE   STATUS
+Configuration/platform-ref-aws                             v0.9.0    True        True      -       HealthyPackageRevision
+├─ Configuration/upbound-configuration-aws-network         v0.2.0    True        True      -       HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-ec2                    v1.0.0    True        True      -       HealthyPackageRevision
+│     └─ Provider/upbound-provider-family-aws              v1.0.0    True        True      -       HealthyPackageRevision
+# Removed for brevity
+```
+
+### beta validate
+
+The `crossplane beta validate` command validates 
+[compositions]({{<ref "../concepts/compositions">}}) against provider or XRD 
+schema using the Kubernetes API server's validation library.
+
+The `crossplane beta validate` command supports validating the following 
+scenarios:
+
+- Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
+  (CEL) rules.
+- A Crossplane resource against a schema, for example a Provider or 
+  Composite Resource Definition (XRD).
+- Validate the output of the `crossplane beta render` command to validate 
+  function-based compositions.
+- Validate all Crossplane resources against a directory of schema files. 
+
+
+
+
+- When validating resources against provider schemas, the command downloads and
+  caches the providers' CRDs to make future runs much faster.
+
+{{< hint "note" >}}
+The `crossplane beta validate` command performs all validation offline. 
+
+A Kubernetes cluster running Crossplane isn't required. 
 {{< /hint >}}
 
 #### Flags
@@ -345,10 +849,10 @@ The `crossplane beta validate` command performs all validation offline without r
 | ------------ | ------------------------ | ----------------------------------------------------- |
 | `-h`         | `--help`                 | Show context sensitive help.                          |
 | `-v`         | `--version`              | Print version and quit.                               |
-|              | `--verbose`              | Print verbose logging statements.                     |
 |              | `--cache-dir=".crossplane/cache"` | Specify the absolute path to the cache directory to store downloaded schemas. |
 |              | `--clean-cache`          | Clean the cache directory before downloading package schemas. |
 |              | `--skip-success-results` | Skip printing success results.                        |
+|              | `--verbose`              | Print verbose logging statements.                     |
 {{< /table >}}
 
 #### Validate Common Expression Language rules
@@ -508,278 +1012,6 @@ Clean the cache directory.
 
 `crossplane beta validate Extensions rendered.yaml --cache-dir mycache --clean-cache`
 
-### beta render 
-
-The `crossplane beta render` command previews the output of a 
-[composite resource]({{<ref "../concepts/composite-resources">}}) after applying 
-any [composition functions]({{<ref "../concepts/composition-functions">}}).
-
-{{< hint "important" >}}
-The `crossplane beta render` command doesn't apply 
-[patch and transform composition patches]({{<ref "../concepts/patch-and-transform">}}).
-
-The command only supports function "patch and transforms."
-{{< /hint >}}
-
-The `crossplane beta render` command connects to the locally running Docker 
-Engine to pull and run composition functions. 
-
-{{<hint "important">}} 
-Running `crossplane beta render` requires [Docker](https://www.docker.com/).
-{{< /hint >}}
-
-Provide a composite resource, composition and composition function YAML 
-definition with the command to render the output locally. 
-
-For example, 
-`crossplane beta render xr.yaml composition.yaml function.yaml`
-
-The output includes the original composite resource followed by the generated 
-managed resources. 
-
-{{<expand "An example render output" >}}
-```yaml
----
-apiVersion: nopexample.org/v1
-kind: XBucket
-metadata:
-  name: test-xrender
-status:
-  bucketRegion: us-east-2
----
-apiVersion: s3.aws.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  annotations:
-    crossplane.io/composition-resource-name: my-bucket
-  generateName: test-xrender-
-  labels:
-    crossplane.io/composite: test-xrender
-  ownerReferences:
-  - apiVersion: nopexample.org/v1
-    blockOwnerDeletion: true
-    controller: true
-    kind: XBucket
-    name: test-xrender
-    uid: ""
-spec:
-  forProvider:
-    region: us-east-2
-```
-{{< /expand >}}
-
-#### Flags
-
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag                             | Description                                           |
-| ------------ | -------------                         | ------------------------------                        |
-|              | `--context-files=<key>=<file>,<key>=<file>`    | A comma separated list of files to load for function "contexts." |
-|              | `--context-values=<key>=<value>,<key>=<value>` | A comma separated list of key-value pairs to load for function "contexts."                                                    |
-| `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
-| `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
-| `-o`         | `--observed-resources=<directory or file>`               | Provide artificial managed resource data to the function.                                                    |
-|              | `--timeout=`                          | Amount of time to wait for a function to finish.                    |
-{{< /table >}}
-
-The `crossplane beta render` command relies on standard 
-[Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables) 
-to connect to the local Docker engine and run composition functions. 
-
-
-#### Provide function context
-
-The `--context-files` and `--context-values` flags can provide data 
-to a function's `context`.  
-The context is JSON formatted data.
-
-#### Include function results
-
-If a function produces Kubernetes events with statuses use the 
-`--include-function-results` to print them along with the managed resource 
-outputs. 
-
-#### Include the composite resource 
-
-Composition functions can only change the `status` field of a composite 
-resource. By default, the `crossplane beta render` command only prints the
-`status` field with `metadata.name`.  
-
-Use `--include-full-xr` to print the full composite resource, 
-including the `spec` and `metadata` fields.
-
-#### Mock managed resources
-
-Provide mocked, or artificial data representing a managed resource with 
-`--observed-resources`. The `crossplane beta render` command treats the 
-provided inputs as if they were resources in a Crossplane cluster. 
-
-A function can reference and manipulate the included resource as part of 
-running the function.
-
-The `observed-resources` may be a single YAML file with multiple resources or a 
-directory of YAML files representing multiple resources.
-
-Inside the YAML file include an 
-{{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
-{{<hover label="apiVersion" line="2">}}kind{{</hover>}},
-{{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
-{{<hover label="apiVersion" line="7">}}spec{{</hover>}}.
-
-```yaml {label="or"}
-apiVersion: example.org/v1alpha1
-kind: ComposedResource
-metadata:
-  name: test-render-b
-  annotations:
-    crossplane.io/composition-resource-name: resource-b
-spec:
-  coolerField: "I'm cooler!"
-```
-
-The schema of the resource isn't validated and may contain any data.
-
-
-### beta trace
-
-Use the `crossplane beta trace` command to display a visual relationship of
-Crossplane objects. The `trace` command supports claims, compositions or
-managed resources. 
-
-The command requires a resource type and a resource name.  
-
-`crossplane beta trace <resource kind> <resource name>`
-
-For example to view a resource named `my-claim` of type `example.crossplane.io`:  
-`crossplane beta trace example.crossplane.io my-claim`
-
-The command also accepts Kubernetes CLI style `<kind>/<name>` input.  
-For example,  
-`crossplane beta trace example.crossplane.io/my-claim`
-
-By default the `crossplane beta trace` command uses the Kubernetes 
-configuration defined in `~/.kube/config`.  
-
-Define a custom Kubernetes configuration file location with the environmental 
-variable `KUBECONFIG`.
-
-#### Flags
-{{< table "table table-sm table-striped">}}
-<!-- vale Crossplane.Spelling = NO -->
-<!-- vale flags `dot` as an error but only the trailing tick. -->
-| Short flag   | Long flag                   | Description                                                                        |
-| ------------ | -------------               | ------------------------------                                                     |
-| `-n`         | `--namespace`               | The namespace of the resource.                                                     |
-| `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. |
-| `-s`         | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
-<!-- vale Crossplane.Spelling = YES -->
-{{< /table >}}
-
-#### Output options
-
-By default `crossplane beta trace` prints directly to the terminal, limiting the
-"Ready" condition and "Status" messages to 64 characters.
-
-The following an example output a "cluster" claim from the AWS reference 
-platform, which includes multiple Compositions and composed resources: 
-
-```shell {copy-lines="1"}
-crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws
-NAME                                                              SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                True     True    Available
-└─ XCluster/platform-ref-aws-mlnwb                                True     True    Available
-   ├─ XNetwork/platform-ref-aws-mlnwb-6nvkx                       True     True    Available
-   │  ├─ VPC/platform-ref-aws-mlnwb-ckblr                         True     True    Available
-   │  ├─ InternetGateway/platform-ref-aws-mlnwb-r7w47             True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-lhr4h                      True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-bss4b                      True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-fzbxx                      True     True    Available
-   │  ├─ Subnet/platform-ref-aws-mlnwb-vxbf4                      True     True    Available
-   │  ├─ RouteTable/platform-ref-aws-mlnwb-cs9nl                  True     True    Available
-   │  ├─ Route/platform-ref-aws-mlnwb-vpxdg                       True     True    Available
-   │  ├─ MainRouteTableAssociation/platform-ref-aws-mlnwb-sngx5   True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-hprsp       True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-shb8f       True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-hvb2h       True     True    Available
-   │  ├─ RouteTableAssociation/platform-ref-aws-mlnwb-m58vl       True     True    Available
-   │  ├─ SecurityGroup/platform-ref-aws-mlnwb-xxbl2               True     True    Available
-   │  ├─ SecurityGroupRule/platform-ref-aws-mlnwb-7qt56           True     True    Available
-   │  └─ SecurityGroupRule/platform-ref-aws-mlnwb-szgxp           True     True    Available
-   ├─ XEKS/platform-ref-aws-mlnwb-fqjzz                           True     True    Available
-   │  ├─ Role/platform-ref-aws-mlnwb-gmpqv                        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-t6rct        True     True    Available
-   │  ├─ Cluster/platform-ref-aws-mlnwb-crrt8                     True     True    Available
-   │  ├─ ClusterAuth/platform-ref-aws-mlnwb-dgn6f                 True     True    Available
-   │  ├─ Role/platform-ref-aws-mlnwb-tdnx4                        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-qzljh        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-l64q2        True     True    Available
-   │  ├─ RolePolicyAttachment/platform-ref-aws-mlnwb-xn2px        True     True    Available
-   │  ├─ NodeGroup/platform-ref-aws-mlnwb-4sfss                   True     True    Available
-   │  ├─ OpenIDConnectProvider/platform-ref-aws-mlnwb-h26xx       True     True    Available
-   │  └─ ProviderConfig/platform-ref-aws                          -        -
-   └─ XServices/platform-ref-aws-mlnwb-bgndx                      True     True    Available
-      ├─ Release/platform-ref-aws-mlnwb-bcj7r                     True     True    Available
-      └─ Release/platform-ref-aws-mlnwb-7hfkv                     True     True    Available
-```
-
-#### Wide outputs
-Print the entire "Ready" or "Status" message if they're longer than 
-64 characters with `--output=wide`. 
-
-For example, the output truncates the "Status" message that's too long. 
-
-```shell {copy-lines="1"
-crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws
-NAME                                                              SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                True     False   Waiting: ...resource claim is waiting for composite resource to become Ready
-```
-
-Use `--output=wide` to see the full message.
-
-```shell {copy-lines="1"
-crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws --output=wide
-NAME                                                              SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                True     False   Waiting: Composite resource claim is waiting for composite resource to become Ready
-```
-
-#### Graphviz dot file output
-
-Use the `--output=dot` to print out a textual 
-[Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. 
-
-Save the output and export it or the output directly to Graphviz `dot` to 
-render an image. 
-
-For example, to save the output as a `graph.png` file use 
-`dot -Tpng -o graph.png`.
-
-`crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws -o dot | dot -Tpng -o graph.png`
-
-#### Print connection secrets
-
-Use `-s` to print any connection secret names along with the other resources.
-
-{{<hint "important">}}
-The `crossplane beta trace` command doesn't print secret values.
-{{< /hint >}}
-
-The output includes both the secret name along with the secret's namespace.
-
-```shell
-NAME                                                                        SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                          True     True    Available
-└─ XCluster/platform-ref-aws-mlnwb                                          True     True    Available
-   ├─ XNetwork/platform-ref-aws-mlnwb-6nvkx                                 True     True    Available
-   │  ├─ SecurityGroupRule/platform-ref-aws-mlnwb-szgxp                     True     True    Available
-   │  └─ Secret/3f11c30b-dd94-4f5b-aff7-10fe4318ab1f (upbound-system)       -        -
-   ├─ XEKS/platform-ref-aws-mlnwb-fqjzz                                     True     True    Available
-   │  ├─ OpenIDConnectProvider/platform-ref-aws-mlnwb-h26xx                 True     True    Available
-   │  └─ Secret/9666eccd-929c-4452-8658-c8c881aee137-eks (upbound-system)   -        -
-   ├─ XServices/platform-ref-aws-mlnwb-bgndx                                True     True    Available
-   │  ├─ Release/platform-ref-aws-mlnwb-7hfkv                               True     True    Available
-   │  └─ Secret/d0955929-892d-40c3-b0e0-a8cabda55895 (upbound-system)       -        -
-   └─ Secret/9666eccd-929c-4452-8658-c8c881aee137 (upbound-system)          -        -
-```
-
 ### beta xpkg init
 
 The `crossplane beta xpkg init` command populates the current directory with 
@@ -819,54 +1051,12 @@ personalize the template.
 #### Flags
 {{< table "table table-sm table-striped">}}
 | Short flag   | Long flag               | Description                                                                                      |
-
-| ------------ | ----------------------- | ------------------------------|
+| ------------ | ----------------------- | ------------------------------                                                                   |
 | `-b`         | `--ref-name`            | The branch or tag to clone from the template repository.                                         |
 | `-d`         | `--directory`           | The directory to create and load the template files into. Uses the current directory by default. |
-| `-r`         | `--run-init-script`     | Run the init.sh script without prompting, if it exists.                                          |
+| `-r`         | `--run-init-script`     | Run the init.sh script without prompting, if it exists.                                                        |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
-### beta convert
 
-As Crossplane evolves, its APIs and resources may change. To help with the 
-migration to the new APIs and resources, the `crossplane beta convert` command
-converts a Crossplane resource to a new version or kind.
-
-The Crossplane CLI supported the following conversions:
-* [ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
-  to [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}})
-* [Composition patch and transforms]({{<ref "../concepts/compositions#changing-resource-fields">}})
-  to [Function Pipeline Composition]({{< ref "../concepts/compositions#use-composition-functions">}})
-
-The command argument is a YAML file containing a single Crossplane resource.  
-Don't provide a file argument or use `-` to use stdin.   
-The command outputs the converted resource to stdout or a file.
-
-#### beta convert `deployment-runtime`
-
-The `crossplane beta convert deployment-runtime` command converts a 
-ControllerConfig to a DeploymentRuntimeConfig.
-
-#### Flags
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag       | Description                                                                                |
-| ------------ | --------------- | ------------------------------                                                             |
-| `-o`         | `--output-file` | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
-<!-- vale Crossplane.Spelling = YES -->
-{{< /table >}}
-
-#### beta convert `pipeline-composition`
-
-The `crossplane beta convert pipeline-composition` command converts a
-Composition patch and transform to a Composition Pipeline Function.
-
-#### Flags
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag         | Description                                                                                |
-| ------------ | ----------------- | ------------------------------                                                             |
-| `-o`         | `--output-file`   | The file to write the generated DeploymentRuntimeConfig to. Outputs to stdout by default.  |
-| `-f`         | `--function-name` | `functionRef.name` to use. Defaults to name "function-patch-and-transform."                |
-<!-- vale Crossplane.Spelling = YES -->
-{{< /table >}}
 

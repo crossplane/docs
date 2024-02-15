@@ -16,7 +16,8 @@ If you don't have a Kubernetes cluster create one locally with [Kind](https://ki
 
 ## Install Crossplane
 
-Install Crossplane using the Crossplane published _Helm chart_. 
+Install Crossplane using the Crossplane published _Helm chart_.
+
 
 ### Add the Crossplane Helm repository
 
@@ -71,6 +72,7 @@ helm install crossplane \
 {{< /hint >}}
 
 
+
 ## Installed deployments
 Crossplane creates two Kubernetes _deployments_ in the `crossplane-system`
 namespace to deploy the Crossplane pods. 
@@ -110,6 +112,7 @@ chart.
 
 Apply customizations with the command line or with a Helm _values_ file. 
 
+<!-- Generated from Helm README at https://github.com/crossplane/crossplane/blob/master/cluster/charts/crossplane/README.md -->
 <!-- vale gitlab.Substitutions = NO -->
 <!-- allow lowercase yaml -->
 {{<expand "All Crossplane customization options" >}}
@@ -245,6 +248,7 @@ at the table below.
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-functions` | Enable support for Composition Functions. |
+| Beta | `--enable-composition-revisions` | Enable support for CompositionRevisions. |
 | Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
@@ -256,6 +260,15 @@ at the table below.
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
 args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
+
+#### Change the default package registry
+
+Beginning with Crossplane version 1.15.0 Crossplane downloads packages from the
+[Upbound Marketplace](https://marketplace.upbound.io) at `xpkg.upbound.io` 
+instead of DockerHub. 
+
+Change the default registry location during the Crossplane install with 
+`--set args='{"--registry=index.docker.io"}'`.
 
 ### Install pre-release Crossplane versions
 Install a pre-release versions of Crossplane from the `master` Crossplane Helm channel.
