@@ -1,8 +1,5 @@
 ---
 title: Composition Revision Example
-state: beta
-alphaVersion: "1.4"
-betaVersion: "1.11"
 ---
 This tutorial discusses how CompositionRevisions work and how they manage Composite Resource
 (XR) updates. This starts with a `Composition` and `CompositeResourceDefinition` (XRD) that defines a `MyVPC`
