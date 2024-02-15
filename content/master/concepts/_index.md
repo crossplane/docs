@@ -4,10 +4,17 @@ weight: 100
 description: Understand Crossplane's core components
 ---
 
-Crossplane extends Kubernetes allowing Kubernetes to create and manage
-resources external to Kubernetes. Crossplane enables platform engineers to
-create custom APIs and abstractions combining both native Kubernetes
-resources and cloud resources under a single control plane.
+Crossplane extends Kubernetes allowing it to create and manage
+resources external to the Kubernetes cluster. Crossplane enables platform 
+engineers to create custom APIs and abstractions combining both native 
+Kubernetes resources and cloud resources under a single control plane. 
+
+With custom APIs, the platform users, like developers, don't need to know 
+any details about the underlying resources or requirements. 
+
+The platform users only need to know the details exposed by the platform, like
+`big` or `small` or `US` or `EU`. Platform users don't need to know any details
+about the underlying provider like instance type or region names. 
 
 Crossplane uses multiple core components to manage the various elements of
 building and managing external resources through Kubernetes. 
@@ -45,10 +52,15 @@ building and managing external resources through Kubernetes.
 
 * [**Claims**]({{<ref "./claims">}}) are like Composite Resources, but exist
   in a Kubernetes namespace. Every Claim links to a single cluster scoped
-  Composite Resource. 
+  Composite Resource. Platform users create Claims in their unique namespace,
+  isolating their resources from other teams in other namespaces. 
+
+* [**Composition Functions**]({{<ref "./composition-functions">}}) are custom
+  programs, written your programming language of choice, to apply logic and
+  loops before or after Crossplane creates resources. 
 
 * [**Patches and Transforms**]({{<ref "./patch-and-transform">}}) allow platform
-  engineers to change user inputs to their custom API and affect how Crossplane
+  engineers to use user inputs to their custom API and change how Crossplane
   creates resources. Patches and transforms allow for flexible and
   abstract inputs like `big` or `encrypted` to have specific meanings when
   creating the actual managed resources.
