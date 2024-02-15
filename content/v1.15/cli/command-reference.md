@@ -813,6 +813,205 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 # Removed for brevity
 ```
 
+### beta validate
+
+The `crossplane beta validate` command validates 
+[compositions]({{<ref "../concepts/compositions">}}) against provider or XRD 
+schema using the Kubernetes API server's validation library.
+
+The `crossplane beta validate` command supports validating the following 
+scenarios:
+
+- Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
+  (CEL) rules.
+- A Crossplane resource against a schema, for example a Provider or 
+  Composite Resource Definition (XRD).
+- Validate the output of the `crossplane beta render` command to validate 
+  function-based compositions.
+- Validate all Crossplane resources against a directory of schema files. 
+
+
+
+
+- When validating resources against provider schemas, the command downloads and
+  caches the providers' CRDs to make future runs much faster.
+
+{{< hint "note" >}}
+The `crossplane beta validate` command performs all validation offline. 
+
+A Kubernetes cluster running Crossplane isn't required. 
+{{< /hint >}}
+
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag   | Long flag                | Description                                           |
+| ------------ | ------------------------ | ----------------------------------------------------- |
+| `-h`         | `--help`                 | Show context sensitive help.                          |
+| `-v`         | `--version`              | Print version and quit.                               |
+|              | `--cache-dir=".crossplane/cache"` | Specify the absolute path to the cache directory to store downloaded schemas. |
+|              | `--clean-cache`          | Clean the cache directory before downloading package schemas. |
+|              | `--skip-success-results` | Skip printing success results.                        |
+|              | `--verbose`              | Print verbose logging statements.                     |
+{{< /table >}}
+
+#### Validate Common Expression Language rules
+
+XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language, CEL for short.
+
+{{< expand "An example validation rule" >}}
+```yaml
+x-kubernetes-validations:
+  - rule: "self.minReplicas <= self.replicas && self.replicas <= self.maxReplicas"
+    message: "replicas should be in between minReplicas and maxReplicas."
+```
+{{< /expand >}}
+
+`crossplane beta validate xrd.yaml rong-xr.yaml`
+{{< expand "CEL rule violation" >}}
+```console
+[x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": replicas should be in between minReplicas and maxReplicas.
+Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
+```
+{{< /expand >}}
+
+#### Validate resource against a schema
+
+Validate a provider CRD against an XRD.
+
+`crossplane beta validate schemas.yaml resources.yaml`
+
+{{< expand "Sample validation output" >}}
+```console
+[✓] example.crossplane.io/v1beta1, Kind=XR, example validated successfully
+Total 1 resources: 0 missing schemas, 1 success cases, 0 failure cases
+controlplane $ crossplane beta validate schemas.yaml resources.yaml
+[✓] example.crossplane.io/v1beta1, Kind=XR, example validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+Total 5 resources: 0 missing schemas, 5 success cases, 0 failure cases
+```
+{{< /expand >}}
+
+{{< hint "important" >}}
+The command has two categories of output; _errors_ and _warnings_.
+If there is a validation error or warning, the command indicates it accordingly. 
+{{< /hint >}}
+
+`crossplane beta validate missing-schemas.yaml resources.yaml`
+
+{{< expand "Missing schema validation" >}}
+```console
+[✓] example.crossplane.io/v1beta1, Kind=XR, example validated successfully
+[!] could not find CRD/XRD for: iam.aws.upbound.io/v1beta1, Kind=AccessKey
+[!] could not find CRD/XRD for: iam.aws.upbound.io/v1beta1, Kind=AccessKey
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+Total 5 resources: 2 missing schemas, 3 success cases, 0 failure cases
+```
+{{< /expand >}}
+
+#### Validate render command output
+
+Passing the output of the _render_ command to the _validate_ command. 
+
+`crossplane beta render xr.yaml composition.yaml func.yaml | crossplane beta validate schemas.yaml -`
+
+{{< expand "Pipe render result to validate command" >}}
+```console
+[x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
+[x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Required value
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
+```
+{{< /expand >}}
+
+Make sure to include full XR in the render output to avoid the _missing resource_ warning.
+
+`crossplane beta render xr.yaml composition.yaml func.yaml --include-full-xr | crossplane beta validate schemas.yaml -`
+
+{{< expand "Use --include-full-xr flag" >}}
+```console
+[x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
+```
+{{< /expand >}}
+
+#### Validate by directory
+
+Pass a directory containing YAML files as an argument to the validate command.
+
+{{< hint "tip" >}}
+The command processes only the Crossplane YAML files while ignoring files with
+other extensions.
+{{< /hint >}}
+
+`crossplane beta render xr.yaml composition.yaml func.yaml --include-full-xr > rendered.yaml`
+
+The _Extensions_ directory contains packages (provider and configuration) to validate against `tree Extensions`
+
+{{< expand "An example directory content" >}}
+```console
+Extensions
+|-- platform-ref-aws.yaml
+|-- providers
+|   |-- a.txt
+|   `-- provider-aws-iam.yaml
+`-- xrds
+    `-- xrd.yaml
+
+2 directories, 4 files
+```
+{{< /expand >}}
+
+`crossplane beta validate Extensions rendered.yaml`
+
+{{< expand "Downloading packages and validating directory content" >}}
+```console
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-observability-oss:v0.2.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-gitops-flux:v0.2.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/provider-aws-iam:v0.45.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/platform-ref-aws:v0.9.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-aws-network:v0.7.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-aws-database:v0.5.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-aws-eks:v0.5.0
+package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-app:v0.2.0
+[x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
+[x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": no such key: minReplicas evaluating rule: replicas should be greater than or equal to minReplicas.
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
+```
+{{< /expand >}}
+
+#### Local schemas cache
+
+The validate command downloads missing CRDs into a _.crossplane_ directory. 
+
+{{< hint "tip" >}}
+Running the same command again doesn't trigger the download because the command
+cached all the schemas.
+{{< /hint >}}
+
+Use a custom directory as a cache for downloading the schemas.
+
+`crossplane beta validate Extensions rendered.yaml --cache-dir mycache`
+
+Clean the cache directory.
+
+`crossplane beta validate Extensions rendered.yaml --cache-dir mycache --clean-cache`
+
 ### beta xpkg init
 
 The `crossplane beta xpkg init` command populates the current directory with 
