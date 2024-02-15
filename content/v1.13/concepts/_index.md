@@ -70,11 +70,6 @@ building and managing external resources through Kubernetes.
   custom resource mapping or storing and retrieving data across Claims and
   Composite Resources. 
 
-* [**Composition functions**]({{<ref "./composition-functions">}}) are a container
-  of your own custom code which can read, write and change any Crossplane
-  resource. Composition functions are incredibly powerful tools allowing for
-  loops and conditional patching or resource generation.
-
 * [**Usages**]({{<ref "./usages">}}) defining critical resources or custom
   dependency mappings. Usages can prevent Crossplane from deleting or can
   ensure that a parent resource waits for Crossplane to delete all child 
