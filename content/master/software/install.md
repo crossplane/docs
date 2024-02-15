@@ -244,8 +244,8 @@ at the table below.
 {{< table caption="Feature flags" >}}
 | Status | Flag | Description |
 | --- | --- | --- |
+| Beta | `--enable-composition-functions` | Enable support for Composition Functions. |
 | Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
-| Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
