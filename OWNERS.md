@@ -17,7 +17,7 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 
 ## Maintainers
 
-* Daniel Mangum <dan@upbound.io> ([hasheddan](https://github.com/hasheddan))
+* Bob Haddleton <bob.haddleton@nokia.com> ([bobh66](https://github.com/bobh66))
 * Jared Watts <jared@upbound.io> ([jbw976](https://github.com/jbw976))
 * Michael Goff <michael@upbound.io> ([thephred](https://github.com/thephred))
 * Nic Cope <negz@upbound.io> ([negz](https://github.com/negz))
@@ -28,7 +28,6 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 
 ## Reviewers
 
-* Bob Haddleton <bob.haddleton@nokia.com> ([bobh66](https://github.com/bobh66))
 * Yury Tsarev <yury@upbound.io> ([ytsarev](https://github.com/ytsarev))
 * Daren Iott <daren@upbound.io> ([nullable-eth](https://github.com/nullable-eth))
 * Ezgi Demirel <ezgi@upbound.io> ([ezgidemirel](https://github.com/ezgidemirel))
@@ -39,3 +38,4 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 ## Emeritus maintainers
 
 * Connor Chan <connor@upbound.io> ([connorchan](https://github.com/connorchan))
+* Daniel Mangum <dan@upbound.io> ([hasheddan](https://github.com/hasheddan))
