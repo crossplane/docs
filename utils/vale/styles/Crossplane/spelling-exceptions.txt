@@ -13,6 +13,7 @@ dry-run
 end-points
 end-to-end
 free-form
+function-based
 hands-on
 how-to
 in-depth
