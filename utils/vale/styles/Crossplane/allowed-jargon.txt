@@ -8,6 +8,7 @@ bool
 boolean
 booleans
 Buf
+CEL
 CI
 CLI
 cluster-scoped
