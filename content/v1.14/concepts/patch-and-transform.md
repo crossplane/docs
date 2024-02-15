@@ -964,10 +964,6 @@ strings.
 The {{<hover label="combineToEnv" line="20">}}toFieldPath{{</hover>}} is the
 key in the environment to write the new string to. 
 
-{{< hint "important" >}}
-The environment's key must already exist. Patches can't create new environment
-keys. 
-{{< /hint >}}
 
 ```yaml {label="combineToEnv",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
