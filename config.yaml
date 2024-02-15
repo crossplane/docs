@@ -64,7 +64,7 @@ security:
       - ^REVIEW_ID
 
 params:
-  latest: "1.14"
+  latest: "1.15"
   upboundLink: "https://www.upbound.io/"
   slackLink: "https://slack.crossplane.io/"
   githubLink: "https://github.com/crossplane/crossplane"

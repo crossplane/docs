@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LATEST_VER="1.14"
+LATEST_VER="1.15"
 
 cp -R content/v$LATEST_VER content/latest
 

@@ -13,6 +13,12 @@ status = 302
 
 # Redirects for EOL versions
 [[redirects]]
+from = "/v1.12/*"
+to = "/latest/:splat"
+status = 302
+
+# Redirects for EOL versions
+[[redirects]]
 from = "/v1.11/*"
 to = "/latest/:splat"
 status = 302
