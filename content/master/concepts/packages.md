@@ -475,14 +475,14 @@ metadata:
 # Removed for brevity
 ```
 
-Specify the output file with `--output=<filename>.xpkg` option.
+Specify the output file with `--package-file=<filename>.xpkg` option.
 
 For example, to build a package from a directory named `test-directory` and
 generate a package named `test-package.xpkg` in the current working directory,
 use the command:
 
 ```shell
-crossplane xpkg build --package-root=test-directory --output=test-package.xpkg
+crossplane xpkg build --package-root=test-directory --package-file=test-package.xpkg
 ```
 
 ```shell
