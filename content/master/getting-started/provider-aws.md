@@ -5,7 +5,7 @@ weight: 100
 
 Connect Crossplane to AWS to create and manage cloud resources from Kubernetes 
 with the 
-[Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-family-aws/v0.37.0).
+[Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-family-aws).
 
 This guide is in two parts:
 * Part 1 walks through installing Crossplane, configuring the provider to
@@ -37,7 +37,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.47.0
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.1.0
 EOF
 ```
 
@@ -52,8 +52,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v0.47.0       97s
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v0.47.0   88s
+provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:1.1.0         97s
+upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:1.1.0     88s
 ```
 
 The S3 Provider installs a second Provider, the
@@ -67,7 +67,7 @@ Every CRD maps to a unique AWS service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.47.0).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.1.0).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
