@@ -8,6 +8,7 @@ import './bootstrap/src/button';
 import './bootstrap/src/collapse';
 import './bootstrap/src/dropdown';
 import './bootstrap/src/popover';
+import './bootstrap/src/scrollspy';
 import './bootstrap/src/tab';
 import './bootstrap/src/offcanvas';
 
