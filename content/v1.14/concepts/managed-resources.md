@@ -681,6 +681,15 @@ spec:
 
 Remove the annotation to resume reconciliation.
 
+{{<hint "important">}}
+Kubernetes and Crossplane can't delete resources with a `paused` annotation,
+even with `kubectl delete`. 
+
+Read 
+[Crossplane discussion #4839](https://github.com/crossplane/crossplane/issues/4839) 
+for more details.
+{{< /hint >}}
+
 ## Finalizers
 Crossplane applies a 
 [Finalizer](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/)
