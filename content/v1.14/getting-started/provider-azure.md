@@ -106,9 +106,9 @@ az ad sp create-for-rbac \
 Save your Azure JSON output as `azure-credentials.json`.
 
 {{< hint type="note" >}}
-The Azure Provider 
-[Authentication documentation](https://github.com/upbound/provider-azure/blob/main/AUTHENTICATION.md)
-describes other authentication methods.
+The
+[Authentication](https://docs.upbound.io/providers/provider-azure/authentication/) 
+section of the Azure Provider documentation describes other authentication methods.
 {{< /hint >}}
 
 ### Create a Kubernetes secret with the Azure credentials
