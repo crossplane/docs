@@ -11,13 +11,13 @@ The recommended upgrade method for an existing Crossplane install is to use
  
 
 ## Add the Crossplane Helm repository
-Verify Helm has the Crossplane repositry.
+Verify Helm has the Crossplane repository.
 
 ```shell
 helm repo add crossplane-stable https://charts.crossplane.io/stable
 ```
 
-## Update the Helm repositry
+## Update the Helm repository
 
 Update the local Crossplane Helm chart with `helm repo update`.
 
@@ -32,8 +32,8 @@ available in the locally cached Helm chart.
 
 ## Upgrade Crossplane
 
-Upgrade Crossplane with `helm upgrade`, providing the namespace where Crossplane
-is installed. By default, Crossplane installs into the `crossplane-system`
+Upgrade Crossplane with `helm upgrade`, providing the Crossplane namespace. 
+By default, Crossplane installs into the `crossplane-system`
 namespace. 
 
 ```shell
@@ -43,7 +43,7 @@ helm upgrade crossplane --namespace crossplane-system crossplane-stable/crosspla
 Helm preserves any arguments or flags originally used when installing
 Crossplane. 
 
-Any new default Crossplane behaviors are changed unless changed in the `helm
+Crossplane uses any new default behaviors unless they're changed in the `helm
 upgrade` command.
 
 For example, in v1.15.0 Crossplane changed the default image registry from 
