@@ -129,6 +129,12 @@ Data
 creds:  2330 bytes
 ```
 
+{{< hint type="note" >}}
+The
+[Authentication](https://docs.upbound.io/providers/provider-gcp/authentication/) 
+section of the GCP Provider documentation describes other authentication methods.
+{{< /hint >}}
+
 ## Create a ProviderConfig
 A `ProviderConfig` customizes the settings of the GCP Provider.  
 
