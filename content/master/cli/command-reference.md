@@ -823,11 +823,11 @@ schemas using the Kubernetes API server's validation library.
 The `crossplane beta validate` command supports validating the following 
 scenarios:
 
-- Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
-  (CEL) rules.
 - Validate a managed resource or composite resource 
   [against a Provider or XRD schema](#validate-resources-against-a-schema). 
 - Use the output of `crossplane beta render` as [validation input](#validate-render-command-output). 
+- Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
+  (CEL) rules.
 - Validate resources against a [directory of schemas](#validate-against-a-directory-of-schemas).
 
 
@@ -850,65 +850,6 @@ A Kubernetes cluster running Crossplane isn't required.
 |              | `--verbose`              | Print verbose logging statements.                     |
 {{< /table >}}
 
-#### Validate Common Expression Language rules
-XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
-([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).
-
-
-Apply a CEL rule with the 
-{{<hover label="celXRD" line="12" >}}x-kubernetes-validations{{</hover>}} key
-inside the schema {{<hover label="celXRD" line="10" >}}spec{{</hover>}} object of an XRD.
-
-```yaml {label="celXRD"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: myXR.crossplane.io
-spec:
-# Removed for brevity
-        openAPIV3Schema:
-          type: object
-          properties:
-            spec:
-              type: object
-              x-kubernetes-validations:
-              - rule: "self.minReplicas <= self.replicas && self.replicas <= self.maxReplicas"
-                message: "replicas should be in between minReplicas and maxReplicas."
-              properties:
-                minReplicas:
-                  type: integer
-                maxReplicas:
-                  type: integer
-                replicas: 
-                  type: integer
-# Removed for brevity
-```
-
-The rule in this example checks that the 
-{{<hover label="celXR" line="6">}}replicas{{</hover>}} field of an XR is between
-the {{<hover label="celXR" line="7">}}minReplicas{{</hover>}} and 
-{{<hover label="celXR" line="8">}}maxReplicas{{</hover>}} values.
-
-```yaml {label="celXR"}
-apiVersion: example.crossplane.io/v1beta1
-kind: XR
-metadata:
-  name: example
-spec:
-  replicas: 49
-  minReplicas: 1
-  maxReplicas: 30
-```
-
-Running `crossplane beta validate` with the example XRD and XR produces an
-error.
-
-```shell
-`crossplane beta validate xrd.yaml xr.yaml
-[x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": replicas should be in between minReplicas and maxReplicas.
-Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
-```
-
 #### Validate resources against a schema
 
 The `crossplane beta validate` command can validate an XR and one or more 
@@ -916,7 +857,8 @@ managed resources against a provider's schema.
 
 {{<hint "important" >}}
 When validating against a provider the `crossplane beta validate` command
-downloads the provider package to the `--cache-dir` directory.
+downloads the provider package to the `--cache-dir` directory. By default
+Crossplane uses `.crossplane` as the `--cache-dir` location.
 
 Access to a Kubernetes cluster or Crossplane pod isn't required.  
 Validation requires the ability to download the provider package.
@@ -928,7 +870,7 @@ in the `--cache-dir` directory. By default the Crossplane CLI uses
 
 To clear the cache and download the CRD files again use the `--clean-cache` flag.
 
-For example, to validate a manage resource against a provider,
+To validate a managed resource against a provider,
 first, create a provider manifest file. For example, to validate an IAM role
 from Provider AWS, use the 
 [Provider AWS IAM](https://marketplace.upbound.io/providers/upbound/provider-aws-iam/v1.0.0) 
@@ -984,8 +926,8 @@ You can pipe the output of `crossplane beta render` into
 including XRs, compositions and composition functions. 
 
 Use the `--include-full-xr` command with `crossplane beta render` and the `-` 
-option with `crossplane beta validate` to read the YAML file from output 
-of `crossplane beta render`.
+option with `crossplane beta validate` to pipe the output from 
+`crossplane beta render` to the input of `crossplane beta validate`. 
 
 ```shell {copy-lines="1"}
 crossplane beta render xr.yaml composition.yaml function.yaml --include-full-xr | crossplane beta validate schemas.yaml -
@@ -997,6 +939,67 @@ crossplane beta render xr.yaml composition.yaml function.yaml --include-full-xr 
 [✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
+
+
+#### Validate Common Expression Language rules
+XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
+([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).
+
+
+Apply a CEL rule with the 
+{{<hover label="celXRD" line="12" >}}x-kubernetes-validations{{</hover>}} key
+inside the schema {{<hover label="celXRD" line="10" >}}spec{{</hover>}} object of an XRD.
+
+```yaml {label="celXRD"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: myXR.crossplane.io
+spec:
+# Removed for brevity
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              x-kubernetes-validations:
+              - rule: "self.minReplicas <= self.replicas && self.replicas <= self.maxReplicas"
+                message: "replicas should be in between minReplicas and maxReplicas."
+              properties:
+                minReplicas:
+                  type: integer
+                maxReplicas:
+                  type: integer
+                replicas: 
+                  type: integer
+# Removed for brevity
+```
+
+The rule in this example checks that the vale of the
+{{<hover label="celXR" line="6">}}replicas{{</hover>}} field of an XR is between
+the {{<hover label="celXR" line="7">}}minReplicas{{</hover>}} and 
+{{<hover label="celXR" line="8">}}maxReplicas{{</hover>}} values.
+
+```yaml {label="celXR"}
+apiVersion: example.crossplane.io/v1beta1
+kind: XR
+metadata:
+  name: example
+spec:
+  replicas: 49
+  minReplicas: 1
+  maxReplicas: 30
+```
+
+Running `crossplane beta validate` with the example XRD and XR produces an
+error.
+
+```shell
+`crossplane beta validate xrd.yaml xr.yaml
+[x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": replicas should be in between minReplicas and maxReplicas.
+Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
+```
+
 
 #### Validate against a directory of schemas
 
@@ -1022,8 +1025,8 @@ schemas
     `-- xrd.yaml
 ```
 
-Provide the directory name and resource YAML file to the `crossplane beta
-validate` command. 
+Provide the directory name and a resource YAML file to the 
+`crossplane beta validate` command. 
 
 ```shell
 crossplane beta validate schema resources.yaml
