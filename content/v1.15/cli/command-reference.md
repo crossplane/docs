@@ -4,6 +4,7 @@ title: Command Reference
 description: "Command reference for the Crossplane CLI"
 ---
 
+
 <!-- vale Google.Headings = NO -->
 The `crossplane` CLI provides utilities to make using Crossplane easier. 
 
@@ -481,7 +482,7 @@ Inside the YAML file include an
 {{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
 {{<hover label="apiVersion" line="7">}}spec{{</hover>}}.
 
-```yaml {label="or"}
+```yaml {label="apiVersion"}
 apiVersion: example.org/v1alpha1
 kind: ComposedResource
 metadata:
@@ -817,24 +818,18 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 
 The `crossplane beta validate` command validates 
 [compositions]({{<ref "../concepts/compositions">}}) against provider or XRD 
-schema using the Kubernetes API server's validation library.
+schemas using the Kubernetes API server's validation library.
 
 The `crossplane beta validate` command supports validating the following 
 scenarios:
 
+- Validate a managed resource or composite resource 
+  [against a Provider or XRD schema](#validate-resources-against-a-schema). 
+- Use the output of `crossplane beta render` as [validation input](#validate-render-command-output). 
 - Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
   (CEL) rules.
-- A Crossplane resource against a schema, for example a Provider or 
-  Composite Resource Definition (XRD).
-- Validate the output of the `crossplane beta render` command to validate 
-  function-based compositions.
-- Validate all Crossplane resources against a directory of schema files. 
+- Validate resources against a [directory of schemas](#validate-against-a-directory-of-schemas).
 
-
-
-
-- When validating resources against provider schemas, the command downloads and
-  caches the providers' CRDs to make future runs much faster.
 
 {{< hint "note" >}}
 The `crossplane beta validate` command performs all validation offline. 
@@ -855,72 +850,87 @@ A Kubernetes cluster running Crossplane isn't required.
 |              | `--verbose`              | Print verbose logging statements.                     |
 {{< /table >}}
 
-#### Validate Common Expression Language rules
+#### Validate resources against a schema
 
-XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language, CEL for short.
+The `crossplane beta validate` command can validate an XR and one or more 
+managed resources against a provider's schema. 
 
-{{< expand "An example validation rule" >}}
-```yaml
-x-kubernetes-validations:
-  - rule: "self.minReplicas <= self.replicas && self.replicas <= self.maxReplicas"
-    message: "replicas should be in between minReplicas and maxReplicas."
-```
-{{< /expand >}}
+{{<hint "important" >}}
+When validating against a provider the `crossplane beta validate` command
+downloads the provider package to the `--cache-dir` directory. By default
+Crossplane uses `.crossplane` as the `--cache-dir` location.
 
-`crossplane beta validate xrd.yaml rong-xr.yaml`
-{{< expand "CEL rule violation" >}}
-```console
-[x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": replicas should be in between minReplicas and maxReplicas.
-Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
-```
-{{< /expand >}}
-
-#### Validate resource against a schema
-
-Validate a provider CRD against an XRD.
-
-`crossplane beta validate schemas.yaml resources.yaml`
-
-{{< expand "Sample validation output" >}}
-```console
-[✓] example.crossplane.io/v1beta1, Kind=XR, example validated successfully
-Total 1 resources: 0 missing schemas, 1 success cases, 0 failure cases
-controlplane $ crossplane beta validate schemas.yaml resources.yaml
-[✓] example.crossplane.io/v1beta1, Kind=XR, example validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
-Total 5 resources: 0 missing schemas, 5 success cases, 0 failure cases
-```
-{{< /expand >}}
-
-{{< hint "important" >}}
-The command has two categories of output; _errors_ and _warnings_.
-If there is a validation error or warning, the command indicates it accordingly. 
+Access to a Kubernetes cluster or Crossplane pod isn't required.  
+Validation requires the ability to download the provider package.
 {{< /hint >}}
 
-`crossplane beta validate missing-schemas.yaml resources.yaml`
+The `crossplane beta validate` command downloads and caches the schema CRD files
+in the `--cache-dir` directory. By default the Crossplane CLI uses
+`.crossplane/cache` as the cache location.
 
-{{< expand "Missing schema validation" >}}
-```console
-[✓] example.crossplane.io/v1beta1, Kind=XR, example validated successfully
-[!] could not find CRD/XRD for: iam.aws.upbound.io/v1beta1, Kind=AccessKey
-[!] could not find CRD/XRD for: iam.aws.upbound.io/v1beta1, Kind=AccessKey
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
-Total 5 resources: 2 missing schemas, 3 success cases, 0 failure cases
+To clear the cache and download the CRD files again use the `--clean-cache` flag.
+
+To validate a managed resource against a provider,
+first, create a provider manifest file. For example, to validate an IAM role
+from Provider AWS, use the 
+[Provider AWS IAM](https://marketplace.upbound.io/providers/upbound/provider-aws-iam/v1.0.0) 
+manifest.
+
+{{<hint "tip" >}}
+To validate a 
+"[family provider](https://blog.upbound.io/new-provider-families)" use the
+provider manifests of the resources to validate.
+{{< /hint >}}
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-iam
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-iam:v1.0.0
 ```
-{{< /expand >}}
+
+Now include the XR or managed resource to validate.
+
+For example, to validate an 
+{{<hover label="iamAK" line="2">}}AccessKey{{</hover>}} managed resource,
+provide a managed resource YAML file. 
+
+```yaml {label="iamAK"}
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: AccessKey
+metadata:
+  name: sample-access-key-0
+spec:
+  forProvider:
+    userSelector:
+      matchLabels:
+        example-name: test-user-0
+```
+
+Run the `crossplane beta validate` command providing the provider and managed
+resource YAML files as input. 
+
+```shell
+crossplane beta validate provider.yaml managedResource.yaml
+[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+Total 1 resources: 0 missing schemas, 1 success case, 0 failure cases
+```
+
 
 #### Validate render command output
 
-Passing the output of the _render_ command to the _validate_ command. 
+You can pipe the output of `crossplane beta render` into 
+`crossplane beta validate` to validate complete Crossplane resource pipelines,
+including XRs, compositions and composition functions. 
 
-`crossplane beta render xr.yaml composition.yaml func.yaml | crossplane beta validate schemas.yaml -`
+Use the `--include-full-xr` command with `crossplane beta render` and the `-` 
+option with `crossplane beta validate` to pipe the output from 
+`crossplane beta render` to the input of `crossplane beta validate`. 
 
-{{< expand "Pipe render result to validate command" >}}
-```console
+```shell {copy-lines="1"}
+crossplane beta render xr.yaml composition.yaml function.yaml --include-full-xr | crossplane beta validate schemas.yaml -
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Required value
 [✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
@@ -929,62 +939,97 @@ Passing the output of the _render_ command to the _validate_ command.
 [✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
-{{< /expand >}}
 
-Make sure to include full XR in the render output to avoid the _missing resource_ warning.
 
-`crossplane beta render xr.yaml composition.yaml func.yaml --include-full-xr | crossplane beta validate schemas.yaml -`
+#### Validate Common Expression Language rules
+XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
+([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).
 
-{{< expand "Use --include-full-xr flag" >}}
-```console
-[x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
-Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
+
+Apply a CEL rule with the 
+{{<hover label="celXRD" line="12" >}}x-kubernetes-validations{{</hover>}} key
+inside the schema {{<hover label="celXRD" line="10" >}}spec{{</hover>}} object of an XRD.
+
+```yaml {label="celXRD"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: myXR.crossplane.io
+spec:
+# Removed for brevity
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              x-kubernetes-validations:
+              - rule: "self.minReplicas <= self.replicas && self.replicas <= self.maxReplicas"
+                message: "replicas should be in between minReplicas and maxReplicas."
+              properties:
+                minReplicas:
+                  type: integer
+                maxReplicas:
+                  type: integer
+                replicas: 
+                  type: integer
+# Removed for brevity
 ```
-{{< /expand >}}
 
-#### Validate by directory
+The rule in this example checks that the vale of the
+{{<hover label="celXR" line="6">}}replicas{{</hover>}} field of an XR is between
+the {{<hover label="celXR" line="7">}}minReplicas{{</hover>}} and 
+{{<hover label="celXR" line="8">}}maxReplicas{{</hover>}} values.
 
-Pass a directory containing YAML files as an argument to the validate command.
+```yaml {label="celXR"}
+apiVersion: example.crossplane.io/v1beta1
+kind: XR
+metadata:
+  name: example
+spec:
+  replicas: 49
+  minReplicas: 1
+  maxReplicas: 30
+```
 
-{{< hint "tip" >}}
-The command processes only the Crossplane YAML files while ignoring files with
-other extensions.
-{{< /hint >}}
+Running `crossplane beta validate` with the example XRD and XR produces an
+error.
 
-`crossplane beta render xr.yaml composition.yaml func.yaml --include-full-xr > rendered.yaml`
+```shell
+`crossplane beta validate xrd.yaml xr.yaml
+[x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": replicas should be in between minReplicas and maxReplicas.
+Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
+```
 
-The _Extensions_ directory contains packages (provider and configuration) to validate against `tree Extensions`
 
-{{< expand "An example directory content" >}}
-```console
-Extensions
+#### Validate against a directory of schemas
+
+The `crossplane beta render` command can validate a directory of YAML files. 
+
+The command only processes `.yaml` and `.yml` files, while ignoring all other
+file types.
+
+With a directory of files, provide the directory and resource to validate. 
+
+For example, using a directory named 
+{{<hover label="validateDir" line="2">}}schemas{{</hover>}} containing the XRD
+and Provider schemas.
+
+```shell {label="validateDir"}
+tree
+schemas
 |-- platform-ref-aws.yaml
 |-- providers
 |   |-- a.txt
 |   `-- provider-aws-iam.yaml
 `-- xrds
     `-- xrd.yaml
-
-2 directories, 4 files
 ```
-{{< /expand >}}
 
-`crossplane beta validate Extensions rendered.yaml`
+Provide the directory name and a resource YAML file to the 
+`crossplane beta validate` command. 
 
-{{< expand "Downloading packages and validating directory content" >}}
-```console
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-observability-oss:v0.2.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-gitops-flux:v0.2.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/provider-aws-iam:v0.45.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/platform-ref-aws:v0.9.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-aws-network:v0.7.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-aws-database:v0.5.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-aws-eks:v0.5.0
-package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configuration-app:v0.2.0
+```shell
+crossplane beta validate schema resources.yaml
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
 [x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": no such key: minReplicas evaluating rule: replicas should be greater than or equal to minReplicas.
 [✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
@@ -993,24 +1038,6 @@ package schemas does not exist, downloading:  xpkg.upbound.io/upbound/configurat
 [✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
-{{< /expand >}}
-
-#### Local schemas cache
-
-The validate command downloads missing CRDs into a _.crossplane_ directory. 
-
-{{< hint "tip" >}}
-Running the same command again doesn't trigger the download because the command
-cached all the schemas.
-{{< /hint >}}
-
-Use a custom directory as a cache for downloading the schemas.
-
-`crossplane beta validate Extensions rendered.yaml --cache-dir mycache`
-
-Clean the cache directory.
-
-`crossplane beta validate Extensions rendered.yaml --cache-dir mycache --clean-cache`
 
 ### beta xpkg init
 

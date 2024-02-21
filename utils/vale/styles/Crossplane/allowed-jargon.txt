@@ -30,7 +30,9 @@ ESS
 float64
 Go
 gRPC
+IAM
 imagePullSecret
+init.sh
 JSONPath
 key-pair
 key-value
@@ -44,11 +46,12 @@ multi-platform
 namespace
 namespaced
 namespaces
+NOTES.txt
 OCI
 PersistentVolumeClaim
 PriorityClass
-protobuf
 proselint
+protobuf
 RBAC
 RPC
 RPCs
@@ -76,5 +79,3 @@ TLS
 tolerations
 VM
 YAML
-NOTES.txt
-init.sh
