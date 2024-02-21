@@ -20,11 +20,14 @@
       padding-left: 0;
       margin-bottom: 0;
       list-style: none;
+      display: inherit;
+
 
       ul {
         padding-left: 1rem;
         margin-top: .25rem;
       }
+
     }
 
     li {
@@ -33,9 +36,27 @@
 
     a {
       color: inherit;
+      display: inherit;
+      padding: inherit;
+
+      &.active {
+        color: var(--content-link-color);
+        font-weight: 600;
+        letter-spacing: .60px;
+
+        &:hover{
+          color: var(--content-link-color);;
+          text-decoration: underline !important;
+        }
+      }
 
       &:not(:hover) {
         text-decoration: none;
+      }
+
+      &:hover{
+        color: inherit;
+        text-decoration: underline !important;
       }
 
       code {

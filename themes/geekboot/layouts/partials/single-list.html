@@ -1,4 +1,4 @@
-<div class="bd-layout docs-container">
+<div class="bd-layout docs-container" data-bs-spy="scroll" data-bs-target="#TableOfContents" data-bs-threshold="0,1" data-bs-root-margin="0% 0% -75%">
   <aside class="bd-sidebar">
     <div class="offcanvas-lg offcanvas-start bd-sidebar-container" tabindex="-1" id="bdSidebar" aria-labelledby="bdSidebarOffcanvasLabel">
       <div class="offcanvas-header pb-4 border-bottom">
@@ -49,7 +49,7 @@
           <strong class="d-none d-md-block h6 my-2">On this page</strong>
           <hr class="d-none d-md-block my-2">
           <div class="collapse bd-toc-collapse" id="tocContents">
-            {{ .TableOfContents }}
+            {{ partial "toc" .}}
             <nav class="pt-3">
               <div class="pb-2">
                 <svg class="bi" width="1em" height="1em"><use xlink:href="#pencil-square"/></svg>
