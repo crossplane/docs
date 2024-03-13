@@ -49,7 +49,7 @@ kind: Instance
 <!-- vale on --> 
 
 A managed resource's `deletionPolicy` tells the Provider what to do after
-deleting the managed resource. If the `deletionPolicy` is `delete` the Provider
+deleting the managed resource. If the `deletionPolicy` is `Delete` the Provider
 deletes the external resource as well. If the `deletionPolicy` is `orphan` the
 Provider deletes the managed resource but doesn't delete the external resource.
 
@@ -222,7 +222,7 @@ Crossplane behaves differently than other tools like Terraform. Terraform
 deletes and recreates a resource to change an immutable field. Crossplane only
 deletes an external resource if their corresponding managed 
 resource object is deleted from Kubernetes and the `deletionPolicy` is 
-`delete`.
+`Delete`.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
