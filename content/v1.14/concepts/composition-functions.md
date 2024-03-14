@@ -73,7 +73,7 @@ reports `True`.
 
 Crossplane calls a Function to determine what resources it should create when
 you create a composite resource. The Function also tells Crossplane what to do
-with these resources when a you update or delete a composite resource.
+with these resources when you update or delete a composite resource.
 
 When Crossplane calls a Function it sends it the current state of the composite
 resource. It also sends it the current state of any managed resources the
