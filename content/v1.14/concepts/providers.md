@@ -109,33 +109,12 @@ crossplane-stable/crossplane \
 
 ### Install offline
 
-Crossplane installs packages from a local package cache. By
-default the Crossplane package cache is an 
-[emptyDir volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir). 
+Installing Crossplane Providers offline requires a local container registry like 
+[Harbor](https://goharbor.io/) to host Provider packages. Crossplane only
+supports installing Provider packages from a container registry. 
 
-Configure Crossplane to use a 
-[PersistentVolumeClaim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
-to use a storage location containing the Provider image. Read more about
-configuring the Crossplane Pod settings in the 
-[Crossplane install documentation]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}).
-
-Provide the name of the Provider's `.xpkg` file and set 
-{{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
-
-For example, to install a locally stored version of Provider AWS set the 
-{{<hover label="offline" line="6">}}package{{</hover>}} to the local filename
-and set the Provider's 
-{{<hover label="offline" line="7">}}packagePullPolicy: Never{{</hover>}}.
-
-```yaml {label="offline"}
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: offline-provider-aws
-spec:
-  package: provider-aws
-  packagePullPolicy: Never
-```
+Crossplane doesn't support installing Provider packages directly from Kubernetes
+volumes.
 
 ### Installation options
 

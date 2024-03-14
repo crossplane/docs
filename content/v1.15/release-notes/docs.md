@@ -12,6 +12,17 @@ removed: 🗑️
 moved: 🗺️
 -->
 
+## March 14, 2024
+
+### Removed content 🗑️
+
+Removed information on installing Crossplane 
+[Providers]({{<ref "../concepts/providers#install-offline">}}) and 
+[Packages]({{<ref "../concepts/packages#install-offline">}}) offline using
+the local package cache. Installing via the local package cache isn't intended
+to be user facing and the recommended offline install method is with a private
+registry. 
+
 ## February 22, 2024
 
 ### Updated content 🏗️
