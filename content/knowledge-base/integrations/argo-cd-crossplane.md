@@ -133,7 +133,9 @@ data:
           "Composition",
           "CompositionRevision",
           "DeploymentRuntimeConfig",
-          "ControllerConfig"
+          "ControllerConfig",
+          "ProviderConfig",
+          "ProviderConfigUsage"
         }
         if obj.status == nil and contains(has_no_status, obj.kind) then
             health_status.status = "Healthy"
@@ -142,6 +144,11 @@ data:
         end
 
         if obj.status == nil or obj.status.conditions == nil then
+            if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
+              health_status.status = "Healthy"
+              health_status.message = "Resource is in use."
+              return health_status
+            end
           return health_status
         end
 
