@@ -1,49 +1,67 @@
-{{ .Content }}
-
 <div class="crds">
 
-    <!-- Kind | Group | Version | Expand | Collapse header -->
-    <div class="row crd-header-row bigName-row" id="crd-header-row">
-        <div class="col col-xl-4 col-8 sortable" onclick="sortIt('kind')"><span data-sort="kind">Kind</span><span class="kind-sort sort-icon sort-icon-down d-none"></span><span class="kind-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col col-lg-4 mobile-hidden sortable" onclick="sortIt('group')"><span data-sort="group">Group/Version</span><span class="group-sort sort-icon sort-icon-down d-none"></span><span class="group-sort sort-icon sort-icon-up d-none"></span></div>
-        <div class="col col-2 expand-link mobile-hidden text-truncate" onclick="showAll('all')"><a href="#">Expand All</a></div>
-        <div class="col col-2 collapse-link mobile-hidden text-truncate" onclick="hideAll('all')"><a href="#">Collapse All</a></div>
-    </div>
-    <div>
+    {{ partialCached "apiBuilder/GKVHeader" . }}
+
+    <div id="crd-rows-container">
+        {{/* $.Site.Data is from the hugo config file. */}}
+        {{/* https://gohugo.io/methods/site/data/ */}}
         {{ $crdFiles := index $.Site.Data.crds .Section "api" "crds" }}
         {{ $descFiles := index $.Site.Data.crds .Section "api" "descriptions" }}
 
 
+        {{/* Iterate over each CRD file */}}
         {{ range $fileName, $crdContent := $crdFiles }}
+            {{/* The path to download the CRD files. Relative to the _index.md file using "product: crds" */}}
+            {{ $downloadPath := (printf "crds/%s.yaml" $fileName) }}
+
             {{ $group   := $crdContent.spec.group }}
             {{ $kind    := $crdContent.spec.names.kind }}
 
+            {{/* bigName is the kind length limit to change CSS styles when it needs to be truncated */}}
+            {{ $bigName := partial "apiBuilder/checkBigName" $kind }}
+
+            {{/* Where the description files are. Relative to the calling page in "./descriptions/<group>/<kind>" */}}
             {{ $descDir := index $descFiles $group $kind }}
             {{ $description := $descDir.description.description }}
 
             {{/* Find the active version. We prefer the "storage: true" value but use "served: true" as a backup */}}
             {{ $versionAndSchema := partial "apiBuilder/getVersionAndSchema" $crdContent.spec }}
             {{ $schema := $versionAndSchema.schema.openAPIV3Schema }}
-
             {{ $version := $versionAndSchema.version }}
-            {{ $type := $schema.type }}
 
-            {{ $kind }} - {{ $version }} <br />
-            {{ $description }}<br /><br />
+            {{/* The div containing the entire CRD information including the Expand All/Collapse All row */}}
+            <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
-
-            {{ partial "apiBuilder/processSpec" (dict "schema" $schema "requiredKeys" slice ) }}
-
-            <hr/>
+                {{/* generate the GKV line to expand/collapse the CRD data */}}
+                {{ partial "apiBuilder/printGKVExpander" (dict  "group" $group "version" $version "kind" $kind) }}
 
 
+                {{/* The container to show/hide with information related to the CRD */}}
+                <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
+                    {{/* Generate the "Download YAML" link */}}
+                    {{ partial "apiBuilder/downloadLink" (dict  "group" $group "version" $version "kind" $kind "downloadPath" $downloadPath) }}
+
+                    {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
+                    <div class="description bigName-reset">
+                        {{ $description | markdownify}}
+                    </div>
+
+                    {{/* Loop over each key inside the schema */}}
+                    {{ range $key, $contents := $schema.properties }}
+
+                        {{/* Skip irrelevant keys at the top level */}}
+                        {{ if not (in (slice "apiVersion" "description" "kind" "metadata") $key) }}
+                            {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind) }}
+                        {{ end }}
+
+                    {{ end }}
+
+                    {{/* Generate the "Return to top" link */}}
+                    {{ partialCached "apiBuilder/backToTopButton" . }}
+
+                </div>
+            </div>
         {{ end}}
-
-
-    <div>
-    <div id="crd-rows-container">
-
-
     </div>
 
 <script>
@@ -215,6 +233,4 @@
 
         }
     }
-
-    document.onLoad(showAll('.CompositeResourceDefinition'))
 </script>
