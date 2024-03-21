@@ -84,6 +84,8 @@
     --integer-color: #{$salmon-600};
     --integer-border-color: #{$salmon-600};
 
+    --enumDefault-color: #{$fog-600};
+
     // Override Bootstrap accordion colors in the body
     .accordion {
         --bs-accordion-border-color: #{$fog-400};
