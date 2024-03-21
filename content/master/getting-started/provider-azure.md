@@ -39,7 +39,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-network:v0.34.0
+  package: xpkg.upbound.io/upbound/provider-azure-network:v0.42.1
 EOF
 ```
 
@@ -54,8 +54,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v0.34.0   38s
-upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v0.34.0    26s
+provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v0.42.1   38s
+upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v0.42.1    26s
 ```
 
 The Network Provider installs a second Provider, the
@@ -69,7 +69,7 @@ Every CRD maps to a unique Azure service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-azure/v0.34.0).
+[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-azure/v0.42.1).
 {{< /hint >}}
 
 
