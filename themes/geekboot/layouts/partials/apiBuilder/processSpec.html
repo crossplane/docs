@@ -1,76 +1,128 @@
-{{ $elemID := (printf "%s-%s" .kind .key) }}    {{/* identify the element for collapsables */}}
+{{/* Recursively process the "spec" portion of a CRD */}}
+{{/* Required parameters:
+    - "key" representing the kind (yaml key)
+    - "contents" representing all child yaml content of "key"
+    - "page" is the current context (The . value)
+    - "kind" is a hyphenated complete string of the kind, for example CompositeResourceDefinition-spec-claimNames-plural
+    - "descDir" is the Hugo data object of all the remaining YAML to process.
+*/}}
+
+
+{{/* identify the element for collapsables */}}
+{{ $elemID := (printf "%s-%s" .kind .key) }}
+
+{{/* make field access easier */}}
 {{ $contentFields := partial "apiBuilder/getSpecFields" .contents }}
+
+{{/* data types for styling */}}
 {{ $dataTypeStyle := $contentFields.dataTypeStyle }}
 {{ $dataType := $contentFields.dataType }}
-{{ $description := $contentFields.description }}
-{{ $properties := $contentFields.properties }}
+
+{{/* Is this a required field? */}}
 {{ $required := $contentFields.required }}
+
+{{/* The inner "properties", if it exists */}}
+{{ $properties := $contentFields.properties }}
+
+{{/* Is this field an enum? */}}
 {{ $enum := false }}
 
 
-<div class="crd-child-container crd-container align-middle expand-buttons">
-    {{/* Plus/Minus Button */}}
-    <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
+{{ partial "apiBuilder/specCollapseButtonStart" (dict "elemID" $elemID "key" .key) }}
 
-    {{/* CRD name text */}}
-    <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
-        <div>
-            <span class="kind align-middle">{{ .key }}</span>
 
-                {{/* Check if the type is `enum` or `oneOf`/`allOf` */}}
-                {{ $isEnum := partial "apiBuilder/isEnum" .contents }}
+{{/* Check if the type is `enum` or `oneOf`/`allOf` */}}
+{{ $isEnum := partial "apiBuilder/isEnum" .contents }}
 
-                {{ if $isEnum }}
-                    {{/* enum fields handle "oneOf" type data lists */}}
-                    {{ partial "apiBuilder/enumHandler" .contents }}
-                {{ else }}
-                    <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
-                {{ end }}
+{{/* Print the correct data type tag */}}
+{{ if $isEnum }}
+    {{/* enum fields handle "oneOf" type data lists */}}
+    {{ partial "apiBuilder/enumHandler" .contents }}
+{{ else }}
+    <span class="dataType {{ $dataTypeStyle }} align-middle">{{ $dataType }}</span>
+{{ end }}
 
-            {{if in $required .key}}
-                <span class="dataType required align-middle">required</span>
+{{/* Add the "Required" tag if necessary */}}
+{{if in $required .key}}
+    <span class="dataType required align-middle">required</span>
+{{ end }}
+
+{{ partial "apiBuilder/specCollapseButtonEnd" (dict "elemID" $elemID "page" .page) }}
+
+{{/* The container to show/hide with information related to the CRD */}}
+<div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
+
+    <div class="description bigName-reset">
+
+        {{/* If the `default` value is set inside the CRD, print it */}}
+        {{ if isset .contents "default" }}
+            <div class="default mb-1">
+                <i>Default: <code>{{.contents.default}}</code></i>
+            </div>
+        {{ end}}
+
+        {{/* First "description" is the yaml file name. The second one is the key "description" inside the file */}}
+        {{ (index .descDir .key "description" "description") | markdownify }}
+
+    </div>
+
+
+    <div class="crd-children align-middle">
+        {{/* Assignments to maintain variable scoping in the 'range' block */}}
+        {{ $descDir := .descDir }}
+        {{ $key := .key }}
+
+
+        {{/*
+            An example YAML structure to process.
+            spec:
+            description: ...
+            properties:
+              compositeTypeRef:
+                description: ...
+                properties:
+                  apiVersion:
+                    description: ...
+                  kind:
+                    description: ...
+                    type: string
+              environment:
+                description: ...
+                properties:
+                  defaultData:
+                    additionalProperties: ...
+                    description: ...
+        */}}
+
+        {{/*
+            Starting at a key, e.g., 'spec', look for the child key "properties".
+            Iterate over all the keys (compositeTypeRef, environment) and their contents,
+            processing any inner 'properties' through this same processSpec partial.
+
+            If a key doesn't have a 'properties' field Hugo ignores the recursion.
+        */}}
+        {{ range $innerKey, $contents := $properties }}
+
+            {{/* If the next element is "items" then we need to look at items.properties instead of .properties */}}
+            {{ $innerDescDir := dict }}
+            {{ if isset (index $descDir $key) "items" }}
+                {{ $innerDescDir = (index $descDir $key "items" "properties") }}
+            {{ else }}
+                {{ $innerDescDir = (index $descDir $key "properties") }}
             {{ end }}
-        </div>
-    </button>
 
-    {{/* Anchor link icon */}}
-    <span class="kind-link" data-bs-content="Link Copied!" data-clipboard-text="{{.page.permalink}}#{{$elemID}}">
-        <a href="#{{ $elemID }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></a>
-    </span>
+            {{/*
+                - key = $innerKey to process the next element
+                - contents = $contents, the contents of the $innerKey element
+                - page = ., the current context
+                - kind = $elemID, the updated hyphenated string of the kind path
+                - required = $required, the list of required elements at this level
+                - descDir = $innerDescDir, the contents of the YAML inside "properties"
+            */}}
+            {{ partial "apiBuilder/processSpec" (dict "key" $innerKey "contents" $contents "page" . "kind" $elemID "required" $required "descDir" $innerDescDir) }}
+        {{ end }}
+    </div>
 
 
-    {{/* The container to show/hide with information related to the CRD */}}
-    <div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
-        <div class="description bigName-reset">
-
-            {{/* If the `default` value is set inside the CRD, print it */}}
-            {{ if isset .contents "default" }}
-                <div class="default mb-1">
-                    <i>Default: <code>{{.contents.default}}</code></i>
-                </div>
-            {{ end}}
-
-            {{/* First "description" is the yaml file name. The second one is the key "description" inside the file */}}
-            {{ index .descDir .key "description" "description" }}
-
-        </div>
-        <div class="crd-children align-middle">
-            {{/* Assignments to maintain variable scoping in the 'range' block */}}
-            {{ $descDir := .descDir }}
-            {{ $key := .key }}
-
-            {{ range $innerKey, $contents := $properties }}
-
-                {{/* If the next element is "items" then we need to look at items.properties instead of .properties */}}
-                {{ $innerDescDir := dict }}
-                {{ if isset (index $descDir $key) "items" }}
-                    {{ $innerDescDir = (index $descDir $key "items" "properties") }}
-                {{ else }}
-                    {{ $innerDescDir = (index $descDir $key "properties") }}
-                {{ end }}
-
-                {{ partial "apiBuilder/processSpec" (dict "key" $innerKey "contents" $contents "page" . "kind" $elemID "required" $required "descDir" $innerDescDir) }}
-            {{ end }}
-        </div>
     </div>
 </div>

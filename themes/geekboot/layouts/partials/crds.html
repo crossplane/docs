@@ -1,9 +1,12 @@
+{{/* Responsible for building the API page */}}
+
 <div class="crds">
 
     {{ partialCached "apiBuilder/GKVHeader" . }}
 
     <div id="crd-rows-container">
-        {{/* $.Site.Data is from the hugo config file. */}}
+        {{/* $.Site.Data is from the hugo config file module.mounts.target. */}}
+        {{/* Hugo requires YAML to be in the 'data' location for processing */}}
         {{/* https://gohugo.io/methods/site/data/ */}}
         {{ $crdFiles := index $.Site.Data.crds .Section "api" "crds" }}
         {{ $descFiles := index $.Site.Data.crds .Section "api" "descriptions" }}
