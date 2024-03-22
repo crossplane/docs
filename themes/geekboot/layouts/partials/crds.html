@@ -44,6 +44,7 @@
                     {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
                     <div class="description bigName-reset">
                         {{ $description | markdownify}}
+                        <br />
                     </div>
 
                     {{/* Loop over each key inside the schema */}}
@@ -51,7 +52,7 @@
 
                         {{/* Skip irrelevant keys at the top level */}}
                         {{ if not (in (slice "apiVersion" "description" "kind" "metadata") $key) }}
-                            {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind) }}
+                            {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind "descDir" (index $descDir "properties")) }}
                         {{ end }}
 
                     {{ end }}
