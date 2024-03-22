@@ -1,0 +1,3 @@
+description:
+    "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime.
+More info: https://examples.k8s.io/volumes/glusterfs/README.md"

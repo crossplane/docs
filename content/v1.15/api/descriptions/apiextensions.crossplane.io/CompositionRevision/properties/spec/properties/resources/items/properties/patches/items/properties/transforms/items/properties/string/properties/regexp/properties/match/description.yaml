@@ -1,0 +1,3 @@
+description:
+    "Match string. May optionally include submatches, aka capture groups.
+See https://pkg.go.dev/regexp/ for details."

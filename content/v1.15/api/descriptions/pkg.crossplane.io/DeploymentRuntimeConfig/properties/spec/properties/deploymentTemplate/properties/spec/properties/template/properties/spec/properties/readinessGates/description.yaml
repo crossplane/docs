@@ -1,0 +1,5 @@
+description:
+    "If specified, all readiness gates will be evaluated for pod readiness.
+A pod is ready when all its containers are ready AND
+all conditions specified in the readiness gates have status equal to 'True'
+More info: https://git.k8s.io/enhancements/keps/sig-network/580-pod-readiness-gates"

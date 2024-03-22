@@ -1,0 +1,4 @@
+description:
+    "ReadinessChecks allows users to define custom readiness checks. All checks
+have to return true in order for resource to be considered ready. The
+default readiness check is to have the 'Ready' condition to be 'True'."

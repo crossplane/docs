@@ -1,0 +1,3 @@
+description:
+    "wwids Optional: FC volume world wide identifiers (wwids)
+Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously."

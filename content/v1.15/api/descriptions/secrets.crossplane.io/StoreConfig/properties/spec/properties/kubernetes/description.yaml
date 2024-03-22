@@ -1,0 +1,4 @@
+description:
+    "Kubernetes configures a Kubernetes secret store.
+If the 'type' is 'Kubernetes' but no config provided, in cluster config
+will be used."

@@ -1,0 +1,3 @@
+description:
+    "ConfigurationSpec specifies details about a request to install a
+configuration to Crossplane."

@@ -1,0 +1,3 @@
+description:
+    "If specified, the pod will be dispatched by specified scheduler.
+If not specified, the pod will be dispatched by default scheduler."

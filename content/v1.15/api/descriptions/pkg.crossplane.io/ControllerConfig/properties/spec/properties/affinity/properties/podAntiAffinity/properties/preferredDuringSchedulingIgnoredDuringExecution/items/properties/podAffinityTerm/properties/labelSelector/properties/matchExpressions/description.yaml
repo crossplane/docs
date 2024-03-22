@@ -1,0 +1,2 @@
+description:
+    "matchExpressions is a list of label selector requirements. The requirements are ANDed."

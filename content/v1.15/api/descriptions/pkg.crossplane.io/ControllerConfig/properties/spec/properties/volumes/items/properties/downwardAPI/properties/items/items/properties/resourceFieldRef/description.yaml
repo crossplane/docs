@@ -1,0 +1,3 @@
+description:
+    "Selects a resource of the container: only resources limits and requests
+(limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported."

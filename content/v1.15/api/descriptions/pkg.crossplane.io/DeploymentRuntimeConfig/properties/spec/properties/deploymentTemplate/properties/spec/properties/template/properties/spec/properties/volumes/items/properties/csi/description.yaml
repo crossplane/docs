@@ -1,0 +1,2 @@
+description:
+    "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature)."

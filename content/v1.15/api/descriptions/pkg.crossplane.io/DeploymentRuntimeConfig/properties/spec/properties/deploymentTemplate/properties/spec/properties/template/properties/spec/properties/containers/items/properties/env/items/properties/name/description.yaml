@@ -1,0 +1,2 @@
+description:
+    "Name of the environment variable. Must be a C_IDENTIFIER."
