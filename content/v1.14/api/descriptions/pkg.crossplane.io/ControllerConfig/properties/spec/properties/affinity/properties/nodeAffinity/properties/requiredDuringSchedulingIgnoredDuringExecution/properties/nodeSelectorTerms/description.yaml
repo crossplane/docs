@@ -1,2 +1,2 @@
-description:
-    "Required. A list of node selector terms. The terms are ORed."
+description: |-
+    Required. A list of node selector terms. The terms are ORed.

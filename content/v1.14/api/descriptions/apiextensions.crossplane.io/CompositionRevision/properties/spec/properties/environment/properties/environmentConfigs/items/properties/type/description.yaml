@@ -1,2 +1,2 @@
-description:
-    "Type specifies the way the EnvironmentConfig is selected. Default is `Reference`"
+description: |-
+    Type specifies the way the EnvironmentConfig is selected. Default is `Reference`

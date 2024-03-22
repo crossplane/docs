@@ -1,2 +1,2 @@
-description:
-    "PackageRevisionSpec specifies the desired state of a PackageRevision."
+description: |-
+    PackageRevisionSpec specifies the desired state of a PackageRevision.

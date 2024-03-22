@@ -1,2 +1,2 @@
-description:
-    "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin."
+description: |-
+    flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.

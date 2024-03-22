@@ -1,2 +1,2 @@
-description:
-    "volume is a string that references an already created Quobyte volume by name."
+description: |-
+    volume is a string that references an already created Quobyte volume by name.

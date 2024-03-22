@@ -1,2 +1,2 @@
-description:
-    "chapAuthSession defines whether support iSCSI Session CHAP authentication"
+description: |-
+    chapAuthSession defines whether support iSCSI Session CHAP authentication

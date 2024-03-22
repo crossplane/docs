@@ -1,2 +1,2 @@
-description:
-    "Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536."
+description: |-
+    Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.

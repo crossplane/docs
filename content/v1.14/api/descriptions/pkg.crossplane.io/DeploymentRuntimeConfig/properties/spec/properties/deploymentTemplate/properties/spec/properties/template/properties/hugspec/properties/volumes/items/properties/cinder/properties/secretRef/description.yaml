@@ -1,2 +1,2 @@
-description:
-    "secretRef is optional: points to a secret object containing parameters used to connect to OpenStack."
+description: |-
+    secretRef is optional: points to a secret object containing parameters used to connect to OpenStack.

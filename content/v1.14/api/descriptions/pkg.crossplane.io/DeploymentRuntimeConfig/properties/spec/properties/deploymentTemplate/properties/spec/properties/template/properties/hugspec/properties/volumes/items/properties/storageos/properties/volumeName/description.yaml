@@ -1,2 +1,2 @@
-description:
-    "volumeName is the human-readable name of the StorageOS volume.  Volume names are only unique within a namespace."
+description: |-
+    volumeName is the human-readable name of the StorageOS volume.  Volume names are only unique within a namespace.

@@ -1,2 +1,2 @@
-description:
-    "If specified, the pod's tolerations."
+description: |-
+    If specified, the pod's tolerations.

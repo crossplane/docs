@@ -1,2 +1,2 @@
-description:
-    "Patches is a list of environment patches that are executed before a composition's resources are composed."
+description: |-
+    Patches is a list of environment patches that are executed before a composition's resources are composed.

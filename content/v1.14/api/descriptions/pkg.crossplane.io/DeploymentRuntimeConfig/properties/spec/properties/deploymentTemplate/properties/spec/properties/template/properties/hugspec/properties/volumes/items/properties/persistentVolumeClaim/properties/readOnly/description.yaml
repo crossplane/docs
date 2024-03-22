@@ -1,2 +1,2 @@
-description:
-    "readOnly Will force the ReadOnly setting in VolumeMounts. Default false."
+description: |-
+    readOnly Will force the ReadOnly setting in VolumeMounts. Default false.

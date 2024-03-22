@@ -1,2 +1,2 @@
-description:
-    "List of VolumeMounts to mount into the container's filesystem. Cannot be updated."
+description: |-
+    List of VolumeMounts to mount into the container's filesystem. Cannot be updated.

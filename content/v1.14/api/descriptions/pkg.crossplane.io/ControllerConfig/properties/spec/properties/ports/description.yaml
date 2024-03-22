@@ -1,2 +1,2 @@
-description:
-    "List of container ports to expose on the container"
+description: |-
+    List of container ports to expose on the container

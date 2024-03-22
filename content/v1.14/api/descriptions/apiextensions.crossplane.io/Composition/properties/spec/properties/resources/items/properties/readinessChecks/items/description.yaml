@@ -1,2 +1,2 @@
-description:
-    "ReadinessCheck is used to indicate how to tell whether a resource is ready for consumption"
+description: |-
+    ReadinessCheck is used to indicate how to tell whether a resource is ready for consumption

@@ -1,2 +1,2 @@
-description:
-    "ConnectionDetails lists the propagation secret keys from this target resource to the composition instance connection secret."
+description: |-
+    ConnectionDetails lists the propagation secret keys from this target resource to the composition instance connection secret.

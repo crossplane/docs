@@ -1,2 +1,2 @@
-description:
-    "quobyte represents a Quobyte mount on the host that shares a pod's lifetime"
+description: |-
+    quobyte represents a Quobyte mount on the host that shares a pod's lifetime

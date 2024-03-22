@@ -1,2 +1,2 @@
-description:
-    "FromConnectionSecretKey is the key that will be used to fetch the value from the composed resource's connection secret."
+description: |-
+    FromConnectionSecretKey is the key that will be used to fetch the value from the composed resource's connection secret.

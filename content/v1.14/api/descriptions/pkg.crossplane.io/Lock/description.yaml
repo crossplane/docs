@@ -1,2 +1,2 @@
-description:
-    "Lock is the CRD type that tracks package dependencies."
+description: |-
+    Lock is the CRD type that tracks package dependencies.

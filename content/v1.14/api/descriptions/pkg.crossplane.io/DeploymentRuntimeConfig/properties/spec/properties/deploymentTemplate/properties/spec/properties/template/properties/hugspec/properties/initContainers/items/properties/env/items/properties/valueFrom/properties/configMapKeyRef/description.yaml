@@ -1,2 +1,2 @@
-description:
-    "Selects a key of a ConfigMap."
+description: |-
+    Selects a key of a ConfigMap.

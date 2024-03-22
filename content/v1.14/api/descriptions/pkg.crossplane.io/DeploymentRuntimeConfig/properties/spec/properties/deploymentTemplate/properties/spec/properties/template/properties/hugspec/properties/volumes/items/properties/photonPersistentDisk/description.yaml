@@ -1,2 +1,2 @@
-description:
-    "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine"
+description: |-
+    photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine

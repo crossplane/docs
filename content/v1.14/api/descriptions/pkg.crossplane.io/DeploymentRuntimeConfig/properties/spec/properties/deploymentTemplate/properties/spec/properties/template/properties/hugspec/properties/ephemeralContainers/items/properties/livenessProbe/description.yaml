@@ -1,2 +1,2 @@
-description:
-    "Probes are not allowed for ephemeral containers."
+description: |-
+    Probes are not allowed for ephemeral containers.

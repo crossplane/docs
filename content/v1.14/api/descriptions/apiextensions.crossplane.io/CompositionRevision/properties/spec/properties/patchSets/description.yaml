@@ -1,3 +1,3 @@
-description:
-    "PatchSets define a named set of patches that may be included by any resource in this Composition. PatchSets cannot themselves refer to other PatchSets. 
- PatchSets are only used by the 'Resources' mode of Composition. They are ignored by other modes."
+description: |-
+    PatchSets define a named set of patches that may be included by any resource in this Composition. PatchSets cannot themselves refer to other PatchSets. 
+     PatchSets are only used by the 'Resources' mode of Composition. They are ignored by other modes.
