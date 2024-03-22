@@ -7,6 +7,7 @@
 {{ $required := $contentFields.required }}
 {{ $enum := false }}
 
+
 <div class="crd-child-container crd-container align-middle expand-buttons">
     {{/* Plus/Minus Button */}}
     <button class="expand-button collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}"></button>
@@ -15,8 +16,8 @@
     <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{ $elemID }}" type="button" aria-expanded="false" aria-controls="{{ $elemID }}">
         <div>
             <span class="kind align-middle">{{ .key }}</span>
-            {{/* An enum puts the data types inside the "One of" border box. */}}
 
+                {{/* Check if the type is `enum` or `oneOf`/`allOf` */}}
                 {{ $isEnum := partial "apiBuilder/isEnum" .contents }}
 
                 {{ if $isEnum }}
@@ -41,16 +42,34 @@
     {{/* The container to show/hide with information related to the CRD */}}
     <div class="collapse crd-expand expand-buttons {{.rootKind}}" id="{{ $elemID }}">
         <div class="description bigName-reset">
+
+            {{/* If the `default` value is set inside the CRD, print it */}}
             {{ if isset .contents "default" }}
                 <div class="default mb-1">
                     <i>Default: <code>{{.contents.default}}</code></i>
                 </div>
             {{ end}}
-            {{ $description | markdownify }}
+
+            {{/* First "description" is the yaml file name. The second one is the key "description" inside the file */}}
+            {{ index .descDir .key "description" "description" }}
+
         </div>
         <div class="crd-children align-middle">
-            {{ range $key, $contents := $properties }}
-                {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $elemID "required" $required) }}
+            {{/* Assignments to maintain variable scoping in the 'range' block */}}
+            {{ $descDir := .descDir }}
+            {{ $key := .key }}
+
+            {{ range $innerKey, $contents := $properties }}
+
+                {{/* If the next element is "items" then we need to look at items.properties instead of .properties */}}
+                {{ $innerDescDir := dict }}
+                {{ if isset (index $descDir $key) "items" }}
+                    {{ $innerDescDir = (index $descDir $key "items" "properties") }}
+                {{ else }}
+                    {{ $innerDescDir = (index $descDir $key "properties") }}
+                {{ end }}
+
+                {{ partial "apiBuilder/processSpec" (dict "key" $innerKey "contents" $contents "page" . "kind" $elemID "required" $required "descDir" $innerDescDir) }}
             {{ end }}
         </div>
     </div>
