@@ -15,14 +15,14 @@ divisor:
     resources, defaults to "1"
 
 defaultCompositeDeletePolicy:
-default: Background
-description: DefaultCompositeDeletePolicy is the policy used when
-    deleting the Composite that is associated with the Claim if no policy
-    has been specified.
-enum:
-- Background
-- Foreground
-type: string
+    default: Background
+    description: DefaultCompositeDeletePolicy is the policy used when
+        deleting the Composite that is associated with the Claim if no policy
+        has been specified.
+    enum:
+    - Background
+    - Foreground
+    type: string
 */}}
 
 {{ if .oneOf }}
@@ -37,7 +37,6 @@ type: string
 {{ else if .enum }}
     {{ $isEnum = true }}
     {{ $enumOf = "One of" }}
-    {{ $enumTypes = .enum }}
 {{ end }}
 
 <span class="enum">{{$enumOf}}
@@ -55,24 +54,3 @@ type: string
         {{ end }}
     {{ end }}
 </span>
-
-{{/* There are "allOf" type keys and "enum" keys */}}
-{{/* example:
-
-*/}}
-{{/*  {{ if .enum }}
-    {{ $isEnum = true }}
-    {{ $default := "" }}
-    {{ $type := .type }}
-    {{ if .default }}
-        {{ $default = .default }}
-    {{ end }}
-
-    {{ range .enum }}
-        <span class="dataType {{ $type }} align-middle">{{ . }}
-            {{ if eq . $default }}
-                <i>(default)</i>
-            {{ end }}
-        </span>
-    {{ end }}
-{{ end }}  */}}
