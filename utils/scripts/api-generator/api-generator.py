@@ -177,12 +177,14 @@ def writeDescriptions(crdDir: str, descDir: str, output: str) -> None:
                     else:
                         targetDir = crdKindDir
 
-                    escapedDesc = item[key].replace("\"","\'")
+                    escapedDesc = item[key].replace("\"","\'")          # replace quotes with ticks
+                    escapedDesc = escapedDesc.replace("---", "")        # strip markdown heading character
+                    escapedDesc = escapedDesc.replace("\n", "\n    ")   # indent each line for literal YAML string
 
                     with open(f"{targetDir}/description.yaml", "w") as f:
                         try:
-                            f.write("description:\n")
-                            f.write(f"    \"{escapedDesc}\"")
+                            f.write("description: |-\n")
+                            f.write(f"    {escapedDesc}")
                         except KeyError:
                             f.write("description:")
         elif output == "md":
