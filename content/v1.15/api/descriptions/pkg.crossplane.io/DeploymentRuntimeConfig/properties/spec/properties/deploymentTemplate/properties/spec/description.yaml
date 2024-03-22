@@ -1,2 +1,2 @@
-description:
-    "Spec contains the configurable spec fields for the Deployment object."
+description: |-
+    Spec contains the configurable spec fields for the Deployment object.

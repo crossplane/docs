@@ -1,4 +1,4 @@
-description:
-    "Name of the connection secret key that will be propagated to the
-connection secret of the composition instance. Leave empty if you'd like
-to use the same key name."
+description: |-
+    Name of the connection secret key that will be propagated to the
+    connection secret of the composition instance. Leave empty if you'd like
+    to use the same key name.

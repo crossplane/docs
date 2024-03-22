@@ -1,3 +1,3 @@
-description:
-    "path is the Glusterfs volume path.
-More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod"
+description: |-
+    path is the Glusterfs volume path.
+    More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod

@@ -1,2 +1,2 @@
-description:
-    "Ports are not allowed for ephemeral containers."
+description: |-
+    Ports are not allowed for ephemeral containers.

@@ -1,3 +1,3 @@
-description:
-    "DefaultCompositionUpdatePolicy is the policy used when updating composites after a new
-Composition Revision has been created if no policy has been specified on the composite."
+description: |-
+    DefaultCompositionUpdatePolicy is the policy used when updating composites after a new
+    Composition Revision has been created if no policy has been specified on the composite.

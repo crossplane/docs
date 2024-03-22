@@ -1,2 +1,2 @@
-description:
-    "webhook describes how to call the conversion webhook. Required when `strategy` is set to `'Webhook'`."
+description: |-
+    webhook describes how to call the conversion webhook. Required when `strategy` is set to `'Webhook'`.

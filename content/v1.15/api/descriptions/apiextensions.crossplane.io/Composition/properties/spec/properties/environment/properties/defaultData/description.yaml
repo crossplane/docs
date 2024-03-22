@@ -1,5 +1,5 @@
-description:
-    "DefaultData statically defines the initial state of the environment.
-It has the same schema-less structure as the data field in
-environment configs.
-It is overwritten by the selected environment configs."
+description: |-
+    DefaultData statically defines the initial state of the environment.
+    It has the same schema-less structure as the data field in
+    environment configs.
+    It is overwritten by the selected environment configs.

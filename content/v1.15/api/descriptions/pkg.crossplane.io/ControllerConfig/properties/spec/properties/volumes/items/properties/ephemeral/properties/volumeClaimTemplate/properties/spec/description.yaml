@@ -1,5 +1,5 @@
-description:
-    "The specification for the PersistentVolumeClaim. The entire content is
-copied unchanged into the PVC that gets created from this
-template. The same fields as in a PersistentVolumeClaim
-are also valid here."
+description: |-
+    The specification for the PersistentVolumeClaim. The entire content is
+    copied unchanged into the PVC that gets created from this
+    template. The same fields as in a PersistentVolumeClaim
+    are also valid here.

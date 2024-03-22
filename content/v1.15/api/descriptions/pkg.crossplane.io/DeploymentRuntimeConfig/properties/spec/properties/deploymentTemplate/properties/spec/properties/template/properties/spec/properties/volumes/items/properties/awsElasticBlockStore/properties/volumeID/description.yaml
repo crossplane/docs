@@ -1,3 +1,3 @@
-description:
-    "volumeID is unique ID of the persistent disk resource in AWS (Amazon EBS volume).
-More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore"
+description: |-
+    volumeID is unique ID of the persistent disk resource in AWS (Amazon EBS volume).
+    More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore

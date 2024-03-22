@@ -1,5 +1,5 @@
-description:
-    "Patch objects are applied between composite and composed resources. Their
-behaviour depends on the Type selected. The default Type,
-FromCompositeFieldPath, copies a value from the composite resource to
-the composed resource, applying any defined transformers."
+description: |-
+    Patch objects are applied between composite and composed resources. Their
+    behaviour depends on the Type selected. The default Type,
+    FromCompositeFieldPath, copies a value from the composite resource to
+    the composed resource, applying any defined transformers.

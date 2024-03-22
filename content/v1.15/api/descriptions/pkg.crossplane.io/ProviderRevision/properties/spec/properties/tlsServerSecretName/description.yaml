@@ -1,3 +1,3 @@
-description:
-    "TLSServerSecretName is the name of the TLS Secret that stores server
-certificates of the Provider."
+description: |-
+    TLSServerSecretName is the name of the TLS Secret that stores server
+    certificates of the Provider.

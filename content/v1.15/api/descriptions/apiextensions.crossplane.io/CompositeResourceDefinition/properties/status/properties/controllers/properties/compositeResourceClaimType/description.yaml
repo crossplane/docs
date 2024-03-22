@@ -1,6 +1,6 @@
-description:
-    "The CompositeResourceClaimTypeRef is the type of composite resource claim
-that Crossplane is currently reconciling for this definition. Its version
-will eventually become consistent with the definition's referenceable
-version. Note that clients may interact with any served type; this is
-simply the type that Crossplane interacts with."
+description: |-
+    The CompositeResourceClaimTypeRef is the type of composite resource claim
+    that Crossplane is currently reconciling for this definition. Its version
+    will eventually become consistent with the definition's referenceable
+    version. Note that clients may interact with any served type; this is
+    simply the type that Crossplane interacts with.

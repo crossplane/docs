@@ -1,2 +1,2 @@
-description:
-    "path is an optional URL path at which the webhook will be contacted."
+description: |-
+    path is an optional URL path at which the webhook will be contacted.

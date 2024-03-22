@@ -1,4 +1,4 @@
-description:
-    "TopologySpreadConstraints describes how a group of pods ought to spread across topology
-domains. Scheduler will schedule pods in a way which abides by the constraints.
-All topologySpreadConstraints are ANDed."
+description: |-
+    TopologySpreadConstraints describes how a group of pods ought to spread across topology
+    domains. Scheduler will schedule pods in a way which abides by the constraints.
+    All topologySpreadConstraints are ANDed.

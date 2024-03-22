@@ -1,2 +1,2 @@
-description:
-    "User is a SELinux user label that applies to the container."
+description: |-
+    User is a SELinux user label that applies to the container.

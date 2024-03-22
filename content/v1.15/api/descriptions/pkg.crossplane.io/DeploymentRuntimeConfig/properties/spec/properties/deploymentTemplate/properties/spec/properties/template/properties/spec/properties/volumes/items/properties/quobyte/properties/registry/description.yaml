@@ -1,4 +1,4 @@
-description:
-    "registry represents a single or multiple Quobyte Registry services
-specified as a string as host:port pair (multiple entries are separated with commas)
-which acts as the central registry for volumes"
+description: |-
+    registry represents a single or multiple Quobyte Registry services
+    specified as a string as host:port pair (multiple entries are separated with commas)
+    which acts as the central registry for volumes

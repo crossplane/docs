@@ -1,2 +1,2 @@
-description:
-    "PodReadinessGate contains the reference to a pod condition"
+description: |-
+    PodReadinessGate contains the reference to a pod condition

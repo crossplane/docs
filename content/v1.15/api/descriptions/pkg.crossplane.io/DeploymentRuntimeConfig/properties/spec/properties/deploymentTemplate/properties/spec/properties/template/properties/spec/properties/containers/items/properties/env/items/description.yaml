@@ -1,2 +1,2 @@
-description:
-    "EnvVar represents an environment variable present in a Container."
+description: |-
+    EnvVar represents an environment variable present in a Container.

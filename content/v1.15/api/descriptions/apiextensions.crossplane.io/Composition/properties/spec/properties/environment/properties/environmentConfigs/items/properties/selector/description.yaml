@@ -1,2 +1,2 @@
-description:
-    "Selector selects EnvironmentConfig(s) via labels."
+description: |-
+    Selector selects EnvironmentConfig(s) via labels.

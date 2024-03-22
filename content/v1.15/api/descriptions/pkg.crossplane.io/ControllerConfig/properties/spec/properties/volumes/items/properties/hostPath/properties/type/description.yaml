@@ -1,4 +1,4 @@
-description:
-    "type for HostPath Volume
-Defaults to ''
-More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath"
+description: |-
+    type for HostPath Volume
+    Defaults to ''
+    More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath

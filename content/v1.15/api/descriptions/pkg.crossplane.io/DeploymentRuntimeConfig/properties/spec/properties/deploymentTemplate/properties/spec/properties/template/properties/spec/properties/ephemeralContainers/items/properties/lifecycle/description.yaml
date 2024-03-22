@@ -1,2 +1,2 @@
-description:
-    "Lifecycle is not allowed for ephemeral containers."
+description: |-
+    Lifecycle is not allowed for ephemeral containers.

@@ -1,4 +1,4 @@
-description:
-    "FromFieldPath is the path of the field on the resource whose value is
-to be used as input. Required when type is FromCompositeFieldPath or
-ToCompositeFieldPath."
+description: |-
+    FromFieldPath is the path of the field on the resource whose value is
+    to be used as input. Required when type is FromCompositeFieldPath or
+    ToCompositeFieldPath.

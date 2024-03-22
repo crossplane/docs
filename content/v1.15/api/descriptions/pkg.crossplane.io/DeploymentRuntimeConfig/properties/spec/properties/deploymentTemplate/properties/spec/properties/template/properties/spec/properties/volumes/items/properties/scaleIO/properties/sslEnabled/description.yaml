@@ -1,2 +1,2 @@
-description:
-    "sslEnabled Flag enable/disable SSL communication with Gateway, default false"
+description: |-
+    sslEnabled Flag enable/disable SSL communication with Gateway, default false

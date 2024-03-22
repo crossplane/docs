@@ -1,3 +1,3 @@
-description:
-    "ProviderSpec specifies details about a request to install a provider to
-Crossplane."
+description: |-
+    ProviderSpec specifies details about a request to install a provider to
+    Crossplane.

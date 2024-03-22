@@ -1,2 +1,2 @@
-description:
-    "HTTPHeader describes a custom header to be used in HTTP probes"
+description: |-
+    HTTPHeader describes a custom header to be used in HTTP probes
