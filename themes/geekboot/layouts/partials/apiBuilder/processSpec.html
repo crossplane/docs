@@ -43,7 +43,7 @@
 {{ end }}
 
 {{/* Add the "Required" tag if necessary */}}
-{{if in $required .key}}
+{{if $required }}
     <span class="dataType required align-middle">required</span>
 {{ end }}
 
