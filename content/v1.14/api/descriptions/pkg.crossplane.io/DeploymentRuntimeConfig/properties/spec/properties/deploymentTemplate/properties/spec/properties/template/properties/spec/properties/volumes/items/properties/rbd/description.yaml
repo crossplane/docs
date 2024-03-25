@@ -1,0 +1,2 @@
+description: |-
+    rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md

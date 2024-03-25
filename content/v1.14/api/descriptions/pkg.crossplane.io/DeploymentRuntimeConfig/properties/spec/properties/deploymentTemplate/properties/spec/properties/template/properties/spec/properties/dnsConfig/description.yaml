@@ -1,0 +1,2 @@
+description: |-
+    Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.

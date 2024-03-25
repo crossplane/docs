@@ -1,0 +1,2 @@
+description: |-
+    Name uniquely identifies this resource claim inside the pod. This must be a DNS_LABEL.

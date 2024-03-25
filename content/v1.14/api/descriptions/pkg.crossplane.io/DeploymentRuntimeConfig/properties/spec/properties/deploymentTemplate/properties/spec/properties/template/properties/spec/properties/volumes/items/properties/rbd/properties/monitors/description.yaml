@@ -1,0 +1,2 @@
+description: |-
+    monitors is a collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
