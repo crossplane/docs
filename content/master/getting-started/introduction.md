@@ -79,7 +79,10 @@ usages.apiextensions.crossplane.io
 
 The following sections describe the functions of some of these CRDs.
 
+<!-- vale Google.Headings = NO -->
+<!-- allow "Providers" -->
 ## Providers
+<!-- vale Google.Headings = YES -->
 A Crossplane _Provider_ creates a second set of CRDs that define how Crossplane
 connects to a non-Kubernetes service. Each external service relies on its own
 Provider. For example, 

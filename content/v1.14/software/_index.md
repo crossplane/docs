@@ -4,8 +4,8 @@ weight: 300
 description: Manage Crossplane installations
 ---
 
-## [Install Crossplane](./install/)
+## [Install Crossplane]({{<ref "./install">}})
 How to install and customize Crossplane in an existing Kubernetes cluster.
 
-## [Uninstall Crossplane](./uninstall/)
+## [Uninstall Crossplane]({{<ref "./uninstall">}})
 How to remove Crossplane from a Kubernetes cluster.
