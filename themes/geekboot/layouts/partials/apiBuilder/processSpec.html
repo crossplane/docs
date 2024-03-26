@@ -18,9 +18,6 @@
 {{ $dataTypeStyle := $contentFields.dataTypeStyle }}
 {{ $dataType := $contentFields.dataType }}
 
-{{/* Is this a required field? */}}
-{{ $required := $contentFields.required }}
-
 {{/* The inner "properties", if it exists */}}
 {{ $properties := $contentFields.properties }}
 
@@ -43,7 +40,7 @@
 {{ end }}
 
 {{/* Add the "Required" tag if necessary */}}
-{{if $required }}
+{{if .required }}
     <span class="dataType required align-middle">required</span>
 {{ end }}
 
@@ -101,6 +98,7 @@
 
             If a key doesn't have a 'properties' field Hugo ignores the recursion.
         */}}
+        {{ $requiredKeys := .contents.required }}
         {{ range $innerKey, $contents := $properties }}
 
             {{/* If the next element is "items" then we need to look at items.properties instead of .properties */}}
@@ -119,6 +117,7 @@
                 - required = $required, the list of required elements at this level
                 - descDir = $innerDescDir, the contents of the YAML inside "properties"
             */}}
+            {{ $required := (in $requiredKeys $innerKey) }}
             {{ partial "apiBuilder/processSpec" (dict "key" $innerKey "contents" $contents "page" . "kind" $elemID "required" $required "descDir" $innerDescDir) }}
         {{ end }}
     </div>
