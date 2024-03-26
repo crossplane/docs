@@ -1,0 +1,4 @@
+description: |-
+    Group specifies the API group of the defined composite resource.
+    Composite resources are served under `/apis/<group>/...`. Must match the
+    name of the XRD (in the form `<names.plural>.<group>`).

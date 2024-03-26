@@ -1,0 +1,8 @@
+description: |-
+    Optional: Path at which the file to which the container's termination message
+    will be written is mounted into the container's filesystem.
+    Message written is intended to be brief final status, such as an assertion failure message.
+    Will be truncated by the node if greater than 4096 bytes. The total message length across
+    all containers will be limited to 12kb.
+    Defaults to /dev/termination-log.
+    Cannot be updated.

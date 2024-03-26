@@ -1,0 +1,3 @@
+description: |-
+    Fs is a reference to a filesystem location that contains credentials that
+    must be used to connect to the provider.

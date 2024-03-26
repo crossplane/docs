@@ -1,0 +1,12 @@
+description: |-
+    ResourceClaims defines which ResourceClaims must be allocated
+    and reserved before the Pod is allowed to start. The resources
+    will be made available to those containers which consume them
+    by name.
+    
+    
+    This is an alpha field and requires enabling the
+    DynamicResourceAllocation feature gate.
+    
+    
+    This field is immutable.

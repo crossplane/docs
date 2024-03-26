@@ -1,0 +1,3 @@
+description: |-
+    PackagePullSecrets are named secrets in the same namespace that can be used
+    to fetch packages from private registries.

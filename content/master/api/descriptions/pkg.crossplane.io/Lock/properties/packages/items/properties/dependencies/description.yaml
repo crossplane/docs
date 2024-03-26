@@ -1,0 +1,3 @@
+description: |-
+    Dependencies are the list of dependencies of this package. The order of
+    the dependencies will dictate the order in which they are resolved.

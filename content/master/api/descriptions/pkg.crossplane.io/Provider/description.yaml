@@ -1,0 +1,2 @@
+description: |-
+    Provider is the CRD type for a request to add a provider to Crossplane.

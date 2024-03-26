@@ -1,0 +1,4 @@
+description: |-
+    ControllerConfigSpec specifies the configuration for a packaged controller.
+    Values provided will override package manager defaults. Labels and
+    annotations are passed to both the controller Deployment and ServiceAccount.

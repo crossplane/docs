@@ -1,0 +1,3 @@
+description: |-
+    Scheme to use for connecting to the host.
+    Defaults to HTTP.

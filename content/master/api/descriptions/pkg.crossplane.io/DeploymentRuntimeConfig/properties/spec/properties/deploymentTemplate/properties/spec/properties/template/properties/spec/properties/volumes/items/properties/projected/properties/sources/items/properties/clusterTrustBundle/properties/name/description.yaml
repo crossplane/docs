@@ -1,0 +1,3 @@
+description: |-
+    Select a single ClusterTrustBundle by object name.  Mutually-exclusive
+    with signerName and labelSelector.

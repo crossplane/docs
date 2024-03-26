@@ -1,0 +1,2 @@
+description: |-
+    clientConfig is the instructions for how to call the webhook if strategy is `Webhook`.

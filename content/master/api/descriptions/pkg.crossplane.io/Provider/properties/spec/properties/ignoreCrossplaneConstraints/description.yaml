@@ -1,0 +1,4 @@
+description: |-
+    IgnoreCrossplaneConstraints indicates to the package manager whether to
+    honor Crossplane version constrains specified by the package.
+    Default is false.

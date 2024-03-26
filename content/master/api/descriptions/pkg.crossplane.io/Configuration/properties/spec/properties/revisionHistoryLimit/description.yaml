@@ -1,0 +1,4 @@
+description: |-
+    RevisionHistoryLimit dictates how the package controller cleans up old
+    inactive package revisions.
+    Defaults to 1. Can be disabled by explicitly setting to 0.

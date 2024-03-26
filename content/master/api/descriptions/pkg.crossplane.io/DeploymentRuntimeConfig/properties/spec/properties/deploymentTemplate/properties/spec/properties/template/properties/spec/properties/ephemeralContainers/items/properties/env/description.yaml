@@ -1,0 +1,3 @@
+description: |-
+    List of environment variables to set in the container.
+    Cannot be updated.

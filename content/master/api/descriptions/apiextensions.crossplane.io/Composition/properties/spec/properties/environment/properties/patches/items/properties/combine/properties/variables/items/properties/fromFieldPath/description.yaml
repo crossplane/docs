@@ -1,0 +1,3 @@
+description: |-
+    FromFieldPath is the path of the field on the source whose value is
+    to be used as input.

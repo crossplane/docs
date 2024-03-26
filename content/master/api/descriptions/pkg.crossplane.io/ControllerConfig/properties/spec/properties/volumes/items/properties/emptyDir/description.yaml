@@ -1,0 +1,3 @@
+description: |-
+    emptyDir represents a temporary directory that shares a pod's lifetime.
+    More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir

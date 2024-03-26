@@ -1,0 +1,3 @@
+description: |-
+    Transforms are the list of functions that are used as a FIFO pipe for the
+    input to be transformed.

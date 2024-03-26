@@ -1,0 +1,2 @@
+description: |-
+    Volume represents a named volume in a pod that may be accessed by any container in the pod.

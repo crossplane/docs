@@ -1,0 +1,3 @@
+description: |-
+    Endpoint is the gRPC endpoint where Crossplane will send
+    RunFunctionRequests.

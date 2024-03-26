@@ -1,0 +1,4 @@
+description: |-
+    PermissionRequests made by this package. The package declares that its
+    controller needs these permissions to run. The RBAC manager is
+    responsible for granting them.

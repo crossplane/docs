@@ -1,0 +1,6 @@
+description: |-
+    Number of desired pods. This is a pointer to distinguish between explicit
+    zero and not specified. Defaults to 1.
+    Note: If more than 1 replica is set and leader election is not enabled then
+    controllers could conflict. Environment variable 'LEADER_ELECTION' can be
+    used to enable leader election process.

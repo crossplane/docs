@@ -1,0 +1,2 @@
+description: |-
+    An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.

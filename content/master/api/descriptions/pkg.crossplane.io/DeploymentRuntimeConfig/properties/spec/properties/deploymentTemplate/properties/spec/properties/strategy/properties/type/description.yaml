@@ -1,0 +1,2 @@
+description: |-
+    Type of deployment. Can be 'Recreate' or 'RollingUpdate'. Default is RollingUpdate.
