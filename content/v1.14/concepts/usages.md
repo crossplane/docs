@@ -54,13 +54,13 @@ with Helm.
 ## Create a usage
 <!-- vale Google.Headings = YES -->
 
+<!-- vale write-good.Passive = NO -->
 A {{<hover label="protect" line="2">}}Usage{{</hover>}}
 {{<hover label="protect" line="5">}}spec{{</hover>}} has a mandatory
 {{<hover label="protect" line="6">}}of{{</hover>}} field for defining the resource
 in use or protected. The 
 {{<hover label="protect" line="11">}}reason{{</hover>}} field defines the reason
 for protection and the {{<hover label="order" line="11">}}by{{</hover>}} field
-<!-- vale write-good.Passive = NO -->
 defines the using resource. Both fields are optional, but at least one of them
 must be provided.
 <!-- vale write-good.Passive = YES -->
@@ -189,6 +189,41 @@ spec:
           baz: qux
 ```
 
+### Replay blocked deletion attempt
+
+By default, the deletion of a `Usage` resource doesn't trigger the deletion of
+the resource in use even if there were deletion attempts blocked by the `Usage`.
+Replaying the blocked deletion is possible by setting the
+{{<hover label="replay" line="6">}}replayDeletion{{</hover>}} field to `true`.
+
+```yaml {label="replay"}
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: Usage
+metadata:
+  name: release-uses-cluster
+spec:
+  replayDeletion: true
+  of:
+    apiVersion: eks.upbound.io/v1beta1
+    kind: Cluster
+    resourceRef:
+      name: my-cluster
+  by:
+    apiVersion: helm.crossplane.io/v1beta1
+    kind: Release
+    resourceRef:
+      name: my-prometheus-chart
+```
+
+{{<hint "tip" >}}
+
+Replay deletion is useful when the used resource is part of a composition.
+This configuration radically decreases time for the deletion of the used
+resource, hence the composite owning it, by replaying the deletion of the
+used resource right after the using resource disappears instead of waiting
+for the long exponential backoff durations of the Kubernetes garbage collector.
+{{< /hint >}}
+
 ## Usage in a Composition
 
 A typical use case for Usages is to define a deletion ordering between the
@@ -221,6 +256,7 @@ spec:
         apiVersion: apiextensions.crossplane.io/v1alpha1
         kind: Usage
         spec:
+          replayDeletion: true
           of:
             apiVersion: container.gcp.upbound.io/v1beta1
             kind: Cluster
