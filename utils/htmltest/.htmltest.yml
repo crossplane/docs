@@ -3,9 +3,11 @@ DirectoryPath: "public"
 # This doesn't cause errors
 IgnoreInternalEmptyHash: true
 CheckExternal: false
+StripQueryString: false
 IgnoreURLs:
   - "github.com/crossplane/docs/tree/master/content/(.*).md" # Ignore the links to "view this source"
   - "www.googletagmanager.com/*" # Ignore google tag manager
   - "twitter.com/*" # Ignore twitter links since they send to login page
   - "https://releases.crossplane.io/stable/current/bin" # S3 bucket listing always returns 404 status even with directory listing
   - "docs.crossplane.io/latest/*" # Allow links to the latest release (e.g. from knowledge-base)
+  - "github.com/crossplane/docs/issues/new*" # Ignore the "open an issue" link
