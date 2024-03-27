@@ -248,13 +248,14 @@ at the table below.
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-functions` | Enable support for Composition Functions. |
-| Beta | `--enable-composition-revisions` | Enable support for CompositionRevisions. |
+| Beta | `--enable-composition-functions-extra-resources` | Enable support for Composition Functions Extra Resources. Only respected if --enable-composition-functions is set to true. |
 | Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
+| Beta | `--enable-deployment-runtime-configs` | Enable support for Deployment Runtime Configs. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
-| Alpha | `--enable-usages` | Enable support for Usages. |
 | Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
 | Alpha | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
+| Alpha | `--enable-usages` | Enable support for Usages. |
 {{< /table >}}
 {{< /expand >}}
 
