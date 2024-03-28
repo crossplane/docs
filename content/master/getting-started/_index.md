@@ -6,7 +6,7 @@ description: An introduction to Crossplane and Crossplane quickstart guides.
 
 {{<img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
 
-## Hands-On
+## Hands-on
 Want a hands-on example? Follow a Crossplane Quickstart for your cloud provider.
 * [AWS quickstart]({{<ref "provider-aws" >}})
 * [Azure quickstart]({{<ref "provider-azure" >}})
