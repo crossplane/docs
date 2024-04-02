@@ -248,9 +248,9 @@ at the table below.
 | Status | Flag | Description |
 | --- | --- | --- |
 | Beta | `--enable-composition-functions` | Enable support for Composition Functions. |
-| Beta | `--enable-composition-functions-extra-resources` | Enable support for Composition Functions Extra Resources. Only respected if --enable-composition-functions is set to true. |
+| Beta | `--enable-composition-functions-extra-resources` | Enable support for Composition Functions Extra Resources. Only respected with `--enable-composition-functions` enabled. |
 | Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
-| Beta | `--enable-deployment-runtime-configs` | Enable support for Deployment Runtime Configs. |
+| Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
