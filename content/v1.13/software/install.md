@@ -264,7 +264,6 @@ at the table below.
 {{< table caption="Feature flags" >}}
 | Status | Flag | Description |
 | --- | --- | --- |
-| Beta | `--enable-composition-revisions` |Enable support for CompositionRevisions |
 | Alpha | `--enable-composition-functions` | Enable support for Composition Functions. |
 | Alpha | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
