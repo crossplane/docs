@@ -42,7 +42,7 @@ registry.
 <!-- allow "check" --> 
 * Fixed [an issue](https://github.com/crossplane/docs/pull/718) where mermaid 
   diagrams didn't display the right colors across light and dark modes. 
-* Added support for a "[you are here](https://github.com/crossplane/docs/pull/716") 
+* Added support for a "[you are here](https://github.com/crossplane/docs/pull/716)" 
   feature for doc page table of contents.
 * Fixed the color of check marks (✔️) in dark mode. 
 <!-- vale Google.WordList = YES -->
