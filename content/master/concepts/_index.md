@@ -34,7 +34,7 @@ building and managing external resources through Kubernetes.
   Deleting a managed resource requires a Provider to delete the associated
   external resource.
 
-* [**Compositions**]({{<ref "./composite-resources">}}) are a template of managed
+* [**Compositions**]({{<ref "./compositions">}}) are a template of managed
   resources. Compositions describe more complex deployments, combining multiple
   managed resources and any resource customizations, like the size of a database
   or the cloud provider region.
