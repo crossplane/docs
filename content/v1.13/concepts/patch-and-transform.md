@@ -1573,7 +1573,7 @@ patches:
 #### Trim suffix
 
 The {{<hover label="typeTrimS" line="8">}}type: TrimSuffix{{</hover>}} uses 
-Go's [TrimSuffix](https://pkg.go.dev/strings#TrimPrefix) and removes characters 
+Go's [[TrimSuffix](https://pkg.go.dev/strings#TrimSuffix)](https://pkg.go.dev/strings#TrimSuffix) and removes characters 
 from the end of a line.
 
 ```yaml {label="typeTrimS"}
