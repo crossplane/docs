@@ -1629,10 +1629,11 @@ patches:
 
 #### Trim prefix
 
-The {{<hover label="typeRegex" line="8">}}type: TrimPrefix{{</hover>}} removes
-the matching string and all preceding characters. 
+The {{<hover label="typeTrimP" line="8">}}type: TrimPrefix{{</hover>}} uses 
+Go's [TrimPrefix](https://pkg.go.dev/strings#TrimPrefix) and removes characters 
+from the beginning of a line.
 
-```yaml {label="typeRegex"}
+```yaml {label="typeTrimP"}
 patches:
   - type: FromCompositeFieldPath
     fromFieldPath: spec.desiredRegion
@@ -1646,10 +1647,11 @@ patches:
 
 #### Trim suffix
 
-The {{<hover label="typeRegex" line="8">}}type: TrimSuffix{{</hover>}} removes
-the matching string and all proceeding characters. 
+The {{<hover label="typeTrimS" line="8">}}type: TrimSuffix{{</hover>}} uses 
+Go's [TrimSuffix](https://pkg.go.dev/strings#TrimPrefix) and removes characters 
+from the end of a line.
 
-```yaml {label="typeRegex"}
+```yaml {label="typeTrimS"}
 patches:
   - type: FromCompositeFieldPath
     fromFieldPath: spec.desiredRegion
