@@ -839,60 +839,93 @@ Providers may define their own custom `Conditions`.
 {{</hint >}}
 
 
-### Available
-`Reason: Available` indicates the Provider created the managed resource and it's
-ready for use. 
+### Type: Ready
 
-```yaml {copy-lines="none"}
+Condition `Type: Ready` indicates if the external resource is ready to use.
+
+The Condition `Type: Ready` and `Status: True` indicates Provider created
+the external resource and notified Crossplane it's ready to use.
+
+{{<hint "important" >}}
+Crossplane doesn't update `Status: True` during a resource update.
+{{< /hint >}}
+
+The Condition `Type: Ready` and `Status: False` indicates the external resource
+isn't available. 
+
+
+#### Available
+{{<hover label="available" line="4">}}Reason: Available{{</hover>}} indicates 
+the Provider created the managed resource and it's ready for use. 
+
+```yaml {copy-lines="none",label="available"}
 Conditions:
   Type:                  Ready
   Status:                True
   Reason:                Available
 ```
-### Creating
 
-`Reason: Creating` indicates the Provider is attempting to create the managed
-resource. 
+#### Creating
 
-```yaml {copy-lines="none"}
+{{<hover label="creating" line="4">}}Reason: Creating{{</hover>}} indicates the 
+Provider is attempting to create the managed resource. 
+
+```yaml {copy-lines="none",label="creating"}
 Conditions:
   Type:                  Ready
   Status:                False
   Reason:                Creating
 ```
 
-### Deleting
-`Reason: Deleting` indicates the Provider is attempting to delete the managed
-resource. 
+#### Deleting
+{{<hover label="deleting" line="4">}}Reason: Deleting{{</hover>}} indicates the 
+Provider is attempting to delete the managed resource. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="deleting"}
 Conditions:
   Type:                  Ready
   Status:                False
   Reason:                Deleting
 ```
 
-<!-- vale off -->
-### ReconcilePaused
-<!-- vale on -->
-`Reason: ReconcilePaused` indicates the managed resource has a [Pause](#paused)
-annotation 
+#### Unavailable
+{{<hover label="unavailable" line="4">}}Reason: Unavailable{{</hover>}}
+indicates Crossplane expects the managed resource to be available, but the 
+Provider reports the resource is unhealthy.
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="unavailable"}
 Conditions:
-  Type:                  Synced
+  Type:                  Ready
   Status:                False
-  Reason:                ReconcilePaused
+  Reason:                Unavailable
 ```
 
+### Type: Synced
+
+Condition `Type: Synced` indicates Crossplane has checked the status of the managed
+resource with the Provider.
+
+The condition `Type: Synced` and `Status: True` means Crossplane successfully
+communicated with the Provider on the status of the manged resource. 
+
+{{< hint "note" >}}
+`Type: Synced` and `Status: True` only shows success between Crossplane and 
+the Provider. This status doesn't mean the Provider successfully changed the
+external resource.
+{{< /hint >}}
+
+The condition `Type: Synced` and `Status: False` means Crossplane failed to
+update or determine the current state of the managed resource.
+
 <!-- vale off -->
-### ReconcileError
+#### ReconcileError
 <!-- vale on -->
-`Reason: ReconcileError` indicates Crossplane encountered an error while
+{{<hover label="ReconcileError" line="4">}}Reason: ReconcileError{{</hover>}} 
+indicates Crossplane encountered an error while
 reconciling the managed resource. The `Message:` value of the `Condition` helps
 identify the Crossplane error. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="ReconcileError"}
 Conditions:
   Type:                  Synced
   Status:                False
@@ -900,35 +933,45 @@ Conditions:
 ```
 
 <!-- vale off -->
-### ReconcileSuccess
+#### ReconcilePaused
 <!-- vale on -->
-`Reason: ReconcileSuccess` indicates the Provider created and is monitoring the 
-managed resource.
+{{<hover label="ReconcilePaused" line="4">}}Reason: ReconcilePaused{{</hover>}} 
+indicates the managed resource has a [Pause](#paused) annotation 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="ReconcilePaused"}
+Conditions:
+  Type:                  Synced
+  Status:                False
+  Reason:                ReconcilePaused
+```
+
+<!-- vale off -->
+#### ReconcileSuccess
+<!-- vale on -->
+{{<hover label="ReconcileSuccess" line="4">}}Reason: ReconcileSuccess{{</hover>}} 
+indicates the Provider created and is monitoring the managed resource.
+
+```yaml {copy-lines="none",label="ReconcileSuccess"}
 Conditions:
   Type:                  Synced
   Status:                True
   Reason:                ReconcileSuccess
 ```
 
-### Unavailable
-`Reason: Unavailable` indicates Crossplane expects the managed resource to be 
-available, but the Provider reports the resource is unhealthy.
+### Type: Unknown
 
-```yaml {copy-lines="none"}
-Conditions:
-  Type:                  Ready
-  Status:                False
-  Reason:                Unavailable
-```
+The `Type: Unknown` indicates that a Provider returned a Condition that
+Crossplane doesn't understand. 
 
-### Unknown
-`Reason: Unknown` indicates the Provider has an unexpected error with the
-managed resource. The `conditions.message` provides more information on what
-went wrong. 
+A managed resource with `Type: Unknown` is an exception condition. Inspect the
+`conditions.message` field or Provider logs for more information.
 
-```yaml {copy-lines="none"}
+#### Unknown
+{{<hover label="unknown" line="4">}}Reason: Unknown{{</hover>}} indicates the 
+Provider has an unexpected error with the managed resource. The 
+`conditions.message` provides more information on what went wrong. 
+
+```yaml {copy-lines="none",label="unknown"}
 Conditions:
   Type:                  Unknown
   Status:                False
@@ -951,10 +994,10 @@ an asynchronous operation.
 
 
 ##### Finished 
-The `Reason: Finished` indicates the asynchronous operation completed
-successfully. 
+{{<hover label="finished" line="4">}}Reason: Finished{{</hover>}} indicates the 
+asynchronous operation completed successfully. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="finished"}
 Conditions:
   Type:                  AsyncOperation
   Status:                True
@@ -964,9 +1007,10 @@ Conditions:
 
 ##### Ongoing
 
-`Reason: Ongoing` indicates the managed resource operation is still in progress. 
+{{<hover label="ongoing" line="4">}}Reason: Ongoing{{</hover>}} indicates the 
+managed resource operation is still in progress. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="ongoing"}
 Conditions:
   Type:                  AsyncOperation
   Status:                True
@@ -984,11 +1028,11 @@ operation status as either `Success` or a failure `Reason`.
 ##### ApplyFailure
 <!-- vale on -->
 
-`Reason: ApplyFailure` indicates the Provider failed to apply a setting to the
-managed resource. The `conditions.message` provides more information on what
-went wrong. 
+{{<hover label="applyfailure" line="4">}}Reason: ApplyFailure{{</hover>}} 
+indicates the Provider failed to apply a setting to the managed resource. 
+The `conditions.message` provides more information on what went wrong. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="applyfailure"}
 Conditions:
   Type:                  LastAsyncOperation
   Status:                False
@@ -999,11 +1043,12 @@ Conditions:
 ##### DestroyFailure
 <!-- vale on -->
 
-`Reason: DestroyFailure` indicates the Provider failed to delete the managed
+{{<hover label="destroyfailure" line="4">}}Reason: DestroyFailure{{</hover>}} 
+indicates the Provider failed to delete the managed
 resource. The `conditions.message` provides more information on what
 went wrong. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="destroyfailure"}
 Conditions:
   Type:                  LastAsyncOperation
   Status:                False
@@ -1011,10 +1056,10 @@ Conditions:
 ```
 
 ##### Success
-`Reason: Success` indicates the Provider successfully created the managed
-resource asynchronously. 
+{{<hover label="success" line="4">}}Reason: Success{{</hover>}} indicates the 
+Provider successfully created the managed resource asynchronously. 
 
-```yaml {copy-lines="none"}
+```yaml {copy-lines="none",label="success"}
 Conditions:
   Type:                  LastAsyncOperation
   Status:                True
