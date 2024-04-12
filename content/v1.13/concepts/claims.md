@@ -205,4 +205,4 @@ spec:
 ```
 
 For more information on connection secrets read the 
-[Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+[Connection Secrets knowledge base article]({{<ref "/v1.15/concepts/connection-details">}}).

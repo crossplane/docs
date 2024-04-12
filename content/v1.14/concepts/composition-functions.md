@@ -451,11 +451,6 @@ $ crossplane beta render xr.yaml composition.yaml functions.yaml
 $ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.1.0
 ```
 
-{{<hint "tip">}}
-Crossplane has a 
-[guide to writing a composition function in Go]({{<ref "../../knowledge-base/guides/write-a-composition-function-in-go">}}). 
-{{</hint>}}
-
 When you're writing a composition function it's useful to know how composition
 functions work. Read the next section to learn
 [how composition functions work](#how-composition-functions-work).

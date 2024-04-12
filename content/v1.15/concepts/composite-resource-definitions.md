@@ -618,7 +618,7 @@ recreate the XRD to change the `connectionSecretKeys`.
 {{</hint >}}
 
 For more information on connection secrets read the 
-[Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+[Connection Secrets knowledge base article]({{<ref "/v1.15/concepts/connection-details">}}).
 
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources and Claims.

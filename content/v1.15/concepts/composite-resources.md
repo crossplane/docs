@@ -189,7 +189,7 @@ spec:
 ### Composition revision policy
 
 Crossplane tracks changes to Compositions as 
-[Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}) . 
+[Composition revisions]({{<ref "/v1.15/concepts/composition-revisions">}}) . 
 
 A composite resource can use
 a {{<hover label="comprev" line="6">}}compositionUpdatePolicy{{</hover>}} to
@@ -217,7 +217,7 @@ spec:
 ### Composition revision selection
 
 Crossplane records changes to Compositions as 
-[Composition revisions]({{<ref "/knowledge-base/guides/composition-revisions">}}).    
+[Composition revisions]({{<ref "/v1.15/concepts/composition-revisions">}}).    
 A composite resource can
 select a specific Composition revision.
 
@@ -309,7 +309,7 @@ spec:
 ```
 
 Composite resources can write connection secrets to an 
-[external secret store]({{<ref "/knowledge-base/integrations/vault-as-secret-store">}}),
+[external secret store]({{<ref "/v1.15/guides/vault-as-secret-store">}}),
 like HashiCorp Vault. 
 
 {{<hint "important" >}}
@@ -332,10 +332,10 @@ spec:
   # Removed for brevity
 ```
 
-Read the [External Secrets Store]({{<ref "/knowledge-base/integrations/vault-as-secret-store">}}) documentation for more information on using
+Read the [External Secrets Store]({{<ref "/v1.15/guides/vault-as-secret-store">}}) documentation for more information on using
 external secret stores. 
 
-For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "/v1.15/concepts/connection-details">}}).
 
 ### Pausing composite resources
 

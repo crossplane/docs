@@ -748,7 +748,7 @@ details.
 This section discusses creating Kubernetes secrets.  
 Crossplane also supports using external secret stores like [HashiCorp Vault](https://www.vaultproject.io/). 
 
-Read the [external secrets store guide]({{<ref "/knowledge-base/integrations/vault-as-secret-store">}}) for more information on using Crossplane
+Read the [external secrets store guide]({{<ref "/v1.15/guides/vault-as-secret-store">}}) for more information on using Crossplane
 with an external secret store. 
 {{</hint >}}
 
@@ -958,7 +958,7 @@ for more information on restricting secret keys.
 {{< /hint >}}
 
 For more information on connection secrets read the 
-[Connection Secrets knowledge base article]({{<ref "/knowledge-base/guides/connection-details">}}).
+[Connection Secrets knowledge base article]({{<ref "/v1.15/concepts/connection-details">}}).
 
 {{<hint "warning">}}
 You can't change the 
@@ -973,7 +973,7 @@ recreate the Composition to change the
 #### Save connection details to an external secret store
 
 Crossplane 
-[External Secret Stores]({{<ref "/knowledge-base/integrations/vault-as-secret-store" >}}) 
+[External Secret Stores]({{<ref "/v1.15/guides/vault-as-secret-store" >}}) 
 write secrets and connection details to external secret stores like HashiCorp
 Vault. 
 
@@ -1018,7 +1018,7 @@ spec:
   # Removed for brevity
 ```
 
-For more details read the [External Secret Stores]({{<ref "/knowledge-base/integrations/vault-as-secret-store" >}}) 
+For more details read the [External Secret Stores]({{<ref "/v1.15/guides/vault-as-secret-store" >}}) 
 integration guide.
 
 ### Resource readiness checks

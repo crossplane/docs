@@ -451,12 +451,7 @@ $ crossplane beta render xr.yaml composition.yaml functions.yaml
 $ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.1.0
 ```
 
-{{<hint "tip">}}
-Crossplane has
-[language specific guides]({{<ref "../../knowledge-base/guides">}}) to writing
-a composition function. Refer to the guide for your preferred language for a
-more detailed guide to writing a function.
-{{</hint>}}
+
 
 When you're writing a composition function it's useful to know how composition
 functions work. Read the next section to learn

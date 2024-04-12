@@ -1,8 +1,7 @@
 ---
 title: Feature Lifecycle
 toc: true
-weight: 309
-indent: true
+weight: 30
 ---
 
 # Feature Lifecycle
