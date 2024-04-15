@@ -84,7 +84,7 @@ status = 301
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "connection-details"
+from = "/knowledge-base/guides/connection-details"
 to = "/latest/concepts/connection-details/"
 status = 301
 
@@ -120,13 +120,13 @@ status = 301
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "/knowledge-base/guides/vault-injection/"
+from = "/knowledge-base/integrations/vault-injection/"
 to = "/latest/guides/vault-injection/"
 status = 301
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "/knowledge-base/guides/vault-as-secret-store/"
+from = "/knowledge-base/integrations/vault-as-secret-store/"
 to = "/latest/guides/vault-as-secret-store/"
 status = 301
 
