@@ -84,7 +84,7 @@ status = 301
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "/knowledge-base/guides/connection-details"
+from = "connection-details"
 to = "/latest/concepts/connection-details/"
 status = 301
 
@@ -92,6 +92,96 @@ status = 301
 # Moved KB article. See issue #749
 from = "/knowledge-base/integrations/argo-cd-crossplane"
 to = "/latest/guides/crossplane-with-argo-cd/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/write-a-composition-function-in-go/"
+to = "/latest/guides/write-a-composition-function-in-go/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/write-a-composition-function-in-python"
+to = "/latest/guides/write-a-composition-function-in-python/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/multi-tenant/"
+to = "/latest/guides/multi-tenant/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/import-existing-resources/"
+to = "/latest/guides/import-existing-resources/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/vault-injection/"
+to = "/latest/guides/vault-injection/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/vault-as-secret-store/"
+to = "/latest/guides/vault-as-secret-store/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/troubleshoot/"
+to = "/latest/guides/troubleshoot-crossplane/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/self-signed-ca-certs/"
+to = "/latest/guides/self-signed-ca-certs/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/disaster-recovery/"
+to = "/latest/guides/disaster-recovery/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/learn-more/"
+to = "/latest/learn/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/feature-lifecycle/"
+to = "/latest/learn/feature-lifecycle"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/release-cycle/"
+to = "/latest/learn/release-cycle"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/guides/"
+to = "/latest/guides"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/integrations/"
+to = "/latest/guides"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/"
+to = "/latest/"
 status = 301
 
 [context.deploy-preview]
