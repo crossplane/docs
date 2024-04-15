@@ -72,20 +72,26 @@ status = 302
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "/knowledge-base/composition-revisions"
+from = "/knowledge-base/guides/composition-revisions"
 to = "/latest/concepts/composition-revisions/"
 status = 301
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "/knowledge-base/composition-revisions-example"
+from = "/knowledge-base/guides/composition-revisions-example"
 to = "/latest/concepts/composition-revisions/"
 status = 301
 
 [[redirects]]
 # Moved KB article. See issue #749
-from = "/knowledge-base/connection-details"
+from = "/knowledge-base/guides/connection-details"
 to = "/latest/concepts/connection-details/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/integrations/argo-cd-crossplane"
+to = "/latest/guides/crossplane-with-argo-cd/"
 status = 301
 
 [context.deploy-preview]
