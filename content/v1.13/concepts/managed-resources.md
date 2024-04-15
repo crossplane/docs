@@ -372,7 +372,7 @@ Crossplane supports the following policies:
 | `Create` | If the external resource doesn't exist, Crossplane creates it based on the managed resource settings. |
 | `Delete` | Crossplane can delete the external resource when deleting the managed resource. |
 | `LateInitialize` | Crossplane initializes some external resource settings not defined in the `spec.forProvider` of the managed resource. See [the late initialization]({{<ref "./managed-resources#late-initialization" >}}) section for more details. |
-| `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for [observe only resources]({{<ref "/knowledge-base/guides/import-existing-resources#import-resources-automatically">}}). |
+| `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for [observe only resources]({{<ref "../guides/import-existing-resources#import-resources-automatically">}}). |
 | `Update` | Crossplane changes the external resource when changing the managed resource. |
 {{</table >}}
 
@@ -388,7 +388,7 @@ The following is a list of common policy combinations:
 | {{<check>}}      |        | {{<check>}}              | {{<check>}}       |        | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't apply changes to the external resource after creation. |
 | {{<check>}}      |        |                | {{<check>}}       | {{<check>}}      | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't import any settings from the external resource. |
 | {{<check>}}      |        |                | {{<check>}}       |        | Crossplane creates the external resource but doesn't apply any changes to the external resource or managed resource. Crossplane can't delete the resource. |
-|        |        |                | {{<check>}}       |        | Crossplane only observes a resource. Used for [observe only resources]({{<ref "/knowledge-base/guides/import-existing-resources#import-resources-automatically">}}). |
+|        |        |                | {{<check>}}       |        | Crossplane only observes a resource. Used for [observe only resources]({{<ref "../guides/import-existing-resources#import-resources-automatically">}}). |
 |        |        |                |         |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
 {{< /table >}}
 
@@ -583,7 +583,7 @@ metadata:
 
 {{<hint "tip" >}}
 Read the 
-[Vault as an External Secrets Store]({{<ref "knowledge-base/integrations/vault-as-secret-store">}})
+[Vault as an External Secrets Store]({{<ref "../guides/vault-as-secret-store">}})
 guide for details on using StoreConfig objects.
 {{< /hint >}}
 

@@ -404,7 +404,7 @@ If you remove the Provider first, you must manually delete external resources
 through your cloud provider. Managed resources must be manually deleted by
 removing their finalizers.
 
-For more information on deleting abandoned resources read the [Crossplane troubleshooting guide]({{<ref "/knowledge-base/guides/troubleshoot#deleting-when-a-resource-hangs" >}}).
+For more information on deleting abandoned resources read the [Crossplane troubleshooting guide]({{<ref "../guides/troubleshoot-crossplane#deleting-when-a-resource-hangs" >}}).
 {{< /hint >}}
 
 ## Verify a Provider
@@ -598,7 +598,7 @@ defines the supported set of ControllerConfig settings.
 
 The most common use case for ControllerConfigs are providing `args` to a
 Provider's pod enabling optional services. For example, enabling
-[external secret stores](https://docs.crossplane.io/knowledge-base/integrations/vault-as-secret-store/#enable-external-secret-stores-in-the-provider)
+[external secret stores](https://docs.crossplane.io../guides/vault-as-secret-store/#enable-external-secret-stores-in-the-provider)
 for a Provider.
 
 Each Provider determines their supported set of `args`.

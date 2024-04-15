@@ -18,7 +18,7 @@ Using connection details in Crossplane requires the following components:
 This guide discusses creating Kubernetes secrets.  
 Crossplane also supports using external secret stores like [HashiCorp Vault](https://www.vaultproject.io/). 
 
-Read the [external secrets store guide]({{<ref "/knowledge-base/integrations/vault-as-secret-store">}}) for more information on using Crossplane
+Read the [external secrets store guide]({{<ref "../guides/vault-as-secret-store">}}) for more information on using Crossplane
 with an external secret store. 
 {{</hint >}}
 
