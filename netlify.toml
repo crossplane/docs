@@ -82,6 +82,12 @@ from = "/knowledge-base/composition-revisions-example"
 to = "/latest/concepts/composition-revisions/"
 status = 301
 
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/connection-details"
+to = "/latest/concepts/connection-details/"
+status = 301
+
 [context.deploy-preview]
     command = "bash netlify_build.sh"
 
