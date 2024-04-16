@@ -1,6 +1,6 @@
 ---
 title: Release Notes
-weight: 20
+weight: 600
 description: "Crossplane release notes"
 product: "Release Notes"
 cascade: 

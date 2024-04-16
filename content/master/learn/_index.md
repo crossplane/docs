@@ -1,6 +1,7 @@
 ---
-title: Learn
+title: Learn More
 description: Learn more about Crossplane.
+weight: 500
 ---
 
 If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us]!

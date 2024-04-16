@@ -1,6 +1,6 @@
 ---
 title: Concepts
-weight: 100
+weight: 50
 description: Understand Crossplane's core components
 ---
 

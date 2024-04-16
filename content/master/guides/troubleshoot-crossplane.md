@@ -1,5 +1,5 @@
 ---
-title: Troubleshoot
+title: Troubleshoot Crossplane
 weight: 306
 ---
 ## Requested Resource Not Found

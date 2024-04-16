@@ -1,5 +1,5 @@
 ---
 title: Guides
-weight: 400
+weight: 100
 description: Crossplane integrations and detailed examples.
 ---
