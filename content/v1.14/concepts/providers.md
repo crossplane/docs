@@ -584,12 +584,12 @@ replacement for Controller configuration and is available in v1.14+.
 
 Applying a Crossplane `ControllerConfig` to a Provider changes the settings of
 the Provider's pod. The
-[Crossplane ControllerConfig schema](https://doc.crds.dev/github.com/crossplane/crossplane/pkg.crossplane.io/ControllerConfig/v1alpha1)
+[Crossplane ControllerConfig schema]({{< ref "../api#ControllerConfig-spec" >}})
 defines the supported set of ControllerConfig settings.
 
 The most common use case for ControllerConfigs are providing `args` to a
 Provider's pod enabling optional services. For example, enabling
-[external secret stores](https://docs.crossplane.io../guides/vault-as-secret-store/#enable-external-secret-stores-in-the-provider)
+[external secret stores]({{< ref "../guides/vault-as-secret-store#enable-external-secret-stores-in-the-provider" >}})
 for a Provider.
 
 Each Provider determines their supported set of `args`.

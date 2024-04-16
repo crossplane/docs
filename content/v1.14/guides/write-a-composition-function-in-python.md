@@ -11,7 +11,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts](https://docs.crossplane.io/latest/concepts/composition-functions)
+[concepts]{{<ref "../concepts/composition-functions" >}}
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -22,7 +22,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work](https://docs.crossplane.io/latest/concepts/composition-functions#how-composition-functions-work)
+[how composition functions work]{{<ref "../concepts/composition-functions#how-composition-functions-work" >}}
 before following this guide.
 {{< /hint >}}
 
@@ -70,7 +70,7 @@ To write a function in Python you need:
 * [Python](https://www.python.org/downloads/) v3.11.
 * [Hatch](https://hatch.pypa.io/), a Python build tool. This guide uses v1.7.
 * [Docker Engine](https://docs.docker.com/engine/). This guide uses Engine v24.
-* The [Crossplane CLI](https://docs.crossplane.io/latest/cli) v1.14 or newer. This guide uses Crossplane
+* The [Crossplane CLI]({{<ref "../cli" >}}) v1.14 or newer. This guide uses Crossplane
   CLI v1.14.
 
 {{<hint "note">}}
@@ -132,7 +132,7 @@ The `package/input` directory defines the OpenAPI schema for the a function's
 input. The function in this guide doesn't accept an input. Delete the
 `package/input` directory.   
 
-The [composition functions](https://docs.crossplane.io/latest/concepts/composition-functions)
+The [composition functions]{{<ref "../concepts/composition-functions" >}}
 documentation explains composition function inputs.
 
 {{<hint "tip">}}
@@ -639,7 +639,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions](https://docs.crossplane.io/latest/concepts/composition-functions#test-a-composition-that-uses-functions).
+[testing composition functions]({{< ref "../concepts/composition-functions#test-a-composition-that-uses-functions" >}}).
 {{</hint>}}
 
 ## Build and push the function to a package registry
@@ -656,7 +656,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation](https://docs.crossplane.io/latest/concepts/composition-functions).
+[composition functions documentation]{{<ref "../concepts/composition-functions" >}}.
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
@@ -715,7 +715,7 @@ crossplane xpkg build \
 
 {{<hint "tip">}}
 Crossplane packages are special OCI images. Read more about packages in the
-[packages documentation](https://docs.crossplane.io/latest/concepts/packages).
+[packages documentation]({{< ref "../concepts/packages" >}}).
 {{</hint>}}
 
 Push both package files to a registry. Pushing both files to one tag in the

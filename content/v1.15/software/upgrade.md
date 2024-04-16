@@ -51,7 +51,7 @@ For example, in v1.15.0 Crossplane changed the default image registry from
 before v1.15.0 updates the default package registry. 
 
 Override new defaults by 
-[customizing the Helm chart](https://docs.crossplane.io/v1.15/software/install/#customize-the-crossplane-helm-chart) 
+[customizing the Helm chart]({{<ref "install#customize-the-crossplane-helm-chart" >}}) 
 with the upgrade command.
 
 For example, to maintain the original image registry use 
