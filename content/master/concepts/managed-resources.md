@@ -844,7 +844,9 @@ Providers may define their own custom `Conditions`.
 Condition `Type: Ready` indicates if the external resource is ready to use.
 
 The Condition `Type: Ready` and `Status: True` indicates Provider created
-the external resource and notified Crossplane it's ready to use.
+the external resource and notified Crossplane it's ready to use. Either the
+external API explicitly indicated the resource is ready or Crossplane appears to
+have successfully created the external resource.
 
 {{<hint "important" >}}
 Crossplane doesn't update `Status: True` during a resource update.
@@ -906,7 +908,9 @@ Condition `Type: Synced` indicates Crossplane has checked the status of the mana
 resource with the Provider.
 
 The condition `Type: Synced` and `Status: True` means Crossplane successfully
-communicated with the Provider on the status of the manged resource. 
+communicated with the Provider on the status of the manged resource and synced
+the managed resource's desired state with the observed state of the external
+resource.  
 
 {{< hint "note" >}}
 `Type: Synced` and `Status: True` only shows success between Crossplane and 
