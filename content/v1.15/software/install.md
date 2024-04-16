@@ -92,7 +92,7 @@ Kubernetes cluster.
 After the `init` container finishes, the `crossplane` pod manages two Kubernetes
 controllers. 
 * The _Package Manager controller_ installs the
-provider and configuration packages.
+provider, function and configuration packages.
 * The _Composition controller_ installs and manages the
 Crossplane _Composite Resource Definitions_, _Compositions_ and _Claims_.
 
@@ -130,6 +130,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `extraObjects` | To add arbitrary Kubernetes Objects during a Helm Install | `[]` |
 | `extraVolumeMountsCrossplane` | Add custom `volumeMounts` to the Crossplane pod. | `{}` |
 | `extraVolumesCrossplane` | Add custom `volumes` to the Crossplane pod. | `{}` |
+| `function.packages` | A list of Function packages to install. | `[]` |
 | `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork` grants the Crossplane Pod access to the host network namespace. | `false` |
 | `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
 | `image.repository` | Repository for the Crossplane pod image. | `"xpkg.upbound.io/crossplane/crossplane"` |

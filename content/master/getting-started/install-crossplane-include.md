@@ -66,6 +66,8 @@ extraEnvVarsRBACManager: {}
 extraObjects: []
 extraVolumeMountsCrossplane: {}
 extraVolumesCrossplane: {}
+function:
+  packages: []
 hostNetwork: false
 image:
   pullPolicy: IfNotPresent
