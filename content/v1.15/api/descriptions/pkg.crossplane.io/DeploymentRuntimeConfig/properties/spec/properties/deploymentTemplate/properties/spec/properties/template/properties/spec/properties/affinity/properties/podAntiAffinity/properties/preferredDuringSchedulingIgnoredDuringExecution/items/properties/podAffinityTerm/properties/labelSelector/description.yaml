@@ -1,3 +1,0 @@
-description: |-
-    A label query over a set of resources, in this case pods.
-    If it's null, this PodAffinityTerm matches with no Pods.

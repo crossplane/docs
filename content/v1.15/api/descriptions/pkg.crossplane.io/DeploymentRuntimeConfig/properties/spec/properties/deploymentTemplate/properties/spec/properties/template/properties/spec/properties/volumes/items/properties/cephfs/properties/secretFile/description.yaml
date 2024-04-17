@@ -1,3 +1,0 @@
-description: |-
-    secretFile is Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
-    More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it

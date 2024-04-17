@@ -1,4 +1,0 @@
-description: |-
-    Select all ClusterTrustBundles that match this signer name.
-    Mutually-exclusive with name.  The contents of all selected
-    ClusterTrustBundles will be unified and deduplicated.

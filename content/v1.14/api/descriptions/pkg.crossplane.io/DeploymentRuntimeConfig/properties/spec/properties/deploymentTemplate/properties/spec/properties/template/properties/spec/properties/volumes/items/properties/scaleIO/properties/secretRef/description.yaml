@@ -1,2 +1,0 @@
-description: |-
-    secretRef references to the secret for ScaleIO user and other sensitive information. If this is not provided, Login operation will fail.

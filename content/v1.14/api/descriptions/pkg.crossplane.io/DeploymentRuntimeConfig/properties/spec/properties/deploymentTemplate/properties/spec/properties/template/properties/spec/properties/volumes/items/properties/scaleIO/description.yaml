@@ -1,2 +1,0 @@
-description: |-
-    scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.

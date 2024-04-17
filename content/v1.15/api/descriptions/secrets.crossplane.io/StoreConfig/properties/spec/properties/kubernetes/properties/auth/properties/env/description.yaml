@@ -1,3 +1,0 @@
-description: |-
-    Env is a reference to an environment variable that contains credentials
-    that must be used to connect to the provider.

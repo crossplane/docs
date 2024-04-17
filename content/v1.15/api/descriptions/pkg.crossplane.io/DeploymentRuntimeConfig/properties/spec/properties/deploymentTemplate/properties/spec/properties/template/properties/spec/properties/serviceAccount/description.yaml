@@ -1,3 +1,0 @@
-description: |-
-    DeprecatedServiceAccount is a depreciated alias for ServiceAccountName.
-    Deprecated: Use serviceAccountName instead.

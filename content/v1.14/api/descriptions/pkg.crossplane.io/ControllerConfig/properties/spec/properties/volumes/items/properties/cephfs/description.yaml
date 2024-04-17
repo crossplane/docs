@@ -1,2 +1,0 @@
-description: |-
-    cephFS represents a Ceph FS mount on the host that shares a pod's lifetime

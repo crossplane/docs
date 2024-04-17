@@ -1,3 +1,0 @@
-description: |-
-    RuntimeConfigRef references a RuntimeConfig resource that will be used
-    to configure the package runtime.

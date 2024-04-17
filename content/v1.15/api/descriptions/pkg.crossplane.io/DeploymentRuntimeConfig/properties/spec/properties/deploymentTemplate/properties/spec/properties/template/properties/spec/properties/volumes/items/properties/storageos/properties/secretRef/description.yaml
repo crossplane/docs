@@ -1,3 +1,0 @@
-description: |-
-    secretRef specifies the secret to use for obtaining the StorageOS API
-    credentials.  If not specified, default values will be attempted.

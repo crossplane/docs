@@ -1,4 +1,0 @@
-description: |-
-    Value that will be propagated to the connection secret of the composite
-    resource. May be set to inject a fixed, non-sensitive connection secret
-    value, for example a well-known port.

@@ -1,5 +1,0 @@
-description: |-
-    PackagePullPolicy defines the pull policy for the package. It is also
-    applied to any images pulled for the package, such as a provider's
-    controller image.
-    Default is IfNotPresent.

@@ -1,4 +1,0 @@
-description: |-
-    EnvironmentConfigs selects a list of `EnvironmentConfig`s. The resolved resources are stored in the composite resource at `spec.environmentConfigRefs` and is only updated if it is null. 
-     The list of references is used to compute an in-memory environment at compose time. The data of all object is merged in the order they are listed, meaning the values of EnvironmentConfigs with a larger index take priority over ones with smaller indices. 
-     The computed environment can be accessed in a composition using `FromEnvironmentFieldPath` and `CombineFromEnvironment` patches.

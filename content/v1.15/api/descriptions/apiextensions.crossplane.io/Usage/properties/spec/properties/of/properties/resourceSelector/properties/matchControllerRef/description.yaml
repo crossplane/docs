@@ -1,3 +1,0 @@
-description: |-
-    MatchControllerRef ensures an object with the same controller reference
-    as the selecting object is selected.

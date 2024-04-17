@@ -1,2 +1,0 @@
-description: |-
-    azureFile represents an Azure File Service mount on the host and bind mount to the pod.

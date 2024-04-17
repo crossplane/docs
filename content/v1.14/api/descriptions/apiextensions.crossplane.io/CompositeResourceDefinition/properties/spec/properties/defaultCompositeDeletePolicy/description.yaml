@@ -1,2 +1,0 @@
-description: |-
-    DefaultCompositeDeletePolicy is the policy used when deleting the Composite that is associated with the Claim if no policy has been specified.

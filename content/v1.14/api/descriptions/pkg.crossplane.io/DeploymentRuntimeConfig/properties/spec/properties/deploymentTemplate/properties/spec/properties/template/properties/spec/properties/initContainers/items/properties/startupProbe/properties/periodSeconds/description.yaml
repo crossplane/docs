@@ -1,2 +1,0 @@
-description: |-
-    How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.

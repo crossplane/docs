@@ -1,2 +1,0 @@
-description: |-
-    vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine

@@ -1,4 +1,0 @@
-description: |-
-    SchedulingGates is an opaque list of values that if specified will block scheduling the pod. If schedulingGates is not empty, the pod will stay in the SchedulingGated state and the scheduler will not attempt to schedule the pod. 
-     SchedulingGates can only be set at pod creation time, and be removed only afterwards. 
-     This is a beta feature enabled by the PodSchedulingReadiness feature gate.

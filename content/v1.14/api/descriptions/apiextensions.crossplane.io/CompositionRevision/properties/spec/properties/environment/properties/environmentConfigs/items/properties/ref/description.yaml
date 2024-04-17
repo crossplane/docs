@@ -1,2 +1,0 @@
-description: |-
-    Ref is a named reference to a single EnvironmentConfig. Either Ref or Selector is required.

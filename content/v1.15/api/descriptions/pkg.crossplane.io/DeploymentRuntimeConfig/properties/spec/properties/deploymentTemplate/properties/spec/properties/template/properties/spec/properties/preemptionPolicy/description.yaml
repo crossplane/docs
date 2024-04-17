@@ -1,4 +1,0 @@
-description: |-
-    PreemptionPolicy is the Policy for preempting pods with lower priority.
-    One of Never, PreemptLowerPriority.
-    Defaults to PreemptLowerPriority if unset.

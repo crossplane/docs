@@ -1,2 +1,0 @@
-description: |-
-    A CompositionRevision represents a revision in time of a Composition. Revisions are created by Crossplane; they should be treated as immutable.

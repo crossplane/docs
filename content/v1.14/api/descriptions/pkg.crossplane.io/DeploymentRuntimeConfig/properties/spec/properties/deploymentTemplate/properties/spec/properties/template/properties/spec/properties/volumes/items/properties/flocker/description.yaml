@@ -1,2 +1,0 @@
-description: |-
-    flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running

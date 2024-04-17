@@ -1,2 +1,0 @@
-description: |-
-    Literal exactly matches the input string (case sensitive). Is required if `type` is `literal`.

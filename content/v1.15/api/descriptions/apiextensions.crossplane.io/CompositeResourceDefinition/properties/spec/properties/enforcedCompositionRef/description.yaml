@@ -1,3 +1,0 @@
-description: |-
-    EnforcedCompositionRef refers to the Composition resource that will be used
-    by all composite instances whose schema is defined by this definition.

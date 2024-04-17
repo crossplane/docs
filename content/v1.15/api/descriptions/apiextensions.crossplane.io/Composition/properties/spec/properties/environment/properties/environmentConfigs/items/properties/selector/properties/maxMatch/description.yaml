@@ -1,2 +1,0 @@
-description: |-
-    MaxMatch specifies the number of extracted EnvironmentConfigs in Multiple mode, extracts all if nil.

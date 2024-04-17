@@ -1,2 +1,0 @@
-description: |-
-    name must match the name of a persistentVolumeClaim in the pod

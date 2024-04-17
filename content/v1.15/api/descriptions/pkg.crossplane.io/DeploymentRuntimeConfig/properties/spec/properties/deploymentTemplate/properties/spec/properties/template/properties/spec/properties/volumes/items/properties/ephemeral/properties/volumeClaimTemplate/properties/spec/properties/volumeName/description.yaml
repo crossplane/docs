@@ -1,2 +1,0 @@
-description: |-
-    volumeName is the binding reference to the PersistentVolume backing this claim.
