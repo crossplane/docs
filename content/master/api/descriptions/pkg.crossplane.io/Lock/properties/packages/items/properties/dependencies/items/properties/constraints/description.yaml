@@ -1,3 +1,0 @@
-description: |-
-    Constraints is a valid semver range, which will be used to select a valid
-    dependency version.

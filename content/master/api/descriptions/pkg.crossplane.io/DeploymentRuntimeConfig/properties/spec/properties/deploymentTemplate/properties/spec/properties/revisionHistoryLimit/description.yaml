@@ -1,4 +1,0 @@
-description: |-
-    The number of old ReplicaSets to retain to allow rollback.
-    This is a pointer to distinguish between explicit zero and not specified.
-    Defaults to 10.

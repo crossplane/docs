@@ -1,3 +1,0 @@
-description: |-
-    Name of the resource to which this resource resize policy applies.
-    Supported values: cpu, memory.

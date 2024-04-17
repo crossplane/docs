@@ -1,4 +1,0 @@
-description: |-
-    PackagePullSecrets are named secrets in the same namespace that can be
-    used to fetch packages from private registries. They are also applied to
-    any images pulled for the package, such as a provider's controller image.

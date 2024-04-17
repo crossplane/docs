@@ -1,3 +1,0 @@
-description: |-
-    Revision number. Indicates when the revision will be garbage collected
-    based on the parent's RevisionHistoryLimit.

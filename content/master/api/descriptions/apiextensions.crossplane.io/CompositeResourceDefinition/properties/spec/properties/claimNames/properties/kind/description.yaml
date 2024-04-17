@@ -1,3 +1,0 @@
-description: |-
-    kind is the serialized kind of the resource. It is normally CamelCase and singular.
-    Custom resource instances will use this value as the `kind` attribute in API calls.

@@ -1,4 +1,0 @@
-description: |-
-    pool is the rados pool name.
-    Default is rbd.
-    More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it

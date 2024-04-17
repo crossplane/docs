@@ -1,7 +1,0 @@
-description: |-
-    A Name uniquely identifies this entry within its Composition's resources
-    array. Names are optional but *strongly* recommended. When all entries in
-    the resources array are named entries may added, deleted, and reordered
-    as long as their names do not change. When entries are not named the
-    length and order of the resources array should be treated as immutable.
-    Either all or no entries must be named.

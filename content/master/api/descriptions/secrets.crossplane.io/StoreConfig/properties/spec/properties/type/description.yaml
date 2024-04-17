@@ -1,4 +1,0 @@
-description: |-
-    Type configures which secret store to be used. Only the configuration
-    block for this store will be used and others will be ignored if provided.
-    Default is Kubernetes.
