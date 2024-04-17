@@ -52,8 +52,7 @@ Crossplane uses the following Vale styles:
 * [Google](https://github.com/errata-ai/google) - for the [Google developer documentation style guide](https://developers.google.com/style).
 * [Microsoft](https://github.com/errata-ai/Microsoft) - for the [Microsoft style guide](https://learn.microsoft.com/en-us/style-guide/welcome/).
 * [proselint](https://github.com/errata-ai/proselint) - for higher quality writing.
-* [Upbound](https://github.com/upbound/vale/tree/main/styles/Upbound) - for
-  customized terms and preventing corporate jargon.
+* [Crossplane](https://github.com/crossplane/docs/tree/master/utils/vale/styles/Crossplane) - spelling exceptions for Kubernetes and Crossplane related words. 
 * [write-good](https://github.com/errata-ai/write-good) - for higher quality writing.
 
 {{<hint "warning" >}}
@@ -120,7 +119,7 @@ Vale back on.
 
 For example, 
 
-```text
+```plaintext
 <!-- vale off -->
 <!-- turn off vale checking for this example -->
 The following example will use passive voice and lowercase crossplane. Do not do this.
@@ -138,7 +137,7 @@ Do not turn off rules without good reasons.
 <!-- vale Microsoft.Contractions = YES -->
 
 For example,
-```text
+```plaintext
 <!-- vale Microsoft.Contractions = NO -->
 <!-- turn off contractions for the example -->
 Do not turn off rules without good reasons.
@@ -149,3 +148,20 @@ Do not turn off rules without good reasons.
 Vale requires capitalization for `YES` and `NO` and a space around `=`.
 {{</hint >}}
 
+## Vale settings
+
+The Vale configuration for the repository is in
+[utils/vale/vale.ini](https://github.com/crossplane/docs/blob/master/utils/vale/.vale.ini).
+
+{{< hint "note" >}}
+The `vale.ini` file is a Vale configuration file. Read the Vale documentation 
+for more information about the `vale.ini` file. 
+{{< /hint >}}
+
+Some imported Vale styles don't apply or duplicate other rules. Disable
+individual rules inside the `vale.ini` file.
+
+For example Google and Microsoft rules both cover the use of first person words 
+like `I`. The docs `vale.ini` disables the
+[Microsoft rule](https://github.com/crossplane/docs/blob/3e9e10671c32e368f5381d83e406e16bc38c93bc/utils/vale/.vale.ini#L42) 
+to prevent duplicate errors.

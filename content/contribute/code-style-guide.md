@@ -9,9 +9,9 @@ for source code used in documentation.
 
 
 ## Use fenced code blocks
-Use Markdown [fenced code
-blocks](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) with
-three backticks (` ``` `) for
+Use Markdown 
+[fenced code blocks](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) 
+with three backticks (` ``` `) for
 all command examples and outputs.
 
 ````markdown
@@ -23,6 +23,10 @@ this is a code block
 Only use a single backtick (`` ` ``) for commands used in a sentence. 
 
 For example, the command `kubectl apply` is inside a sentence. 
+
+{{< hint "warning" >}}
+Vale doesn't validate terms inside single backtick or fenced code blocks.
+{{< /hint >}}
 
 ## Use language hints for proper highlighting
 Hugo attempts to determine the language and apply proper styling, but it's
