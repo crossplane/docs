@@ -9,7 +9,6 @@
         {{/* Hugo requires YAML to be in the 'data' location for processing */}}
         {{/* https://gohugo.io/methods/site/data/ */}}
         {{ $crdFiles := index $.Site.Data.crds .Section "api" "crds" }}
-        {{ $descFiles := index $.Site.Data.crds .Section "api" "descriptions" }}
 
 
         {{/* Iterate over each CRD file */}}
@@ -23,14 +22,12 @@
             {{/* bigName is the kind length limit to change CSS styles when it needs to be truncated */}}
             {{ $bigName := partial "apiBuilder/checkBigName" $kind }}
 
-            {{/* Where the description files are. Relative to the calling page in "./descriptions/<group>/<kind>" */}}
-            {{ $descDir := index $descFiles $group $kind }}
-            {{ $description := $descDir.description.description }}
 
             {{/* Find the active version. We prefer the "storage: true" value but use "served: true" as a backup */}}
             {{ $versionAndSchema := partial "apiBuilder/getVersionAndSchema" $crdContent.spec }}
             {{ $schema := $versionAndSchema.schema.openAPIV3Schema }}
             {{ $version := $versionAndSchema.version }}
+            {{ $description := $schema.description }}
 
             {{/* The div containing the entire CRD information including the Expand All/Collapse All row */}}
             <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
@@ -55,7 +52,7 @@
 
                         {{/* Skip irrelevant keys at the top level */}}
                         {{ if not (in (slice "apiVersion" "description" "kind" "metadata") $key) }}
-                            {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind "descDir" (index $descDir "properties")) }}
+                            {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind) }}
                         {{ end }}
 
                     {{ end }}
