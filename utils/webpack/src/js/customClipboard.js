@@ -1,6 +1,11 @@
 // Customize clipboard.js
 import * as ClipboardJS from 'clipboard';
 
+/*
+* Extends clipboard.js to support passing line numbers to copy instead of a
+* whole code box.
+*/
+
 // copy API links to the clipboard
 const crdURLCopier = new ClipboardJS('.kind-link');
 

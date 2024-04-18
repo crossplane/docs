@@ -1,3 +1,7 @@
+/*
+* Create a PopperJS popover for the Join Slack notifications.
+*/
+
 import { createPopper } from '@popperjs/core';
 
 const slackIcon = document.querySelector('#slack');
