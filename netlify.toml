@@ -1,11 +1,27 @@
+# Read the Netlify docs for details:
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+#
+#
+# Build commands. Logic for previews vs prod are handled inside netlify_build.sh
+[context.deploy-preview]
+    command = "bash netlify_build.sh"
+
+[context.production]
+    command = "bash netlify_build.sh"
+
 [build]
     base = "/"
     publish = "public/"
     command = "bash netlify_build.sh"
 
+# The version of Hugo to use for the Netlify build.
 [build.environment]
   HUGO_VERSION = "0.119.0"
 
+#
+# The following are Netlify redirects for moved docs pages
+# https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
+#
 [[redirects]]
 from = "/docs/*"
 to = "/:splat"
@@ -17,7 +33,6 @@ from = "/v1.12/*"
 to = "/latest/:splat"
 status = 302
 
-# Redirects for EOL versions
 [[redirects]]
 from = "/v1.11/*"
 to = "/latest/:splat"
@@ -54,12 +69,6 @@ status = 302
 from = "/knowledge-base/install/**"
 to = "/latest/software/"
 status = 302
-
-[context.deploy-preview]
-    command = "bash netlify_build.sh"
-
-[context.production]
-    command = "bash netlify_build.sh"
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
