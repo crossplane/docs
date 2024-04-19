@@ -2,13 +2,20 @@ baseURL: "/"
 enableRobotsTXT: True
 languageCode: "en-us"
 title: "Crossplane"
+
+# directory name in /themes
 theme: "geekboot"
+
+# enable Lastmod parameter for each page. Placed in an HTML meta tag.
 enableGitInfo: true
-uglyurls: false
+
+# Crossplane docs don't use the Hugo taxonomy or term page kinds.
+# Disabling provides a small build speedup
 disableKinds:
   - taxonomy
   - term
 
+# Enable RSS feeds for sections
 outputs:
   home:
   - html
@@ -18,28 +25,43 @@ outputs:
   taxonomy:
   term:
 
-
+# Don't publish the README.md file in the /public folder
 ignoreFiles:
 - README.md
 
+# build.writeStats is used to optimize CSS.
+# the netlify_build.sh script uncomments this.
+# The default comment means users don't need Hugo extended for authoring.
 build:
   # writeStats: true
+
 
 markup:
   goldmark:
     renderer:
+      # Allow mixing markdown and HTML. Required for Vale and some in-line
+      # styling.
+      # Okay to run `unsafe: true` since we review .md file inputs
+      # More info: https://gohugo.io/getting-started/configuration-markup/#rendererunsafe
       unsafe: true
   tableOfContents:
+    # Which heading levels to include in the right-side table of contents
     startLevel: 1
     endLevel: 9
   highlight:
+    # Enable syntax styling for code fence (```) blocks
     codeFences: true
+    # Use classes instead of inline HTML styles for syntax decoration
     noClasses: false
+    # Include line numbers to the left of a code fence box
     linenos: true
+    # Make the line numbers anchor links
     anchorLineNos: true
+    # Don't put the line numbers in tables and only use SPAN elements. For CSS styling.
     lineNumbersInTable: false
 
 module:
+  # Mounts give Hugo access to images and YAML for compile-time processing.
   mounts:
   - source: content
     target: content
@@ -57,30 +79,21 @@ module:
     includeFiles:
       - "**/api/**.yaml"
 
+# Give Hugo access to environmental variables matching a given regex.
+# These give Hugo access to Netlify data to generate proper URLs
 security:
   funcs:
     getenv:
       - ^CONTEXT
       - ^REVIEW_ID
 
+# Global parameters accessible by any Page
 params:
+  # The current "latest" version. Used in the version dropdown
   latest: "1.15"
-  upboundLink: "https://www.upbound.io/"
-  slackLink: "https://slack.crossplane.io/"
-  githubLink: "https://github.com/crossplane/crossplane"
-  twitterLink: "https://twitter.com/crossplane_io"
-  forumLink: "https://groups.google.com/forum/#!forum/crossplane-dev"
-  youtubeLink: "https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw"
-  podcastLink: "https://www.youtube.com/playlist?list=PL510POnNVaaYFuK-B_SIUrpIonCtLVOzT"
-  blogLink: "https://blog.crossplane.io/"
-  communityMeetingLink: "https://github.com/crossplane/crossplane/#get-involved"
-  cncfLink: "https://www.cncf.io/"
-  prodFormLink: "https://docs.google.com/forms/d/e/1FAIpQLSev-5clADSdkwi_wiFqBCAECeIoAQDE91chBbeWbvyTjRCeYg/viewform"
-  infoMailToLink: "mailto:info@crossplane.io"
-  upboundGithubLink: "https://github.com/upbound"
-  docs: true
-  repoLink: "https://github.com/crossplane/crossplane"
   anchors:
+    # Generate heading anchors for any heading between min and max
     min: 2
     max: 5
+  # description for search engines.
   description: "Crossplane lets you build a control plane with Kubernetes-style declarative and API-driven configuration and management for anything."

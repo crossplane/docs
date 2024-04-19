@@ -134,6 +134,23 @@ betaVersion: "1.11"
 ---
 ```
 
+#### Descriptions
+
+Hugo uses the `description` field to populate webpage metadata for search
+engines.
+
+```yaml
+---
+title: Compositions
+weight: 30
+aliases: 
+  - composition
+description: "Compositions are a template for creating Crossplane resources"
+---
+```
+
+The description text isn't displayed anywhere in the docs.
+
 ### Headings
 Use standard markdown for headings (`#`). The top level heading, a single hash
 (`#`) is for the page title. All content headings should be two hashes (`##`) or

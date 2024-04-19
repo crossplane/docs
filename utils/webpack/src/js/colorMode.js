@@ -4,6 +4,12 @@
  * Licensed under MIT (https://github.com/coliff/dark-mode-switch/blob/main/LICENSE)
  */
 
+/*
+*
+* Controls the dark mode/light mode switcher and saves a cookie to remember the
+* user preference.
+*/
+
 (() => {
     var darkSwitch = document.getElementById("darkSwitch");
 

@@ -1,8 +1,10 @@
+Algolia
 Bootstrap
 CC-BY
 CNCF
 Commonmark
 DockerHub
+DocSearch
 Geekdocs
 Goldmark
 Grammarly
@@ -11,6 +13,7 @@ HashiCorp
 instant.page
 Kustomize
 Netlify
+NodeJS
 NPM
 OpenAPI
 OpenAPIv3

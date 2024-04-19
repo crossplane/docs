@@ -1,3 +1,10 @@
+/*
+*    Create the hover to highlight function.
+*
+*    Finds the code box matching the label and updates the code box to add a
+*    highlight function.
+*/
+
 export function getKeywords(){
     var keywordList = document.getElementsByTagName("highlight-term")
 
