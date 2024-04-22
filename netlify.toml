@@ -184,12 +184,6 @@ from = "/knowledge-base/"
 to = "/latest/"
 status = 301
 
-[context.deploy-preview]
-    command = "bash netlify_build.sh"
-
-[context.production]
-    command = "bash netlify_build.sh"
-
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
 # for environment variables. Environment variables for Netlify
