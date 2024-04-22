@@ -1,0 +1,19 @@
+{{/* Pass a schema and find the currently active version and return a dict of (version: <version>, schema: <schema>) */}}
+{{ $version := "" }}
+{{ $schema := dict }}
+
+{{ range .versions }}
+    {{ if index . "storage" }}
+        {{ $version = .name }}
+        {{ $schema = .schema }}
+    {{ else if (and (index . "served") (not $version)) }}
+        {{ $version = .name }}
+        {{ $schema = .schema }}
+    {{ end }}
+{{ end }}
+
+{{ return (dict "version" $version
+                "schema" $schema)
+}}
+
+

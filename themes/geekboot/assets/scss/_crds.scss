@@ -219,11 +219,17 @@
     border-width: 1px;
     font-size: 14px;
     margin-right: 5px;
+    border-color: var(--body-font-color);
+    color: var(--body-font-color);
   }
 
   .enum {
     padding-top: 7px !important;
     padding-bottom: 7px !important;
+
+    >:first-child{
+      margin-left: 0.25rem !important;
+    }
   }
 
   .required {
@@ -249,6 +255,10 @@
   .integer {
     color: var(--integer-color);
     border-color: var(--integer-border-color);
+  }
+
+  .enumDefault {
+    color: var(--enumDefault-color);
   }
 
   .bigName-row {
