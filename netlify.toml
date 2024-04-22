@@ -70,6 +70,24 @@ from = "/knowledge-base/install/**"
 to = "/latest/software/"
 status = 302
 
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/composition-revisions"
+to = "/latest/concepts/composition-revisions/"
+status = 301
+
+[[redirects]]
+# Moved KB article. See issue #749
+from = "/knowledge-base/composition-revisions-example"
+to = "/latest/concepts/composition-revisions/"
+status = 301
+
+[context.deploy-preview]
+    command = "bash netlify_build.sh"
+
+[context.production]
+    command = "bash netlify_build.sh"
+
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
 # for environment variables. Environment variables for Netlify
