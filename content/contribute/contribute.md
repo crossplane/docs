@@ -54,43 +54,6 @@ To create new content create a new markdown file in the appropriate location.
 To create a new section, create a new directory and an `_index.md` file in the
 root. 
 
-### Types of content
-Crossplane documentation has three content sections:
-* The [Contributing Guide]({{<ref "/contribute/_index.md">}}) with details on 
-  how to contribute to the Crossplane documentation.
-* The [Knowledge Base]({{<ref "/knowledge-base" >}}) is for content related to
-  Crossplane integrations, in-depth articles or how-to guides. 
-* [User documentation]({{<ref "/master" >}}) are for generic documentation,
-  commonly version-specific. 
-
-#### User documentation vs knowledge base articles
-User documentation includes both _conceptual_ and _procedural_ instructions.
-
-_Conceptual_ content describes the background and theory behind the technology.
-Conceptual documents are helpful to explain the "why" of the technology.
-
-An example of _Conceptual_ content would be describing the role
-of a Crossplane Provider.
-
-_Procedural_ content is the step-by-step instructions to do something.
-Procedural content details the "how" of a piece of technology.
-
-An example of a _Procedural_ document would be a step-by-step Crossplane 
-installation guide.
-
-User documentation is more narrowly focused on a single piece or
-related pieces of technology. For example, installing a Provider and creating a
-ProviderConfig.
-
-Knowledge base articles are more "free-form" and can describe more than one 
-piece of technology or provide more opinionated examples.
-
-{{< hint "tip" >}}
-Not sure if the content would be better as a knowledge base article or user
-document? Ask in the `#documentation` channel of the 
-[Crossplane Slack](https://slack.crossplane.io/).
-{{< /hint >}}
-
 ### Front matter
 Each page contains metadata called 
 [front matter](https://gohugo.io/content-management/front-matter/). Each page 

@@ -29,8 +29,12 @@
             <br />
             This feature graduated to beta status in v{{.Page.Params.betaVersion}}.
             {{ end }}
+            {{ $ver := (printf "v%s" .Page.Params.version) }}
+            {{ if eq .Page.Params.version "master" }}
+                {{ $ver = "master" }}
+            {{ end }}
             <br /><br />
-            For more information read the <a href="{{.Site.BaseURL}}knowledge-base/guides/feature-lifecycle/">Crossplane feature lifecycle</a>.
+            For more information read the <a href="{{.Site.BaseURL}}{{$ver}}/learn/feature-lifecycle/">Crossplane feature lifecycle</a>.
         </p>
     </div>
 </div>

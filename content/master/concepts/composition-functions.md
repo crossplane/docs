@@ -453,7 +453,7 @@ $ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.
 
 {{<hint "tip">}}
 Crossplane has
-[language specific guides]({{<ref "../../knowledge-base/guides">}}) to writing
+[language specific guides]({{<ref "../guides">}}) to writing
 a composition function. Refer to the guide for your preferred language for a
 more detailed guide to writing a function.
 {{</hint>}}
