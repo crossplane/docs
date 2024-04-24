@@ -665,9 +665,7 @@ the runtime container. When you use a different container name, the package
 manager introduces it as a sidecar container instead of modifying the
 package runtime container.
 
-<!-- vale write-good.Passive = NO -->
 The package manager is opinionated about some fields to ensure
-<!-- vale write-good.Passive = YES -->
 the runtime is working and overlay them on top of the values
 in the runtime configuration. For example, it defaults the replica count
 to 1 if not set and overrides the label selectors to make sure the Deployment
