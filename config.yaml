@@ -91,6 +91,7 @@ security:
 params:
   # The current "latest" version. Used in the version dropdown
   latest: "1.15"
+  docs: true 
   anchors:
     # Generate heading anchors for any heading between min and max
     min: 2
