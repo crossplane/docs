@@ -17,13 +17,13 @@ A provider may optionally support additional credentials sources, but the common
 sources cover a wide variety of use cases. One specific use case that is popular
 among organizations that use [Vault] for secrets management is using a sidecar
 to inject credentials into the filesystem. This guide will demonstrate how to
-use the [Vault Kubernetes Sidecar] to provide credentials for [provider-gcp] 
+use the [Vault Kubernetes Sidecar] to provide credentials for [provider-gcp]
 and [provider-aws].
 
-> Note: in this guide we will copy GCP credentials and AWS access keys 
-> into Vault's KV secrets engine. This is a simple generic approach to 
-> managing secrets with Vault, but is not as robust as using Vault's 
-> dedicated cloud provider secrets engines for [AWS], [Azure], and [GCP]. 
+> Note: in this guide we will copy GCP credentials and AWS access keys
+> into Vault's KV secrets engine. This is a simple generic approach to
+> managing secrets with Vault, but is not as robust as using Vault's
+> dedicated cloud provider secrets engines for [AWS], [Azure], and [GCP].
 
 ## Setup
 
@@ -186,7 +186,7 @@ In order to provision infrastructure on AWS, you will need to use an existing or
 user with appropriate permissions. The following steps will create an AWS IAM user and give it the necessary
 permissions.
 
-> Note: if you have an existing IAM user with appropriate permissions, you can skip this step but you will 
+> Note: if you have an existing IAM user with appropriate permissions, you can skip this step but you will
 > still need to provide the values for the `ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
 
 ```console
@@ -298,11 +298,11 @@ metadata:
 spec:
   metadata:
     annotations:
-      vault.hashicorp.com/agent-inject: \"true\"
+      vault.hashicorp.com/agent-inject: "true"
       vault.hashicorp.com/role: "crossplane-providers"
       vault.hashicorp.com/agent-inject-secret-creds.txt: "secret/provider-creds/gcp-default"
       vault.hashicorp.com/agent-inject-template-creds.txt: |
-        {{- with secret \"secret/provider-creds/gcp-default\" -}}
+        {{- with secret "secret/provider-creds/gcp-default" -}}
          {{ .Data.data | toJSON }}
         {{- end -}}
 ---
@@ -341,7 +341,7 @@ spec:
       path: /vault/secrets/creds.txt" | kubectl apply -f -
 ```
 
-To verify that the GCP credentials are being injected into the container run the 
+To verify that the GCP credentials are being injected into the container run the
 following command:
 
 ```console
@@ -406,11 +406,11 @@ spec:
     - --debug
   metadata:
     annotations:
-      vault.hashicorp.com/agent-inject: \"true\"
-      vault.hashicorp.com/role: \"crossplane-providers\"
-      vault.hashicorp.com/agent-inject-secret-creds.txt: \"secret/provider-creds/aws-default\"
+      vault.hashicorp.com/agent-inject: "true"
+      vault.hashicorp.com/role: "crossplane-providers"
+      vault.hashicorp.com/agent-inject-secret-creds.txt:\"secret/provider-creds/aws-default"
       vault.hashicorp.com/agent-inject-template-creds.txt: |
-        {{- with secret \"secret/provider-creds/aws-default\" -}}
+        {{- with secret "secret/provider-creds/aws-default" -}}
           [default]
           aws_access_key_id="{{ .Data.data.access_key }}"
           aws_secret_access_key="{{ .Data.data.secret_key }}"
@@ -447,7 +447,7 @@ spec:
       path: /vault/secrets/creds.txt" | kubectl apply -f -
 ```
 
-To verify that the AWS credentials are being injected into the container run the 
+To verify that the AWS credentials are being injected into the container run the
 following command:
 
 ```console
@@ -499,7 +499,7 @@ kubectl get bucket -w
 [provider-aws]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws
 [AWS]: https://www.vaultproject.io/docs/secrets/aws
 [Azure]: https://www.vaultproject.io/docs/secrets/azure
-[GCP]: https://www.vaultproject.io/docs/secrets/gcp 
+[GCP]: https://www.vaultproject.io/docs/secrets/gcp
 [unsealed]: https://www.vaultproject.io/docs/concepts/seal
 [Kubernetes authentication backend]: https://www.vaultproject.io/docs/auth/kubernetes
 [kv secrets engine]: https://www.vaultproject.io/docs/secrets/kv/kv-v2
