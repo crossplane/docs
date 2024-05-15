@@ -90,8 +90,8 @@ security:
 # Global parameters accessible by any Page
 params:
   # The current "latest" version. Used in the version dropdown
-  latest: "1.15"
-  docs: true 
+  latest: "1.16"
+  docs: true
   anchors:
     # Generate heading anchors for any heading between min and max
     min: 2
