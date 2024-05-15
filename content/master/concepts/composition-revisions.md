@@ -14,7 +14,7 @@ what managed resources Crossplane will create in response. Let's say for example
 that you define a `PlatformDB` XR, which represents your organisation's common
 database configuration of an Azure MySQL Server and a few firewall rules. The
 `Composition` contains the 'base' configuration for the MySQL server and the
-firewall rules that is extended by the configuration for the `PlatformDB`.
+firewall rules that are extended by the configuration for the `PlatformDB`.
 
 There is a one-to-many relationship between a `Composition` and the XRs that use
 it. You might define a `Composition` named `big-platform-db` that is used by ten
@@ -25,7 +25,7 @@ member, while individual application teams create `PlatformDB` XRs that use said
 `Composition`.
 
 Each `Composition` is mutable - you can update it as your organisation's needs
-change. However, without Composition Revisions updating a `Composition` can be a
+change. However, updating a `Composition` without Composition Revisions can be a
 risky process. Crossplane constantly uses the `Composition` to ensure that your
 actual infrastructure - your MySQL Servers and firewall rules - match your
 desired state. If you have 10 `PlatformDB` XRs all using the `big-platform-db`
