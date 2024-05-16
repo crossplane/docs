@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Which which version is the "Latest"?
-LATEST_VER="1.15"
+LATEST_VER="1.16"
 
 # Make a copy of /content/$LATEST_VER to the directory /latest
 # Search indexing only points to /latest, this prevents broken or out of date
