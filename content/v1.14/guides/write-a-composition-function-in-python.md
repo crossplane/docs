@@ -11,7 +11,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts]{{<ref "../concepts/composition-functions" >}}
+[concepts]({{<ref "../concepts/composition-functions" >}})
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -22,7 +22,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work]{{<ref "../concepts/composition-functions#how-composition-functions-work" >}}
+[how composition functions work]({{<ref "../concepts/composition-functions#how-composition-functions-work" >}})
 before following this guide.
 {{< /hint >}}
 
@@ -132,7 +132,7 @@ The `package/input` directory defines the OpenAPI schema for the a function's
 input. The function in this guide doesn't accept an input. Delete the
 `package/input` directory.   
 
-The [composition functions]{{<ref "../concepts/composition-functions" >}}
+The [composition functions]({{<ref "../concepts/composition-functions" >}})
 documentation explains composition function inputs.
 
 {{<hint "tip">}}
@@ -656,7 +656,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation]{{<ref "../concepts/composition-functions" >}}.
+[composition functions documentation]({{<ref "../concepts/composition-functions" >}}).
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
