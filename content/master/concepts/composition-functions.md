@@ -249,7 +249,7 @@ spec:
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files used in the example">}}
 
-You can recreate the output below using by running `crossplane beta render` with
+You can recreate the output below by running `crossplane beta render` with
 these files.
 
 The `xr.yaml` file contains the composite resource to render:
@@ -309,7 +309,7 @@ spec:
 {{</expand>}}
 
 The Crossplane CLI uses Docker Engine to run functions. You can change how the
-Crossplane CLI run a function by adding an annotation in `functions.yaml`. Add
+Crossplane CLI runs a function by adding an annotation in `functions.yaml`. Add
 the `render.crossplane.io/runtime` annotation to a Function to change how it's
 run.
 
@@ -379,8 +379,10 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 }
 ```
 
-Some people design composition functions for you to use them with any kind of
+<!-- vale write-good.Passive = NO -->
+Some composition functions are designed to be used with any kind of
 composite resource.
+<!-- vale write-good.Passive = YES -->
 [Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform)
 and
 [Function Auto Ready](https://github.com/crossplane-contrib/function-auto-ready)
@@ -550,7 +552,7 @@ spec:
 ```
 
 If any composed resources already exist, Crossplane observes them and sends them
-to your function to as part of the observed state.
+to your function as part of the observed state.
 
 Crossplane also observes the connection details of your composite resource and
 any composed resources. It sends them to your function as part of the observed
