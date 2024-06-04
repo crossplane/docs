@@ -332,7 +332,7 @@ Below are vendors providing conformant Crossplane distributions.
 #### Upbound
 Upbound, the founders of Crossplane, maintains a free and open source 
 distribution of Crossplane called 
-[Universal Crossplane](https://www.upbound.io/products/universal-crossplane)
+[Universal Crossplane](https://www.upbound.io/product/universal-crossplane)
 (`UXP`). 
 
 Find information on UXP in the 
