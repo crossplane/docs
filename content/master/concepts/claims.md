@@ -138,7 +138,7 @@ If you don't use namespaces in your Kubernetes deployment Claims aren't necessar
 ### Claiming existing composite resources
 
 By default, creating a Claim creates a new composite resource. Claims can also
-link to existing composite resources. 
+link to existing composite resources (if not yet referencing a claim). 
 
 A use case for claiming existing composite resources may be slow to provision
 resources. Composite resources can be pre-provisioned and a Claim can
@@ -164,6 +164,10 @@ If a Claim specifies a
 {{<hover label="resourceref" line="6">}}resourceRef{{</hover>}} that doesn't
 exist, Crossplane doesn't create a composite resource. 
 
+If a new Claim specifies a 
+{{<hover label="resourceref" line="6">}}resourceRef{{</hover>}} of a composite which is already referenced by another existing claim, then the new Claim will fail with a `CompositeAlreadyBoundError`. 
+
+
 {{<hint "note" >}}
 All Claims have a 
 {{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}. Manually
@@ -173,6 +177,8 @@ isn't required. Crossplane fills in the
 {{<hover label="resourceref" line="6">}}resourceRef{{</hover>}}
 with the information from the composite resource created for the Claim.
 {{< /hint >}}
+
+
 
 ## Claim connection secrets
 
