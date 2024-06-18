@@ -34,7 +34,7 @@ data:
 
 Argo CD has a built-in health assessment for Kubernetes resources. Some checks are supported by the community directly
 in Argo's [repository](https://github.com/argoproj/argo-cd/tree/master/resource_customizations). For example the `Provider`
-from `pkg.crossplane.io` has already been declared which means there no further configuration needed.
+from `pkg.crossplane.io` has already been declared which means that no further configuration is needed.
 
 Argo CD also enable customising these checks per instance, and that's the mechanism used to provide support
 of Provider's CRDs.
