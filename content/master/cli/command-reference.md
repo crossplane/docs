@@ -828,7 +828,8 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 
 The `crossplane beta validate` command validates 
 [compositions]({{<ref "../concepts/compositions">}}) against provider or XRD 
-schemas using the Kubernetes API server's validation library.
+schemas using the Kubernetes API server's validation library
+with additional validation checks such as Unknown Field Check.
 
 The `crossplane beta validate` command supports validating the following 
 scenarios:
