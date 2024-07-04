@@ -39,7 +39,7 @@ some XRs to previous `Composition` settings without rolling back all XRs.
 
 ## Using Composition Revisions
 
-When you enable Composition Revisions three things happen:
+When Composition Revisions are enabled three things happen:
 
 1. Crossplane creates a `CompositionRevision` for each `Composition` update.
 1. Composite Resources gain a `spec.compositionRevisionRef` field that specifies
@@ -53,12 +53,6 @@ that unique state. Each revision is allocated an increasing revision number.
 This gives `CompositionRevision` consumers an idea about which revision is
 'newest'.
 
-Crossplane distinguishes between the 'newest' and the 'current' revision of a
-`Composition`. That is, if you revert a `Composition` to a previous state that
-corresponds to an existing `CompositionRevision` that revision will become
-'current' even if it is not the 'newest' revision (i.e. the most latest _unique_
-`Composition` configuration).
-
 You can discover which revisions exist using `kubectl`:
 
 ```console
@@ -69,10 +63,10 @@ kubectl get compositionrevision -l crossplane.io/composition-name=example
 This should produce output something like:
 
 ```console
-NAME            REVISION   CURRENT   AGE
-example-18pdg   1          False     4m36s
-example-2bgdr   2          True      73s
-example-xjrdm   3          False     61s
+NAME              REVISION   AGE
+example-18pdgs2   1          4m36s
+example-2bgdr31   2          73s
+example-xjrdmzz   3          61s
 ```
 
 > A `Composition` is a mutable resource that you can update as your needs
@@ -84,11 +78,11 @@ enabled or not. This is because when you enable Composition Revisions all XRs
 default to the `Automatic` `compositionUpdatePolicy`. XRs support two update
 policies:
 
-* `Automatic`: Automatically use the current `CompositionRevision`. (Default)
+* `Automatic`: Automatically use the latest `CompositionRevision`. (Default)
 * `Manual`: Require manual intervention to change `CompositionRevision`.
 
 The below XR uses the `Manual` policy. When this policy is used the XR will
-select the current `CompositionRevision` when it is first created, but must
+select the latest `CompositionRevision` when it is first created, but must
 manually be updated when you wish it to use another `CompositionRevision`.
 
 ```yaml
@@ -100,7 +94,7 @@ spec:
   parameters:
     storageGB: 20
   # The Manual policy specifies that you do not want this XR to update to the
-  # current CompositionRevision automatically.
+  # latest CompositionRevision automatically.
   compositionUpdatePolicy: Manual
   compositionRef:
     name: example
