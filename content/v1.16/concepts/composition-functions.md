@@ -187,7 +187,9 @@ spec:
         value: |
           apiVersion: "s3.aws.upbound.io/v1beta1"
           kind: "Bucket"
-          spec: forProvider: region: "us-east-2"
+          spec:
+            forProvider:
+              region: "us-east-2"
   - step: automatically-detect-readiness
     functionRef:
       name: function-auto-ready
