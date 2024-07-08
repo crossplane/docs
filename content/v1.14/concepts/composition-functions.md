@@ -5,7 +5,7 @@ alphaVersion: "1.11"
 betaVersion: "1.14"
 weight: 80
 description: "Composition Functions allow you to template resources using general-purpose programming languages"
-aliases: 
+aliases:
   - /knowledge-base/guides/composition-functions
 ---
 
@@ -88,45 +88,45 @@ Crossplane has four core components that users commonly mix up:
 * [Composition]({{<ref "./compositions">}}) - A template to define how to create
   resources.
 * [CompositeResourceDefinition]({{<ref "./composite-resource-definitions">}})
-  (`XRD`) - A custom API specification. 
+  (`XRD`) - A custom API specification.
 * [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
   using the custom API defined in a CompositeResourceDefinition. XRs use the
-  Composition template to create new managed resources. 
+  Composition template to create new managed resources.
 * [Claim]({{<ref "./claims" >}}) (`XRC`) - Like a Composite Resource, but with
-  namespace scoping. 
+  namespace scoping.
 {{</expand >}}
 
-To use composition functions set the Composition 
+To use composition functions set the Composition
 {{<hover label="single" line="6">}}mode{{</hover>}} to
 {{<hover label="single" line="6">}}Pipeline{{</hover>}}.
 
-Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of 
-{{<hover label="single" line="8">}}steps{{</hover>}}. Each 
-{{<hover label="single" line="8">}}step{{</hover>}} calls a Function.  
+Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of
+{{<hover label="single" line="8">}}steps{{</hover>}}. Each
+{{<hover label="single" line="8">}}step{{</hover>}} calls a Function.
 
-Each {{<hover label="single" line="8">}}step{{</hover>}} uses a 
+Each {{<hover label="single" line="8">}}step{{</hover>}} uses a
 {{<hover label="single" line="9">}}functionRef{{</hover>}} to reference the
-{{<hover label="single" line="10">}}name{{</hover>}} of the Function to call. 
+{{<hover label="single" line="10">}}name{{</hover>}} of the Function to call.
 
 {{<hint "important" >}}
-Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}} 
-can't specify resource templates with a `resources` field. 
+Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}}
+can't specify resource templates with a `resources` field.
 
 Use function "Patch and Transform" to create resource templates.
 {{< /hint >}}
 
 
-Some Functions also allow you to specify an 
-{{<hover label="single" line="11">}}input{{</hover>}}.  
+Some Functions also allow you to specify an
+{{<hover label="single" line="11">}}input{{</hover>}}.
 The function defines the
 {{<hover label="single" line="13">}}kind{{</hover>}} of input.
 
 This example uses
-[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform).  
+[Function Patch and Transform](https://github.com/crossplane-contrib/function-patch-and-transform).
 Function Patch and Transform implements Crossplane resource
-templates.  
-The input kind is {{<hover label="single" line="13">}}Resources{{</hover>}}, 
-and it accepts [Patch and Transform]({{<ref "./patch-and-transform">}}) 
+templates.
+The input kind is {{<hover label="single" line="13">}}Resources{{</hover>}},
+and it accepts [Patch and Transform]({{<ref "./patch-and-transform">}})
 {{<hover label="single" line="14">}}resources{{</hover>}} as input.
 
 ```yaml {label="single",copy-lines="none"}
@@ -163,7 +163,7 @@ calls them all. It calls them in the order they appear in the pipeline.
 Crossplane passes each Function in the pipeline the result of the previous
 Function. This enables powerful combinations of Functions. In this example,
 Crossplane calls {{<hover label="double" line="10">}}function-cue{{</hover>}} to
-create an S3 bucket. Crossplane then passes the bucket to 
+create an S3 bucket. Crossplane then passes the bucket to
 {{<hover label="double" line="23">}}function-auto-ready{{</hover>}}, which marks the
 composite resource as ready when the bucket becomes ready.
 
@@ -212,7 +212,7 @@ Running `crossplane beta render` requires [Docker](https://www.docker.com).
 {{< /hint >}}
 
 Provide a composite resource, composition and composition functions to render
-the output locally. 
+the output locally.
 
 ```shell
 crossplane beta render xr.yaml composition.yaml functions.yaml
@@ -454,8 +454,8 @@ $ crossplane xpkg push -f package/*.xpkg crossplane-contrib/function-example:v0.
 ```
 
 {{<hint "tip">}}
-Crossplane has a 
-[guide to writing a composition function in Go]({{<ref "../guides/write-a-composition-function-in-go">}}). 
+Crossplane has a
+[guide to writing a composition function in Go]({{<ref "../guides/write-a-composition-function-in-go">}}).
 {{</hint>}}
 
 When you're writing a composition function it's useful to know how composition
@@ -514,7 +514,7 @@ which composed resources it should create or update.
 A _composed_ resource is a resource created by a composite resource. Composed
 resources are usually Crossplane managed resources (MRs), but they can be any
 kind of Crossplane resource. For example a composite resource could also create
-a ProviderConfig, or another kind of composite resource. 
+a ProviderConfig, or another kind of composite resource.
 <!-- vale write-good.Weasel = YES -->
 {{</hint>}}
 
