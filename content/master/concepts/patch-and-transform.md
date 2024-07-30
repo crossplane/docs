@@ -1541,6 +1541,7 @@ String transforms support the following
 * [Regexp](#regular-expression-type)
 * [TrimPrefix](#trim-prefix)
 * [TrimSuffix](#trim-suffix)
+* [Replace](#replace)
 
 #### String convert
 
@@ -1662,6 +1663,26 @@ patches:
           type: TrimSuffix
           trim: `-north-1'
 ```
+
+#### Replace
+
+The {{<hover label="typeReplace" line="8">}}type: Replace{{</hover>}} replaces all occurrences of the {{<hover label="typeReplace" line="10">}}search{{</hover>}} string with the {{<hover label="typeReplace" line="11">}}replace{{</hover>}} string. If `replace` is an empty string, then the `search` string is removed.
+
+
+```yaml {label="typeReplace"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.location
+    toFieldPath: spec.forProvider.region
+    transforms:
+      - type: string
+        string:
+          type: Replace
+          replace:
+            search: "europe"
+            replace: "eu"
+```
+
 
 ## Patch policies
 
