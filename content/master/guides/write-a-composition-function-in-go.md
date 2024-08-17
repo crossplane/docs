@@ -1,8 +1,5 @@
 ---
 title: Write a Composition Function in Go
-state: beta
-alphaVersion: "1.11"
-betaVersion: "1.14"
 weight: 80
 description: "Composition functions allow you to template resources using Go"
 ---
@@ -11,7 +8,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts]({{<ref "../concepts/composition-functions" >}})
+[concepts]({{<ref "../concepts/compositions" >}})
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -22,7 +19,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work]({{<ref "../concepts/composition-functions#how-composition-functions-work" >}})
+[how composition functions work]({{<ref "../concepts/compositions#how-composition-functions-work" >}})
 before following this guide.
 {{< /hint >}}
 
@@ -79,17 +76,17 @@ build or test a composition function.
 
 ## Initialize the function from a template
 
-Use the `crossplane beta xpkg init` command to initialize a new function. When
+Use the `crossplane xpkg init` command to initialize a new function. When
 you run this command it initializes your function using
 [a GitHub repository](https://github.com/crossplane/function-template-go)
 as a template.
 
 ```shell {copy-lines=1}
-crossplane beta xpkg init function-xbuckets function-template-go -d function-xbuckets 
+crossplane xpkg init function-xbuckets function-template-go -d function-xbuckets 
 Initialized package "function-xbuckets" in directory "/home/negz/control/negz/function-xbuckets" from https://github.com/crossplane/function-template-go/tree/91a1a5eed21964ff98966d72cc6db6f089ad63f4 (main)
 ```
 
-The `crossplane beta init xpkg` command creates a directory named
+The `crossplane xpkg init` command creates a directory named
 `function-xbuckets`. When you run the command the new directory should look like
 this:
 
@@ -111,7 +108,7 @@ some other files in the template:
 <!--
 This tip talks about future plans for Crossplane.
 -->
-In v1.14 of the Crossplane CLI `crossplane beta xpkg init` just clones a
+In v1.14 of the Crossplane CLI `crossplane xpkg init` just clones a
 template GitHub repository. A future CLI release will automate tasks like
 replacing the template name with the new function's name. See Crossplane issue
 [#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
@@ -134,7 +131,7 @@ should delete the `input` and `package/input` directories.
 
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
-[composition functions]({{<ref "../concepts/composition-functions" >}})
+[composition functions]({{<ref "../concepts/compositions" >}})
 documentation explains how to pass an input to a composition function.
 
 The `package/input` directory contains an OpenAPI schema generated from the
@@ -163,7 +160,7 @@ method in `fn.go`. When you first open the file it contains a "hello world"
 function.
 
 ```go {label="hello-world"}
-func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
+func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) (*fnv1.RunFunctionResponse, error) {
 	f.log.Info("Running Function", "tag", req.GetMeta().GetTag())
 
 	rsp := response.To(req, response.DefaultTTL)
@@ -190,13 +187,13 @@ The function tells Crossplane what resources it should compose by returning a
 Crossplane generates the `RunFunctionRequest` and `RunFunctionResponse` structs
 using [Protocol Buffers](http://protobuf.dev). You can find detailed schemas for
 `RunFunctionRequest` and `RunFunctionResponse` in the
-[Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1beta1).
+[Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1).
 {{</hint>}}
 
 Edit the `RunFunction` method to replace it with this code.
 
 ```go {hl_lines="4-56"}
-func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
+func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) (*fnv1.RunFunctionResponse, error) {
 	rsp := response.To(req, response.DefaultTTL)
 
 	xr, err := request.GetObservedCompositeResource(req)
@@ -274,7 +271,7 @@ import (
 
 	"github.com/crossplane/function-sdk-go/errors"
 	"github.com/crossplane/function-sdk-go/logging"
-	fnv1beta1 "github.com/crossplane/function-sdk-go/proto/v1beta1"
+	fnv1 "github.com/crossplane/function-sdk-go/proto/v1"
 	"github.com/crossplane/function-sdk-go/request"
 	"github.com/crossplane/function-sdk-go/resource"
 	"github.com/crossplane/function-sdk-go/resource/composed"
@@ -283,14 +280,14 @@ import (
 
 // Function returns whatever response you ask it to.
 type Function struct {
-	fnv1beta1.UnimplementedFunctionRunnerServiceServer
+	fnv1.UnimplementedFunctionRunnerServiceServer
 
 	log logging.Logger
 }
 
 // RunFunction observes an XBuckets composite resource (XR). It adds an S3
 // bucket to the desired state for every entry in the XR's spec.names array.
-func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
+func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) (*fnv1.RunFunctionResponse, error) {
 	f.log.Info("Running Function", "tag", req.GetMeta().GetTag())
 
 	// Create a response to the request. This copies the desired state and
@@ -428,8 +425,8 @@ for the SDK.
 
 ## Test the function end-to-end
 
-Test your function by adding unit tests, and by using the `crossplane beta
-render` command.
+Test your function by adding unit tests, and by using the `crossplane render`
+command.
 
 Go has rich support for unit testing. When you initialize a function from the
 template it adds some unit tests to `fn_test.go`. These tests follow Go's
@@ -456,17 +453,17 @@ import (
 
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
 
-	fnv1beta1 "github.com/crossplane/function-sdk-go/proto/v1beta1"
+	fnv1 "github.com/crossplane/function-sdk-go/proto/v1"
 	"github.com/crossplane/function-sdk-go/resource"
 )
 
 func TestRunFunction(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *fnv1beta1.RunFunctionRequest
+		req *fnv1.RunFunctionRequest
 	}
 	type want struct {
-		rsp *fnv1beta1.RunFunctionResponse
+		rsp *fnv1.RunFunctionResponse
 		err error
 	}
 
@@ -478,9 +475,9 @@ func TestRunFunction(t *testing.T) {
 		"AddTwoBuckets": {
 			reason: "The Function should add two buckets to the desired composed resources",
 			args: args{
-				req: &fnv1beta1.RunFunctionRequest{
-					Observed: &fnv1beta1.State{
-						Composite: &fnv1beta1.Resource{
+				req: &fnv1.RunFunctionRequest{
+					Observed: &fnv1.State{
+						Composite: &fnv1.Resource{
 							// MustStructJSON is a handy way to provide mock
 							// resources.
 							Resource: resource.MustStructJSON(`{
@@ -502,10 +499,10 @@ func TestRunFunction(t *testing.T) {
 				},
 			},
 			want: want{
-				rsp: &fnv1beta1.RunFunctionResponse{
-					Meta: &fnv1beta1.ResponseMeta{Ttl: durationpb.New(60 * time.Second)},
-					Desired: &fnv1beta1.State{
-						Resources: map[string]*fnv1beta1.Resource{
+				rsp: &fnv1.RunFunctionResponse{
+					Meta: &fnv1.ResponseMeta{Ttl: durationpb.New(60 * time.Second)},
+					Desired: &fnv1.State{
+						Resources: map[string]*fnv1.Resource{
 							"xbuckets-test-bucket-a": {Resource: resource.MustStructJSON(`{
 								"apiVersion": "s3.aws.upbound.io/v1beta1",
 								"kind": "Bucket",
@@ -582,7 +579,7 @@ Expand the following block to see example files.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
 
-You can recreate the output below using by running `crossplane beta render` with
+You can recreate the output below using by running `crossplane render` with
 these files.
 
 The `xr.yaml` file contains the composite resource to render:
@@ -627,7 +624,7 @@ The `functions.yaml` file contains the Functions the Composition references in
 its pipeline steps:
 
 ```yaml
-apiVersion: pkg.crossplane.io/v1beta1
+apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
   name: function-xbuckets
@@ -642,12 +639,12 @@ spec:
 
 The Function in `functions.yaml` uses the
 {{<hover label="development" line="6">}}Development{{</hover>}}
-runtime. This tells `crossplane beta render` that your function is running
+runtime. This tells `crossplane render` that your function is running
 locally. It connects to your locally running function instead of using Docker to
 pull and run the function.
 
 ```yaml {label="development"}
-apiVersion: pkg.crossplane.io/v1beta1
+apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
   name: function-xbuckets
@@ -667,10 +664,10 @@ to run without encryption or authentication. Only use it during testing and
 development.
 {{</hint>}}
 
-In a separate terminal, run `crossplane beta render`. 
+In a separate terminal, run `crossplane render`. 
 
 ```shell
-crossplane beta render xr.yaml composition.yaml functions.yaml
+crossplane render xr.yaml composition.yaml functions.yaml
 ```
 
 This command calls your function. In the terminal where your function is running
@@ -682,7 +679,7 @@ go run . --insecure --debug
 2023-10-31T16:17:32.159-0700    INFO    function-xbuckets/fn.go:125     Added desired buckets   {"xr-version": "example.crossplane.io/v1", "xr-kind": "XBuckets", "xr-name": "example-buckets", "region": "us-east-2", "count": 3}
 ```
 
-The `crossplane beta render` command prints the desired resources the function
+The `crossplane render` command prints the desired resources the function
 returns.
 
 ```yaml
@@ -740,7 +737,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions]({{< ref "../concepts/composition-functions#test-a-composition-that-uses-functions" >}}).
+[testing composition functions]({{< ref "../concepts/compositions#test-a-composition" >}}).
 {{</hint>}}
 
 ## Build and push the function to a package registry
@@ -757,7 +754,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation]({{<ref "../concepts/composition-functions" >}}).
+[composition functions documentation]({{<ref "../concepts/compositions" >}}).
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.

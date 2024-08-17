@@ -170,17 +170,25 @@ spec:
   compositeTypeRef:
     apiVersion: aws.example.upbound.io/v1alpha1
     kind: MyVPC
-  resources:
-  - base:
-      apiVersion: ec2.aws.upbound.io/v1beta1
-      kind: VPC
-      spec:
-        forProvider:
-          region: us-west-1
-          cidrBlock: 192.168.0.0/16
-          enableDnsSupport: true
-          enableDnsHostnames: true
-    name: my-vcp
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: my-vpc
+        base:
+          apiVersion: ec2.aws.upbound.io/v1beta1
+          kind: VPC
+          spec:
+            forProvider:
+              region: us-west-1
+              cidrBlock: 192.168.0.0/16
+              enableDnsSupport: true
+              enableDnsHostnames: true
 ```
 
 Apply the example XRD.
@@ -382,17 +390,25 @@ spec:
   compositeTypeRef:
     apiVersion: aws.example.upbound.io/v1alpha1
     kind: MyVPC
-  resources:
-  - base:
-      apiVersion: ec2.aws.upbound.io/v1beta1
-      kind: VPC
-      spec:
-        forProvider:
-          region: us-west-1
-          cidrBlock: 192.168.0.0/16
-          enableDnsSupport: false
-          enableDnsHostnames: true
-    name: my-vcp
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: my-vpc
+        base:
+          apiVersion: ec2.aws.upbound.io/v1beta1
+          kind: VPC
+          spec:
+            forProvider:
+              region: us-west-1
+              cidrBlock: 192.168.0.0/16
+              enableDnsSupport: false
+              enableDnsHostnames: true
 ```
 
 Expected Output:

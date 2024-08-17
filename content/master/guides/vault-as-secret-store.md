@@ -411,35 +411,47 @@ spec:
   compositeTypeRef:
     apiVersion: ess.example.org/v1alpha1
     kind: CompositeESSInstance
-  resources:
-    - name: serviceaccount
-      base:
-        apiVersion: iam.gcp.crossplane.io/v1alpha1
-        kind: ServiceAccount
-        metadata:
-          name: ess-test-sa
-        spec:
-          forProvider:
-            displayName: a service account to test ess
-    - name: serviceaccountkey
-      base:
-        apiVersion: iam.gcp.crossplane.io/v1alpha1
-        kind: ServiceAccountKey
-        spec:
-          forProvider:
-            serviceAccountSelector:
-              matchControllerRef: true
-          publishConnectionDetailsTo:
-            name: ess-mr-conn
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: serviceaccount
+          base:
+            apiVersion: iam.gcp.crossplane.io/v1alpha1
+            kind: ServiceAccount
             metadata:
-              labels:
-                environment: development
-                team: backend
-            configRef:
-              name: vault
-      connectionDetails:
-        - fromConnectionSecretKey: publicKey
-        - fromConnectionSecretKey: publicKeyType" | kubectl apply -f -
+              name: ess-test-sa
+            spec:
+              forProvider:
+                displayName: a service account to test ess
+        - name: serviceaccountkey
+          base:
+            apiVersion: iam.gcp.crossplane.io/v1alpha1
+            kind: ServiceAccountKey
+            spec:
+              forProvider:
+                serviceAccountSelector:
+                  matchControllerRef: true
+              publishConnectionDetailsTo:
+                name: ess-mr-conn
+                metadata:
+                  labels:
+                    environment: development
+                    team: backend
+                configRef:
+                  name: vault
+          connectionDetails:
+            - name: publicKey
+              type: FromConnectionSecretKey
+              fromConnectionSecretKey: publicKey
+            - name: publicKey
+              type: FromConnectionSecretKey
+              fromConnectionSecretKey: publicKeyType" | kubectl apply -f -
 ```
 
 ### Create a Claim

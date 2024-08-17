@@ -50,6 +50,7 @@ StoreConfig
 StoreConfigs
 ToCompositeFieldPath
 ToEnvironmentFieldPath
+toFieldPath
 TrimPrefix
 TrimSuffix
 UnhealthyPackageRevision

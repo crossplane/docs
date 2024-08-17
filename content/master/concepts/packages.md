@@ -10,19 +10,19 @@ A _Configuration_ package is an
 [Compositions]({{<ref "./compositions" >}}), 
 [Composite Resource Definitions]({{<ref "./composite-resource-definitions" >}})
 and any required [Providers]({{<ref "./providers">}}) or 
-[Functions]({{<ref "./composition-functions" >}}).
+[Functions]({{<ref "./compositions" >}}).
 
 Configuration packages make your Crossplane configuration fully portable. 
 
 {{<hint "important" >}}
 Crossplane [Providers]({{<ref "./providers">}}) and 
-[Functions]({{<ref "./composition-functions">}}) are also Crossplane packages.  
+[Functions]({{<ref "./compositions">}}) are also Crossplane packages.  
 
 This document describes how to install and manage configuration packages.  
 
 Refer to the 
 [Provider]({{<ref "./providers">}}) and 
-[Composition Functions]({{<ref "./composition-functions">}}) chapters for
+[Composition Functions]({{<ref "./compositions">}}) chapters for
 details on their usage of packages. 
 {{< /hint >}}
 

@@ -183,12 +183,6 @@ spec:
 
 Matching by selector is the most flexible matching method. 
 
-{{<hint "note" >}}
-
-The [Compositions]({{<ref "./compositions">}}) section covers the 
-`matchControllerRef` selector.
-{{</hint >}}
-
 Use `matchLabels` to match the labels applied to a resource. For example, this
 Subnet resource only matches VPC resources with the label 
 `my-label: label-value`.
@@ -203,6 +197,100 @@ spec:
       matchLabels:
         my-label: label-value
 ```
+
+##### Matching by controller reference 
+
+Matching a controller reference ensures that the matching resource is part of
+the same composite resource.
+
+{{<hint "note" >}}
+Learn more about composite resources in the
+[Composite Resources]({{<ref "./composite-resources">}}) section.
+{{</hint >}}
+
+Matching only a controller reference simplifies the matching process without
+requiring labels or more information. 
+
+For example, creating an AWS `InternetGateway` requires a `VPC`.
+
+The `InternetGateway` could match a label, but every VPC created by this
+Composition shares the same label. 
+
+Using `matchControllerRef` matches only the VPC created in the same composite
+resource that created the `InternetGateway`. 
+
+```yaml {label="controller1",copy-lines="none"}
+apiVersion: pt.fn.crossplane.io/v1beta1
+kind: Resources
+resources:
+- base:
+    apiVersion: ec2.aws.upbound.io/v1beta1
+    kind: VPC
+    name: my-vpc
+    spec:
+      forProvider:
+      # Removed for brevity
+- base:
+    apiVersion: ec2.aws.upbound.io/v1beta1
+    kind: InternetGateway
+    name: my-gateway
+    spec:
+      forProvider:
+        vpcIdSelector:
+          matchControllerRef: true
+```
+
+Resources can match both labels and a controller reference to match a specific
+resource in the larger composite resource. 
+
+For example, this Composition creates two `VPC` resources, but the
+`InternetGateway` must match only one. 
+
+Applying a `label` to the second `VPC` allows the `InternetGateway` to match the
+label `type: internet` and only match objects in the same composite resource
+with `matchControllerRef`.
+
+```yaml {label="controller2",copy-lines="none"}
+apiVersion: pt.fn.crossplane.io/v1beta1
+kind: Resources
+resources:
+- name: my-first-vpc
+  base:
+    apiVersion: ec2.aws.upbound.io/v1beta1
+    kind: VPC
+    metadata:
+      labels:
+        type: backend
+    spec:
+      forProvider:
+      # Removed for brevity
+- name: my-second-vpc
+  base:
+    apiVersion: ec2.aws.upbound.io/v1beta1
+    kind: VPC
+    metadata:
+      labels:
+        type: internet
+    spec:
+      forProvider:
+      # Removed for brevity
+- name: my-gateway
+  base:
+    apiVersion: ec2.aws.upbound.io/v1beta1
+    kind: InternetGateway
+    spec:
+      forProvider:
+        vpcIdSelector:
+          matchControllerRef: true
+          matchLabels:
+            type: internet
+```
+
+{{<hint "note" >}}
+These examples use Function Patch and Transform. Learn more about functions and
+Compositions in the [Compositions]({{<ref "./compositions">}}) section.
+{{</hint >}}
+
 
 
 #### Immutable fields
