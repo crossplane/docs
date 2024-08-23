@@ -337,12 +337,23 @@ This template creates a GCP
 {{<hover label="comp" line="25">}}PubSub{{</hover>}}
 {{<hover label="comp" line="26">}}Topic{{</hover>}}.
 
-Crossplane uses {{<hover label="comp" line="15">}}patches{{</hover>}} to apply
-the user's input to the resource template.  
 This Composition takes the user's 
 {{<hover label="comp" line="16">}}location{{</hover>}} input and uses it as the 
 {{<hover label="comp" line="14">}}location{{</hover>}} used in the individual 
 resource.
+
+{{<hint "important" >}}
+This Composition uses an array of resource templates. You can patch each
+template with data copied from the custom API. Crossplane calls this a _Patch
+and Transform_ Composition.
+
+You don't have to use Patch and Transform. Crossplane supports a variety of
+alternatives, including Go Templating and CUE. You can also write a function in
+Go or Python to template your resources.
+
+Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
+more information on configuring Compositions and all the available options.
+{{< /hint >}}
 
 Apply this Composition to your cluster. 
 
@@ -353,39 +364,47 @@ kind: Composition
 metadata:
   name: topic-with-bucket
 spec:
-  resources:
-    - name: crossplane-quickstart-bucket
-      base:
-        apiVersion: storage.gcp.upbound.io/v1beta1
-        kind: Bucket
-        spec:
-          forProvider:
-            location: "US"
-      patches:
-        - fromFieldPath: "spec.location"
-          toFieldPath: "spec.forProvider.location"
-          transforms:
-            - type: map
-              map: 
-                EU: "EU"
-                US: "US"
-    - name: crossplane-quickstart-topic
-      base:
-        apiVersion: pubsub.gcp.upbound.io/v1beta1
-        kind: Topic
-        spec:
-          forProvider:
-            messageStoragePolicy:
-              - allowedPersistenceRegions: 
-                - "us-central1"
-      patches:
-        - fromFieldPath: "spec.location"
-          toFieldPath: "spec.forProvider.messageStoragePolicy[0].allowedPersistenceRegions[0]"
-          transforms:
-            - type: map
-              map: 
-                EU: "europe-central2"
-                US: "us-central1"
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: crossplane-quickstart-bucket
+          base:
+            apiVersion: storage.gcp.upbound.io/v1beta1
+            kind: Bucket
+            spec:
+              forProvider:
+                location: "US"
+          patches:
+            - fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.location"
+              transforms:
+                - type: map
+                  map: 
+                    EU: "EU"
+                    US: "US"
+        - name: crossplane-quickstart-topic
+          base:
+            apiVersion: pubsub.gcp.upbound.io/v1beta1
+            kind: Topic
+            spec:
+              forProvider:
+                messageStoragePolicy:
+                  - allowedPersistenceRegions: 
+                    - "us-central1"
+          patches:
+            - fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.messageStoragePolicy[0].allowedPersistenceRegions[0]"
+              transforms:
+                - type: map
+                  map: 
+                    EU: "europe-central2"
+                    US: "us-central1"
   compositeTypeRef:
     apiVersion: queue.example.com/v1alpha1
     kind: PubSub
@@ -395,14 +414,32 @@ EOF
 The {{<hover label="comp" line="40">}}compositeTypeRef{{</hover >}} defines
 which custom APIs can use this template to create resources.
 
+A Composition uses a pipeline of _composition functions_ to define the cloud
+resources to deploy. This template uses
+{{<hover label="comp" line="10">}}function-patch-and-transform{{</hover>}}.
+You must install the function before you can use it in a Composition.
+
+Apply this Function to install `function-patch-and-transform`:
+
+```yaml {label="install"}
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+EOF
+```
+
 {{<hint "tip" >}}
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 
 Read the 
-[Patch and Transform documentation]({{<ref "../concepts/patch-and-transform">}}) 
-for more information on how Crossplane uses patches to map user inputs to
-Composition resource templates.
+[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}}) 
+for more information on how it uses patches to map user inputs to Composition
+resource templates.
 {{< /hint >}}
 
 View the Composition with `kubectl get composition`

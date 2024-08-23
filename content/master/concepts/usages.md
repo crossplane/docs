@@ -228,9 +228,9 @@ for the long exponential backoff durations of the Kubernetes garbage collector.
 
 A typical use case for Usages is to define a deletion ordering between the
 resources in a Composition. The Usages support
-[matching controller reference]({{<ref "./compositions#match-a-controller-reference" >}})
+[matching controller reference]({{<ref "./managed-resources#matching-by-controller-reference" >}})
 in selectors to ensures that the matching resource is in the same composite
-resource in the same way as [cross-resource referencing]({{<ref "./compositions#cross-resource-references" >}}).
+resource in the same way as [cross-resource referencing]({{<ref "./managed-resources#referencing-other-resources" >}}).
 
 The following example shows a Composition that defines a deletion ordering
 between a `Cluster` and a `Release` resource. The `Usage` blocks deletion of
@@ -240,33 +240,41 @@ the `Cluster` resource until the `Release` resource is successfully deleted.
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 spec:
-  resources:
-    - name: cluster
-      base:
-        apiVersion: container.gcp.upbound.io/v1beta1
-        kind: Cluster
-        # Removed for brevity
-    - name: release
-      base:
-        apiVersion: helm.crossplane.io/v1beta1
-        kind: Release
-        # Removed for brevity
-    - name: release-uses-cluster
-      base:
-        apiVersion: apiextensions.crossplane.io/v1alpha1
-        kind: Usage
-        spec:
-          replayDeletion: true
-          of:
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: cluster
+          base:
             apiVersion: container.gcp.upbound.io/v1beta1
             kind: Cluster
-            resourceSelector:
-              matchControllerRef: true
-          by:
+            # Removed for brevity
+        - name: release
+          base:
             apiVersion: helm.crossplane.io/v1beta1
             kind: Release
-            resourceSelector:
-              matchControllerRef: true
+            # Removed for brevity
+        - name: release-uses-cluster
+          base:
+            apiVersion: apiextensions.crossplane.io/v1alpha1
+            kind: Usage
+            spec:
+              replayDeletion: true
+              of:
+                apiVersion: container.gcp.upbound.io/v1beta1
+                kind: Cluster
+                resourceSelector:
+                  matchControllerRef: true
+              by:
+                apiVersion: helm.crossplane.io/v1beta1
+                kind: Release
+                resourceSelector:
+                  matchControllerRef: true
 ```
 
 {{<hint "tip" >}}

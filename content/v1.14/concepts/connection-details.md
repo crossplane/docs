@@ -10,7 +10,7 @@ Using connection details in Crossplane requires the following components:
 * Define the `writeConnectionSecretToRef` name and namespace for each resource in the
   [Composition]({{<ref "/master/concepts/compositions#composed-resource-secrets">}}).
 * Define the list of secret keys produced by each composed resource with `connectionDetails` in the
-  [Composition]({{<ref "/master/concepts/compositions#define-secret-keys">}}).
+  [Composition]({{<ref "./compositions#define-secret-keys">}}).
 * Optionally, define the `connectionSecretKeys` in a 
   [CompositeResourceDefinition]({{<ref "/master/concepts/composite-resource-definitions#manage-connection-secrets">}}).
 

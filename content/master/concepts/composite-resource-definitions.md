@@ -413,7 +413,7 @@ field indicates which version of the schema Compositions use. Only one
 version can be `referenceable`. 
 
 {{< hint "note" >}}
-Changing which version is `referenceable:true` requires [updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#enabling-composite-resources" >}}) 
+Changing which version is `referenceable:true` requires [updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#enable-composite-resources" >}}) 
 of any Compositions referencing that XRD.
 {{< /hint >}}
 
@@ -582,7 +582,7 @@ key names listed in the Composition's `connectionDetails`.
 An XRD ignores any keys listed that aren't created by a managed resource.
 
 For more information read the 
-[Composition documentation]({{<ref "./compositions#storing-connection-details">}}).
+[Composition documentation]({{<ref "./compositions#store-connection-details">}}).
 {{< /hint >}}
 
 

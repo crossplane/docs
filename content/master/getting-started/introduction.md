@@ -225,7 +225,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: test.example.org/v1alpha1
-    kind: myComputeResource
+    kind: MyComputeResource
     # Removed for brevity
 ```
 
@@ -235,9 +235,9 @@ label="comp" line="8">}}kind{{< /hover >}}.
 
 ```yaml {label="xr"}
 apiVersion: test.example.org/v1alpha1
-kind: myComputeResource
+kind: MyComputeResource
 metadata:
-  name: myResource
+  name: my-resource
 spec:
   storage: "large"
 ```
@@ -310,7 +310,7 @@ to define the _Composite Resource_ {{<hover label="xr2" line="6" >}}spec{{</hove
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   versions:
   - name: v1alpha1
     schema:
@@ -322,9 +322,9 @@ A _Composite Resource_ based on this _Composite Resource Definition_ looks like 
 ```yaml {label="xr2"}
 # Composite Resource (XR)
 apiVersion: test.example.org/v1alpha1
-kind: myComputeResource
+kind: MyComputeResource
 metadata:
-  name: myResource
+  name: my-resource
 spec:
   storage: "large"
 ```
@@ -355,7 +355,7 @@ or {{<hover label="specVersions" line="21" >}}large{{< /hover >}}.
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   versions:
   - name: v1alpha1
     served: true
@@ -392,7 +392,7 @@ allows the creation of _Claims_ of `kind: computeClaim`.
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   claimNames:
     kind: computeClaim
   # Removed for brevity 
@@ -431,7 +431,7 @@ _Composite Resources_.
 spec:
   group: test.example.org
   names:
-    kind: myComputeResource
+    kind: MyComputeResource
   claimNames:
     kind: computeClaim
   # Removed for brevity 
@@ -477,9 +477,9 @@ The _Composite Resource Definition_ defines the
 ```yaml {label="xr-claim"}
 # Composite Resource (XR)
 apiVersion: test.example.org/v1alpha1
-kind: myComputeResource
+kind: MyComputeResource
 metadata:
-  name: myResource
+  name: my-resource
 spec:
   storage: "large"
 ```

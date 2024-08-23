@@ -32,6 +32,135 @@ Client Version: v1.16.0
 Server Version: v1.16.0
 ```
 
+## render 
+
+The `crossplane render` command previews the output of a 
+[composite resource]({{<ref "../concepts/composite-resources">}}) after applying 
+any [composition functions]({{<ref "../concepts/compositions">}}).
+
+{{< hint "important" >}}
+The `crossplane render` command requires you to use composition functions.
+{{< /hint >}}
+
+The `crossplane render` command connects to the locally running Docker 
+Engine to pull and run composition functions. 
+
+{{<hint "important">}} 
+Running `crossplane render` requires [Docker](https://www.docker.com/).
+{{< /hint >}}
+
+Provide a composite resource, composition and composition function YAML 
+definition with the command to render the output locally. 
+
+For example, 
+`crossplane render xr.yaml composition.yaml function.yaml`
+
+The output includes the original composite resource followed by the generated 
+managed resources. 
+
+{{<expand "An example render output" >}}
+```yaml
+---
+apiVersion: nopexample.org/v1
+kind: XBucket
+metadata:
+  name: test-xrender
+status:
+  bucketRegion: us-east-2
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  annotations:
+    crossplane.io/composition-resource-name: my-bucket
+  generateName: test-xrender-
+  labels:
+    crossplane.io/composite: test-xrender
+  ownerReferences:
+  - apiVersion: nopexample.org/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: XBucket
+    name: test-xrender
+    uid: ""
+spec:
+  forProvider:
+    region: us-east-2
+```
+{{< /expand >}}
+
+### Flags
+
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag                             | Description                                           |
+| ------------ | -------------                         | ------------------------------                        |
+|              | `--context-files=<key>=<file>,<key>=<file>`    | A comma separated list of files to load for function "contexts." |
+|              | `--context-values=<key>=<value>,<key>=<value>` | A comma separated list of key-value pairs to load for function "contexts."                                                    |
+| `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
+| `-o`         | `--observed-resources=<directory or file>`               |
+Provide artificial managed resource data to the function.
+|
+| `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
+|              | `--timeout=`                          | Amount of time to wait for a function to finish. (Default 1 minute)       |
+{{< /table >}}
+
+The `crossplane render` command relies on standard 
+[Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables) 
+to connect to the local Docker Engine and run composition functions. 
+
+
+### Provide function context
+
+The `--context-files` and `--context-values` flags can provide data 
+to a function's `context`.  
+The context is JSON formatted data.
+
+### Include function results
+
+If a function produces Kubernetes events with statuses use the 
+`--include-function-results` to print them along with the managed resource 
+outputs. 
+
+### Include the composite resource 
+
+Composition functions can only change the `status` field of a composite 
+resource. By default, the `crossplane render` command only prints the
+`status` field with `metadata.name`.  
+
+Use `--include-full-xr` to print the full composite resource, 
+including the `spec` and `metadata` fields.
+
+### Mock managed resources
+
+Provide mocked, or artificial data representing a managed resource with 
+`--observed-resources`. The `crossplane render` command treats the 
+provided inputs as if they were resources in a Crossplane cluster. 
+
+A function can reference and manipulate the included resource as part of 
+running the function.
+
+The `observed-resources` may be a single YAML file with multiple resources or a 
+directory of YAML files representing multiple resources.
+
+Inside the YAML file include an 
+{{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
+{{<hover label="apiVersion" line="2">}}kind{{</hover>}},
+{{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
+{{<hover label="apiVersion" line="7">}}spec{{</hover>}}.
+
+```yaml {label="apiVersion"}
+apiVersion: example.org/v1alpha1
+kind: ComposedResource
+metadata:
+  name: test-render-b
+  annotations:
+    crossplane.io/composition-resource-name: resource-b
+spec:
+  coolerField: "I'm cooler!"
+```
+
+The schema of the resource isn't validated and may contain any data.
+
 ## xpkg
 
 The `crossplane xpkg` commands create, install and update Crossplane
@@ -51,7 +180,7 @@ The CLI applies the required annotations and values to meet the
 
 The `crossplane` CLI supports building 
 [configuration]({{< ref "../concepts/packages" >}}),
-[function]({{<ref "../concepts/composition-functions">}}) and 
+[function]({{<ref "../concepts/compositions">}}) and 
 [provider]({{<ref "../concepts/providers" >}}) package types. 
 
 
@@ -116,6 +245,52 @@ Use `docker pull` to download a missing image.
 
 The `--embed-runtime-image-tarball` flag includes a local OCI image tarball 
 inside the function or provider package.
+
+### xpkg init
+
+The `crossplane xpkg init` command populates the current directory with 
+files to build a package. 
+
+Provide a name to use for the package and the package template to start from 
+with the command  
+`crossplane xpkg init <name> <template>`
+
+The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
+
+The `<template>` value may be one of four well known templates:
+* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../concepts/packages">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
+* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../concepts/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
+* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../concepts/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
+* `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
+* `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
+
+Instead of a well known template the `<template>` value can be a git repository 
+URL.
+
+#### NOTES.txt
+
+If the template repository contains a `NOTES.txt` file in its root directory,
+the `crossplane xpkg init` command prints the contents of the file to the
+terminal after populating the directory with the template files. This can be
+useful for providing information about the template.
+
+#### init.sh
+
+If the template repository contains an `init.sh` file in its root directory, the
+`crossplane xpkg init` command starts a dialog after populating the
+directory with the template files. The dialog prompts the user if they want
+to view or run the script. Use the initialization script to automatically
+personalize the template.
+
+#### Flags
+{{< table "table table-sm table-striped">}}
+| Short flag   | Long flag               | Description                                                                                      |
+| ------------ | ----------------------- | ------------------------------                                                                   |
+| `-b`         | `--ref-name`            | The branch or tag to clone from the template repository.                                         |
+| `-d`         | `--directory`           | The directory to create and load the template files into. Uses the current directory by default. |
+| `-r`         | `--run-init-script`     | Run the init.sh script without prompting, if it exists.                                                        |
+<!-- vale Crossplane.Spelling = YES -->
+{{< /table >}}
 
 
 ### xpkg install
@@ -341,9 +516,8 @@ converts a Crossplane resource to a new version or kind.
 Use the `crossplane beta convert` command to convert an existing
 [ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
 to a [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}}) 
-or a Composition using [patch and transforms]({{<ref "../concepts/patch-and-transform">}}) 
-to a 
-[Composition pipeline function]({{< ref "../concepts/compositions#use-composition-functions" >}}).
+or a legacy Composition using `mode: Resources` to a 
+[Composition pipeline function]({{< ref "../concepts/compositions" >}}).
 
 Provide the `crossplane beta convert` command the conversion type, the input
 file and optionally, an output file. By default the command writes the output to
@@ -372,138 +546,6 @@ By default the function name is "function-patch-and-transform."
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
-
-### beta render 
-
-The `crossplane beta render` command previews the output of a 
-[composite resource]({{<ref "../concepts/composite-resources">}}) after applying 
-any [composition functions]({{<ref "../concepts/composition-functions">}}).
-
-{{< hint "important" >}}
-The `crossplane beta render` command doesn't apply 
-[patch and transform composition patches]({{<ref "../concepts/patch-and-transform">}}).
-
-The command only supports function "patch and transforms."
-{{< /hint >}}
-
-The `crossplane beta render` command connects to the locally running Docker 
-Engine to pull and run composition functions. 
-
-{{<hint "important">}} 
-Running `crossplane beta render` requires [Docker](https://www.docker.com/).
-{{< /hint >}}
-
-Provide a composite resource, composition and composition function YAML 
-definition with the command to render the output locally. 
-
-For example, 
-`crossplane beta render xr.yaml composition.yaml function.yaml`
-
-The output includes the original composite resource followed by the generated 
-managed resources. 
-
-{{<expand "An example render output" >}}
-```yaml
----
-apiVersion: nopexample.org/v1
-kind: XBucket
-metadata:
-  name: test-xrender
-status:
-  bucketRegion: us-east-2
----
-apiVersion: s3.aws.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  annotations:
-    crossplane.io/composition-resource-name: my-bucket
-  generateName: test-xrender-
-  labels:
-    crossplane.io/composite: test-xrender
-  ownerReferences:
-  - apiVersion: nopexample.org/v1
-    blockOwnerDeletion: true
-    controller: true
-    kind: XBucket
-    name: test-xrender
-    uid: ""
-spec:
-  forProvider:
-    region: us-east-2
-```
-{{< /expand >}}
-
-#### Flags
-
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag                             | Description                                           |
-| ------------ | -------------                         | ------------------------------                        |
-|              | `--context-files=<key>=<file>,<key>=<file>`    | A comma separated list of files to load for function "contexts." |
-|              | `--context-values=<key>=<value>,<key>=<value>` | A comma separated list of key-value pairs to load for function "contexts."                                                    |
-| `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
-| `-o`         | `--observed-resources=<directory or file>`               |
-Provide artificial managed resource data to the function.
-|
-| `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
-|              | `--timeout=`                          | Amount of time to wait for a function to finish.                    |
-{{< /table >}}
-
-The `crossplane beta render` command relies on standard 
-[Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables) 
-to connect to the local Docker engine and run composition functions. 
-
-
-#### Provide function context
-
-The `--context-files` and `--context-values` flags can provide data 
-to a function's `context`.  
-The context is JSON formatted data.
-
-#### Include function results
-
-If a function produces Kubernetes events with statuses use the 
-`--include-function-results` to print them along with the managed resource 
-outputs. 
-
-#### Include the composite resource 
-
-Composition functions can only change the `status` field of a composite 
-resource. By default, the `crossplane beta render` command only prints the
-`status` field with `metadata.name`.  
-
-Use `--include-full-xr` to print the full composite resource, 
-including the `spec` and `metadata` fields.
-
-#### Mock managed resources
-
-Provide mocked, or artificial data representing a managed resource with 
-`--observed-resources`. The `crossplane beta render` command treats the 
-provided inputs as if they were resources in a Crossplane cluster. 
-
-A function can reference and manipulate the included resource as part of 
-running the function.
-
-The `observed-resources` may be a single YAML file with multiple resources or a 
-directory of YAML files representing multiple resources.
-
-Inside the YAML file include an 
-{{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
-{{<hover label="apiVersion" line="2">}}kind{{</hover>}},
-{{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
-{{<hover label="apiVersion" line="7">}}spec{{</hover>}}.
-
-```yaml {label="apiVersion"}
-apiVersion: example.org/v1alpha1
-kind: ComposedResource
-metadata:
-  name: test-render-b
-  annotations:
-    crossplane.io/composition-resource-name: resource-b
-spec:
-  coolerField: "I'm cooler!"
-```
-
-The schema of the resource isn't validated and may contain any data.
 
 ### beta top
 
@@ -837,7 +879,7 @@ scenarios:
 
 - Validate a managed resource or composite resource 
   [against a Provider or XRD schema](#validate-resources-against-a-schema). 
-- Use the output of `crossplane beta render` as [validation input](#validate-render-command-output). 
+- Use the output of `crossplane render` as [validation input](#validate-render-command-output). 
 - Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
   (CEL) rules.
 - Validate resources against a [directory of schemas](#validate-against-a-directory-of-schemas).
@@ -933,16 +975,16 @@ Total 1 resources: 0 missing schemas, 1 success case, 0 failure cases
 
 #### Validate render command output
 
-You can pipe the output of `crossplane beta render` into 
+You can pipe the output of `crossplane render` into 
 `crossplane beta validate` to validate complete Crossplane resource pipelines,
 including XRs, compositions and composition functions. 
 
-Use the `--include-full-xr` command with `crossplane beta render` and the `-` 
+Use the `--include-full-xr` command with `crossplane render` and the `-` 
 option with `crossplane beta validate` to pipe the output from 
-`crossplane beta render` to the input of `crossplane beta validate`. 
+`crossplane render` to the input of `crossplane beta validate`. 
 
 ```shell {copy-lines="1"}
-crossplane beta render xr.yaml composition.yaml function.yaml --include-full-xr | crossplane beta validate schemas.yaml -
+crossplane render xr.yaml composition.yaml function.yaml --include-full-xr | crossplane beta validate schemas.yaml -
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Required value
 [✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
@@ -1015,7 +1057,7 @@ Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
 
 #### Validate against a directory of schemas
 
-The `crossplane beta render` command can validate a directory of YAML files. 
+The `crossplane render` command can validate a directory of YAML files. 
 
 The command only processes `.yaml` and `.yml` files, while ignoring all other
 file types.
@@ -1050,52 +1092,5 @@ crossplane beta validate schema resources.yaml
 [✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
-
-### beta xpkg init
-
-The `crossplane beta xpkg init` command populates the current directory with 
-files to build a package. 
-
-Provide a name to use for the package and the package template to start from 
-with the command  
-`crossplane beta xpkg init <name> <template>`
-
-The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
-
-The `<template>` value may be one of four well known templates:
-* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../concepts/packages">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
-* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
-* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../concepts/composition-functions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
-* `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
-* `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
-
-Instead of a well known template the `<template>` value can be a git repository 
-URL.
-
-#### NOTES.txt
-
-If the template repository contains a `NOTES.txt` file in its root directory,
-the `crossplane beta xpkg init` command prints the contents of the file to the
-terminal after populating the directory with the template files. This can be
-useful for providing information about the template.
-
-#### init.sh
-
-If the template repository contains an `init.sh` file in its root directory, the
-`crossplane beta xpkg init` command starts a dialog after populating the
-directory with the template files. The dialog prompts the user if they want
-to view or run the script. Use the initialization script to automatically
-personalize the template.
-
-#### Flags
-{{< table "table table-sm table-striped">}}
-| Short flag   | Long flag               | Description                                                                                      |
-| ------------ | ----------------------- | ------------------------------                                                                   |
-| `-b`         | `--ref-name`            | The branch or tag to clone from the template repository.                                         |
-| `-d`         | `--directory`           | The directory to create and load the template files into. Uses the current directory by default. |
-| `-r`         | `--run-init-script`     | Run the init.sh script without prompting, if it exists.                                                        |
-<!-- vale Crossplane.Spelling = YES -->
-{{< /table >}}
-
 
 

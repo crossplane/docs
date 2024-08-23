@@ -308,10 +308,9 @@ with a template describing what infrastructure to deploy. Crossplane calls this
 template a _Composition_.
 
 The {{<hover label="comp" line="3">}}Composition{{</hover>}} defines all the 
-cloud resources to deploy.
-Each entry in the template
-is a full resource definitions, defining all the resource settings and metadata
-like labels and annotations. 
+cloud resources to deploy. Each entry in the template is a full resource
+definition, defining all the resource settings and metadata like labels and
+annotations. 
 
 This template creates an AWS 
 {{<hover label="comp" line="13">}}S3{{</hover>}}
@@ -319,12 +318,23 @@ This template creates an AWS
 {{<hover label="comp" line="33">}}DynamoDB{{</hover>}}
 {{<hover label="comp" line="34">}}Table{{</hover>}}.
 
-Crossplane uses {{<hover label="comp" line="19">}}patches{{</hover>}} to apply
-the user's input to the resource template.  
 This Composition takes the user's 
 {{<hover label="comp" line="21">}}location{{</hover>}} input and uses it as the 
 {{<hover label="comp" line="16">}}region{{</hover>}} used in the individual 
 resource.
+
+{{<hint "important" >}}
+This Composition uses an array of resource templates. You can patch each
+template with data copied from the custom API. Crossplane calls this a _Patch
+and Transform_ Composition.
+
+You don't have to use Patch and Transform. Crossplane supports a variety of
+alternatives, including Go Templating and CUE. You can also write a function in
+Go or Python to template your resources.
+
+Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
+more information on configuring Compositions and all the available options.
+{{< /hint >}}
 
 Apply this Composition to your cluster. 
 
@@ -335,51 +345,59 @@ kind: Composition
 metadata:
   name: dynamo-with-bucket
 spec:
-  resources:
-    - name: s3Bucket
-      base:
-        apiVersion: s3.aws.upbound.io/v1beta1
-        kind: Bucket
-        metadata:
-          name: crossplane-quickstart-bucket
-        spec:
-          forProvider:
-            region: us-east-2
-          providerConfigRef:
-            name: default
-      patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.location"
-          toFieldPath: "spec.forProvider.region"
-          transforms:
-            - type: map
-              map: 
-                EU: "eu-north-1"
-                US: "us-east-2"
-    - name: dynamoDB
-      base:
-        apiVersion: dynamodb.aws.upbound.io/v1beta1
-        kind: Table
-        metadata:
-          name: crossplane-quickstart-database
-        spec:
-          forProvider:
-            region: "us-east-2"
-            writeCapacity: 1
-            readCapacity: 1
-            attribute:
-              - name: S3ID
-                type: S
-            hashKey: S3ID
-      patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.location"
-          toFieldPath: "spec.forProvider.region"
-          transforms:
-            - type: map
-              map: 
-                EU: "eu-north-1"
-                US: "us-east-2"
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: s3Bucket
+          base:
+            apiVersion: s3.aws.upbound.io/v1beta1
+            kind: Bucket
+            metadata:
+              name: crossplane-quickstart-bucket
+            spec:
+              forProvider:
+                region: us-east-2
+              providerConfigRef:
+                name: default
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.region"
+              transforms:
+                - type: map
+                  map: 
+                    EU: "eu-north-1"
+                    US: "us-east-2"
+        - name: dynamoDB
+          base:
+            apiVersion: dynamodb.aws.upbound.io/v1beta1
+            kind: Table
+            metadata:
+              name: crossplane-quickstart-database
+            spec:
+              forProvider:
+                region: "us-east-2"
+                writeCapacity: 1
+                readCapacity: 1
+                attribute:
+                  - name: S3ID
+                    type: S
+                hashKey: S3ID
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.region"
+              transforms:
+                - type: map
+                  map: 
+                    EU: "eu-north-1"
+                    US: "us-east-2"
   compositeTypeRef:
     apiVersion: database.example.com/v1alpha1
     kind: NoSQL
@@ -389,14 +407,32 @@ EOF
 The {{<hover label="comp" line="52">}}compositeTypeRef{{</hover >}} defines
 which custom APIs can use this template to create resources.
 
+A Composition uses a pipeline of _composition functions_ to define the cloud
+resources to deploy. This template uses
+{{<hover label="comp" line="10">}}function-patch-and-transform{{</hover>}}.
+You must install the function before you can use it in a Composition.
+
+Apply this Function to install `function-patch-and-transform`:
+
+```yaml {label="install"}
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+EOF
+```
+
 {{<hint "tip" >}}
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 
 Read the 
-[Patch and Transform documentation]({{<ref "../concepts/patch-and-transform">}}) 
-for more information on how Crossplane uses patches to map user inputs to
-Composition resource templates.
+[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}}) 
+for more information on how it uses patches to map user inputs to Composition
+resource templates.
 {{< /hint >}}
 
 View the Composition with `kubectl get composition`
