@@ -39,7 +39,7 @@ The `crossplane render` command previews the output of a
 any [composition functions]({{<ref "../concepts/compositions">}}).
 
 {{< hint "important" >}}
-The `crossplane render` requires you to use composition functions.
+The `crossplane render` command requires you to use composition functions.
 {{< /hint >}}
 
 The `crossplane render` command connects to the locally running Docker 
@@ -101,12 +101,12 @@ spec:
 Provide artificial managed resource data to the function.
 |
 | `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
-|              | `--timeout=`                          | Amount of time to wait for a function to finish.                    |
+|              | `--timeout=`                          | Amount of time to wait for a function to finish. (Default 1 minute)       |
 {{< /table >}}
 
 The `crossplane render` command relies on standard 
 [Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables) 
-to connect to the local Docker engine and run composition functions. 
+to connect to the local Docker Engine and run composition functions. 
 
 
 ### Provide function context
