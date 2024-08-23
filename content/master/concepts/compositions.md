@@ -107,9 +107,9 @@ but the feature is no longer maintained. Crossplane doesn't accept new
 `Resources` features, and only accepts security bug fixes.
 <!-- vale write-good.Passive = YES -->
 
-See the [CLI documentation]({{<ref "../cli">}}) to learn how to use the
-`crossplane beta convert` command to convert a legacy `Resources` Composition to
-the `Pipeline` mode. 
+See the [CLI documentation]({{<ref "../cli/command-reference#beta-convert">}})
+to learn how to use the `crossplane beta convert` command to convert a legacy
+`Resources` Composition to the `Pipeline` mode. 
 {{< /hint >}}
 
 
