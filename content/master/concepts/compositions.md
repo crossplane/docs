@@ -83,7 +83,9 @@ resource (XR).
 {{<hint "tip" >}}
 The Crossplane community has built lots of functions that let you template
 Crossplane resources using
-[CUE](https://github.com/crossplane-contrib/function-cue), Helm-like
+[CUE](https://github.com/crossplane-contrib/function-cue), 
+[KCL](https://github.com/crossplane-contrib/function-kcl), 
+Helm-like
 [Go templates](https://github.com/crossplane-contrib/function-go-templating) or
 legacy Crossplane
 [Patch and Transforms]({{<ref "../guides/function-patch-and-transform">}}).

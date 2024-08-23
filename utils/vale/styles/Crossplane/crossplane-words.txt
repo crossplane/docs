@@ -21,6 +21,7 @@ crossplane-edit
 crossplane-view
 crossplane.yaml
 Crossplane's
+CUE
 definition.yaml
 deletionPolicy
 DeploymentRuntimeConfig
@@ -34,8 +35,10 @@ FromCompositeFieldPath
 FromEnvironmentFieldPath
 fromFieldPath
 HealthyPackageRevision
+Helm-like
 InactivePackageRevision
 initProvider
+KCL
 LateInitialize
 managementPolicies
 MR
