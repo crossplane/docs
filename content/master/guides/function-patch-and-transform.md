@@ -13,6 +13,16 @@ A [patch](#create-a-patch) copies a value from one resource and _patches_ it
 onto another resource. A [transform](#transform-a-patch) modifies the values
 before applying the patch.
 
+{{<hint "tip" >}}
+All Compositions used Patch and Transform before Crossplane added
+support for composition functions.
+
+Function Patch and Transform works like legacy `mode: Resources` Compositions,
+which Crossplane deprecated in v1.17. The difference is that it uses a
+`mode: Pipeline` Composition and a function instead of a `mode: Resources`
+Composition.
+{{< /hint >}}
+
 Here's an example Composition that uses Function Patch and Transform. When you
 create an `AcmeBucket` XR that uses this Composition, Crossplane uses the
 template to create the Amazon S3 `Bucket` MR.
