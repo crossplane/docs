@@ -133,27 +133,16 @@ kind: Composition
 metadata:
   name: my-composition
 spec:
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: database
-        base:
-          # Removed for brevity
-        patches:
-        - fromFieldPath: metadata.annotations
-          toFieldPath: metadata.annotations
+  resources:
+    - name: database
+      base:
+        # Removed for brevity
+      patches:
+      - fromFieldPath: metadata.annotations
+        toFieldPath: metadata.annotations
 ```
 
-For more information on using `function-patch-and-transform` to patch
-resources refer to the
-[Function Patch and Transform]({{<ref "../guides/function-patch-and-transform">}})
-documentation. 
+For more information on patching resources refer to the [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation. 
 
 ### Composition selection
 
@@ -163,7 +152,7 @@ Select a specific Composition for a composite resource to use with
 {{<hint "important">}}
 The selected Composition must allow the composite resource to use it with a
 `compositeTypeRef`. Read more about the `compositeTypeRef` field in the
-[Enable Composite Resources]({{<ref "./compositions#enable-composite-resources">}})
+[Enabling Composite Resources]({{<ref "./compositions#enabling-composite-resources">}})
 section of the Composition documentation. 
 {{< /hint >}}
 

@@ -58,7 +58,7 @@ feature flag together with composition functions.
 
 When you use composition functions, Crossplane uses server side apply to sync
 composite resources with composed resources. Read more about this in the
-[composition functions documentation]({{<ref "./compositions#how-composition-functions-work">}}).
+[composition functions documentation]({{<ref "./composition-functions#how-composition-functions-work">}}).
 
 ```mermaid
 graph LR

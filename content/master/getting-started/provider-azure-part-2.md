@@ -295,23 +295,12 @@ This template creates an Azure
 {{<hover label="comp" line="90">}}VirtualNetwork{{</hover>}} and
 {{<hover label="comp" line="110">}}ResourceGroup{{</hover>}}.
 
+Crossplane uses {{<hover label="comp" line="34">}}patches{{</hover>}} to apply
+the user's input to the resource template.  
 This Composition takes the user's 
 {{<hover label="comp" line="36">}}location{{</hover>}} input and uses it as the 
 {{<hover label="comp" line="37">}}location{{</hover>}} used in the individual 
 resource.
-
-{{<hint "important" >}}
-This Composition uses an array of resource templates. You can patch each
-template with data copied from the custom API. Crossplane calls this a _Patch
-and Transform_ Composition.
-
-You don't have to use Patch and Transform. Crossplane supports a variety of
-alternatives, including Go Templating and CUE. You can also write a function in
-Go or Python to template your resources.
-
-Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
-more information on configuring Compositions and all the available options.
-{{< /hint >}}
 
 Apply this Composition to your cluster. 
 
@@ -322,130 +311,122 @@ kind: Composition
 metadata:
   name: crossplane-quickstart-vm-with-network
 spec:
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-        - name: quickstart-vm
-          base:
-            apiVersion: compute.azure.upbound.io/v1beta1
-            kind: LinuxVirtualMachine
-            spec:
-              forProvider:
-                adminUsername: adminuser
-                adminSshKey:
-                  - publicKey: ssh-rsa
-                      AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN
-                      example@docs.crossplane.io
-                    username: adminuser
-                location: "Central US"
-                osDisk:
-                  - caching: ReadWrite
-                    storageAccountType: Standard_LRS
-                resourceGroupNameSelector:
+  resources:
+    - name: quickstart-vm
+      base:
+        apiVersion: compute.azure.upbound.io/v1beta1
+        kind: LinuxVirtualMachine
+        spec:
+          forProvider:
+            adminUsername: adminuser
+            adminSshKey:
+              - publicKey: ssh-rsa
+                  AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN
+                  example@docs.crossplane.io
+                username: adminuser
+            location: "Central US"
+            osDisk:
+              - caching: ReadWrite
+                storageAccountType: Standard_LRS
+            resourceGroupNameSelector:
+              matchControllerRef: true
+            size: Standard_B1ms
+            sourceImageReference:
+              - offer: debian-11
+                publisher: Debian
+                sku: 11-backports-gen2
+                version: latest
+            networkInterfaceIdsSelector:
+              matchControllerRef: true
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "Sweden Central"
+                US: "Central US"
+    - name: quickstart-nic
+      base:
+        apiVersion: network.azure.upbound.io/v1beta1
+        kind: NetworkInterface
+        spec:
+          forProvider:
+            ipConfiguration:
+              - name: crossplane-quickstart-configuration
+                privateIpAddressAllocation: Dynamic
+                subnetIdSelector:
                   matchControllerRef: true
-                size: Standard_B1ms
-                sourceImageReference:
-                  - offer: debian-11
-                    publisher: Debian
-                    sku: 11-backports-gen2
-                    version: latest
-                networkInterfaceIdsSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map: 
-                    EU: "Sweden Central"
-                    US: "Central US"
-        - name: quickstart-nic
-          base:
-            apiVersion: network.azure.upbound.io/v1beta1
-            kind: NetworkInterface
-            spec:
-              forProvider:
-                ipConfiguration:
-                  - name: crossplane-quickstart-configuration
-                    privateIpAddressAllocation: Dynamic
-                    subnetIdSelector:
-                      matchControllerRef: true
-                location: "Central US"
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map: 
-                    EU: "Sweden Central"
-                    US: "Central US"            
-        - name: quickstart-subnet
-          base:
-            apiVersion: network.azure.upbound.io/v1beta1
-            kind: Subnet
-            spec:
-              forProvider:
-                addressPrefixes:
-                  - 10.0.1.0/24
-                virtualNetworkNameSelector:
-                  matchControllerRef: true
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map: 
-                    EU: "Sweden Central"
-                    US: "Central US"
-        - name: quickstart-network
-          base:
-            apiVersion: network.azure.upbound.io/v1beta1
-            kind: VirtualNetwork
-            spec:
-              forProvider:
-                addressSpace:
-                  - 10.0.0.0/16
-                location: "Central US"
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map: 
-                    EU: "Sweden Central"
-                    US: "Central US"
-        - name: crossplane-resourcegroup
-          base:
-            apiVersion: azure.upbound.io/v1beta1
-            kind: ResourceGroup
-            spec:
-              forProvider:
-                location: Central US
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map: 
-                    EU: "Sweden Central"
-                    US: "Central US"
+            location: "Central US"
+            resourceGroupNameSelector:
+              matchControllerRef: true
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "Sweden Central"
+                US: "Central US"            
+    - name: quickstart-subnet
+      base:
+        apiVersion: network.azure.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            addressPrefixes:
+              - 10.0.1.0/24
+            virtualNetworkNameSelector:
+              matchControllerRef: true
+            resourceGroupNameSelector:
+              matchControllerRef: true
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "Sweden Central"
+                US: "Central US"
+    - name: quickstart-network
+      base:
+        apiVersion: network.azure.upbound.io/v1beta1
+        kind: VirtualNetwork
+        spec:
+          forProvider:
+            addressSpace:
+              - 10.0.0.0/16
+            location: "Central US"
+            resourceGroupNameSelector:
+              matchControllerRef: true
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "Sweden Central"
+                US: "Central US"
+    - name: crossplane-resourcegroup
+      base:
+        apiVersion: azure.upbound.io/v1beta1
+        kind: ResourceGroup
+        spec:
+          forProvider:
+            location: Central US
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.location"
+          toFieldPath: "spec.forProvider.location"
+          transforms:
+            - type: map
+              map: 
+                EU: "Sweden Central"
+                US: "Central US"
   compositeTypeRef:
     apiVersion: compute.example.com/v1alpha1
     kind: VirtualMachine
@@ -455,32 +436,14 @@ EOF
 The {{<hover label="comp" line="52">}}compositeTypeRef{{</hover >}} defines
 which custom APIs can use this template to create resources.
 
-A Composition uses a pipeline of _composition functions_ to define the cloud
-resources to deploy. This template uses
-{{<hover label="comp" line="10">}}function-patch-and-transform{{</hover>}}.
-You must install the function before you can use it in a Composition.
-
-Apply this Function to install `function-patch-and-transform`:
-
-```yaml {label="install"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-patch-and-transform
-spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
-EOF
-```
-
 {{<hint "tip" >}}
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 
 Read the 
-[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}}) 
-for more information on how it uses patches to map user inputs to Composition
-resource templates.
+[Patch and Transform documentation]({{<ref "../concepts/patch-and-transform">}}) 
+for more information on how Crossplane uses patches to map user inputs to
+Composition resource templates.
 {{< /hint >}}
 
 View the Composition with `kubectl get composition`

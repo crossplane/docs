@@ -155,7 +155,6 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `rbacManager.replicas` | The number of RBAC Manager pod `replicas` to deploy. | `1` |
 | `rbacManager.skipAggregatedClusterRoles` | Don't install aggregated Crossplane ClusterRoles. | `false` |
 | `rbacManager.tolerations` | Add `tolerations` to the RBAC Manager pod deployment. | `[]` |
-| `rbacManager.topologySpreadConstraints` | Add `topologySpreadConstraints` to the RBAC Manager pod deployment. | `[]` |
 | `registryCaBundleConfig.key` | The ConfigMap key containing a custom CA bundle to enable fetching packages from registries with unknown or untrusted certificates. | `""` |
 | `registryCaBundleConfig.name` | The ConfigMap name containing a custom CA bundle to enable fetching packages from registries with unknown or untrusted certificates. | `""` |
 | `replicas` | The number of Crossplane pod `replicas` to deploy. | `1` |
@@ -177,7 +176,6 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `securityContextRBACManager.runAsUser` | The user ID used by the RBAC Manager pod. | `65532` |
 | `serviceAccount.customAnnotations` | Add custom `annotations` to the Crossplane ServiceAccount. | `{}` |
 | `tolerations` | Add `tolerations` to the Crossplane pod deployment. | `[]` |
-| `topologySpreadConstraints` | Add `topologySpreadConstraints` to the Crossplane pod deployment. | `[]` |
 | `webhooks.enabled` | Enable webhooks for Crossplane and installed Provider packages. | `true` |
 {{< /table >}}
 {{< /expand >}}

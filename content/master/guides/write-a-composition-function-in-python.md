@@ -1,5 +1,8 @@
 ---
 title: Write a Composition Function in Python
+state: beta
+alphaVersion: "1.11"
+betaVersion: "1.14"
 weight: 81
 description: "Composition functions allow you to template resources using Python"
 ---
@@ -8,7 +11,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts]({{<ref "../concepts/compositions" >}})
+[concepts]({{<ref "../concepts/composition-functions" >}})
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -19,7 +22,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work]({{<ref "../concepts/compositions#how-composition-functions-work" >}})
+[how composition functions work]({{<ref "../concepts/composition-functions#how-composition-functions-work" >}})
 before following this guide.
 {{< /hint >}}
 
@@ -77,17 +80,17 @@ build or test a composition function.
 
 ## Initialize the function from a template
 
-Use the `crossplane xpkg init` command to initialize a new function. When
+Use the `crossplane beta xpkg init` command to initialize a new function. When
 you run this command it initializes your function using
 [a GitHub repository](https://github.com/crossplane/function-template-python)
 as a template.
 
 ```shell {copy-lines=1}
-crossplane xpkg init function-xbuckets https://github.com/crossplane/function-template-python -d function-xbuckets
+crossplane beta xpkg init function-xbuckets https://github.com/crossplane/function-template-python -d function-xbuckets
 Initialized package "function-xbuckets" in directory "/home/negz/control/negz/function-xbuckets" from https://github.com/crossplane/function-template-python/tree/bfed6923ab4c8e7adeed70f41138645fc7d38111 (main)
 ```
 
-The `crossplane xpkg init` command creates a directory named
+The `crossplane beta init xpkg` command creates a directory named
 `function-xbuckets`. When you run the command the new directory should look like
 this:
 
@@ -115,7 +118,7 @@ know about some other files in the template:
 <!--
 This tip talks about future plans for Crossplane.
 -->
-In v1.14 of the Crossplane CLI `crossplane xpkg init` just clones a
+In v1.14 of the Crossplane CLI `crossplane beta xpkg init` just clones a
 template GitHub repository. A future CLI release will automate tasks like
 replacing the template name with the new function's name. See Crossplane issue
 [#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
@@ -129,7 +132,7 @@ The `package/input` directory defines the OpenAPI schema for the a function's
 input. The function in this guide doesn't accept an input. Delete the
 `package/input` directory.   
 
-The [composition functions]({{<ref "../concepts/compositions" >}})
+The [composition functions]({{<ref "../concepts/composition-functions" >}})
 documentation explains composition function inputs.
 
 {{<hint "tip">}}
@@ -148,7 +151,7 @@ method in `function/fn.py`. When you first open the file it contains a "hello
 world" function.
 
 ```python {label="hello-world"}
-async def RunFunction(self, req: fnv1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1.RunFunctionResponse:
+async def RunFunction(self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1beta1.RunFunctionResponse:
     log = self.log.bind(tag=req.meta.tag)
     log.info("Running function")
 
@@ -175,7 +178,7 @@ The function tells Crossplane what resources it should compose by returning a
 Edit the `RunFunction` method to replace it with this code.
 
 ```python {hl_lines="7-28"}
-async def RunFunction(self, req: fnv1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1.RunFunctionResponse:
+async def RunFunction(self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1beta1.RunFunctionResponse:
     log = self.log.bind(tag=req.meta.tag)
     log.info("Running function")
 
@@ -216,11 +219,11 @@ commentary explaining the function's logic.
 
 import grpc
 from crossplane.function import logging, response
-from crossplane.function.proto.v1 import run_function_pb2 as fnv1
-from crossplane.function.proto.v1 import run_function_pb2_grpc as grpcv1
+from crossplane.function.proto.v1beta1 import run_function_pb2 as fnv1beta1
+from crossplane.function.proto.v1beta1 import run_function_pb2_grpc as grpcv1beta1
 
 
-class FunctionRunner(grpcv1.FunctionRunnerService):
+class FunctionRunner(grpcv1beta1.FunctionRunnerService):
     """A FunctionRunner handles gRPC RunFunctionRequests."""
 
     def __init__(self):
@@ -228,8 +231,8 @@ class FunctionRunner(grpcv1.FunctionRunnerService):
         self.log = logging.get_logger()
 
     async def RunFunction(
-        self, req: fnv1.RunFunctionRequest, _: grpc.aio.ServicerContext
-    ) -> fnv1.RunFunctionResponse:
+        self, req: fnv1beta1.RunFunctionRequest, _: grpc.aio.ServicerContext
+    ) -> fnv1beta1.RunFunctionResponse:
         """Run the function."""
         # Create a logger for this request.
         log = self.log.bind(tag=req.meta.tag)
@@ -254,7 +257,7 @@ class FunctionRunner(grpcv1.FunctionRunnerService):
             # the key and mutate its value as if it did exist.
             #
             # The below code works because accessing the xbuckets-{name} key
-            # automatically creates a new, empty fnv1.Resource message. The
+            # automatically creates a new, empty fnv1beta1.Resource message. The
             # Resource message has a resource field containing an empty Struct
             # object that can be populated from a dictionary by calling update.
             #
@@ -305,7 +308,7 @@ Read [the Python Function SDK documentation](https://crossplane.github.io/functi
 The Python SDK automatically generates the `RunFunctionRequest` and
 `RunFunctionResponse` Python objects from a
 [Protocol Buffers](https://protobuf.dev) schema. You can see the schema in the
-[Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1).
+[Buf Schema Registry](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1beta1).
 
 The fields of the generated Python objects behave similarly to builtin Python
 types like dictionaries and lists. Be aware that there are some differences.
@@ -318,7 +321,7 @@ Instead of adding a new resource like this:
 
 ```python
 resource = {"apiVersion": "example.org/v1", "kind": "Composed", ...}
-rsp.desired.resources["new-resource"] = fnv1.Resource(resource=resource)
+rsp.desired.resources["new-resource"] = fnv1beta1.Resource(resource=resource)
 ```
 
 Pretend it already exists and mutate it, like this:
@@ -335,8 +338,8 @@ for further details.
 
 ## Test the function end-to-end
 
-Test your function by adding unit tests, and by using the `crossplane render`
-command.
+Test your function by adding unit tests, and by using the `crossplane beta
+render` command.
 
 When you initialize a function from the
 template it adds some unit tests to `tests/test_fn.py`. These tests use the
@@ -352,7 +355,7 @@ import dataclasses
 import unittest
 
 from crossplane.function import logging, resource
-from crossplane.function.proto.v1 import run_function_pb2 as fnv1
+from crossplane.function.proto.v1beta1 import run_function_pb2 as fnv1beta1
 from google.protobuf import duration_pb2 as durationpb
 from google.protobuf import json_format
 from google.protobuf import struct_pb2 as structpb
@@ -369,15 +372,15 @@ class TestFunctionRunner(unittest.IsolatedAsyncioTestCase):
         @dataclasses.dataclass
         class TestCase:
             reason: str
-            req: fnv1.RunFunctionRequest
-            want: fnv1.RunFunctionResponse
+            req: fnv1beta1.RunFunctionRequest
+            want: fnv1beta1.RunFunctionResponse
 
         cases = [
             TestCase(
                 reason="The function should compose two S3 buckets.",
-                req=fnv1.RunFunctionRequest(
-                    observed=fnv1.State(
-                        composite=fnv1.Resource(
+                req=fnv1beta1.RunFunctionRequest(
+                    observed=fnv1beta1.State(
+                        composite=fnv1beta1.Resource(
                             resource=resource.dict_to_struct(
                                 {
                                     "apiVersion": "example.crossplane.io/v1alpha1",
@@ -392,11 +395,11 @@ class TestFunctionRunner(unittest.IsolatedAsyncioTestCase):
                         )
                     )
                 ),
-                want=fnv1.RunFunctionResponse(
-                    meta=fnv1.ResponseMeta(ttl=durationpb.Duration(seconds=60)),
-                    desired=fnv1.State(
+                want=fnv1beta1.RunFunctionResponse(
+                    meta=fnv1beta1.ResponseMeta(ttl=durationpb.Duration(seconds=60)),
+                    desired=fnv1beta1.State(
                         resources={
-                            "xbuckets-test-bucket-a": fnv1.Resource(
+                            "xbuckets-test-bucket-a": fnv1beta1.Resource(
                                 resource=resource.dict_to_struct(
                                     {
                                         "apiVersion": "s3.aws.upbound.io/v1beta1",
@@ -412,7 +415,7 @@ class TestFunctionRunner(unittest.IsolatedAsyncioTestCase):
                                     }
                                 )
                             ),
-                            "xbuckets-test-bucket-b": fnv1.Resource(
+                            "xbuckets-test-bucket-b": fnv1beta1.Resource(
                                 resource=resource.dict_to_struct(
                                     {
                                         "apiVersion": "s3.aws.upbound.io/v1beta1",
@@ -479,7 +482,7 @@ Expand the following block to see example files.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
 
-You can recreate the output below using by running `crossplane render` with
+You can recreate the output below using by running `crossplane beta render` with
 these files.
 
 The `xr.yaml` file contains the composite resource to render:
@@ -524,7 +527,7 @@ The `functions.yaml` file contains the Functions the Composition references in
 its pipeline steps:
 
 ```yaml
-apiVersion: pkg.crossplane.io/v1
+apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
 metadata:
   name: function-xbuckets
@@ -539,12 +542,12 @@ spec:
 
 The Function in `functions.yaml` uses the
 {{<hover label="development" line="6">}}Development{{</hover>}}
-runtime. This tells `crossplane render` that your function is running
+runtime. This tells `crossplane beta render` that your function is running
 locally. It connects to your locally running function instead of using Docker to
 pull and run the function.
 
 ```yaml {label="development"}
-apiVersion: pkg.crossplane.io/v1
+apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
 metadata:
   name: function-xbuckets
@@ -563,10 +566,10 @@ hatch run development
 Only use it during testing and development.
 {{</hint>}}
 
-In a separate terminal, run `crossplane render`. 
+In a separate terminal, run `crossplane beta render`. 
 
 ```shell
-crossplane render xr.yaml composition.yaml functions.yaml
+crossplane beta render xr.yaml composition.yaml functions.yaml
 ```
 
 This command calls your function. In the terminal where your function is running
@@ -578,7 +581,7 @@ hatch run development
 2024-01-11T22:12:58.153792Z [info     ] Added desired buckets          count=3 filename=fn.py lineno=68 region=us-east-2 tag=
 ```
 
-The `crossplane render` command prints the desired resources the function
+The `crossplane beta render` command prints the desired resources the function
 returns.
 
 ```yaml
@@ -636,7 +639,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions]({{< ref "../concepts/compositions#test-a-composition" >}}).
+[testing composition functions]({{< ref "../concepts/composition-functions#test-a-composition-that-uses-functions" >}}).
 {{</hint>}}
 
 ## Build and push the function to a package registry
@@ -653,7 +656,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation]({{<ref "../concepts/compositions" >}}).
+[composition functions documentation]({{<ref "../concepts/composition-functions" >}}).
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.

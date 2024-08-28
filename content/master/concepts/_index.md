@@ -55,6 +55,16 @@ building and managing external resources through Kubernetes.
   Composite Resource. Platform users create Claims in their unique namespace,
   isolating their resources from other teams in other namespaces. 
 
+* [**Composition Functions**]({{<ref "./composition-functions">}}) are custom
+  programs, written your programming language of choice, to apply logic and
+  loops before or after Crossplane creates resources. 
+
+* [**Patches and Transforms**]({{<ref "./patch-and-transform">}}) allow platform
+  engineers to use user inputs to their custom API and change how Crossplane
+  creates resources. Patches and transforms allow for flexible and
+  abstract inputs like `big` or `encrypted` to have specific meanings when
+  creating the actual managed resources.
+
 * [**EnvironmentConfigs**]({{<ref "./environment-configs">}}) are an in-memory
   data store, like a Kubernetes ConfigMap. EnvironmentConfigs are useful for
   custom resource mapping or storing and retrieving data across Claims and

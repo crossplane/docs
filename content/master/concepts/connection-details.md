@@ -9,8 +9,8 @@ Using connection details in Crossplane requires the following components:
 * Defining the `writeConnectionSecretsToNamespace` value in the [Composition]({{<ref "/master/concepts/compositions#composite-resource-combined-secret">}}).
 * Define the `writeConnectionSecretToRef` name and namespace for each resource in the
   [Composition]({{<ref "/master/concepts/compositions#composed-resource-secrets">}}).
-* Define the list of secret keys produced by each composed resource with in the
-  [Composition]({{<ref "/master/concepts/compositions">}}).
+* Define the list of secret keys produced by each composed resource with `connectionDetails` in the
+  [Composition]({{<ref "./compositions#define-secret-keys">}}).
 * Optionally, define the `connectionSecretKeys` in a 
   [CompositeResourceDefinition]({{<ref "/master/concepts/composite-resource-definitions#manage-connection-secrets">}}).
 
@@ -63,96 +63,74 @@ spec:
   compositeTypeRef:
     apiVersion: example.org/v1alpha1
     kind: XSecretTest
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              userSelector:
-                matchControllerRef: true
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1
-        connectionDetails:
-        - name: user
-          type: FromConnectionSecretKey
+  resources:
+    - name: key
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: AccessKey
+        spec:
+          forProvider:
+            userSelector:
+              matchControllerRef: true
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key1
+      connectionDetails:
+        - fromConnectionSecretKey: username
+        - fromConnectionSecretKey: password
+        - fromConnectionSecretKey: attribute.secret
+        - fromConnectionSecretKey: attribute.ses_smtp_password_v4
+      patches:
+        - fromFieldPath: "metadata.uid"
+          toFieldPath: "spec.writeConnectionSecretToRef.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-secret1"
+    - name: user
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: User
+        spec:
+          forProvider: {}
+    - name: user2
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: User
+        metadata:
+          labels:
+            docs.crossplane.io: user
+        spec:
+          forProvider: {}
+    - name: key2
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: AccessKey
+        spec:
+          forProvider:
+            userSelector:
+              matchLabels:
+                docs.crossplane.io: user
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key2
+      connectionDetails:
+        - name: key2-user
           fromConnectionSecretKey: username
-        - name: password
-          type: FromConnectionSecretKey
+        - name: key2-password
           fromConnectionSecretKey: password
-        - name: key
-          type: FromConnectionSecretKey
+        - name: key2-secret
           fromConnectionSecretKey: attribute.secret
-        - name: smtp
-          type: FromConnectionSecretKey
+        - name: key2-smtp
           fromConnectionSecretKey: attribute.ses_smtp_password_v4
-        patches:
-          - fromFieldPath: "metadata.uid"
-            toFieldPath: "spec.writeConnectionSecretToRef.name"
-            transforms:
-              - type: string
-                string:
-                  type: Format
-                  fmt: "%s-secret1"
-      - name: user
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: User
-          spec:
-            forProvider: {}
-      - name: user2
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: User
-          metadata:
-            labels:
-              docs.crossplane.io: user
-          spec:
-            forProvider: {}
-      - name: key2
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              userSelector:
-                matchLabels:
-                  docs.crossplane.io: user
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key2
-        connectionDetails:
-          - name: key2-user
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: username
-          - name: key2-password
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: password
-          - name: key2-secret
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: attribute.secret
-          - name: key2-smtp
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: attribute.ses_smtp_password_v4
-        patches:
-          - fromFieldPath: "metadata.uid"
-            toFieldPath: "spec.writeConnectionSecretToRef.name"
-            transforms:
-              - type: string
-                string:
-                  type: Format
-                  fmt: "%s-secret2"
-``  `
+      patches:
+        - fromFieldPath: "metadata.uid"
+          toFieldPath: "spec.writeConnectionSecretToRef.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-secret2"
+```
 {{</expand >}}
 
 {{<expand "Reference CompositeResourceDefinition" >}}
@@ -306,36 +284,28 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 spec:
   writeConnectionSecretsToNamespace: other-namespace
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key1
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1-secret
-      - name: key2
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key2-secret
-      # Removed for brevity
+  resources:
+    - name: key1
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: AccessKey
+        spec:
+          forProvider:
+            # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key1-secret
+    - name: key2
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: AccessKey
+        spec:
+          forProvider:
+            # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key2-secret
+    # Removed for brevity
 ```
 
 After applying a Claim, view the Kubernetes secrets to see three secret objects
@@ -394,39 +364,23 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 spec:
   writeConnectionSecretsToNamespace: other-namespace
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1
-        connectionDetails:
-          - name: user
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: username
-          - name: password
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: password
-          - name: key
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: attribute.secret
-          - name: smtp
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: attribute.ses_smtp_password_v4
-      # Removed for brevity
+  resources:
+    - name: key
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: AccessKey
+        spec:
+          forProvider:
+            # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key1
+      connectionDetails:
+        - fromConnectionSecretKey: username
+        - fromConnectionSecretKey: password
+        - fromConnectionSecretKey: attribute.secret
+        - fromConnectionSecretKey: attribute.ses_smtp_password_v4
+    # Removed for brevity
 ```
 
 After applying a Claim the composite resource secret object contains the list of
@@ -464,39 +418,28 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 spec:
   writeConnectionSecretsToNamespace: other-namespace
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key
-        base:
-          kind: AccessKey
-          spec:
-            # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1
-        connectionDetails:
-          - name: user
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: username
-      - name: key2
-        base:
-          kind: AccessKey
-          spec:
-            # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key2
-        connectionDetails:
-          - name: key2-user
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: username
+  resources:
+    - name: key
+      base:
+        kind: AccessKey
+        spec:
+          # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key1
+      connectionDetails:
+        - fromConnectionSecretKey: username
+    - name: key2
+      base:
+        kind: AccessKey
+        spec:
+          # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key2
+      connectionDetails:
+        - name: key2-user
+          fromConnectionSecretKey: username
 ```
 
 The secret object contains both keys, 
@@ -605,39 +548,28 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 spec:
   writeConnectionSecretsToNamespace: other-namespace
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key
-        base:
-          kind: AccessKey
-          spec:
-            # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1
-        connectionDetails:
-          - name: user
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: username
-      - name: key2
-        base:
-          kind: AccessKey
-          spec:
-            # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key2
-        connectionDetails:
-          - name: key2-user
-            type: FromConnectionSecretKey
-            fromConnectionSecretKey: username
+  resources:
+    - name: key
+      base:
+        kind: AccessKey
+        spec:
+          # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key1
+      connectionDetails:
+        - fromConnectionSecretKey: username
+    - name: key2
+      base:
+        kind: AccessKey
+        spec:
+          # Removed for brevity
+          writeConnectionSecretToRef:
+            namespace: docs
+            name: key2
+      connectionDetails:
+        - name: key2-user
+          fromConnectionSecretKey: username
 ```
 
 If a Claim uses a secret, it's stored in the same namespace as the Claim with

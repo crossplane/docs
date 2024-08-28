@@ -14,7 +14,7 @@ what managed resources Crossplane will create in response. Let's say for example
 that you define a `PlatformDB` XR, which represents your organisation's common
 database configuration of an Azure MySQL Server and a few firewall rules. The
 `Composition` contains the 'base' configuration for the MySQL server and the
-firewall rules that are extended by the configuration for the `PlatformDB`.
+firewall rules that is extended by the configuration for the `PlatformDB`.
 
 There is a one-to-many relationship between a `Composition` and the XRs that use
 it. You might define a `Composition` named `big-platform-db` that is used by ten
@@ -25,7 +25,7 @@ member, while individual application teams create `PlatformDB` XRs that use said
 `Composition`.
 
 Each `Composition` is mutable - you can update it as your organisation's needs
-change. However, updating a `Composition` without Composition Revisions can be a
+change. However, without Composition Revisions updating a `Composition` can be a
 risky process. Crossplane constantly uses the `Composition` to ensure that your
 actual infrastructure - your MySQL Servers and firewall rules - match your
 desired state. If you have 10 `PlatformDB` XRs all using the `big-platform-db`
@@ -170,25 +170,17 @@ spec:
   compositeTypeRef:
     apiVersion: aws.example.upbound.io/v1alpha1
     kind: MyVPC
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: my-vpc
-        base:
-          apiVersion: ec2.aws.upbound.io/v1beta1
-          kind: VPC
-          spec:
-            forProvider:
-              region: us-west-1
-              cidrBlock: 192.168.0.0/16
-              enableDnsSupport: true
-              enableDnsHostnames: true
+  resources:
+  - base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: VPC
+      spec:
+        forProvider:
+          region: us-west-1
+          cidrBlock: 192.168.0.0/16
+          enableDnsSupport: true
+          enableDnsHostnames: true
+    name: my-vcp
 ```
 
 Apply the example XRD.
@@ -390,25 +382,17 @@ spec:
   compositeTypeRef:
     apiVersion: aws.example.upbound.io/v1alpha1
     kind: MyVPC
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: my-vpc
-        base:
-          apiVersion: ec2.aws.upbound.io/v1beta1
-          kind: VPC
-          spec:
-            forProvider:
-              region: us-west-1
-              cidrBlock: 192.168.0.0/16
-              enableDnsSupport: false
-              enableDnsHostnames: true
+  resources:
+  - base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: VPC
+      spec:
+        forProvider:
+          region: us-west-1
+          cidrBlock: 192.168.0.0/16
+          enableDnsSupport: false
+          enableDnsHostnames: true
+    name: my-vcp
 ```
 
 Expected Output:
