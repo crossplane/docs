@@ -1,3 +1,4 @@
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -32,9 +33,12 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          A CompositeResourceDefinition defines a new kind of composite infrastructure
-          resource. The new resource is composed of other composite or managed
-          infrastructure resources.
+          A CompositeResourceDefinition defines the schema for a new custom Kubernetes
+          API.
+
+
+          Read the Crossplane documentation for
+          [more information about CustomResourceDefinitions](https://docs.crossplane.io/latest/concepts/composite-resource-definitions).
         properties:
           apiVersion:
             description: |-
@@ -76,6 +80,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   kind:
                     description: |-
                       kind is the serialized kind of the resource. It is normally CamelCase and singular.
@@ -100,6 +105,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   singular:
                     description: singular is the singular name of the resource. It
                       must be all lowercase. Defaults to lowercased `kind`.
@@ -108,6 +114,9 @@ spec:
                 - kind
                 - plural
                 type: object
+                x-kubernetes-validations:
+                - message: Value is immutable
+                  rule: self == oldSelf
               connectionSecretKeys:
                 description: |-
                   ConnectionSecretKeys is the list of keys that will be exposed to the end
@@ -219,6 +228,7 @@ spec:
                         items:
                           type: string
                         type: array
+                        x-kubernetes-list-type: atomic
                     required:
                     - conversionReviewVersions
                     type: object
@@ -265,12 +275,18 @@ spec:
                 required:
                 - name
                 type: object
+                x-kubernetes-validations:
+                - message: Value is immutable
+                  rule: self == oldSelf
               group:
                 description: |-
                   Group specifies the API group of the defined composite resource.
                   Composite resources are served under `/apis/<group>/...`. Must match the
                   name of the XRD (in the form `<names.plural>.<group>`).
                 type: string
+                x-kubernetes-validations:
+                - message: Value is immutable
+                  rule: self == oldSelf
               metadata:
                 description: Metadata specifies the desired metadata for the defined
                   composite resource and claim CRD's.
@@ -309,6 +325,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   kind:
                     description: |-
                       kind is the serialized kind of the resource. It is normally CamelCase and singular.
@@ -333,6 +350,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   singular:
                     description: singular is the singular name of the resource. It
                       must be all lowercase. Defaults to lowercased `kind`.
@@ -341,6 +359,9 @@ spec:
                 - kind
                 - plural
                 type: object
+                x-kubernetes-validations:
+                - message: Value is immutable
+                  rule: self == oldSelf
               versions:
                 description: |-
                   Versions is the list of all API versions of the defined composite
@@ -480,6 +501,13 @@ spec:
                         A Message containing details about this condition's last transition from
                         one status to another, if any.
                       type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
                     reason:
                       description: A Reason for this condition's last transition from
                         one status to another.

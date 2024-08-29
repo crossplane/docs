@@ -1,3 +1,4 @@
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -41,7 +42,13 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        description: A ConfigurationRevision that has been added to Crossplane.
+        description: |-
+          A ConfigurationRevision represents a revision of a Configuration. Crossplane
+          creates new revisions when there are changes to a Configuration.
+
+
+          Crossplane creates and manages ConfigurationRevision. Don't directly edit
+          ConfigurationRevisions.
         properties:
           apiVersion:
             description: |-
@@ -70,7 +77,7 @@ spec:
                   Map of string keys and values that can be used to organize and categorize
                   (scope and select) objects. May match selectors of replication controllers
                   and services.
-                  More info: http://kubernetes.io/docs/user-guide/labels
+                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
                 type: object
               desiredState:
                 description: DesiredState of the PackageRevision. Can be either Active
@@ -153,6 +160,13 @@ spec:
                         A Message containing details about this condition's last transition from
                         one status to another, if any.
                       type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
                     reason:
                       description: A Reason for this condition's last transition from
                         one status to another.
@@ -229,6 +243,7 @@ spec:
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: atomic
                     nonResourceURLs:
                       description: |-
                         NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
@@ -237,6 +252,7 @@ spec:
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: atomic
                     resourceNames:
                       description: ResourceNames is an optional white list of names
                         that the rule applies to.  An empty set means that everything
@@ -244,18 +260,21 @@ spec:
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: atomic
                     resources:
                       description: Resources is a list of resources this rule applies
                         to. '*' represents all resources.
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: atomic
                     verbs:
                       description: Verbs is a list of Verbs that apply to ALL the
                         ResourceKinds contained in this rule. '*' represents all verbs.
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: atomic
                   required:
                   - verbs
                   type: object
