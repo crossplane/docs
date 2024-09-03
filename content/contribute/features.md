@@ -316,7 +316,7 @@ Hugo to fail.
 ## API documentation
 
 The API documentation is auto generated from the Crossplane YAML files from the 
-[cluster/crds](https://github.com/crossplane/crossplane/tree/master/cluster/crds) 
+[cluster/crds](https://github.com/crossplane/crossplane/tree/main/cluster/crds) 
 directory. 
 
 Place any updated files in the `/content/<version>/api/yaml` folder to update or 

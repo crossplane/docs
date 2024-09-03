@@ -207,7 +207,7 @@ Disabling the RBAC manager requires manual Kubernetes permissions definitions
 for proper Crossplane operations. 
 
 The 
-[RBAC manager design document](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md) 
+[RBAC manager design document](https://github.com/crossplane/crossplane/blob/main/design/design-doc-rbac-manager.md) 
 provides more comprehensive details on the Crossplane RBAC requirements.
 {{< /hint >}}
 

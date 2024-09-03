@@ -27,10 +27,10 @@ To download the latest version for your CPU architecture with the Crossplane
 install script.
 
 ```shell
-curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh" | sh
+curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | sh
 ```
 
-[The script](https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh)
+[The script](https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh)
 detects your CPU architecture and downloads the latest stable release.
 
 {{<expand "Manually install the Crossplane CLI" >}}
@@ -61,4 +61,4 @@ By default the CLI installs from the `XP_CHANNEL` named `stable` and the
 For example, to install CLI version `v1.14.0` add `XP_VERSION=v1.14.0` to the 
 download script curl command:  
 
-`curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh" | XP_VERSION=v1.14.0 sh`
+`curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_VERSION=v1.14.0 sh`

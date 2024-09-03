@@ -618,7 +618,7 @@ kubectl delete claim my-ess
 <!-- named links -->
 
 [Vault]: https://www.vaultproject.io/
-[External Secret Store]: https://github.com/crossplane/crossplane/blob/master/design/design-doc-external-secret-stores.md
+[External Secret Store]: https://github.com/crossplane/crossplane/blob/main/design/design-doc-external-secret-stores.md
 [this issue]: https://github.com/crossplane/crossplane/issues/2985
 [Kubernetes Auth Method]: https://www.vaultproject.io/docs/auth/kubernetes
 [Unseal]: https://www.vaultproject.io/docs/concepts/seal
