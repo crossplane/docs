@@ -81,11 +81,11 @@ group is for creating Provider packages.
 Instructions on building Providers are outside of the scope of this
 document.  
 Read the Crossplane contributing 
-[Provider Development Guide](https://github.com/crossplane/crossplane/blob/master/contributing/guide-provider-development.md)
+[Provider Development Guide](https://github.com/crossplane/crossplane/blob/main/contributing/guide-provider-development.md)
 for more information.
 
 For information on the specification of Provider packages read the 
-[Crossplane Provider Package specification](https://github.com/crossplane/crossplane/blob/master/contributing/specifications/xpkg.md#provider-package-requirements).
+[Crossplane Provider Package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md#provider-package-requirements).
 
 ```yaml {label="meta-pkg"}
 apiVersion: meta.pkg.crossplane.io/v1
@@ -440,7 +440,7 @@ This can create significant strain on undersized API Servers, impacting Provider
 install times.
 
 The Crossplane community has more
-[details on scaling CRDs](https://github.com/crossplane/crossplane/blob/master/design/one-pager-crd-scaling.md).
+[details on scaling CRDs](https://github.com/crossplane/crossplane/blob/main/design/one-pager-crd-scaling.md).
 {{< /hint >}}
 
 ### Provider conditions

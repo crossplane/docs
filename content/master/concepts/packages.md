@@ -361,7 +361,7 @@ It's strongly recommended to use the Crossplane command-line tool to
 provide error checking and formatting to Crossplane package builds. 
 
 Read the 
-[Crossplane package specification](https://github.com/crossplane/crossplane/blob/master/contributing/specifications/xpkg.md) 
+[Crossplane package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md) 
 for package requirements when building packages with third-party tools.
 {{</hint >}}
 

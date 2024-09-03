@@ -96,5 +96,5 @@ reviews, testing, and bug fixing to ensure a quality release.
 [Active Development]: #active-development
 [Feature Freeze]: #feature-freeze
 [Code Freeze]: #code-freeze
-[CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md
 [community calendar]: https://calendar.google.com/calendar/embed?src=c_2cdn0hs9e2m05rrv1233cjoj1k%40group.calendar.google.com

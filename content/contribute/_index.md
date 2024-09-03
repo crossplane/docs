@@ -12,7 +12,7 @@ the Crossplane documentation.
 
 Information on contributing to the Crossplane software project is in the
 Crossplane 
-[`CONTRIBUTING.md`](https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md)
+[`CONTRIBUTING.md`](https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md)
 file.
 
 ## Code of conduct
