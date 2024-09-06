@@ -4,7 +4,7 @@ weight: 35
 ---
 
 This guide discusses the use of "Composition Revisions" to safely make and roll
-back changes to a Crossplane [`Composition`][composition-type]. It assumes
+back changes to a Crossplane [`Composition`][composition type]. It assumes
 familiarity with Crossplane, and particularly with
 [Compositions].
 
@@ -16,12 +16,12 @@ database configuration of an Azure MySQL Server and a few firewall rules. The
 `Composition` contains the 'base' configuration for the MySQL server and the
 firewall rules that are extended by the configuration for the `PlatformDB`.
 
-There is a one-to-many relationship between a `Composition` and the XRs that use
-it. You might define a `Composition` named `big-platform-db` that is used by ten
-different `PlatformDB` XRs. Usually, in the interest of self-service, the
-`Composition` is managed by a different team from the actual `PlatformDB` XRs.
-For example the `Composition` may be written and maintained by a platform team
-member, while individual application teams create `PlatformDB` XRs that use said
+A `Composition` is associated with multiple XRs that make use of it. You might
+define a `Composition` named `big-platform-db` that's used by ten different
+`PlatformDB` XRs. Usually, in the interest of self-service, the `Composition`
+is managed by a different team from the actual `PlatformDB` XRs. For example
+the `Composition` may be written and maintained by a platform team member,
+while individual application teams create `PlatformDB` XRs that use said
 `Composition`.
 
 Each `Composition` is mutable - you can update it as your organisation's needs
@@ -33,13 +33,13 @@ desired state. If you have 10 `PlatformDB` XRs all using the `big-platform-db`
 any updates you make to the `big-platform-db` `Composition`.
 
 Composition Revisions allow XRs to opt out of automatic updates. Instead you can
-update your XRs to leverage the latest `Composition` settings at your own pace.
+update your XRs to use the latest `Composition` settings at your own pace.
 This enables you to [canary] changes to your infrastructure, or to roll back
 some XRs to previous `Composition` settings without rolling back all XRs.
 
 ## Using Composition Revisions
 
-When you enable Composition Revisions three things happen:
+When Composition Revisions are enabled three things happen:
 
 1. Crossplane creates a `CompositionRevision` for each `Composition` update.
 1. Composite Resources gain a `spec.compositionRevisionRef` field that specifies
@@ -53,12 +53,6 @@ that unique state. Each revision is allocated an increasing revision number.
 This gives `CompositionRevision` consumers an idea about which revision is
 'newest'.
 
-Crossplane distinguishes between the 'newest' and the 'current' revision of a
-`Composition`. That is, if you revert a `Composition` to a previous state that
-corresponds to an existing `CompositionRevision` that revision will become
-'current' even if it is not the 'newest' revision (i.e. the most latest _unique_
-`Composition` configuration).
-
 You can discover which revisions exist using `kubectl`:
 
 ```console
@@ -69,10 +63,10 @@ kubectl get compositionrevision -l crossplane.io/composition-name=example
 This should produce output something like:
 
 ```console
-NAME            REVISION   CURRENT   AGE
-example-18pdg   1          False     4m36s
-example-2bgdr   2          True      73s
-example-xjrdm   3          False     61s
+NAME              REVISION   AGE
+example-18pdgs2   1          4m36s
+example-2bgdr31   2          73s
+example-xjrdmzz   3          61s
 ```
 
 > A `Composition` is a mutable resource that you can update as your needs
@@ -84,11 +78,11 @@ enabled or not. This is because when you enable Composition Revisions all XRs
 default to the `Automatic` `compositionUpdatePolicy`. XRs support two update
 policies:
 
-* `Automatic`: Automatically use the current `CompositionRevision`. (Default)
+* `Automatic`: Automatically use the latest `CompositionRevision`. (Default)
 * `Manual`: Require manual intervention to change `CompositionRevision`.
 
 The below XR uses the `Manual` policy. When this policy is used the XR will
-select the current `CompositionRevision` when it is first created, but must
+select the latest `CompositionRevision` when it's first created, but must
 manually be updated when you wish it to use another `CompositionRevision`.
 
 ```yaml
@@ -100,7 +94,7 @@ spec:
   parameters:
     storageGB: 20
   # The Manual policy specifies that you do not want this XR to update to the
-  # current CompositionRevision automatically.
+  # latest CompositionRevision automatically.
   compositionUpdatePolicy: Manual
   compositionRef:
     name: example
@@ -136,9 +130,9 @@ spec:
 This tutorial discusses how CompositionRevisions work and how they manage Composite Resource
 (XR) updates. This starts with a `Composition` and `CompositeResourceDefinition` (XRD) that defines a `MyVPC`
 resource and continues with creating multiple XRs to observe different upgrade paths. Crossplane will
-assign different CompositionRevisions to the created composite resources each time the composition is updated. 
+assign different CompositionRevisions to the created composite resources each time the composition is updated.
 
-### Preparation 
+### Preparation
 ##### Install Crossplane
 Install Crossplane v1.11.0 or later and wait until the Crossplane pods are running.
 ```shell
@@ -238,7 +232,7 @@ The label `dev` is automatically created from the Composition.
 ### Create Composite Resources
 This tutorial has four composite resources to cover different update policies and composition selection options.
 The default behavior is updating XRs to the latest revision of the Composition. However, this can be changed by setting
-`compositionUpdatePolicy: Manual` in the XR. It is also possible to select the latest revision with a specific label
+`compositionUpdatePolicy: Manual` in the XR. It's also possible to select the latest revision with a specific label
 with `compositionRevisionSelector.matchLabels` together with `compositionUpdatePolicy: Automatic`.
 
 #### Default update policy
@@ -331,7 +325,7 @@ The `vpc-staging` XR label doesn't match any existing Composition Revisions.
 
 ### Create new Composition revisions
 Crossplane creates a new CompositionRevision when a Composition is created or updated. Label and annotation changes will
-also trigger a new CompositionRevision. 
+also trigger a new CompositionRevision.
 
 #### Update the Composition label
 Update the `Composition` label to `channel: staging`:
@@ -455,7 +449,7 @@ vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[c
 {{< /hint >}}
 
 
-[composition-type]: {{<ref "../../master/concepts/compositions" >}}
+[composition type]: {{<ref "../../master/concepts/compositions" >}}
 [Compositions]: {{<ref "../../master/concepts/compositions" >}}
 [canary]: https://martinfowler.com/bliki/CanaryRelease.html
-[install-guide]: {{<ref "../../master/software/install" >}}
+[install guide]: {{<ref "../../master/software/install" >}}
