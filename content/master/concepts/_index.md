@@ -79,5 +79,5 @@ building and managing external resources through Kubernetes.
   entire custom platform and define any other Crossplane related requirements.
   Packages define how to install Providers, custom APIs or composition functions.
 
-* [**Metrics**]({{<ref "./metrics">}})  are essential for monitoring Crossplane's 
-  operations, helping to quickly identify and resolve potential issues.
+* [**Metrics**]({{<ref "./metrics">}}) are essential for monitoring Crossplane's 
+  operations, helping to identify and resolve potential issues.
