@@ -351,7 +351,7 @@ Status:
 Events:
   Type     Reason             Age                From                                         Message
   ----     ------             ----               ----                                         -------
-  Warning  LintPackage        41s (x3 over 47s)  packages/providerrevision.pkg.crossplane.io  incompatible Crossplane version: package is not compatible with Crossplane version (v1.10.0)
+  Warning  LintPackage        41s (x3 over 47s)  packages/providerrevision.pkg.crossplane.io  incompatible Crossplane version: package isn't compatible with Crossplane version (v1.10.0)
 ```
 
 The {{<hover label="depend" line="17">}}Events{{</hover>}} show a 

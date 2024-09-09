@@ -5,12 +5,12 @@ weight: 306
 ## Requested Resource Not Found
 
 If you use the Crossplane CLI to install a `Provider` or
-`Configuration` (e.g. `crossplane install provider
+`Configuration` (for example, `crossplane install provider
 xpkg.upbound.io/crossplane-contrib/provider-aws:v0.33.0`) and get `the server
-could not find the requested resource` error, more often than not, that is an
+could not find the requested resource` error, more often than not, that's an
 indicator that the Crossplane CLI you're using is outdated. In other words
 some Crossplane API has been graduated from alpha to beta or stable and the old
-plugin is not aware of this change.
+plugin isn't aware of this change.
 
 
 ## Resource Status and Conditions
@@ -32,14 +32,14 @@ Status:
 ```
 
 Most Crossplane resources set the `Ready` condition. `Ready` represents the
-availability of the resource - whether it is creating, deleting, available,
+availability of the resource - whether it's creating, deleting, available,
 unavailable, binding, etc.
 
 ## Resource Events
 
 Most Crossplane resources emit _events_ when something interesting happens. You
 can see the events associated with a resource by running `kubectl describe` -
-e.g. `kubectl describe cloudsqlinstance my-db`. You can also see all events in a
+for example, `kubectl describe cloudsqlinstance my-db`. You can also see all events in a
 particular namespace by running `kubectl get events`.
 
 ```console
@@ -112,7 +112,7 @@ Crossplane and its providers log most error messages to resources' event fields.
 
 1. Get the events for the root resource using `kubectl describe` or `kubectl get event`
 2. If there are errors in the events, address them.
-3. If there are no errors, follow its sub-resources.
+3. If there are no errors, follow its subresources.
 
     `kubectl get <KIND> <NAME> -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq`
 4. Repeat this process for each resource returned.
@@ -120,7 +120,7 @@ Crossplane and its providers log most error messages to resources' event fields.
 {{< hint "note" >}}
 The rest of this section show you how to debug issues related to compositions without using external tooling. 
 If you are using ArgoCD or FluxCD with UI, you can visualize object relationships in the UI. 
-You can also use the kube-lineage plugin to visualize object relationships in your terminal.
+You can also use the `kube-lineage` plugin to visualize object relationships in your terminal.
 {{< /hint >}}
 
 ### Examples
@@ -135,7 +135,7 @@ The example application never reaches available state as shown below.
 
 1. View the claim.
 
-    ```bash
+    ```shell
     kubectl describe exampleapp example-application
 
     Status:
@@ -149,7 +149,7 @@ The example application never reaches available state as shown below.
 
 2. If the claim doesn't have errors, inspect the `.spec.resourceRef` field of the claim.
 
-    ```bash
+    ```shell
     kubectl get exampleapp example-application -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq
 
     {
@@ -161,7 +161,7 @@ The example application never reaches available state as shown below.
 3. In the preceding output, you see the cluster scoped resource for this claim. Kind = `XExampleApp` name = `example-application-xqlsz`
 4. View the cluster scoped resource's events.
 
-    ```bash
+    ```shell
     kubectl describe xexampleapp example-application-xqlsz
 
     Events:
@@ -172,9 +172,9 @@ The example application never reaches available state as shown below.
     Warning  ComposeResources         6s (x6 over 10s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  can't render composed resource from resource template at index 3: can't use dry-run create to name composed resource: an empty namespace may not be set during creation
     Normal   ComposeResources         6s (x6 over 10s)  defined/compositeresourcedefinition.apiextensions.crossplane.io  Successfully composed resources
     ```
-5. You see errors in the events. it's complaining about not specifying namespace in its compositions. For this particular kind of error, you can get its sub-resources and check which one isn't created.
+5. You see errors in the events. it's complaining about not specifying namespace in its compositions. For this particular kind of error, you can get its subresources and check which one isn't created.
 
-    ```bash
+    ```shell
     kubectl get xexampleapp example-application-xqlsz -o=jsonpath='{.spec.resourceRef}{" "}{.spec.resourceRefs}' | jq
     
     [
@@ -207,7 +207,7 @@ Debugging Composite Resource Definition (XRD) is like debugging Compositions.
 
 1. Get the XRD
 
-    ```bash
+    ```shell
     kubectl get xrd testing.awsblueprints.io
 
     NAME                       ESTABLISHED   OFFERED   AGE
@@ -215,7 +215,7 @@ Debugging Composite Resource Definition (XRD) is like debugging Compositions.
     ```
 2. Notice its status it not established. You describe this XRD to get its events.
 
-    ```bash
+    ```shell
     kubectl describe xrd testing.awsblueprints.io
 
     Events:
@@ -231,14 +231,13 @@ Debugging Composite Resource Definition (XRD) is like debugging Compositions.
 
 You can use install providers in two ways: `configuration.pkg.crossplane.io` and `provider.pkg.crossplane.io`. You can use either one to install providers with no functional differences to providers themselves.
 If you define a `configuration.pkg.crossplane.io` object, Crossplane creates a
-`provider.pkg.crossplane.io` object and manages it. Refer to [the Packages
-documentation]({{<ref "/master/concepts/packages">}})
+`provider.pkg.crossplane.io` object and manages it. Refer to [the Packages documentation]({{<ref "/master/concepts/packages">}})
 for more information about Crossplane Packages.
 
 If you are experiencing provider issues, steps below are a good starting point. 
 
 1. Check the status of provider object. 
-    ```bash
+    ```shell
     kubectl describe provider.pkg.crossplane.io provider-aws
 
     Status:
@@ -264,7 +263,7 @@ If you are experiencing provider issues, steps below are a good starting point.
 2. When you create a provider object, Crossplane creates a `ProviderRevision` object based on the contents of the OCI image. In this example, you're specifying the OCI image to be `crossplane/provider-aws:v0.29.0`. This image contains a YAML file which defines Kubernetes objects such as Deployment, ServiceAccount, and CRDs.
 The `ProviderRevision` object creates resources necessary for a provider to function based on the contents of the YAML file. To inspect what's deployed as part of the provider package, you inspect the ProviderRevision object. The `Current Revision` field above indicates which ProviderRevision object this provider uses.
 
-    ```bash
+    ```shell
     kubectl get providerrevision provider-aws-a2e16ca2fc1a
 
     NAME                        HEALTHY   REVISION   IMAGE                             STATE    DEP-FOUND   DEP-INSTALLED   AGE
@@ -273,7 +272,7 @@ The `ProviderRevision` object creates resources necessary for a provider to func
 
     When you describe the object, you find all CRDs managed by this object. 
 
-    ```bash
+    ```shell
     kubectl describe providerrevision provider-aws-a2e16ca2fc1a
 
     Status:
@@ -297,7 +296,7 @@ The `ProviderRevision` object creates resources necessary for a provider to func
     <!-- vale  Google.WordList = YES -->
 3. If you don't see any errors in the event field above, you should check if Crossplane provisioned deployments and their status.
 
-    ```bash
+    ```shell
     kubectl get deployment -n crossplane-system
 
     NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
@@ -320,16 +319,16 @@ The `ProviderRevision` object creates resources necessary for a provider to func
 Sometimes, for example when you encounter a bug, it can be useful to pause
 Crossplane if you want to stop it from actively attempting to manage your
 resources. To pause Crossplane without deleting all of its resources, run the
-following command to simply scale down its deployment:
+following command to scale down its deployment:
 
-```bash
+```shell
 kubectl -n crossplane-system scale --replicas=0 deployment/crossplane
 ```
 
 Once you have been able to rectify the problem or smooth things out, you can
-unpause Crossplane simply by scaling its deployment back up:
+unpause Crossplane by scaling its deployment back up:
 
-```bash
+```shell
 kubectl -n crossplane-system scale --replicas=1 deployment/crossplane
 ```
 
@@ -405,9 +404,9 @@ kubectl describe postgresqlinstance.database.example.org my-db
 ```
 
 Per Kubernetes convention, Crossplane keeps errors close to the place they
-happen. This means that if your claim is not becoming ready due to an issue with
+happen. This means that if your claim isn't becoming ready due to an issue with
 your `Composition` or with a composed resource you'll need to "follow the
-references" to find out why. Your claim will only tell you that the XR is not
+references" to find out why. Your claim will only tell you that the XR isn't
 yet ready.
 
 To follow the references:
@@ -420,7 +419,7 @@ To follow the references:
    look for the "Resource Refs" (or `spec.resourceRefs`) to find your composed
    resources.
 1. Run `kubectl describe` on each referenced composed resource to determine
-   whether it is ready and what issues, if any, it is encountering.
+   whether it's ready and what issues, if any, it's encountering.
 
 
 

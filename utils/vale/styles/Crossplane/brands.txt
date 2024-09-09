@@ -1,10 +1,13 @@
 Algolia
+ArgoCD
 Bootstrap
 CC-BY
+CloudSQL
 CNCF
 Commonmark
 DockerHub
 DocSearch
+FluxCD
 Geekdocs
 Goldmark
 Grammarly
@@ -15,6 +18,7 @@ Kustomize
 Netlify
 NodeJS
 NPM
+OPA
 OpenAPI
 OpenAPIv3
 PostCSS
@@ -23,6 +27,7 @@ postcss-sort-media-queries
 PostgreSQL
 Protobuf
 PurgeCSS
+Rego
 Upbound
 Upbound's
 Upjet

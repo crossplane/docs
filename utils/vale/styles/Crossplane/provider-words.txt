@@ -7,8 +7,11 @@ europe-central2
 GCP
 GCP's
 GKE
+provider-aws
 provider-aws-iam
 provider-aws-s3
+provider-gcp
+provider-helm
 Pub/Sub
 PubSub
 S3

@@ -23,7 +23,7 @@ The most important points of the style guide include:
 users. When in doubt, spell it out first.
   * Avoid assuming the reader already knows the background.
 * Don't use [cliches](https://www.topcreativewritingcourses.com/blog/common-cliches-in-writing-and-how-to-avoid-them).
-  * Cliches make writing sound unprofessional and are not internationally inclusive. 
+  * Cliches make writing sound unprofessional and aren't internationally inclusive. 
 * Use contractions for phrases like "do not," "cannot," "is not" and related terms.
   * It's easy to miss "not" in "do not." It's hard to misunderstand "don't."
 * Don't use Latin terms (i.e., e.g., etc.).
@@ -48,8 +48,7 @@ users. When in doubt, spell it out first.
 Crossplane relies on [Vale](https://github.com/errata-ai/vale) to enforce the
 complete style guide. 
 
-Read more about [using Vale with the Crossplane
-documentation]({{<ref "Vale" >}}).
+Read more about [using Vale with the Crossplane documentation]({{<ref "Vale" >}}).
 
 ## Italics
 

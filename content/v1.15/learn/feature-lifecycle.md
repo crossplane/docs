@@ -22,7 +22,9 @@ removal or breaking changes without notice**, and generally not considered ready
 for use in production. 
 
 In some cases alpha features require fields be added to existing beta or GA
-API types. In these cases fields must clearly be marked (i.e in their OpenAPI
+<!-- vale alex.Condescending = NO -->
+API types. In these cases fields must clearly be marked (for instance in their OpenAPI
+<!-- vale alex.Condescending = YES -->
 schema) as alpha and subject to alpha API constraints (or lack thereof).
 
 All alpha features should have an issue tracking their graduation to beta.
@@ -31,24 +33,26 @@ All alpha features should have an issue tracking their graduation to beta.
 
 Beta features are on by default, but may be disabled by a feature flag. API
 types pertaining to beta features use a `vNbetaN` style API version, like
-`v1beta1`. Beta features are considered to be well tested, and will not be
+`v1beta1`. Beta features are considered to be well tested, and won't be
 removed completely without being marked deprecated for at least two releases.
 
 The schema and/or semantics of objects may change in incompatible ways in a
 subsequent beta or stable release. When this happens, we will provide
 instructions for migrating to the next version. This may require deleting,
-editing, and re-creating API objects. The editing process may require some
+editing, and recreating API objects. The editing process may require some
 thought. This may require downtime for applications that rely on the feature.
 
 In some cases beta features require fields be added to existing GA API types. In
-these cases fields must clearly be marked (i.e in their OpenAPI schema) as beta
+<!-- vale alex.Condescending = NO -->
+these cases fields must clearly be marked (for instance in their OpenAPI schema) as beta
+<!-- vale alex.Condescending = YES -->
 and subject to beta API constraints (or lack thereof).
 
 All beta features should have an issue tracking their graduation to GA.
 
 ## GA Features
 
-GA features are always enabled - they cannot be disabled. API types pertaining
+GA features are always enabled - they can't be disabled. API types pertaining
 to GA features use `vN` style API versions, like `v1`. GA features are widely
 used and thoroughly tested. They guarantee API stability - only backward
 compatible changes are allowed.
