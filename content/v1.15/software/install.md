@@ -101,7 +101,7 @@ The `crossplane-rbac-manager` creates and manages Kubernetes _ClusterRoles_ for
 installed Crossplane _Provider_ and their _Custom Resource Definitions_.
 
 The 
-[Crossplane RBAC Manager design document](https://github.com/crossplane/crossplane/blob/master/design/design-doc-rbac-manager.md) 
+[Crossplane RBAC Manager design document](https://github.com/crossplane/crossplane/blob/main/design/design-doc-rbac-manager.md) 
 has more information on the installed _ClusterRoles_.
 
 ## Installation options
@@ -112,7 +112,7 @@ chart.
 
 Apply customizations with the command line or with a Helm _values_ file. 
 
-<!-- Generated from Helm README at https://github.com/crossplane/crossplane/blob/master/cluster/charts/crossplane/README.md -->
+<!-- Generated from Helm README at https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md -->
 <!-- vale gitlab.Substitutions = NO -->
 <!-- allow lowercase yaml -->
 {{<expand "All Crossplane customization options" >}}

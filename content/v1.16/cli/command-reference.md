@@ -47,7 +47,7 @@ The Crossplane CLI combines a directory of YAML files and packages them as
 an [OCI container image](https://opencontainers.org/).  
 
 The CLI applies the required annotations and values to meet the 
-[Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/master/contributing/specifications/xpkg.md).
+[Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md).
 
 The `crossplane` CLI supports building 
 [configuration]({{< ref "../concepts/packages" >}}),
