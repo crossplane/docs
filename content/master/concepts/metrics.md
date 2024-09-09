@@ -40,4 +40,3 @@ Please note that this document focuses on Crossplane specific metrics and doesn'
 | {{<hover label="crossplane_managed_resource_first_time_to_readiness_seconds_bucket" line="27">}}crossplane_managed_resource_first_time_to_readiness_seconds_bucket{{</hover>}} | The time it took for a managed resource to become ready first time after creation |  |
 | {{<hover label="crossplane_managed_resource_first_time_to_reconcile_seconds_bucket" line="28">}}crossplane_managed_resource_first_time_to_reconcile_seconds_bucket{{</hover>}} | The time it took to detect a managed resource by the controller |  |
 | {{<hover label="upjet_resource_ttr_bucket" line="29">}}upjet_resource_ttr_bucket{{</hover>}} | Measures in seconds the `time-to-readiness` `(TTR)` for managed resources |  |
-{{< /table >}}
