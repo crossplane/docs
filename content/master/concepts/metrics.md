@@ -5,7 +5,7 @@ description: "Metrics are essential for monitoring Crossplane's operations, help
 ---
 
 This page offers explanations of various metrics gathered from Crossplane, which are essential for effective monitoring and alerting in your Crossplane environment.
-Understanding these metrics help you maintain the health and performance of your resources, ensuring that any issues are identified and addressed.
+Understanding these metrics help you maintain the health and performance of your resources, ensuring to identify and address any issues.
 Please note that this document focuses on Crossplane specific metrics and doesn't cover standard Go metrics.
 
 
