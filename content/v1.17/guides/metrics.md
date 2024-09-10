@@ -4,10 +4,24 @@ weight: 60
 description: "Metrics are essential for monitoring Crossplane's operations, helping to quickly identify and resolve potential issues."
 ---
 
-This page offers explanations of various metrics gathered from Crossplane, which are essential for effective monitoring and alerting in your Crossplane environment.
-Understanding these metrics help you maintain the health and performance of your resources, ensuring to identify and address any issues.
-Please note that this document focuses on Crossplane specific metrics and doesn't cover standard Go metrics.
+Crossplane produces numerous [Prometheus-style metrics](https://prometheus.io/docs/introduction/overview/#what-are-metrics) for effective monitoring and alerting in your environment.
+These metrics are essential for helping to identify and resolve potential issues quickly.
+This page offers explanations of all these metrics gathered from Crossplane.
+Understanding these metrics helps you maintain the health and performance of your resources.
+Please note that this document focuses on Crossplane-specific metrics and doesn't cover standard Go metrics.
 
+To enable the export of metrics it is necessary to configure the `--set metrics.enabled=true` option in the [helm chart](https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md#configuration).
+```yaml {label="value",copy-lines="none"}
+metrics:
+  enabled: true
+```
+
+The metrics are exposed using these Prometheus annotations:
+```yaml {label="deployment",copy-lines="none"}
+prometheus.io/path: /metrics
+prometheus.io/port: "8080"
+prometheus.io/scrape: "true"
+```    
 
 | Metric Name | Description | Further Explanation |
 | --- | --- | --- |
