@@ -22,7 +22,7 @@ content. The community approves PRs with Vale errors in unmodified document sect
 Follow the directions on the Vale website to 
 [install the Vale binary](https://vale.sh/docs/vale-cli/installation/).
 <!-- vale off -->
-Crossplane CI uses [Vale v2.22.0](https://github.com/errata-ai/vale/releases/tag/v2.22.0) or later.
+Crossplane CI uses [Vale v3.7.1](https://github.com/errata-ai/vale/releases/tag/v3.7.1) or later.
 <!-- vale on -->
 ## Run Vale
 
