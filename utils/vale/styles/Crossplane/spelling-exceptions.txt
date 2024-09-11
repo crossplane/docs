@@ -1,5 +1,6 @@
 /tab
 /tabs
+built-in
 call-outs
 ClusterRoles`
 comma-separated
@@ -19,7 +20,10 @@ how-to
 in-depth
 in-memory
 left-hand
+multi-cluster
 multi-region
+multi-tenant
+multi-tenancy
 non-empty
 non-Kubernetes
 per-element
@@ -34,9 +38,13 @@ read-only
 resource-specific
 right-hand
 run-time
+self-signed
+self-service
 step-by-step
+subresources
 third-party
 top-level
+unpause
 untrusted
 UpperCamelCase
 UpperCamelCased

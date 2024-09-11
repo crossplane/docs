@@ -1,5 +1,6 @@
 ActivePackageRevision
 Adler32
+apiGroups
 clampMax
 clampMin
 CombineFromComposite
@@ -9,8 +10,10 @@ CombineToEnvironment
 CompositeResourceDefinition
 CompositeResourceDefinitions
 composition.yaml
+CompositionRevision
 CompositionRevisions
 config
+CONTRIBUTING.md
 ControllerConfig
 ControllerConfigs
 CRDs
@@ -47,6 +50,7 @@ PatchSet
 PatchSets
 ProviderConfig
 ProviderConfigs
+ProviderRevision
 RunFunctionRequest
 RunFunctionResponse
 StoreConfig

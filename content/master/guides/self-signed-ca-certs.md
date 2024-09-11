@@ -3,7 +3,7 @@ title: Self-Signed CA Certs
 weight: 270   
 ---  
 
->  Using self-signed certificates is not advised in production, it is 
+>  Using self-signed certificates isn't advised in production, it's 
 recommended to only use self-signed certificates for testing.
 
 When Crossplane loads Configuration and Provider Packages from private 
@@ -39,7 +39,7 @@ kubectl -n [Crossplane system namespace] create cm ca-bundle-config \
 `ca-bundle-config` and the `registryCaBundleConfig.key` parameter to 
 `ca-bundle`.
 
-> Providing Helm with parameter values is convered in the Helm docs, 
+> Providing Helm with parameter values is covered in the Helm docs, 
 [Helm install](https://helm.sh/docs/helm/helm_install/). An example block  
 in an `override.yaml` file would look like this:
 ```

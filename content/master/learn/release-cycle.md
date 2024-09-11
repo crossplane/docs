@@ -18,7 +18,7 @@ be maintained for nine months.
 ### Definition of maintenance
 
 The Crossplane community defines maintenance in that relevant bug fixes that are
-merged to the main development branch will be eligible to be back-ported to the
+merged to the main development branch will be eligible to be backported to the
 release branch of any currently maintained version, and patch releases will be
 cut appropriately. It's also possible that a fix may be merged directly to the
 release branch if no longer applicable on the main development branch.
@@ -30,15 +30,15 @@ effort basis by maintainers and contributors for currently maintained releases.
 
 _This policy is subject to change in the future._
 
-Patch releases are cut for currently maintained minor versions on an as-needed
-basis. Any critical back-ported fixes will be included in a patch release as
+Patch releases are cut for currently maintained minor versions on an as needed
+basis. Any critical backported fixes will be included in a patch release as
 soon as possible after merge.
 
 ### Pre-releases
 
 _This policy is subject to change in the future._
 
-Alpha, Beta, and RC releases are cut for an upcoming release on an as-needed
+Alpha, Beta, and RC releases are cut for an upcoming release on an as needed
 basis. As a policy, at least one pre-release will be cut prior to any minor
 release. Pre-releases won't be made on release branches.
 
@@ -55,7 +55,7 @@ The following stages are the main milestones in a Crossplane release.
 
 ### Active development
 
-During active development, any code that meets the requisite criteria (i.e.
+During active development, any code that meets the requisite criteria (such as
 passing appropriate tests, approved by a maintainer, etc.) will be merged into
 the main development branch. At present, there is no requirement to formally
 submit an enhancement proposal prior to the start of the release cycle, but
@@ -65,7 +65,7 @@ work on a major implementation (see [CONTRIBUTING.md] for more information).
 ### Feature freeze
 
 During feature freeze, no new functionality should be merged into the main
-development branch. Bug fixes, documentation changes, and non-critical changes
+development branch. Bug fixes, documentation changes, and non critical changes
 may be made. In the case that a new feature is deemed absolutely necessary for a
 release, the Crossplane maintainers will weigh the impact of the change and make
 a decision on whether it should be included. 

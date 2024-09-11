@@ -55,10 +55,9 @@ here.
   generator, CSS layouts and JavaScript.
 
 ## Licensing
-The Crossplane documentation is under the [Creative Commons
-Attribution](https://creativecommons.org/licenses/by/4.0/) license. CC-BY allows
-reuse, remixing and republishing of Crossplane documentation with attribution to
-the Crossplane organization.
+The Crossplane documentation is under the [Creative Commons Attribution](https://creativecommons.org/licenses/by/4.0/)
+license. CC-BY allows reuse, remixing and republishing of Crossplane
+documentation with attribution to the Crossplane organization.
 
 ## Issues and feature requests
 Open an [issue](https://github.com/crossplane/crossplane/issues)

@@ -14,15 +14,15 @@ following sources:
 - Filesystem
 
 A provider may optionally support additional credentials sources, but the common
-sources cover a wide variety of use cases. One specific use case that is popular
+sources cover a wide variety of use cases. One specific use case that's popular
 among organizations that use [Vault] for secrets management is using a sidecar
 to inject credentials into the filesystem. This guide will demonstrate how to
 use the [Vault Kubernetes Sidecar] to provide credentials for [provider-gcp] 
 and [provider-aws].
 
 > Note: in this guide we will copy GCP credentials and AWS access keys 
-> into Vault's KV secrets engine. This is a simple generic approach to 
-> managing secrets with Vault, but is not as robust as using Vault's 
+> into Vault's KV secrets engine. This is a generic approach to 
+> managing secrets with Vault, but isn't as robust as using Vault's 
 > dedicated cloud provider secrets engines for [AWS], [Azure], and [GCP]. 
 
 ## Setup
@@ -32,7 +32,7 @@ and [provider-aws].
 > outside the cluster but has Kubernetes authentication enabled.
 
 Before getting started, you must ensure that you have installed Crossplane and
-Vault and that they are running in your cluster.
+Vault and that they're running in your cluster.
 
 1. Install Crossplane
 
@@ -66,9 +66,9 @@ kubectl exec vault-0 -- vault operator unseal $VAULT_UNSEAL_KEY
 4. Enable Kubernetes Authentication Method
 
 In order for Vault to be able to authenticate requests based on Kubernetes
-service accounts, the [Kubernetes authentication backend] must be enabled. This
+service accounts, the [Kubernetes authentication method] must be enabled. This
 requires logging in to Vault and configuring it with a service account token,
-API server address, and certificate. Because we are running Vault in Kubernetes,
+API server address, and certificate. Because we're running Vault in Kubernetes,
 these values are already available via the container filesystem and environment
 variables.
 
@@ -136,7 +136,7 @@ secrets engine].
 
 > Note: the steps below involve copying credentials into the container
 > filesystem before storing them in Vault. You may also choose to use Vault's
-> HTTP API or UI by port-forwarding the container to your local environment
+> HTTP API or UI by port forwarding the container to your local environment
 > (`kubectl port-forward vault-0 8200:8200`).
 
 1. Copy Credentials File into Vault Container
@@ -254,7 +254,7 @@ EOF
 
 1. Create Role
 
-The last step is to create a role that is bound to the policy you created and
+The last step is to create a role that's bound to the policy you created and
 associate it with a group of Kubernetes service accounts. This role can be
 assumed by any (`*`) service account in the `crossplane-system` namespace.
 
@@ -286,10 +286,9 @@ by any number of `Provider` objects that wish to use its configuration. In the
 example below, the `Pod` annotations indicate to the Vault mutating webhook that
 we want for the secret stored at `secret/provider-creds/gcp-default` to be
 injected into the container filesystem by assuming role `crossplane-providers`.
-There is also so template formatting added to make sure the secret data is
+Template formatting has been added to make sure the secret data is
 presented in a form that `provider-gcp` is expecting.
 
-{% raw  %}
 ```console
 echo "apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
@@ -315,7 +314,6 @@ spec:
   controllerConfigRef:
     name: vault-config" | kubectl apply -f -
 ```
-{% endraw %}
 
 ## Configure provider-gcp
 
@@ -323,7 +321,7 @@ One `provider-gcp` is installed and running, you will want to create a
 `ProviderConfig` that specifies the credentials in the filesystem that should be
 used to provision managed resources that reference this `ProviderConfig`.
 Because the name of this `ProviderConfig` is `default` it will be used by any
-managed resources that do not explicitly reference a `ProviderConfig`.
+managed resources that don't explicitly reference a `ProviderConfig`.
 
 > Note: make sure that the `PROJECT_ID` environment variable that was defined
 > earlier is still set correctly.
@@ -352,7 +350,7 @@ kubectl -n crossplane-system exec -it $PROVIDER_CONTROLLER_POD -c provider-gcp -
 ## Provision Infrastructure
 
 The final step is to actually provision a `CloudSQLInstance`. Creating the
-object below will result in the creation of a Cloud SQL Postgres database on
+object below will result in the creation of a Cloud SQL PostgreSQL database on
 GCP.
 
 ```console
@@ -392,10 +390,9 @@ by any number of `Provider` objects that wish to use its configuration. In the
 example below, the `Pod` annotations indicate to the Vault mutating webhook that
 we want for the secret stored at `secret/provider-creds/aws-default` to be
 injected into the container filesystem by assuming role `crossplane-providers`.
-There is also some template formatting added to make sure the secret data is
+Template formatting has been added to make sure the secret data is
 presented in a form that `provider-aws` is expecting.
 
-{% raw  %}
 ```console
 echo "apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
@@ -425,7 +422,6 @@ spec:
   controllerConfigRef:
     name: aws-vault-config" | kubectl apply -f -
 ```
-{% endraw %}
 
 ## Configure provider-aws
 
@@ -433,7 +429,7 @@ Once `provider-aws` is installed and running, you will want to create a
 `ProviderConfig` that specifies the credentials in the filesystem that should be
 used to provision managed resources that reference this `ProviderConfig`.
 Because the name of this `ProviderConfig` is `default` it will be used by any
-managed resources that do not explicitly reference a `ProviderConfig`.
+managed resources that don't explicitly reference a `ProviderConfig`.
 
 ```console
 echo "apiVersion: aws.crossplane.io/v1beta1
@@ -501,6 +497,6 @@ kubectl get bucket -w
 [Azure]: https://www.vaultproject.io/docs/secrets/azure
 [GCP]: https://www.vaultproject.io/docs/secrets/gcp 
 [unsealed]: https://www.vaultproject.io/docs/concepts/seal
-[Kubernetes authentication backend]: https://www.vaultproject.io/docs/auth/kubernetes
+[Kubernetes authentication method]: https://www.vaultproject.io/docs/auth/kubernetes
 [kv secrets engine]: https://www.vaultproject.io/docs/secrets/kv/kv-v2
 [policy]: https://www.vaultproject.io/docs/concepts/policies

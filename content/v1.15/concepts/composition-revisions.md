@@ -93,7 +93,7 @@ metadata:
 spec:
   parameters:
     storageGB: 20
-  # The Manual policy specifies that you do not want this XR to update to the
+  # The Manual policy specifies that you don't want this XR to update to the
   # latest CompositionRevision automatically.
   compositionUpdatePolicy: Manual
   compositionRef:
@@ -340,8 +340,8 @@ myvpcs.aws.example.upbound.io-727b3c8   2          staging
 myvpcs.aws.example.upbound.io-ad265bc   1          dev
 ``` 
 
-Verify that Crossplane assigns the Composite Resources `vpc-auto` and `vpc-staging` to Composite revision:2.  
-XRs `vpc-man` and `vpc-dev` are still assigned to the original revision:1:
+Verify that Crossplane assigns the Composite Resources `vpc-auto` and `vpc-staging` to Composite `revision:2`.  
+XRs `vpc-man` and `vpc-dev` are still assigned to the original `revision:1`:
 
 ```shell
 kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.compositionRevisionRef.name,POLICY:.spec.compositionUpdatePolicy,MATCHLABEL:.spec.compositionRevisionSelector.matchLabels"
@@ -357,7 +357,7 @@ vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[c
 
 {{< hint "note" >}}
 `vpc-auto` always use the latest Revision.  
-`vpc-staging` now matches the label applied to Revision revision:2.
+`vpc-staging` now matches the label applied to Revision `revision:2`.
 {{< /hint >}}
 
 #### Update Composition Spec and Label
@@ -411,8 +411,8 @@ myvpcs.aws.example.upbound.io-f81c553   3          dev
 Changing the label and the spec values simultaneously is critical for deploying new changes to the `dev` channel.
 {{< /hint >}}
 
-Verify Crossplane assigns the Composite Resources `vpc-auto` and `vpc-dev` to Composite revision:3.  
-`vpc-staging` is assigned to revision:2, and `vpc-man` is still assigned to the original revision:1:
+Verify Crossplane assigns the Composite Resources `vpc-auto` and `vpc-dev` to Composite `revision:3`.  
+`vpc-staging` is assigned to `revision:2`, and `vpc-man` is still assigned to the original `revision:1`:
 
 ```shell
 kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.compositionRevisionRef.name,POLICY:.spec.compositionUpdatePolicy,MATCHLABEL:.spec.compositionRevisionSelector.matchLabels"
@@ -428,8 +428,8 @@ vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[c
 
 
 {{< hint "note" >}}
-`vpc-dev` matches the updated label applied to Revision revision:3.
-`vpc-staging` matches the label applied to Revision revision:2.
+`vpc-dev` matches the updated label applied to Revision `revision:3`.
+`vpc-staging` matches the label applied to Revision `revision:2`.
 {{< /hint >}}
 
 

@@ -5,9 +5,9 @@ weight: 240
 
 This guide describes how to use Crossplane effectively in multi-tenant
 environments by utilizing Kubernetes primitives and compatible policy
-enforcement projects in the cloud-native ecosystem.
+enforcement projects in the cloud native ecosystem.
 
-## TL;DR
+## Summary
 
 Infrastructure operators in multi-tenant Crossplane environments typically
 utilize composition and Kubernetes RBAC to define lightweight, standardized
@@ -21,7 +21,7 @@ those with more complex environments, may choose to incorporate third-party
 policy engines, or scale to multiple Crossplane clusters. The following sections
 describe each of these scenarios in greater detail.
 
-- [TL;DR](#tldr)
+- [Summary](#summary)
 - [Background](#background)
   - [Cluster-Scoped Managed Resources](#cluster-scoped-managed-resources)
   - [Namespace Scoped Claims](#namespace-scoped-claims)
@@ -109,7 +109,7 @@ in response to the creation of an instance of the XRD. More information about
 this architecture can be found in the [Composition] documentation.
 
 Every XRD is exposed at the cluster scope, but only those with `spec.claimNames`
-defined will have a namespace-scoped variant.
+defined will have a namespace scoped variant.
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1
@@ -131,7 +131,7 @@ When the example above is created, Crossplane will produce two
 [CustomResourceDefinitions]:
 1. A cluster-scoped type with `kind: XMySQLInstance`. This is referred to as a
    **Composite Resource (XR)**.
-2. A namespace-scoped type with `kind: MySQLInstance`. This is referred to as a
+2. A namespace scoped type with `kind: MySQLInstance`. This is referred to as a
    **Claim (XRC)**.
 
 Platform builders may choose to define an arbitrary number of Compositions that
@@ -160,13 +160,13 @@ This feature serves as a lightweight policy mechanism by only giving the
 consumer the ability to customize the underlying resources to the extent the
 platform builder desires. For instance, in the examples above, a platform
 builder may choose to define a `spec.location` field in the schema of the
-`XMySQLInstance` that is an enum with options `east` and `west`. In the
+`XMySQLInstance` that's an enum with options `east` and `west`. In the
 Composition, those fields could map to the `RDSInstance` `spec.region` field,
 making the value either `us-east-1` or `us-west-1`. If no other patches were
 defined for the `RDSInstance`, giving a user the ability (using RBAC) to create
 a `XMySQLInstance` / `MySQLInstance` would be akin to giving the ability to
-create a very specifically configured `RDSInstance`, where they can only decide
-the region where it lives and they are restricted to two options.
+create a specifically configured `RDSInstance`, where they can only decide
+the region where it lives and they're restricted to two options.
 
 This model is in contrast to many infrastructure as code tools where the end
 user must have provider credentials to create the underlying resources that are
@@ -182,11 +182,11 @@ standardizing on Kubernetes RBAC.
 While the ability to define abstract schemas and patches to concrete resource
 types using composition is powerful, the ability to define Claim types at the
 namespace scope enhances the functionality further by enabling RBAC to be
-applied with namespace restrictions. Most users in a cluster do not have access
-to cluster-scoped resources as they are considered only relevant to
+applied with namespace restrictions. Most users in a cluster don't have access
+to cluster-scoped resources as they're considered only relevant to
 infrastructure admins by both Kubernetes and Crossplane.
 
-Building on our simple `XMySQLInstance` / `MySQLInstance` example, a platform
+Building on our `XMySQLInstance` / `MySQLInstance` example, a platform
 builder may choose to define permissions on `MySQLInstance` at the namespace
 scope using a `Role`. This allows for giving users the ability to create and
 manage `MySQLInstances` in their given namespace, but not the ability to see
@@ -249,15 +249,15 @@ namespace the corresponding `MySQLInstance` was created in.
 ### Policy Enforcement with Open Policy Agent
 
 In some Crossplane deployment models, only using composition and RBAC to define
-policy will not be flexible enough. However, because Crossplane brings
-management of external infrastructure to the Kubernetes API, it is well suited
-to integrate with other projects in the cloud-native ecosystem. Organizations
+policy won't be flexible enough. However, because Crossplane brings
+management of external infrastructure to the Kubernetes API, it's well suited
+to integrate with other projects in the cloud native ecosystem. Organizations
 and individuals that need a more robust policy engine, or just prefer a more
 general language for defining policy, often turn to [Open Policy Agent] (OPA).
-OPA allows platform builders to write custom logic in [Rego], a domain-specific
+OPA allows platform builders to write custom logic in [Rego], a domain specific
 language. Writing policy in this manner allows for not only incorporating the
 information available in the specific resource being evaluated, but also using
-other state represented in the cluster. Crossplane users typically install OPA's
+other state represented in the cluster. Crossplane users typically install OPA
 [Gatekeeper] to make policy management as streamlined as possible.
 
 > A live demo of using OPA with Crossplane can be viewed [here].
@@ -271,14 +271,16 @@ simpler.
 ### Reproducible Platforms with Configuration Packages
 
 [Configuration packages] allow platform builders to package their XRDs and
-Compositions into [OCI images] that can be distributed via any OCI-compliant
+Compositions into [OCI images] that can be distributed via any OCI compliant
 image registry. These packages can also declare dependencies on providers,
 meaning that a single package can declare all of the granular managed resources,
 the controllers that must be deployed to reconcile them, and the abstract types
 that expose the underlying resources using composition.
 
 Organizations with many Crossplane deployments utilize Configuration packages to
+<!-- vale alex.Condescending = NO -->
 reproduce their platform in each cluster. This can be as simple as installing
+<!-- vale alex.Condescending = YES -->
 Crossplane with the flag to automatically install a Configuration package
 alongside it.
 

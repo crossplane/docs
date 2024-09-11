@@ -32,8 +32,7 @@ This guide requires [Helm](https://helm.sh) version 3.11 or later.
 ## Install Vault
 
 {{<hint "note" >}}
-Detailed instructions on [installing
-Vault](https://developer.hashicorp.com/vault/docs/platform/k8s/helm)
+Detailed instructions on [installing Vault](https://developer.hashicorp.com/vault/docs/platform/k8s/helm)
 are available from the Vault documentation.
 {{< /hint >}}
 
@@ -515,7 +514,7 @@ is the name of the Claim's
 {{<hover label="claim" line="12">}}publishConnectionDetailsTo{{</hover>}}
 configuration.
 
-Check connection secrets in the "crossplane-system" Vault scope.
+Check connection secrets in the `crossplane-system` Vault scope.
 ```shell {copy-lines="1",label="scope-key"}
 kubectl -n vault-system exec -i vault-0 -- vault kv list /secret/crossplane-system
 Keys

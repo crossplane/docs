@@ -4,7 +4,7 @@ description: Learn more about Crossplane.
 weight: 500
 ---
 
-If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us]!
+If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us].
 
 ***Learn more about using Crossplane***
  - [Latest Design Docs](https://github.com/crossplane/crossplane/tree/main/design)
@@ -20,14 +20,16 @@ If you have any questions, please drop us a note on [Crossplane Slack][join-cros
  - [Programming Kubernetes Book](https://www.oreilly.com/library/view/programming-kubernetes/9781492047094/)
  - [Contributor Guide](https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md)
 
-***Join the growing Crossplane community and get involved!***
+***Join the growing Crossplane community and get involved***
 - Join our [Community Slack](https://slack.crossplane.io/)!
 - Submit an issue on [GitHub](https://github.com/crossplane/crossplane)
-- Attend our bi-weekly [Community Meeting](https://github.com/crossplane/crossplane#get-involved)
-- Join our bi-weekly live stream: [The Binding Status](https://github.com/crossplane/tbs)
+- Attend our biweekly [Community Meeting](https://github.com/crossplane/crossplane#get-involved)
+- Join our biweekly live stream: [The Binding Status](https://github.com/crossplane/tbs)
 - Subscribe to our [YouTube Channel](https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw)
+<!-- vale Crossplane.Spelling = NO -->
 - Drop us a note on Twitter: [@crossplane_io](https://twitter.com/crossplane_io)
 - Email us: [info@crossplane.io](mailto:info@crossplane.io)
+<!-- vale Crossplane.Spelling = YES -->
 
 <!-- Named links -->
 
