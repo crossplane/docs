@@ -766,6 +766,22 @@ spec:
       name: my-service-account
 ```
 
+<!-- vale gitlab.FutureTense = NO -->
+{{<hint "important" >}}
+Setting the `serviceAccountTemplate.metadata.name` field will override the
+name of service account created by the package manager and used in the
+provider deployment. The package manager will own that service account and
+may conflict with other owners attempting to take ownership. A common mistake
+is configuring the same service account for multiple packages in this way
+which ends up causing frequent reconciliation loops and loads on the API server.
+
+If you just want to use an existing service account, you should instead only
+set the `deploymentTemplate.spec.template.spec.serviceAccountName` field.
+Crossplane will then use the existing service account without taking the ownership
+and still take care of binding the necessary permissions.
+{{</hint >}}
+<!-- vale gitlab.FutureTense = YES -->
+
 ### Provider configuration
 
 The `ProviderConfig` determines settings the Provider uses communicating to the
