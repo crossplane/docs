@@ -401,15 +401,6 @@ spec:
                   matchControllerRef: true
                 resourceGroupNameSelector:
                   matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map: 
-                    EU: "Sweden Central"
-                    US: "Central US"
         - name: quickstart-network
           base:
             apiVersion: network.azure.upbound.io/v1beta1
