@@ -64,10 +64,10 @@ This guide covers each of these steps in detail.
 
 To write a function in Go you need:
 
-* [Go](https://go.dev/dl/) v1.21 or newer. The guide uses Go v1.21.
+* [Go](https://go.dev/dl/) v1.23 or newer. The guide uses Go v1.23.
 * [Docker Engine](https://docs.docker.com/engine/). This guide uses Engine v24.
-* The [Crossplane CLI]({{<ref "../cli" >}}) v1.14 or newer. This guide uses Crossplane
-  CLI v1.14.
+* The [Crossplane CLI]({{<ref "../cli" >}}) v1.17 or newer. This guide uses Crossplane
+  CLI v1.17.
 
 {{<hint "note">}}
 You don't need access to a Kubernetes cluster or a Crossplane control plane to
@@ -84,6 +84,20 @@ as a template.
 ```shell {copy-lines=1}
 crossplane xpkg init function-xbuckets function-template-go -d function-xbuckets 
 Initialized package "function-xbuckets" in directory "/home/negz/control/negz/function-xbuckets" from https://github.com/crossplane/function-template-go/tree/91a1a5eed21964ff98966d72cc6db6f089ad63f4 (main)
+
+To get started:
+
+1. Replace `function-template-go` with your function in `go.mod`,
+   `package/crossplane.yaml`, and any Go imports. (You can also do this
+   automatically by running the `./init.sh <function-name>` script.)
+2. Update `input/v1beta1/` to reflect your desired input (and run `go generate`)
+3. Add your logic to `RunFunction` in `fn.go`
+4. Add tests for your logic in `fn_test.go`
+5. Update `README.md`, to be about your function!
+
+Found init.sh script!
+Do you want to run it? [y]es/[n]o/[v]iew: y
+Function function-xbuckets has been initialised successfully
 ```
 
 The `crossplane xpkg init` command creates a directory named
@@ -92,7 +106,7 @@ this:
 
 ```shell {copy-lines=1}
 ls function-xbuckets
-Dockerfile  fn.go  fn_test.go  go.mod  go.sum  input/  LICENSE  main.go  package/  README.md  renovate.json
+Dockerfile    LICENSE       NOTES.txt     README.md     example       fn.go         fn_test.go    go.mod        go.sum        init.sh       input         main.go       package       renovate.json
 ```
 
 The `fn.go` file is where you add the function's code. It's useful to know about
@@ -104,15 +118,9 @@ some other files in the template:
 * The `package` directory contains metadata used to build the function package.
 
 {{<hint "tip">}}
-<!-- vale gitlab.FutureTense = NO -->
-<!--
-This tip talks about future plans for Crossplane.
--->
-In v1.14 of the Crossplane CLI `crossplane xpkg init` just clones a
-template GitHub repository. A future CLI release will automate tasks like
-replacing the template name with the new function's name. See Crossplane issue
-[#4941](https://github.com/crossplane/crossplane/issues/4941) for details.
-<!-- vale gitlab.FutureTense = YES -->
+Starting with v1.15 of the Crossplane CLI, `crossplane xpkg init` gives you the
+option of running an initialization script to automate tasks like replacing the
+template name with the new function's name.
 {{</hint>}}
 
 You must make some changes before you start adding code:
@@ -131,7 +139,7 @@ should delete the `input` and `package/input` directories.
 
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
-[composition functions]({{<ref "../concepts/compositions" >}})
+[composition functions]({{<ref "../concepts/compositions/#function-input" >}})
 documentation explains how to pass an input to a composition function.
 
 The `package/input` directory contains an OpenAPI schema generated from the
@@ -417,15 +425,15 @@ This code:
 1. Adds one desired S3 bucket for each bucket name.
 1. Returns the desired S3 buckets in a `RunFunctionResponse`.
 
-The code uses the `v1beta1.Bucket` type from
-[Upbound's AWS S3 provider](https://github.com/upbound/provider-aws). One
+The code uses the `v1beta1.Bucket` type from [Upbound's AWS S3
+provider](https://github.com/crossplane-contrib/provider-upjet-aws). One
 advantage of writing a function in Go is that you can compose resources using
 the same strongly typed structs Crossplane uses in its providers.
 
 You must get the AWS Provider Go module to use this type:
 
 ```shell
-go get github.com/upbound/provider-aws@v0.43.0
+go get github.com/upbound/provider-aws@v1.14.0
 ```
 
 Crossplane provides a
@@ -447,7 +455,7 @@ command.
 
 Go has rich support for unit testing. When you initialize a function from the
 template it adds some unit tests to `fn_test.go`. These tests follow Go's
-[recommendations](https://github.com/golang/go/wiki/TestComments). They use only
+[recommendations](https://go.dev/wiki/TestComments). They use only
 [`pkg/testing`](https://pkg.go.dev/testing) from the Go standard library and
 [`google/go-cmp`](https://pkg.go.dev/github.com/google/go-cmp/cmp).
 
@@ -532,6 +540,9 @@ func TestRunFunction(t *testing.T) {
 									"forProvider": {
 										"region": "us-east-2"
 									}
+								},
+								"status": {
+									"observedGeneration": 0
 								}
 							}`)},
 							"xbuckets-test-bucket-b": {Resource: resource.MustStructJSON(`{
@@ -546,8 +557,19 @@ func TestRunFunction(t *testing.T) {
 									"forProvider": {
 										"region": "us-east-2"
 									}
+								},
+								"status": {
+									"observedGeneration": 0
 								}
 							}`)},
+						},
+					},
+					Conditions: []*fnv1.Condition{
+						{
+							Type:   "FunctionSuccess",
+							Status: fnv1.Status_STATUS_CONDITION_TRUE,
+							Reason: "Success",
+							Target: fnv1.Target_TARGET_COMPOSITE_AND_CLAIM.Enum(),
 						},
 					},
 				},
@@ -575,7 +597,7 @@ func TestRunFunction(t *testing.T) {
 
 Run the unit tests using the `go test` command:
 
-```shell
+```shell {copy-lines=1}
 go test -v -cover .
 === RUN   TestRunFunction
 === RUN   TestRunFunction/AddTwoBuckets
@@ -589,8 +611,8 @@ ok      github.com/negz/function-xbuckets       0.016s  coverage: 52.6% of state
 You can preview the output of a Composition that uses this function using
 the Crossplane CLI. You don't need a Crossplane control plane to do this.
 
-Create a directory under `function-xbuckets` named `example` and create
-Composite Resource, Composition and Function YAML files.
+Under `function-xbuckets`, there is a directory named `example` with Composite
+Resource, Composition and Function YAML files.
 
 Expand the following block to see example files.
 
@@ -771,7 +793,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation]({{<ref "../concepts/compositions" >}}).
+[composition functions documentation]({{<ref "../concepts/compositions" >}})
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
