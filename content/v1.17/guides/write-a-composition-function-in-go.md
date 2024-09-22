@@ -425,10 +425,9 @@ This code:
 1. Adds one desired S3 bucket for each bucket name.
 1. Returns the desired S3 buckets in a `RunFunctionResponse`.
 
-The code uses the `v1beta1.Bucket` type from [Upbound's AWS S3
-provider](https://github.com/crossplane-contrib/provider-upjet-aws). One
-advantage of writing a function in Go is that you can compose resources using
-the same strongly typed structs Crossplane uses in its providers.
+The code uses the `v1beta1.Bucket` type from [Upbound's AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws).
+One advantage of writing a function in Go is that you can compose resources
+using the same strongly typed structs Crossplane uses in its providers.
 
 You must get the AWS Provider Go module to use this type:
 
