@@ -169,9 +169,9 @@ The schema of the resource isn't validated and may contain any data.
 
 ### Mock Extra Resources
 
-Extra Resources allow a Composition to request Crossplane Objects on the cluster that are not
-part of the Composition. The `--extra-resources` option can be pointed at a directory containing
-YAML manifests of resources to mock, and can be used in combination with a function like
+Extra Resources allow a Composition to request Crossplane Objects on the cluster that aren't
+part of the Composition. The `--extra-resources` option points at a directory containing
+YAML manifests of resources to mock. Use Extra Resources in combination with a function like
 [function-extra-resources](https://github.com/crossplane-contrib/function-extra-resources) or the 
 built-in support in [function-go-templating](https://github.com/crossplane-contrib/function-go-templating?tab=readme-ov-file#extraresources).
 
