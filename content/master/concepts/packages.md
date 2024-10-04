@@ -6,7 +6,7 @@ weight: 200
 ---
 
 A _Configuration_ package is an 
-[OCI container images](https://opencontainers.org/) containing a collection of
+[OCI container image](https://opencontainers.org/) containing a collection of
 [Compositions]({{<ref "./compositions" >}}), 
 [Composite Resource Definitions]({{<ref "./composite-resource-definitions" >}})
 and any required [Providers]({{<ref "./providers">}}) or 
@@ -43,7 +43,7 @@ registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
 {{< /hint >}}
 
 For example to install the 
-[Upbound AWS reference platform](https://marketplace.upbound.io/configurations/upbound/platform-ref-aws/v0.6.0), 
+[Upbound AWS reference platform](https://marketplace.upbound.io/configurations/upbound/platform-ref-aws/v0.6.0).
 
 ```yaml {label="install"}
 apiVersion: pkg.crossplane.io/v1
@@ -78,7 +78,7 @@ crossplane-stable/crossplane \
 
 ### Install offline
 
-Installing Crossplane packages offline requires a local container registry like 
+Installing Crossplane packages offline requires a local container registry, such as
 [Harbor](https://goharbor.io/) to host the packages. Crossplane only
 supports installing packages from a container registry. 
 
@@ -437,7 +437,7 @@ Including YAML files that aren't Compositions or CompositeResourceDefinitions,
 including Claims isn't supported.
 {{</hint >}}
 
-By default, Crossplane creates an `.xpkg` file of the Configuration name and 
+By default, Crossplane creates a `.xpkg` file of the Configuration name and 
 a SHA-256 hash of the package contents.
 
 For example, a {{<hover label="xpkgName" line="2">}}Configuration{{</hover>}}
