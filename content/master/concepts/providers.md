@@ -22,7 +22,7 @@ Examples of providers include:
 * [Provider Kubernetes](https://github.com/crossplane-contrib/provider-kubernetes)
 
 {{< hint "tip" >}}
-Find more providers in the [Upbound Marketplace](https://marketplace.upbound.io).
+Find more providers in Crossplane's [public package registries](https://www.crossplane.io/registries).
 {{< /hint >}}
 
 <!-- vale write-good.Passive = NO -->
