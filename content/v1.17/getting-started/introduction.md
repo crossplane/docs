@@ -110,8 +110,8 @@ In the `bucket` CRD is a
 [`spec.forProvider.region`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1#doc:spec-forProvider-region)
 value that defines which AWS region to deploy the bucket in.
 
-The Upbound Marketplace contains a large 
-[collection of Crossplane Providers](https://marketplace.upbound.io/providers).
+Crossplane's [public package registries](https://www.crossplane.io/registries) contain a large 
+collection of Crossplane Providers.
 
 More providers are available in the [Crossplane Contrib repository](https://github.com/crossplane-contrib/).
 
