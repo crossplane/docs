@@ -351,7 +351,7 @@ Status:
 Events:
   Type     Reason             Age                From                                         Message
   ----     ------             ----               ----                                         -------
-  Warning  LintPackage        41s (x3 over 47s)  packages/providerrevision.pkg.crossplane.io  incompatible Crossplane version: package is not compatible with Crossplane version (v1.10.0)
+  Warning  LintPackage        41s (x3 over 47s)  packages/providerrevision.pkg.crossplane.io  incompatible Crossplane version: package isn't compatible with Crossplane version (v1.10.0)
 ```
 
 The {{<hover label="depend" line="17">}}Events{{</hover>}} show a 
@@ -606,7 +606,7 @@ Each Provider determines their supported set of `args`.
 ### Runtime configuration
 
 {{<hint "important" >}}
-`DeploymentRuntimeConfigs` is a beta feature. 
+`DeploymentRuntimeConfigs` is a beta feature.
 
 It's on by default, and you can disable it by passing
 `--enable-deployment-runtime-configs=false` to the Crossplane deployment.
@@ -628,7 +628,6 @@ Kubernetes Deployment spec, which allows for more flexibility in configuring
 the runtime. Refer to the [design document](https://github.com/crossplane/crossplane/blob/2c5e7f07ba9e3d83d1c85169bbde685de8514ab8/design/one-pager-package-runtime-config.md)
 for more details.
 {{< /hint >}}
-
 
 As an example, to enable the external secret stores alpha feature for a `Provider`
 by adding the `--enable-external-secret-stores` argument to the controller,

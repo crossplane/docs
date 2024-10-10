@@ -80,16 +80,23 @@ kubectl -n crossplane-system logs <name-of-provider-pod>
 
 All providers maintained by the Crossplane community mirror Crossplane's support
 of the `--debug` flag. The easiest way to set flags on a provider is to create a
-`ControllerConfig` and reference it from the `Provider`:
+`DeploymentRuntimeConfig` and reference it from the `Provider`:
 
 ```yaml
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
 metadata:
   name: debug-config
 spec:
-  args:
-    - --debug
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+          - name: package-runtime
+            args: 
+            - --debug
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
@@ -97,11 +104,13 @@ metadata:
   name: provider-aws
 spec:
   package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.33.0
-  controllerConfigRef:
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
     name: debug-config
 ```
 
-> Note that a reference to a `ControllerConfig` can be added to an already
+> Note that a reference to a `DeploymentRuntimeConfig` can be added to an already
 > installed `Provider` and it will update its `Deployment` accordingly.
 
 ## Compositions and composite resource definition
@@ -335,17 +344,21 @@ kubectl -n crossplane-system scale --replicas=1 deployment/crossplane
 ## Pausing Providers
 
 Providers can also be paused when troubleshooting an issue or orchestrating a
-complex migration of resources. Creating and referencing a `ControllerConfig` is
-the easiest way to scale down a provider, and the `ControllerConfig` can be
+complex migration of resources. Creating and referencing a `DeploymentRuntimeConfig` is
+the easiest way to scale down a provider, and the `DeploymentRuntimeConfig` can be
 modified or the reference can be removed to scale it back up:
 
 ```yaml
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
 metadata:
   name: scale-config
 spec:
-  replicas: 0
+  deploymentTemplate:
+    spec:
+      selector: {}
+      replicas: 0
+      template: {}
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
@@ -353,11 +366,13 @@ metadata:
   name: provider-aws
 spec:
   package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.33.0
-  controllerConfigRef:
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
     name: scale-config
 ```
 
-> Note that a reference to a `ControllerConfig` can be added to an already
+> Note that a reference to a `DeploymentRuntimeConfig` can be added to an already
 > installed `Provider` and it will update its `Deployment` accordingly.
 
 ## Deleting When a Resource Hangs
