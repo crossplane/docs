@@ -73,4 +73,7 @@ XRD
 XRD's
 XRDs
 XRs
+function-extra-resources
+function-go-templating
 function-patch-and-transform
+

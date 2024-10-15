@@ -6,19 +6,22 @@ description: "Command reference for the Crossplane CLI"
 
 
 <!-- vale Google.Headings = NO -->
-The `crossplane` CLI provides utilities to make using Crossplane easier. 
+The `crossplane` CLI provides utilities to make using Crossplane easier.
 
-Read the [Crossplane CLI overview]({{<ref "../cli">}}) page for information on 
+Read the [Crossplane CLI overview]({{<ref "../cli">}}) page for information on
 installing `crossplane`.
 
 ## Global flags
+
 The following flags are available for all commands.
 
 {{< table "table table-sm table-striped">}}
+
 | Short flag | Long flag   | Description                  |
 |------------|-------------|------------------------------|
 | `-h`       | `--help`    | Show context sensitive help. |
 |            | `--verbose` | Print verbose output.        |
+
 {{< /table >}}
 
 ## version
@@ -28,29 +31,29 @@ and the control plane.
 
 ```shell
 crossplane version
-Client Version: v1.16.0
-Server Version: v1.16.0
+Client Version: v1.17.0
+Server Version: v1.17.0
 ```
 
-## render 
+## render
 
 The `crossplane render` command previews the output of a 
-[composite resource]({{<ref "../concepts/composite-resources">}}) after applying 
+[composite resource]({{<ref "../concepts/composite-resources">}}) after applying
 any [composition functions]({{<ref "../concepts/compositions">}}).
 
 {{< hint "important" >}}
 The `crossplane render` command requires you to use composition functions.
 {{< /hint >}}
 
-The `crossplane render` command connects to the locally running Docker 
+The `crossplane render` command connects to the locally running Docker
 Engine to pull and run composition functions. 
 
 {{<hint "important">}} 
 Running `crossplane render` requires [Docker](https://www.docker.com/).
 {{< /hint >}}
 
-Provide a composite resource, composition and composition function YAML 
-definition with the command to render the output locally. 
+Provide a composite resource, composition and composition function YAML
+definition with the command to render the output locally.
 
 For example, 
 `crossplane render xr.yaml composition.yaml function.yaml`
@@ -59,6 +62,7 @@ The output includes the original composite resource followed by the generated
 managed resources. 
 
 {{<expand "An example render output" >}}
+
 ```yaml
 ---
 apiVersion: nopexample.org/v1
@@ -87,62 +91,64 @@ spec:
   forProvider:
     region: us-east-2
 ```
+
 {{< /expand >}}
 
 ### Flags
 
 {{< table "table table-sm table-striped">}}
+
 | Short flag   | Long flag                             | Description                                           |
 | ------------ | -------------                         | ------------------------------                        |
 |              | `--context-files=<key>=<file>,<key>=<file>`    | A comma separated list of files to load for function "contexts." |
 |              | `--context-values=<key>=<value>,<key>=<value>` | A comma separated list of key-value pairs to load for function "contexts."                                                    |
 | `-r`         | `--include-function-results`          | Include the "results" or events from the function.   |
-| `-o`         | `--observed-resources=<directory or file>`               |
-Provide artificial managed resource data to the function.
-|
+| `-o`         | `--observed-resources=<directory or file>`  | Provide artificial managed resource data to the function. |
+| `-e`         | `--extra-resources=PATH`     |  A YAML file or directory of YAML files specifying extra resources to pass to the Function pipeline. |
+|  `-c`        | `--include-context`          | Include the context in the rendered output as a resource of kind: Context. |
 | `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
 |              | `--timeout=`                          | Amount of time to wait for a function to finish. (Default 1 minute)       |
+
 {{< /table >}}
 
-The `crossplane render` command relies on standard 
-[Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables) 
-to connect to the local Docker Engine and run composition functions. 
-
+The `crossplane render` command relies on standard
+[Docker environmental variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables)
+to connect to the local Docker Engine and run composition functions.
 
 ### Provide function context
 
-The `--context-files` and `--context-values` flags can provide data 
+The `--context-files` and `--context-values` flags can provide data
 to a function's `context`.  
 The context is JSON formatted data.
 
 ### Include function results
 
-If a function produces Kubernetes events with statuses use the 
-`--include-function-results` to print them along with the managed resource 
-outputs. 
+If a function produces Kubernetes events with statuses use the
+`--include-function-results` to print them along with the managed resource
+outputs.
 
-### Include the composite resource 
+### Include the composite resource
 
-Composition functions can only change the `status` field of a composite 
+Composition functions can only change the `status` field of a composite
 resource. By default, the `crossplane render` command only prints the
 `status` field with `metadata.name`.  
 
-Use `--include-full-xr` to print the full composite resource, 
+Use `--include-full-xr` to print the full composite resource,
 including the `spec` and `metadata` fields.
 
 ### Mock managed resources
 
-Provide mocked, or artificial data representing a managed resource with 
-`--observed-resources`. The `crossplane render` command treats the 
-provided inputs as if they were resources in a Crossplane cluster. 
+Provide mocked, or artificial data representing a managed resource with
+`--observed-resources`. The `crossplane render` command treats the
+provided inputs as if they were resources in a Crossplane cluster.
 
-A function can reference and manipulate the included resource as part of 
+A function can reference and manipulate the included resource as part of
 running the function.
 
-The `observed-resources` may be a single YAML file with multiple resources or a 
+The `observed-resources` may be a single YAML file with multiple resources or a
 directory of YAML files representing multiple resources.
 
-Inside the YAML file include an 
+Inside the YAML file include an
 {{<hover label="apiVersion" line="1">}}apiVersion{{</hover>}},
 {{<hover label="apiVersion" line="2">}}kind{{</hover>}},
 {{<hover label="apiVersion" line="3">}}metadata{{</hover>}} and
@@ -161,31 +167,40 @@ spec:
 
 The schema of the resource isn't validated and may contain any data.
 
+### Mock Extra Resources
+
+Extra Resources allow a Composition to request Crossplane Objects on the cluster that aren't
+part of the Composition. The `--extra-resources` option points at a directory containing
+YAML manifests of resources to mock. Use Extra Resources in combination with a function like
+[function-extra-resources](https://github.com/crossplane-contrib/function-extra-resources) or the 
+built-in support in [function-go-templating](https://github.com/crossplane-contrib/function-go-templating?tab=readme-ov-file#extraresources).
+
 ## xpkg
 
 The `crossplane xpkg` commands create, install and update Crossplane
 [packages]({{<ref "../concepts/packages">}}) as well as enable authentication
-and publishing of Crossplane packages to a Crossplane package registry. 
+and publishing of Crossplane packages to a Crossplane package registry.
 
 ### xpkg build
 
-Using `crossplane xpkg build` provides automation and simplification to build 
+Using `crossplane xpkg build` provides automation and simplification to build
 Crossplane packages.  
 
-The Crossplane CLI combines a directory of YAML files and packages them as 
+The Crossplane CLI combines a directory of YAML files and packages them as
 an [OCI container image](https://opencontainers.org/).  
 
-The CLI applies the required annotations and values to meet the 
+The CLI applies the required annotations and values to meet the
 [Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md).
 
 The `crossplane` CLI supports building 
 [configuration]({{< ref "../concepts/packages" >}}),
-[function]({{<ref "../concepts/compositions">}}) and 
-[provider]({{<ref "../concepts/providers" >}}) package types. 
-
+[function]({{<ref "../concepts/compositions">}}) and
+[provider]({{<ref "../concepts/providers" >}}) package types.
 
 #### Flags
+
 {{< table "table table-sm table-striped">}}
+
 | Short flag   | Long flag                            | Description                    |
 | ------------ | -------------                        | ------------------------------ |
 |              | `--embed-runtime-image-name=NAME`    |  The image name and tag of an image to include in the package. Only for provider and function packages. |
@@ -196,12 +211,12 @@ The `crossplane` CLI supports building
 | `-f`         | `--package-root="."`                 |  Directory to search for YAML files.                              |
 {{< /table >}}
 
-The `crossplane xpkg build` command recursively looks in the directory set by 
-`--package-root` and attempts to combine any files ending in `.yml` or `.yaml` 
+The `crossplane xpkg build` command recursively looks in the directory set by
+`--package-root` and attempts to combine any files ending in `.yml` or `.yaml`
 into a package.
 
-All YAML files must be valid Kubernetes manifests with `apiVersion`, `kind`, 
-`metadata` and `spec` fields. 
+All YAML files must be valid Kubernetes manifests with `apiVersion`, `kind`,
+`metadata` and `spec` fields.
 
 #### Ignore files
 
@@ -972,16 +987,15 @@ crossplane beta validate provider.yaml managedResource.yaml
 Total 1 resources: 0 missing schemas, 1 success case, 0 failure cases
 ```
 
-
 #### Validate render command output
 
-You can pipe the output of `crossplane render` into 
+You can pipe the output of `crossplane render` into
 `crossplane beta validate` to validate complete Crossplane resource pipelines,
-including XRs, compositions and composition functions. 
+including XRs, compositions and composition functions.
 
-Use the `--include-full-xr` command with `crossplane render` and the `-` 
-option with `crossplane beta validate` to pipe the output from 
-`crossplane render` to the input of `crossplane beta validate`. 
+Use the `--include-full-xr` command with `crossplane render` and the `-`
+option with `crossplane beta validate` to pipe the output from
+`crossplane render` to the input of `crossplane beta validate`.
 
 ```shell {copy-lines="1"}
 crossplane render xr.yaml composition.yaml function.yaml --include-full-xr | crossplane beta validate schemas.yaml -
@@ -994,8 +1008,8 @@ crossplane render xr.yaml composition.yaml function.yaml --include-full-xr | cro
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
-
 #### Validate Common Expression Language rules
+
 XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
 ([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).
 
@@ -1031,7 +1045,7 @@ spec:
 
 The rule in this example checks that the vale of the
 {{<hover label="celXR" line="6">}}replicas{{</hover>}} field of an XR is between
-the {{<hover label="celXR" line="7">}}minReplicas{{</hover>}} and 
+the {{<hover label="celXR" line="7">}}minReplicas{{</hover>}} and
 {{<hover label="celXR" line="8">}}maxReplicas{{</hover>}} values.
 
 ```yaml {label="celXR"}
@@ -1054,17 +1068,16 @@ error.
 Total 1 resources: 0 missing schemas, 0 success cases, 1 failure cases
 ```
 
-
 #### Validate against a directory of schemas
 
-The `crossplane render` command can validate a directory of YAML files. 
+The `crossplane render` command can validate a directory of YAML files.
 
 The command only processes `.yaml` and `.yml` files, while ignoring all other
 file types.
 
-With a directory of files, provide the directory and resource to validate. 
+With a directory of files, provide the directory and resource to validate.
 
-For example, using a directory named 
+For example, using a directory named
 {{<hover label="validateDir" line="2">}}schemas{{</hover>}} containing the XRD
 and Provider schemas.
 
@@ -1079,8 +1092,8 @@ schemas
     `-- xrd.yaml
 ```
 
-Provide the directory name and a resource YAML file to the 
-`crossplane beta validate` command. 
+Provide the directory name and a resource YAML file to the
+`crossplane beta validate` command.
 
 ```shell
 crossplane beta validate schema resources.yaml
