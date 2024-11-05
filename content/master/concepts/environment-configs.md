@@ -388,7 +388,7 @@ Defining the default value _after_ the label always overwrites the label
 value.
 {{< /hint >}}
 
-## Patching with EnvironmentConfigs using [function-patch-and-transform]
+## Patching with EnvironmentConfigs using function-patch-and-transform
 
 `EnvironmentConfigs` selected as explained above, are then merged in an
 `in-memory environment` by [function-environment-configs] and passed to the
