@@ -486,9 +486,12 @@ spec:
               toFieldPath: spec.forProvider.tags
 ```
 
-The [Patch and Transform]({{<ref "./patch-and-transform">}}) documentation has
-more information on patching individual resources.
 
-[extra-resources]: {{<ref "./composition-functions">}}
+
+{{<hint "tip" >}}
+The [Patch and Transform]({{<ref "../guides/function-patch-and-transform">}}) documentation has more information on patching individual resources.
+{{< /hint >}}
+
+[extra-resources]: {{<ref "./compositions">}}
 [function-environment-configs]: https://github.com/crossplane-contrib/function-environment-configs
 [function-patch-and-transform]: {{<ref "../guides/function-patch-and-transform">}}
