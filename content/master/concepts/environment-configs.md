@@ -1,8 +1,9 @@
 ---
 title: Environment Configurations
 weight: 75
-state: alpha
+state: beta
 alphaVersion: "1.11"
+betaVersion: "1.18"
 description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in Compositions"
 ---
 
@@ -86,7 +87,7 @@ convert pipeline-composition`, which will move a composition using `Resource`
 mode, to [function-patch-and-transform] and, if needed,
 [function-environment-configs].
 
-See [function-environment-configs]' docs for more details about manual
+See the documentation of [function-environment-configs] for more details about manual
 migration.
 
 <!-- vale Google.Headings = NO -->
@@ -344,7 +345,7 @@ Set a default value for an optional label by setting the default `value` for
 the `key` first using a `Value` selector, then define the `Optional`
 `FromCompositeFieldPath` one.
 
-For example, this Composition defines `value: my-default-value` for the key
+For example, the Composition below defines `value: my-default-value` for the key
 `my-second-label-key`. If the Composite resource defines
 `spec.parameters.deploy`, [function-environment-configs] will use that instead.
 
@@ -381,8 +382,8 @@ spec:
 ```
 
 {{<hint "warning" >}}
-[function-environment-configs] applies values in order. The value of the last
-key defined always takes precedence.
+[function-environment-configs](https://github.com/crossplane-contrib/function-environment-configs)
+applies values in order. The value of the last key defined always takes precedence.
 
 Defining the default value _after_ the label always overwrites the label
 value.
@@ -494,3 +495,6 @@ The [Patch and Transform]({{<ref "../guides/function-patch-and-transform">}}) do
 [extra-resources]: {{<ref "./compositions">}}
 [function-environment-configs]: https://github.com/crossplane-contrib/function-environment-configs
 [function-patch-and-transform]: {{<ref "../guides/function-patch-and-transform">}}
+[function-go-templating]: https://github.com/crossplane-contrib/function-go-templating
+[Composition Functions]: {{<ref "./compositions">}}
+[Context]: {{<ref "./compositions/#function-pipeline-context">}}
