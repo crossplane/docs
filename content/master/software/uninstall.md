@@ -135,7 +135,7 @@ List the installed _providers_ with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                   INSTALLED   HEALTHY   PACKAGE                                        AGE
-upbound-provider-aws   True        True      xpkg.upbound.io/upbound/provider-aws:v0.27.0   8h
+upbound-provider-aws   True        True      xpkg.upbound.io/upbound/provider-aws:v1.0.0    8h
 ```
 
 Remove the installed _providers_ with `kubectl delete provider`.
