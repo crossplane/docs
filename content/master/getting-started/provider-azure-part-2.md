@@ -45,7 +45,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-network:v1.8.0
+  package: xpkg.upbound.io/upbound/provider-azure-network:v1
 EOF
 ```
 
@@ -496,7 +496,7 @@ kind: Provider
 metadata:
   name: provider-azure-compute
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-compute:v1.8.0
+  package: xpkg.upbound.io/upbound/provider-azure-compute:v1
 EOF
 ```
 
@@ -506,9 +506,9 @@ View the new Compute provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-compute          True        True      xpkg.upbound.io/upbound/provider-azure-compute:v1.8.0   25s
-provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v1.8.0   3h
-upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v1.8.0    3h
+provider-azure-compute          True        True      xpkg.upbound.io/upbound/provider-azure-compute:v1.0.0    25s
+provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v1.0.0    3h
+upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v1.0.0     3h
 ```
 
 ## Access the custom API
