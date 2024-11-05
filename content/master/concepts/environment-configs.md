@@ -11,7 +11,7 @@ TODO: Add Policies
 -->
 
 
-A Crossplane EnvironmentConfig is a cluster-scoped, strongly-typed,
+A Crossplane EnvironmentConfig is a cluster-scoped, strongly typed,
 [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like 
 resource used by Compositions. Compositions can use the environment to store
 information from individual resources or to apply patches.
@@ -65,7 +65,7 @@ data:
 ## Access EnvironmentConfigs
 
 `EnvironmentConfigs` can be accessed by [Composition Functions] supporting
-[extra-resources], e.g. [function-environment-configs] or
+[extra-resources], for example [function-environment-configs] or
 [function-go-templating].
 
 ## Migration from Alpha Composition Environment
@@ -97,7 +97,7 @@ Select the EnvironmentConfigs to use through [function-environment-configs]'s `I
 
 The `environmentConfigs` field is a list of `EnvironmentConfigs` we want
 retrieved, merged and passed to the next step in the pipeline through the
-[Context] at a well-known key, `apiextensions.crossplane.io/environment`.
+[Context] at a well known key, `apiextensions.crossplane.io/environment`.
 
 Select an environment by `Reference` or by `Selector`:
 
@@ -174,7 +174,7 @@ Select an `EnvironmentConfig` by labels with a `type: Selector`.
 Define `selector.matchLabels` to a list of selectors either of type `Value`, or `FromCompositeFieldPath`.
 
 When matching the label's value, provide an exact value with a 
-`type: Value and provide the value to match in the `value` field.
+`type: Value` and provide the value to match in the `value` field.
 
 [function-environment-configs] can also match a label's value based on an input
 in the composite resource. Use `type: FromCompositeFieldPath` and provide the
@@ -263,7 +263,7 @@ with `maxMatch` and define the maximum number to select.
 
 Use `minMatch` and define the minimum number of environments returned.
 
-The Function sorts the returned environments alphabetically by name by defaul.
+The Function sorts the returned environments alphabetically by name by default.
 Sort the environments on a different field with `sortByFieldPath` and define
 the field to sort by. 
 
@@ -392,7 +392,7 @@ value.
 
 `EnvironmentConfigs` selected as explained above, are then merged in an
 `in-memory environment` by [function-environment-configs] and passed to the
-next function in the pipeline at a well-known key,
+next function in the pipeline at a well known key,
 `apiextensions.crossplane.io/environment`.
 
 [function-patch-and-transform] can be used to read or write data between the in-memory environment and
@@ -407,11 +407,10 @@ resources. Read about EnvironmentConfig patch types in the
 ### Patch between Composite resource and environment
 
 To patch between Composite resource and environment define patches at
-`spec.environment.patches` in [function-patch-and-transform]'s `Resources`
-input.
+`spec.environment.patches` in the `Resources` input of [function-patch-and-transform].
 
 Use the `ToCompositeFieldPath` patch type to copy data from the in-memory
-environment to the Composite resource.  Use the `FromCompositeFieldPath` to
+environment to the Composite resource. Use the `FromCompositeFieldPath` to
 copy data from the Composite resource to the in-memory environment.
 
 ```yaml {label="xrpatch",copy-lines="none"}
@@ -450,7 +449,7 @@ Composite resource, respectively.
 
 To patch between individual resources and the in-memory environment, inside the
 patches of the resource, use `ToEnvironmentFieldPath` to copy data from the
-resource to the in-memory environment.  Use `FromEnvironmentFieldPath` to copy
+resource to the in-memory environment. Use `FromEnvironmentFieldPath` to copy
 data to the resource from the in-memory environment.
 
 ```yaml {label="envpatch",copy-lines="none"}
