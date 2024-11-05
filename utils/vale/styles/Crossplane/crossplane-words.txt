@@ -32,11 +32,16 @@ DeploymentRuntimeConfigs
 EnvironmentConfig
 EnvironmentConfigs
 external-name
+extra-resources
 finalizer
 finalizers
 FromCompositeFieldPath
 FromEnvironmentFieldPath
 fromFieldPath
+function-environment-configs
+function-extra-resources
+function-go-templating
+function-patch-and-transform
 HealthyPackageRevision
 Helm-like
 InactivePackageRevision
@@ -73,7 +78,3 @@ XRD
 XRD's
 XRDs
 XRs
-function-extra-resources
-function-go-templating
-function-patch-and-transform
-
