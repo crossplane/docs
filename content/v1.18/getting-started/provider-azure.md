@@ -39,7 +39,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-network:v0.42.1
+  package: xpkg.upbound.io/upbound/provider-azure-network:v1.8.0
 EOF
 ```
 
@@ -54,8 +54,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v0.42.1   38s
-upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v0.42.1    26s
+provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v1.8.0   38s
+upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v1.8.0    26s
 ```
 
 The Network Provider installs a second Provider, the
