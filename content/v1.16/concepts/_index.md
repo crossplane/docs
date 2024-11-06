@@ -78,3 +78,6 @@ building and managing external resources through Kubernetes.
 * [**Packages**]({{<ref "./packages">}}) are a convenient way to package up an
   entire custom platform and define any other Crossplane related requirements.
   Packages define how to install Providers, custom APIs or composition functions.
+
+* [**ImageConfigs**]({{<ref "./image-configs">}}) are for centralized control
+  of the configuration of Crossplane package images.
