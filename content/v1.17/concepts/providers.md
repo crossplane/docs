@@ -325,7 +325,7 @@ For example, this installation of the Upbound AWS reference platform is
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME              INSTALLED   HEALTHY   PACKAGE                                           AGE
-provider-aws-s3   True        False     xpkg.upbound.io/upbound/provider-aws-s3:v0.41.0   12s
+provider-aws-s3   True        False     xpkg.upbound.io/upbound/provider-aws-s3:v1.9.0   12s
 ```
 
 To see more information on why the Provider isn't `HEALTHY` use 
@@ -338,7 +338,7 @@ API Version:  pkg.crossplane.io/v1
 Kind:         ProviderRevision
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.upbound.io/upbound/provider-aws-s3:v0.41.0
+  Image:                          xpkg.upbound.io/upbound/provider-aws-s3:v1.9.0
   Revision:                       1
 Status:
   Conditions:
