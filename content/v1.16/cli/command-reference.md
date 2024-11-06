@@ -138,7 +138,7 @@ The `<package-kind>` is either a `configuration`, `function` or `provider`.
 For example, to install version 0.42.0 of the 
 [AWS S3 provider](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.42.0):
 
-`crossplane xpkg install provider xpkg.upbound.io/upbound/provider-aws-s3:v0.42.0`
+`crossplane xpkg install provider xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0`
 
 #### Flags
 {{< table "table table-sm table-striped">}}
@@ -320,7 +320,7 @@ registry on [Upbound Marketplace](https://marketplace.upbound.io/).
 For example, to update to version 0.42.0 of the 
 [AWS S3 provider](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v0.42.0):
 
-`crossplane xpkg update provider xpkg.upbound.io/upbound/provider-aws-s3:v0.42.0`
+`crossplane xpkg update provider xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0`
 
 
 ## beta
@@ -898,7 +898,7 @@ kind: Provider
 metadata:
   name: provider-aws-iam
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-iam:v1.0.0
+  package: xpkg.upbound.io/upbound/provider-aws-iam:v1.17.0
 ```
 
 Now include the XR or managed resource to validate.

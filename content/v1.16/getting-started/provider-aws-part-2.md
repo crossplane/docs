@@ -44,7 +44,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.1.0
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0
 EOF
 ```
 
@@ -96,7 +96,7 @@ kind: Provider
 metadata:
   name: provider-aws-dynamodb
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v1.1.0
+  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v1.17.0
 EOF
 ```
 
@@ -106,9 +106,9 @@ View the new DynamoDB provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                 AGE
-provider-aws-dynamodb         True        True      xpkg.upbound.io/upbound/provider-aws-dynamodb:v1.1.0     3m55s
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v1.1.0           13m
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v1.1.0       13m
+provider-aws-dynamodb         True        True      xpkg.upbound.io/upbound/provider-aws-dynamodb:v1.17.0     3m55s
+provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0           13m
+upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v1.17.0       13m
 ```
 
 ## Create a custom API
