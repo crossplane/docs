@@ -52,8 +52,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:1.1.0         97s
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:1.1.0     88s
+provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:1.16.0        97s
+upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:1.16.0    88s
 ```
 
 The S3 Provider installs a second Provider, the
