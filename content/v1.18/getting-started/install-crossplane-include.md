@@ -5,7 +5,7 @@ searchExclude: true
 
 ## Install Crossplane
 
-Crossplane installs into an existing Kubernetes cluster. 
+Crossplane installs into an existing Kubernetes cluster.
 
 {{< hint type="tip" >}}
 If you don't have a Kubernetes cluster create one locally with [Kind](https://kind.sigs.k8s.io/).
@@ -1104,7 +1104,7 @@ crossplane-d4cd8d784-ldcgb                1/1     Running   0          54s
 crossplane-rbac-manager-84769b574-6mw6f   1/1     Running   0          54s
 ```
 
-Installing Crossplane creates new Kubernetes API end-points.  
+Installing Crossplane creates new Kubernetes API end-points.
 Look at the new API end-points with `kubectl api-resources  | grep crossplane`.
 
 ```shell  {label="grep",copy-lines="1"}
@@ -1112,7 +1112,7 @@ kubectl api-resources  | grep crossplane
 compositeresourcedefinitions      xrd,xrds     apiextensions.crossplane.io/v1         false        CompositeResourceDefinition
 compositionrevisions              comprev      apiextensions.crossplane.io/v1         false        CompositionRevision
 compositions                      comp         apiextensions.crossplane.io/v1         false        Composition
-environmentconfigs                envcfg       apiextensions.crossplane.io/v1alpha1   false        EnvironmentConfig
+environmentconfigs                envcfg       apiextensions.crossplane.io/v1beta1    false        EnvironmentConfig
 usages                                         apiextensions.crossplane.io/v1alpha1   false        Usage
 configurationrevisions                         pkg.crossplane.io/v1                   false        ConfigurationRevision
 configurations                                 pkg.crossplane.io/v1                   false        Configuration

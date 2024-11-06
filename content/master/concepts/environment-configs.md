@@ -13,24 +13,24 @@ TODO: Add Policies
 
 
 A Crossplane EnvironmentConfig is a cluster-scoped, strongly typed,
-[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like 
+[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)-like
 resource used by Compositions. Compositions can use the environment to store
 information from individual resources or to apply patches.
 
 Crossplane supports multiple `EnvironmentConfigs`, each acting as a unique
-data store. 
+data store.
 
-When Crossplane creates a composite resource, Crossplane merges all the 
+When Crossplane creates a composite resource, Crossplane merges all the
 EnvironmentConfigs referenced in the associated Composition and creates a unique
 in-memory environment for that composite resource.
 
-The composite resource can read and write data to their unique 
+The composite resource can read and write data to their unique
 in-memory environment.
 
 {{<hint "important" >}}
-The in-memory environment is unique to each composite resource.  
+The in-memory environment is unique to each composite resource.
 A composite resource can't read data in another composite resource's
-environment. 
+environment.
 {{< /hint >}}
 
 <!-- vale Google.Headings = NO -->
@@ -41,14 +41,14 @@ An {{<hover label="env1" line="2">}}EnvironmentConfig{{</hover>}} has a single
 object field,
 {{<hover label="env1" line="5">}}data{{</hover>}}.
 
-An EnvironmentConfig supports any data inside the 
+An EnvironmentConfig supports any data inside the
 {{<hover label="env1" line="5">}}data{{</hover>}} field.
 
-Here an example 
+Here an example
 {{<hover label="env1" line="2">}}EnvironmentConfig{{</hover>}}.
 
 ```yaml {label="env1"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: EnvironmentConfig
 metadata:
   name: example-environment

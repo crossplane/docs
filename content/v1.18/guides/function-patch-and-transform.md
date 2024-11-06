@@ -73,12 +73,12 @@ Crossplane has four core components that users commonly mix up:
 * [Composition]({{<ref "../concepts/compositions">}}) - A template to define
   how to create resources.
 * [composite resource Definition]({{<ref "../concepts/composite-resource-definitions">}})
-  (`XRD`) - A custom API specification. 
+  (`XRD`) - A custom API specification.
 * [composite resource]({{<ref "../concepts/composite-resources">}}) (`XR`) -
   Created by using the custom API defined in a composite resource Definition.
-  XRs use the Composition template to create new managed resources. 
+  XRs use the Composition template to create new managed resources.
 * [Claim]({{<ref "../concepts/claims" >}}) (`XRC`) - Like a composite resource,
-  but with namespace scoping. 
+  but with namespace scoping.
 {{</expand >}}
 
 ## Install the function
@@ -107,7 +107,7 @@ The `resources` field the function's input defines the set of things that a
 composite resource creates when it uses this function.
 
 For example, the input can define a template to create a virtual machine and an
-associated storage bucket at the same time. 
+associated storage bucket at the same time.
 
 {{<hint "tip" >}}
 Crossplane calls the resources a composite resource creates
@@ -121,8 +121,8 @@ name used with the Provider.
 The contents of the `base` are identical to creating a standalone
 [managed resource]({{<ref "../concepts/managed-resources">}}).
 
-This example uses 
-[Upbound's Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.35.0)
+This example uses
+[Upbound's Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-family-aws/v1.17.0)
 to define a S3 storage `Bucket` and EC2 compute `Instance`.
 
 After defining the `apiVersion` and `kind`, define the `spec.forProvider` fields
@@ -174,10 +174,10 @@ You can't template namespaced resources.
 ## Create a patch
 
 Each entry in the `resources` list can include a list of patches. The `patches`
-field takes a list of patches to apply to the individual resource. 
+field takes a list of patches to apply to the individual resource.
 
 Each patch has a `type`, which defines what kind of patch action Crossplane
-applies. 
+applies.
 
 Patches reference fields inside different resources depending on the patch type,
 but all patches reference a `fromFieldPath` and `toFieldPath`.
@@ -212,7 +212,7 @@ subset of [JSONPath selectors](https://kubernetes.io/docs/reference/kubectl/json
 called "field paths."
 
 Field paths can select any field in a composite resource or managed resource
-object, including the `metadata`, `spec` or `status` fields. 
+object, including the `metadata`, `spec` or `status` fields.
 
 Field paths can be a string matching a field name or an array index, in
 brackets. Field names may use a `.` character to select child elements.
@@ -220,7 +220,7 @@ brackets. Field names may use a `.` character to select child elements.
 #### Example field paths
 Here are some example selectors from a composite resource object.
 {{<table "table" >}}
-| Selector | Selected element | 
+| Selector | Selected element |
 | --- | --- |
 | `kind` | `kind` |
 | `metadata.labels['crossplane.io/claim-name']` | `my-example-claim` |
@@ -259,7 +259,7 @@ You can reuse a patch object on multiple resources by using a PatchSet.
 
 To create a PatchSet, define a `patchSets` object in the function's input.
 
-Each patch inside a PatchSet has a `name` and a list of `patches`.  
+Each patch inside a PatchSet has a `name` and a list of `patches`.
 
 Apply the PatchSet to a resource with a patch `type: PatchSet`. Set the
 `patchSetName` to the `name` of the PatchSet.
@@ -285,11 +285,11 @@ resources:
     # Removed for brevity
   patches:
     - type: PatchSet
-      patchSetName: my-patchset  
+      patchSetName: my-patchset
 ```
 
 {{<hint "important" >}}
-A PatchSet can't contain other PatchSets.  
+A PatchSet can't contain other PatchSets.
 
 Crossplane ignores any [transforms](#transform-a-patch) or
 [policies](#patch-policies) in a PatchSet.
@@ -299,10 +299,10 @@ Crossplane ignores any [transforms](#transform-a-patch) or
 
 Function Patch and Transform can't directly patch between two composed
 resources. For example, generating a network resource and patching the resource
-name to a compute resource. 
+name to a compute resource.
 
 A resource can patch to a user-defined `status` field in the composite resource.
-Another resource can then read from that `Status` field to patch a field. 
+Another resource can then read from that `Status` field to patch a field.
 
 First, define a custom `status` in the composite resource Definition and a
 custom field, for example `secondResource`
@@ -329,7 +329,7 @@ spec:
 
 Inside the function input the resource with the source data uses a
 `ToCompositeFieldPath` patch to write data to the `status.secondResource` field
-in the composite resource. 
+in the composite resource.
 
 The destination resource uses a `FromCompositeFieldPath` patch to read data from
 the composite resource `status.secondResource` field in the composite resource
@@ -360,7 +360,7 @@ resources:
 ```
 
 Describe the composite resource to view the `resources` and the
-`status.secondResource` value. 
+`status.secondResource` value.
 
 ```yaml {label="descCompPatch",copy-lines="none"}
 $ kubectl describe composite
@@ -386,30 +386,25 @@ Labels:       crossplane.io/composite=my-example-claim-jp7rx
               secondResource=my-example-claim-jp7rx-gfg4m
 ```
 
-## Patch with EnvironmentConfigs 
+## Patch with EnvironmentConfigs
 
-Crossplane uses EnvironmentConfigs to create in-memory data stores. Compositions 
-can read and write from this data store as part of the patch process. 
-
-{{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. Alpha features aren't enabled by
-default. 
-{{< /hint >}}
+Crossplane uses EnvironmentConfigs to create in-memory data stores. Compositions
+can read and write from this data store as part of the patch process.
 
  EnvironmentConfigs can predefine data that Compositions can use or a composite
  resource can write data to their in-memory environment for other resources to
- read. 
+ read.
 
 <!-- vale off -->
 {{< hint "note" >}}
-<!-- vale on --> 
+<!-- vale on -->
 Read the [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page
 for more information on using EnvironmentConfigs.
 {{< /hint >}}
 
 To apply a patch using EnvironmentConfigs, first define which EnvironmentConfigs
-to use with 
-`environment.environmentConfigs`. 
+to use with
+`environment.environmentConfigs`.
 
 <!-- vale Google.Quotes = NO -->
 <!-- vale gitlab.SentenceLength = NO -->
@@ -437,7 +432,7 @@ To patch between the composite resource and the in-memory environment use
 `patches` inside of the `environment`.
 
 Use the `ToCompositeFieldPath` to copy data from the in-memory environment to
-the composite resource.  
+the composite resource.
 
 Use the `FromCompositeFieldPath` to copy data from the composite resource to the
 in-memory environment.
@@ -461,7 +456,7 @@ Individual resources can use any data written to their in-memory environment.
 
 To patch an individual resource, inside the `patches` of the resource, use
 `ToEnvironmentFieldPath` to copy data from the resource to the in-memory
-environment.  
+environment.
 
 Use `FromEnvironmentFieldPath` to copy data to the resource from the in-memory
 environment.
@@ -486,31 +481,31 @@ resources:
     toFieldPath: spec.forProvider.tags
 ```
 
-The [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page has 
+The [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page has
 more information on EnvironmentConfigs options and usage.
 
 ## Types of patches
 Function Patch and Transform supports multiple patch types, each using a
-different source for data and applying the patch to a different location. 
+different source for data and applying the patch to a different location.
 
 Summary of Crossplane patches
 {{< table "table table-hover" >}}
-| Patch Type | Data Source | Data Destination | 
-| ---  | --- | --- | 
-| [FromCompositeFieldPath](#fromcompositefieldpath) | A field in the composite resource. | A field in the composed resource. | 
-| [ToCompositeFieldPath](#tocompositefieldpath) | A field in the composed resource. | A field in the composite resource. |  
-| [CombineFromComposite](#combinefromcomposite) | Multiple fields in the composite resource. | A field in the composed resource. | 
-| [CombineToComposite](#combinetocomposite) | Multiple fields in the composed resource. | A field in the composite resource. | 
-| [FromEnvironmentFieldPath](#fromenvironmentfieldpath) | Data in the in-memory environment | A field in the composed resource. | 
-| [ToEnvironmentFieldPath](#toenvironmentfieldpath) | A field in the composed resource. | The in-memory environment. | 
-| [CombineFromEnvironment](#combinefromenvironment) | Multiple fields in the in-memory environment. | A field in the composed resource. | 
-| [CombineToEnvironment](#combinetoenvironment) | Multiple fields in the composed resource. | A field in the in-memory environment. | 
+| Patch Type | Data Source | Data Destination |
+| ---  | --- | --- |
+| [FromCompositeFieldPath](#fromcompositefieldpath) | A field in the composite resource. | A field in the composed resource. |
+| [ToCompositeFieldPath](#tocompositefieldpath) | A field in the composed resource. | A field in the composite resource. |
+| [CombineFromComposite](#combinefromcomposite) | Multiple fields in the composite resource. | A field in the composed resource. |
+| [CombineToComposite](#combinetocomposite) | Multiple fields in the composed resource. | A field in the composite resource. |
+| [FromEnvironmentFieldPath](#fromenvironmentfieldpath) | Data in the in-memory environment | A field in the composed resource. |
+| [ToEnvironmentFieldPath](#toenvironmentfieldpath) | A field in the composed resource. | The in-memory environment. |
+| [CombineFromEnvironment](#combinefromenvironment) | Multiple fields in the in-memory environment. | A field in the composed resource. |
+| [CombineToEnvironment](#combinetoenvironment) | Multiple fields in the composed resource. | A field in the in-memory environment. |
 {{< /table >}}
 
 {{<hint "note" >}}
 All the following examples use the same set of Compositions,
-CompositeResourceDefinitions, Claims and EnvironmentConfigs.  
-Only the applied patches change between examples. 
+CompositeResourceDefinitions, Claims and EnvironmentConfigs.
+Only the applied patches change between examples.
 
 All examples rely on Upbound
 [provider-aws-s3](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/)
@@ -585,9 +580,9 @@ spec:
                 type: string
               field2:
                 type: string
-              field3: 
+              field3:
                 type: string
-              desiredRegion: 
+              desiredRegion:
                 type: string
               boolField:
                 type: boolean
@@ -619,7 +614,7 @@ spec:
 
 {{< expand "Reference EnvironmentConfig" >}}
 ```yaml {copy-lines="all"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: EnvironmentConfig
 metadata:
   name: example-environment
@@ -639,19 +634,19 @@ data:
 <!-- vale Google.Headings = YES -->
 
 The `FromCompositeFieldPath` patch takes a value in a composite resource and
-applies it to a field in the composed resource. 
+applies it to a field in the composed resource.
 
 {{< hint "tip" >}}
 Use the `FromCompositeFieldPath` patch to apply options from users in their
-Claims to settings in managed resource `forProvider` settings. 
+Claims to settings in managed resource `forProvider` settings.
 {{< /hint >}}
 
 For example, to use the value `desiredRegion` provided by a user in a composite
-resource to a managed resource's `region`. 
+resource to a managed resource's `region`.
 
-The `fromFieldPath` value is a field in the composite resource. 
+The `fromFieldPath` value is a field in the composite resource.
 
-The `toFieldPath` value is the field in the composed resource to change. 
+The `toFieldPath` value is the field in the composed resource to change.
 
 ```yaml {label="fromComposite",copy-lines="9-11"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -713,7 +708,7 @@ resources:
       toFieldPath: metadata.labels['ZoneID']
 ```
 
-View the created managed resource to see the 
+View the created managed resource to see the
 `Hosted Zone Id` field.
 ```yaml {label="toCompMR",copy-lines="none"}
 $ kubectl describe bucket
@@ -738,20 +733,20 @@ Labels:       ZoneID=Z2O1EMRO9K5GLX
 <!-- vale Google.Headings = YES -->
 
 The `CombineFromComposite` patch takes values from the composite resource,
-combines them and applies them to the composed resource. 
+combines them and applies them to the composed resource.
 
 {{< hint "tip" >}}
 Use the `CombineFromComposite` patch to create complex strings, like security
-policies and apply them to a composed resource. 
+policies and apply them to a composed resource.
 {{< /hint >}}
 
 For example, use the Claim value `desiredRegion` and `field2` to generate the
 managed resource's `name`
 
-The `CombineFromComposite` patch only supports the `combine` option. 
+The `CombineFromComposite` patch only supports the `combine` option.
 
 The `variables` are the list of `fromFieldPath` values from the composite
-resource to combine. 
+resource to combine.
 
 The only supported `strategy` is `strategy: string`.
 
@@ -760,7 +755,7 @@ Optionally you can apply a `string.fmt`, based on
 strings.
 
 The `toFieldPath` is the field in the composed resource to apply the new string
-to. 
+to.
 
 ```yaml {label="combineFromComp",copy-lines="11-20"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -797,33 +792,33 @@ Name:         my-resource-eu-north-1-field2-text
 <!-- vale Google.Headings = YES -->
 
 The `CombineToComposite` patch takes values from the composed resource, combines
-them and applies them to the composite resource. 
+them and applies them to the composite resource.
 
 {{<hint "tip" >}}
 Use `CombineToComposite` patches to create a single field like a URL from
-multiple fields in a managed resource. 
+multiple fields in a managed resource.
 {{< /hint >}}
 
 For example, use the managed resource `name` and `region` to generate a custom
-`url` field. 
+`url` field.
 
 {{< hint "important" >}}
 Writing custom fields in the status field of a composite resource requires
-defining the custom fields in the CompositeResourceDefinition first. 
+defining the custom fields in the CompositeResourceDefinition first.
 {{< /hint >}}
 
-The `CombineToComposite` patch only supports the `combine` option. 
+The `CombineToComposite` patch only supports the `combine` option.
 
-The `variables` are the list of `fromFieldPath` the managed resource to combine. 
+The `variables` are the list of `fromFieldPath` the managed resource to combine.
 
 The only supported `strategy` is `strategy: string`.
 
-Optionally you can apply a `string.fmt`, based on 
-[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+Optionally you can apply a `string.fmt`, based on
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the
 strings.
 
 The `toFieldPath` is the field in the composite resource to apply the new string
-to. 
+to.
 
 ```yaml {label="combineToComposite",copy-lines="9-11"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -866,9 +861,9 @@ Status:
 <!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
+EnvironmentConfigs are an alpha feature. They aren't enabled by default.
 
-For more information about using an EnvironmentConfig, read the 
+For more information about using an EnvironmentConfig, read the
 [EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
 {{< /hint >}}
 
@@ -877,7 +872,7 @@ and applies them to the composed resource.
 
 {{<hint "tip" >}}
 Use `FromEnvironmentFieldPath` to apply custom managed resource settings based
-on the current environment.  
+on the current environment.
 {{< /hint >}}
 
 For example, use the environment's `locations.eu` value and apply it as the
@@ -900,7 +895,7 @@ resources:
       toFieldPath: spec.forProvider.region
 ```
 
-Verify managed resource to confirm the applied patch. 
+Verify managed resource to confirm the applied patch.
 
 ```yaml {copy-lines="none"}
 kubectl describe bucket
@@ -918,9 +913,7 @@ Spec:
 <!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
-
-For more information about using an EnvironmentConfig, read the 
+For more information about using an EnvironmentConfig, read the
 [EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
 {{< /hint >}}
 
@@ -929,7 +922,7 @@ applies it to the in-memory environment.
 
 {{<hint "tip" >}}
 Use `ToEnvironmentFieldPath` to write data to the environment that any
-FromEnvironmentFieldPath patch can access. 
+FromEnvironmentFieldPath patch can access.
 {{< /hint >}}
 
 For example, use the desired `region` value and apply it as the environment's
@@ -962,9 +955,7 @@ wrote the value to the environment.
 <!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
-
-For more information about using an EnvironmentConfig, read the 
+For more information about using an EnvironmentConfig, read the
 [EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
 {{< /hint >}}
 
@@ -973,25 +964,25 @@ environment and applies them to the composed resource.
 
 {{<hint "tip" >}}
 Use `CombineFromEnvironment` patch to create complex strings, like security
-policies and apply them to a managed resource. 
+policies and apply them to a managed resource.
 {{< /hint >}}
 
 For example, combine multiple fields in the environment to create a unique
-`annotation` . 
+`annotation` .
 
-The `CombineFromEnvironment` patch only supports the `combine` option. 
+The `CombineFromEnvironment` patch only supports the `combine` option.
 
 The only supported `strategy` is `strategy: string`.
 
 The `variables` are the list of `fromFieldPath` values from the in-memory
-environment to combine. 
+environment to combine.
 
-Optionally you can apply a `string.fmt`, based on 
-[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+Optionally you can apply a `string.fmt`, based on
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the
 strings.
 
 The `toFieldPath` is the field in the composed resource to apply the new string
-to. 
+to.
 
 ```yaml {label="combineFromEnv",copy-lines="11-20"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -1011,12 +1002,12 @@ resources:
         variables:
         - fromFieldPath: key1
         - fromFieldPath: key2
-        string: 
+        string:
           fmt: "%s-%s"
       toFieldPath: metadata.annotations[EnvironmentPatch]
 ```
 
-Describe the managed resource to see new 
+Describe the managed resource to see new
 `annotation`.
 
 ```yaml {copy-lines="none",label="combineFromEnvDesc"}
@@ -1032,9 +1023,7 @@ Annotations:  EnvironmentPatch: value1-value2
 <!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. They aren't enabled by default.  
-
-For more information about using an EnvironmentConfig, read the 
+For more information about using an EnvironmentConfig, read the
 [EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
 {{< /hint >}}
 
@@ -1043,26 +1032,26 @@ resource and applies them to the in-memory EnvironmentConfig environment.
 
 {{<hint "tip" >}}
 Use `CombineToEnvironment` patch to create complex strings, like security
-policies to use in other managed resources. 
+policies to use in other managed resources.
 {{< /hint >}}
 
 For example, combine multiple fields in the managed resource to create a unique
-string and store it in the environment's `key2` value. 
+string and store it in the environment's `key2` value.
 
 The string combines the managed resource `Kind` and `region`.
 
-The `CombineToEnvironment` patch only supports the `combine` option. 
+The `CombineToEnvironment` patch only supports the `combine` option.
 
 The only supported `strategy` is `strategy: string`.
 
 The `variables` are the list of `fromFieldPath` values in the managed resource
-to combine. 
+to combine.
 
-Optionally you can apply a `string.fmt`, based on 
-[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the 
+Optionally you can apply a `string.fmt`, based on
+[Go string formatting](https://pkg.go.dev/fmt) to specify how to combine the
 strings.
 
-The `toFieldPath` is the key in the environment to write the new string to. 
+The `toFieldPath` is the key in the environment to write the new string to.
 
 ```yaml {label="combineToEnv",copy-lines="none"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -1093,30 +1082,30 @@ wrote the value to the environment.
 ## Transform a patch
 
 When applying a patch, Crossplane supports modifying the data before applying it
-as a patch. Crossplane calls this a "transform" operation. 
+as a patch. Crossplane calls this a "transform" operation.
 
 Summary of Crossplane transforms.
 {{< table "table table-hover" >}}
 | Transform Type | Action |
 | ---  | --- |
-| [convert](#convert-transforms) | Converts an input data type to a different type. Also called "casting." | 
-| [map](#map-transforms) | Selects a specific output based on a specific input. | 
-| [match](#match-transform) | Selects a specific output based on a string or regular expression. | 
-| [math](#math-transforms) | Applies a mathematical operation on the input. | 
-| [string](#string-transforms) | Change the input string using [Go string formatting](https://pkg.go.dev/fmt). | 
+| [convert](#convert-transforms) | Converts an input data type to a different type. Also called "casting." |
+| [map](#map-transforms) | Selects a specific output based on a specific input. |
+| [match](#match-transform) | Selects a specific output based on a string or regular expression. |
+| [math](#math-transforms) | Applies a mathematical operation on the input. |
+| [string](#string-transforms) | Change the input string using [Go string formatting](https://pkg.go.dev/fmt). |
 {{< /table >}}
 
-Apply a transform directly to an individual patch with the `transforms` field. 
+Apply a transform directly to an individual patch with the `transforms` field.
 
-A `transform` requires a `type`, indicating the transform action to take. 
+A `transform` requires a `type`, indicating the transform action to take.
 
 The other transform field is the same as the `type`, in this example, `map`.
 
-The other fields depend on the patch type used. 
+The other fields depend on the patch type used.
 
 This example uses a `type: map` transform, taking the input
 `spec.desiredRegion`, matching it to either `us` or `eu` and returning the
-corresponding AWS region for the `spec.forProvider.region` value. 
+corresponding AWS region for the `spec.forProvider.region` value.
 
 ```yaml {label="transform1",copy-lines="none"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -1147,10 +1136,10 @@ type.
 
 {{< hint "tip" >}}
 Some provider APIs require a field to be a string. Use a `convert` type to
-change any boolean or integer fields to strings. 
+change any boolean or integer fields to strings.
 {{< /hint >}}
 
-A `convert` transform requires a `toType`, defining the output data type. 
+A `convert` transform requires a `toType`, defining the output data type.
 
 ```yaml {label="convert",copy-lines="none"}
 patches:
@@ -1165,23 +1154,23 @@ patches:
 
 Supported `toType` values:
 {{< table "table table-sm table-hover" >}}
-| `toType` value | Description | 
+| `toType` value | Description |
 | -- | -- |
-| `bool` | A boolean value of `true` or `false`. | 
-| `float64` | A 64-bit float value. | 
-| `int` | A 32-bit integer value. | 
-| `int64` | A 64-bit integer value. | 
-| `string` | A string value. | 
+| `bool` | A boolean value of `true` or `false`. |
+| `float64` | A 64-bit float value. |
+| `int` | A 32-bit integer value. |
+| `int64` | A 64-bit integer value. |
+| `string` | A string value. |
 | `object` | An object. |
 | `array` | An array. |
 {{< /table >}}
 
 #### Converting strings to booleans
-When converting from a string to a `bool` Crossplane considers the string values  
-`1`, `t`, `T`, `TRUE`, `True` and `true` equal to the boolean value `True`.  
+When converting from a string to a `bool` Crossplane considers the string values
+`1`, `t`, `T`, `TRUE`, `True` and `true` equal to the boolean value `True`.
 
 The strings `0`, `f`, `F`, `FALSE`, `False` and `false` are equal to the boolean
-value `False`. 
+value `False`.
 
 #### Converting numbers to booleans
 Crossplane considers the integer `1` and float `1.0` equal to the boolean value
@@ -1194,19 +1183,19 @@ Crossplane converts the boolean value `True` to the integer `1` or float64
 The value `False` converts to the integer `0` or float64 `0.0`
 
 #### Converting strings to float64
-When converting from a `string` to a `float64` Crossplane supports an optional  
+When converting from a `string` to a `float64` Crossplane supports an optional
 `format: quantity` field.
 
 Using `format: quantity` translates size suffixes like `M` for megabyte or `Mi`
-for megabit into the correct float64 value. 
+for megabit into the correct float64 value.
 
 {{<hint "note" >}}
-Refer to the [Go language docs](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity) 
+Refer to the [Go language docs](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)
 for a full list of supported suffixes.
 {{</hint >}}
 
 Add `format: quantity` to the `convert` object to enable quantity suffix
-support. 
+support.
 
 ```yaml {label="format",copy-lines="all"}
 - type: convert
@@ -1267,15 +1256,15 @@ format for this conversion.
 
 ### Map transforms
 
-The `map` transform type _maps_ an input value to an output value. 
+The `map` transform type _maps_ an input value to an output value.
 
 {{< hint "tip" >}}
 The `map` transform is useful for translating generic region names like `US` or
-`EU` to provider specific region names. 
+`EU` to provider specific region names.
 {{< /hint >}}
 
 The `map` transform compares the value from the `fromFieldPath` to the options
-listed in the `map`.  
+listed in the `map`.
 
 If Crossplane finds the value, Crossplane puts the mapped value in the
 `toFieldPath`.
@@ -1285,10 +1274,10 @@ Crossplane throws an error for the patch if the value isn't found.
 {{< /hint >}}
 
 `spec.field1` is the string `"field1-text"` then Crossplane uses the string
-`firstField` for the `annotation`.  
+`firstField` for the `annotation`.
 
 If `spec.field1` is the string `"field2-text"` then Crossplane uses the string
-`secondField` for the `annotation`.  
+`secondField` for the `annotation`.
 
 ```yaml {label="map",copy-lines="none"}
 patches:
@@ -1324,7 +1313,7 @@ Annotations:  crossplane.io/composition-resource-name: bucket1
 
 ### Match transform
 
-The `match` transform is like the `map` transform.  
+The `match` transform is like the `map` transform.
 
 The `match` transform adds support for regular expressions along with exact
 strings and can provide default values if there isn't a match.
@@ -1332,7 +1321,7 @@ strings and can provide default values if there isn't a match.
 A `match` object requires a `patterns` object.
 
 The `patterns` is a list of one or more patterns to attempt to match the input
-value against. 
+value against.
 
 ```yaml {label="match",copy-lines="1-8"}
 patches:
@@ -1350,7 +1339,7 @@ patches:
 ```
 
 Match `patterns` can be either `type: literal` to match an exact string or
-`type: regexp` to match a regular expression. 
+`type: regexp` to match a regular expression.
 
 {{<hint "note" >}}
 Crossplane stops processing matches after the first pattern match.
@@ -1358,13 +1347,13 @@ Crossplane stops processing matches after the first pattern match.
 
 #### Match an exact string
 
-Use a `pattern` with 
-`type: literal` to match an 
-exact string. 
+Use a `pattern` with
+`type: literal` to match an
+exact string.
 
-On a successful match Crossplane provides the 
+On a successful match Crossplane provides the
 `result:` to
-the patch `toFieldPath`. 
+the patch `toFieldPath`.
 
 ```yaml {label="matchLiteral"}
 patches:
@@ -1382,11 +1371,11 @@ patches:
 
 #### Match a regular expression
 
-Use a `pattern` with `type: regexp` to match a regular expression.  
+Use a `pattern` with `type: regexp` to match a regular expression.
 Define a `regexp` key with the value of the regular expression to match.
 
 On a successful match Crossplane provides the `result:` to the patch
-`toFieldPath`. 
+`toFieldPath`.
 
 ```yaml {label="matchRegex"}
 patches:
@@ -1405,15 +1394,15 @@ patches:
 #### Using default values
 
 Optionally you can provide a default value to use if there is no matching
-pattern.  
+pattern.
 
 The default value can either be the original input value or a defined default
-value. 
+value.
 
 Use `fallbackTo: Value` to provide a default value if a match isn't found.
 
 For example if the string `unknownString` isn't matched, Crossplane provides the
-`Value` `StringNotFound` to the `toFieldPath` 
+`Value` `StringNotFound` to the `toFieldPath`
 
 ```yaml {label="defaultValue"}
 patches:
@@ -1453,10 +1442,10 @@ patches:
 ### Math transforms
 
 Use the `math` transform to multiply an input or apply a minimum or maximum
-value. 
+value.
 
 {{<hint "important">}}
-A `math` transform only supports integer inputs. 
+A `math` transform only supports integer inputs.
 {{< /hint >}}
 
 ```yaml {label="math",copy-lines="1-7"}
@@ -1559,7 +1548,7 @@ patches:
           type: ...
 ```
 
-String transforms support the following 
+String transforms support the following
 `types`
 
 * [Convert](#string-convert)
@@ -1573,9 +1562,9 @@ String transforms support the following
 
 The `type: convert`
 converts the input based on one of the following conversion types:
-* `ToUpper` - Change the string to all upper case letters. 
+* `ToUpper` - Change the string to all upper case letters.
 * `ToLower` - Change the string to all lower case letters.
-* `ToBase64` - Create a new base64 string from the input. 
+* `ToBase64` - Create a new base64 string from the input.
 * `FromBase64` - Create a new text string from a base64 input.
 * `ToJson` - Convert the input string to valid JSON.
 * `ToSha1` - Create a SHA-1 hash of the input string.
@@ -1598,7 +1587,7 @@ patches:
 #### String format
 
 The `type: format` applies [Go string formatting](https://pkg.go.dev/fmt) to the
-input. 
+input.
 
 ```yaml {label="typeFormat"}
 patches:
@@ -1634,9 +1623,9 @@ patches:
 
 #### Regular expression type
 
-The `type: Regexp` extracts the part of the input matching a regular expression. 
+The `type: Regexp` extracts the part of the input matching a regular expression.
 
-Optionally use a `group` to match a regular expression capture group.  
+Optionally use a `group` to match a regular expression capture group.
 By default Crossplane matches the entire regular expression.
 
 ```yaml {label="typeRegex"}
@@ -1655,8 +1644,8 @@ patches:
 
 #### Trim prefix
 
-The `type: TrimPrefix` uses 
-Go's [TrimPrefix](https://pkg.go.dev/strings#TrimPrefix) and removes characters 
+The `type: TrimPrefix` uses
+Go's [TrimPrefix](https://pkg.go.dev/strings#TrimPrefix) and removes characters
 from the beginning of a line.
 
 ```yaml {label="typeTrimP"}
@@ -1673,8 +1662,8 @@ patches:
 
 #### Trim suffix
 
-The `type: TrimSuffix` uses 
-Go's [TrimSuffix](https://pkg.go.dev/strings#TrimSuffix) and removes characters 
+The `type: TrimSuffix` uses
+Go's [TrimSuffix](https://pkg.go.dev/strings#TrimSuffix) and removes characters
 from the end of a line.
 
 ```yaml {label="typeTrimS"}
@@ -1704,15 +1693,15 @@ to exist in the data source resource.
 
 {{<hint "tip" >}}
 If a resource patch isn't working applying the `fromFieldPath: Required` policy
-may produce an error in the composite resource to help troubleshoot. 
+may produce an error in the composite resource to help troubleshoot.
 {{< /hint >}}
 
 By default, Crossplane applies the policy `fromFieldPath: Optional`. With
 `fromFieldPath: Optional` Crossplane ignores a patch if the `fromFieldPath`
-doesn't exist.   
+doesn't exist.
 
 With `fromFieldPath: Required` the composite resource produces an error if the
-`fromFieldPath` doesn't exist. 
+`fromFieldPath` doesn't exist.
 
 ```yaml {label="required"}
 patches:
@@ -1735,11 +1724,11 @@ The `toFieldPath` policy supports these options:
 {{< table "table table-hover" >}}
 | Policy | Action |
 | ---  | --- |
-| `Replace` (default) | Replace the value at `toFieldPath`. | 
-| `MergeObjects` | Recursively merge into the value at `toFieldPath`. Keep any conflicting object keys. | 
-| `ForceMergeObjects` | Recursively merge into the value at `toFieldPath`. Replace any conflicting object keys. | 
-| `MergeObjectsAppendArrays` | Like `MergeObjects`, but append values to arrays instead of replacing them. | 
-| `ForceMergeObjectsAppendArrays` | Like `ForceMergeObjects`, but append values to arrays instead of replacing them. | 
+| `Replace` (default) | Replace the value at `toFieldPath`. |
+| `MergeObjects` | Recursively merge into the value at `toFieldPath`. Keep any conflicting object keys. |
+| `ForceMergeObjects` | Recursively merge into the value at `toFieldPath`. Replace any conflicting object keys. |
+| `MergeObjectsAppendArrays` | Like `MergeObjects`, but append values to arrays instead of replacing them. |
+| `ForceMergeObjectsAppendArrays` | Like `ForceMergeObjects`, but append values to arrays instead of replacing them. |
 {{< /table >}}
 
 ```yaml {label="merge"}
@@ -1757,15 +1746,15 @@ Function patch and Transform must define the specific secret keys a resource
 creates with the `connectionDetails` object.
 
 {{<table "table table-sm" >}}
-| Secret Type | Description | 
-| --- | --- | 
-| `FromConnectionSecretKey` | Create a secret key matching the key of a secret generated by the resource. | 
+| Secret Type | Description |
+| --- | --- |
+| `FromConnectionSecretKey` | Create a secret key matching the key of a secret generated by the resource. |
 | `FromFieldPath`  | Create a secret key matching a field path of the resource. |
 | `FromValue`  | Create a secret key with a predefined value. |
 {{< /table >}}
 
 {{<hint "note">}}
-The `value` type must use a string value.  
+The `value` type must use a string value.
 
 The `value` isn't added to the individual resource secret object. The `value`
 only appears in the combined composite resource secret.
@@ -1809,23 +1798,23 @@ The `connectionDetails` in a resource can reference a secret from a resource
 with `FromConnectionSecretKey`, from another field in the resource with
 `FromFieldPath` or a statically defined value with `FromValue`.
 
-Crossplane sets the secret key to the `name` value. 
+Crossplane sets the secret key to the `name` value.
 
 Describe the secret to view the secret keys inside the secret object.
 
 {{<hint "tip" >}}
 If more than one resource generates secrets with the same secret key name,
-Crossplane only saves one value. 
+Crossplane only saves one value.
 
 Use a custom `name` to create unique secret keys.
 {{< /hint >}}
 
 {{<hint "important">}}
 Crossplane only adds connection details listed in the `connectionDetails` to the
-combined secret object.  
+combined secret object.
 
 Any connection secrets in a managed resource, not defined in the
-`connectionDetails` aren't added to the combined secret object.   
+`connectionDetails` aren't added to the combined secret object.
 {{< /hint >}}
 
 
@@ -1847,17 +1836,17 @@ myStaticSecret:  18 bytes
 
 {{<hint "note" >}}
 The CompositeResourceDefinition can also limit which keys Crossplane stores from
-the composite resources.  
+the composite resources.
 
 By default an XRD writes all secret keys listed in the composed resources
 `connectionDetails` to the combined secret object.
 
-Read the 
-[CompositeResourceDefinition documentation]({{<ref "../concepts/composite-resource-definitions#manage-connection-secrets">}}) 
+Read the
+[CompositeResourceDefinition documentation]({{<ref "../concepts/composite-resource-definitions#manage-connection-secrets">}})
 for more information on restricting secret keys.
 {{< /hint >}}
 
-For more information on connection secrets read the 
+For more information on connection secrets read the
 [Connection Secrets concepts age]({{<ref "../concepts/connection-details">}}).
 
 ## Resource readiness checks
@@ -1917,7 +1906,7 @@ expressions aren't supported in a readiness check.
 
 
 For example, matching the string `Online` in the resource's
-`status.atProvider.state` field. 
+`status.atProvider.state` field.
 
 ```yaml {label="matchstring",copy-lines="none"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -1939,12 +1928,12 @@ field in that resource matches a specified integer.
 
 {{<hint "note" >}}
 <!-- vale Google.WordList = NO -->
-Crossplane doesn't support matching `0`. 
+Crossplane doesn't support matching `0`.
 <!-- vale Google.WordList = YES -->
 {{</hint >}}
 
 For example, matching the number `4` in the resource's `status.atProvider.state`
-field. 
+field.
 
 ```yaml {label="matchint",copy-lines="none"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -1961,7 +1950,7 @@ resources:
 
 ### Match that a field exists
 `NonEmpty` considers the composed resource to be ready when a field exists with
-a value. 
+a value.
 
 {{<hint "note" >}}
 <!-- vale Google.WordList = NO -->
@@ -1969,7 +1958,7 @@ Crossplane considers a value of `0` or an empty string as empty.
 {{</hint >}}
 
 For example, to check that a resource's `status.atProvider.state` field isn't
-empty. 
+empty.
 <!-- vale Google.WordList = YES -->
 
 ```yaml {label="NonEmpty",copy-lines="none"}
@@ -1987,12 +1976,12 @@ resources:
 {{<hint "tip" >}}
 Checking `NonEmpty` doesn't
 require setting any other fields.
-{{< /hint >}} 
+{{< /hint >}}
 
 ### Always consider a resource ready
 `None` considers the composed resource to be ready as soon as it's created.
 Crossplane doesn't wait for any other conditions before declaring the resource
-ready. 
+ready.
 
 For example, consider `my-resource` ready as soon as it's created.
 
@@ -2036,15 +2025,15 @@ Two types of checks exist for matching boolean fields:
  * `MatchTrue`
  * `MatchFalse`
 
-`MatchTrue` considers the composed resource to be ready when the value of a 
+`MatchTrue` considers the composed resource to be ready when the value of a
 field inside that resource is `true`.
 
-`MatchFalse` considers the composed resource to be ready when the value of a 
+`MatchFalse` considers the composed resource to be ready when the value of a
 field inside that resource is `false`.
 
-For example, consider 
+For example, consider
 `my-resource`, which is
-ready if 
+ready if
 ` status.atProvider.manifest.status.ready`
 is `true`.
 
@@ -2062,7 +2051,7 @@ resources:
 {{<hint "tip" >}}
 Checking `MatchTrue` doesn't
 require setting any other fields.
-{{< /hint >}} 
+{{< /hint >}}
 
 `MatchFalse` matches fields that express readiness with the value `false`.
 
@@ -2083,4 +2072,4 @@ resources:
 
 {{<hint "tip" >}}
 Checking `MatchFalse` doesn't require setting any other fields.
-{{< /hint >}} 
+{{< /hint >}}
