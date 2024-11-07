@@ -44,6 +44,8 @@ function-go-templating
 function-patch-and-transform
 HealthyPackageRevision
 Helm-like
+ImageConfig
+ImageConfigs
 InactivePackageRevision
 initProvider
 KCL
@@ -58,6 +60,7 @@ ProviderConfigs
 ProviderRevision
 RunFunctionRequest
 RunFunctionResponse
+Sigstore
 StoreConfig
 StoreConfigs
 ToCompositeFieldPath
