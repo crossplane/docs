@@ -130,6 +130,20 @@ volumes.
 Providers support multiple configuration options to change installation related
 settings. 
 
+{{<hint "tip" >}}
+Crossplane supports installations with image digests instead of tags to get deterministic
+and repeatable installations.
+
+```yaml {label="digest"}
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/provider-aws@sha256:ee6bece46dbb54cc3f0233961f5baac317fa4e4a81b41198bdc72fc472d113d0
+```
+{{< /hint >}}
+
 #### Provider pull policy
 
 Use a {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} to
