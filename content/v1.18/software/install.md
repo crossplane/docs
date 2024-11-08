@@ -259,6 +259,7 @@ at the table below.
 | Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
 | Alpha | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
+| Alpha | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
 {{< /table >}}
 {{< /expand >}}
 

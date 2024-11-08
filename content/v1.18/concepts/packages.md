@@ -54,6 +54,20 @@ spec:
   package: xpkg.upbound.io/upbound/platform-ref-aws:v0.6.0
 ```
 
+{{<hint "tip" >}}
+Crossplane supports installations with image digests instead of tags to get deterministic
+and repeatable installations.
+
+```yaml {label="digest"}
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: platform-ref-aws
+spec:
+  package: xpkg.upbound.io/upbound/platform-ref-aws@sha256:a30ad655c7699218d9234285d838d85582f015d02f7f061f8486b28248fd7db7
+```
+{{< /hint >}}
+
 Crossplane installs the Compositions, Composite Resource Definitions and
 Providers listed in the Configuration. 
 
