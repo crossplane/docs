@@ -152,7 +152,7 @@ spec:
                 string:
                   type: Format
                   fmt: "%s-secret2"
-``  `
+```
 {{</expand >}}
 
 {{<expand "Reference CompositeResourceDefinition" >}}
