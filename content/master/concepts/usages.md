@@ -1,8 +1,9 @@
 ---
 title: Usages
 weight: 95
-state: alpha
+state: beta
 alphaVersion: "1.14"
+betaVersion: "1.19"
 description: "Usage defines a usage relationship for Managed Resources or Composites"
 ---
 
@@ -19,12 +20,14 @@ first use case and the section [Usage for Deletion Ordering](#usage-for-deletion
 for the second one.
 
 ## Enable usages
-Usages are an alpha feature. Alpha features aren't enabled by default.
+<!-- vale write-good.Passive = NO -->
+Usages are a beta feature. Beta features are enabled by default.
+<!-- vale write-good.Passive = YES -->
 
-Enable `Usage` support by 
+Disable `Usage` support by 
 [changing the Crossplane pod setting]({{<ref "./pods#change-pod-settings">}})
-and enabling  
-{{<hover label="deployment" line="12">}}--enable-usages{{</hover>}}
+and setting  
+{{<hover label="deployment" line="12">}}--enable-usages=false{{</hover>}}
 argument.
 
 ```yaml {label="deployment",copy-lines="12"}
@@ -39,7 +42,7 @@ spec:
       - args:
         - core
         - start
-        - --enable-usages
+        - --enable-usages=false
 ```
 
 {{<hint "tip" >}}
@@ -85,7 +88,7 @@ any deletion request with the
 {{<hover label="protect" line="11">}}reason{{</hover>}} defined.
 
 ```yaml {label="protect"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: Usage
 metadata:
   name: protect-production-database
@@ -106,7 +109,7 @@ any deletion request before the deletion of
 {{<hover label="order" line="15">}}my-prometheus-chart{{</hover>}} resource.
 
 ```yaml {label="order"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: Usage
 metadata:
   name: release-uses-cluster
@@ -132,7 +135,7 @@ This enables using {{<hover label="selectors" line="12">}}labels{{</hover>}} or
 to define resource instead of providing the resource name.
 
 ```yaml {label="selectors"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: Usage
 metadata:
   name: release-uses-cluster
@@ -166,7 +169,7 @@ random resource is selected from the list of matched resources.
 {{< /hint >}}
 
 ```yaml {label="selectors-resolved"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: Usage
 metadata:
   name: release-uses-cluster
@@ -197,7 +200,7 @@ Replaying the blocked deletion is possible by setting the
 {{<hover label="replay" line="6">}}replayDeletion{{</hover>}} field to `true`.
 
 ```yaml {label="replay"}
-apiVersion: apiextensions.crossplane.io/v1alpha1
+apiVersion: apiextensions.crossplane.io/v1beta1
 kind: Usage
 metadata:
   name: release-uses-cluster
@@ -261,7 +264,7 @@ spec:
             # Removed for brevity
         - name: release-uses-cluster
           base:
-            apiVersion: apiextensions.crossplane.io/v1alpha1
+            apiVersion: apiextensions.crossplane.io/v1beta1
             kind: Usage
             spec:
               replayDeletion: true
