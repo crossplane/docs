@@ -424,7 +424,9 @@ metadata:
   name: test-configuration
 spec:
   dependsOn:
-    - provider: xpkg.upbound.io/crossplane-contrib/provider-aws
+    - apiVersion: pkg.crossplane.io/v1
+      kind: Provider
+      package: xpkg.upbound.io/crossplane-contrib/provider-aws
       version: ">=v0.36.0"
   crossplane:
     version: ">=v1.12.1-0"
