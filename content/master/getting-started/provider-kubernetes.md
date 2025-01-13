@@ -1,4 +1,4 @@
- ---
+---
 title: KubeAdm Quickstart 
 weight: 110
 ---
