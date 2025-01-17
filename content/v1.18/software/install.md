@@ -250,16 +250,14 @@ at the table below.
 {{< table caption="Feature flags" >}}
 | Status | Flag | Description |
 | --- | --- | --- |
-| Beta | `--enable-composition-functions` | Enable support for Composition Functions. |
-| Beta | `--enable-composition-functions-extra-resources` | Enable support for Composition Functions Extra Resources. Only respected with `--enable-composition-functions` enabled. |
 | Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
-| Alpha | `--enable-environment-configs` | Enable support for EnvironmentConfigs. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
 | Alpha | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
 | Alpha | `--enable-usages` | Enable support for Usages. |
 | Alpha | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
+| Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
 {{< /table >}}
 {{< /expand >}}
 
