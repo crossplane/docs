@@ -72,7 +72,7 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-kubernetes          True        True      xpkg.upbound.io/upbound/provider-azure-network:v1.16.0  38s
+provider-kubernetes          True        True      xpkg.upbound.io/upbound/provider-kubernetes:v1.16.2  38s
 ```
 
 
