@@ -18,7 +18,7 @@ This quickstart requires:
 
 ## Install the Kubernetes provider
 
-Install the Azure Network resource provider into the Kubernetes cluster with a Kubernetes configuration 
+Install the Kubernetes provider into the Kubernetes cluster with a Kubernetes configuration 
 file. 
 
 ```yaml
