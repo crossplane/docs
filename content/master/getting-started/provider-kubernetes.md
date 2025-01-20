@@ -26,7 +26,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-azure-network
+  name: provider-kubernetes
 spec:
   package: xpkg.upbound.io/upbound/provider-kubernetes:v0.16.0
   runtimeConfigRef:
