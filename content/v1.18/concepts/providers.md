@@ -339,7 +339,7 @@ For example, this installation of the Upbound AWS reference platform is
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME              INSTALLED   HEALTHY   PACKAGE                                           AGE
-provider-aws-s3   True        False     xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0   12s
+provider-aws-s3   True        False     xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0   12s
 ```
 
 To see more information on why the Provider isn't `HEALTHY` use 
@@ -352,7 +352,7 @@ API Version:  pkg.crossplane.io/v1
 Kind:         ProviderRevision
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0
+  Image:                          xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0
   Revision:                       1
 Status:
   Conditions:
@@ -390,10 +390,10 @@ View the `ProviderRevisions` with
 ```shell {label="getPR",copy-lines="1"}
 kubectl get providerrevisions
 NAME                                       HEALTHY   REVISION   IMAGE                                                    STATE      DEP-FOUND   DEP-INSTALLED   AGE
-provider-aws-s3-dbc7f981d81f               True      1          xpkg.upbound.io/upbound/provider-aws-s3:v1.17.0          Active     1           1               10d
+provider-aws-s3-dbc7f981d81f               True      1          xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0           Active     1           1               10d
 provider-nop-552a394a8acc                  True      2          xpkg.upbound.io/crossplane-contrib/provider-nop:v0.3.0   Active                                 11d
 provider-nop-7e62d2a1a709                  True      1          xpkg.upbound.io/crossplane-contrib/provider-nop:v0.2.0   Inactive                               13d
-upbound-provider-family-aws-710d8cfe9f53   True      1          xpkg.upbound.io/upbound/provider-family-aws:v1.17.0      Active                                 10d
+upbound-provider-family-aws-710d8cfe9f53   True      1          xpkg.upbound.io/upbound/provider-family-aws:v1.0.0       Active                                 10d
 ```
 
 By default Crossplane keeps a single 
@@ -654,7 +654,7 @@ kind: Provider
 metadata:
   name: provider-gcp-iam
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-iam:v1.9.0
+  package: xpkg.upbound.io/upbound/provider-gcp-iam:v1
   runtimeConfigRef:
     name: enable-ess
 ---
