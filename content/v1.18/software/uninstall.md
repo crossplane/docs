@@ -138,10 +138,10 @@ NAME                   INSTALLED   HEALTHY   PACKAGE                            
 upbound-provider-aws   True        True      xpkg.upbound.io/upbound/provider-aws:v1.0.0   8h
 ```
 
-Remove the installed _providers_ with `kubectl delete provider`.
+Remove the installed _providers_ with `kubectl delete providers`.
 
 ```shell
-kubectl delete provider upbound-provider-aws
+kubectl delete providers upbound-provider-aws
 ```
 
 ## Uninstall the Crossplane deployment 
