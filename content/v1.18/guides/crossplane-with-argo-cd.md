@@ -132,8 +132,9 @@ data:
         local has_no_status = {
           "Composition",
           "CompositionRevision",
-          "DeploymentRuntimeConfig",
           "ControllerConfig",
+          "DeploymentRuntimeConfig",
+          "ImageConfig",
           "ProviderConfig",
           "ProviderConfigUsage"
         }
