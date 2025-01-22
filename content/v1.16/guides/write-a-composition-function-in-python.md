@@ -562,7 +562,7 @@ hatch run development
 ```
 
 {{<hint "warning">}}
-`hatch run development` runs the function without encryption or authentication.
+`hatch run development` runs the function, and listen to incoming grpc request on port 9443 without encryption or authentication.
 Only use it during testing and development.
 {{</hint>}}
 
