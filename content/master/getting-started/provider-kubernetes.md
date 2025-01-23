@@ -1,5 +1,5 @@
 ---
-title: KubeAdm Quickstart 
+title: Kubernetes Provider Quickstart
 weight: 110
 ---
 
