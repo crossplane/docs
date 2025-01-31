@@ -699,3 +699,4 @@ No resources found
   Crossplane users and contributors.
 * Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out
   what else you can do with Crossplane. 
+* Learn how to use Crossplane to compose Kubernetes app resources. Read the [App Compositions Quickstart]({{<ref "app-compositions" >}}).
