@@ -1,0 +1,102 @@
+name: Documentation Freshness Check
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Run monthly on the 1st at midnight
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  check_freshness:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0    # Need full history for git log
+    
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Create scripts directory
+      run: mkdir -p .github/scripts
+        
+    - name: Copy Python script
+      run: |
+        cat > .github/scripts/check_freshness.py << 'EOL'
+        import os
+        import subprocess
+        from datetime import datetime, timedelta
+
+        FRESHNESS_PERIOD = timedelta(days=180)  # 6 months
+        IGNORED_FILES = ["_index.md"]  # Add any files to ignore
+        now = datetime.now()
+
+        def get_last_modified_time(file_path):
+            result = subprocess.run(
+                ['git', 'log', '-1', '--format=%ct', file_path],
+                stdout=subprocess.PIPE,
+                text=True
+            )
+            if not result.stdout.strip():
+                return now  # Return current time for new files
+            timestamp = int(result.stdout.strip())
+            return datetime.fromtimestamp(timestamp)
+
+        def check_freshness(directory):
+            stale_files = []
+            for root, _, files in os.walk(directory):
+                for file in files:
+                    if file.endswith(".md"):
+                        relative_path = os.path.relpath(os.path.join(root, file), start=directory)
+                        if file in IGNORED_FILES:
+                            continue
+                        last_modified = get_last_modified_time(os.path.join(root, file))
+                        time_diff = now - last_modified
+                        if time_diff > FRESHNESS_PERIOD:
+                            stale_files.append((relative_path, last_modified))
+            return stale_files
+
+        docs_directory = "docs/content/master"  # Crossplane docs directory
+        stale_docs = check_freshness(docs_directory)
+        sorted_stale_docs = sorted(stale_docs, key=lambda x: x[1])
+
+        if sorted_stale_docs:
+            issue_body = "## Stale Documentation Alert\n\n"
+            issue_body += "The following documentation files have not been modified in the last 6 months:\n\n"
+            for doc, mod_time in sorted_stale_docs:
+                issue_body += f"- `{doc}` (Last Modified: {mod_time.strftime('%Y-%m-%d')})\n"
+            issue_body += "\nPlease review these documents to ensure they are up-to-date and accurate."
+            
+            with open("issue_body.txt", "w") as f:
+                f.write(issue_body)
+            
+            with open("has_stale.txt", "w") as f:
+                f.write("true")
+        else:
+            with open("has_stale.txt", "w") as f:
+                f.write("false")
+        EOL
+
+    - name: Run freshness check
+      run: python3 .github/scripts/check_freshness.py
+
+    - name: Check for stale docs
+      id: check
+      run: |
+        HAS_STALE=$(cat has_stale.txt)
+        echo "has_stale=$HAS_STALE" >> $GITHUB_OUTPUT
+
+    - name: Create Issue
+      if: steps.check.outputs.has_stale == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const issueBody = fs.readFileSync('issue_body.txt', 'utf8');
+          
+          await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '📚 Documentation Freshness Check Results',
+            body: issueBody,
+            labels: ['documentation', 'maintenance']
+          });
