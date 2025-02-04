@@ -3,21 +3,30 @@ title: Working without RBAC Manager
 weight: 280
 ---
 
-RBAC Manager is responsible for granting appropriate permissions to components.
+RBAC Manager is responsible for establishing appropriate roles structure to components.
 
 In cases, where administrators are not allowing permissive cluster wide-permissions,you can turn off RBAC Manager
-with argument `--set rbacManager.deploy=false` in [helm chart](https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md#configuration).
+with argument `--set rbacManager.deploy=false` in [helm chart](https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md#configuration) during installation.
 ```yaml {label="value",copy-lines="none"}
 rbacManager:
   enabled: false
 ```
 
-Once done, you need to configure custom permissions for each provider and custom resource definition. Below guides
-will instruct you step by step the additional work needed for each provider and XRD.
+Once done, you need to configure Roles on your own for each provider and Composition Resource Definitions (XRDs).
+Below guides  will instruct you step by step the additional work needed for each provider and XRD to be able to
+successfully deploy a provider and an XRD.
+
+The guide only establishes minimal number of resources to fulfill the guide's goal, RBAC Manager creates more resources
+and if you want to read more, the
+[Crossplane RBAC Manager design document](https://github.com/crossplane/crossplane/blob/main/design/design-doc-rbac-manager.md)
+has more information on the installed _ClusterRoles_.
+
+> Note: The guide doesn't address any cluster-wide permissions that are used in Core Crossplane service.
 
 ## Provider RBAC
 
-> Note: Please keep in mind this guide doesn't show manual steps for installing providers. If you want to control Crossplane Core pod permissions even further, you can manually install the provider service.
+> Note: Please keep in mind this guide doesn't show manual steps for installing providers. If you want to control 
+> Crossplane Core pod permissions even further, you can manually install the provider service.
 
 For the prpose of this guide, let's assume you want to deploy a `provider-kubernetes` to the cluster and control its
 permissions. You create a resource provider as usual
@@ -34,7 +43,7 @@ Once installed, save provider service account name
 SA=$(kubectl -n crossplane-system get sa -o name | grep provider-kubernetes | sed -e 's|serviceaccount\/||g')
 ```
 
-### ClusterRole for provider
+### Provider ClusterRole
 
 Then, create a ClusterRole, that will have necessary rules for resources that are to be managed by a provider:
 ```yaml
@@ -96,7 +105,7 @@ subjects:
   namespace: crossplane-system
 ```
 
-### ClusterRole for core Crossplane
+### Core Crossplane ClusterRole
 
 Now, create a new ClusterRole, for core Crossplane service
 ```yaml
@@ -182,10 +191,11 @@ spec:
     name: kubernetes-provider-config
 ```
 
-## Compositions
+## Composition Resource Definitions RBAC
 If you want to add a CompositionResourceDefinition in a system without RBAC Manager, you need to create the
 necessary XRD definition as well as assign permissions to the defined type to Core Crossplane ServiceAccount.
 
+### XRD ClusterRole
 For the purpose of the example, let's create a sample XRD:
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1
@@ -228,6 +238,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: compositenamespace:aggregate-to-crossplane
+  labels:
+    rbac.crossplane.io/aggregate-to-crossplane: "true"
 rules:
 - apiGroups:
   - k8s.crossplane.io

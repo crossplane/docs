@@ -221,8 +221,8 @@ file, setting `rbacManager.deploy` to `false`.
 
 {{< hint "note" >}}
 
-Instructions for changing Crossplane pod settings during installation are in the
-[Crossplane Install]({{<ref "../software/install">}}) section. 
+You can follow a guide [Working without RBAC Manager]({{<ref "../guides/working-without-rbac-manager">}})
+to understand additional steps necessary when working with this configuration in place.
 {{< /hint >}}
 
 <!-- vale Microsoft.HeadingAcronyms = NO -->
