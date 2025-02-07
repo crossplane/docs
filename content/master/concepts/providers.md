@@ -302,6 +302,47 @@ spec:
 # Removed for brevity
 ```
 
+#### Automatically update dependency versions
+
+Crossplane can automatically upgrade a package's dependency version to the minimum
+valid version that satisfies all the constraints. It's an alpha feature that
+requires enabling with the `--enable-dependency-version-upgrades` flag.
+
+In some cases, dependency version downgrade is required for proceeding with
+installations. Suppose configuration A, which depends on package X with the
+constraint`>=v0.0.0`, is installed on the control plane. In this case, the package
+manager installs the latest version of package X, such as `v3.0.0`. Later, you decide
+to install configuration Y, which depends on package X with the constraint `<=v2.0.0`.
+Since version `v2.0.0`satisfies both conditions, package X must be downgraded to
+allow the installation of configuration Y which is disabled by default.
+
+For enabling automatic dependency version downgrades, there is a configuration
+option as a helm value `packageManager.enableAutomaticDependencyDowngrade=true`.
+Downgrading a package can cause unexpected behavior, therefore, this
+option is disabled by default. After enabling this option, the package manager will
+automatically downgrade a package's dependency version to the maximum valid version
+that satisfies the constraints.
+
+{{<hint "note" >}}
+This configuration requires the `--enable-dependency-version-upgrades` flag.
+Please check the
+[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
+and
+[feature flags]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
+are available in the
+[Crossplane Install]({{<ref "../software/install">}})
+section for more details.
+{{</hint >}}
+
+{{<hint "important" >}}
+Enabling automatic dependency downgrades may have unintended consequences, such as:
+
+1) CRDs missing in the downgraded version, possibly leaving orphaned MRs without
+controllers to reconcile them.
+2) Loss of data if downgraded CRD versions omit fields that were set before.
+3) Changes in the CRD storage version, which may prevent package version update.
+{{</hint >}}
+
 #### Ignore Crossplane version requirements
 
 A Provider package may require a specific or minimum Crossplane version before
