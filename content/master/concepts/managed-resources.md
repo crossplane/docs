@@ -50,7 +50,7 @@ kind: Instance
 
 A managed resource's `deletionPolicy` tells the Provider what to do after
 deleting the managed resource. If the `deletionPolicy` is `Delete` the Provider
-deletes the external resource as well. If the `deletionPolicy` is `orphan` the
+deletes the external resource as well. If the `deletionPolicy` is `Orphan` the
 Provider deletes the managed resource but doesn't delete the external resource.
 
 #### Options
