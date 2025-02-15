@@ -312,9 +312,9 @@ In some cases, dependency version downgrade is required for proceeding with
 installations. Suppose configuration A, which depends on package X with the
 constraint`>=v0.0.0`, is installed on the control plane. In this case, the package
 manager installs the latest version of package X, such as `v3.0.0`. Later, you decide
-to install configuration Y, which depends on package X with the constraint `<=v2.0.0`.
+to install configuration B, which depends on package X with the constraint `<=v2.0.0`.
 Since version `v2.0.0`satisfies both conditions, package X must be downgraded to
-allow the installation of configuration Y which is disabled by default.
+allow the installation of configuration B which is disabled by default.
 
 For enabling automatic dependency version downgrades, there is a configuration
 option as a helm value `packageManager.enableAutomaticDependencyDowngrade=true`.
@@ -328,7 +328,7 @@ This configuration requires the `--enable-dependency-version-upgrades` flag.
 Please check the
 [configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
 and
-[feature flags]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
+[feature flags]({{<ref "../software/install#feature-flags">}})
 are available in the
 [Crossplane Install]({{<ref "../software/install">}})
 section for more details.
