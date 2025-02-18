@@ -916,6 +916,7 @@ A Kubernetes cluster running Crossplane isn't required.
 |              | `--cache-dir=".crossplane/cache"` | Specify the absolute path to the cache directory to store downloaded schemas. |
 |              | `--clean-cache`          | Clean the cache directory before downloading package schemas. |
 |              | `--skip-success-results` | Skip printing success results.                        |
+|              | `--error-on-missing-schemas` | Return a non zero exit code if any schemas are missing. |
 |              | `--verbose`              | Print verbose logging statements.                     |
 {{< /table >}}
 
