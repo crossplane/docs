@@ -310,7 +310,7 @@ kind: Provider
 metadata:
   name: provider-gcp
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.22.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp:v0.22.0
   controllerConfigRef:
     name: vault-config" | kubectl apply -f -
 ```
@@ -418,7 +418,7 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.33.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.33.0
   controllerConfigRef:
     name: aws-vault-config" | kubectl apply -f -
 ```
@@ -491,8 +491,8 @@ kubectl get bucket -w
 [Vault Kubernetes Sidecar]: https://learn.hashicorp.com/tutorials/vault/kubernetes-sidecar
 [Vault]: https://www.vaultproject.io/
 [Vault Kubernetes Sidecar]: https://www.vaultproject.io/docs/platform/k8s/injector
-[provider-gcp]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-gcp
-[provider-aws]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws
+[provider-gcp]: https://github.com/crossplane-contrib/provider-upjet-gcp
+[provider-aws]: https://github.com/crossplane-contrib/provider-upjet-aws
 [AWS]: https://www.vaultproject.io/docs/secrets/aws
 [Azure]: https://www.vaultproject.io/docs/secrets/azure
 [GCP]: https://www.vaultproject.io/docs/secrets/gcp 

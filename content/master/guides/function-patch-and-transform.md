@@ -92,7 +92,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 ```
 
 {{<hint "tip" >}}
@@ -122,7 +122,7 @@ The contents of the `base` are identical to creating a standalone
 [managed resource]({{<ref "../concepts/managed-resources">}}).
 
 This example uses
-[Upbound's Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-family-aws/v1.17.0)
+[provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws)
 to define a S3 storage `Bucket` and EC2 compute `Instance`.
 
 After defining the `apiVersion` and `kind`, define the `spec.forProvider` fields
@@ -507,8 +507,8 @@ All the following examples use the same set of Compositions,
 CompositeResourceDefinitions, Claims and EnvironmentConfigs.
 Only the applied patches change between examples.
 
-All examples rely on Upbound
-[provider-aws-s3](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/)
+All examples rely on 
+[provider-aws-s3](https://github.com/crossplane-contrib/provider-upjet-aws)
 to create resources.
 
 {{< expand "Reference Composition" >}}

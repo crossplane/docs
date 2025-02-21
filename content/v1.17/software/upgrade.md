@@ -47,7 +47,7 @@ Crossplane uses any new default behaviors unless they're changed in the `helm
 upgrade` command.
 
 For example, in v1.15.0 Crossplane changed the default image registry from 
-`index.docker.io` to `xpkg.upbound.io`. Upgrading Crossplane from a version
+`index.docker.io` to `xpkg.crossplane.io`. Upgrading Crossplane from a version
 before v1.15.0 updates the default package registry. 
 
 Override new defaults by 

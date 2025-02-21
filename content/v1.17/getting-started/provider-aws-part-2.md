@@ -44,7 +44,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.0.0
 EOF
 ```
 
@@ -96,7 +96,7 @@ kind: Provider
 metadata:
   name: provider-aws-dynamodb
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1
 EOF
 ```
 
@@ -106,9 +106,9 @@ View the new DynamoDB provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                 AGE
-provider-aws-dynamodb         True        True      xpkg.upbound.io/upbound/provider-aws-dynamodb:v1.0.0     3m55s
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0           13m
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:v1.0.0       13m
+provider-aws-dynamodb         True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.0.0     3m55s
+provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.0.0           13m
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.0.0       13m
 ```
 
 ## Create a custom API
@@ -421,7 +421,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 EOF
 ```
 
@@ -596,7 +596,7 @@ No resources found
 
 ## Next steps
 * Explore AWS resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
+  [provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.
 * Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out what else you can do

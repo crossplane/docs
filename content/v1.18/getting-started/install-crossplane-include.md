@@ -71,7 +71,7 @@ function:
 hostNetwork: false
 image:
   pullPolicy: IfNotPresent
-  repository: xpkg.upbound.io/crossplane/crossplane
+  repository: xpkg.crossplane.io/crossplane/crossplane
   tag: ""
 imagePullSecrets: {}
 leaderElection: true
@@ -840,7 +840,7 @@ spec:
       serviceAccountName: crossplane
       hostNetwork: false
       initContainers:
-        - image: "xpkg.upbound.io/crossplane/crossplane:v1.15.0"
+        - image: "xpkg.crossplane.io/crossplane/crossplane:v1.15.0"
           args:
           - core
           - init
@@ -894,7 +894,7 @@ spec:
           - name: "TLS_CLIENT_SECRET_NAME"
             value: crossplane-tls-client
       containers:
-      - image: "xpkg.upbound.io/crossplane/crossplane:v1.15.0"
+      - image: "xpkg.crossplane.io/crossplane/crossplane:v1.15.0"
         args:
         - core
         - start
@@ -1011,7 +1011,7 @@ spec:
     spec:
       serviceAccountName: rbac-manager
       initContainers:
-      - image: "xpkg.upbound.io/crossplane/crossplane:v1.15.0"
+      - image: "xpkg.crossplane.io/crossplane/crossplane:v1.15.0"
         args:
         - rbac
         - init
@@ -1041,7 +1041,7 @@ spec:
                 containerName: crossplane-init
                 resource: limits.memory
       containers:
-      - image: "xpkg.upbound.io/crossplane/crossplane:v1.15.0"
+      - image: "xpkg.crossplane.io/crossplane/crossplane:v1.15.0"
         args:
         - rbac
         - start

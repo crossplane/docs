@@ -45,7 +45,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-network:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.1
 EOF
 ```
 
@@ -460,7 +460,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 EOF
 ```
 
@@ -496,7 +496,7 @@ kind: Provider
 metadata:
   name: provider-azure-compute
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-compute:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.11.1
 EOF
 ```
 
@@ -506,9 +506,9 @@ View the new Compute provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-compute          True        True      xpkg.upbound.io/upbound/provider-azure-compute:v1.0.0   25s
-provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v1.0.0   3h
-upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v1.0.0    3h
+provider-azure-compute          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.0.0   25s
+provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.0.0   3h
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.0.0    3h
 ```
 
 ## Access the custom API
@@ -694,7 +694,7 @@ No resources found
 
 ## Next steps
 * Explore Azure resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
+  [Provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-azure/tree/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.
 * Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out

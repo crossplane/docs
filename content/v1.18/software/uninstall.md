@@ -135,13 +135,13 @@ List the installed _providers_ with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                   INSTALLED   HEALTHY   PACKAGE                                        AGE
-upbound-provider-aws   True        True      xpkg.upbound.io/upbound/provider-aws:v1.0.0   8h
+crossplane-contrib-provider-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws:v1.0.0   8h
 ```
 
 Remove the installed _providers_ with `kubectl delete provider`.
 
 ```shell
-kubectl delete provider upbound-provider-aws
+kubectl delete provider crossplane-contrib-provider-aws
 ```
 
 ## Uninstall the Crossplane deployment 

@@ -49,7 +49,7 @@ All the following examples use the same set of Compositions,
 CompositeResourceDefinitions and Claims.
 
 All examples rely on 
-[Upbound provider-aws-iam](https://marketplace.upbound.io/providers/upbound/provider-aws-iam/)
+[provider-aws-iam](https://github.com/REPLACEME)
 to create resources.
 
 {{<expand "Reference Composition" >}}

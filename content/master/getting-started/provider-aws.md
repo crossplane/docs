@@ -4,8 +4,8 @@ weight: 100
 ---
 
 Connect Crossplane to AWS to create and manage cloud resources from Kubernetes 
-with the 
-[Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-family-aws).
+with  
+[provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws).
 
 This guide is in two parts:
 * Part 1 walks through installing Crossplane, configuring the provider to
@@ -37,7 +37,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1
 EOF
 ```
 
@@ -52,12 +52,12 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.upbound.io/upbound/provider-aws-s3:1.0.0         97s
-upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/provider-family-aws:1.0.0     88s
+provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:1.0.0         97s
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:1.0.0     88s
 ```
 
 The S3 Provider installs a second Provider, the
-{{<hover label="getProvider" line="4">}}upbound-provider-family-aws{{</hover >}}.   
+{{<hover label="getProvider" line="4">}}crossplane-contrib-provider-family-aws{{</hover >}}.   
 The family provider manages authentication to AWS across all AWS family
 Providers. 
 
@@ -67,7 +67,7 @@ Every CRD maps to a unique AWS service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/v1.1.0).
+[provider examples](https://github.com/crossplane-contrib/provider-upjet-aws/tree/main/examples).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
@@ -239,6 +239,6 @@ bucket.s3.aws.upbound.io "crossplane-bucket-hhdzh" deleted
 * [**Continue to part 2**]({{< ref "provider-aws-part-2">}}) to create and use a 
   custom API with Crossplane.
 * Explore AWS resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
+  [provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.

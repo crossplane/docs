@@ -133,7 +133,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `function.packages` | A list of Function packages to install. | `[]` |
 | `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork` grants the Crossplane Pod access to the host network namespace. | `false` |
 | `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
-| `image.repository` | Repository for the Crossplane pod image. | `"xpkg.upbound.io/crossplane/crossplane"` |
+| `image.repository` | Repository for the Crossplane pod image. | `"xpkg.crossplane.io/crossplane/crossplane"` |
 | `image.tag` | The Crossplane image tag. Defaults to the value of `appVersion` in `Chart.yaml`. | `""` |
 | `imagePullSecrets` | The imagePullSecret names to add to the Crossplane ServiceAccount. | `{}` |
 | `leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the Crossplane pod. | `true` |
@@ -267,9 +267,8 @@ args='{"--enable-composition-functions","--enable-composition-webhook-schema-val
 
 #### Change the default package registry
 
-Beginning with Crossplane version 1.15.0 Crossplane downloads packages from the
-[Upbound Marketplace](https://marketplace.upbound.io) at `xpkg.upbound.io` 
-instead of DockerHub. 
+Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
+installing packages. 
 
 Change the default registry location during the Crossplane install with 
 `--set args='{"--registry=index.docker.io"}'`.
@@ -326,15 +325,3 @@ Community Crossplane distribution.
 The CNCF certified third-party distributions as 
 "[conformant](https://github.com/cncf/crossplane-conformance)" with the 
 Community Crossplane distribution.
-
-### Vendors
-Below are vendors providing conformant Crossplane distributions. 
-
-#### Upbound
-Upbound, the founders of Crossplane, maintains a free and open source 
-distribution of Crossplane called 
-[Universal Crossplane](https://www.upbound.io/product/universal-crossplane)
-(`UXP`). 
-
-Find information on UXP in the 
-[Upbound UXP documentation](https://docs.upbound.io/uxp/install/).

@@ -195,7 +195,7 @@ without using the
 
 For example, 
 ```markdown
-[Go to Upbound](http://upbound.io)
+[Go to Crossplane](http://crossplane.io)
 ```
 
 ## Tables

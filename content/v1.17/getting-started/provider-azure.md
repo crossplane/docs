@@ -4,8 +4,8 @@ weight: 110
 ---
 
 Connect Crossplane to Azure to create and manage cloud resources from Kubernetes 
-with the 
-[Upbound Azure Provider](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
+with  
+[provider-upjet-azure](https://github.com/crossplane-contrib/provider-upjet-azure).
 
 This guide is in two parts:
 * Part 1 walks through installing Crossplane, configuring the provider to
@@ -39,7 +39,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.upbound.io/upbound/provider-azure-network:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.1
 EOF
 ```
 
@@ -54,12 +54,12 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-network          True        True      xpkg.upbound.io/upbound/provider-azure-network:v1.0.0   38s
-upbound-provider-family-azure   True        True      xpkg.upbound.io/upbound/provider-family-azure:v1.0.0    26s
+provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.0.0   38s
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.0.0    26s
 ```
 
 The Network Provider installs a second Provider, the
-{{<hover label="getProvider" line="4">}}upbound-provider-family-azure{{</hover>}} 
+{{<hover label="getProvider" line="4">}}crossplane-contrib-provider-family-azure{{</hover>}} 
 provider.   
 The family provider manages authentication to Azure across all Azure family
 Providers. 
@@ -69,7 +69,7 @@ Every CRD maps to a unique Azure service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-azure/v0.42.1).
+[provider CRDs reference](https://github.com/crossplane-contrib/provider-upjet-azure/tree/main/package/crds).
 {{< /hint >}}
 
 
@@ -234,6 +234,6 @@ virtualnetwork.network.azure.upbound.io "crossplane-quickstart-network" deleted
 * [**Continue to part 2**]({{< ref "provider-azure-part-2">}}) to create and use
   a custom API with Crossplane.
 * Explore Azure resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-azure/).
+  [Provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-azure/tree/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.
