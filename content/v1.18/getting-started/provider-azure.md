@@ -54,8 +54,8 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.0.0   38s
-crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.0.0    26s
+provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.11.1   38s
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.1    26s
 ```
 
 The Network Provider installs a second Provider, the

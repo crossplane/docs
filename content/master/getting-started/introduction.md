@@ -107,7 +107,7 @@ defines a
 resource for creating and managing AWS S3 storage buckets. 
 
 In the `bucket` CRD is a
-[`spec.forProvider.region`](https://github.com/crossplane-contrib/provider-upjet-aws/blob/d83ef906bd17a7b6df814310e2ed7d674e99b786/package/crds/s3.aws.upbound.io_buckets.yaml#L91)
+[`spec.forProvider.region`](https://github.com/crossplane-contrib/provider-upjet-aws/blob/release-1.20/package/crds/s3.aws.upbound.io_buckets.yaml#L91)
 value that defines which AWS region to deploy the bucket in.
 
 Crossplane's [public package registries](https://www.crossplane.io/registries) contain a large 

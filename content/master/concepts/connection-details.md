@@ -49,7 +49,7 @@ All the following examples use the same set of Compositions,
 CompositeResourceDefinitions and Claims.
 
 All examples rely on 
-[provider-aws-iam](https://github.com/REPLACEME)
+[provider-aws-iam](https://github.com/crossplane-contrib/provider-upjet-aws)
 to create resources.
 
 {{<expand "Reference Composition" >}}

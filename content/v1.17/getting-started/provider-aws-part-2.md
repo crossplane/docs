@@ -44,7 +44,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.0.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1
 EOF
 ```
 
@@ -106,9 +106,9 @@ View the new DynamoDB provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                 AGE
-provider-aws-dynamodb         True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.0.0     3m55s
-provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.0.0           13m
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.0.0       13m
+provider-aws-dynamodb         True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.20.1     3m55s
+provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1           13m
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.20.1       13m
 ```
 
 ## Create a custom API

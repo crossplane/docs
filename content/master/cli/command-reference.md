@@ -377,7 +377,7 @@ in the package documentation.
 
 ### xpkg login
 
-Use `xpkg login` to authenticate to `xpkg.crossplane.io`, the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry used by the Crossplane project.
+Use `xpkg login` to authenticate to registries that host Crossplane packages.
 
 #### Flags
 
@@ -428,7 +428,7 @@ Authenticate to a registered organization in the Upbound Marketplace with the
 `--account` option, along with the username and password or token. 
 
 For example, 
-`crossplane xpkg login --account=Upbound --username=my-user --password -`. -->
+`crossplane xpkg login --account=Upbound --username=my-user --password -`.
 
 ### xpkg logout
 
@@ -495,9 +495,6 @@ Specify the package kind, package file and optionally the name of the package
 already installed in Crossplane.
 
 `crossplane xpkg update <package-kind> <registry package name and tag> [<optional-name>]`
-
-The package file must be an organization, image and tag on the `xpkg.crossplane.io`
-GitHub Container Registry in [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub org.
 
 For example, to update to the latest version of the 
 [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):

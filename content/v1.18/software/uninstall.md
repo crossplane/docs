@@ -135,7 +135,7 @@ List the installed _providers_ with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                   INSTALLED   HEALTHY   PACKAGE                                        AGE
-crossplane-contrib-provider-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws:v1.0.0   8h
+crossplane-contrib-provider-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws:v1.20.1   8h
 ```
 
 Remove the installed _providers_ with `kubectl delete provider`.
