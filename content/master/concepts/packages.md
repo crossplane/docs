@@ -42,15 +42,15 @@ registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
 {{< /hint >}}
 
 For example to install the 
-[Getting Started Configuration](https://github.com/crossplane-contrib/configuration-getting-started), 
+[Getting Started Configuration](https://github.com/crossplane-contrib/configuration-quickstart), 
 
 ```yaml {label="install"}
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: configuration-getting-started
+  name: configuration-quickstart
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/configuration-getting-started:v0.0.1
+  package: xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0
 ```
 
 {{<hint "tip" >}}
@@ -61,9 +61,9 @@ and repeatable installations.
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: platform-ref-aws
+  name: configuration-quickstart
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/platform-ref-aws@sha256:a30ad655c7699218d9234285d838d85582f015d02f7f061f8486b28248fd7db7
+  package: xpkg.crossplane.io/crossplane-contrib/configuration-quickstart@sha256:a30ad655c7699218d9234285d838d85582f015d02f7f061f8486b28248fd7db7
 ```
 {{< /hint >}}
 
@@ -86,7 +86,7 @@ helm install crossplane \
 crossplane-stable/crossplane \
 --namespace crossplane-system \
 --create-namespace \
---set configuration.packages='{xpkg.crossplane.io/crossplane-contrib/configuration-getting-started:v0.0.1}'
+--set configuration.packages='{xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0}'
 ```
 
 ### Install offline
@@ -349,7 +349,7 @@ A working configuration reports `Installed` and `Healthy` as `True`.
 ```shell {label="verify",copy-lines="1"}
 kubectl get configuration
 NAME               INSTALLED   HEALTHY   PACKAGE                                           AGE
-platform-ref-aws   True        True      xpkg.crossplane.io/crossplane-contrib/configuration-getting-started:v0.0.1   54s
+platform-ref-aws   True        True      xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0   54s
 ```
 
 ### Manage dependencies
@@ -366,7 +366,7 @@ For example, this installation of the Getting Started Configuration is
 ```shell {copy-lines="1"}
 kubectl get configuration
 NAME               INSTALLED   HEALTHY   PACKAGE                                           AGE
-platform-ref-aws   True        False     xpkg.crossplane.io/crossplane-contrib/configuration-getting-started:v0.0.1   71s
+platform-ref-aws   True        False     xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0   71s
 ```
 
 To see more information on why the Configuration isn't `HEALTHY` use 
@@ -380,7 +380,7 @@ Kind:         ConfigurationRevision
 # Removed for brevity
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.crossplane.io/crossplane-contrib/configuration-getting-started:v0.0.1
+  Image:                          xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0
   Revision:                       1
 Status:
   Conditions:

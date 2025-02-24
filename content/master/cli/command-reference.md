@@ -444,9 +444,6 @@ Using `crossplane xpkg logout` removes the `session` from the
 
 Push a Crossplane package file to a package registry. 
 
-The Crossplane CLI pushes images to the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by 
-default.
-
 {{< hint "note" >}}
 Pushing a package may require authentication with 
 [`crossplane xpkg login`](#xpkg-login)
