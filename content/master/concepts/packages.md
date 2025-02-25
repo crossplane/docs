@@ -63,7 +63,7 @@ kind: Configuration
 metadata:
   name: configuration-quickstart
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/configuration-quickstart@sha256:a30ad655c7699218d9234285d838d85582f015d02f7f061f8486b28248fd7db7
+  package: xpkg.crossplane.io/crossplane-contrib/configuration-quickstart@sha256:ef9795d146190637351a5c5848e0bab5e0c190fec7780f6c426fbffa0cb68358
 ```
 {{< /hint >}}
 

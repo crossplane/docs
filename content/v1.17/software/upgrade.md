@@ -46,9 +46,9 @@ Crossplane.
 Crossplane uses any new default behaviors unless they're changed in the `helm
 upgrade` command.
 
-For example, in v1.15.0 Crossplane changed the default image registry from 
+For example, in v1.20.0 Crossplane changed the default image registry from 
 `index.docker.io` to `xpkg.crossplane.io`. Upgrading Crossplane from a version
-before v1.15.0 updates the default package registry. 
+before v1.20.0 updates the default package registry. 
 
 Override new defaults by 
 [customizing the Helm chart]({{<ref "install#customize-the-crossplane-helm-chart" >}}) 
