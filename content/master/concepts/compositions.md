@@ -134,7 +134,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 ```
 
 {{< hint "tip" >}}
@@ -155,7 +155,7 @@ During the install a Function reports `INSTALLED` as `True` and `HEALTHY` as
 ```shell {copy-lines="1"}
 kubectl get functions
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                                  AGE
-function-patch-and-transform      True        Unknown   xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4   10s
+function-patch-and-transform      True        Unknown   xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4   10s
 ```
 
 After the Function install completes and it's ready for use the `HEALTHY` status
@@ -545,7 +545,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 ```
 {{</expand>}}
 
@@ -576,7 +576,7 @@ metadata:
   annotations:
     render.crossplane.io/runtime: Development
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 ```
 
 {{<hint "tip">}}

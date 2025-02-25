@@ -47,7 +47,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-storage:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.11.4
 EOF
 ```
 
@@ -114,7 +114,7 @@ kind: Provider
 metadata:
   name: provider-gcp-pubsub
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-pubsub:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.11.4
 EOF
 ```
 
@@ -123,9 +123,9 @@ View the new PubSub provider with `kubectl get providers`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-pubsub           True        True      xpkg.upbound.io/upbound/provider-gcp-pubsub:v1.0.0    39s
-provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v1.0.0   13m
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v1.0.0    12m
+provider-gcp-pubsub           True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.11.4.0.0    39s
+provider-gcp-storage          True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-v1.11.4   13m
+crossplane-contrib-provider-family-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.4    12m
 ```
 
 
@@ -428,7 +428,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
 EOF
 ```
 
@@ -601,7 +601,7 @@ No resources found
 
 ## Next steps
 * Explore AWS resources that Crossplane can configure in the 
-  [Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-aws/).
+  [provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.
 * Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out what else you can do

@@ -15,9 +15,9 @@ external object inside the Provider an _external resource_.
 {{< /hint >}}
 
 Examples of managed resources include:
-* Amazon AWS EC2 [`Instance`](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/resources/ec2.aws.upbound.io/Instance/v1beta1)
-* Google Cloud GKE [`Cluster`](https://marketplace.upbound.io/providers/upbound/provider-gcp/latest/resources/container.gcp.upbound.io/Cluster/v1beta1)
-* Microsoft Azure PostgreSQL [`Database`](https://marketplace.upbound.io/providers/upbound/provider-azure/latest/resources/dbforpostgresql.azure.upbound.io/Database/v1beta1)
+* Amazon AWS EC2 `Instance` defined in [provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws).
+* Google Cloud GKE `Cluster` defined in [provider-upjet-gcp](https://github.com/crossplane-contrib/provider-upjet-gcp).
+* Microsoft Azure PostgreSQL `Database` defined in [provider-upjet-azure](https://github.com/crossplane-contrib/provider-upjet-azure).
 
 {{< hint "tip" >}}
 
@@ -35,7 +35,7 @@ Provider also define the available settings of a managed resource.
 Each managed resource is a unique API endpoint with their own
 group, kind and version. 
 
-For example the [Upbound AWS Provider](https://marketplace.upbound.io/providers/upbound/provider-aws/latest/)
+For example the [AWS Provider](https://github.com/crossplane-contrib/provider-upjet-aws)
 defines the {{<hover label="gkv" line="2">}}Instance{{</hover>}} kind from the
 group {{<hover label="gkv" line="1">}}ec2.aws.upbound.io{{</hover>}}
 
@@ -529,7 +529,7 @@ Crossplane stores these details in a Kubernetes Secret object specified by the
 `writeConnectionSecretToRef` values. 
 
 For example, when creating an AWS RDS database instance with the Crossplane 
-[community AWS provider](https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/v0.40.0) 
+[community AWS provider](https://github.com/crossplane-contrib/provider-aws) 
 generates an endpoint, password, port and username data. The Provider saves
 these variables in the Kubernetes secret 
 {{<hover label="secretname" line="9" >}}rds-secret{{</hover>}}, referenced by

@@ -425,7 +425,7 @@ This code:
 1. Adds one desired S3 bucket for each bucket name.
 1. Returns the desired S3 buckets in a `RunFunctionResponse`.
 
-The code uses the `v1beta1.Bucket` type from [Upbound's AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws).
+The code uses the `v1beta1.Bucket` type from the [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws).
 One advantage of writing a function in Go is that you can compose resources
 using the same strongly typed structs Crossplane uses in its providers.
 
@@ -671,7 +671,7 @@ metadata:
 spec:
   # The CLI ignores this package when using the Development runtime.
   # You can set it to any value.
-  package: xpkg.upbound.io/negz/function-xbuckets:v0.1.0
+  package: xpkg.crossplane.io/negz/function-xbuckets:v0.1.0
 ```
 {{</expand>}}
 
@@ -783,7 +783,7 @@ Read the composition functions documentation to learn more about
 You build a function in two stages. First you build the function's runtime. This
 is the Open Container Initiative (OCI) image Crossplane uses to run your
 function. You then embed that runtime in a package, and push it to a package
-registry. The Crossplane CLI uses `xpkg.upbound.io` as its default package
+registry. The Crossplane CLI uses `xpkg.crossplane.io` as its default package
 registry.
 
 A function supports a single platform, like `linux/amd64`, by default. You can
@@ -863,11 +863,4 @@ up continuous integration (CI) using
 [GitHub Actions](https://github.com/features/actions). The CI workflow will
 lint, test, and build your function. You can see how the template configures CI
 by reading `.github/workflows/ci.yaml`.
-
-The CI workflow can automatically push packages to `xpkg.upbound.io`. For this
-to work you must create a repository at https://marketplace.upbound.io. Give the
-CI workflow access to push to the Marketplace by creating an API token and
-[adding it to your repository](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
-Save your API token access ID as a secret named `XPKG_ACCESS_ID` and your API
-token as a secret named `XPKG_TOKEN`.
 {{</hint>}}

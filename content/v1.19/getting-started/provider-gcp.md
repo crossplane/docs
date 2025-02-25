@@ -4,8 +4,8 @@ weight: 140
 ---
 
 Connect Crossplane to GCP to create and manage cloud resources from Kubernetes 
-with the 
-[Upbound GCP Provider](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
+with  
+[provider-upjet-gcp](https://github.com/crossplane-contrib/provider-upjet-gcp).
 
 This guide is in two parts:
 * Part 1 walks through installing Crossplane, configuring the provider to
@@ -36,7 +36,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-storage:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1
 EOF
 ```
 
@@ -51,12 +51,12 @@ Verify the provider installed with `kubectl get providers`.
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-storage          True        True      xpkg.upbound.io/upbound/provider-gcp-storage:v1.0.0   36s
-upbound-provider-family-gcp   True        True      xpkg.upbound.io/upbound/provider-family-gcp:v1.0.0    29s
+provider-gcp-storage          True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-v1.11.4   36s
+crossplane-contrib-provider-family-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.4    29s
 ```
 
 The Storage Provider installs a second Provider, the
-{{<hover label="getProvider" line="4">}}upbound-provider-family-gcp{{</hover>}} 
+{{<hover label="getProvider" line="4">}}crossplane-contrib-provider-family-gcp{{</hover>}} 
 provider.   
 The family provider manages authentication to GCP across all GCP family
 Providers. 
@@ -66,7 +66,7 @@ Every CRD maps to a unique GCP service Crossplane can provision and manage.
 
 {{< hint "tip" >}}
 See details about all the supported CRDs in the 
-[Upbound Marketplace](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
+[provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-gcp/blob/main/package/crds).
 {{< /hint >}}
 
 
@@ -246,6 +246,6 @@ bucket.storage.gcp.upbound.io "crossplane-bucket-8b7gw" deleted
 * [**Continue to part 2**]({{< ref "provider-gcp-part-2">}}) to create a 
 Crossplane _Composite Resource_ and _Claim_.
 * Explore GCP resources that can Crossplane can configure in the 
-[Provider CRD reference](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/).
+[Provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-gcp/tree/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
 Crossplane users and contributors.

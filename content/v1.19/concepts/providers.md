@@ -48,8 +48,7 @@ Install a Provider with a Crossplane
 location of the provider package.
 
 {{< hint "important" >}}
-Beginning with Crossplane version 1.15.0 Crossplane uses the Upbound Marketplace
-Crossplane package registry at `xpkg.upbound.io` by default for downloading and
+Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
 installing packages. 
 
 Specify the full domain name with the `package` or change the default Crossplane
@@ -65,7 +64,7 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0
 ```
 
 By default, the Provider pod installs in the same namespace as Crossplane
@@ -113,7 +112,7 @@ helm install crossplane \
 crossplane-stable/crossplane \
 --namespace crossplane-system \
 --create-namespace \
---set provider.packages='{xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0}'
+--set provider.packages='{xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0}'
 ```
 
 ### Install offline
@@ -140,7 +139,7 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-aws@sha256:ee6bece46dbb54cc3f0233961f5baac317fa4e4a81b41198bdc72fc472d113d0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws@sha256:ee6bece46dbb54cc3f0233961f5baac317fa4e4a81b41198bdc72fc472d113d0
 ```
 {{< /hint >}}
 
@@ -374,13 +373,13 @@ Configurations or other Providers.
 If Crossplane can't meet the dependencies of a Provider package the Provider
 reports `HEALTHY` as `False`. 
 
-For example, this installation of the Upbound AWS reference platform is
+For example, this installation of the Getting Started Configuration is
 `HEALTHY: False`.
 
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME              INSTALLED   HEALTHY   PACKAGE                                           AGE
-provider-aws-s3   True        False     xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0   12s
+provider-aws-s3   True        False     xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1   12s
 ```
 
 To see more information on why the Provider isn't `HEALTHY` use 
@@ -393,7 +392,7 @@ API Version:  pkg.crossplane.io/v1
 Kind:         ProviderRevision
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0
+  Image:                          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1
   Revision:                       1
 Status:
   Conditions:
@@ -431,10 +430,10 @@ View the `ProviderRevisions` with
 ```shell {label="getPR",copy-lines="1"}
 kubectl get providerrevisions
 NAME                                       HEALTHY   REVISION   IMAGE                                                    STATE      DEP-FOUND   DEP-INSTALLED   AGE
-provider-aws-s3-dbc7f981d81f               True      1          xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0           Active     1           1               10d
-provider-nop-552a394a8acc                  True      2          xpkg.upbound.io/crossplane-contrib/provider-nop:v0.3.0   Active                                 11d
-provider-nop-7e62d2a1a709                  True      1          xpkg.upbound.io/crossplane-contrib/provider-nop:v0.2.0   Inactive                               13d
-upbound-provider-family-aws-710d8cfe9f53   True      1          xpkg.upbound.io/upbound/provider-family-aws:v1.0.0       Active                                 10d
+provider-aws-s3-dbc7f981d81f               True      1          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1           Active     1           1               10d
+provider-nop-552a394a8acc                  True      2          xpkg.crossplane.io/crossplane-contrib/provider-nop:v0.3.0   Active                                 11d
+provider-nop-7e62d2a1a709                  True      1          xpkg.crossplane.io/crossplane-contrib/provider-nop:v0.2.0   Inactive                               13d
+crossplane-contrib-provider-family-aws-710d8cfe9f53   True      1          xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.20.1       Active                                 10d
 ```
 
 By default Crossplane keeps a single 
@@ -477,7 +476,7 @@ During the install a Provider report `INSTALLED` as `True` and `HEALTHY` as
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
-crossplane-contrib-provider-aws   True        Unknown   xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0   63s
+crossplane-contrib-provider-aws   True        Unknown   xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0   63s
 ```
 
 After the Provider install completes and it's ready for use the `HEALTHY` status
@@ -486,7 +485,7 @@ reports `True`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
-crossplane-contrib-provider-aws   True        True      xpkg.upbound.io/crossplane-contrib/provider-aws:v0.39.0   88s
+crossplane-contrib-provider-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0   88s
 ```
 
 {{<hint "important" >}}
@@ -694,7 +693,7 @@ kind: Provider
 metadata:
   name: provider-gcp-iam
 spec:
-  package: xpkg.upbound.io/upbound/provider-gcp-iam:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-iam:v1
   runtimeConfigRef:
     name: enable-ess
 ---

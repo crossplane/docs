@@ -217,7 +217,7 @@ Next, install the Crossplane ESS Plugin pod to the `crossplane-system` namespace
 and apply the Vault annotations.
 
 ```shell
-helm upgrade --install ess-plugin-vault oci://xpkg.upbound.io/crossplane-contrib/ess-plugin-vault --namespace crossplane-system -f values.yaml
+helm upgrade --install ess-plugin-vault oci://xpkg.crossplane.io/crossplane-contrib/ess-plugin-vault --namespace crossplane-system -f values.yaml
 ```
 
 ## Configure Crossplane
@@ -255,7 +255,7 @@ kind: Provider
 metadata:
   name: provider-gcp
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.23.0-rc.0.19.ge9b75ee5
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp:v0.23.0-rc.0.19.ge9b75ee5
   controllerConfigRef:
     name: vault-config" | kubectl apply -f -
 ```
@@ -341,7 +341,7 @@ Check that Crossplane installed the Provider and the Provider is healthy.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME           INSTALLED   HEALTHY   PACKAGE                                                                     AGE
-provider-gcp   True        True      xpkg.upbound.io/crossplane-contrib/provider-gcp:v0.23.0-rc.0.19.ge9b75ee5   10m
+provider-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp:v0.23.0-rc.0.19.ge9b75ee5   10m
 ```
 
 ### Create a CompositeResourceDefinition

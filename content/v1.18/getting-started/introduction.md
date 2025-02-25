@@ -86,9 +86,9 @@ The following sections describe the functions of some of these CRDs.
 A Crossplane _Provider_ creates a second set of CRDs that define how Crossplane
 connects to a non-Kubernetes service. Each external service relies on its own
 Provider. For example, 
-[AWS](https://marketplace.upbound.io/providers/upbound/provider-aws), 
-[Azure](https://marketplace.upbound.io/providers/upbound/provider-azure) 
-and [GCP](https://marketplace.upbound.io/providers/upbound/provider-gcp)
+[AWS](https://github.com/crossplane-contrib/provider-upjet-aws), 
+[Azure](https://github.com/crossplane-contrib/provider-upjet-azure) 
+and [GCP](https://github.com/crossplane-contrib/provider-upjet-gcp)
 are different providers for each cloud service.
 
 {{< hint "tip" >}}
@@ -100,14 +100,14 @@ For example, an AWS Provider defines Kubernetes CRDs for AWS resources like EC2
 compute instances or S3 storage buckets.
 
 The Provider defines the Kubernetes API definition for the external resource.
-For example, the 
-[Upbound Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-aws/)
+For example,  
+[provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws)
 defines a 
-[`bucket`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1) 
+[`bucket`](https://github.com/crossplane-contrib/provider-upjet-aws/blob/release-1.20/package/crds/s3.aws.upbound.io_buckets.yaml) 
 resource for creating and managing AWS S3 storage buckets. 
 
 In the `bucket` CRD is a
-[`spec.forProvider.region`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1#doc:spec-forProvider-region)
+[`spec.forProvider.region`](https://github.com/crossplane-contrib/provider-upjet-aws/blob/release-1.20/package/crds/s3.aws.upbound.io_buckets.yaml#L91)
 value that defines which AWS region to deploy the bucket in.
 
 Crossplane's [public package registries](https://www.crossplane.io/registries) contain a large 
