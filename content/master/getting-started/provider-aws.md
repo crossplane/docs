@@ -201,7 +201,7 @@ The {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and
 {{< hover label="xr" line="4">}}kind{{</hover >}} are from the provider's CRDs.
 
 
-The {{< hover label="xr" line="6">}}metadata.name{{< /hover >}} value is the 
+The {{< hover label="xr" line="6">}}metadata.generateName{{< /hover >}} value is the 
 name of the created S3 bucket in AWS.  
 This example uses the generated name `crossplane-bucket-<hash>` in the 
 {{< hover label="xr" line="6">}}$bucket{{</hover >}} variable.
