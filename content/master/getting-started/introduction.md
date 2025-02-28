@@ -493,3 +493,4 @@ Build your own Crossplane platform using one of the quickstart guides.
 * [Azure Quickstart]({{<ref "provider-azure" >}})
 * [AWS Quickstart]({{<ref "provider-aws" >}})
 * [GCP Quickstart]({{<ref "provider-gcp" >}})
+* [App Compositions Quickstart]({{<ref "app-compositions" >}})
