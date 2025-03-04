@@ -56,5 +56,5 @@ with the upgrade command.
 
 For example, to maintain the original image registry use 
 ```shell 
-helm upgrade crossplane --namespace crossplane-system crossplane-stable/crossplane `--set 'args={"--registry=index.docker.io"}'
+helm upgrade crossplane --namespace crossplane-system crossplane-stable/crossplane --set 'args={"--registry=index.docker.io"}'
 ```
