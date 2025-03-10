@@ -7,7 +7,7 @@ aliases:
 ---
 
 {{< hint "important" >}}
-This guide is part 2 of a series.  
+This guide is part 2 of a series.
 
 [**Part 1**]({{<ref "provider-aws" >}}) covers
 to installing Crossplane and connect your Kubernetes cluster to AWS.
@@ -36,7 +36,7 @@ crossplane-stable/crossplane \
 ```
 
 2. When the Crossplane pods finish installing and are ready, apply the AWS Provider
-   
+
 ```yaml {label="provider",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
@@ -83,11 +83,11 @@ EOF
 
 ## Install the DynamoDB Provider
 
-Part 1 only installed the AWS S3 Provider. This section deploys an S3 bucket 
-along with a DynamoDB Table.  
-Deploying a DynamoDB Table requires the DynamoDB Provider as well. 
+Part 1 only installed the AWS S3 Provider. This section deploys an S3 bucket
+along with a DynamoDB Table.
+Deploying a DynamoDB Table requires the DynamoDB Provider as well.
 
-Add the new Provider to the cluster. 
+Add the new Provider to the cluster.
 
 ```yaml
 cat <<EOF | kubectl apply -f -
@@ -116,10 +116,10 @@ crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.i
 <!-- vale alex.Condescending = NO -->
 Crossplane allows you to build your own custom APIs for your users, abstracting
 away details about the cloud provider and their resources. You can make your API
-as complex or simple as you wish. 
+as complex or simple as you wish.
 <!-- vale alex.Condescending = YES -->
 
-The custom API is a Kubernetes object.  
+The custom API is a Kubernetes object.
 Here is an example custom API.
 
 ```yaml {label="exAPI"}
@@ -127,39 +127,39 @@ apiVersion: database.example.com/v1alpha1
 kind: NoSQL
 metadata:
   name: my-nosql-database
-spec: 
+spec:
   location: "US"
 ```
 
-Like any Kubernetes object the API has a 
-{{<hover label="exAPI" line="1">}}version{{</hover>}}, 
-{{<hover label="exAPI" line="2">}}kind{{</hover>}} and 
+Like any Kubernetes object the API has a
+{{<hover label="exAPI" line="1">}}version{{</hover>}},
+{{<hover label="exAPI" line="2">}}kind{{</hover>}} and
 {{<hover label="exAPI" line="5">}}spec{{</hover>}}.
 
 ### Define a group and version
-To create your own API start by defining an 
-[API group](https://kubernetes.io/docs/reference/using-api/#api-groups) and 
-[version](https://kubernetes.io/docs/reference/using-api/#api-versioning).  
+To create your own API start by defining an
+[API group](https://kubernetes.io/docs/reference/using-api/#api-groups) and
+[version](https://kubernetes.io/docs/reference/using-api/#api-versioning).
 
 The _group_ can be any value, but common convention is to map to a fully
-qualified domain name. 
+qualified domain name.
 
 <!-- vale gitlab.SentenceLength = NO -->
 The version shows how mature or stable the API is and increments when changing,
 adding or removing fields in the API.
 <!-- vale gitlab.SentenceLength = YES -->
 
-Crossplane doesn't require specific versions or a specific version naming 
-convention, but following 
+Crossplane doesn't require specific versions or a specific version naming
+convention, but following
 [Kubernetes API versioning guidelines](https://kubernetes.io/docs/reference/using-api/#api-versioning)
-is strongly recommended. 
+is strongly recommended.
 
 * `v1alpha1` - A new API that may change at any time.
 * `v1beta1` - An existing API that's considered stable. Breaking changes are
   strongly discouraged.
-* `v1` - A stable API that doesn't have breaking changes. 
+* `v1` - A stable API that doesn't have breaking changes.
 
-This guide uses the group 
+This guide uses the group
 {{<hover label="version" line="1">}}database.example.com{{</hover>}}.
 
 Because this is the first version of the API, this guide uses the version
@@ -176,10 +176,10 @@ individual kinds representing different resources.
 
 For example a `database` group may have a `Relational` and `NoSQL` kinds.
 
-The `kind` can be anything, but it must be 
+The `kind` can be anything, but it must be
 [UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
 
-This API's kind is 
+This API's kind is
 {{<hover label="kind" line="2">}}NoSQL{{</hover>}}
 
 ```yaml {label="kind",copy-lines="none"}
@@ -190,51 +190,51 @@ kind: NoSQL
 ### Define a spec
 
 The most important part of an API is the schema. The schema defines the inputs
-accepted from users. 
+accepted from users.
 
-This API allows users to provide a 
-{{<hover label="spec" line="4">}}location{{</hover>}} of where to run their 
+This API allows users to provide a
+{{<hover label="spec" line="4">}}location{{</hover>}} of where to run their
 cloud resources.
 
 All other resource settings can't be configurable by the users. This allows
 Crossplane to enforce any policies and standards without worrying about
-user errors. 
+user errors.
 
 ```yaml {label="spec",copy-lines="none"}
 apiVersion: database.example.com/v1alpha1
 kind: NoSQL
-spec: 
+spec:
   location: "US"
 ```
 
 ### Apply the API
 
-Crossplane uses 
-{{<hover label="xrd" line="3">}}Composite Resource Definitions{{</hover>}} 
+Crossplane uses
+{{<hover label="xrd" line="3">}}Composite Resource Definitions{{</hover>}}
 (also called an `XRD`) to install your custom API in
-Kubernetes. 
+Kubernetes.
 
 The XRD {{<hover label="xrd" line="6">}}spec{{</hover>}} contains all the
-information about the API including the 
+information about the API including the
 {{<hover label="xrd" line="7">}}group{{</hover>}},
 {{<hover label="xrd" line="12">}}version{{</hover>}},
-{{<hover label="xrd" line="9">}}kind{{</hover>}} and 
+{{<hover label="xrd" line="9">}}kind{{</hover>}} and
 {{<hover label="xrd" line="13">}}schema{{</hover>}}.
 
 The XRD's {{<hover label="xrd" line="5">}}name{{</hover>}} must be the
-combination of the {{<hover label="xrd" line="9">}}plural{{</hover>}} and 
+combination of the {{<hover label="xrd" line="9">}}plural{{</hover>}} and
 {{<hover label="xrd" line="7">}}group{{</hover>}}.
 
 The {{<hover label="xrd" line="13">}}schema{{</hover>}} uses the
 {{<hover label="xrd" line="14">}}OpenAPIv3{{</hover>}} specification to define
-the API {{<hover label="xrd" line="17">}}spec{{</hover>}}.  
+the API {{<hover label="xrd" line="17">}}spec{{</hover>}}.
 
 The API defines a {{<hover label="xrd" line="20">}}location{{</hover>}} that
-must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either 
-{{<hover label="xrd" line="23">}}EU{{</hover>}} or 
+must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either
+{{<hover label="xrd" line="23">}}EU{{</hover>}} or
 {{<hover label="xrd" line="24">}}US{{</hover>}}.
 
-Apply this XRD to create the custom API in your Kubernetes cluster. 
+Apply this XRD to create the custom API in your Kubernetes cluster.
 
 ```yaml {label="xrd",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
@@ -272,20 +272,20 @@ EOF
 ```
 
 Adding the {{<hover label="xrd" line="29">}}claimNames{{</hover>}} allows users
-to access this API either at the cluster level with the 
+to access this API either at the cluster level with the
 {{<hover label="xrd" line="9">}}nosql{{</hover>}} endpoint or in a namespace
-with the 
-{{<hover label="xrd" line="29">}}nosqlclaim{{</hover>}} endpoint. 
+with the
+{{<hover label="xrd" line="29">}}nosqlclaim{{</hover>}} endpoint.
 
 The namespace scoped API is a Crossplane _Claim_.
 
 {{<hint "tip" >}}
 For more details on the fields and options of Composite Resource Definitions
-read the 
-[XRD documentation]({{<ref "../concepts/composite-resource-definitions">}}). 
+read the
+[XRD documentation]({{<ref "../concepts/composite-resource-definitions">}}).
 {{< /hint >}}
 
-View the installed XRD with `kubectl get xrd`.  
+View the installed XRD with `kubectl get xrd`.
 
 ```shell {copy-lines="1"}
 kubectl get xrd
@@ -307,20 +307,20 @@ When users access the custom API Crossplane takes their inputs and combines them
 with a template describing what infrastructure to deploy. Crossplane calls this
 template a _Composition_.
 
-The {{<hover label="comp" line="3">}}Composition{{</hover>}} defines all the 
+The {{<hover label="comp" line="3">}}Composition{{</hover>}} defines all the
 cloud resources to deploy. Each entry in the template is a full resource
 definition, defining all the resource settings and metadata like labels and
-annotations. 
+annotations.
 
-This template creates an AWS 
+This template creates an AWS
 {{<hover label="comp" line="13">}}S3{{</hover>}}
-{{<hover label="comp" line="14">}}Bucket{{</hover>}} and a 
+{{<hover label="comp" line="14">}}Bucket{{</hover>}} and a
 {{<hover label="comp" line="33">}}DynamoDB{{</hover>}}
 {{<hover label="comp" line="34">}}Table{{</hover>}}.
 
-This Composition takes the user's 
-{{<hover label="comp" line="21">}}location{{</hover>}} input and uses it as the 
-{{<hover label="comp" line="16">}}region{{</hover>}} used in the individual 
+This Composition takes the user's
+{{<hover label="comp" line="21">}}location{{</hover>}} input and uses it as the
+{{<hover label="comp" line="16">}}region{{</hover>}} used in the individual
 resource.
 
 {{<hint "important" >}}
@@ -336,7 +336,7 @@ Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 {{< /hint >}}
 
-Apply this Composition to your cluster. 
+Apply this Composition to your cluster.
 
 ```yaml {label="comp",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
@@ -371,7 +371,7 @@ spec:
               toFieldPath: "spec.forProvider.region"
               transforms:
                 - type: map
-                  map: 
+                  map:
                     EU: "eu-north-1"
                     US: "us-east-2"
         - name: dynamoDB
@@ -395,7 +395,7 @@ spec:
               toFieldPath: "spec.forProvider.region"
               transforms:
                 - type: map
-                  map: 
+                  map:
                     EU: "eu-north-1"
                     US: "us-east-2"
   compositeTypeRef:
@@ -421,7 +421,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
 EOF
 ```
 
@@ -429,8 +429,8 @@ EOF
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 
-Read the 
-[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}}) 
+Read the
+[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}})
 for more information on how it uses patches to map user inputs to Composition
 resource templates.
 {{< /hint >}}
@@ -459,7 +459,7 @@ apiVersion: database.example.com/v1alpha1
 kind: NoSQL
 metadata:
   name: my-nosql-database
-spec: 
+spec:
   location: "US"
 EOF
 ```
@@ -472,10 +472,10 @@ NAME                SYNCED   READY   COMPOSITION          AGE
 my-nosql-database   True     True    dynamo-with-bucket   14s
 ```
 
-This object is a Crossplane _composite resource_ (also called an `XR`).  
+This object is a Crossplane _composite resource_ (also called an `XR`).
 It's a
 single object representing the collection of resources created from the
-Composition template. 
+Composition template.
 
 View the individual resources with `kubectl get managed`
 
@@ -508,17 +508,17 @@ No resources found
 
 ## Using the API with namespaces
 
-Accessing the API `nosql` happens at the cluster scope.  
+Accessing the API `nosql` happens at the cluster scope.
 Most organizations
-isolate their users into namespaces.  
+isolate their users into namespaces.
 
 A Crossplane _Claim_ is the custom API in a namespace.
 
 Creating a _Claim_ is just like accessing the custom API endpoint, but with the
-{{<hover label="claim" line="3">}}kind{{</hover>}} 
+{{<hover label="claim" line="3">}}kind{{</hover>}}
 from the custom API's `claimNames`.
 
-Create a new namespace to test create a Claim in. 
+Create a new namespace to test create a Claim in.
 
 ```shell
 kubectl create namespace crossplane-test
@@ -533,7 +533,7 @@ kind: NoSQLClaim
 metadata:
   name: my-nosql-database
   namespace: crossplane-test
-spec: 
+spec:
   location: "US"
 EOF
 ```
@@ -546,7 +546,7 @@ my-nosql-database   True     True                        17s
 ```
 
 The Claim automatically creates a composite resource, which creates the managed
-resources. 
+resources.
 
 View the Crossplane created composite resource with `kubectl get composite`.
 
@@ -595,9 +595,9 @@ No resources found
 ```
 
 ## Next steps
-* Explore AWS resources that Crossplane can configure in the 
+* Explore AWS resources that Crossplane can configure in the
   [provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/package/crds).
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with
   Crossplane users and contributors.
 * Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out what else you can do
-  with Crossplane. 
+  with Crossplane.
