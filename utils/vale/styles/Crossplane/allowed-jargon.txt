@@ -66,6 +66,8 @@ proselint
 protobuf
 QPS
 RBAC
+readyz
+ReplicaSets
 RPC
 RPCs
 RSS
@@ -93,4 +95,5 @@ TLS
 tolerations
 UI
 VM
+webhooks.enabled
 YAML
