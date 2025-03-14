@@ -197,16 +197,16 @@ spec:
 EOF
 ```
 
-The {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and 
-{{< hover label="xr" line="4">}}kind{{</hover >}} are from the provider's CRDs.
+The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
+{{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
 
 
-The {{< hover label="xr" line="6">}}metadata.generateName{{< /hover >}} value is the 
+The {{< hover label="xr" line="5">}}metadata.generateName{{< /hover >}} value is the 
 name of the created S3 bucket in AWS.  
 This example uses the generated name `crossplane-bucket-<hash>` in the 
-{{< hover label="xr" line="6">}}$bucket{{</hover >}} variable.
+{{< hover label="xr" line="5">}}$bucket{{</hover >}} variable.
 
-The {{< hover label="xr" line="9">}}spec.forProvider.region{{< /hover >}} tells 
+The {{< hover label="xr" line="8">}}spec.forProvider.region{{< /hover >}} tells 
 AWS which AWS region to use when deploying resources.  
 
 The region can be any 
