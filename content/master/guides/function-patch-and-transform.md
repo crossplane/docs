@@ -92,7 +92,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
 ```
 
 {{<hint "tip" >}}
@@ -507,7 +507,7 @@ All the following examples use the same set of Compositions,
 CompositeResourceDefinitions, Claims and EnvironmentConfigs.
 Only the applied patches change between examples.
 
-All examples rely on 
+All examples rely on
 [provider-aws-s3](https://github.com/crossplane-contrib/provider-upjet-aws)
 to create resources.
 

@@ -1,7 +1,7 @@
 ---
 title: Compositions
 weight: 30
-aliases: 
+aliases:
   - composition
   - composition-functions
   - /knowledge-base/guides/composition-functions
@@ -9,14 +9,14 @@ description: "Compositions are a template for creating Crossplane resources"
 ---
 
 Compositions are a template for creating multiple managed resources as a single
-object. 
+object.
 
 A Composition _composes_ individual managed resources together into a larger,
 reusable, solution.
 
 An example Composition may combine a virtual machine, storage resources and
 networking policies. A Composition template links all these individual
-resources together. 
+resources together.
 
 Here's an example Composition. When you create an
 {{<hover label="intro" line="8">}}AcmeBucket{{</hover >}} composite resource
@@ -57,12 +57,12 @@ Crossplane has four core components that users commonly mix up:
 
 * Compositions - This page. A template to define how to create resources.
 * [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
-  (`XRD`) - A custom API specification. 
+  (`XRD`) - A custom API specification.
 * [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources. 
+  Composition template to create new managed resources.
 * [Claims]({{<ref "./claims" >}}) (`XRC`) - Like a Composite Resource, but
-  with namespace scoping. 
+  with namespace scoping.
 {{</expand >}}
 
 ## Create a Composition
@@ -83,8 +83,8 @@ resource (XR).
 {{<hint "tip" >}}
 The Crossplane community has built lots of functions that let you template
 Crossplane resources using
-[CUE](https://github.com/crossplane-contrib/function-cue), 
-[KCL](https://github.com/crossplane-contrib/function-kcl), 
+[CUE](https://github.com/crossplane-contrib/function-cue),
+[KCL](https://github.com/crossplane-contrib/function-kcl),
 Helm-like
 [Go templates](https://github.com/crossplane-contrib/function-go-templating) or
 legacy Crossplane
@@ -111,7 +111,7 @@ but the feature is no longer maintained. Crossplane doesn't accept new
 
 See the [CLI documentation]({{<ref "../cli/command-reference#beta-convert">}})
 to learn how to use the `crossplane beta convert` command to convert a legacy
-`Resources` Composition to the `Pipeline` mode. 
+`Resources` Composition to the `Pipeline` mode.
 {{< /hint >}}
 
 
@@ -134,7 +134,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
 ```
 
 {{< hint "tip" >}}
@@ -155,7 +155,7 @@ During the install a Function reports `INSTALLED` as `True` and `HEALTHY` as
 ```shell {copy-lines="1"}
 kubectl get functions
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                                  AGE
-function-patch-and-transform      True        Unknown   xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4   10s
+function-patch-and-transform      True        Unknown   xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2   10s
 ```
 
 After the Function install completes and it's ready for use the `HEALTHY` status
@@ -174,36 +174,36 @@ composite resource owns.
 Crossplane knows what Function to call when a composite resource changes by
 looking at the Composition the composite resource uses.
 
-To use composition functions set the Composition 
+To use composition functions set the Composition
 {{<hover label="single" line="6">}}mode{{</hover>}} to
 {{<hover label="single" line="6">}}Pipeline{{</hover>}}.
 
-Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of 
-{{<hover label="single" line="8">}}steps{{</hover>}}. Each 
-{{<hover label="single" line="8">}}step{{</hover>}} calls a Function.  
+Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of
+{{<hover label="single" line="8">}}steps{{</hover>}}. Each
+{{<hover label="single" line="8">}}step{{</hover>}} calls a Function.
 
-Each {{<hover label="single" line="8">}}step{{</hover>}} uses a 
+Each {{<hover label="single" line="8">}}step{{</hover>}} uses a
 {{<hover label="single" line="9">}}functionRef{{</hover>}} to reference the
-{{<hover label="single" line="10">}}name{{</hover>}} of the Function to call. 
+{{<hover label="single" line="10">}}name{{</hover>}} of the Function to call.
 
 {{<hint "important" >}}
-Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}} 
-can't specify resource templates with a `resources` field. 
+Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}}
+can't specify resource templates with a `resources` field.
 
 Use function "Patch and Transform" to create resource templates.
 {{< /hint >}}
 
 
-Some Functions also allow you to specify an 
-{{<hover label="single" line="11">}}input{{</hover>}}.  
+Some Functions also allow you to specify an
+{{<hover label="single" line="11">}}input{{</hover>}}.
 The function defines the
 {{<hover label="single" line="13">}}kind{{</hover>}} of input.
 
 This example uses
 [Function Patch and Transform]({{<ref "../guides/function-patch-and-transform">}}).
 Function Patch and Transform implements Crossplane resource
-templates.  
-The input kind is {{<hover label="single" line="13">}}Resources{{</hover>}}, 
+templates.
+The input kind is {{<hover label="single" line="13">}}Resources{{</hover>}},
 and it accepts  {{<hover label="single" line="14">}}resources{{</hover>}} as input.
 
 ```yaml {label="single",copy-lines="none"}
@@ -239,7 +239,7 @@ calls them all. It calls them in the order they appear in the pipeline.
 Crossplane passes each Function in the pipeline the result of the previous
 Function. This enables powerful combinations of Functions. In this example,
 Crossplane calls {{<hover label="double" line="10">}}function-cue{{</hover>}} to
-create an S3 bucket. Crossplane then passes the bucket to 
+create an S3 bucket. Crossplane then passes the bucket to
 {{<hover label="double" line="23">}}function-auto-ready{{</hover>}}, which marks the
 composite resource as ready when the bucket becomes ready.
 
@@ -272,22 +272,22 @@ spec:
 
 ### Enable composite resources
 
-A Composition is only a template defining how to create managed 
+A Composition is only a template defining how to create managed
 resources. A Composition limits which Composite Resources can use this
-template. 
+template.
 
-A Composition's {{<hover label="typeref" line="6">}}compositeTypeRef{{</hover>}} 
-defines which Composite Resource type can use this Composition. 
+A Composition's {{<hover label="typeref" line="6">}}compositeTypeRef{{</hover>}}
+defines which Composite Resource type can use this Composition.
 
 {{<hint "note" >}}
-Read more about Composite Resources in the 
-[Composite Resources page]({{<ref "./composite-resources" >}}). 
+Read more about Composite Resources in the
+[Composite Resources page]({{<ref "./composite-resources" >}}).
 {{< /hint >}}
 
-Inside a Composition's 
+Inside a Composition's
 {{<hover label="typeref" line="5">}}spec{{</hover>}}
-define the Composite Resource 
-{{<hover label="typeref" line="7">}}apiVersion{{</hover>}} and 
+define the Composite Resource
+{{<hover label="typeref" line="7">}}apiVersion{{</hover>}} and
 {{<hover label="typeref" line="8">}}kind{{</hover>}}
 that the Composition allows to use this template.
 
@@ -306,26 +306,26 @@ spec:
 ### Store connection details
 
 Some managed resources generate unique details like usernames, passwords, IP
-addresses, ports or other connection details. 
+addresses, ports or other connection details.
 
 When resources inside a Composition create connection details Crossplane creates
 a Kubernetes secret object for each managed resource generating connection
-details. 
+details.
 
 {{<hint "note">}}
-This section discusses creating Kubernetes secrets.  
+This section discusses creating Kubernetes secrets.
 Crossplane also supports using external secret stores like
-[HashiCorp Vault](https://www.vaultproject.io/). 
+[HashiCorp Vault](https://www.vaultproject.io/).
 
 Read the [external secrets store guide]({{<ref "../guides/vault-as-secret-store">}}) for more information on using Crossplane
-with an external secret store. 
+with an external secret store.
 {{</hint >}}
 
 #### Composite resource combined secret
 
 Crossplane can combine all the secrets generated by the resources inside a
 Composition into a single Kubernetes secret and optionally copy the secret
-object for claims. 
+object for claims.
 
 Set the value of `writeConnectionSecretsToNamespace` to the namespace where
 Crossplane should store the combined secret object.
@@ -344,7 +344,7 @@ spec:
 
 Inside the `spec` of each resource producing connection details, define the
 `writeConnectionSecretToRef`, with a `namespace` and `name` of the secret object
-for the resource.  
+for the resource.
 
 If a `writeConnectionSecretToRef` isn't defined, Crossplane doesn't write any
 keys to the secret.
@@ -389,10 +389,10 @@ Remember to create a unique name for each secret.
 
 #### External secret stores
 
-Crossplane 
-[External Secret Stores]({{<ref "../guides/vault-as-secret-store" >}}) 
+Crossplane
+[External Secret Stores]({{<ref "../guides/vault-as-secret-store" >}})
 write secrets and connection details to external secret stores like HashiCorp
-Vault. 
+Vault.
 
 {{<hint "important" >}}
 External Secret Stores are an alpha feature.
@@ -403,7 +403,7 @@ Stores by default.
 
 Use `publishConnectionDetailsWithStoreConfigRef` in place of
 `writeConnectionSecretsToNamespace` to define the `StoreConfig` to save
-connection details to. 
+connection details to.
 
 For example, using a `StoreConfig` with the `name` "vault," use
 `publishConnectionDetailsWithStoreConfigRef.name` matching the
@@ -421,13 +421,13 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 # Removed for Brevity
 spec:
-  publishConnectionDetailsWithStoreConfigRef: 
+  publishConnectionDetailsWithStoreConfigRef:
     name: vault
   # Removed for brevity
 ```
 
 For more details read the
-[External Secret Stores]({{<ref "../guides/vault-as-secret-store" >}}) 
+[External Secret Stores]({{<ref "../guides/vault-as-secret-store" >}})
 integration guide.
 
 ## Test a composition
@@ -451,7 +451,7 @@ Running `crossplane render` requires [Docker](https://www.docker.com).
 {{< /hint >}}
 
 Provide a composite resource, composition and composition functions to render
-the output locally. 
+the output locally.
 
 ```shell
 crossplane render xr.yaml composition.yaml functions.yaml
@@ -545,7 +545,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
 ```
 {{</expand>}}
 
@@ -576,7 +576,7 @@ metadata:
   annotations:
     render.crossplane.io/runtime: Development
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
 ```
 
 {{<hint "tip">}}
@@ -616,18 +616,18 @@ xsqlinstances.aws.platformref.upbound.io   XSQLInstance   aws.platformref.upboun
 ```
 
 The `XR-KIND` lists the Composite Resource `kind` that's allowed to use the
-Composition template.  
+Composition template.
 The `XR-APIVERSION` lists the Composite Resource API versions allowed to use the
-Composition template. 
+Composition template.
 
 {{<hint "note" >}}
 The output of `kubectl get composition` is different than `kubectl get
-composite`. 
+composite`.
 
 `kubectl get composition` lists all available Compositions.
 
 `kubectl get composite` lists all created Composite Resources and their related
-Composition. 
+Composition.
 {{< /hint >}}
 
 ## Composition validation
@@ -657,18 +657,18 @@ If using `mode: Pipeline` (Composition Functions):
 ### Composition schema aware validation
 
 Crossplane also performs schema aware
-validation of Compositions. Schema validation checks that `patches`, 
-`readinessChecks` and `connectionDetails` are valid according to the resource 
-schemas. For example, checking that the source and destination fields of a patch 
+validation of Compositions. Schema validation checks that `patches`,
+`readinessChecks` and `connectionDetails` are valid according to the resource
+schemas. For example, checking that the source and destination fields of a patch
 are valid according to the source and destination resource schema.
 
 {{<hint "note" >}}
 Composition schema aware validation is a beta feature. Crossplane enables
-beta features by default. 
+beta features by default.
 
 Disable schema aware validation by setting the
 `--enable-composition-webhook-schema-validation=false` flag on the Crossplane
-pod.  
+pod.
 
 The [Crossplane Pods]({{<ref "./pods#edit-the-deployment">}}) page has
 more information on enabling Crossplane flags.
@@ -698,12 +698,12 @@ The following modes are available:
 {{< /table >}}
 
 Change the validation mode for a Composition with the
-{{<hover label="mode" line="5">}}crossplane.io/composition-schema-aware-validation-mode{{</hover>}} 
+{{<hover label="mode" line="5">}}crossplane.io/composition-schema-aware-validation-mode{{</hover>}}
 annotation.
 
 If not specified, the default mode is `warn`.
 
-For example, to enable `loose` mode checking set the annotation value to 
+For example, to enable `loose` mode checking set the annotation value to
 {{<hover label="mode" line="5">}}loose{{</hover>}}.
 
 ```yaml {copy-lines="none",label="mode"}
@@ -827,7 +827,7 @@ Crossplane errors if stability isn't reached after 5 iterations.
 A _composed_ resource is a resource created by a composite resource. Composed
 resources are usually Crossplane managed resources (MRs), but they can be any
 kind of Crossplane resource. For example a composite resource could also create
-a ProviderConfig, or another kind of composite resource. 
+a ProviderConfig, or another kind of composite resource.
 <!-- vale write-good.Weasel = YES -->
 {{</hint>}}
 
