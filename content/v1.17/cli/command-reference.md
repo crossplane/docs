@@ -240,9 +240,6 @@ For example,
 
 Include YAML files demonstrating how to use the package with `--examples-root`. 
 
-[Upbound Marketplace](https://marketplace.upbound.io/) uses files included with 
-`--examples-root` as documentation for published packages.
-
 #### Include a runtime image
 
 Functions and Providers require YAML files describing their dependencies and 
@@ -326,9 +323,9 @@ inside Crossplane.
 The `<package-kind>` is either a `configuration`, `function` or `provider`.
 
 For example, to install to the latest version of the
-[AWS S3 provider](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/):
+[AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):
 
-`crossplane xpkg install provider xpkg.upbound.io/upbound/provider-aws-s3:v1`
+`crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1`
 
 #### Flags
 {{< table "table table-sm table-striped">}}
@@ -380,11 +377,7 @@ in the package documentation.
 
 ### xpkg login
 
-Use `xpkg login` to authenticate to `xpkg.upbound.io`, the 
-[Upbound Marketplace](https://marketplace.upbound.io/) container registry.
-
-[Register with the Upbound Marketplace](https://accounts.upbound.io/register) 
-to push packages and create private repositories. 
+Use `xpkg login` to authenticate to registries that host Crossplane packages.
 
 #### Flags
 
@@ -451,10 +444,6 @@ Using `crossplane xpkg logout` removes the `session` from the
 
 Push a Crossplane package file to a package registry. 
 
-The Crossplane CLI pushes images to the 
-[Upbound Marketplace](https://marketplace.upbound.io/) at `xpkg.upbound.io` by 
-default.
-
 {{< hint "note" >}}
 Pushing a package may require authentication with 
 [`crossplane xpkg login`](#xpkg-login)
@@ -504,13 +493,10 @@ already installed in Crossplane.
 
 `crossplane xpkg update <package-kind> <registry package name and tag> [<optional-name>]`
 
-The package file must be an organization, image and tag on the `xpkg.upbound.io`
-registry on [Upbound Marketplace](https://marketplace.upbound.io/).
+For example, to update to the latest version of the 
+[AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):
 
-For example, to update to the latest version of the
-[AWS S3 provider](https://marketplace.upbound.io/providers/upbound/provider-aws-s3/):
-
-`crossplane xpkg update provider xpkg.upbound.io/upbound/provider-aws-s3:v1`
+`crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1`
 
 
 ## beta
@@ -569,11 +555,11 @@ related pods.
 
 ```shell
 crossplane beta top 
-TYPE         NAMESPACE   NAME                                                       CPU(cores)   MEMORY
-crossplane   default     crossplane-f98f9ddfd-tnm46                                 4m           32Mi
-crossplane   default     crossplane-rbac-manager-74ff459b88-94p8p                   4m           14Mi
-provider     default     provider-aws-s3-1f1a3fb08cbc-5c49d84447-sggrq              3m           108Mi
-provider     default     upbound-provider-family-aws-48b3b5ccf964-76c9686b6-bgg65   2m           89Mi
+TYPE         NAMESPACE   NAME                                                                  CPU(cores)   MEMORY
+crossplane   default     crossplane-f98f9ddfd-tnm46                                            4m           32Mi
+crossplane   default     crossplane-rbac-manager-74ff459b88-94p8p                              4m           14Mi
+provider     default     provider-aws-s3-1f1a3fb08cbc-5c49d84447-sggrq                         3m           108Mi
+provider     default     crossplane-contrib-provider-family-aws-48b3b5ccf964-76c9686b6-bgg65   2m           89Mi
 ```
 
 {{<hint "important" >}}
@@ -942,7 +928,7 @@ To clear the cache and download the CRD files again use the `--clean-cache` flag
 To validate a managed resource against a provider,
 first, create a provider manifest file. For example, to validate an IAM role
 from Provider AWS, use the 
-[Provider AWS IAM](https://marketplace.upbound.io/providers/upbound/provider-aws-iam/v1.0.0) 
+[Provider AWS IAM](https://github.com/crossplane-contrib/provider-upjet-aws) 
 manifest.
 
 {{<hint "tip" >}}
@@ -957,7 +943,7 @@ kind: Provider
 metadata:
   name: provider-aws-iam
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-iam:v1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam:v1.20.1
 ```
 
 Now include the XR or managed resource to validate.

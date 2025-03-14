@@ -315,9 +315,9 @@ dedicated control planes to many tenants within a single organization.
 [Multiple Source Field patching]: https://github.com/crossplane/crossplane/pull/2093
 [Configuration packages]: {{<ref "../../master/concepts/packages" >}}
 [OCI images]: https://github.com/opencontainers/image-spec
-[EKS Cluster]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/latest/resources/eks.aws.crossplane.io/Cluster/v1beta1
-[provider-aws]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws
-[provider-helm]: https://marketplace.upbound.io/providers/crossplane-contrib/provider-helm/
+[EKS Cluster]: https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/examples/eks/v1beta2/cluster.yaml
+[provider-aws]: https://github.com/crossplane-contrib/provider-upjet-aws
+[provider-helm]: https://github.com/crossplane-contrib/provider-helm
 [Open Service Broker API]: https://github.com/openservicebrokerapi/servicebroker
 [Crossplane Service Broker]: https://github.com/vshn/crossplane-service-broker
 [Cloudfoundry]: https://www.cloudfoundry.org/

@@ -34,8 +34,7 @@ the {{<hover line="6" label="install">}}spec.package{{</hover>}} value to the
 location of the configuration package.
 
 {{< hint "important" >}}
-Beginning with Crossplane version 1.15.0 Crossplane uses the Upbound Marketplace
-Crossplane package registry at `xpkg.upbound.io` by default for downloading and
+Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
 installing packages. 
 
 Specify the full domain name with the `package` or change the default Crossplane
@@ -43,15 +42,15 @@ registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
 {{< /hint >}}
 
 For example to install the 
-[Upbound AWS reference platform](https://marketplace.upbound.io/configurations/upbound/platform-ref-aws/v0.6.0).
+[Getting Started Configuration](https://github.com/crossplane-contrib/configuration-quickstart), 
 
 ```yaml {label="install"}
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: platform-ref-aws
+  name: configuration-quickstart
 spec:
-  package: xpkg.upbound.io/upbound/platform-ref-aws:v0.6.0
+  package: xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0
 ```
 
 {{<hint "tip" >}}
@@ -62,9 +61,9 @@ and repeatable installations.
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: platform-ref-aws
+  name: configuration-quickstart
 spec:
-  package: xpkg.upbound.io/upbound/platform-ref-aws@sha256:a30ad655c7699218d9234285d838d85582f015d02f7f061f8486b28248fd7db7
+  package: xpkg.crossplane.io/crossplane-contrib/configuration-quickstart@sha256:ef9795d146190637351a5c5848e0bab5e0c190fec7780f6c426fbffa0cb68358
 ```
 {{< /hint >}}
 
@@ -80,14 +79,14 @@ Use the
 {{<hover label="helm" line="5" >}}--set configuration.packages{{</hover >}}
 argument with `helm install`.
 
-For example, to install the Upbound AWS reference platform,
+For example, to install the Getting Started configuration,
 
 ```shell {label="helm"}
 helm install crossplane \
 crossplane-stable/crossplane \
 --namespace crossplane-system \
 --create-namespace \
---set configuration.packages='{xpkg.upbound.io/upbound/platform-ref-aws:v0.6.0}'
+--set configuration.packages='{xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0}'
 ```
 
 ### Install offline
@@ -116,8 +115,8 @@ View the configuration revisions with
 ```shell {label="rev",copy-lines="1"}
 kubectl get configurationrevisions
 NAME                            HEALTHY   REVISION   IMAGE                                             STATE      DEP-FOUND   DEP-INSTALLED   AGE
-platform-ref-aws-1735d56cd88d   True      2          xpkg.upbound.io/upbound/platform-ref-aws:v0.5.0   Active     2           2               46s
-platform-ref-aws-3ac761211893   True      1          xpkg.upbound.io/upbound/platform-ref-aws:v0.4.1   Inactive                               5m13s
+platform-ref-aws-1735d56cd88d   True      2          xpkg.crossplane.io/crossplane-contrib/platform-ref-aws:v0.5.0   Active     2           2               46s
+platform-ref-aws-3ac761211893   True      1          xpkg.crossplane.io/crossplane-contrib/platform-ref-aws:v0.4.1   Inactive                               5m13s
 ```
 
 Only a single revision is active at a time. The active revision determines the
@@ -275,6 +274,47 @@ spec:
 # Removed for brevity
 ```
 
+#### Automatically update dependency versions
+
+Crossplane can automatically upgrade a package's dependency version to the minimum
+valid version that satisfies all the constraints. It's an alpha feature that
+requires enabling with the `--enable-dependency-version-upgrades` flag.
+
+In some cases, dependency version downgrade is required for proceeding with
+installations. Suppose configuration A, which depends on package X with the
+constraint`>=v0.0.0`, is installed on the control plane. In this case, the package
+manager installs the latest version of package X, such as `v3.0.0`. Later, you decide
+to install configuration B, which depends on package X with the constraint `<=v2.0.0`.
+Since version `v2.0.0`satisfies both conditions, package X must be downgraded to
+allow the installation of configuration B which is disabled by default.
+
+For enabling automatic dependency version downgrades, there is a configuration
+option as a helm value `packageManager.enableAutomaticDependencyDowngrade=true`.
+Downgrading a package can cause unexpected behavior, therefore, this
+option is disabled by default. After enabling this option, the package manager will
+automatically downgrade a package's dependency version to the maximum valid version
+that satisfies the constraints.
+
+{{<hint "note" >}}
+This configuration requires the `--enable-dependency-version-upgrades` flag.
+Please check the
+[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
+and
+[feature flags]({{<ref "../software/install#feature-flags">}})
+are available in the
+[Crossplane Install]({{<ref "../software/install">}})
+section for more details.
+{{</hint >}}
+
+{{<hint "important" >}}
+Enabling automatic dependency downgrades may have unintended consequences, such as:
+
+1) CRDs missing in the downgraded version, possibly leaving orphaned MRs without 
+controllers to reconcile them.
+2) Loss of data if downgraded CRD versions omit fields that were set before.
+3) Changes in the CRD storage version, which may prevent package version update.
+{{</hint >}}
+
 #### Ignore Crossplane version requirements
 
 A Configuration package may require a specific or minimum Crossplane version 
@@ -309,7 +349,7 @@ A working configuration reports `Installed` and `Healthy` as `True`.
 ```shell {label="verify",copy-lines="1"}
 kubectl get configuration
 NAME               INSTALLED   HEALTHY   PACKAGE                                           AGE
-platform-ref-aws   True        True      xpkg.upbound.io/upbound/platform-ref-aws:v0.6.0   54s
+platform-ref-aws   True        True      xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0   54s
 ```
 
 ### Manage dependencies
@@ -320,13 +360,13 @@ Functions, Providers or other Configurations.
 If Crossplane can't meet the dependencies of a Configuration the Configuration
 reports `HEALTHY` as `False`. 
 
-For example, this installation of the Upbound AWS reference platform is
+For example, this installation of the Getting Started Configuration is
 `HEALTHY: False`.
 
 ```shell {copy-lines="1"}
 kubectl get configuration
 NAME               INSTALLED   HEALTHY   PACKAGE                                           AGE
-platform-ref-aws   True        False     xpkg.upbound.io/upbound/platform-ref-aws:v0.6.0   71s
+platform-ref-aws   True        False     xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0   71s
 ```
 
 To see more information on why the Configuration isn't `HEALTHY` use 
@@ -340,7 +380,7 @@ Kind:         ConfigurationRevision
 # Removed for brevity
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.upbound.io/upbound/platform-ref-aws:v0.6.0
+  Image:                          xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0
   Revision:                       1
 Status:
   Conditions:
@@ -426,7 +466,7 @@ spec:
   dependsOn:
     - apiVersion: pkg.crossplane.io/v1
       kind: Provider
-      package: xpkg.upbound.io/crossplane-contrib/provider-aws
+      package: xpkg.crossplane.io/crossplane-contrib/provider-aws
       version: ">=v0.36.0"
   crossplane:
     version: ">=v1.12.1-0"

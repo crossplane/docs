@@ -350,7 +350,7 @@ the Helm `values.yml` file or after installation by editing the `Deployment`.
 The full list of 
 [configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
 and 
-[feature flags]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+[feature flags]({{<ref "../software/install#feature-flags">}})
 are available in the 
 [Crossplane Install]({{<ref "../software/install">}}) 
 section. 
