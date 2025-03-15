@@ -4,7 +4,7 @@ weight: 100
 ---
 
 Connect Crossplane to AWS to create and manage cloud resources from Kubernetes 
-with the 
+with  
 [provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws).
 
 This guide is in two parts:
@@ -37,7 +37,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
 EOF
 ```
 
@@ -51,9 +51,9 @@ Verify the provider installed with `kubectl get providers`.
 
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:1.20.1         97s
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:1.20.1     88s
+NAME                                     INSTALLED   HEALTHY   PACKAGE                                                             AGE
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.21.1   30s
+provider-aws-s3                          True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1       34s
 ```
 
 The S3 Provider installs a second Provider, the
@@ -67,7 +67,7 @@ Every CRD maps to a unique AWS service Crossplane can provision and manage.
 
 {{< hint type="tip" >}}
 See details about all the supported CRDs in the 
-[provider examples](https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/examples).
+[provider examples](https://github.com/crossplane-contrib/provider-upjet-aws/tree/main/examples).
 {{< /hint >}}
 
 ## Create a Kubernetes secret for AWS
@@ -197,16 +197,16 @@ spec:
 EOF
 ```
 
-The {{< hover label="xr" line="3">}}apiVersion{{< /hover >}} and 
-{{< hover label="xr" line="4">}}kind{{</hover >}} are from the provider's CRDs.
+The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
+{{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
 
 
-The {{< hover label="xr" line="6">}}metadata.name{{< /hover >}} value is the 
+The {{< hover label="xr" line="5">}}metadata.generateName{{< /hover >}} value is the 
 name of the created S3 bucket in AWS.  
 This example uses the generated name `crossplane-bucket-<hash>` in the 
-{{< hover label="xr" line="6">}}$bucket{{</hover >}} variable.
+{{< hover label="xr" line="5">}}$bucket{{</hover >}} variable.
 
-The {{< hover label="xr" line="9">}}spec.forProvider.region{{< /hover >}} tells 
+The {{< hover label="xr" line="8">}}spec.forProvider.region{{< /hover >}} tells 
 AWS which AWS region to use when deploying resources.  
 
 The region can be any 

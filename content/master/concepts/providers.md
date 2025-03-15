@@ -379,10 +379,10 @@ For example, this installation of the Getting Started Configuration is
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME              INSTALLED   HEALTHY   PACKAGE                                           AGE
-provider-aws-s3   True        False     xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1   12s
+provider-aws-s3   True        False     xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1   12s
 ```
 
-To see more information on why the Provider isn't `HEALTHY` use 
+To see more information on why the Provider isn't `HEALTHY` use
 {{<hover label="depend" line="1">}}kubectl describe providerrevisions{{</hover>}}.
 
 ```yaml {copy-lines="1",label="depend"}
@@ -392,7 +392,7 @@ API Version:  pkg.crossplane.io/v1
 Kind:         ProviderRevision
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1
+  Image:                          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
   Revision:                       1
 Status:
   Conditions:
@@ -430,13 +430,13 @@ View the `ProviderRevisions` with
 ```shell {label="getPR",copy-lines="1"}
 kubectl get providerrevisions
 NAME                                       HEALTHY   REVISION   IMAGE                                                    STATE      DEP-FOUND   DEP-INSTALLED   AGE
-provider-aws-s3-dbc7f981d81f               True      1          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1           Active     1           1               10d
+provider-aws-s3-dbc7f981d81f               True      1          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1           Active     1           1               10d
 provider-nop-552a394a8acc                  True      2          xpkg.crossplane.io/crossplane-contrib/provider-nop:v0.3.0   Active                                 11d
 provider-nop-7e62d2a1a709                  True      1          xpkg.crossplane.io/crossplane-contrib/provider-nop:v0.2.0   Inactive                               13d
-crossplane-contrib-provider-family-aws-710d8cfe9f53   True      1          xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.20.1       Active                                 10d
+crossplane-contrib-provider-family-aws-710d8cfe9f53   True      1          xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.21.1        Active                                 10d
 ```
 
-By default Crossplane keeps a single 
+By default Crossplane keeps a single
 {{<hover label="getPR" line="5">}}Inactive{{</hover>}} Provider.
 
 Read the [revision history limit](#package-revision-history-limit) section to
@@ -693,7 +693,7 @@ kind: Provider
 metadata:
   name: provider-gcp-iam
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-iam:v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-iam:v1.12.1
   runtimeConfigRef:
     name: enable-ess
 ---

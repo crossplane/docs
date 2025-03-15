@@ -44,7 +44,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
 EOF
 ```
 
@@ -96,7 +96,7 @@ kind: Provider
 metadata:
   name: provider-aws-dynamodb
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.21.1
 EOF
 ```
 
@@ -105,10 +105,10 @@ View the new DynamoDB provider with `kubectl get providers`.
 
 ```shell {copy-lines="1"}
 kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                                 AGE
-provider-aws-dynamodb         True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.20.1     3m55s
-provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1           13m
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.20.1       13m
+NAME                                     INSTALLED   HEALTHY   PACKAGE                                                               AGE
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.21.1     15m
+provider-aws-dynamodb                    True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.21.1   22s
+provider-aws-s3                          True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1         15m
 ```
 
 ## Create a custom API
@@ -358,8 +358,6 @@ spec:
           base:
             apiVersion: s3.aws.upbound.io/v1beta1
             kind: Bucket
-            metadata:
-              name: crossplane-quickstart-bucket
             spec:
               forProvider:
                 region: us-east-2
@@ -378,8 +376,6 @@ spec:
           base:
             apiVersion: dynamodb.aws.upbound.io/v1beta1
             kind: Table
-            metadata:
-              name: crossplane-quickstart-database
             spec:
               forProvider:
                 region: "us-east-2"

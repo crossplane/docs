@@ -4,7 +4,7 @@ weight: 140
 ---
 
 Connect Crossplane to GCP to create and manage cloud resources from Kubernetes 
-with the 
+with  
 [provider-upjet-gcp](https://github.com/crossplane-contrib/provider-upjet-gcp).
 
 This guide is in two parts:
@@ -36,7 +36,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.11.4
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.12.1
 EOF
 ```
 
@@ -50,9 +50,9 @@ Verify the provider installed with `kubectl get providers`.
 
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-storage          True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-v1.11.4   36s
-crossplane-contrib-provider-family-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.4    29s
+NAME                                     INSTALLED   HEALTHY   PACKAGE                                                              AGE
+crossplane-contrib-provider-family-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-gcp:v1.12.1    33s
+provider-gcp-storage                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.12.1   37s
 ```
 
 The Storage Provider installs a second Provider, the
@@ -66,7 +66,7 @@ Every CRD maps to a unique GCP service Crossplane can provision and manage.
 
 {{< hint "tip" >}}
 See details about all the supported CRDs in the 
-[provider CRDs reference](https://github.com/crossplane-contrib/provider-upjet-gcp/tree/main/package/crds).
+[provider examples](https://github.com/crossplane-contrib/provider-upjet-gcp/tree/main/examples).
 {{< /hint >}}
 
 

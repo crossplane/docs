@@ -322,10 +322,10 @@ inside Crossplane.
 
 The `<package-kind>` is either a `configuration`, `function` or `provider`.
 
-For example, to install the latest version of the 
+For example, to install the latest version of the
 [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):
 
-`crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1`
+`crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`
 
 #### Flags
 {{< table "table table-sm table-striped">}}
@@ -493,10 +493,10 @@ already installed in Crossplane.
 
 `crossplane xpkg update <package-kind> <registry package name and tag> [<optional-name>]`
 
-For example, to update to the latest version of the 
+For example, to update to the latest version of the
 [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):
 
-`crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1`
+`crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`
 
 
 ## beta
@@ -943,7 +943,7 @@ kind: Provider
 metadata:
   name: provider-aws-iam
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam:v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam:v1.21.1
 ```
 
 Now include the XR or managed resource to validate.

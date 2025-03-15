@@ -7,7 +7,7 @@ aliases:
 ---
 
 {{< hint "important" >}}
-This guide is part 2 of a series.  
+This guide is part 2 of a series.
 
 [**Part 1**]({{<ref "provider-azure" >}}) covers
 to installing Crossplane and connect your Kubernetes cluster to Azure.
@@ -35,9 +35,9 @@ crossplane-stable/crossplane \
 --create-namespace
 ```
 
-2. When the Crossplane pods finish installing and are ready, apply the Azure 
+2. When the Crossplane pods finish installing and are ready, apply the Azure
    Provider
-   
+
 ```yaml {label="provider",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
@@ -45,11 +45,11 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2
 EOF
 ```
 
-3. Use the Azure CLI to create a service principal and save the JSON output as 
+3. Use the Azure CLI to create a service principal and save the JSON output as
    `azure-crednetials.json`
 {{< editCode >}}
 ```console
@@ -91,10 +91,10 @@ EOF
 <!-- vale alex.Condescending = NO -->
 Crossplane allows you to build your own custom APIs for your users, abstracting
 away details about the cloud provider and their resources. You can make your API
-as complex or simple as you wish. 
+as complex or simple as you wish.
 <!-- vale alex.Condescending = YES -->
 
-The custom API is a Kubernetes object.  
+The custom API is a Kubernetes object.
 Here is an example custom API.
 
 ```yaml {label="exAPI"}
@@ -102,39 +102,39 @@ apiVersion: compute.example.com/v1alpha1
 kind: VirtualMachine
 metadata:
   name: my-vm
-spec: 
+spec:
   location: "US"
 ```
 
-Like any Kubernetes object the API has a 
-{{<hover label="exAPI" line="1">}}version{{</hover>}}, 
-{{<hover label="exAPI" line="2">}}kind{{</hover>}} and 
+Like any Kubernetes object the API has a
+{{<hover label="exAPI" line="1">}}version{{</hover>}},
+{{<hover label="exAPI" line="2">}}kind{{</hover>}} and
 {{<hover label="exAPI" line="5">}}spec{{</hover>}}.
 
 ### Define a group and version
-To create your own API start by defining an 
-[API group](https://kubernetes.io/docs/reference/using-api/#api-groups) and 
-[version](https://kubernetes.io/docs/reference/using-api/#api-versioning).  
+To create your own API start by defining an
+[API group](https://kubernetes.io/docs/reference/using-api/#api-groups) and
+[version](https://kubernetes.io/docs/reference/using-api/#api-versioning).
 
 The _group_ can be any value, but common convention is to map to a fully
-qualified domain name. 
+qualified domain name.
 
 <!-- vale gitlab.SentenceLength = NO -->
 The version shows how mature or stable the API is and increments when changing,
 adding or removing fields in the API.
 <!-- vale gitlab.SentenceLength = YES -->
 
-Crossplane doesn't require specific versions or a specific version naming 
-convention, but following 
+Crossplane doesn't require specific versions or a specific version naming
+convention, but following
 [Kubernetes API versioning guidelines](https://kubernetes.io/docs/reference/using-api/#api-versioning)
-is strongly recommended. 
+is strongly recommended.
 
 * `v1alpha1` - A new API that may change at any time.
 * `v1beta1` - An existing API that's considered stable. Breaking changes are
   strongly discouraged.
-* `v1` - A stable API that doesn't have breaking changes. 
+* `v1` - A stable API that doesn't have breaking changes.
 
-This guide uses the group 
+This guide uses the group
 {{<hover label="version" line="1">}}compute.example.com{{</hover>}}.
 
 Because this is the first version of the API, this guide uses the version
@@ -151,10 +151,10 @@ individual kinds representing different resources.
 
 For example a `compute` group may have a `VirtualMachine` and `BareMetal` kinds.
 
-The `kind` can be anything, but it must be 
+The `kind` can be anything, but it must be
 [UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
 
-This API's kind is 
+This API's kind is
 {{<hover label="kind" line="2">}}VirtualMachine{{</hover>}}
 
 ```yaml {label="kind",copy-lines="none"}
@@ -165,51 +165,51 @@ kind: VirtualMachine
 ### Define a spec
 
 The most important part of an API is the schema. The schema defines the inputs
-accepted from users. 
+accepted from users.
 
-This API allows users to provide a 
-{{<hover label="spec" line="4">}}location{{</hover>}} of where to run their 
+This API allows users to provide a
+{{<hover label="spec" line="4">}}location{{</hover>}} of where to run their
 cloud resources.
 
 All other resource settings can't be configurable by the users. This allows
 Crossplane to enforce any policies and standards without worrying about
-user errors. 
+user errors.
 
 ```yaml {label="spec",copy-lines="none"}
 apiVersion: compute.example.com/v1alpha1
 kind: VirtualMachine
-spec: 
+spec:
   location: "US"
 ```
 
 ### Apply the API
 
-Crossplane uses 
-{{<hover label="xrd" line="3">}}Composite Resource Definitions{{</hover>}} 
+Crossplane uses
+{{<hover label="xrd" line="3">}}Composite Resource Definitions{{</hover>}}
 (also called an `XRD`) to install your custom API in
-Kubernetes. 
+Kubernetes.
 
 The XRD {{<hover label="xrd" line="6">}}spec{{</hover>}} contains all the
-information about the API including the 
+information about the API including the
 {{<hover label="xrd" line="7">}}group{{</hover>}},
 {{<hover label="xrd" line="12">}}version{{</hover>}},
-{{<hover label="xrd" line="9">}}kind{{</hover>}} and 
+{{<hover label="xrd" line="9">}}kind{{</hover>}} and
 {{<hover label="xrd" line="13">}}schema{{</hover>}}.
 
 The XRD's {{<hover label="xrd" line="5">}}name{{</hover>}} must be the
-combination of the {{<hover label="xrd" line="10">}}plural{{</hover>}} and 
+combination of the {{<hover label="xrd" line="10">}}plural{{</hover>}} and
 {{<hover label="xrd" line="7">}}group{{</hover>}}.
 
 The {{<hover label="xrd" line="13">}}schema{{</hover>}} uses the
 {{<hover label="xrd" line="14">}}OpenAPIv3{{</hover>}} specification to define
-the API {{<hover label="xrd" line="17">}}spec{{</hover>}}.  
+the API {{<hover label="xrd" line="17">}}spec{{</hover>}}.
 
 The API defines a {{<hover label="xrd" line="20">}}location{{</hover>}} that
-must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either 
-{{<hover label="xrd" line="23">}}EU{{</hover>}} or 
+must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either
+{{<hover label="xrd" line="23">}}EU{{</hover>}} or
 {{<hover label="xrd" line="24">}}US{{</hover>}}.
 
-Apply this XRD to create the custom API in your Kubernetes cluster. 
+Apply this XRD to create the custom API in your Kubernetes cluster.
 
 ```yaml {label="xrd",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
@@ -247,20 +247,20 @@ EOF
 ```
 
 Adding the {{<hover label="xrd" line="29">}}claimNames{{</hover>}} allows users
-to access this API either at the cluster level with the 
+to access this API either at the cluster level with the
 {{<hover label="xrd" line="9">}}VirtualMachine{{</hover>}} endpoint or in a namespace
-with the 
-{{<hover label="xrd" line="30">}}VirtualMachineClaim{{</hover>}} endpoint. 
+with the
+{{<hover label="xrd" line="30">}}VirtualMachineClaim{{</hover>}} endpoint.
 
 The namespace scoped API is a Crossplane _Claim_.
 
 {{<hint "tip" >}}
 For more details on the fields and options of Composite Resource Definitions
-read the 
-[XRD documentation]({{<ref "../concepts/composite-resource-definitions">}}). 
+read the
+[XRD documentation]({{<ref "../concepts/composite-resource-definitions">}}).
 {{< /hint >}}
 
-View the installed XRD with `kubectl get xrd`.  
+View the installed XRD with `kubectl get xrd`.
 
 ```shell {copy-lines="1"}
 kubectl get xrd
@@ -282,22 +282,22 @@ When users access the custom API Crossplane takes their inputs and combines them
 with a template describing what infrastructure to deploy. Crossplane calls this
 template a _Composition_.
 
-The {{<hover label="comp" line="3">}}Composition{{</hover>}} defines all the 
+The {{<hover label="comp" line="3">}}Composition{{</hover>}} defines all the
 cloud resources to deploy.
 Each entry in the template
 is a full resource definitions, defining all the resource settings and metadata
-like labels and annotations. 
+like labels and annotations.
 
 This template creates an Azure
 {{<hover label="comp" line="11">}}LinuxVirtualMachine{{</hover>}}
-{{<hover label="comp" line="46">}}NetworkInterface{{</hover>}}, 
+{{<hover label="comp" line="46">}}NetworkInterface{{</hover>}},
 {{<hover label="comp" line="69">}}Subnet{{</hover>}}
 {{<hover label="comp" line="90">}}VirtualNetwork{{</hover>}} and
 {{<hover label="comp" line="110">}}ResourceGroup{{</hover>}}.
 
-This Composition takes the user's 
-{{<hover label="comp" line="36">}}location{{</hover>}} input and uses it as the 
-{{<hover label="comp" line="37">}}location{{</hover>}} used in the individual 
+This Composition takes the user's
+{{<hover label="comp" line="36">}}location{{</hover>}} input and uses it as the
+{{<hover label="comp" line="37">}}location{{</hover>}} used in the individual
 resource.
 
 {{<hint "important" >}}
@@ -313,7 +313,7 @@ Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 {{< /hint >}}
 
-Apply this Composition to your cluster. 
+Apply this Composition to your cluster.
 
 ```yaml {label="comp",copy-lines="all"}
 cat <<EOF | kubectl apply -f -
@@ -363,7 +363,7 @@ spec:
               toFieldPath: "spec.forProvider.location"
               transforms:
                 - type: map
-                  map: 
+                  map:
                     EU: "Sweden Central"
                     US: "Central US"
         - name: quickstart-nic
@@ -386,9 +386,9 @@ spec:
               toFieldPath: "spec.forProvider.location"
               transforms:
                 - type: map
-                  map: 
+                  map:
                     EU: "Sweden Central"
-                    US: "Central US"            
+                    US: "Central US"
         - name: quickstart-subnet
           base:
             apiVersion: network.azure.upbound.io/v1beta1
@@ -418,7 +418,7 @@ spec:
               toFieldPath: "spec.forProvider.location"
               transforms:
                 - type: map
-                  map: 
+                  map:
                     EU: "Sweden Central"
                     US: "Central US"
         - name: crossplane-resourcegroup
@@ -434,7 +434,7 @@ spec:
               toFieldPath: "spec.forProvider.location"
               transforms:
                 - type: map
-                  map: 
+                  map:
                     EU: "Sweden Central"
                     US: "Central US"
   compositeTypeRef:
@@ -460,7 +460,7 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
 EOF
 ```
 
@@ -468,8 +468,8 @@ EOF
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
 more information on configuring Compositions and all the available options.
 
-Read the 
-[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}}) 
+Read the
+[Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}})
 for more information on how it uses patches to map user inputs to Composition
 resource templates.
 {{< /hint >}}
@@ -485,9 +485,9 @@ crossplane-quickstart-vm-with-network   XVirtualMachine   custom-api.example.org
 ## Install the Azure virtual machine provider
 
 Part 1 only installed the Azure Virtual Network Provider. To deploying virtual
-machines requires the Azure Compute provider as well. 
+machines requires the Azure Compute provider as well.
 
-Add the new Provider to the cluster. 
+Add the new Provider to the cluster.
 
 ```yaml
 cat <<EOF | kubectl apply -f -
@@ -496,7 +496,7 @@ kind: Provider
 metadata:
   name: provider-azure-compute
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.11.2
 EOF
 ```
 
@@ -505,10 +505,10 @@ View the new Compute provider with `kubectl get providers`.
 
 ```shell {copy-lines="1"}
 kubectl get providers
-NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-compute          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.11.1   25s
-provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.11.1   3h
-crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.1    3h
+NAME                                       INSTALLED   HEALTHY   PACKAGE                                                                AGE
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.11.2    23m
+provider-azure-compute                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.11.2   2m54s
+provider-azure-network                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2   23m
 ```
 
 ## Access the custom API
@@ -516,7 +516,7 @@ crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane
 With the custom API (XRD) installed and associated to a resource template
 (Composition) users can access the API to create resources.
 
-Create a {{<hover label="xr" line="3">}}VirtualMachine{{</hover>}} object to 
+Create a {{<hover label="xr" line="3">}}VirtualMachine{{</hover>}} object to
 create the cloud resources.
 
 ```yaml {copy-lines="all",label="xr"}
@@ -525,7 +525,7 @@ apiVersion: compute.example.com/v1alpha1
 kind: VirtualMachine
 metadata:
   name: my-vm
-spec: 
+spec:
   location: "EU"
 EOF
 ```
@@ -542,10 +542,10 @@ NAME    SYNCED   READY   COMPOSITION                             AGE
 my-vm   True     True    crossplane-quickstart-vm-with-network   3m3s
 ```
 
-This object is a Crossplane _composite resource_ (also called an `XR`).  
+This object is a Crossplane _composite resource_ (also called an `XR`).
 It's a
 single object representing the collection of resources created from the
-Composition template. 
+Composition template.
 
 View the individual resources with `kubectl get managed`
 
@@ -568,7 +568,7 @@ virtualnetwork.network.azure.upbound.io/my-vm-pd2sw   True    True     my-vm-pd2
 ```
 
 Accessing the API created all five resources defined in the template and linked
-them together. 
+them together.
 
 Look at a specific resource to see it's created in the location used in the API.
 
@@ -598,17 +598,17 @@ No resources found
 
 ## Using the API with namespaces
 
-Accessing the API `VirtualMachine` happens at the cluster scope.  
+Accessing the API `VirtualMachine` happens at the cluster scope.
 Most organizations
-isolate their users into namespaces.  
+isolate their users into namespaces.
 
 A Crossplane _Claim_ is the custom API in a namespace.
 
 Creating a _Claim_ is just like accessing the custom API endpoint, but with the
-{{<hover label="claim" line="3">}}kind{{</hover>}} 
+{{<hover label="claim" line="3">}}kind{{</hover>}}
 from the custom API's `claimNames`.
 
-Create a new namespace to test create a Claim in. 
+Create a new namespace to test create a Claim in.
 
 ```shell
 kubectl create namespace crossplane-test
@@ -623,7 +623,7 @@ kind: VirtualMachineClaim
 metadata:
   name: my-namespaced-vm
   namespace: crossplane-test
-spec: 
+spec:
   location: "EU"
 EOF
 ```
@@ -636,7 +636,7 @@ my-namespaced-vm   True     True                        5m11s
 ```
 
 The Claim automatically creates a composite resource, which creates the managed
-resources. 
+resources.
 
 View the Crossplane created composite resource with `kubectl get composite`.
 
@@ -693,9 +693,9 @@ No resources found
 ```
 
 ## Next steps
-* Explore Azure resources that Crossplane can configure in the 
+* Explore Azure resources that Crossplane can configure in the
   [Provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-azure/tree/main/package/crds).
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
+* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with
   Crossplane users and contributors.
 * Read more about the [Crossplane concepts]({{<ref "../concepts">}}) to find out
-  what else you can do with Crossplane. 
+  what else you can do with Crossplane.
