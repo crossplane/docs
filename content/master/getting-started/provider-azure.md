@@ -39,7 +39,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2
 EOF
 ```
 
@@ -53,9 +53,9 @@ Verify the provider installed with `kubectl get providers`.
 
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
-NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.11.1   38s
-crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.1    26s
+NAME                                       INSTALLED   HEALTHY   PACKAGE                                                                AGE
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.11.2    2m18s
+provider-azure-network                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2   2m23s
 ```
 
 The Network Provider installs a second Provider, the

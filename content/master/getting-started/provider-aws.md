@@ -37,7 +37,7 @@ kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
 EOF
 ```
 
@@ -51,9 +51,9 @@ Verify the provider installed with `kubectl get providers`.
 
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                               AGE
-provider-aws-s3               True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:1.20.1         97s
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:1.20.1     88s
+NAME                                     INSTALLED   HEALTHY   PACKAGE                                                             AGE
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.21.1   30s
+provider-aws-s3                          True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1       34s
 ```
 
 The S3 Provider installs a second Provider, the

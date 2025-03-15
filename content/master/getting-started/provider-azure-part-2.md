@@ -45,7 +45,7 @@ kind: Provider
 metadata:
   name: provider-azure-network
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2
 EOF
 ```
 
@@ -496,7 +496,7 @@ kind: Provider
 metadata:
   name: provider-azure-compute
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.20.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.11.2
 EOF
 ```
 
@@ -505,10 +505,10 @@ View the new Compute provider with `kubectl get providers`.
 
 ```shell {copy-lines="1"}
 kubectl get providers
-NAME                            INSTALLED   HEALTHY   PACKAGE                                                  AGE
-provider-azure-compute          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.11.1    25s
-provider-azure-network          True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-v1.11.1    3h
-crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-v1.11.1     3h
+NAME                                       INSTALLED   HEALTHY   PACKAGE                                                                AGE
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.11.2    23m
+provider-azure-compute                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.11.2   2m54s
+provider-azure-network                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2   23m
 ```
 
 ## Access the custom API

@@ -47,7 +47,7 @@ kind: Provider
 metadata:
   name: provider-gcp-storage
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.11.4
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.12.1
 EOF
 ```
 
@@ -114,7 +114,7 @@ kind: Provider
 metadata:
   name: provider-gcp-pubsub
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.11.4
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.12.1
 EOF
 ```
 
@@ -122,10 +122,10 @@ View the new PubSub provider with `kubectl get providers`.
 
 ```shell {copy-lines="1"}
 kubectl get providers
-NAME                          INSTALLED   HEALTHY   PACKAGE                                                AGE
-provider-gcp-pubsub           True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.11.4.0.0     39s
-provider-gcp-storage          True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.11.4.0.0    13m
-crossplane-contrib-provider-family-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-gcp:v1.11.4.0.0     12m
+NAME                                     INSTALLED   HEALTHY   PACKAGE                                                              AGE
+crossplane-contrib-provider-family-gcp   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-gcp:v1.12.1    48m
+provider-gcp-pubsub                      True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.12.1    14s
+provider-gcp-storage                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.12.1   48m
 ```
 
 
