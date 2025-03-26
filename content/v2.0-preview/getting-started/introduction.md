@@ -64,7 +64,6 @@ compositionrevisions.apiextensions.crossplane.io
 compositions.apiextensions.crossplane.io                
 configurationrevisions.pkg.crossplane.io                
 configurations.pkg.crossplane.io                        
-controllerconfigs.pkg.crossplane.io                     
 deploymentruntimeconfigs.pkg.crossplane.io              
 environmentconfigs.apiextensions.crossplane.io          
 functionrevisions.pkg.crossplane.io                     
@@ -490,6 +489,4 @@ View all available Claims with the command `kubectl get claim`.
 
 ## Next steps
 Build your own Crossplane platform using one of the quickstart guides.
-* [Azure Quickstart]({{<ref "provider-azure" >}})
 * [AWS Quickstart]({{<ref "provider-aws" >}})
-* [GCP Quickstart]({{<ref "provider-gcp" >}})

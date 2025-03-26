@@ -1116,7 +1116,6 @@ environmentconfigs                envcfg       apiextensions.crossplane.io/v1bet
 usages                                         apiextensions.crossplane.io/v1alpha1   false        Usage
 configurationrevisions                         pkg.crossplane.io/v1                   false        ConfigurationRevision
 configurations                                 pkg.crossplane.io/v1                   false        Configuration
-controllerconfigs                              pkg.crossplane.io/v1alpha1             false        ControllerConfig
 deploymentruntimeconfigs                       pkg.crossplane.io/v1beta1              false        DeploymentRuntimeConfig
 functionrevisions                              pkg.crossplane.io/v1beta1              false        FunctionRevision
 functions                                      pkg.crossplane.io/v1beta1              false        Function

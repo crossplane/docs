@@ -7,13 +7,6 @@ Connect Crossplane to AWS to create and manage cloud resources from Kubernetes
 with  
 [provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws).
 
-This guide is in two parts:
-* Part 1 walks through installing Crossplane, configuring the provider to
-authenticate to AWS and creating a _Managed Resource_ in AWS directly from your
-Kubernetes cluster. This shows Crossplane can communicate with AWS.
-* [Part 2]({{< ref "provider-aws-part-2" >}}) shows how to build and access a 
-  custom API with Crossplane.
-
 
 ## Prerequisites
 This quickstart requires:
@@ -236,9 +229,5 @@ bucket.s3.aws.upbound.io "crossplane-bucket-hhdzh" deleted
 ```
 
 ## Next steps
-* [**Continue to part 2**]({{< ref "provider-aws-part-2">}}) to create and use a 
-  custom API with Crossplane.
-* Explore AWS resources that Crossplane can configure in the 
-  [provider CRD reference](https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/package/crds).
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with 
   Crossplane users and contributors.
