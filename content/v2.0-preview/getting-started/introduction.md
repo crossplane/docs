@@ -44,8 +44,7 @@ This table provides a summary of Crossplane components and their roles.
 | [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A Provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
 | [Composition]({{<ref "#compositions">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
 | [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
-| [CompositeResourceDefinitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
-| [Claims]({{<ref "#claims" >}}) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
+| [CompositeResourceDefinitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ |
 {{< /table >}}
 
 ## The Crossplane Pod
@@ -208,50 +207,6 @@ every time a user requests this set of resources.
 If a _Composition_ allows a user to define resource settings, users apply them
 in a _Composite Resource_.
 
-
-<!-- A _Composition_ defines which _Composite Resources_ can use the _Composition_
-template with the _Composition_ `spec.compositeTypeRef` value. This defines the
-{{<hover label="comp" line="7">}}apiVersion{{< /hover >}} and {{<hover
-label="comp" line="8">}}kind{{< /hover >}} of _Composite Resources_ that can use the
-_Composition_.
-
-For example, in the _Composition_:
-```yaml {label="comp"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: test.example.org
-spec:
-  compositeTypeRef:
-    apiVersion: test.example.org/v1alpha1
-    kind: MyComputeResource
-    # Removed for brevity
-```
-
-A _Composite Resource_ that can use this template must match this 
-{{<hover label="comp" line="7">}}apiVersion{{< /hover >}} and {{<hover
-label="comp" line="8">}}kind{{< /hover >}}.
-
-```yaml {label="xr"}
-apiVersion: test.example.org/v1alpha1
-kind: MyComputeResource
-metadata:
-  name: my-resource
-spec:
-  storage: "large"
-```
-
-The _Composite Resource_ {{<hover label="xr" line="1">}}apiVersion{{< /hover >}}
-matches the and _Composition_ 
-{{<hover label="comp" line="7">}}apiVersion{{</hover >}} and the 
-_Composite Resource_  {{<hover label="xr" line="2">}}kind{{< /hover >}}
-matches the _Composition_ {{<hover label="comp" line="8">}}kind{{< /hover >}}.
-
-In this example, the _Composite Resource_ also sets the 
-{{<hover label="xr" line="7">}}storage{{< /hover >}} setting. The
-_Composition_ uses this value when creating the associated _managed resources_
-owned by this _Composite Resource_. -->
-
 {{< hint "tip" >}}
 _Compositions_ are templates for a set of _managed resources_.  
 _Composite Resources_ fill out the template and create _managed resources_.
@@ -265,12 +220,7 @@ Use `kubectl get composite` to view all _Composite Resources_.
 
 ## Composite Resource Definitions
 _Composite Resource Definitions_ (`XRDs`) create custom Kubernetes APIs used by 
-_Claims_ and _Composite Resources_.
-
-{{< hint "note" >}}
-The [_Claims_]({{<ref "#claims">}}) section discusses
-_Claims_.
-{{< /hint >}}
+_Composite Resources_.
 
 Platform teams define the custom APIs.  
 These APIs can define specific values
@@ -378,114 +328,7 @@ spec:
 A _Composite Resource Definition_ can define a wide variety of settings and options. 
 
 Creating a _Composite Resource Definition_ enables the creation of _Composite
-Resources_ but can also create a _Claim_.
-
-_Composite Resource Definitions_ with a `spec.claimNames` allow developers to
-create _Claims_.
-
-For example, the 
-{{< hover label="xrdClaim" line="6" >}}claimNames.kind{{</hover >}}
-allows the creation of _Claims_ of `kind: computeClaim`.
-```yaml {label="xrdClaim"}
-# Composite Resource Definition (XRD)
-spec:
-  group: test.example.org
-  names:
-    kind: MyComputeResource
-  claimNames:
-    kind: computeClaim
-  # Removed for brevity 
-```
-
-## Claims
-_Claims_ are the primary way developers interact with Crossplane. 
-
-_Claims_ access the custom APIs defined by the platform team in a _Composite
-Resource Definition_.
-
-_Claims_ look like _Composite Resources_, but they're namespace scoped,
-while _Composite Resources_ are cluster scoped. 
-
-{{< hint "note" >}}
-**Why does namespace scope matter?**  
-Having namespace scoped _Claims_ allows multiple teams, using unique namespaces,
-to create the same types of resources, independent of each other. The compute
-resources of team A are unique to the compute resources of team B.
-
-Directly creating _Composite Resources_ requires cluster-wide permissions,
-shared with all teams.   
-_Claims_ create the same set of resources, but on a namespace level.
-{{< /hint >}}
-
-The previous _Composite Resource Definition_ allows the creation of _Claims_
-of the kind  
-{{<hover label="xrdClaim2" line="7" >}}computeClaim{{</hover>}}.  
-
-Claims use the same 
-{{< hover label="xrdClaim2" line="3" >}}apiVersion{{< /hover >}}
-defined in _Composite Resource Definition_ and also used by 
-_Composite Resources_.
-```yaml {label="xrdClaim2"}
-# Composite Resource Definition (XRD)
-spec:
-  group: test.example.org
-  names:
-    kind: MyComputeResource
-  claimNames:
-    kind: computeClaim
-  # Removed for brevity 
-```
-
-In an example _Claim_ the 
-{{<hover label="claim" line="2">}}apiVersion{{< /hover >}}
-matches the {{<hover label="xrdClaim2" line="3">}}group{{< /hover >}} in the
-_Composite Resource Definition_. 
-
-The _Claim_ {{<hover label="claim" line="3">}}kind{{< /hover >}} matches the
-_Composite Resource Definition_ 
-{{<hover label="xrdClaim2" line="7">}}claimNames.kind{{< /hover >}}.
-
-```yaml {label="claim"}
-# Claim
-apiVersion: test.example.org/v1alpha1
-kind: computeClaim
-metadata:
-  name: myClaim
-  namespace: devGroup
-spec:
-  size: "large"
-```
-
-A _Claim_ can install in a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
-The _Composite Resource Definition_ defines the 
-{{<hover label="claim" line="7">}}spec{{< /hover >}} options the same way it
-does for a _Composite Resource_ 
-{{<hover label="xr-claim" line="6">}}spec{{< /hover >}}.
-
-{{< hint "tip" >}}
-_Composite Resources_ and _Claims_ are similar.   
-Only _Claims_ can be in
-a {{<hover label="claim" line="6">}}namespace{{</hover >}}.  
-Also the _Composite Resource's_ {{<hover label="xr-claim"
-line="3">}}kind{{</hover >}} may be different than the _Claim's_
-{{<hover label="claim" line="3">}}kind{{< /hover >}}.  
-The _Composite Resource Definition_ defines the 
-{{<hover label="xrdClaim2" line="7">}}kind{{</hover >}} values.
-{{< /hint >}}
-
-```yaml {label="xr-claim"}
-# Composite Resource (XR)
-apiVersion: test.example.org/v1alpha1
-kind: MyComputeResource
-metadata:
-  name: my-resource
-spec:
-  storage: "large"
-```
-
-_Claims_ are namespace scoped.
-
-View all available Claims with the command `kubectl get claim`.
+Resources_.
 
 ## Next steps
 Build your own Crossplane platform using one of the quickstart guides.
