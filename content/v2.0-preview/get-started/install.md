@@ -3,10 +3,20 @@ title: Install Crossplane
 weight: 100
 ---
 
-Crossplane installs into an existing Kubernetes cluster, creating the
-`Crossplane` pod, enabling the installation of Crossplane _Provider_ resources.
+{{< hint "warning" >}}
+Crossplane v2 is a preview release.
 
-{{< hint type="tip" >}}
+**Don't use this Crossplane v2 preview in production.**
+{{< /hint >}}
+
+
+Crossplane installs into an existing Kubernetes cluster, creating the
+Crossplane pod.
+
+Installing Crossplane enables the installation of Crossplane _Provider_,
+_Function_, and _Configuration_ resources.
+
+{{< hint "tip" >}}
 If you don't have a Kubernetes cluster create one locally with [Kind](https://kind.sigs.k8s.io/).
 {{< /hint >}}
 
@@ -16,15 +26,15 @@ If you don't have a Kubernetes cluster create one locally with [Kind](https://ki
 
 ## Install Crossplane
 
-Install Crossplane using the Crossplane published _Helm chart_.
+Install Crossplane using the _Helm chart_.
 
 
-### Add the Crossplane Helm repository
+### Add the Crossplane Preview Helm repository
 
-Add the Crossplane repository with the `helm repo add` command.
+Add the Crossplane preview repository with the `helm repo add` command.
 
 ```shell
-helm repo add crossplane-stable https://charts.crossplane.io/stable
+helm repo add crossplane-preview https://charts.crossplane.io/preview
 ```
 
 Update the
@@ -33,9 +43,9 @@ local Helm chart cache with `helm repo update`.
 helm repo update
 ```
 
-### Install the Crossplane Helm chart
+### Install the Crossplane Preview Helm chart
 
-Install the Crossplane Helm chart with `helm install`.
+Install the Crossplane Preview Helm chart with `helm install`.
 
 {{< hint "tip" >}}
 View the changes Crossplane makes to your cluster with the
@@ -48,7 +58,8 @@ Crossplane creates and installs into the `crossplane-system` namespace.
 ```shell
 helm install crossplane \
 --namespace crossplane-system \
---create-namespace crossplane-stable/crossplane
+--create-namespace crossplane-preview/crossplane \
+--devel
 ```
 
 View the installed Crossplane pods with `kubectl get pods -n crossplane-system`.
@@ -60,198 +71,23 @@ crossplane-6d67f8cd9d-g2gjw                1/1     Running   0          26m
 crossplane-rbac-manager-86d9b5cf9f-2vc4s   1/1     Running   0          26m
 ```
 
-{{< hint "tip" >}}
-Install a specific version of Crossplane with the `--version <version>` option. For example, to install version `1.10.0`:
-
-```shell
-helm install crossplane \
---namespace crossplane-system \
---create-namespace crossplane-stable/crossplane \
---version 1.10.0
-```
-{{< /hint >}}
-
-
-
-## Installed deployments
-Crossplane creates two Kubernetes _deployments_ in the `crossplane-system`
-namespace to deploy the Crossplane pods.
-
-```shell {copy-lines="1"}
-kubectl get deployments -n crossplane-system
-NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
-crossplane                1/1     1            1           8m13s
-crossplane-rbac-manager   1/1     1            1           8m13s
-```
-
-### Crossplane deployment
-The Crossplane deployment starts with the `crossplane-init container`. The
-`init` container installs the Crossplane _Custom Resource Definitions_ into the
-Kubernetes cluster.
-
-After the `init` container finishes, the `crossplane` pod manages two Kubernetes
-controllers.
-* The _Package Manager controller_ installs the
-provider, function and configuration packages.
-* The _Composition controller_ installs and manages the
-Crossplane _Composite Resource Definitions_, _Compositions_ and _Claims_.
-
-### Crossplane RBAC manager deployment
-The `crossplane-rbac-manager` creates and manages Kubernetes _ClusterRoles_ for
-installed Crossplane _Provider_ and their _Custom Resource Definitions_.
-
-The
-[Crossplane RBAC Manager design document](https://github.com/crossplane/crossplane/blob/main/design/design-doc-rbac-manager.md)
-has more information on the installed _ClusterRoles_.
-
 ## Installation options
 
 ### Customize the Crossplane Helm chart
+
 Crossplane supports customizations at install time by configuring the Helm
 chart.
 
-Apply customizations with the command line or with a Helm _values_ file.
+Read [the Helm chart README](https://github.com/crossplane/crossplane/blob/v2/cluster/charts/crossplane/README.md#configuration) 
+to learn what customizations are available.
 
-<!-- Generated from Helm README at https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md -->
-<!-- vale gitlab.Substitutions = NO -->
-<!-- allow lowercase yaml -->
-{{<expand "All Crossplane customization options" >}}
-{{< table "table table-hover table-striped table-sm">}}
-| Parameter | Description | Default |
-| --- | --- | --- |
-| `affinity` | Add `affinities` to the Crossplane pod deployment. | `{}` |
-| `args` | Add custom arguments to the Crossplane pod. | `[]` |
-| `configuration.packages` | A list of Configuration packages to install. | `[]` |
-| `customAnnotations` | Add custom `annotations` to the Crossplane pod deployment. | `{}` |
-| `customLabels` | Add custom `labels` to the Crossplane pod deployment. | `{}` |
-| `deploymentStrategy` | The deployment strategy for the Crossplane and RBAC Manager pods. | `"RollingUpdate"` |
-| `dnsPolicy` | Specify the `dnsPolicy` to be used by the Crossplane pod. | `""` |
-| `extraEnvVarsCrossplane` | Add custom environmental variables to the Crossplane pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
-| `extraEnvVarsRBACManager` | Add custom environmental variables to the RBAC Manager pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
-| `extraObjects` | To add arbitrary Kubernetes Objects during a Helm Install | `[]` |
-| `extraVolumeMountsCrossplane` | Add custom `volumeMounts` to the Crossplane pod. | `{}` |
-| `extraVolumesCrossplane` | Add custom `volumes` to the Crossplane pod. | `{}` |
-| `function.packages` | A list of Function packages to install | `[]` |
-| `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork` grants the Crossplane Pod access to the host network namespace. Consider setting `dnsPolicy` to `ClusterFirstWithHostNet`. | `false` |
-| `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
-| `image.repository` | Repository for the Crossplane pod image. | `"xpkg.crossplane.io/crossplane/crossplane"` |
-| `image.tag` | The Crossplane image tag. Defaults to the value of `appVersion` in `Chart.yaml`. | `""` |
-| `imagePullSecrets` | The imagePullSecret names to add to the Crossplane ServiceAccount. | `[]` |
-| `leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the Crossplane pod. | `true` |
-| `metrics.enabled` | Enable Prometheus path, port and scrape annotations and expose port 8080 for both the Crossplane and RBAC Manager pods. | `false` |
-| `metrics.port` | The port the metrics server listens on. | `""` |
-| `nodeSelector` | Add `nodeSelectors` to the Crossplane pod deployment. | `{}` |
-| `packageCache.configMap` | The name of a ConfigMap to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
-| `packageCache.medium` | Set to `Memory` to hold the package cache in a RAM backed file system. Useful for Crossplane development. | `""` |
-| `packageCache.pvc` | The name of a PersistentVolumeClaim to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
-| `packageCache.sizeLimit` | The size limit for the package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"20Mi"` |
-| `packageManager.enableAutomaticDependencyDowngrade` | Enable automatic dependency version downgrades. This configuration is only used when `--enable-dependency-version-upgrades` flag is passed. | `false` |
-| `podSecurityContextCrossplane` | Add a custom `securityContext` to the Crossplane pod. | `{}` |
-| `podSecurityContextRBACManager` | Add a custom `securityContext` to the RBAC Manager pod. | `{}` |
-| `priorityClassName` | The PriorityClass name to apply to the Crossplane and RBAC Manager pods. | `""` |
-| `provider.packages` | A list of Provider packages to install. | `[]` |
-| `rbacManager.affinity` | Add `affinities` to the RBAC Manager pod deployment. | `{}` |
-| `rbacManager.args` | Add custom arguments to the RBAC Manager pod. | `[]` |
-| `rbacManager.deploy` | Deploy the RBAC Manager pod and its required roles. | `true` |
-| `rbacManager.leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the RBAC Manager pod. | `true` |
-| `rbacManager.nodeSelector` | Add `nodeSelectors` to the RBAC Manager pod deployment. | `{}` |
-| `rbacManager.replicas` | The number of RBAC Manager pod `replicas` to deploy. | `1` |
-| `rbacManager.revisionHistoryLimit` | The number of RBAC Manager ReplicaSets to retain. | `nil` |
-| `rbacManager.skipAggregatedClusterRoles` | Don't install aggregated Crossplane ClusterRoles. | `false` |
-| `rbacManager.tolerations` | Add `tolerations` to the RBAC Manager pod deployment. | `[]` |
-| `rbacManager.topologySpreadConstraints` | Add `topologySpreadConstraints` to the RBAC Manager pod deployment. | `[]` |
-| `readiness.port` | The port the readyz server listens on. | `""` |
-| `registryCaBundleConfig.key` | The ConfigMap key containing a custom CA bundle to enable fetching packages from registries with unknown or untrusted certificates. | `""` |
-| `registryCaBundleConfig.name` | The ConfigMap name containing a custom CA bundle to enable fetching packages from registries with unknown or untrusted certificates. | `""` |
-| `replicas` | The number of Crossplane pod `replicas` to deploy. | `1` |
-| `resourcesCrossplane.limits.cpu` | CPU resource limits for the Crossplane pod. | `"500m"` |
-| `resourcesCrossplane.limits.memory` | Memory resource limits for the Crossplane pod. | `"1024Mi"` |
-| `resourcesCrossplane.requests.cpu` | CPU resource requests for the Crossplane pod. | `"100m"` |
-| `resourcesCrossplane.requests.memory` | Memory resource requests for the Crossplane pod. | `"256Mi"` |
-| `resourcesRBACManager.limits.cpu` | CPU resource limits for the RBAC Manager pod. | `"100m"` |
-| `resourcesRBACManager.limits.memory` | Memory resource limits for the RBAC Manager pod. | `"512Mi"` |
-| `resourcesRBACManager.requests.cpu` | CPU resource requests for the RBAC Manager pod. | `"100m"` |
-| `resourcesRBACManager.requests.memory` | Memory resource requests for the RBAC Manager pod. | `"256Mi"` |
-| `revisionHistoryLimit` | The number of Crossplane ReplicaSets to retain. | `nil` |
-| `securityContextCrossplane.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the Crossplane pod. | `false` |
-| `securityContextCrossplane.readOnlyRootFilesystem` | Set the Crossplane pod root file system as read-only. | `true` |
-| `securityContextCrossplane.runAsGroup` | The group ID used by the Crossplane pod. | `65532` |
-| `securityContextCrossplane.runAsUser` | The user ID used by the Crossplane pod. | `65532` |
-| `securityContextRBACManager.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the RBAC Manager pod. | `false` |
-| `securityContextRBACManager.readOnlyRootFilesystem` | Set the RBAC Manager pod root file system as read-only. | `true` |
-| `securityContextRBACManager.runAsGroup` | The group ID used by the RBAC Manager pod. | `65532` |
-| `securityContextRBACManager.runAsUser` | The user ID used by the RBAC Manager pod. | `65532` |
-| `service.customAnnotations` | Configure annotations on the service object. Only enabled when webhooks.enabled = true | `{}` |
-| `serviceAccount.create` | Specifies whether Crossplane ServiceAccount should be created | `true` |
-| `serviceAccount.customAnnotations` | Add custom `annotations` to the Crossplane ServiceAccount. | `{}` |
-| `serviceAccount.name` | Provide the name of an already created Crossplane ServiceAccount. Required when `serviceAccount.create` is `false` | `""` |
-| `tolerations` | Add `tolerations` to the Crossplane pod deployment. | `[]` |
-| `topologySpreadConstraints` | Add `topologySpreadConstraints` to the Crossplane pod deployment. | `[]` |
-| `webhooks.enabled` | Enable webhooks for Crossplane and installed Provider packages. | `true` |
-| `webhooks.port` | The port the webhook server listens on. | `""` |
-{{< /table >}}
-{{< /expand >}}
-<!-- vale gitlab.Substitutions = YES -->
-
-#### Command line customization
-
-Apply custom settings at the command line with
-`helm install crossplane --set <setting>=<value>`.
-
-For example, to change the image pull policy:
-
-```shell
-helm install crossplane \
---namespace crossplane-system \
---create-namespace \
-crossplane-stable/crossplane \
---set image.pullPolicy=Always
-```
-
-Helm supports comma-separated arguments.
-
-For example, to change the image pull policy and number of replicas:
-
-```shell
-helm install crossplane \
---namespace crossplane-system \
---create-namespace \
-crossplane-stable/crossplane \
---set image.pullPolicy=Always,replicas=2
-```
-
-#### Helm values file
-
-Apply custom settings in a Helm _values_ file with
-`helm install crossplane -f <filename>`.
-
-A YAML file defines the customized settings.
-
-For example, to change the image pull policy and number of replicas:
-
-Create a YAML with the customized settings.
-
-```yaml
-replicas: 2
-
-image:
-  pullPolicy: Always
-```
-
-Apply the file with `helm install`:
-
-```shell
-helm install crossplane \
---namespace crossplane-system \
---create-namespace \
-crossplane-stable/crossplane \
--f settings.yaml
-```
+Read [the Helm documentation](https://helm.sh/docs/) to learn how to run Helm
+with custom options using `--set` or `values.yaml`.
 
 #### Feature flags
 
-Crossplane introduces new features behind feature flags. By default
-alpha features are off. Crossplane enables beta features by default. To enable a
+Crossplane introduces new features behind feature flags. By default alpha
+features are off. Crossplane enables beta features by default. To enable a
 feature flag, set the `args` value in the Helm chart. Available feature flags
 can be directly found by running `crossplane core start --help`, or by looking
 at the table below.
@@ -260,11 +96,8 @@ at the table below.
 {{< table caption="Feature flags" >}}
 | Status | Flag | Description |
 | --- | --- | --- |
-| Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
 | Beta | `--enable-usages` | Enable support for Usages. |
-| Beta | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
-| Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
 | Alpha | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
 | Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
@@ -282,56 +115,3 @@ installing packages.
 
 Change the default registry location during the Crossplane install with
 `--set args='{"--registry=index.docker.io"}'`.
-
-### Install pre-release Crossplane versions
-Install a pre-release versions of Crossplane from the `master` Crossplane Helm channel.
-
-Versions in the `master` channel are under active development and may be unstable.
-
-{{< hint "warning" >}}
-Don't use Crossplane `master` releases in production. Only use `stable` channel.
-Only use `master` for testing and development.
-{{< /hint >}}
-
-
-#### Add the Crossplane master Helm repository
-
-Add the Crossplane repository with the `helm repo add` command.
-
-```shell
-helm repo add crossplane-master https://charts.crossplane.io/master/
-```
-
-Update the
-local Helm chart cache with `helm repo update`.
-```shell
-helm repo update
-```
-
-#### Install the Crossplane master Helm chart
-
-Install the Crossplane `master` Helm chart with `helm install`.
-
-{{< hint "tip" >}}
-View the changes Crossplane makes to your cluster with the
-`helm install --dry-run --debug` options. Helm shows what configurations it
-applies without making changes to the Kubernetes cluster.
-{{< /hint >}}
-
-Crossplane creates and installs into the `crossplane-system` namespace.
-
-```shell
-helm install crossplane \
---namespace crossplane-system \
---create-namespace crossplane-master/crossplane \
---devel
-```
-
-## Crossplane distributions
-Third-party vendors may maintain their own Crossplane distributions. Vendor
-supported distribution may have features or tooling that isn't in the
-Community Crossplane distribution.
-
-The CNCF certified third-party distributions as
-"[conformant](https://github.com/cncf/crossplane-conformance)" with the
-Community Crossplane distribution.
