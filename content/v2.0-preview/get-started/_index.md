@@ -1,7 +1,7 @@
 ---
-title: Getting Started
+title: Get Started
 weight: 4
-description: An introduction to Crossplane and Crossplane quickstart guides.
+description: Get started with Crossplane.
 ---
 
 {{<img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
