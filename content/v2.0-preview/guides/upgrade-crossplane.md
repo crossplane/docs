@@ -10,14 +10,14 @@ The recommended upgrade method for an existing Crossplane install is to use
 * [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
  
 
-## Add the Crossplane Helm repository
+## Add the Crossplane Preview Helm repository
 Verify Helm has the Crossplane repository.
 
 ```shell
-helm repo add crossplane-stable https://charts.crossplane.io/stable
+helm repo add crossplane-preview https://charts.crossplane.io/preview
 ```
 
-## Update the Helm repository
+## Update the Helm Preview repository
 
 Update the local Crossplane Helm chart with `helm repo update`.
 
@@ -37,7 +37,7 @@ By default, Crossplane installs into the `crossplane-system`
 namespace. 
 
 ```shell
-helm upgrade crossplane --namespace crossplane-system crossplane-stable/crossplane
+helm upgrade crossplane --namespace crossplane-system crossplane-preview/crossplane --devel
 ```
 
 Helm preserves any arguments or flags originally used when installing
@@ -56,5 +56,5 @@ with the upgrade command.
 
 For example, to maintain the original image registry use 
 ```shell 
-helm upgrade crossplane --namespace crossplane-system crossplane-stable/crossplane --set 'args={"--registry=index.docker.io"}'
+helm upgrade crossplane --namespace crossplane-system crossplane-preview/crossplane --set 'args={"--registry=index.docker.io"}'
 ```
