@@ -1,7 +1,8 @@
 ---
 title: Server-Side Apply
-state: alpha
+state: beta
 alphaVersion: "1.15"
+betaVersion: "1.19"
 weight: 300
 ---
 
@@ -17,6 +18,20 @@ Server-side apply is a Kubernetes feature. Read more about server-side apply in
 the [Kubernetes documentation](https://kubernetes.io/docs/reference/using-api/server-side-apply/).
 {{</hint>}}
 
+## Disable server-side apply
+<!-- vale write-good.Passive = NO -->
+Server-Side Apply is a beta feature. Beta features are enabled by default.
+<!-- vale write-good.Passive = YES -->
+
+Disable server-side apply by disabling the `--enable-ssa-claims` feature flag.
+Read the [Install Crossplane documentation]({{<ref "../software/install#feature-flags">}})
+to learn about feature flags.
+
+When server-side apply is disabled, you might see fields reappearing after you delete 
+them from a claim's `spec`. Also, Crossplane doesn't delete labels and annotations from
+the composite resource when you delete them from the claim.
+
+
 ## Use server-side apply to sync claims with composite resources
 
 When you create a claim, Crossplane creates a corresponding composite resource.
@@ -29,32 +44,22 @@ and how they relate to composite resources.
 Crossplane can use server-side apply to keep the claim in sync with the
 composite resource.
 
-Use the `--enable-ssa-claims` feature flag to enable using server-side apply.
-Read the [Install Crossplane documentation]({{<ref "../software/install#feature-flags">}})
-to learn about feature flags.
-
-If you see fields reappearing after you delete them from a claim's `spec`,
-enable server-side apply to fix the problem. Enabling server-side apply also
-fixes the problem where Crossplane doesn't delete labels and annotations from
-the composite resource when you delete them from the claim.
-
 {{<hint "important">}}
-When you enable server-side apply, Crossplane is stricter about how it syncs
+With server-side apply, Crossplane is stricter about how it syncs
 a claim with its counterpart composite resource:
 
 - The claim's `metadata` syncs to the composite resource's `metadata`.
 - The claim's `spec` syncs to the composite resource's `spec`.
 - The composite resource's `status` syncs to the claim's `status`.
 
-When you enable server-side apply Crossplane doesn't sync the composite resource's `metadata`
+With server-side apply Crossplane doesn't sync the composite resource's `metadata`
 and `spec` back to the claim's `metadata` and `spec`. It also doesn't sync the
 claim's `status` to the composite resource's `status`.
 {{</hint>}}
 
 ## Use server-side apply to sync claims end-to-end
 
-To get the full benefit of server-side apply, use the `--enable-ssa-claims`
-feature flag together with composition functions.
+To get the full benefit of server-side apply, use it together with composition functions.
 
 When you use composition functions, Crossplane uses server side apply to sync
 composite resources with composed resources. Read more about this in the
