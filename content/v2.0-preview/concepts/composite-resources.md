@@ -13,7 +13,7 @@ Composite resources are a _composite_ of managed resources.
 A _Composition_ defines how to _compose_ the managed resources together.
 {{< /hint >}}
 
-{{<expand "Confused about Compositions, XRDs, XRs and Claims?" >}}
+{{<expand "Confused about Compositions, XRDs and XRs?" >}}
 Crossplane has four core components that users commonly mix up:
 
 * [Compositions]({{<ref "./compositions">}}) - A template to define how to create resources.
@@ -22,8 +22,6 @@ Crossplane has four core components that users commonly mix up:
 * Composite Resource (`XR`) - This page. Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
   Composition template to create new managed resources. 
-* [Claims]({{<ref "./claims" >}}) (`XRC`) - Like a Composite Resource, but
-  with namespace scoping. 
 {{</expand >}}
 
 ## Creating composite resources
@@ -440,43 +438,9 @@ Crossplane applies the composite label to any managed resource created by a
 composite, creating a reference between the managed resource and owning
 composite resource. 
 
-```shell {label="claimname",copy-lines="1"}
-kubectl describe xmydatabase.example.org/my-claimed-database-x9rx9
-Name:         my-claimed-database2-x9rx9
+```shell {label="complabel",copy-lines="1"}
+kubectl describe xmydatabase.example.org/my-database-x9rx9
+Name:         my-database2-x9rx9
 Namespace:
-Labels:       crossplane.io/composite=my-claimed-database-x9rx9
+Labels:       crossplane.io/composite=my-database-x9rx9
 ```
-
-### Claim name label
-Crossplane adds the 
-{{<hover label="claimname" line="4">}}crossplane.io/claim-name{{</hover>}}
-label to composite resources created from a Claim. The label indicates the name
-of the Claim linked to this composite resource. 
-
-```shell {label="claimname",copy-lines="1"}
-kubectl describe xmydatabase.example.org/my-claimed-database-x9rx9
-Name:         my-claimed-database2-x9rx9
-Namespace:
-Labels:       crossplane.io/claim-name=my-claimed-database
-```
-
-Composite resources created directly, without using a Claim, don't have a
-{{<hover label="claimname" line="4">}}crossplane.io/claim-name{{</hover>}} 
-label. 
-
-### Claim namespace label
-Crossplane adds the 
-{{<hover label="claimname" line="4">}}crossplane.io/claim-namespace{{</hover>}}
-label to composite resources created from a Claim. The label indicates the 
-namespace of the Claim linked to this composite resource. 
-
-```shell {label="claimname",copy-lines="1"}
-kubectl describe xmydatabase.example.org/my-claimed-database-x9rx9
-Name:         my-claimed-database2-x9rx9
-Namespace:
-Labels:       crossplane.io/claim-namespace=default
-```
-
-Composite resources created directly, without using a Claim, don't have a
-{{<hover label="claimname" line="4">}}crossplane.io/claim-namespace{{</hover>}} 
-label. 

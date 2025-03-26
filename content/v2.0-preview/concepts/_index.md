@@ -50,15 +50,10 @@ building and managing external resources through Kubernetes.
   custom API Crossplane creates a single Composite Resource and links all
   the related managed resources to it. 
 
-* [**Claims**]({{<ref "./claims">}}) are like Composite Resources, but exist
-  in a Kubernetes namespace. Every Claim links to a single cluster scoped
-  Composite Resource. Platform users create Claims in their unique namespace,
-  isolating their resources from other teams in other namespaces. 
-
 * [**EnvironmentConfigs**]({{<ref "./environment-configs">}}) are an in-memory
   data store, like a Kubernetes ConfigMap. EnvironmentConfigs are useful for
-  custom resource mapping or storing and retrieving data across Claims and
-  Composite Resources. 
+  custom resource mapping or storing and retrieving data across Composite
+  Resources. 
 
 * [**Usages**]({{<ref "./usages">}}) defining critical resources or custom
   dependency mappings. Usages can prevent Crossplane from deleting or can

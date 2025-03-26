@@ -5,21 +5,18 @@ description: "Composite Resource Definitions or XRDs define custom API schemas"
 ---
 
 Composite resource definitions (`XRDs`) define the schema for a custom API.  
-Users create composite resources (`XRs`) and Claims (`XCs`) using the API
-schema defined by an `XRD`.
+Users create composite resources (`XRs`) using the API schema defined by an
+`XRD`.
 
 
 {{< hint "note" >}}
 
 Read the [composite resources]({{<ref "./composite-resources">}}) page for more
 information about composite resources.
-
-Read the [Claims]({{<ref "./claims">}}) page for more
-information about Claims.
 {{</hint >}}
 
 
-{{<expand "Confused about Compositions, XRDs, XRs and Claims?" >}}
+{{<expand "Confused about Compositions, XRDs, and XRs?" >}}
 Crossplane has four core components that users commonly mix up:
 
 * [Compositions]({{<ref "./compositions" >}}) - A template to define how to create resources.
@@ -27,14 +24,12 @@ Crossplane has four core components that users commonly mix up:
 * [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
   Composition template to create new managed resources. 
-* [Claims]({{<ref "./claims" >}}) (`XRC`) - Like a Composite Resource, but
-  with namespace scoping. 
 {{</expand >}}
 
 Crossplane XRDs are like 
 [Kubernetes custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). 
-XRDs require fewer fields and add options related to Crossplane, like Claims and
-connection secrets. 
+XRDs require fewer fields and add options related to Crossplane, like connection
+secrets. 
 
 ## Creating a CompositeResourceDefinition
 
@@ -44,7 +39,6 @@ Creating a CompositeResourceDefinition consists of:
 * [Defining a custom API schema and version](#xrd-versions).
   
 Optionally, CompositeResourceDefinitions also support:
-* [Offering a Claim](#enable-claims).
 * [Defining connection secrets](#manage-connection-secrets).
 * [Setting composite resource defaults](#set-composite-resource-defaults).
  
@@ -82,7 +76,7 @@ creates a custom resource definition
 ```shell {label="kubeapi",copy-lines="3"}
 kubectl api-resources
 NAME                              SHORTNAMES   APIVERSION          NAMESPACED   KIND
-xmydatabases.example.org                       v1alpha1            false        xmydatabases
+xmydatabases.example.org                       v1alpha1            true         xmydatabases
 # Removed for brevity
 ```
 
@@ -105,12 +99,6 @@ value, but common convention is to map to a fully qualified domain name.
 Many XRDs may use the same `group` to create a logical collection of APIs.  
 <!-- vale write-good.Weasel = YES -->
 For example a `database` group may have a `relational` and `nosql` kinds. 
-
-{{<hint "tip" >}}
-Group names are cluster scoped. Choose group names that don't conflict with
-Providers.  
-Avoid Provider names in the group.
-{{< /hint >}}
 
 ### XRD names
 
@@ -356,12 +344,9 @@ documentation has more examples.
 ##### Crossplane reserved fields
 
 Crossplane doesn't allow the following fields in a schema:
-* `spec.resourceRef`
-* `spec.resourceRefs`
-* `spec.claimRef`
-* `spec.writeConnectionSecretToRef`
+* Any field under the object `spec.crossplane`
+* Any field under the object `status.crossplane`
 * `status.conditions`
-* `status.connectionDetails`
 
 Crossplane ignores any fields matching the reserved fields.
 
@@ -495,84 +480,23 @@ spec:
 Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
-### Enable Claims
-
-Optionally, XRDs can allow Claims to use the XRD API. 
-
-{{<hint "note" >}}
-
-Read the [Claims]({{<ref "./claims">}}) page for more
-information about Claims.
-{{</hint >}}
-
-XRDs offer Claims with a 
-{{<hover label="claim" line="10">}}claimNames{{</hover >}} object.
-
-The {{<hover label="claim" line="10">}}claimNames{{</hover >}} defines a 
-{{<hover label="claim" line="11">}}kind{{</hover >}} and 
-{{<hover label="claim" line="12">}}plural{{</hover >}} like the XRD 
-{{<hover label="claim" line="7">}}names{{</hover >}} object.   
-Also like XRD 
-{{<hover label="claim" line="7">}}names{{</hover >}}, use UpperCamelCase
-for the
-{{<hover label="claim" line="11">}}kind{{</hover >}} and lowercase for the 
-{{<hover label="claim" line="12">}}plural{{</hover >}}.
-
-The Claim 
-{{<hover label="claim" line="11">}}kind{{</hover >}} and 
-{{<hover label="claim" line="12">}}plural{{</hover >}} must be unique. They
-can't match any other Claim or other XRD 
-{{<hover label="claim" line="8">}}kind{{</hover >}}.
-
-{{<hint "tip" >}}
-Common Crossplane convention is to use 
-{{<hover label="claim" line="10">}}claimNames{{</hover >}} that match the XRD 
-{{<hover label="claim" line="7">}}names{{</hover >}}, but without the beginning
-"x."
-{{</hint >}}
-
-```yaml {label="claim",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xdatabases.custom-api.example.org
-spec:
-  group: custom-api.example.org
-  names:
-    kind: xDatabase
-    plural: xdatabases
-  claimNames:
-    kind: Database
-    plural: databases
-  versions:
-  # Removed for brevity
-```
-
-{{<hint "important" >}}
-You can't change the 
-{{<hover label="claim" line="10">}}claimNames{{</hover >}}
-after they're defined. You must delete and
-recreate the XRD to change the 
-{{<hover label="claim" line="10">}}claimNames{{</hover >}}.
-{{</hint >}}
-
 ### Manage connection secrets
 
 When a composite resource creates managed resources, Crossplane provides any
 [connection secrets]({{<ref "./managed-resources#writeconnectionsecrettoref">}})
-to the composite resource or Claim. This requires the creators of composite
-resources and Claims to know the secrets provided by a managed resource.
-In other cases, Crossplane administrators may not want to expose some or all the
-generated connection secrets.
+to the composite resource. This requires the creators of composite resources to
+know the secrets provided by a managed resource. In other cases, Crossplane
+administrators may not want to expose some or all the generated connection
+secrets.
 
 XRDs can define a list of 
 {{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}}
-to limit what's provided to a composite resource or Claim.
+to limit what's provided to a composite resource.
 
 Crossplane only provides the keys listed in the 
 {{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}} 
-to the composite resource or Claim using this XRD. Any other connection
-secrets aren't passed to the composite resource or Claim. 
+to the composite resource using this XRD. Any other connection secrets aren't
+passed to the composite resource. 
 
 {{<hint "important" >}}
 The keys listed in the
@@ -591,7 +515,7 @@ For example, an XRD passes the keys
 {{<hover label="key" line="12">}}password{{</hover>}} and 
 {{<hover label="key" line="13">}}address{{</hover>}}.
 
-Composite resources or Claims save these in the secret defined by their
+Composite resources save these in the secret defined by their
 `writeConnectionSecretToRef` field. 
 
 ```yaml {label="key",copy-lines="none"}
@@ -621,61 +545,14 @@ For more information on connection secrets read the
 [Connection Secrets knowledge base article]({{<ref "connection-details">}}).
 
 ### Set composite resource defaults
-XRDs can set default parameters for composite resources and Claims.
-
-<!-- vale off -->
-#### defaultCompositeDeletePolicy
-<!-- vale on -->
-The `defaultCompositeDeletePolicy` defines the default value for the claim's 
-`compositeDeletePolicy` property if the user doesn't specify a value when creating
-the claim. The claim controller uses the `compositeDeletePolicy` property to specify
-the propagation policy when deleting the associated composite.
-The `compositeDeletePolicy` doesn't apply to standalone composites that don't have
-associated claims.
-
-Using a `defaultCompositeDeletePolicy: Background` policy causes the CRD for the claim to have
-the default value `Background` for the `compositeDeletePolicy` property.
-When a deleted claim has the `compositeDeletePolicy` property set to `Background` 
-the claim controller deletes the composite resource using the propagation policy `background`
-and returns, relying on Kubernetes to delete the remaining child objects,
-like managed resources, nested composites and secrets.
-
-Using `defaultCompositeDeletePolicy: Foreground` causes the CRD for the claim to have
-the `compositeDeletePolicy` default value `Foreground`. When a deleted claim has the
-`compositeDeletePolicy` property set to `Foreground` the controller
-deletes the associated composite using the propagation policy `foreground`. This causes Kubernetes
-to use foreground cascading deletion which deletes all child resources before deleting the
-parent resource. The claim controller waits for the composite deletion to finish before returning.
-
-When creating a claim the user can override the `defaultCompositeDeletePolicy` by including
-the `spec.compositeDeletePolicy` property with either the `Background` or `Foreground` value.
-
-The default value is `defaultCompositeDeletePolicy: Background`. 
-
-Set 
-{{<hover label="delete" line="6">}}defaultCompositeDeletePolicy: Foreground{{</hover>}} 
-to change the XRD deletion policy.
-
-```yaml {label="delete",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xdatabases.custom-api.example.org
-spec:
-  defaultCompositeDeletePolicy: Foreground
-  group: custom-api.example.org
-  names:
-  # Removed for brevity
-  versions:
-  # Removed for brevity
-```
+XRDs can set default parameters for composite resources.
 
 <!-- vale off -->
 #### defaultCompositionRef
 <!-- vale on -->
 It's possible for multiple [Compositions]({{<ref "./compositions">}}) to
 reference the same XRD. If more than one Composition references the same XRD,
-the composite resource or Claim must select which Composition to use. 
+the composite resource must select which Composition to use. 
 
 An XRD can define the default Composition to use with the
 `defaultCompositionRef` value. 
@@ -704,16 +581,16 @@ spec:
 <!-- vale on -->
 
 Changes to a Composition generate a new Composition revision. By default all
-composite resources and Claims use the updated Composition revision. 
+composite resources use the updated Composition revision. 
 
 Set the XRD `defaultCompositionUpdatePolicy` to `Manual` to prevent composite
-resources and Claims from automatically using the new revision. 
+resources from automatically using the new revision. 
 
 The default value is `defaultCompositionUpdatePolicy: Automatic`.
 
 Set {{<hover label="compRev" line="6">}}defaultCompositionUpdatePolicy: Manual{{</hover>}}
-to set the default Composition update policy for composite resources and Claims
-using this XRD.
+to set the default Composition update policy for composite resources and using
+this XRD.
 
 ```yaml {label="compRev",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -732,11 +609,11 @@ spec:
 <!-- vale off -->
 #### enforcedCompositionRef
 <!-- vale on -->
-To require all composite resources or Claims to use a specific Composition use
-the `enforcedCompositionRef` setting in the XRD.
+To require all composite resources to use a specific Composition use the
+`enforcedCompositionRef` setting in the XRD.
 
-For example, to require all composite resources and Claims using this XRD to use
-the Composition 
+For example, to require all composite resources using this XRD to use the
+Composition 
 {{<hover label="enforceComp" line="6">}}myComposition{{</hover>}} 
 set 
 {{<hover label="enforceComp" line="6">}}enforcedCompositionRef.name: myComposition{{</hover>}}.
@@ -770,9 +647,6 @@ xdatabases.custom-api.example.org   True          True      22m
 The `ESTABLISHED` field indicates Crossplane installed the Kubernetes custom
 resource definition for this XRD.
 
-The `OFFERED` field indicates this XRD offers a Claim and Crossplane installed
-the Kubernetes custom resource definitions for the Claim.
-
 ### XRD conditions
 Crossplane uses a standard set of `Conditions` for XRDs.  
 View the conditions of a XRD under their `Status` with 
@@ -789,9 +663,6 @@ Status:
     Reason:                WatchingCompositeResource
     Status:                True
     Type:                  Established
-    Reason:                WatchingCompositeResourceClaim
-    Status:                True
-    Type:                  Offered
 # Removed for brevity
 ```
 
@@ -819,30 +690,4 @@ terminating the composite resource controller.
 Type: Established
 Status: False
 Reason: TerminatingCompositeResource
-```
-
-<!-- vale off -->
-#### WatchingCompositeResourceClaim
-<!-- vale on -->
-`Reason: WatchingCompositeResourceClaim` indicates Crossplane defined the new
-Kubernetes custom resource definitions related to the offered Claims and is 
-watching for the creation of new Claims. 
-
-```yaml
-Type: Offered
-Status: True
-Reason: WatchingCompositeResourceClaim
-```
-
-<!-- vale off -->
-#### TerminatingCompositeResourceClaim
-<!-- vale on -->
-`Reason: TerminatingCompositeResourceClaim` indicates Crossplane is deleting the
-custom resource definitions related to the offered Claims and is 
-terminating the Claims controller.
-
-```yaml
-Type: Offered
-Status: False
-Reason: TerminatingCompositeResourceClaim
 ```

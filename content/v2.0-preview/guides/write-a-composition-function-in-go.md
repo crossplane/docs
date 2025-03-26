@@ -306,17 +306,17 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) 
 	// to add desired managed resources.
 	xr, err := request.GetObservedCompositeResource(req)
 	if err != nil {
-		// You can set a custom status condition on the claim. This
+		// You can set a custom status condition on the XR. This
 		// allows you to communicate with the user.
 		response.ConditionFalse(rsp, "FunctionSuccess", "InternalError").
 			WithMessage("Something went wrong.").
-			TargetCompositeAndClaim()
+			TargetComposite()
 
-		// You can emit an event regarding the claim. This allows you to
+		// You can emit an event regarding the XR. This allows you to
 		// communicate with the user. Note that events should be used 
 		// sparingly and are subject to throttling
 		response.Warning(rsp, errors.New("something went wrong")).
-			TargetCompositeAndClaim()
+			TargetComposite()
 
 		// If the function can't read the XR, the request is malformed. This
 		// should never happen. The function returns a fatal result. This tells
@@ -408,10 +408,10 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) 
 	// Kubernetes events associated with the XR it's operating on.
 	log.Info("Added desired buckets", "region", region, "count", len(names))
 
-	// You can set a custom status condition on the claim. This allows you
+	// You can set a custom status condition on the XR. This allows you
 	// to communicate with the user.
 	response.ConditionTrue(rsp, "FunctionSuccess", "Success").
-		TargetCompositeAndClaim()
+		TargetComposite()
 
 	return rsp, nil
 }
@@ -568,7 +568,7 @@ func TestRunFunction(t *testing.T) {
 							Type:   "FunctionSuccess",
 							Status: fnv1.Status_STATUS_CONDITION_TRUE,
 							Reason: "Success",
-							Target: fnv1.Target_TARGET_COMPOSITE_AND_CLAIM.Enum(),
+							Target: fnv1.Target_TARGET_COMPOSITE.Enum(),
 						},
 					},
 				},

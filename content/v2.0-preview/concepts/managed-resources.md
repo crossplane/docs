@@ -19,13 +19,6 @@ Examples of managed resources include:
 * Google Cloud GKE `Cluster` defined in [provider-upjet-gcp](https://github.com/crossplane-contrib/provider-upjet-gcp).
 * Microsoft Azure PostgreSQL `Database` defined in [provider-upjet-azure](https://github.com/crossplane-contrib/provider-upjet-azure).
 
-{{< hint "tip" >}}
-
-You can create individual managed resources, but Crossplane recommends using
-[Compositions]({{<ref "./compositions" >}}) and Claims to create
-managed resources.
-{{< /hint >}}
-
 ## Managed resource fields
 
 The Provider defines the group, kind and version of a managed resource. The

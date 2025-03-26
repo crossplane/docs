@@ -1,13 +1,13 @@
 ---
 title: Function Patch and Transform
 weight: 70
-description: "A function that use patches and transforms to modify inputs from claims and composite resources before creating managed resources"
+description: "A function that use patches and transforms to modify inputs from composite resources before creating managed resources"
 ---
 
 Function Patch and Transform allows you to write a Composition that specifies
 managed resource (MR) templates, and uses "patch and transform" operations to
 fill them out. Crossplane fills the templates out with values copied from a
-claim or composite resource (XR).
+composite resource (XR).
 
 A [patch](#create-a-patch) copies a value from one resource and _patches_ it
 onto another resource. A [transform](#transform-a-patch) modifies the values
@@ -67,7 +67,7 @@ Patch and transform is best for simpler compositions. It intentionally doesn't
 support features like loops and conditionals.
 {{</hint >}}
 
-{{<expand "Confused about Compositions, XRDs, XRs and Claims?" >}}
+{{<expand "Confused about Compositions, XRDs and XRs?" >}}
 Crossplane has four core components that users commonly mix up:
 
 * [Composition]({{<ref "../concepts/compositions">}}) - A template to define
@@ -77,8 +77,6 @@ Crossplane has four core components that users commonly mix up:
 * [composite resource]({{<ref "../concepts/composite-resources">}}) (`XR`) -
   Created by using the custom API defined in a composite resource Definition.
   XRs use the Composition template to create new managed resources.
-* [Claim]({{<ref "../concepts/claims" >}}) (`XRC`) - Like a composite resource,
-  but with namespace scoping.
 {{</expand >}}
 
 ## Install the function
@@ -223,9 +221,8 @@ Here are some example selectors from a composite resource object.
 | Selector | Selected element |
 | --- | --- |
 | `kind` | `kind` |
-| `metadata.labels['crossplane.io/claim-name']` | `my-example-claim` |
 | `spec.desiredRegion` | `eu-north-1` |
-| `spec.resourceRefs[0].name` | `my-example-claim-978mh-r6z64` |
+| `spec.resourceRefs[0].name` | `my-example-978mh-r6z64` |
 {{</table >}}
 
 ```yaml {label="select",copy-lines="none"}
@@ -235,22 +232,20 @@ kind: XExample
 metadata:
   # Removed for brevity
   labels:
-    crossplane.io/claim-name: my-example-claim
-    crossplane.io/claim-namespace: default
-    crossplane.io/composite: my-example-claim-978mh
+    crossplane.io/composite: my-example-978mh
 spec:
   desiredRegion: eu-north-1
   field1: field1-text
   resourceRefs:
   - apiVersion: s3.aws.upbound.io/v1beta1
     kind: Bucket
-    name: my-example-claim-978mh-r6z64
+    name: my-example-978mh-r6z64
   - apiVersion: s3.aws.upbound.io/v1beta1
     kind: Bucket
-    name: my-example-claim-978mh-cnlhj
+    name: my-example-978mh-cnlhj
   - apiVersion: s3.aws.upbound.io/v1beta1
     kind: Bucket
-    name: my-example-claim-978mh-rv5nm
+    name: my-example-978mh-rv5nm
 ```
 
 ## Reuse a patch
@@ -364,26 +359,26 @@ Describe the composite resource to view the `resources` and the
 
 ```yaml {label="descCompPatch",copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-jp7rx
+Name:         my-example-jp7rx
 Spec:
   # Removed for brevity
   Resource Refs:
-    Name:         my-example-claim-jp7rx-gfg4m
+    Name:         my-example-jp7rx-gfg4m
     # Removed for brevity
-    Name:         my-example-claim-jp7rx-fttpj
+    Name:         my-example-jp7rx-fttpj
 Status:
   # Removed for brevity
-  Second Resource:         my-example-claim-jp7rx-gfg4m
+  Second Resource:         my-example-jp7rx-gfg4m
 ```
 
 Describe the destination managed resource to see the label `secondResource`.
 
 ```yaml {label="bucketlabel",copy-lines="none"}
 $ kubectl describe bucket
-kubectl describe bucket my-example-claim-jp7rx-fttpj
-Name:         my-example-claim-jp7rx-fttpj
-Labels:       crossplane.io/composite=my-example-claim-jp7rx
-              secondResource=my-example-claim-jp7rx-gfg4m
+kubectl describe bucket my-example-jp7rx-fttpj
+Name:         my-example-jp7rx-fttpj
+Labels:       crossplane.io/composite=my-example-jp7rx
+              secondResource=my-example-jp7rx-gfg4m
 ```
 
 ## Patch with EnvironmentConfigs
@@ -504,7 +499,7 @@ Summary of Crossplane patches
 
 {{<hint "note" >}}
 All the following examples use the same set of Compositions,
-CompositeResourceDefinitions, Claims and EnvironmentConfigs.
+CompositeResourceDefinitions and EnvironmentConfigs.
 Only the applied patches change between examples.
 
 All examples rely on
@@ -560,11 +555,8 @@ metadata:
 spec:
   group: example.org
   names:
-    kind: xExample
-    plural: xexamples
-  claimNames:
-    kind: ExampleClaim
-    plural: exampleclaims
+    kind: Example
+    plural: examples
   versions:
   - name: v1alpha1
     served: true
@@ -597,12 +589,13 @@ spec:
 {{< /expand >}}
 
 
-{{< expand "Reference Claim" >}}
+{{< expand "Reference XR" >}}
 ```yaml {copy-lines="all"}
 apiVersion: example.org/v1alpha1
-kind: ExampleClaim
+kind: Example
 metadata:
-  name: my-example-claim
+  namespace: default
+  name: my-example
 spec:
   field1: "field1-text"
   field2: "field2-text"
@@ -637,8 +630,8 @@ The `FromCompositeFieldPath` patch takes a value in a composite resource and
 applies it to a field in the composed resource.
 
 {{< hint "tip" >}}
-Use the `FromCompositeFieldPath` patch to apply options from users in their
-Claims to settings in managed resource `forProvider` settings.
+Use the `FromCompositeFieldPath` patch to apply options from users in their XRs
+to settings in managed resource `forProvider` settings.
 {{< /hint >}}
 
 For example, to use the value `desiredRegion` provided by a user in a composite
@@ -669,7 +662,7 @@ View the managed resource to see the updated `region`
 
 ```yaml {label="fromCompMR",copy-lines="1"}
 $ kubectl describe bucket
-Name:         my-example-claim-qlr68-29nqf
+Name:         my-example-qlr68-29nqf
 # Removed for brevity
 Spec:
   For Provider:
@@ -712,7 +705,7 @@ View the created managed resource to see the
 `Hosted Zone Id` field.
 ```yaml {label="toCompMR",copy-lines="none"}
 $ kubectl describe bucket
-Name:         my-example-claim-p5pxf-5vnp8
+Name:         my-example-p5pxf-5vnp8
 # Removed for brevity
 Status:
   At Provider:
@@ -724,7 +717,7 @@ Next view the composite resource and confirm the patch applied the `label`
 
 ```yaml {label="toCompositeXR",copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-p5pxf
+Name:         my-example-p5pxf
 Labels:       ZoneID=Z2O1EMRO9K5GLX
 ```
 
@@ -740,7 +733,7 @@ Use the `CombineFromComposite` patch to create complex strings, like security
 policies and apply them to a composed resource.
 {{< /hint >}}
 
-For example, use the Claim value `desiredRegion` and `field2` to generate the
+For example, use the XR value `desiredRegion` and `field2` to generate the
 managed resource's `name`
 
 The `CombineFromComposite` patch only supports the `combine` option.
@@ -847,13 +840,13 @@ View the composite resource to verify the applied patch.
 
 ```yaml {copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-bjdjw
+Name:         my-example-bjdjw
 API Version:  example.org/v1alpha1
 Kind:         xExample
 # Removed for brevity
 Status:
   # Removed for brevity
-  URL:                     https://my-example-claim-bjdjw-r6ncd.us-east-2.com
+  URL:                     https://my-example-bjdjw-r6ncd.us-east-2.com
 ```
 
 <!-- vale Google.Headings = NO -->
@@ -899,8 +892,7 @@ Verify managed resource to confirm the applied patch.
 
 ```yaml {copy-lines="none"}
 kubectl describe bucket
-Name:         my-example-claim-8vrvc-xx5sr
-Labels:       crossplane.io/claim-name=my-example-claim
+Name:         my-example-8vrvc-xx5sr
 # Removed for brevity
 Spec:
   For Provider:
@@ -1012,7 +1004,7 @@ Describe the managed resource to see new
 
 ```yaml {copy-lines="none",label="combineFromEnvDesc"}
 $ kubectl describe bucket
-Name:         my-example-claim-zmxdg-grl6p
+Name:         my-example-zmxdg-grl6p
 # Removed for brevity
 Annotations:  EnvironmentPatch: value1-value2
 # Removed for brevity
@@ -1295,7 +1287,7 @@ In this example, the value of `spec.field1` is `field1-text`.
 
 ```yaml {label="comositeMap",copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-twx7n
+Name:         my-example-twx7n
 Spec:
   # Removed for brevity
   field1:         field1-text
@@ -1305,7 +1297,7 @@ The annotation applied to the managed resource is `firstField`.
 
 ```yaml {label="mrMap",copy-lines="none"}
 $ kubectl describe bucket
-Name:         my-example-claim-twx7n-ndb2f
+Name:         my-example-twx7n-ndb2f
 Annotations:  crossplane.io/composition-resource-name: bucket1
               myAnnotation: firstField
 # Removed for brevity.
@@ -1851,8 +1843,9 @@ For more information on connection secrets read the
 
 ## Resource readiness checks
 
-By default Crossplane considers a composite resource or Claim as `READY` when
-the status of all created resource are `Type: Ready` and `Status: True`
+By default function-patch-and-transform considers a composite resource as
+`READY` when the status of all created resource are `Type: Ready` and `Status:
+True`
 
 Some resources, for example, a ProviderConfig, don't have a Kubernetes status
 and are never considered `Ready`.

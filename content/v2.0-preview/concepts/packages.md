@@ -489,8 +489,8 @@ You must ignore any other YAML files with `--ignore=<file_list>`.
 For
 example, `crossplane xpkg build --package-root=test-directory --ignore=".tmp/*"`.
 
-Including YAML files that aren't Compositions or CompositeResourceDefinitions, 
-including Claims isn't supported.
+Including YAML files that aren't Compositions or CompositeResourceDefinitions 
+isn't supported.
 {{</hint >}}
 
 By default, Crossplane creates a `.xpkg` file of the Configuration name and 

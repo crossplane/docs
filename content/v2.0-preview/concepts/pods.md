@@ -64,8 +64,8 @@ the desired state of Crossplane resources, manages leader elections and process
 webhooks. 
 
 {{<hint "note" >}}
-The Crossplane pod only reconciles core Crossplane components, including Claims
-and composite resources. Providers are responsible for reconciling their managed
+The Crossplane pod only reconciles core Crossplane components, including
+composite resources. Providers are responsible for reconciling their managed
 resources. 
 {{< /hint >}}
 
@@ -297,19 +297,6 @@ View the full RBAC policy with
 
 ```shell
 kubectl describe clusterrole crossplane-view
-```
-
-##### crossplane-browse
-
-The `crossplane-browse` ClusterRole has the following permissions:
-
-  * read-only access to Crossplane compositions and XRDs. This allows resource claim
-    creators to discover and select an appropriate composition.
-
-View the full RBAC policy with 
-
-```shell
-kubectl describe clusterrole crossplane-browse
 ```
 
 ## Leader election
