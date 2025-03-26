@@ -332,4 +332,3 @@ Resources_.
 
 ## Next steps
 Build your own Crossplane platform using one of the quickstart guides.
-* [AWS Quickstart]({{<ref "provider-aws" >}})
