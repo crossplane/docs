@@ -1,51 +1,51 @@
 ---
-title: "Overview"
+title: "Welcome"
 weight: -1
 cascade:
     version: "2.0-preview"
 ---
 
-{{< img src="/media/banner.png" alt="Crossplane Popsicle Truck" size="large" >}}
+Welcome to the Crossplane documentation. Crossplane is a control plane framework
+for platform engineering. 
 
-<br />
+Crossplane lets you build control planes to manage your apps, infrastructure, or
+anything else. It lets you design the APIs and abstractions that your users use
+to interact with your control planes.
 
-Crossplane is an open source Kubernetes extension that transforms your Kubernetes 
-cluster into a **universal control plane**. 
-
-Crossplane lets you manage anything, anywhere, all through standard Kubernetes
-APIs. Crossplane can even let you 
-[order a pizza](https://blog.crossplane.io/providers-101-ordering-pizza-with-kubernetes-and-crossplane/) 
-directly from Kubernetes. If it has an API, Crossplane can connect to it. 
-
-With Crossplane, platform teams can create new abstractions and custom
-APIs with the full power of Kubernetes policies, namespaces, role based access
-controls and more. Crossplane brings all your non-Kubernetes resources under
-one roof.
-
-Custom APIs, created by platform teams, allow security and compliance
-enforcement across resources or clouds, without exposing any complexity to the
-developers. A single API call can create multiple resources, in multiple clouds
-and use Kubernetes as the control plane for everything.
+Crossplane has a rich ecosystem of extensions that make building a control plane
+faster and easier. It's built on Kubernetes, so it works with all the Kubernetes
+tools you already use.
 
 {{< hint "tip" >}}
-**What's a control plane?**  
-<!-- vale Google.WordList = NO -->
-Control planes create and manage the lifecycle of resources. Control planes
-constantly _check_ that the intended resources exist, _report_ when the intended
-state doesn't match reality and _act_ to make things right. 
+**A control plane is software that controls other software.**
 
-Crossplane extends the Kubernetes control plane to be a **universal control
-plane** to check, report and act on any resource, anywhere. 
-<!-- vale Google.WordList = YES -->
+Control planes expose an API. You use the API to tell the control plane what
+software it should deploy and how - this is your _desired state_. It could be
+any cloud native software, like an app, a load balancer, or a GitHub repository.
+
+The control plane deploys your software, then monitors it throughout its
+lifecycle. If your software ever _drifts_ from your desired state, the control
+plane automatically corrects the drift.
+
+Control planes are a core cloud native pattern. The major cloud providers are
+all built using control planes.
 {{< /hint >}}
 
 
-# Get started
-* [Install Crossplane]({{<ref "get-started/install">}}) in your Kubernetes cluster
-* Learn more about how Crossplane works in the 
-[Crossplane introduction]({{<ref "get-started" >}})
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and start a
-conversation with a community of over 7,000 operators.
+# Using the documentation
 
+Crossplane organizes its documentation into the following sections:
 
-Crossplane is a [Cloud Native Compute Foundation](https://www.cncf.io/) project.
+* [Get Started]({{<ref "get-started">}}) explains how to install Crossplane and
+  create a control plane.
+
+* [Concepts]({{<ref "concepts">}}) introduces Crossplane's key concepts.
+
+* [Guides]({{<ref "guides">}}) guide you through common use cases, like
+  monitoring Crossplane or extending it by writing a composition function.
+
+* [CLI Reference]({{<ref "cli">}}) documents the `crossplane` command-line
+  interface that you can use to configure a Crossplane control plane.
+
+* [API Reference]({{<ref "api">}}) documents the APIs that you can use to
+  configure a Crossplane control plane.
