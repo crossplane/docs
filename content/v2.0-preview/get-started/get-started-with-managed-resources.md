@@ -1,6 +1,6 @@
 ---
-title: AWS Quickstart
-weight: 100
+title: Get Started With Managed Resources
+weight: 200
 ---
 
 Connect Crossplane to AWS to create and manage cloud resources from Kubernetes 

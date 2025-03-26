@@ -1,6 +1,7 @@
 ---
-title: Crossplane Introduction
-weight: 2
+title: Get Started
+weight: 4
+description: Get started with Crossplane.
 ---
 
 Crossplane connects your Kubernetes cluster to external,
@@ -332,4 +333,3 @@ Resources_.
 
 ## Next steps
 Build your own Crossplane platform using one of the quickstart guides.
-* [AWS Quickstart]({{<ref "provider-aws" >}})

@@ -1,6 +1,6 @@
 ---
 title: Upgrade Crossplane
-weight: 200
+weight: 400
 ---
 
 The recommended upgrade method for an existing Crossplane install is to use
@@ -51,7 +51,7 @@ For example, in v1.20.0 Crossplane changed the default image registry from
 before v1.20.0 updates the default package registry. 
 
 Override new defaults by 
-[customizing the Helm chart]({{<ref "install#customize-the-crossplane-helm-chart" >}}) 
+[customizing the Helm chart]({{<ref "../get-started/install#customize-the-crossplane-helm-chart" >}}) 
 with the upgrade command.
 
 For example, to maintain the original image registry use 

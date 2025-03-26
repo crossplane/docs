@@ -36,7 +36,7 @@ The core CRDs installed by the init container include:
 
 {{< hint "note" >}}
 
-The [Install Crossplane]({{< ref "../software/install" >}}) section has more
+The [Install Crossplane]({{< ref "../get-started/install" >}}) section has more
 information about customizing the Crossplane install.
 {{< /hint >}}
 
@@ -169,7 +169,7 @@ spec:
 
 {{<hint "tip" >}}
 
-The [Crossplane install guide]({{<ref "../software/install#feature-flags">}})
+The [Crossplane install guide]({{<ref "../get-started/install#feature-flags">}})
 describes enabling feature flags like
 {{<hover label="deployment" line="12">}}--enable-realtime-compositions{{</hover>}}
 with Helm.
@@ -222,7 +222,7 @@ file, setting `rbacManager.deploy` to `false`.
 {{< hint "note" >}}
 
 Instructions for changing Crossplane pod settings during installation are in the
-[Crossplane Install]({{<ref "../software/install">}}) section. 
+[Crossplane Install]({{<ref "../get-started/install">}}) section. 
 {{< /hint >}}
 
 <!-- vale Microsoft.HeadingAcronyms = NO -->
@@ -335,17 +335,17 @@ Change Crossplane pod settings either before installing Crossplane by editing
 the Helm `values.yml` file or after installation by editing the `Deployment`.
 
 The full list of 
-[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}}) 
+[configuration options]({{<ref "../get-started/install#customize-the-crossplane-helm-chart">}}) 
 and 
-[feature flags]({{<ref "../software/install#feature-flags">}})
+[feature flags]({{<ref "../get-started/install#feature-flags">}})
 are available in the 
-[Crossplane Install]({{<ref "../software/install">}}) 
+[Crossplane Install]({{<ref "../get-started/install">}}) 
 section. 
 
 {{< hint "note" >}}
 
 Instructions for changing Crossplane pod settings during installation are in the
-[Crossplane Install]({{<ref "../software/install">}}) section. 
+[Crossplane Install]({{<ref "../get-started/install">}}) section. 
 {{< /hint >}}
 
 ### Edit the deployment
@@ -391,4 +391,4 @@ The core Crossplane pod checks for configured environmental variables at startup
 to change default settings. 
 
 The full list of configurable environmental variables are available in the 
-[Crossplane Install]({{<ref "../software/install">}}) section.
+[Crossplane Install]({{<ref "../get-started/install">}}) section.
