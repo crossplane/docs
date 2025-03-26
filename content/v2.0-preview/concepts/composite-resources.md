@@ -317,33 +317,6 @@ spec:
   # Removed for brevity
 ```
 
-Composite resources can write connection secrets to an 
-[external secret store]({{<ref "../guides/vault-as-secret-store">}}),
-like HashiCorp Vault. 
-
-{{<hint "important" >}}
-External secret stores are an alpha feature. Alpha features aren't enabled by
-default. 
-{{< /hint >}}
-
-Use the {{<hover label="publishsecret"
-line="6">}}publishConnectionDetailsTo{{</hover>}} field to save connection
-secrets to an external secrets store.
-
-```yaml {label="publishsecret",copy-lines="none"}
-apiVersion: example.org/v1alpha1
-kind: xMyDatabase
-metadata:
-  name: my-composite-resource
-spec:
-  publishConnectionDetailsTo:
-    name: my-external-secret-store
-  # Removed for brevity
-```
-
-Read the [External Secrets Store]({{<ref "../guides/vault-as-secret-store">}}) documentation for more information on using
-external secret stores. 
-
 For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "connection-details">}}).
 
 ### Pausing composite resources

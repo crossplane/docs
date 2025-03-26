@@ -514,9 +514,8 @@ As Crossplane evolves, its APIs and resources may change. To help with the
 migration to the new APIs and resources, the `crossplane beta convert` command
 converts a Crossplane resource to a new version or kind.
 
-Use the `crossplane beta convert` command to convert an existing
-[ControllerConfig]({{<ref "../concepts/providers#controller-configuration">}})
-to a [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}}) 
+Use the `crossplane beta convert` command to convert a
+ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}}) 
 or a legacy Composition using `mode: Resources` to a 
 [Composition pipeline function]({{< ref "../concepts/compositions" >}}).
 
