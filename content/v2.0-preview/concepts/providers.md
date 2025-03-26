@@ -325,11 +325,11 @@ that satisfies the constraints.
 {{<hint "note" >}}
 This configuration requires the `--enable-dependency-version-upgrades` flag.
 Please check the
-[configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
+[configuration options]({{<ref "../get-started/install#customize-the-crossplane-helm-chart">}})
 and
-[feature flags]({{<ref "../software/install#feature-flags">}})
+[feature flags]({{<ref "../get-started/install#feature-flags">}})
 are available in the
-[Crossplane Install]({{<ref "../software/install">}})
+[Crossplane Install]({{<ref "../get-started/install">}})
 section for more details.
 {{</hint >}}
 

@@ -1,6 +1,6 @@
 ---
 title: Crossplane Introduction
-weight: 2
+weight: 1000
 ---
 
 Crossplane connects your Kubernetes cluster to external,

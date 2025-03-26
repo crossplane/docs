@@ -47,7 +47,7 @@ spec:
 
 {{<hint "tip" >}}
 
-The [Crossplane install guide]({{<ref "../software/install#feature-flags">}}) 
+The [Crossplane install guide]({{<ref "../get-started/install#feature-flags">}}) 
 describes enabling feature flags like 
 {{<hover label="deployment" line="12">}}\-\-enable-usages{{</hover>}}
 with Helm.

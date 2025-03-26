@@ -41,7 +41,7 @@ plane** to check, report and act on any resource, anywhere.
 
 
 # Get started
-* [Install Crossplane]({{<ref "software/install">}}) in your Kubernetes cluster
+* [Install Crossplane]({{<ref "get-started/install">}}) in your Kubernetes cluster
 * Learn more about how Crossplane works in the 
 [Crossplane introduction]({{<ref "get-started/introduction" >}})
 * Join the [Crossplane Slack](https://slack.crossplane.io/) and start a
