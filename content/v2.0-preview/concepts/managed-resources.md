@@ -438,7 +438,7 @@ Crossplane supports the following policies:
 | `Create` | If the external resource doesn't exist, Crossplane creates it based on the managed resource settings. |
 | `Delete` | Crossplane can delete the external resource when deleting the managed resource. |
 | `LateInitialize` | Crossplane initializes some external resource settings not defined in the `spec.forProvider` of the managed resource. See [the late initialization]({{<ref "./managed-resources#late-initialization" >}}) section for more details. |
-| `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for [observe only resources]({{<ref "../guides/import-existing-resources#import-resources-automatically">}}). |
+| `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for observe only resources. |
 | `Update` | Crossplane changes the external resource when changing the managed resource. |
 {{</table >}}
 
@@ -454,7 +454,7 @@ The following is a list of common policy combinations:
 | {{<check>}}      |        | {{<check>}}              | {{<check>}}       |        | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't apply changes to the external resource after creation. |
 | {{<check>}}      |        |                | {{<check>}}       | {{<check>}}      | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't import any settings from the external resource. |
 | {{<check>}}      |        |                | {{<check>}}       |        | Crossplane creates the external resource but doesn't apply any changes to the external resource or managed resource. Crossplane can't delete the resource. |
-|        |        |                | {{<check>}}       |        | Crossplane only observes a resource. Used for [observe only resources]({{<ref "../guides/import-existing-resources#import-resources-automatically">}}). |
+|        |        |                | {{<check>}}       |        | Crossplane only observes a resource. |
 |        |        |                |         |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
 {{< /table >}}
 
@@ -614,43 +614,6 @@ spec:
       annotations:
         annotation-tag: annotation-value
 ```
-
-#### Publish secrets to an external secrets store
-
-Publishing secrets data to an external secret store like 
-[HashiCorp Vault](https://www.vaultproject.io/) relies on a 
-{{<hover label="configref" line="8">}}publishConnectionDetailsTo.configRef{{</hover>}}. 
-
-The 
-{{<hover label="configref" line="9">}}configRef.name{{</hover>}} references a 
-{{<hover label="storeconfig" line="4">}}StoreConfig{{</hover>}}
-object. 
-
-```yaml {label="configref",copy-lines="none"}
-apiVersion: rds.aws.upbound.io/v1beta1
-kind: Instance
-spec:
-  forProvider:
-  # Removed for brevity
-  publishConnectionDetailsTo:
-    name: rds-kubernetes-secret
-    configRef: 
-      name: my-vault-storeconfig
-```
-
-```yaml {label="storeconfig",copy-lines="none"}
-apiVersion: secrets.crossplane.io/v1alpha1
-kind: StoreConfig
-metadata:
-  name: my-vault-storeconfig
-# Removed for brevity
-```
-
-{{<hint "tip" >}}
-Read the 
-[Vault as an External Secrets Store]({{<ref "../guides/vault-as-secret-store">}})
-guide for details on using StoreConfig objects.
-{{< /hint >}}
 
 ## Annotations
 

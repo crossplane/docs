@@ -310,15 +310,6 @@ When resources inside a Composition create connection details Crossplane creates
 a Kubernetes secret object for each managed resource generating connection
 details.
 
-{{<hint "note">}}
-This section discusses creating Kubernetes secrets.
-Crossplane also supports using external secret stores like
-[HashiCorp Vault](https://www.vaultproject.io/).
-
-Read the [external secrets store guide]({{<ref "../guides/vault-as-secret-store">}}) for more information on using Crossplane
-with an external secret store.
-{{</hint >}}
-
 #### Composed resource secrets
 
 Inside the `spec` of each resource producing connection details, define the
@@ -365,49 +356,6 @@ key1   connection.crossplane.io/v1alpha1   4      4m30s
 {{<hint "tip" >}}
 Remember to create a unique name for each secret.
 {{< /hint >}}
-
-#### External secret stores
-
-Crossplane
-[External Secret Stores]({{<ref "../guides/vault-as-secret-store" >}})
-write secrets and connection details to external secret stores like HashiCorp
-Vault.
-
-{{<hint "important" >}}
-External Secret Stores are an alpha feature.
-
-They're not recommended for production use. Crossplane disables External Secret
-Stores by default.
-{{< /hint >}}
-
-Use `publishConnectionDetailsWithStoreConfigRef` in place of
-`writeConnectionSecretsToNamespace` to define the `StoreConfig` to save
-connection details to.
-
-For example, using a `StoreConfig` with the `name` "vault," use
-`publishConnectionDetailsWithStoreConfigRef.name` matching the
-`StoreConfig.name`, in this example, "vault."
-
-
-```yaml {label="gcp-storeconfig",copy-lines="none"}
-apiVersion: gcp.crossplane.io/v1alpha1
-kind: StoreConfig
-metadata:
-  name: vault
-# Removed for brevity.
----
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-# Removed for Brevity
-spec:
-  publishConnectionDetailsWithStoreConfigRef:
-    name: vault
-  # Removed for brevity
-```
-
-For more details read the
-[External Secret Stores]({{<ref "../guides/vault-as-secret-store" >}})
-integration guide.
 
 ## Test a composition
 

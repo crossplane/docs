@@ -618,44 +618,12 @@ Reason: UnknownPackageRevisionHealth
 
 Providers have two different types of configurations:
 
-* _Controller configurations_ that change the settings of the Provider pod
+* _Runtime configurations_ that change the settings of the Provider pod
   running inside the Kubernetes cluster. For example, setting a `toleration` on
   the Provider pod.
 
 * _Provider configurations_ that change settings used when communicating with
   an external provider. For example, cloud provider authentication.
-
-{{<hint "important" >}}
-Apply `ControllerConfig` objects to Providers.  
-
-Apply `ProviderConfig` objects to managed resources.
-{{< /hint >}}
-
-### Controller configuration
-
-{{< hint "important" >}}
-<!-- vale write-good.Passive = NO -->
-<!-- vale gitlab.FutureTense = NO -->
-The `ControllerConfig` type was deprecated in v1.11 and will be removed in
-a future release.
-<!-- vale write-good.Passive = YES -->
-<!-- vale gitlab.FutureTense = YES -->
-
-[`DeploymentRuntimeConfig`]({{<ref "#runtime-configuration" >}}) is the
-replacement for Controller configuration and is available in v1.14+.
-{{< /hint >}}
-
-Applying a Crossplane `ControllerConfig` to a Provider changes the settings of
-the Provider's pod. The
-[Crossplane ControllerConfig schema]({{< ref "../api#ControllerConfig-spec" >}})
-defines the supported set of ControllerConfig settings.
-
-The most common use case for ControllerConfigs are providing `args` to a
-Provider's pod enabling optional services. For example, enabling
-[external secret stores]({{< ref "../guides/vault-as-secret-store#enable-external-secret-stores-in-the-provider" >}})
-for a Provider.
-
-Each Provider determines their supported set of `args`.
 
 ### Runtime configuration
 
@@ -667,21 +635,13 @@ It's on by default, and you can disable it by passing
 {{< /hint >}}
 
 Runtime configuration is a generalized mechanism for configuring the runtime for
-Crossplane packages with a runtime, namely `Providers` and `Functions`. It
-replaces the deprecated `ControllerConfig` type and is available in v1.14+.
+Crossplane packages with a runtime, namely `Providers` and `Functions`.
 
 With its default configuration, Crossplane uses Kubernetes Deployments to
 deploy runtime for packages, more specifically, a controller for a `Provider`
 or a gRPC server for a `Function`. It's possible to configure the runtime
 manifest by applying a `DeploymentRuntimeConfig` and referencing it in the
 `Provider` or `Function` object.
-
-{{<hint "note" >}}
-Different from `ControllerConfig`, `DeploymentRuntimeConfig` embed the whole
-Kubernetes Deployment spec, which allows for more flexibility in configuring
-the runtime. Refer to the [design document](https://github.com/crossplane/crossplane/blob/2c5e7f07ba9e3d83d1c85169bbde685de8514ab8/design/one-pager-package-runtime-config.md)
-for more details.
-{{< /hint >}}
 
 As an example, to enable the external secret stores alpha feature for a `Provider`
 by adding the `--enable-external-secret-stores` argument to the controller,
