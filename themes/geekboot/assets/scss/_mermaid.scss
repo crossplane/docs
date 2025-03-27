@@ -10,5 +10,14 @@
         stroke: var(--body-font-color) !important;
     }
 
-
+    .cluster {
+        &>rect {
+            fill: color-mix(in srgb,
+                color-mix(in srgb, var(--hint-note-background) 50%, #ffffff 50%) 80%,
+            transparent 100%) !important;
+        }
+        span {
+            color: var(--body-font-color) !important;
+        }
+    }
 }
