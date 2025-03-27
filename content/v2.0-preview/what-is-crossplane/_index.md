@@ -79,7 +79,7 @@ user(User)
 
 subgraph control [Control Plane]
   api(Application API)
-  controller(Your Application Controller)
+  controller[Your Application Controller]
   deployment(Deployment API)
   service(Service API)
 end
@@ -103,7 +103,7 @@ user(User)
 subgraph control [Control Plane]
   api(Application API)
 
-  subgraph crossplane [Crossplane Composition]
+  subgraph crossplane [Composition Engine]
     fn(Python Function)
   end
 
@@ -159,7 +159,7 @@ user(User)
 
 subgraph control [Control Plane]
   instance(RDS Instance API)
-  controller(Crossplane MR Controller)
+  controller(Managed Resource Controller)
 end
 
 subgraph aws [Amazon Web Services]
@@ -183,7 +183,7 @@ user(User)
 subgraph control [Control Plane]
   api(Application API)
 
-  subgraph crossplane [Crossplane Composition]
+  subgraph crossplane [Composition Engine]
     fn(Python Function)
   end
 
@@ -191,7 +191,7 @@ subgraph control [Control Plane]
   service(Service API)
   instance(RDS Instance API)
 
-  controller(Crossplane MR Controller)
+  controller(Managed Resource Controller)
 end
 
 subgraph aws [Amazon Web Services]
