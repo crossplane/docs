@@ -10,13 +10,11 @@ with
 
 ## Prerequisites
 This quickstart requires:
-* a Kubernetes cluster with at least 2 GB of RAM
-* permissions to create pods and secrets in the Kubernetes cluster
-* [Helm](https://helm.sh/) version v3.2.0 or later
-* an AWS account with permissions to create an S3 storage bucket
-* AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
-{{<include file="/master/getting-started/install-crossplane-include.md" type="page" >}}
+* A Kubernetes cluster with at least 2 GB of RAM
+* The Crossplane v2 preview [installed on the Kubernetes cluster]({{<ref "install">}})
+* An AWS account with permissions to create an S3 storage bucket
+* AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
 ## Install the AWS provider
 
