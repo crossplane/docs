@@ -4,332 +4,85 @@ weight: 4
 description: Get started with Crossplane.
 ---
 
-Crossplane connects your Kubernetes cluster to external,
-non-Kubernetes resources, and allows platform teams to build custom Kubernetes
-APIs to consume those resources.
-
-<!-- vale gitlab.SentenceLength = NO -->
-Crossplane creates Kubernetes
-[Custom Resource Definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
-(`CRDs`) to represent the external resources as native 
-[Kubernetes objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/). 
-As native Kubernetes objects, you can use standard commands like `kubectl create`
-and `kubectl describe`. The full 
-[Kubernetes API](https://kubernetes.io/docs/reference/using-api/) is available
-for every Crossplane resource. 
-<!-- vale gitlab.SentenceLength = YES -->
-
-Crossplane also acts as a
-[Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/)
-to watch the state of the external resources and provide state enforcement. If
-something modifies or deletes a resource outside of Kubernetes, Crossplane reverses
-the change or recreates the deleted resource.
-
-{{<img src="/media/crossplane-intro-diagram.png" alt="Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP" align="center">}}
-With Crossplane installed in a Kubernetes cluster, users only communicate with
-Kubernetes. Crossplane manages the communication to external resources like AWS,
-Azure or Google Cloud.
-
-Crossplane also allows the creation of custom Kubernetes APIs. Platform teams can
-combine external resources and simplify or customize the APIs presented to the
-platform consumers.
-
-## Crossplane components overview
-This table provides a summary of Crossplane components and their roles. 
-
-{{< table "table table-hover table-sm">}}
-| Component | Abbreviation | Scope | Summary |
-| --- | --- | --- | ---- | 
-| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
-| [ProviderConfig]({{<ref "#provider-configurations">}}) | `PC` | cluster | Applies settings for a _Provider_. |
-| [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A Provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
-| [Composition]({{<ref "#compositions">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
-| [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
-| [CompositeResourceDefinitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ |
-{{< /table >}}
-
-## The Crossplane Pod
-When installed in a Kubernetes cluster Crossplane creates an initial set of
-Custom Resource Definitions (`CRDs`) of the core Crossplane components. 
-
-{{< expand "View the initial Crossplane CRDs" >}}
-After installing Crossplane use `kubectl get crds` to view the Crossplane
-installed CRDs.
-
-```shell
-❯ kubectl get crd
-NAME                                                    
-compositeresourcedefinitions.apiextensions.crossplane.io
-compositionrevisions.apiextensions.crossplane.io        
-compositions.apiextensions.crossplane.io                
-configurationrevisions.pkg.crossplane.io                
-configurations.pkg.crossplane.io                        
-deploymentruntimeconfigs.pkg.crossplane.io              
-environmentconfigs.apiextensions.crossplane.io          
-functionrevisions.pkg.crossplane.io                     
-functions.pkg.crossplane.io                             
-locks.pkg.crossplane.io                                 
-providerrevisions.pkg.crossplane.io                     
-providers.pkg.crossplane.io                             
-storeconfigs.secrets.crossplane.io                      
-usages.apiextensions.crossplane.io                                        
-```
-{{< /expand >}}
-
-The following sections describe the functions of some of these CRDs.
-
-<!-- vale Google.Headings = NO -->
-<!-- allow "Providers" -->
-## Providers
-<!-- vale Google.Headings = YES -->
-A Crossplane _Provider_ creates a second set of CRDs that define how Crossplane
-connects to a non-Kubernetes service. Each external service relies on its own
-Provider. For example, 
-[AWS](https://github.com/crossplane-contrib/provider-upjet-aws), 
-[Azure](https://github.com/crossplane-contrib/provider-upjet-azure) 
-and [GCP](https://github.com/crossplane-contrib/provider-upjet-gcp)
-are different providers for each cloud service.
-
-{{< hint "tip" >}}
-Most Providers are for cloud services but Crossplane can use a Provider to
-connect to any service with an API.
-{{< /hint >}}
-
-For example, an AWS Provider defines Kubernetes CRDs for AWS resources like EC2
-compute instances or S3 storage buckets.
-
-The Provider defines the Kubernetes API definition for the external resource.
-For example,  
-[provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws)
-defines a 
-[`bucket`](https://github.com/crossplane-contrib/provider-upjet-aws/blob/release-1.20/package/crds/s3.aws.upbound.io_buckets.yaml) 
-resource for creating and managing AWS S3 storage buckets. 
-
-In the `bucket` CRD is a
-[`spec.forProvider.region`](https://github.com/crossplane-contrib/provider-upjet-aws/blob/release-1.20/package/crds/s3.aws.upbound.io_buckets.yaml#L91)
-value that defines which AWS region to deploy the bucket in.
+Crossplane has three major components:
 
-Crossplane's [public package registries](https://www.crossplane.io/registries) contain a large 
-collection of Crossplane Providers.
+* [Composition](#composition)
+* [Managed resources](#managed-resources)
+* [Package manager](#package-manager)
 
-More providers are available in the [Crossplane Contrib repository](https://github.com/crossplane-contrib/).
+You can use all the components to build your control plane, or pick only the
+ones you need.
 
-Providers are cluster scoped and available to all cluster namespaces.
+# Composition
 
-View all installed Providers with the command `kubectl get providers`.
+Composition lets you build custom APIs to control your cloud-native software.
 
-## Provider configurations
-Providers have _ProviderConfigs_. _ProviderConfigs_ configure settings
-related to the Provider like authentication or global defaults for the
-Provider.
+Crossplane extends Kubernetes. You build your custom APIs by using Crossplane to
+extend Kubernetes with new custom resources.
 
-The API endpoints for ProviderConfigs are unique to each Provider.
+To extend Kubernetes without using Crossplane you have to write a Kubernetes
+controller. The controller is the software that reacts when a user calls the
+custom resource API.
 
-_ProviderConfigs_ are cluster scoped and available to all cluster namespaces.
+With Crossplane you don't have to write a controller. Instead you configure a
+pipeline of functions. The functions tell Crossplane what to do when a user
+calls the custom resource API. You can configure the functions using common
+languages, including YAML, [KCL](https://www.kcl-lang.io), and
+[Python](https://python.org).
 
-View all installed ProviderConfigs with the command `kubectl get providerconfig`.
+You can use composition together with [managed resources](#managed-resources) to
+build new custom resource APIs powered by managed resources.
 
-## Managed resources
-A Provider's CRDs map to individual _resources_ inside the provider. When
-Crossplane creates and monitors a resource it's a _Managed Resource_.
+Follow [Get Started with Composition]({{<ref "./get-started-with-composition">}})
+to see how composition works.
 
-Using a Provider's CRD creates a unique _Managed Resource_. For example,
-using the Provider AWS's `bucket` CRD, Crossplane creates a `bucket` _Managed Resource_
-inside the Kubernetes cluster that's connected to an AWS S3 storage bucket.
+{{<hint "tip">}}
+Not familiar with Kubernetes custom resources and controllers?
 
-The Crossplane controller provides state enforcement for _Managed Resources_.
-Crossplane enforces the settings and existence of _Managed Resources_. This
-"Controller Pattern" is like how the Kubernetes 
-[kube-controller-manager](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/)
-enforces state for pods.
+Read the Kubernetes documentation on
+[custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+and [controllers](https://kubernetes.io/docs/concepts/architecture/controller/).
 
-_Managed Resources_ are cluster scoped and available to all cluster namespaces.
+Kubebuilder is a popular project for building Kubernetes controllers. Read the
+[Kubebuilder documentation](https://book.kubebuilder.io) to see what's
+involved in writing a controller.
+{{</hint>}}
 
-Use `kubectl get managed` to view all _managed resources_.
-{{<hint "warning" >}}
-The `kubectl get managed` creates a lot of Kubernetes API queries.
-Both the `kubectl` client and kube-apiserver throttle the API queries. 
+# Managed resources
 
-Depending on the size of the API server and number of managed resources, this
-command may take minutes to return or may timeout. 
+Managed resources (MRs) are ready-made Kubernetes custom resources. 
 
-For more information, read 
-[Kubernetes issue #111880](https://github.com/kubernetes/kubernetes/issues/111880)
-and 
-[Crossplane issue #3459](https://github.com/crossplane/crossplane/issues/3459).
-{{< /hint >}}
+Each MR extends Kubernetes with the ability to manage a new kind of resource.
+For example there's an RDS instance MR that extends Kubernetes with the ability
+to manage [AWS RDS](https://aws.amazon.com/rds/) instances.
 
-## Compositions
+Crossplane has an extensive library of managed resources you can use to manage
+almost any cloud provider, or cloud-native software.
 
-A _Composition_ is a template for a collection of _managed resource_. _Compositions_ 
-allow platform teams to define a set of _managed resources_ as a 
-single object.
+You can use managed resources together with [composition](#composition) to build
+new custom resource APIs powered by MRs.
 
-For example, a compute _managed resource_ may require the creation of a storage 
-resource and a virtual network as well. A single _Composition_ can define all three
-resources in a single _Composition_ object. 
+Follow [Get Started with Managed Resources]({{<ref "./get-started-with-managed-resources">}})
+to see how managed resources work.
 
-Using _Compositions_ simplifies the deployment of infrastructure made up of
-multiple _managed resources_. _Compositions_ also enforce standards and settings
-across deployments.
+{{<hint "note">}}
+Only AWS managed resources support the Crossplane v2 preview.
 
-Platform teams can define fixed or default settings for each _managed resource_ inside a
-_Composition_ or define fields and settings that users may change.
+<!-- vale gitlab.FutureTense = NO -->
+Maintainers will update the managed resources for other systems including Azure,
+GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
+<!-- vale gitlab.FutureTense = YES -->
+{{</hint>}}
 
-Using the previous example, the platform team may set a compute resource size
-and virtual network settings. But the platform team allows users to define the 
-storage resource size.
+# Package manager
 
-Creating a _Composition_ Crossplane doesn't create any managed
-resources. The _Composition_ is only a template for a collection of _managed
-resources_ and their settings. A _Composite Resource_ creates the specific resources.
+The Crossplane package manager lets you install new managed resources and
+composition functions.
 
-{{< hint "note" >}}
-The [_Composite Resources_]({{<ref "#composite-resources">}}) section discusses
-_Composite Resources_.
-{{< /hint >}}
+You can also package any part of a control plane's configuration and install it
+using the package manager. This allows you to deploy several control planes with
+identical capabilities - for example one control planes per region or per
+service.
 
-_Compositions_ are cluster scoped and available to all cluster namespaces.
-
-Use `kubectl get compositions` to view all _compositions_.
- 
-
- ## Composite Resources
-
-A _Composite Resource_ (`XR`) is a set of provisioned _managed resources_. A
-_Composite Resource_ uses the template defined by a _Composition_ and applies
-any user defined settings. 
-
-Multiple unique _Composite Resource_ objects can use the same _Composition_. For
-example, a _Composition_ template can create a compute, storage and networking
-set of _managed resources_. Crossplane uses the same _Composition_ template
-every time a user requests this set of resources.
-
-If a _Composition_ allows a user to define resource settings, users apply them
-in a _Composite Resource_.
-
-{{< hint "tip" >}}
-_Compositions_ are templates for a set of _managed resources_.  
-_Composite Resources_ fill out the template and create _managed resources_.
-
-Deleting a _Composite Resource_ deletes all the _managed resources_ it created.
-{{< /hint >}}
-
-_Composite Resources_ are cluster scoped and available to all cluster namespaces.
-
-Use `kubectl get composite` to view all _Composite Resources_.
-
-## Composite Resource Definitions
-_Composite Resource Definitions_ (`XRDs`) create custom Kubernetes APIs used by 
-_Composite Resources_.
-
-Platform teams define the custom APIs.  
-These APIs can define specific values
-like storage space in gigabytes, generic settings like `small` or `large`,
-deployment options like `cloud` or `onprem`. Crossplane doesn't limit the API definitions.
-
-The _Composite Resource Definition's_ `kind` is from Crossplane.
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-```
-
-The `spec` of a _Composite Resource Definition_ creates the  `apiVersion`,
-`kind` and `spec` of a _Composite Resource_. 
-
-{{< hint "tip" >}}
-The _Composite Resource Definition_ defines the parameters for a _Composite
-Resource_.
-{{< /hint >}}
-
-A _Composite Resource Definition_ has four main `spec` parameters:
-* A {{<hover label="specGroup" line="3" >}}group{{< /hover >}} 
-to define the 
-{{< hover label="xr2" line="2" >}}apiVersion{{</hover >}} 
-in a _Composite Resource_ .
-* The {{< hover label="specGroup" line="7" >}}versions.name{{</hover >}} 
-that defines the version used in a _Composite Resource_.
-* A {{< hover label="specGroup" line="5" >}}names.kind{{</hover >}}
-to define the _Composite Resource_ 
-{{< hover label="xr2" line="3" >}}kind{{</hover>}}.
-* A {{< hover label="specGroup" line="8" >}}versions.schema{{</hover>}} section
-to define the _Composite Resource_ {{<hover label="xr2" line="6" >}}spec{{</hover >}}.
-
-```yaml {label="specGroup"}
-# Composite Resource Definition (XRD)
-spec:
-  group: test.example.org
-  names:
-    kind: MyComputeResource
-  versions:
-  - name: v1alpha1
-    schema:
-      # Removed for brevity
-```
-
-A _Composite Resource_ based on this _Composite Resource Definition_ looks like this:
-
-```yaml {label="xr2"}
-# Composite Resource (XR)
-apiVersion: test.example.org/v1alpha1
-kind: MyComputeResource
-metadata:
-  name: my-resource
-spec:
-  storage: "large"
-```
-
-A _Composite Resource Definition_ {{< hover label="specGroup" line="8" >}}schema{{</hover >}} defines the _Composite Resource_
-{{<hover label="xr2" line="6" >}}spec{{</hover >}} parameters.
-
-These parameters are the new, custom APIs, that developers can use. 
-
-For example, creating a compute _managed resource_ requires knowledge of a
-cloud provider's compute class names like AWS's `m6in.large` or GCP's
-`e2-standard-2`. 
-
-A _Composite Resource Definition_ can limit the choices to `small` or `large`.
-A _Composite Resource_ uses those options and the _Composition_ maps them
-to specific cloud provider settings. 
-
-The following _Composite Resource Definition_ defines a {{<hover label="specVersions" line="17" >}}storage{{< /hover >}}
-parameter. The storage is a 
-{{<hover label="specVersions" line="18">}}string{{< /hover >}} 
-and the OpenAPI 
-{{<hover label="specVersions" line="19" >}}oneOf{{< /hover >}} requires the
-options to be either {{<hover label="specVersions" line="20" >}}small{{< /hover >}} 
-or {{<hover label="specVersions" line="21" >}}large{{< /hover >}}.
-
-```yaml {label="specVersions"}
-# Composite Resource Definition (XRD)
-spec:
-  group: test.example.org
-  names:
-    kind: MyComputeResource
-  versions:
-  - name: v1alpha1
-    served: true
-    referenceable: true
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              storage:
-                type: string
-                oneOf:
-                  - pattern: '^small$'
-                  - pattern: '^large$'
-            required:
-            - storage  
-```
-
-A _Composite Resource Definition_ can define a wide variety of settings and options. 
-
-Creating a _Composite Resource Definition_ enables the creation of _Composite
-Resources_.
-
-## Next steps
-Build your own Crossplane platform using one of the quickstart guides.
+Read about Crossplane packages in [Concepts]({{<ref "../concepts/packages">}})
+to learn about the package manager.

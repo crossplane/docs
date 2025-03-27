@@ -13,6 +13,7 @@ Buf
 CEL
 CI
 CLI
+cloud-native
 cluster-scoped
 cluster-wide
 ClusterRole
@@ -95,5 +96,6 @@ TLS
 tolerations
 UI
 VM
+v2
 webhooks.enabled
 YAML

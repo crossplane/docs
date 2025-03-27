@@ -35,6 +35,7 @@ pre-provisioned
 pre-release
 race-conditions
 read-only
+ready-made
 resource-specific
 right-hand
 run-time
