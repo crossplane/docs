@@ -73,6 +73,7 @@ ReplicaSets
 RPC
 RPCs
 RSS
+sandboxed
 SCSS
 SDK
 SDKs
@@ -93,6 +94,7 @@ Subnet
 subnets
 Substrings
 syscall
+templated
 TLS
 tolerations
 UI
