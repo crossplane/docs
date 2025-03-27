@@ -119,10 +119,17 @@ crossplane -- create --> service
 watch@{animate: true}
 ```
 
+With Composition you avoid writing and maintaining complex controller code
+that's hard to get right. Instead you focus on expressing your business
+logic, and work in your preferred language.
+
+
 {{<hint "important">}}
-Composition functions allow you to express declarative configuration in various
-languages including YAML, [KCL](https://www.kcl-lang.io), and
-[Python](https://python.org).
+Composition functions are like configuration language plugins.
+
+Functions allow you to write your configuration in several languages, including
+[YAML](https://yaml.org), [KCL](https://www.kcl-lang.io),
+[Python](https://python.org), and [Go](https://go.dev).
 {{</hint>}}
 
 You can use composition together with [managed resources](#managed-resources) to
