@@ -34,16 +34,15 @@ tools you already use.
 **Crossplane's key value is that it unlocks the benefits of building your own
 Kubernetes custom resources without having to write controllers for them.**
 
-{{<hint "note">}}
 Not familiar with Kubernetes custom resources and controllers?
+[This DevOps Toolkit video](https://www.youtube.com/watch?v=aM2Y9m2Kazk) has a
+great explanation.
 
-Read the Kubernetes documentation on
-[custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-and [controllers](https://kubernetes.io/docs/concepts/architecture/controller/).
-
+{{<hint "note">}}
 Kubebuilder is a popular project for building Kubernetes controllers. Look at
 the [Kubebuilder documentation](https://book.kubebuilder.io) to see what's
-involved in writing a controller. {{</hint>}}
+involved in writing a controller.
+{{</hint>}}
 
 # Crossplane components
 
