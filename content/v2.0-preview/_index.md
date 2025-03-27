@@ -12,7 +12,7 @@ for platform engineering.
 
 Crossplane organizes its documentation into the following sections:
 
-* [What is Crossplane?]({{<ref "what-is-crossplane">}}) introduces Crossplane
+* [What's Crossplane?]({{<ref "whats-crossplane">}}) introduces Crossplane
   and explains why you should use it.
 
 * [Get Started]({{<ref "get-started">}}) explains how to install Crossplane and

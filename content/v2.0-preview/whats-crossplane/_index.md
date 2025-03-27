@@ -1,5 +1,5 @@
 ---
-title: What is Crossplane?
+title: What's Crossplane?
 weight: 3
 description: Learn what Crossplane is and why you'd use it.
 ---
