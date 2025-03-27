@@ -44,7 +44,7 @@ the [Kubebuilder documentation](https://book.kubebuilder.io) to see what's
 involved in writing a controller.
 {{</hint>}}
 
-# Crossplane components
+## Crossplane components
 
 Crossplane has three major components:
 
@@ -55,7 +55,7 @@ Crossplane has three major components:
 You can use all three components to build your control plane, or pick only the
 ones you need.
 
-## Composition
+### Composition
 
 Composition lets you build custom APIs to control your cloud native software.
 
@@ -138,7 +138,7 @@ build new custom resource APIs powered by managed resources.
 Follow [Get Started with Composition]({{<ref "../get-started/get-started-with-composition">}})
 to see how composition works.
 
-## Managed resources
+### Managed resources
 
 Managed resources (MRs) are ready-made Kubernetes custom resources. 
 
@@ -223,7 +223,7 @@ GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
-## Package manager
+### Package manager
 
 The Crossplane package manager lets you install new managed resources and
 composition functions.
