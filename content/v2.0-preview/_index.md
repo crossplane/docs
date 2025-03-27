@@ -19,6 +19,9 @@ tools you already use.
 {{< hint "tip" >}}
 **A control plane is software that controls other software.**
 
+Control planes are a core cloud native pattern. The major cloud providers are
+all built using control planes.
+
 Control planes expose an API. You use the API to tell the control plane what
 software it should configure and how - this is your _desired state_.
 
@@ -28,9 +31,6 @@ create a load balancer, or create a GitHub repository.
 The control plane configures your software, then monitors it throughout its
 lifecycle. If your software ever _drifts_ from your desired state, the control
 plane automatically corrects the drift.
-
-Control planes are a core cloud native pattern. The major cloud providers are
-all built using control planes.
 {{< /hint >}}
 
 
