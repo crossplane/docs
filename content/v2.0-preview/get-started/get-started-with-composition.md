@@ -12,8 +12,8 @@ user calls the custom resource API to create an `App`, Crossplane creates a
 
 
 {{<hint "tip">}}
-The guide shows how to configure composition using YAML, Python, KCL, and
-templated YAML. You can pick your preferred language.
+The guide shows how to configure composition using YAML, templated YAML, Python,
+and KCL. You can pick your preferred language.
 {{</hint>}}
 
 An `App` custom resource looks like this:
@@ -86,7 +86,7 @@ that supports REST APIs to work with apps.
 
 ## Prerequisites
 
-This quickstart requires:
+This guide requires:
 
 * A Kubernetes cluster with at least 2 GB of RAM
 * The Crossplane v2 preview [installed on the Kubernetes cluster]({{<ref "install">}})
