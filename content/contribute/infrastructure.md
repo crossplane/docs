@@ -390,6 +390,7 @@ Expand the tab below to see an annotated `tree` output of the website repository
 │       │   │   ├── meta-common.html  # <meta> tags used on all pages
 │       │   │   ├── ms-clarity.html   # Microsoft Clarity tags
 │       │   │   ├── old-version-alert.html  # Alert box for versions that aren't the latest
+│       │   │   ├── preview-version-alert.html  # Alert box for preview versions
 │       │   │   ├── redirect.html     # HTML meta redirect
 │       │   │   ├── release-notes.html  # Release note summary page generator
 │       │   │   ├── rollworks.html    # Rollworks analytics tags
