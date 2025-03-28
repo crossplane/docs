@@ -134,26 +134,6 @@ generic aws-secret \
 --from-file=creds=./aws-credentials.txt
 ```
 
-View the secret with `kubectl describe secret`
-
-{{< hint type="note" >}}
-The size may be larger if there are extra blank spaces in your text file.
-{{< /hint >}}
-
-```shell {copy-lines="1"}
-kubectl describe secret aws-secret -n crossplane-system
-Name:         aws-secret
-Namespace:    crossplane-system
-Labels:       <none>
-Annotations:  <none>
-
-Type:  Opaque
-
-Data
-====
-creds:  114 bytes
-```
-
 ## Create a ProviderConfig
 A {{< hover label="providerconfig" line="3">}}ProviderConfig{{</ hover >}}
 customizes the settings of the AWS Provider.
@@ -179,11 +159,6 @@ EOF
 
 This attaches the AWS credentials, saved as a Kubernetes secret, as a
 {{< hover label="providerconfig" line="9">}}secretRef{{</ hover>}}.
-
-The
-{{< hover label="providerconfig" line="11">}}spec.credentials.secretRef.name{{< /hover >}}
-value is the name of the Kubernetes secret containing the AWS credentials in the
-{{< hover label="providerconfig" line="10">}}spec.credentials.secretRef.namespace{{< /hover >}}.
 
 ## Create a namespace
 Before we can create our namespaced S3 bucket managed resource, we must create a
@@ -214,18 +189,9 @@ spec:
 EOF
 ```
 
-The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and
-{{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.
-
 The {{< hover label="xr" line="6">}}metadata.generateName{{< /hover >}} gives a
 pattern that the provider will use to create a unique name for the bucket in S3.
 The generated name will look like `crossplane-bucket-<hash>`.
-
-The {{< hover label="xr" line="9">}}spec.forProvider.region{{< /hover >}} tells
-AWS which AWS region to use when deploying resources.
-
-The region can be any
-[AWS Regional endpoint](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints) code.
 
 Use `kubectl -n crossplane-aws-app get buckets.s3.aws.m.upbound.io` to verify Crossplane created the bucket.
 
@@ -241,7 +207,7 @@ crossplane-bucket-7tfcj   True     True    crossplane-bucket-7tfcj   3m4s
 ```
 
 ## Delete the managed resource
-Before shutting down your Kubernetes cluster, delete the S3 bucket just created.
+Before shutting down your Kubernetes cluster, delete the S3 bucket that was just created.
 
 Use `kubectl -n crossplane-aws-app delete buckets.s3.aws.m.upbound.io <bucketname>` to remove the bucket.
 
