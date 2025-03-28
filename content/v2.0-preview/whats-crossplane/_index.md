@@ -44,7 +44,7 @@ the [Kubebuilder documentation](https://book.kubebuilder.io) to see what's
 involved in writing a controller.
 {{</hint>}}
 
-# Crossplane components
+## Crossplane components
 
 Crossplane has three major components:
 
@@ -55,7 +55,7 @@ Crossplane has three major components:
 You can use all three components to build your control plane, or pick only the
 ones you need.
 
-## Composition
+### Composition
 
 Composition lets you build custom APIs to control your cloud native software.
 
@@ -66,9 +66,9 @@ extend Kubernetes with new custom resources.
 controller.** The controller is the software that reacts when a user calls the
 custom resource API.
 
-Say you want your control plane to serve an `Application` custom resource API.
-When someone creates an `Application`, the control plane should create a
-Kubernetes `Deployment` and a `Service`.
+Say you want your control plane to serve an `App` custom resource API. When
+someone creates an `App`, the control plane should create a Kubernetes
+`Deployment` and a `Service`.
 
 **If there's not already a controller that does what you want - and exposes the
 API you want - you have to write the controller yourself.**
@@ -78,8 +78,8 @@ flowchart TD
 user(User)
 
 subgraph control [Control Plane]
-  api(Application API)
-  controller[Your Application Controller]
+  api(App API)
+  controller[Your App Controller]
   deployment(Deployment API)
   service(Service API)
 end
@@ -101,7 +101,7 @@ flowchart TD
 user(User)
 
 subgraph control [Control Plane]
-  api(Application API)
+  api(App API)
 
   subgraph crossplane [Composition Engine]
     fn(Python Function)
@@ -138,7 +138,7 @@ build new custom resource APIs powered by managed resources.
 Follow [Get Started with Composition]({{<ref "../get-started/get-started-with-composition">}})
 to see how composition works.
 
-## Managed resources
+### Managed resources
 
 Managed resources (MRs) are ready-made Kubernetes custom resources. 
 
@@ -181,7 +181,7 @@ flowchart TD
 user(User)
 
 subgraph control [Control Plane]
-  api(Application API)
+  api(App API)
 
   subgraph crossplane [Composition Engine]
     fn(Python Function)
@@ -223,7 +223,7 @@ GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
-## Package manager
+### Package manager
 
 The Crossplane package manager lets you install new managed resources and
 composition functions.

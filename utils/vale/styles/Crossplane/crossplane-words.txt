@@ -16,6 +16,7 @@ config
 CONTRIBUTING.md
 ControllerConfig
 ControllerConfigs
+CRs
 CRDs
 Crossplane
 crossplane-admin
@@ -42,6 +43,7 @@ function-environment-configs
 function-extra-resources
 function-go-templating
 function-patch-and-transform
+function-template-python
 HealthyPackageRevision
 Helm-like
 ImageConfig
