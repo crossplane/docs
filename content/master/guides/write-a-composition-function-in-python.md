@@ -733,3 +733,72 @@ up continuous integration (CI) using
 lint, test, and build your function. You can see how the template configures CI
 by reading `.github/workflows/ci.yaml`.
 {{</hint>}}
+
+## Using credentials in the function
+
+To access a secret, the `composition.yaml` step declares it with:
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: create-buckets
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: XBuckets
+  mode: Pipeline
+  pipeline:
+  - step: create-buckets
+    credentials:
+      - name: function-credentials
+        secretRef:
+          name: secret-name
+          namespace: crossplane-system
+        source: Secret
+    functionRef:
+      name: function-xbuckets
+```
+
+Where `secret-name` is the kubernetes secret name.
+
+Edit the `RunFunction` method to read the credentials using `req.credentials`:
+
+{{<hint "tip">}}
+See [apiextensions.fn.proto.v1.RunFunctionRequest](https://buf.build/crossplane/crossplane/docs/main:apiextensions.fn.proto.v1#apiextensions.fn.proto.v1.RunFunctionRequest) 
+and [protobuf generated Python code ](https://protobuf.dev/reference/python/python-generated/) 
+to understand what kind of Python code is generated from the protobuf 
+and how to access the request content
+{{</hint>}}
+
+```python
+async def RunFunction(self, req: fnv1.RunFunctionRequest, _: grpc.aio.ServicerContext) -> fnv1.RunFunctionResponse:
+    log = self.log.bind(tag=req.meta.tag)
+    log.info("Running function")
+
+    rsp = response.to(req)
+
+    credentials = req.credentials
+
+    username = credentials["secret-name"].credential_data.data["username"].decode("utf-8")
+    password = credentials["secret-name"].credential_data.data["password"].decode("utf-8")
+```
+
+To test the function with `crossplane render`, use:
+
+`crossplane render --function-credentials=secret.yaml xr.yaml composition.yaml functions.yaml`
+
+Where `secret.yaml` is a Kubernetes secret manifest:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-name
+  namespace: crossplane-system
+data:
+  username: bb..bb
+  password: aa..aa
+type: Opaque
+```
+
