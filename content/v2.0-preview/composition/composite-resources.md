@@ -1,6 +1,6 @@
 ---
 title: Composite Resources
-weight: 50
+weight: 10
 description: "Composite resources, an XR or XRs, represent a collection of related cloud resources."
 ---
 

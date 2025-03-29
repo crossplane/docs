@@ -1,6 +1,6 @@
 ---
 title: Composite Resource Definitions
-weight: 40
+weight: 20
 description: "Composite Resource Definitions or XRDs define custom API schemas"
 ---
 
@@ -9,11 +9,10 @@ Users create composite resources (`XRs`) using the API schema defined by an
 `XRD`.
 
 
-{{< hint "note" >}}
-
+{{<hint "note">}}
 Read the [composite resources]({{<ref "./composite-resources">}}) page for more
 information about composite resources.
-{{</hint >}}
+{{</hint>}}
 
 
 {{<expand "Confused about Compositions, XRDs, and XRs?" >}}
