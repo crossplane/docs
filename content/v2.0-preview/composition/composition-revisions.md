@@ -129,21 +129,6 @@ resource and continues with creating multiple XRs to observe different upgrade p
 assign different CompositionRevisions to the created composite resources each time the composition is updated. 
 
 ### Preparation 
-##### Install Crossplane
-Install Crossplane v1.11.0 or later and wait until the Crossplane pods are running.
-```shell
-kubectl create namespace crossplane-system
-helm repo add crossplane-master https://charts.crossplane.io/master/
-helm repo update
-helm install crossplane --namespace crossplane-system crossplane-master/crossplane --devel --version 1.11.0-rc.0.108.g0521c32e
-kubectl get pods -n crossplane-system
-```
-Expected Output:
-```shell
-NAME                                       READY   STATUS    RESTARTS   AGE
-crossplane-7f75ddcc46-f4d2z                1/1     Running   0          9s
-crossplane-rbac-manager-78bd597746-sdv6w   1/1     Running   0          9s
-```
 
 #### Deploy Composition and XRD Examples
 Apply the example Composition.
@@ -236,6 +221,7 @@ Create an XR without a `compositionUpdatePolicy` defined. The update policy is `
 apiVersion: aws.example.upbound.io/v1alpha1
 kind: MyVPC
 metadata:
+  namespace: default
   name: vpc-auto
 spec:
   id: vpc-auto
@@ -251,6 +237,7 @@ Create a Composite Resource with `compositionUpdatePolicy: Manual` and `composit
 apiVersion: aws.example.upbound.io/v1alpha1
 kind: MyVPC
 metadata:
+  namespace: default
   name: vpc-man
 spec:
   id: vpc-man
@@ -271,6 +258,7 @@ Create an XR with a `compositionRevisionSelector` of `channel: dev`:
 apiVersion: aws.example.upbound.io/v1alpha1
 kind:  MyVPC
 metadata:
+  namespace: default
   name: vpc-dev
 spec:
   id: vpc-dev
@@ -289,6 +277,7 @@ Create an XR with a `compositionRevisionSelector` of `channel: staging`:
 apiVersion: aws.example.upbound.io/v1alpha1
 kind: MyVPC
 metadata:
+  namespace: default
   name: vpc-staging
 spec:
   id: vpc-staging
