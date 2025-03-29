@@ -44,7 +44,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -192,7 +192,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -230,7 +230,7 @@ spec:
       export:
         target: Resources
         value: |
-          apiVersion: "s3.aws.upbound.io/v1beta1"
+          apiVersion: "s3.aws.m.upbound.io/v1beta1"
           kind: "Bucket"
           spec: forProvider: region: "us-east-2"
   - step: automatically-detect-readiness
@@ -305,7 +305,7 @@ kind: XBucket
 metadata:
   name: example-render
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -364,7 +364,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
         patches:
         - type: FromCompositeFieldPath
@@ -655,7 +655,7 @@ For example, if all a function wants is to make sure an S3 bucket in region
 resources.
 
 ```yaml
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 spec:
   forProvider:
@@ -699,7 +699,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
         patches:
         - type: FromCompositeFieldPath

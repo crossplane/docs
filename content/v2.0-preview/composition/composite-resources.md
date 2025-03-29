@@ -342,10 +342,10 @@ Spec:
     Name:                     my-composition-cf2d3a7
   Composition Update Policy:  Automatic
   Resource Refs:
-    API Version:  s3.aws.upbound.io/v1beta1
+    API Version:  s3.aws.m.upbound.io/v1beta1
     Kind:         Bucket
     Name:         my-composite-resource-fmrks
-    API Version:  dynamodb.aws.upbound.io/v1beta1
+    API Version:  dynamodb.aws.m.upbound.io/v1beta1
     Kind:         Table
     Name:         my-composite-resource-wnr9t
 # Removed for brevity

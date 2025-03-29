@@ -175,7 +175,7 @@ spec:
       resources:
       - name: my-vpc
         base:
-          apiVersion: ec2.aws.upbound.io/v1beta1
+          apiVersion: ec2.aws.m.upbound.io/v1beta1
           kind: VPC
           spec:
             forProvider:
@@ -395,7 +395,7 @@ spec:
       resources:
       - name: my-vpc
         base:
-          apiVersion: ec2.aws.upbound.io/v1beta1
+          apiVersion: ec2.aws.m.upbound.io/v1beta1
           kind: VPC
           spec:
             forProvider:
