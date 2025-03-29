@@ -233,5 +233,5 @@ using the package manager. This allows you to deploy several control planes with
 identical capabilities - for example one control plane per region or per
 service.
 
-Read about Crossplane packages in [Concepts]({{<ref "../packages/packages">}})
+Read about Crossplane packages in [Concepts]({{<ref "../packages/configurations">}})
 to learn about the package manager.

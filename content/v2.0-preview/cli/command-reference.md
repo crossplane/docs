@@ -178,7 +178,7 @@ built-in support in [function-go-templating](https://github.com/crossplane-contr
 ## xpkg
 
 The `crossplane xpkg` commands create, install and update Crossplane
-[packages]({{<ref "../packages/packages">}}) as well as enable authentication
+[packages]({{<ref "../packages/configurations">}}) as well as enable authentication
 and publishing of Crossplane packages to a Crossplane package registry.
 
 ### xpkg build
@@ -193,7 +193,7 @@ The CLI applies the required annotations and values to meet the
 [Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md).
 
 The `crossplane` CLI supports building 
-[configuration]({{< ref "../packages/packages" >}}),
+[configuration]({{< ref "../packages/configurations" >}}),
 [function]({{<ref "../composition/compositions">}}) and
 [provider]({{<ref "../packages/providers" >}}) package types.
 
@@ -270,7 +270,7 @@ with the command
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
 The `<template>` value may be one of four well known templates:
-* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../packages/packages">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
+* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../packages/configurations">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
 * `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
 * `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
@@ -352,7 +352,7 @@ returns an error if the `wait` time expires before the package is `HEALTHY`.
 #### Require manual package activation
 
 Set the package to require 
-[manual activation]({{<ref "../packages/packages#revision-activation-policy" >}}), 
+[manual activation]({{<ref "../packages/configurations#revision-activation-policy" >}}), 
 preventing an automatic upgrade of a package with `--manual-activation`
 
 #### Authenticate to a private registry
@@ -372,7 +372,7 @@ cache.
 Store more inactive copies of a package with `--revision-history-limit`. 
 
 Read more about 
-[package revisions]({{< ref "../packages/packages#configuration-revisions" >}}) 
+[package revisions]({{< ref "../packages/configurations#configuration-revisions" >}}) 
 in the package documentation. 
 
 ### xpkg login
