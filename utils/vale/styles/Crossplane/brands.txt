@@ -2,6 +2,7 @@ Algolia
 ArgoCD
 Bootstrap
 CC-BY
+CloudNativePG
 CloudSQL
 CNCF
 Commonmark

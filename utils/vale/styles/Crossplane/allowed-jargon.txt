@@ -99,6 +99,5 @@ TLS
 tolerations
 UI
 VM
-v2
 webhooks.enabled
 YAML
