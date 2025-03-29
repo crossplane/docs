@@ -92,27 +92,6 @@ You can also [write your own function](#write-a-composition-function) using Go
 or Python.
 {{< /hint >}}
 
-{{<hint "important" >}}
-Crossplane has two modes of composition:
-
-* `mode: Pipeline`
-* `mode: Resources`
-
-Use the `Pipeline` mode to use composition functions.
-
-<!-- vale write-good.Passive = NO -->
-The `Resources` mode is deprecated, and you shouldn't use it. Crossplane
-supports Compositions that use the `Resources` mode for backward compatibility,
-but the feature is no longer maintained. Crossplane doesn't accept new
-`Resources` features, and only accepts security bug fixes.
-<!-- vale write-good.Passive = YES -->
-
-See the [CLI documentation]({{<ref "../cli/command-reference#beta-convert">}})
-to learn how to use the `crossplane beta convert` command to convert a legacy
-`Resources` Composition to the `Pipeline` mode.
-{{< /hint >}}
-
-
 ### Install a composition function
 
 Installing a Function creates a function pod. Crossplane sends requests to this
@@ -137,7 +116,7 @@ spec:
 
 {{< hint "tip" >}}
 Functions are Crossplane Packages. Read more about Packages in the
-[Packages documentation]({{<ref "../packages/configurations" >}}).
+[Packages documentation]({{<ref "../packages/functions" >}}).
 {{< /hint >}}
 
 By default, the Function pod installs in the same namespace as Crossplane
@@ -183,14 +162,6 @@ Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of
 Each {{<hover label="single" line="8">}}step{{</hover>}} uses a
 {{<hover label="single" line="9">}}functionRef{{</hover>}} to reference the
 {{<hover label="single" line="10">}}name{{</hover>}} of the Function to call.
-
-{{<hint "important" >}}
-Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}}
-can't specify resource templates with a `resources` field.
-
-Use function "Patch and Transform" to create resource templates.
-{{< /hint >}}
-
 
 Some Functions also allow you to specify an
 {{<hover label="single" line="11">}}input{{</hover>}}.
@@ -362,11 +333,6 @@ Remember to create a unique name for each secret.
 You can preview the output of any composition using the Crossplane CLI. You
 don't need a Crossplane control plane to do this. The Crossplane CLI uses Docker
 Engine to run functions.
-
-{{<hint "important">}}
-The `crossplane render` command only supports composition functions. It doesn't
-support `mode: Resources` Compositions.
-{{< /hint >}}
 
 {{<hint "tip">}}
 See the [Crossplane CLI docs]({{<ref "../cli">}}) to
