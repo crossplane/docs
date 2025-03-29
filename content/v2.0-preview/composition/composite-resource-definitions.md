@@ -38,7 +38,6 @@ Creating a CompositeResourceDefinition consists of:
 * [Defining a custom API schema and version](#xrd-versions).
   
 Optionally, CompositeResourceDefinitions also support:
-* [Defining connection secrets](#manage-connection-secrets).
 * [Setting composite resource defaults](#set-composite-resource-defaults).
  
 Composite resource definitions (`XRDs`) create new API endpoints inside a
@@ -397,7 +396,7 @@ field indicates which version of the schema Compositions use. Only one
 version can be `referenceable`. 
 
 {{< hint "note" >}}
-Changing which version is `referenceable:true` requires [updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#enable-composite-resources" >}}) 
+Changing which version is `referenceable:true` requires [updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#match-composite-resources" >}}) 
 of any Compositions referencing that XRD.
 {{< /hint >}}
 

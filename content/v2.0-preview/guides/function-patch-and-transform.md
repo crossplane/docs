@@ -1835,7 +1835,7 @@ By default an XRD writes all secret keys listed in the composed resources
 
 
 For more information on connection secrets read about
-[managed resources]({{<ref "../managed-resources/managed-resources#writeConnectionSecretToRef">}}).
+[managed resources]({{<ref "../managed-resources/managed-resources">}}).
 {{</hint>}}
 
 ## Resource readiness checks

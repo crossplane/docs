@@ -68,7 +68,7 @@ Crossplane has four core components that users commonly mix up:
 Creating a Composition consists of:
 * [Using composition functions](#use-a-function-in-a-composition) to define the
   resources to create.
-* [Enabling composite resources](#enable-composite-resources) to use the
+* [Enabling composite resources](#match-composite-resources) to use the
   Composition template.
 
 A Composition is a pipeline of composition functions.
