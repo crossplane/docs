@@ -157,7 +157,7 @@ documentation.
 ### Composition selection
 
 Select a specific Composition for a composite resource to use with 
-{{<hover label="compref" line="6">}}compositionRef{{</hover>}}
+{{<hover label="compref" line="7">}}compositionRef{{</hover>}}
 
 {{<hint "important">}}
 The selected Composition must allow the composite resource to use it with a
@@ -173,14 +173,15 @@ metadata:
   namespace: default
   name: my-composite-resource
 spec:
-  compositionRef:
-    name: my-other-composition
+  crossplane:
+    compositionRef:
+      name: my-other-composition
   # Removed for brevity
 ```
 
 A composite resource can also select a Composition based on labels instead of 
 the exact name with a
-{{<hover label="complabel" line="6">}}compositionSelector{{</hover>}}.
+{{<hover label="complabel" line="7">}}compositionSelector{{</hover>}}.
 
 Inside the {{<hover label="complabel" line="7">}}matchLabels{{</hover>}} section
 provide one or more Composition labels to match.
@@ -192,10 +193,11 @@ metadata:
   namespace: default
   name: my-composite-resource
 spec:
-  compositionSelector:
-    matchLabels:
-      environment: production
-  # Removed for brevity
+  crossplane:
+    compositionSelector:
+      matchLabels:
+        environment: production
+    # Removed for brevity
 ```
 
 ### Composition revision policy
@@ -204,16 +206,16 @@ Crossplane tracks changes to Compositions as
 [Composition revisions]({{<ref "composition-revisions">}}) . 
 
 A composite resource can use
-a {{<hover label="comprev" line="6">}}compositionUpdatePolicy{{</hover>}} to
+a {{<hover label="comprev" line="7">}}compositionUpdatePolicy{{</hover>}} to
 manually or automatically reference newer Composition revisions.
 
 The default 
-{{<hover label="comprev" line="6">}}compositionUpdatePolicy{{</hover>}} is 
+{{<hover label="comprev" line="7">}}compositionUpdatePolicy{{</hover>}} is 
 "Automatic." Composite resources automatically use the latest Composition
 revision. 
 
 Change the policy to 
-{{<hover label="comprev" line="6">}}Manual{{</hover>}} to prevent composite
+{{<hover label="comprev" line="7">}}Manual{{</hover>}} to prevent composite
 resources from automatically upgrading.
 
 ```yaml {label="comprev",copy-lines="none"}
@@ -223,8 +225,9 @@ metadata:
   namespace: default
   name: my-composite-resource
 spec:
-  compositionUpdatePolicy: Manual
-  # Removed for brevity
+  crossplane:
+    compositionUpdatePolicy: Manual
+    # Removed for brevity
 ```
 
 ### Composition revision selection
@@ -235,7 +238,7 @@ A composite resource can
 select a specific Composition revision.
 
 
-Use {{<hover label="comprevref" line="6">}}compositionRevisionRef{{</hover>}} to
+Use {{<hover label="comprevref" line="7">}}compositionRevisionRef{{</hover>}} to
 select a specific Composition revision by name.
 
 For example, to select a specific Composition revision use the name of the
@@ -248,10 +251,11 @@ metadata:
   namespace: default
   name: my-composite-resource
 spec:
-  compositionUpdatePolicy: Manual
-  compositionRevisionRef:
-    name: my-composition-b5aa1eb
-  # Removed for brevity
+  crossplane:
+    compositionUpdatePolicy: Manual
+    compositionRevisionRef:
+      name: my-composition-b5aa1eb
+    # Removed for brevity
 ```
 
 {{<hint "note" >}}
@@ -268,7 +272,7 @@ my-composition-b5aa1eb       2          xmydatabases   example.org/v1alpha1     
 
 A Composite resource can also select Composition revisions based on labels
 instead of the exact name with a 
-{{<hover label="comprevsel" line="6">}}compositionRevisionSelector{{</hover>}}.
+{{<hover label="comprevsel" line="7">}}compositionRevisionSelector{{</hover>}}.
 
 Inside the {{<hover label="comprevsel" line="7">}}matchLabels{{</hover>}} 
 section provide one or more Composition revision labels to match.
@@ -281,10 +285,11 @@ metadata:
   namespace: default
   name: my-composite-resource
 spec:
-  compositionRevisionSelector:
-    matchLabels:
-      channel: dev
-  # Removed for brevity
+  crossplane:
+    compositionRevisionSelector:
+      matchLabels:
+        channel: dev
+    # Removed for brevity
 ```
 
 ### Pausing composite resources
