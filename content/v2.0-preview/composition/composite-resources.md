@@ -45,12 +45,12 @@ creates a custom API endpoint
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata: 
-  name: xmydatabases.example.org
+  name: mydatabases.example.org
 spec:
   group: example.org
   names:
-    kind: xMyDatabase
-    plural: xmydatabases
+    kind: MyDatabase
+    plural: mydatabases
   # Removed for brevity
 ```
 
@@ -67,7 +67,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.org/v1alpha1
-    kind: xMyDatabase
+    kind: MyDatabase
   # Removed for brevity
 ```
 
@@ -102,8 +102,9 @@ resource.
 
 ```yaml {label="annotation",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
   annotations: 
     crossplane.io/external-name: my-custom-name
@@ -167,8 +168,9 @@ section of the Composition documentation.
 
 ```yaml {label="compref",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
 spec:
   compositionRef:
@@ -185,8 +187,9 @@ provide one or more Composition labels to match.
 
 ```yaml {label="complabel",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
 spec:
   compositionSelector:
@@ -215,8 +218,9 @@ resources from automatically upgrading.
 
 ```yaml {label="comprev",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
 spec:
   compositionUpdatePolicy: Manual
@@ -239,8 +243,9 @@ desired Composition revision.
 
 ```yaml {label="comprevref",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
 spec:
   compositionUpdatePolicy: Manual
@@ -271,8 +276,9 @@ section provide one or more Composition revision labels to match.
 
 ```yaml {label="comprevsel",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
 spec:
   compositionRevisionSelector:
@@ -293,8 +299,9 @@ To pause a composite resource apply the
 
 ```yaml {label="pause",copy-lines="none"}
 apiVersion: example.org/v1alpha1
-kind: xMyDatabase
+kind: MyDatabase
 metadata:
+  namespace: default
   name: my-composite-resource
   annotations:
     crossplane.io/paused: "true"
@@ -317,7 +324,7 @@ Use `kubectl get` for the specific custom API endpoint to view
 only those resources.
 
 ```shell {copy-lines="1"}
-kubectl get xMyDatabase.example.org
+kubectl get mydatabases
 NAME                    SYNCED   READY   COMPOSITION        AGE
 my-composite-resource   True     True    my-composition     12m
 ```
@@ -333,8 +340,9 @@ and unique managed resources created in the
 ```yaml {copy-lines="1",label="desccomposite"}
 kubectl describe composite my-composite-resource
 Name:         my-composite-resource
+Namespace:    default
 API Version:  example.org/v1alpha1
-Kind:         xMyDatabase
+Kind:         MyDatabase
 Spec:
   Composition Ref:
     Name:  my-composition
@@ -374,7 +382,7 @@ composite, creating a reference between the managed resource and owning
 composite resource. 
 
 ```shell {label="complabel",copy-lines="1"}
-kubectl describe xmydatabase.example.org/my-database-x9rx9
+kubectl describe mydatabase.example.org/my-database-x9rx9
 Name:         my-database2-x9rx9
 Namespace:
 Labels:       crossplane.io/composite=my-database-x9rx9

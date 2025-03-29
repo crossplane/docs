@@ -301,7 +301,7 @@ created.
 ```yaml
 ---
 apiVersion: example.crossplane.io/v1
-kind: XBucket
+kind: Bucket
 metadata:
   name: example-render
 ---
@@ -317,7 +317,7 @@ metadata:
   - apiVersion: example.crossplane.io/v1
     blockOwnerDeletion: true
     controller: true
-    kind: XBucket
+    kind: Bucket
     name: example-render
     uid: ""
 spec:
@@ -334,7 +334,7 @@ The `xr.yaml` file contains the composite resource to render:
 
 ```yaml
 apiVersion: example.crossplane.io/v1
-kind: XBucket
+kind: Bucket
 metadata:
   name: example-render
 spec:
@@ -352,7 +352,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.crossplane.io/v1
-    kind: XBucket
+    kind: Bucket
   mode: Pipeline
   pipeline:
   - step: patch-and-transform
@@ -575,7 +575,7 @@ sends it to the composition function as part of the observed state.
 
 ```yaml
 apiVersion: example.crossplane.io/v1
-kind: XBucket
+kind: Bucket
 metadata:
   name: example-render
 spec:
@@ -687,7 +687,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.crossplane.io/v1
-    kind: XBucket
+    kind: Bucket
   mode: Pipeline
   pipeline:
   - step: patch-and-transform
