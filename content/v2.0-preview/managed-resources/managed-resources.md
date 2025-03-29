@@ -19,6 +19,16 @@ Examples of managed resources include:
 * Google Cloud GKE `Cluster` defined in [provider-upjet-gcp](https://github.com/crossplane-contrib/provider-upjet-gcp).
 * Microsoft Azure PostgreSQL `Database` defined in [provider-upjet-azure](https://github.com/crossplane-contrib/provider-upjet-azure).
 
+{{<hint "important">}}
+Only AWS managed resources support the Crossplane v2 preview.
+
+<!-- vale gitlab.FutureTense = NO -->
+Maintainers will update the managed resources for other systems including Azure,
+GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
+<!-- vale gitlab.FutureTense = YES -->
+{{</hint>}}
+
+
 ## Managed resource fields
 
 The Provider defines the group, kind and version of a managed resource. The
@@ -30,47 +40,12 @@ group, kind and version.
 
 For example the [AWS Provider](https://github.com/crossplane-contrib/provider-upjet-aws)
 defines the {{<hover label="gkv" line="2">}}Instance{{</hover>}} kind from the
-group {{<hover label="gkv" line="1">}}ec2.aws.upbound.io{{</hover>}}
+group {{<hover label="gkv" line="1">}}ec2.aws.m.upbound.io{{</hover>}}
 
 ```yaml {label="gkv",copy-lines="none"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Instance
 ```
-
-<!-- vale off -->
-### deletionPolicy
-<!-- vale on --> 
-
-A managed resource's `deletionPolicy` tells the Provider what to do after
-deleting the managed resource. If the `deletionPolicy` is `Delete` the Provider
-deletes the external resource as well. If the `deletionPolicy` is `orphan` the
-Provider deletes the managed resource but doesn't delete the external resource.
-
-#### Options
-* `deletionPolicy: Delete` - **Default** - Delete the external resource when deleting the managed resource.
-* `deletionPolicy: Orphan` - Leave the external resource when deleting the managed resource.
-
-#### Interaction with management policies
-
-The [management policy](#managementpolicies) takes precedence over the
-`deletionPolicy` when:
-<!-- vale write-good.Passive = NO -->
-- The related management policy alpha feature is enabled.
-<!-- vale write-good.Passive = YES -->
-- The resource configures a management policy other than the default value.
-
-See the table below for more details.
-
-{{< table "table table-sm table-hover">}}
-| managementPolicies          | deletionPolicy   | result  |
-|-----------------------------|------------------|---------|
-| "*" (default)               | Delete (default) | Delete  |
-| "*" (default)               | Orphan           | Orphan  |
-| contains "Delete"           | Delete (default) | Delete  |
-| contains "Delete"           | Orphan           | Delete  |
-| doesn't contain "Delete"   | Delete (default) | Orphan  |
-| doesn't contain "Delete"   | Orphan           | Orphan  |
-{{< /table >}}
 
 <!-- vale off -->
 ### forProvider
@@ -93,7 +68,7 @@ Refer to the documentation of your specific Provider for details.
 
 
 ```yaml {label="forProvider",copy-lines="none"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Instance
 # Removed for brevity
 spec:
@@ -136,7 +111,7 @@ To match the VPC by name, use the external name. For example, creating a Subnet
 managed resource attached to this VPC.
 
 ```yaml {copy-lines="none"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Subnet
 spec:
   forProvider:
@@ -162,7 +137,7 @@ To match the VPC by name reference, use the managed resource name. For example,
 creating a Subnet managed resource attached to this VPC.
 
 ```yaml {copy-lines="none"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Subnet
 spec:
   forProvider:
@@ -181,7 +156,7 @@ Subnet resource only matches VPC resources with the label
 `my-label: label-value`.
 
 ```yaml {copy-lines="none"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Subnet
 spec:
   forProvider:
@@ -193,8 +168,11 @@ spec:
 
 ##### Matching by controller reference 
 
-Matching a controller reference ensures that the matching resource is part of
-the same composite resource.
+Matching a controller reference ensures that the matching resource has the same
+Kubernetes controller reference.
+
+This is useful for matching a resource that's composed by the same composite
+resource (XR).
 
 {{<hint "note" >}}
 Learn more about composite resources in the
@@ -212,80 +190,6 @@ Composition shares the same label.
 Using `matchControllerRef` matches only the VPC created in the same composite
 resource that created the `InternetGateway`. 
 
-```yaml {label="controller1",copy-lines="none"}
-apiVersion: pt.fn.crossplane.io/v1beta1
-kind: Resources
-resources:
-- base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
-    kind: VPC
-    name: my-vpc
-    spec:
-      forProvider:
-      # Removed for brevity
-- base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
-    kind: InternetGateway
-    name: my-gateway
-    spec:
-      forProvider:
-        vpcIdSelector:
-          matchControllerRef: true
-```
-
-Resources can match both labels and a controller reference to match a specific
-resource in the larger composite resource. 
-
-For example, this Composition creates two `VPC` resources, but the
-`InternetGateway` must match only one. 
-
-Applying a `label` to the second `VPC` allows the `InternetGateway` to match the
-label `type: internet` and only match objects in the same composite resource
-with `matchControllerRef`.
-
-```yaml {label="controller2",copy-lines="none"}
-apiVersion: pt.fn.crossplane.io/v1beta1
-kind: Resources
-resources:
-- name: my-first-vpc
-  base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
-    kind: VPC
-    metadata:
-      labels:
-        type: backend
-    spec:
-      forProvider:
-      # Removed for brevity
-- name: my-second-vpc
-  base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
-    kind: VPC
-    metadata:
-      labels:
-        type: internet
-    spec:
-      forProvider:
-      # Removed for brevity
-- name: my-gateway
-  base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
-    kind: InternetGateway
-    spec:
-      forProvider:
-        vpcIdSelector:
-          matchControllerRef: true
-          matchLabels:
-            type: internet
-```
-
-{{<hint "note" >}}
-These examples use Function Patch and Transform. Learn more about functions and
-Compositions in the [Compositions]({{<ref "../composition/compositions">}}) section.
-{{</hint >}}
-
-
-
 #### Immutable fields
 
 Some providers don't support changing the fields of some managed resources after
@@ -302,8 +206,7 @@ doesn't apply the change. Crossplane never deletes a resource based on a
 Crossplane behaves differently than other tools like Terraform. Terraform
 deletes and recreates a resource to change an immutable field. Crossplane only
 deletes an external resource if their corresponding managed 
-resource object is deleted from Kubernetes and the `deletionPolicy` is 
-`Delete`.
+resource object is deleted from Kubernetes.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
@@ -369,9 +272,10 @@ Crossplane recommends configuring
 {{< /hint >}}
 
 ```yaml {label="initProvider",copy-lines="none"}
-apiVersion: eks.aws.upbound.io/v1beta1
+apiVersion: eks.aws.m.upbound.io/v1beta1
 kind: NodeGroup
 metadata:
+  namespace: default
   name: sample-eks-ng
 spec:
   managementPolicies: ["Observe", "Create", "Update", "Delete"]
@@ -412,7 +316,7 @@ but not make any changes, set the policies to
 {{<hover label="managementPol1" line="4">}}["Create", "Delete", "Observe"]{{</hover>}}.
 
 ```yaml {label="managementPol1"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Subnet
 spec:
   managementPolicies: ["Create", "Delete", "Observe"]
@@ -479,7 +383,7 @@ For example, a managed resource references a ProviderConfig named
 This matches the {{<hover label="pc" line="4">}}name{{</hover>}} of a ProviderConfig.
 
 ```yaml {label="pcref",copy-lines="none"}}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Instance
 spec:
   forProvider:
@@ -488,7 +392,7 @@ spec:
 ```
 
 ```yaml {label="pc"}
-apiVersion: aws.crossplane.io/v1beta1
+apiVersion: aws.m.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: user-keys
@@ -500,16 +404,6 @@ Each managed resource can reference different ProviderConfigs. This allows
 different managed resources to authenticate with different credentials to the
 same Provider. 
 {{< /hint >}}
-
-<!-- vale off -->
-### providerRef
-<!-- vale on --> 
-
-<!-- vale Crossplane.Spelling = NO -->
-Crossplane deprecated the `providerRef` field in `crossplane-runtime` 
-[v0.10.0](https://github.com/crossplane/crossplane-runtime/releases/tag/v0.10.0). 
-Managed resources using `providerRef`must use [`providerConfigRef`](#providerconfigref).
-<!-- vale Crossplane.Spelling = YES -->
 
 <!-- vale off -->
 ### writeConnectionSecretToRef
@@ -531,7 +425,7 @@ the
 field. 
 
 ```yaml {label="secretname",copy-lines="none"}
-apiVersion: database.aws.crossplane.io/v1beta1
+apiVersion: database.aws.m.crossplane.io/v1beta1
 kind: RDSInstance
 metadata:
   name: my-rds-instance
@@ -561,60 +455,6 @@ The Provider determines the data written to the Secret object. Refer to the
 specific Provider documentation for the generated Secret data.
 {{< /hint >}}
 
-<!-- vale off -->
-### publishConnectionDetailsTo
-<!-- vale on --> 
-
-The `publishConnectionDetailsTo` field expands on 
-[`writeConnectionSecretToRef`](#writeconnectionsecrettoref) supporting storing
-managed resource information as a Kubernetes Secret object or in an external
-secrets store like [HashiCorp Vault](https://www.vaultproject.io/).
-
-Using `publishConnectionDetailsTo` requires enabling Crossplane 
-External Secrets Stores (ESS). Enable ESS inside a Provider with a
-[DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration" >}}) and
-in Crossplane with the `--enable-external-secret-stores` argument.
-
-{{< hint "note" >}}
-Not all Providers support `publishConnectionDetailsTo`. Check your Provider
-documentation for details.
-{{< /hint >}}
-
-#### Publish secrets to Kubernetes
-
-To publish the data generated by a managed resource as a Kubernetes Secret
-object provide a 
-{{<hover label="k8secret" line="7">}}publishConnectionDetailsTo.name{{< /hover >}} 
-
-```yaml {label="k8secret",copy-lines="none"}
-apiVersion: rds.aws.upbound.io/v1beta1
-kind: Instance
-spec:
-  forProvider:
-  # Removed for brevity
-  publishConnectionDetailsTo:
-    name: rds-kubernetes-secret
-```
-
-Crossplane can apply labels and annotations to the Kubernetes secret as well
-using 
-{{<hover label="k8label" line="8">}}publishConnectionDetailsTo.metadata{{</hover>}}.
-
-```yaml {label="k8label",copy-lines="none"}
-apiVersion: rds.aws.upbound.io/v1beta1
-kind: Instance
-spec:
-  forProvider:
-  # Removed for brevity
-  publishConnectionDetailsTo:
-    name: rds-kubernetes-secret
-    metadata:
-      labels:
-        label-tag: label-value
-      annotations:
-        annotation-tag: annotation-value
-```
-
 ## Annotations
 
 Crossplane applies a standard set of Kubernetes `annotations` to managed
@@ -628,7 +468,6 @@ resources.
 | `crossplane.io/external-create-succeeded` | The timestamp of when the Provider successfully created the managed resource. | 
 | `crossplane.io/external-create-failed` | The timestamp of when the Provider failed to create the managed resource. | 
 | `crossplane.io/paused` | Indicates Crossplane isn't reconciling this resource. Read the [Pause Annotation](#paused) for more details. |
-| `crossplane.io/composition-resource-name` | For managed resource created by a Composition, this is the Composition's `resources.name` value. | 
 {{</table >}}
 
 ### Naming external resources
@@ -641,9 +480,10 @@ the name `my-rds-instance` as an external resource inside the Provider's
 environment. 
 
 ```yaml {label="external-name",copy-lines="none"}
-apiVersion: database.aws.crossplane.io/v1beta1
+apiVersion: database.aws.m.crossplane.io/v1beta1
 kind: RDSInstance
 metadata:
+  namespace: default
   name: my-rds-instance
 ```
 
@@ -663,9 +503,10 @@ the name {{<hover label="custom-name" line="5">}}my-custom-name{{</hover >}}
 for the external resource inside AWS.
 
 ```yaml {label="custom-name",copy-lines="none"}
-apiVersion: database.aws.crossplane.io/v1beta1
+apiVersion: database.aws.m.crossplane.io/v1beta1
 kind: RDSInstance
 metadata:
+  namespace: default
   name: my-rds-instance  
   annotations: 
     crossplane.io/external-name: my-custom-name
@@ -702,9 +543,10 @@ AWS VPC resource:
 
 ```yaml {label="creation" copy-lines="2-9"}
 $ kubectl get -o yaml vpc my-vpc
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: VPC
 metadata:
+  namespace: default
   name: my-vpc
   annotations:
     crossplane.io/external-name: vpc-1234567890abcdef0
@@ -759,7 +601,7 @@ kubectl describe queue my-sqs-queue
 Events:
   Type     Reason                           Age                 From                                 Message
   ----     ------                           ----                ----                                 -------
-  Warning  CannotInitializeManagedResource  29m (x19 over 19h)  managed/queue.sqs.aws.crossplane.io  cannot determine creation result - remove the crossplane.io/external-create-pending annotation if it is safe to proceed
+  Warning  CannotInitializeManagedResource  29m (x19 over 19h)  managed/queue.sqs.aws.m.crossplane.io  cannot determine creation result - remove the crossplane.io/external-create-pending annotation if it is safe to proceed
 ```
 
 Providers use the creation annotations to detect that they might have leaked a
@@ -832,9 +674,10 @@ Only the value `"true"` pauses reconciliation.
 {{< /hint >}}
 
 ```yaml {label="pause"}
-apiVersion: ec2.aws.upbound.io/v1beta1
+apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Instance
 metadata:
+  namespace: default
   name: my-rds-instance
   annotations:
     crossplane.io/paused: "true"

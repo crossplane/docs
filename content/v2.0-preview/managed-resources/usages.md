@@ -82,7 +82,7 @@ metadata:
   name: protect-production-database
 spec:
   of:
-    apiVersion: rds.m.aws.upbound.io/v1beta1
+    apiVersion: rds.m.aws.m.upbound.io/v1beta1
     kind: Instance
     resourceRef:
       name: my-database

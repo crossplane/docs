@@ -1833,13 +1833,10 @@ the composite resources.
 By default an XRD writes all secret keys listed in the composed resources
 `connectionDetails` to the combined secret object.
 
-Read the
-[CompositeResourceDefinition documentation]({{<ref "../composition/composite-resource-definitions#manage-connection-secrets">}})
-for more information on restricting secret keys.
-{{< /hint >}}
 
-For more information on connection secrets read the
-[Connection Secrets concepts age]({{<ref "../managed-resources/connection-details">}}).
+For more information on connection secrets read about
+[managed resources]({{<ref "../managed-resources/managed-resources#writeConnectionSecretToRef">}}).
+{{</hint>}}
 
 ## Resource readiness checks
 
