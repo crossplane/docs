@@ -875,8 +875,3 @@ that isn't desired state. Functions can use context for this. Any function can
 write to the pipeline context. Crossplane passes the context to all following
 functions. When Crossplane has called all functions it discards the pipeline
 context.
-
-Crossplane can write context too. If you enable the alpha
-[composition environment]({{<ref "environment-configs">}}) feature Crossplane
-writes the environment to the top-level context field
-`apiextensions.crossplane.io/environment`.
