@@ -44,6 +44,8 @@ claims and provider-kubernetes Objects.
 
 {{<hint "tip">}}
 Most users can upgrade to Crossplane v2 without breaking changes.
+
+Read about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
 {{<hint "note">}}
@@ -120,6 +122,8 @@ Crossplane v2 is backward compatible with v1-style XRs.
 
 When you use v1 of the XRD API `scope` defaults to a special `LegacyCluster`
 mode. `LegacyCluster` XRs support claims and don't use `spec.crossplane`.
+
+Read more about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
 ## Namespaced managed resources
@@ -166,6 +170,8 @@ New provider releases will support both namespaced and cluster scoped MRs.
 Crossplane v2 considers cluster scoped MRs a legacy feature. Crossplane will
 deprecate and remove cluster scoped MRs at a future date.
 <!-- vale gitlab.FutureTense = YES -->
+
+Read more about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
 ## Compose any resource
