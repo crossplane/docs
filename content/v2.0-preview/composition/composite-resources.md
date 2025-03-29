@@ -284,7 +284,7 @@ spec:
 ### Manage connection secrets 
 
 When a composite resource creates resources, Crossplane provides any
-[connection secrets]({{<ref "./managed-resources#writeconnectionsecrettoref">}})
+[connection secrets]({{<ref "../managed-resources/managed-resources#writeconnectionsecrettoref">}})
 to the composite resource.
 
 {{<hint "important" >}}
@@ -317,7 +317,7 @@ spec:
   # Removed for brevity
 ```
 
-For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "connection-details">}}).
+For more information on connection secrets read the [Connection Secrets knowledge base article]({{<ref "../managed-resources/connection-details">}}).
 
 ### Pausing composite resources
 
@@ -395,7 +395,7 @@ The conditions of composite resources match the conditions of their managed
 resources. 
 
 Read the 
-[conditions section]({{<ref "./managed-resources#conditions">}}) of the
+[conditions section]({{<ref "../managed-resources/managed-resources#conditions">}}) of the
 managed resources documentation for details.
 
 ## Composite resource labels

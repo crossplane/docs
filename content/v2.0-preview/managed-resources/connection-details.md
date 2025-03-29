@@ -1,6 +1,6 @@
 ---
 title: Connection Details
-weight: 110
+weight: 20
 description: "How to create and manage connection details across Crossplane managed resources, composite resources and Compositions"
 ---
 

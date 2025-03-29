@@ -30,7 +30,7 @@ Find more providers in Crossplane's [public package registries](https://www.cros
 Providers define every external resource they can create in Kubernetes as a
 Kubernetes API endpoint.  
 These endpoints are
-[_Managed Resources_]({{<ref "managed-resources" >}}).
+[_Managed Resources_]({{<ref "../managed-resources/managed-resources" >}}).
 <!-- vale write-good.Passive = YES -->
 
 

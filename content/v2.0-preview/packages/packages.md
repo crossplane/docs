@@ -7,22 +7,22 @@ weight: 200
 
 A _Configuration_ package is an 
 [OCI container image](https://opencontainers.org/) containing a collection of
-[Compositions]({{<ref "./compositions" >}}), 
-[Composite Resource Definitions]({{<ref "./composite-resource-definitions" >}})
+[Compositions]({{<ref "../composition/compositions" >}}), 
+[Composite Resource Definitions]({{<ref "../composition/composite-resource-definitions" >}})
 and any required [Providers]({{<ref "./providers">}}) or 
-[Functions]({{<ref "./compositions" >}}).
+[Functions]({{<ref "../composition/compositions" >}}).
 
 Configuration packages make your Crossplane configuration fully portable. 
 
 {{<hint "important" >}}
 Crossplane [Providers]({{<ref "./providers">}}) and 
-[Functions]({{<ref "./compositions">}}) are also Crossplane packages.  
+[Functions]({{<ref "../composition/compositions">}}) are also Crossplane packages.  
 
 This document describes how to install and manage configuration packages.  
 
 Refer to the 
 [Provider]({{<ref "./providers">}}) and 
-[Composition Functions]({{<ref "./compositions">}}) chapters for
+[Composition Functions]({{<ref "../composition/compositions">}}) chapters for
 details on their usage of packages. 
 {{< /hint >}}
 

@@ -198,7 +198,7 @@ the same composite resource.
 
 {{<hint "note" >}}
 Learn more about composite resources in the
-[Composite Resources]({{<ref "./composite-resources">}}) section.
+[Composite Resources]({{<ref "../composition/composite-resources">}}) section.
 {{</hint >}}
 
 Matching only a controller reference simplifies the matching process without
@@ -281,7 +281,7 @@ resources:
 
 {{<hint "note" >}}
 These examples use Function Patch and Transform. Learn more about functions and
-Compositions in the [Compositions]({{<ref "./compositions">}}) section.
+Compositions in the [Compositions]({{<ref "../composition/compositions">}}) section.
 {{</hint >}}
 
 
@@ -463,7 +463,7 @@ The following is a list of common policy combinations:
 <!-- vale on -->
 
 The `providerConfigRef` on a managed resource tells the Provider which
-[ProviderConfig]({{<ref "./providers#provider-configuration">}}) to
+[ProviderConfig]({{<ref "../packages/providers#provider-configuration">}}) to
 use when creating the managed resource.  
 
 Use a ProviderConfig to define the authentication method to use when 
@@ -572,7 +572,7 @@ secrets store like [HashiCorp Vault](https://www.vaultproject.io/).
 
 Using `publishConnectionDetailsTo` requires enabling Crossplane 
 External Secrets Stores (ESS). Enable ESS inside a Provider with a
-[DeploymentRuntimeConfig]({{<ref "providers#runtime-configuration" >}}) and
+[DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration" >}}) and
 in Crossplane with the `--enable-external-secret-stores` argument.
 
 {{< hint "note" >}}

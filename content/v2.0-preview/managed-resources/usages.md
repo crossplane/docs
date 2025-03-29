@@ -1,6 +1,6 @@
 ---
 title: Usages
-weight: 95
+weight: 30
 state: beta
 alphaVersion: "1.14"
 betaVersion: "1.19"

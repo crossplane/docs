@@ -483,7 +483,7 @@ Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{
 ### Manage connection secrets
 
 When a composite resource creates managed resources, Crossplane provides any
-[connection secrets]({{<ref "./managed-resources#writeconnectionsecrettoref">}})
+[connection secrets]({{<ref "../managed-resources/managed-resources#writeconnectionsecrettoref">}})
 to the composite resource. This requires the creators of composite resources to
 know the secrets provided by a managed resource. In other cases, Crossplane
 administrators may not want to expose some or all the generated connection
@@ -542,7 +542,7 @@ recreate the XRD to change the `connectionSecretKeys`.
 {{</hint >}}
 
 For more information on connection secrets read the 
-[Connection Secrets knowledge base article]({{<ref "connection-details">}}).
+[Connection Secrets knowledge base article]({{<ref "../managed-resources/connection-details">}}).
 
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources.

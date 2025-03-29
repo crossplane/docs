@@ -137,7 +137,7 @@ spec:
 
 {{< hint "tip" >}}
 Functions are Crossplane Packages. Read more about Packages in the
-[Packages documentation]({{<ref "packages" >}}).
+[Packages documentation]({{<ref "../packages/packages" >}}).
 {{< /hint >}}
 
 By default, the Function pod installs in the same namespace as Crossplane

@@ -38,8 +38,8 @@ Server Version: v1.17.0
 ## render
 
 The `crossplane render` command previews the output of a 
-[composite resource]({{<ref "../concepts/composite-resources">}}) after applying
-any [composition functions]({{<ref "../concepts/compositions">}}).
+[composite resource]({{<ref "../composition/composite-resources">}}) after applying
+any [composition functions]({{<ref "../composition/compositions">}}).
 
 {{< hint "important" >}}
 The `crossplane render` command requires you to use composition functions.
@@ -178,7 +178,7 @@ built-in support in [function-go-templating](https://github.com/crossplane-contr
 ## xpkg
 
 The `crossplane xpkg` commands create, install and update Crossplane
-[packages]({{<ref "../concepts/packages">}}) as well as enable authentication
+[packages]({{<ref "../packages/packages">}}) as well as enable authentication
 and publishing of Crossplane packages to a Crossplane package registry.
 
 ### xpkg build
@@ -193,9 +193,9 @@ The CLI applies the required annotations and values to meet the
 [Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md).
 
 The `crossplane` CLI supports building 
-[configuration]({{< ref "../concepts/packages" >}}),
-[function]({{<ref "../concepts/compositions">}}) and
-[provider]({{<ref "../concepts/providers" >}}) package types.
+[configuration]({{< ref "../packages/packages" >}}),
+[function]({{<ref "../composition/compositions">}}) and
+[provider]({{<ref "../packages/providers" >}}) package types.
 
 #### Flags
 
@@ -270,9 +270,9 @@ with the command
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
 The `<template>` value may be one of four well known templates:
-* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../concepts/packages">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
-* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../concepts/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
-* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../concepts/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
+* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../packages/packages">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
+* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
+* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
 * `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
 
@@ -352,7 +352,7 @@ returns an error if the `wait` time expires before the package is `HEALTHY`.
 #### Require manual package activation
 
 Set the package to require 
-[manual activation]({{<ref "../concepts/packages#revision-activation-policy" >}}), 
+[manual activation]({{<ref "../packages/packages#revision-activation-policy" >}}), 
 preventing an automatic upgrade of a package with `--manual-activation`
 
 #### Authenticate to a private registry
@@ -372,7 +372,7 @@ cache.
 Store more inactive copies of a package with `--revision-history-limit`. 
 
 Read more about 
-[package revisions]({{< ref "../concepts/packages#configuration-revisions" >}}) 
+[package revisions]({{< ref "../packages/packages#configuration-revisions" >}}) 
 in the package documentation. 
 
 ### xpkg login
@@ -515,9 +515,9 @@ migration to the new APIs and resources, the `crossplane beta convert` command
 converts a Crossplane resource to a new version or kind.
 
 Use the `crossplane beta convert` command to convert a
-ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "../concepts/providers#runtime-configuration">}}) 
+ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration">}}) 
 or a legacy Composition using `mode: Resources` to a 
-[Composition pipeline function]({{< ref "../concepts/compositions" >}}).
+[Composition pipeline function]({{< ref "../composition/compositions" >}}).
 
 Provide the `crossplane beta convert` command the conversion type, the input
 file and optionally, an output file. By default the command writes the output to
@@ -829,7 +829,7 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 ### beta validate
 
 The `crossplane beta validate` command validates 
-[compositions]({{<ref "../concepts/compositions">}}) against provider or XRD 
+[compositions]({{<ref "../composition/compositions">}}) against provider or XRD 
 schemas using the Kubernetes API server's validation library
 with extra validation such as checking for unknown fields,
 a common source of difficult to debug issues in Crossplane.

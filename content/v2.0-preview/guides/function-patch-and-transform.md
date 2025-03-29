@@ -70,11 +70,11 @@ support features like loops and conditionals.
 {{<expand "Confused about Compositions, XRDs and XRs?" >}}
 Crossplane has four core components that users commonly mix up:
 
-* [Composition]({{<ref "../concepts/compositions">}}) - A template to define
+* [Composition]({{<ref "../composition/compositions">}}) - A template to define
   how to create resources.
-* [composite resource Definition]({{<ref "../concepts/composite-resource-definitions">}})
+* [composite resource Definition]({{<ref "../composition/composite-resource-definitions">}})
   (`XRD`) - A custom API specification.
-* [composite resource]({{<ref "../concepts/composite-resources">}}) (`XR`) -
+* [composite resource]({{<ref "../composition/composite-resources">}}) (`XR`) -
   Created by using the custom API defined in a composite resource Definition.
   XRs use the Composition template to create new managed resources.
 {{</expand >}}
@@ -94,7 +94,7 @@ spec:
 ```
 
 {{<hint "tip" >}}
-Read the [Composition page]({{<ref "../concepts/compositions">}}) to learn more
+Read the [Composition page]({{<ref "../composition/compositions">}}) to learn more
 about Compositions and composition functions.
 {{< /hint >}}
 
@@ -117,7 +117,7 @@ identifies the resource inside the Composition. It isn't related to the external
 name used with the Provider.
 
 The contents of the `base` are identical to creating a standalone
-[managed resource]({{<ref "../concepts/managed-resources">}}).
+[managed resource]({{<ref "../managed-resources/managed-resources">}}).
 
 This example uses
 [provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws)
@@ -148,7 +148,7 @@ resources:
         region: "us-east-2"
 ```
 
-When a [composite resource]({{<ref "../concepts/composite-resources" >}}) uses
+When a [composite resource]({{<ref "../composition/composite-resources" >}}) uses
 this function, the composite resource creates two new managed resources with all
 the provided `spec.forProvider` settings.
 
@@ -393,7 +393,7 @@ can read and write from this data store as part of the patch process.
 <!-- vale off -->
 {{< hint "note" >}}
 <!-- vale on -->
-Read the [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page
+Read the [EnvironmentConfigs]({{<ref "../composition/environment-configs" >}}) page
 for more information on using EnvironmentConfigs.
 {{< /hint >}}
 
@@ -405,8 +405,8 @@ to use with
 <!-- vale gitlab.SentenceLength = NO -->
 <!-- ignore false positive -->
 Use either a
-[reference]({{<ref "../concepts/managed-resources#matching-by-name-reference" >}})
-or a [selector]({{<ref "../concepts/managed-resources#matching-by-selector" >}}) to
+[reference]({{<ref "../managed-resources/managed-resources#matching-by-name-reference" >}})
+or a [selector]({{<ref "../managed-resources/managed-resources#matching-by-selector" >}}) to
 identify the EnvironmentConfigs to use.
 <!-- vale Google.Quotes = YES -->
 
@@ -476,7 +476,7 @@ resources:
     toFieldPath: spec.forProvider.tags
 ```
 
-The [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page has
+The [EnvironmentConfigs]({{<ref "../composition/environment-configs" >}}) page has
 more information on EnvironmentConfigs options and usage.
 
 ## Types of patches
@@ -857,7 +857,7 @@ Status:
 EnvironmentConfigs are an alpha feature. They aren't enabled by default.
 
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `FromEnvironmentFieldPath` patch takes values from the in-memory environment
@@ -906,7 +906,7 @@ Spec:
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `ToEnvironmentFieldPath` patch takes a value from the composed resource and
@@ -948,7 +948,7 @@ wrote the value to the environment.
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `CombineFromEnvironment` patch combines multiple values from the in-memory
@@ -1016,7 +1016,7 @@ Annotations:  EnvironmentPatch: value1-value2
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `CombineToEnvironment` patch combines multiple values from the composed
@@ -1834,12 +1834,12 @@ By default an XRD writes all secret keys listed in the composed resources
 `connectionDetails` to the combined secret object.
 
 Read the
-[CompositeResourceDefinition documentation]({{<ref "../concepts/composite-resource-definitions#manage-connection-secrets">}})
+[CompositeResourceDefinition documentation]({{<ref "../composition/composite-resource-definitions#manage-connection-secrets">}})
 for more information on restricting secret keys.
 {{< /hint >}}
 
 For more information on connection secrets read the
-[Connection Secrets concepts age]({{<ref "../concepts/connection-details">}}).
+[Connection Secrets concepts age]({{<ref "../managed-resources/connection-details">}}).
 
 ## Resource readiness checks
 

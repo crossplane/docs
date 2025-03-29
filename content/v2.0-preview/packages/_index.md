@@ -1,5 +1,5 @@
 ---
-title: Concepts
-weight: 50
+title: Packages
+weight: 53
 description: Understand Crossplane's core components
 ---
