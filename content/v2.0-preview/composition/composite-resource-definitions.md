@@ -22,7 +22,7 @@ Crossplane has four core components that users commonly mix up:
 * Composite Resource Definition (`XRD`) - This page. A custom API specification. 
 * [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources. 
+  Composition template to create other resources. 
 {{</expand >}}
 
 Crossplane XRDs are like 

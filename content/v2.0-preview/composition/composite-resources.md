@@ -4,13 +4,13 @@ weight: 10
 description: "Composite resources, an XR or XRs, represent a collection of related cloud resources."
 ---
 
-A composite resource represents a set of managed resources as a single
+A composite resource represents a set of Kubernetes resources as a single
 Kubernetes object. Crossplane creates composite resources when users access a
 custom API, defined in the CompositeResourceDefinition. 
 
 {{<hint "tip" >}}
-Composite resources are a _composite_ of managed resources.  
-A _Composition_ defines how to _compose_ the managed resources together.
+Composite resources are a _composite_ of Kubernetes resources.  
+A _Composition_ defines how to _compose_ the resources together.
 {{< /hint >}}
 
 {{<expand "Confused about Compositions, XRDs and XRs?" >}}
@@ -21,7 +21,7 @@ Crossplane has four core components that users commonly mix up:
   (`XRD`) - A custom API specification. 
 * Composite Resource (`XR`) - This page. Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources. 
+  Composition template to create new resources. 
 {{</expand >}}
 
 ## Creating composite resources
@@ -269,7 +269,7 @@ Use
 {{<hover label="desccomposite" line="1">}}kubectl describe composite{{</hover>}}
 to view the linked 
 {{<hover label="desccomposite" line="16">}}Composition Ref{{</hover>}},
-and unique managed resources created in the
+and unique resources created in the
 {{<hover label="desccomposite" line="22">}}Resource Refs{{</hover>}}.
 
 
@@ -297,12 +297,8 @@ Spec:
 
 ### Composite resource conditions
 
-The conditions of composite resources match the conditions of their managed 
+The conditions of composite resources match the conditions of their composed
 resources. 
-
-Read the 
-[conditions section]({{<ref "../managed-resources/managed-resources#conditions">}}) of the
-managed resources documentation for details.
 
 ## Composite resource labels
 
@@ -310,12 +306,12 @@ Crossplane adds labels to composite resources to show their relationship to
 other Crossplane components.
 
 ### Composite label
+
 Crossplane adds the 
 {{<hover label="complabel" line="4">}} crossplane.io/composite{{</hover>}} label
-to all composite resources. The label matches the name of the composite.
-Crossplane applies the composite label to any managed resource created by a
-composite, creating a reference between the managed resource and owning
-composite resource. 
+to all composed resources. The label matches the name of the composite.
+Crossplane applies the composite label to anyresource created by a composite,
+creating a reference between the resource and owning composite resource. 
 
 ```shell {label="complabel",copy-lines="1"}
 kubectl describe mydatabase.example.org/my-database-x9rx9

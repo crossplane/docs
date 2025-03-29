@@ -8,11 +8,11 @@ aliases:
 description: "Compositions are a template for creating Crossplane resources"
 ---
 
-Compositions are a template for creating multiple managed resources as a single
-object.
+Compositions are a template for creating multiple Kubernetes resources as a
+single _composite_ resource.
 
-A Composition _composes_ individual managed resources together into a larger,
-reusable, solution.
+A Composition _composes_ individual resources together into a larger, reusable,
+solution.
 
 An example Composition may combine a virtual machine, storage resources and
 networking policies. A Composition template links all these individual
@@ -60,7 +60,7 @@ Crossplane has four core components that users commonly mix up:
   (`XRD`) - A custom API specification.
 * [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
   using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources.
+  Composition template to create new resources.
 {{</expand >}}
 
 ## Create a Composition
@@ -145,8 +145,8 @@ you create a composite resource. The Function also tells Crossplane what to do
 with these resources when you update or delete a composite resource.
 
 When Crossplane calls a Function it sends it the current state of the composite
-resource. It also sends it the current state of any managed resources the
-composite resource owns.
+resource. It also sends it the current state of any resources the composite
+resource owns.
 
 Crossplane knows what Function to call when a composite resource changes by
 looking at the Composition the composite resource uses.
@@ -239,11 +239,10 @@ spec:
 ```
 
 
-### Enable composite resources
+### Match composite resources
 
-A Composition is only a template defining how to create managed
-resources. A Composition limits which Composite Resources can use this
-template.
+A Composition is only a template defining how to create composed resources. A
+Composition limits which kind of composite resource (XR) can use this template.
 
 A Composition's {{<hover label="typeref" line="6">}}compositeTypeRef{{</hover>}}
 defines which Composite Resource type can use this Composition.
@@ -559,13 +558,8 @@ stable, so the Function returns the same exact request two times in a row.
 Crossplane errors if stability isn't reached after 5 iterations.
 
 {{<hint "tip">}}
-<!-- vale write-good.Weasel = NO -->
-<!-- Disable Weasel to say "usually", which is correct in this context. -->
 A _composed_ resource is a resource created by a composite resource. Composed
-resources are usually Crossplane managed resources (MRs), but they can be any
-kind of Crossplane resource. For example a composite resource could also create
-a ProviderConfig, or another kind of composite resource.
-<!-- vale write-good.Weasel = YES -->
+resources can be any kind of Kubernetes resource.
 {{</hint>}}
 
 ### Observed state
