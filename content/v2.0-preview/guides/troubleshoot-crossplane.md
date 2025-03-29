@@ -209,7 +209,7 @@ has some useful information.
 [Pausing Providers]: #pausing-providers
 [Deleting When a Resource Hangs]: #deleting-when-a-resource-hangs
 [Installing Crossplane Package]: #installing-crossplane-package
-[Crossplane package]: /master/concepts/packages/
+[Crossplane package]: {{<ref "../packages/packages/">}}
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
 [semver spec]: https://github.com/Masterminds/semver#basic-comparisons
 
