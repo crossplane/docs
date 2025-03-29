@@ -4,9 +4,9 @@ weight: 10
 description: "Composite resources, an XR or XRs, represent a collection of related cloud resources."
 ---
 
-A composite resource represents a set of Kubernetes resources as a single
-Kubernetes object. Crossplane creates composite resources when users access a
-custom API, defined in the CompositeResourceDefinition. 
+A composite resource, or XR, represents a set of Kubernetes resources as a
+single Kubernetes object. Crossplane creates composite resources when users
+access a custom API, defined in the CompositeResourceDefinition. 
 
 {{<hint "tip" >}}
 Composite resources are a _composite_ of Kubernetes resources.  
@@ -24,7 +24,7 @@ Crossplane has four core components that users commonly mix up:
   Composition template to create new resources. 
 {{</expand >}}
 
-## Creating composite resources
+## Create composite resources
 
 Creating composite resources requires a 
 [Composition]({{<ref "./compositions">}}) and a 
@@ -34,7 +34,29 @@ Creating composite resources requires a
 The Composition defines the set of resources to create. The XRD defines the
 custom API users call to request the set of resources.
 
-![Diagram of the relationship of Crossplane components](/media/composition-how-it-works.svg)
+```mermaid
+flowchart TD
+
+user(["User"])
+xr("Composite Resource (XR)")
+xrd("Composite Resource Definition (XRD)")
+comp("Composition")
+cda("Composed Resource A")
+cdb("Composed Resource B")
+cdc("Composed Resource C")
+
+xrd -.defines.-> xr
+comp configure-xr@-.configures.-> xr
+user --creates--> xr
+xr compose-a@--composes-->cda
+xr compose-b@--composes-->cdb
+xr compose-c@--composes-->cdc
+
+configure-xr@{animate: true}
+compose-a@{animate: true}
+compose-b@{animate: true}
+compose-c@{animate: true}
+```
 
 XRDs define the API used to create a composite resource. For example, 
 this {{<hover label="xrd1" line="2">}}CompositeResourceDefinition{{</hover>}}
@@ -297,7 +319,7 @@ Spec:
 
 ### Composite resource conditions
 
-A composite resource has two status conditions Synced and Ready.
+A composite resource has two status conditions: Synced and Ready.
 
 Crossplane sets the Synced status condition to True when it's able to
 successfully reconcile the composite resource. If Crossplane can't reconcile the
@@ -308,7 +330,7 @@ composition function pipeline reports that all of its composed resources are
 ready. If a composed resource isn't ready Crossplane will report it in the
 Ready condition.
 
-## Composed resource labels
+## Composite resource labels
 
 Crossplane adds labels to composed resources to show their relationship to
 other Crossplane components.

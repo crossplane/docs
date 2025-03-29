@@ -5,7 +5,7 @@ aliases:
   - composition
   - composition-functions
   - /knowledge-base/guides/composition-functions
-description: "Compositions are a template for creating Crossplane resources"
+description: "Compositions are a template for creating composite resources"
 ---
 
 Compositions are a template for creating multiple Kubernetes resources as a
