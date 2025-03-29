@@ -246,7 +246,7 @@ on what your OpenAPIv3 custom API can use.
 
 {{<hint "important" >}}
 
-Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
+Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "../guides/pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
 ##### Required fields
@@ -477,7 +477,7 @@ spec:
 
 {{<hint "important" >}}
 
-Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
+Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "../guides/pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
 ### Manage connection secrets

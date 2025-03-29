@@ -25,7 +25,7 @@ Usages are a beta feature. Beta features are enabled by default.
 <!-- vale write-good.Passive = YES -->
 
 Disable `Usage` support by 
-[changing the Crossplane pod setting]({{<ref "./pods#change-pod-settings">}})
+[changing the Crossplane pod setting]({{<ref "../guides/pods#change-pod-settings">}})
 and setting  
 {{<hover label="deployment" line="12">}}--enable-usages=false{{</hover>}}
 argument.

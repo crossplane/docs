@@ -597,7 +597,7 @@ Disable schema aware validation by setting the
 `--enable-composition-webhook-schema-validation=false` flag on the Crossplane
 pod.
 
-The [Crossplane Pods]({{<ref "./pods#edit-the-deployment">}}) page has
+The [Crossplane Pods]({{<ref "../guides/pods#edit-the-deployment">}}) page has
 more information on enabling Crossplane flags.
 {{< /hint >}}
 

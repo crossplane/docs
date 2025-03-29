@@ -52,7 +52,7 @@ Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib
 installing packages. 
 
 Specify the full domain name with the `package` or change the default Crossplane
-registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
+registry with the `--registry` flag on the [Crossplane pod]({{<ref "../guides/pods">}})
 {{< /hint >}}
 
 For example, to install the
