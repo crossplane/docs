@@ -272,62 +272,6 @@ spec:
   # Removed for brevity
 ```
 
-### Store connection details
-
-Some managed resources generate unique details like usernames, passwords, IP
-addresses, ports or other connection details.
-
-When resources inside a Composition create connection details Crossplane creates
-a Kubernetes secret object for each managed resource generating connection
-details.
-
-#### Composed resource secrets
-
-Inside the `spec` of each resource producing connection details, define the
-`writeConnectionSecretToRef`, with a `namespace` and `name` of the secret object
-for the resource.
-
-If a `writeConnectionSecretToRef` isn't defined, Crossplane doesn't write any
-keys to the secret.
-
-```yaml {label="writeConnRes"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-spec:
-  writeConnectionSecretsToNamespace: other-namespace
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-            # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1
-```
-
-Crossplane saves a secret with the `name` in the `namespace` provided.
-
-```shell {label="viewComposedSec"}
-kubectl get secrets -n docs
-NAME   TYPE                                DATA   AGE
-key1   connection.crossplane.io/v1alpha1   4      4m30s
-```
-
-{{<hint "tip" >}}
-Remember to create a unique name for each secret.
-{{< /hint >}}
-
 ## Test a composition
 
 You can preview the output of any composition using the Crossplane CLI. You
