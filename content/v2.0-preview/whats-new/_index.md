@@ -58,7 +58,7 @@ This page assumes you're familiar with Crossplane. New to Crossplane? Read
 
 Crossplane v2 makes composite resources (XRs) namespaced by default.
 
-A namespaced XR can any resource ([not just Crossplane resources](#compose-any-resource))
+A namespaced XR can compose any resource ([not just Crossplane resources](#compose-any-resource))
 in its namespace.
 
 A namespaced XR looks like this:
@@ -130,7 +130,7 @@ Read more about Crossplane v2's [backward compatibility](#backward-compatibility
 
 Crossplane v2 makes all managed resources (MRs) namespaced.
 
-This enables a namespaced XR to compose entirely of namespaced resources -
+This enables a namespaced XR to by composed entirely of namespaced resources -
 whether they're a Crossplane MR like an `RDSInstance`, a Kubernetes resource
 like a `Deployment`, or a third party custom resource like a
 [Cluster API](https://cluster-api.sigs.k8s.io) `Cluster`.
