@@ -694,7 +694,7 @@ my-app   True     True    app-yaml      56s
 The `COMPOSITION` column shows what composition the `App` is using.
 
 You can create multiple compositions for each kind of XR.
-[Read the XR page]({{<ref "../concepts/composite-resources">}}) to learn how to
+[Read the XR page]({{<ref "../composition/composite-resources">}}) to learn how to
 select which composition Crossplane uses.
 {{</hint>}}
 

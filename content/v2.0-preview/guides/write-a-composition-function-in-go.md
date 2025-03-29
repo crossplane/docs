@@ -8,7 +8,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts]({{<ref "../concepts/compositions" >}})
+[concepts]({{<ref "../composition/compositions" >}})
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -19,7 +19,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work]({{<ref "../concepts/compositions#how-composition-functions-work" >}})
+[how composition functions work]({{<ref "../composition/compositions#how-composition-functions-work" >}})
 before following this guide.
 {{< /hint >}}
 
@@ -139,7 +139,7 @@ should delete the `input` and `package/input` directories.
 
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
-[composition functions]({{<ref "../concepts/compositions/#function-input" >}})
+[composition functions]({{<ref "../composition/compositions/#function-input" >}})
 documentation explains how to pass an input to a composition function.
 
 The `package/input` directory contains an OpenAPI schema generated from the
@@ -775,7 +775,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions]({{< ref "../concepts/compositions#test-a-composition" >}}).
+[testing composition functions]({{< ref "../composition/compositions#test-a-composition" >}}).
 {{</hint>}}
 
 ## Build and push the function to a package registry
@@ -792,7 +792,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation]({{<ref "../concepts/compositions" >}})
+[composition functions documentation]({{<ref "../composition/compositions" >}})
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
@@ -843,7 +843,7 @@ crossplane xpkg build \
 
 {{<hint "tip">}}
 Crossplane packages are special OCI images. Read more about packages in the
-[packages documentation]({{< ref "../concepts/packages" >}}).
+[packages documentation]({{< ref "../packages/configurations" >}}).
 {{</hint>}}
 
 Push both package files to a registry. Pushing both files to one tag in the

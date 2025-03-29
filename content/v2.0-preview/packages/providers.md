@@ -30,7 +30,7 @@ Find more providers in Crossplane's [public package registries](https://www.cros
 Providers define every external resource they can create in Kubernetes as a
 Kubernetes API endpoint.  
 These endpoints are
-[_Managed Resources_]({{<ref "managed-resources" >}}).
+[_Managed Resources_]({{<ref "../managed-resources/managed-resources" >}}).
 <!-- vale write-good.Passive = YES -->
 
 
@@ -52,7 +52,7 @@ Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib
 installing packages. 
 
 Specify the full domain name with the `package` or change the default Crossplane
-registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
+registry with the `--registry` flag on the [Crossplane pod]({{<ref "../guides/pods">}})
 {{< /hint >}}
 
 For example, to install the
