@@ -12,8 +12,9 @@ Crossplane v2 makes three major changes:
 * **Managed resources are now namespaced**
 * **Composition supports any Kubernetes resource**
 
-Despite these major changes, Crossplane v2 is backward compatible with
-Crossplane v1.
+**Crossplane v2 is better suited to building control planes for applications,
+not just infrastructure.** It removes the need for awkward abstractions like
+claims and provider-kubernetes Objects.
 
 ```mermaid
 flowchart LR
@@ -37,10 +38,6 @@ compose-dply@{animate: true}
 compose-svc@{animate: true}
 compose-rds@{animate: true}
 ```
-
-**Crossplane v2 is better suited to building control planes for applications,
-not just infrastructure.** It removes the need for awkward abstractions like
-claims and provider-kubernetes Objects.
 
 {{<hint "tip">}}
 Most users can upgrade to Crossplane v2 without breaking changes.
