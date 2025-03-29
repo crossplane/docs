@@ -297,8 +297,16 @@ Spec:
 
 ### Composite resource conditions
 
-The conditions of composite resources match the conditions of their composed
-resources. 
+A composite resource has two status conditions Synced and Ready.
+
+Crossplane sets the Synced status condition to True when it's able to
+successfully reconcile the composite resource. If Crossplane can't reconcile the
+composite resource it'll report an error in the Synced condition.
+
+Crossplane sets the Ready status condition to True when the composite resource's
+composition function pipeline reports that all of its composed resources are
+ready. If a composed resource isn't ready Crossplane will report it in the
+Ready condition.
 
 ## Composite resource labels
 
