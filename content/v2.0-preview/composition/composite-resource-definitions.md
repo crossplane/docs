@@ -53,12 +53,12 @@ Creating a new API requires defining an API
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata: 
-  name: xmydatabases.example.org
+  name: mydatabases.example.org
 spec:
   group: example.org
   names:
     kind: XMyDatabase
-    plural: xmydatabases
+    plural: mydatabases
   versions:
   - name: v1alpha1
   # Removed for brevity
@@ -68,14 +68,14 @@ After applying an XRD, Crossplane creates a new Kubernetes custom resource
 definition matching the defined API.
 
 For example, the XRD 
-{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover >}} 
+{{<hover label="xrd1" line="4">}}mydatabases.example.org{{</hover >}} 
 creates a custom resource definition 
-{{<hover label="kubeapi" line="2">}}xmydatabases.example.org{{</hover >}}.  
+{{<hover label="kubeapi" line="2">}}mydatabases.example.org{{</hover >}}.  
 
 ```shell {label="kubeapi",copy-lines="3"}
 kubectl api-resources
 NAME                              SHORTNAMES   APIVERSION          NAMESPACED   KIND
-xmydatabases.example.org                       v1alpha1            true         xmydatabases
+mydatabases.example.org                        v1alpha1            true         mydatabases
 # Removed for brevity
 ```
 
@@ -118,9 +118,9 @@ The XRD
 {{<hover label="xrdName" line="6">}}group{{</hover>}}.
 
 For example, {{<hover label="xrdName"
-line="4">}}xmydatabases.example.org{{</hover>}} matches the {{<hover
+line="4">}}mydatabases.example.org{{</hover>}} matches the {{<hover
 label="xrdName" line="9">}}plural{{</hover>}} name
-{{<hover label="xrdName" line="9">}}xmydatabases{{</hover>}}, `.` 
+{{<hover label="xrdName" line="9">}}mydatabases{{</hover>}}, `.` 
 {{<hover label="xrdName" line="6">}}group{{</hover>}} name, 
 {{<hover label="xrdName" line="6">}}example.org{{</hover>}}.
 
@@ -128,12 +128,12 @@ label="xrdName" line="9">}}plural{{</hover>}} name
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata: 
-  name: xmydatabases.example.org
+  name: mydatabases.example.org
 spec:
   group: example.org
   names:
     kind: XMyDatabase
-    plural: xmydatabases
+    plural: mydatabases
     # Removed for brevity
 ```
 {{</hint >}}

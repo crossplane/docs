@@ -30,16 +30,16 @@ Creating composite resources requires a
 [Composition]({{<ref "./compositions">}}) and a 
 [CompositeResourceDefinition]({{<ref "./composite-resource-definitions">}}) 
 (`XRD`).  
-The Composition defines the set of resources to create.  
-The XRD defines the custom API users call to request the set of resources.
+
+The Composition defines the set of resources to create. The XRD defines the
+custom API users call to request the set of resources.
 
 ![Diagram of the relationship of Crossplane components](/media/composition-how-it-works.svg)
 
-XRDs define the API used to create a composite resource.  
-For example, 
+XRDs define the API used to create a composite resource. For example, 
 this {{<hover label="xrd1" line="2">}}CompositeResourceDefinition{{</hover>}}
 creates a custom API endpoint 
-{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover>}}.
+{{<hover label="xrd1" line="4">}}mydatabases.example.org{{</hover>}}.
 
 ```yaml {label="xrd1",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -55,7 +55,7 @@ spec:
 ```
 
 When a user calls the custom API, 
-{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover>}}, 
+{{<hover label="xrd1" line="4">}}mydatabases.example.org{{</hover>}}, 
 Crossplane chooses the Composition to use based on the Composition's 
 {{<hover label="typeref" line="6">}}compositeTypeRef{{</hover>}}
 
@@ -196,8 +196,8 @@ Find the Composition revision name from
 ```shell {label="getcomprev",copy-lines="1"}
 kubectl get compositionrevision
 NAME                         REVISION   XR-KIND        XR-APIVERSION            AGE
-my-composition-5c976ad       1          xmydatabases   example.org/v1alpha1     65m
-my-composition-b5aa1eb       2          xmydatabases   example.org/v1alpha1     64m
+my-composition-5c976ad       1          mydatabases    example.org/v1alpha1     65m
+my-composition-b5aa1eb       2          mydatabases    example.org/v1alpha1     64m
 ```
 {{< /hint >}}
 
@@ -316,6 +316,6 @@ creating a reference between the resource and owning composite resource.
 ```shell {label="complabel",copy-lines="1"}
 kubectl describe mydatabase.example.org/my-database-x9rx9
 Name:         my-database2-x9rx9
-Namespace:
+Namespace:    default
 Labels:       crossplane.io/composite=my-database-x9rx9
 ```
