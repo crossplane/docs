@@ -72,8 +72,10 @@
 
           {{- if eq .Page.Params.version "master" -}}
             {{ partialCached "master-version-alert" . }}
+          {{- else if strings.HasSuffix $pageVer "-preview" -}}
+            {{ partialCached "preview-version-alert" . .Section }}
           {{- else if ne $pageVer .Site.Params.latest -}}
-            {{ partialCached "not-latest-version-alert" . .Section }}
+            {{ partialCached "old-version-alert" . .Section }}
           {{ end }}
         {{ end }}
 

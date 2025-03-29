@@ -3,13 +3,6 @@ title: Install Crossplane
 weight: 100
 ---
 
-{{< hint "warning" >}}
-Crossplane v2 is a preview release.
-
-**Don't use this Crossplane v2 preview in production.**
-{{< /hint >}}
-
-
 Crossplane installs into an existing Kubernetes cluster, creating the
 Crossplane pod.
 
