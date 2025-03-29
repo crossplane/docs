@@ -308,12 +308,10 @@ composition function pipeline reports that all of its composed resources are
 ready. If a composed resource isn't ready Crossplane will report it in the
 Ready condition.
 
-## Composite resource labels
+## Composed resource labels
 
-Crossplane adds labels to composite resources to show their relationship to
+Crossplane adds labels to composed resources to show their relationship to
 other Crossplane components.
-
-### Composite label
 
 Crossplane adds the 
 {{<hover label="complabel" line="4">}} crossplane.io/composite{{</hover>}} label
