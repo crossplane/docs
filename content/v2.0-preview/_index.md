@@ -15,6 +15,9 @@ Crossplane organizes its documentation into the following sections:
 * [What's Crossplane?]({{<ref "whats-crossplane">}}) introduces Crossplane
   and explains why you should use it.
 
+* [What's New in v2?]({{<ref "whats-new">}}) highlights what's changed in
+  Crossplane v2.
+
 * [Get Started]({{<ref "get-started">}}) explains how to install Crossplane and
   create a control plane.
 
