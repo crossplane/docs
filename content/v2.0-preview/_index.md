@@ -23,10 +23,10 @@ Crossplane organizes its documentation into the following sections:
 
 * [Composition]({{<ref "composition">}}) covers the key concepts of composition.
 
-* [Managed Resources]({{<ref "composition">}}) covers the key concepts of
+* [Managed Resources]({{<ref "managed-resources">}}) covers the key concepts of
   managed resources.
 
-* [Packages]({{<ref "composition">}}) covers the key concepts of the Crossplane
+* [Packages]({{<ref "packages">}}) covers the key concepts of the Crossplane
   package manager.
 
 * [Guides]({{<ref "guides">}}) guide you through common use cases, like
