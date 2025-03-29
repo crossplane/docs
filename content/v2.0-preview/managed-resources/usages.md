@@ -4,11 +4,10 @@ weight: 30
 state: beta
 alphaVersion: "1.14"
 betaVersion: "1.19"
-description: "Usage defines a usage relationship for Managed Resources or Composites"
+description: "Usage indicates a resource is in use"
 ---
 
-A `Usage` is a Crossplane resource that defines a usage relationship for a 
-Managed Resource or a Composite Resource. Two main use cases for the Usages are
+A `Usage` indicates a resource is in use. Two main use cases for Usages are
 as follows:
 
 1. Protecting a resource from accidental deletion.
@@ -68,18 +67,6 @@ defines the using resource. Both fields are optional, but at least one of them
 must be provided.
 <!-- vale write-good.Passive = YES -->
 
-{{<hint "important" >}}
-<!-- vale write-good.Passive = NO -->
-Usage relationships can be defined between `Managed Resources` and `Composites`.
-<!-- vale write-good.TooWordy = NO -->
-However, a `Composite` as the using resource (`spec.by`) would be ineffective
-unless the `compositeDeletePolicy` `Foreground` is used because it wouldn't block
-deletion of its child resources before its own deletion with the default deletion
-policy `Background`.
-<!-- vale write-good.TooWordy = YES -->
-<!-- vale write-good.Passive = YES -->
-{{< /hint >}}
-
 ### Usage for deletion protection
 
 The following example prevents the deletion of the 
@@ -88,13 +75,14 @@ any deletion request with the
 {{<hover label="protect" line="11">}}reason{{</hover>}} defined.
 
 ```yaml {label="protect"}
-apiVersion: apiextensions.crossplane.io/v1beta1
+apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
+  namespace: default
   name: protect-production-database
 spec:
   of:
-    apiVersion: rds.aws.upbound.io/v1beta1
+    apiVersion: rds.m.aws.upbound.io/v1beta1
     kind: Instance
     resourceRef:
       name: my-database
@@ -109,18 +97,19 @@ any deletion request before the deletion of
 {{<hover label="order" line="15">}}my-prometheus-chart{{</hover>}} resource.
 
 ```yaml {label="order"}
-apiVersion: apiextensions.crossplane.io/v1beta1
+apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
+  namespace: default
   name: release-uses-cluster
 spec:
   of:
-    apiVersion: eks.upbound.io/v1beta1
+    apiVersion: eks.m.upbound.io/v1beta1
     kind: Cluster
     resourceRef:
       name: my-cluster
   by:
-    apiVersion: helm.crossplane.io/v1beta1
+    apiVersion: helm.m.crossplane.io/v1beta1
     kind: Release
     resourceRef:
       name: my-prometheus-chart
@@ -135,20 +124,21 @@ This enables using {{<hover label="selectors" line="12">}}labels{{</hover>}} or
 to define resource instead of providing the resource name.
 
 ```yaml {label="selectors"}
-apiVersion: apiextensions.crossplane.io/v1beta1
+apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
+  namespace: default
   name: release-uses-cluster
 spec:
   of:
-    apiVersion: eks.upbound.io/v1beta1
+    apiVersion: eks.m.upbound.io/v1beta1
     kind: Cluster
     resourceSelector:
       matchControllerRef: false # default, and could be omitted
       matchLabels:
         foo: bar
   by:
-    apiVersion: helm.crossplane.io/v1beta1
+    apiVersion: helm.m.crossplane.io/v1beta1
     kind: Release
     resourceSelector:
        matchLabels:
@@ -169,13 +159,14 @@ random resource is selected from the list of matched resources.
 {{< /hint >}}
 
 ```yaml {label="selectors-resolved"}
-apiVersion: apiextensions.crossplane.io/v1beta1
+apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
+  namespace: default
   name: release-uses-cluster
 spec:
   of:
-    apiVersion: eks.upbound.io/v1beta1
+    apiVersion: eks.m.upbound.io/v1beta1
     kind: Cluster
     resourceRef:
        name: my-cluster
@@ -183,7 +174,7 @@ spec:
       matchLabels:
         foo: bar
   by:
-    apiVersion: helm.crossplane.io/v1beta1
+    apiVersion: helm.m.crossplane.io/v1beta1
     kind: Release
     resourceRef:
        name: my-cluster
@@ -200,19 +191,20 @@ Replaying the blocked deletion is possible by setting the
 {{<hover label="replay" line="6">}}replayDeletion{{</hover>}} field to `true`.
 
 ```yaml {label="replay"}
-apiVersion: apiextensions.crossplane.io/v1beta1
+apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
+  namespace: default
   name: release-uses-cluster
 spec:
   replayDeletion: true
   of:
-    apiVersion: eks.upbound.io/v1beta1
+    apiVersion: eks.m.upbound.io/v1beta1
     kind: Cluster
     resourceRef:
       name: my-cluster
   by:
-    apiVersion: helm.crossplane.io/v1beta1
+    apiVersion: helm.m.crossplane.io/v1beta1
     kind: Release
     resourceRef:
       name: my-prometheus-chart
@@ -235,51 +227,6 @@ resources in a Composition. The Usages support
 in selectors to ensures that the matching resource is in the same composite
 resource in the same way as [cross-resource referencing]({{<ref "./managed-resources#referencing-other-resources" >}}).
 
-The following example shows a Composition that defines a deletion ordering
-between a `Cluster` and a `Release` resource. The `Usage` blocks deletion of
-the `Cluster` resource until the `Release` resource is successfully deleted.
-
-```yaml {label="composition"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-spec:
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-        - name: cluster
-          base:
-            apiVersion: container.gcp.upbound.io/v1beta1
-            kind: Cluster
-            # Removed for brevity
-        - name: release
-          base:
-            apiVersion: helm.crossplane.io/v1beta1
-            kind: Release
-            # Removed for brevity
-        - name: release-uses-cluster
-          base:
-            apiVersion: apiextensions.crossplane.io/v1beta1
-            kind: Usage
-            spec:
-              replayDeletion: true
-              of:
-                apiVersion: container.gcp.upbound.io/v1beta1
-                kind: Cluster
-                resourceSelector:
-                  matchControllerRef: true
-              by:
-                apiVersion: helm.crossplane.io/v1beta1
-                kind: Release
-                resourceSelector:
-                  matchControllerRef: true
-```
-
 {{<hint "tip" >}}
 
 <!-- vale write-good.Passive = NO -->
@@ -288,8 +235,55 @@ When there are multiple resources of same type in a Composition, the
 uniquely identify the resource in use or the using one. This could be
 accomplished by using extra labels and combining
 {{<hover label="composition" line="24">}}matchControllerRef{{</hover>}}
-with a `matchLabels` selector. Another alternative is patching `resourceRef.name`
-directly with the help of `ToCompositeFieldPath` and `FromCompositeFieldPath`
-or `ToEnvironmentFieldPath` and `FromEnvironmentFieldPath` type patches. 
+with a `matchLabels` selector. 
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
+
+## Usage across namespaces
+
+A `Usage` with `of` and `by` represents a usage relationship between two
+resources in the same namespace as the `Usage` by default.
+
+A `Usage` can represent a usage relationship between a `by` resource in the same
+namespace as the `Usage` and an `of` resource in a different namespace.
+
+To use a resource in a different namespace, specify the `namespace` in the `of`
+`resourceRef` or `resourceSelector`.
+
+```yaml {label="order"}
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  namespace: default
+  name: release-uses-cluster
+spec:
+  of:
+    apiVersion: eks.m.upbound.io/v1beta1
+    kind: Cluster
+    resourceRef:
+      namespace: cluster-infra
+      name: my-cluster
+  by:
+    apiVersion: helm.m.crossplane.io/v1beta1
+    kind: Release
+    resourceRef:
+      name: my-prometheus-chart
+```
+
+## ClusterUsages
+
+Use a `ClusterUsage` to protect cluster scoped resources.
+
+```yaml {label="protect"}
+apiVersion: protection.crossplane.io/v1beta1
+kind: ClusterUsage
+metadata:
+  name: protect-important-crd
+spec:
+  of:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    resourceRef:
+      name: importantresources.example.crossplane.io
+  reason: "Very important CRD - should never be deleted!"
+```
