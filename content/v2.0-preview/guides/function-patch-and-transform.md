@@ -51,7 +51,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -132,14 +132,14 @@ kind: Resources
 resources:
 - name: storage-bucket
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
         region: "us-east-2"
 - name: vm
   base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
+    apiVersion: ec2.aws.m.upbound.io/v1beta1
     kind: Instance
     spec:
       forProvider:
@@ -161,12 +161,8 @@ the resource's name in the external system (like AWS).
 {{< /hint >}}
 
 {{<hint "tip" >}}
-You can use Function Patch and Transform to template other kinds of Crossplane
-resources, like ProviderConfigs.
-
-You can also template other kinds of composite resource (XR).
-
-You can't template namespaced resources.
+You can use Function Patch and Transform to template any kind of Kubernetes
+resource.
 {{< /hint >}}
 
 ## Create a patch
@@ -192,7 +188,7 @@ kind: Resources
 resources:
 - name: storage-bucket
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -228,7 +224,7 @@ Here are some example selectors from a composite resource object.
 ```yaml {label="select",copy-lines="none"}
 $ kubectl get composite -o yaml
 apiVersion: example.org/v1alpha1
-kind: XExample
+kind: Example
 metadata:
   # Removed for brevity
   labels:
@@ -236,16 +232,17 @@ metadata:
 spec:
   desiredRegion: eu-north-1
   field1: field1-text
-  resourceRefs:
-  - apiVersion: s3.aws.upbound.io/v1beta1
-    kind: Bucket
-    name: my-example-978mh-r6z64
-  - apiVersion: s3.aws.upbound.io/v1beta1
-    kind: Bucket
-    name: my-example-978mh-cnlhj
-  - apiVersion: s3.aws.upbound.io/v1beta1
-    kind: Bucket
-    name: my-example-978mh-rv5nm
+  crossplane:
+    resourceRefs:
+    - apiVersion: s3.aws.m.upbound.io/v1beta1
+      kind: Bucket
+      name: my-example-978mh-r6z64
+    - apiVersion: s3.aws.m.upbound.io/v1beta1
+      kind: Bucket
+      name: my-example-978mh-cnlhj
+    - apiVersion: s3.aws.m.upbound.io/v1beta1
+      kind: Bucket
+      name: my-example-978mh-rv5nm
 ```
 
 ## Reuse a patch
@@ -336,7 +333,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     # Removed for brevity
   patches:
@@ -345,7 +342,7 @@ resources:
       toFieldPath: status.secondResource
 - name: bucket2
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     # Removed for brevity
   patches:
@@ -462,7 +459,7 @@ kind: Resources
 resources:
 - name: vpc
   base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
+    apiVersion: ec2.aws.m.upbound.io/v1beta1
     kind: VPC
     spec:
       forProvider:
@@ -515,7 +512,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.org/v1alpha1
-    kind: xExample
+    kind: Example
   environment:
     environmentConfigs:
     - ref:
@@ -531,14 +528,14 @@ spec:
       resources:
       - name: bucket1
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
               region: us-east-2
       - name: bucket2
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -551,7 +548,7 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xexamples.example.org
+  name: examples.example.org
 spec:
   group: example.org
   names:
@@ -647,7 +644,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -690,7 +687,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -756,7 +753,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -819,7 +816,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -842,7 +839,7 @@ View the composite resource to verify the applied patch.
 $ kubectl describe composite
 Name:         my-example-bjdjw
 API Version:  example.org/v1alpha1
-Kind:         xExample
+Kind:         Example
 # Removed for brevity
 Status:
   # Removed for brevity
@@ -852,13 +849,6 @@ Status:
 <!-- vale Google.Headings = NO -->
 ### FromEnvironmentFieldPath
 <!-- vale Google.Headings = YES -->
-
-{{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. They aren't enabled by default.
-
-For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
-{{< /hint >}}
 
 The `FromEnvironmentFieldPath` patch takes values from the in-memory environment
 and applies them to the composed resource.
@@ -877,7 +867,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -927,7 +917,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -982,7 +972,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -1051,7 +1041,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -1105,7 +1095,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -1755,7 +1745,6 @@ only appears in the combined composite resource secret.
 ```yaml {label="conDeet",copy-lines="none"}
 kind: Composition
 spec:
-  writeConnectionSecretsToNamespace: other-namespace
   mode: Pipeline
   pipeline:
   - step: patch-and-transform
