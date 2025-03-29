@@ -594,19 +594,19 @@ running the `top` command may produce an error, for example,
 ### beta trace
 
 Use the `crossplane beta trace` command to display a visual relationship of
-Crossplane objects. The `trace` command supports claims, compositions, 
+Crossplane objects. The `trace` command supports XRs, compositions, 
 functions, managed resources or packages. 
 
 The command requires a resource type and a resource name.  
 
 `crossplane beta trace <resource kind> <resource name>`
 
-For example to view a resource named `my-claim` of type `example.crossplane.io`:  
-`crossplane beta trace example.crossplane.io my-claim`
+For example to view a resource named `my-xr` of type `example.crossplane.io`:  
+`crossplane beta trace example.crossplane.io my-xr`
 
 The command also accepts Kubernetes CLI style `<kind>/<name>` input.  
 For example,  
-`crossplane beta trace example.crossplane.io/my-claim`
+`crossplane beta trace example.crossplane.io/my-xr`
 
 By default the `crossplane beta trace` command uses the Kubernetes 
 configuration defined in `~/.kube/config`.  
@@ -634,46 +634,6 @@ variable `KUBECONFIG`.
 By default `crossplane beta trace` prints directly to the terminal, limiting the
 "Ready" condition and "Status" messages to 64 characters.
 
-The following an example output a "cluster" claim from the AWS reference 
-platform, which includes multiple Compositions and composed resources: 
-
-```shell {copy-lines="1"}
-crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws
-NAME                                                                               VERSION   INSTALLED   HEALTHY   STATE    STATUS
-Configuration/platform-ref-aws                                                     v0.9.0    True        True      -        HealthyPackageRevision
-├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active   HealthyPackageRevision
-├─ Configuration/upbound-configuration-aws-network                                 v0.7.0    True        True      -        HealthyPackageRevision
-│  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1         v0.7.0    -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
-│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
-│  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
-│     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
-├─ Configuration/upbound-configuration-aws-database                                v0.5.0    True        True      -        HealthyPackageRevision
-│  ├─ ConfigurationRevision/upbound-configuration-aws-database-3112f0a765c5        v0.5.0    -           True      Active   HealthyPackageRevision
-│  └─ Provider/upbound-provider-aws-rds                                            v0.47.0   True        True      -        HealthyPackageRevision
-│     └─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v0.47.0   -           True      Active   HealthyPackageRevision
-├─ Configuration/upbound-configuration-aws-eks                                     v0.5.0    True        True      -        HealthyPackageRevision
-│  ├─ ConfigurationRevision/upbound-configuration-aws-eks-83c9d65f4a47             v0.5.0    -           True      Active   HealthyPackageRevision
-│  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
-│  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
-│  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
-│  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-eks                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  └─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  └─ Provider/upbound-provider-aws-iam                                            v0.47.0   True        True      -        HealthyPackageRevision
-│     └─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v0.47.0   -           True      Active   HealthyPackageRevision
-├─ Configuration/upbound-configuration-app                                         v0.2.0    True        True      -        HealthyPackageRevision
-│  └─ ConfigurationRevision/upbound-configuration-app-5d95726dba8c                 v0.2.0    -           True      Active   HealthyPackageRevision
-├─ Configuration/upbound-configuration-observability-oss                           v0.2.0    True        True      -        HealthyPackageRevision
-│  ├─ ConfigurationRevision/upbound-configuration-observability-oss-a51529457ad7   v0.2.0    -           True      Active   HealthyPackageRevision
-│  └─ Provider/grafana-provider-grafana                                            v0.8.0    True        True      -        HealthyPackageRevision
-│     └─ ProviderRevision/grafana-provider-grafana-ac529c8ce1c6                    v0.8.0    -           True      Active   HealthyPackageRevision
-└─ Configuration/upbound-configuration-gitops-flux                                 v0.2.0    True        True      -        HealthyPackageRevision
-   └─ ConfigurationRevision/upbound-configuration-gitops-flux-2e80ec62738d         v0.2.0    -           True      Active   HealthyPackageRevision
-```
-
 #### Wide outputs
 Print the entire "Ready" or "Status" message if they're longer than 
 64 characters with `--output=wide`. 
@@ -683,7 +643,7 @@ For example, the output truncates the "Status" message that's too long.
 ```shell {copy-lines="1"
 crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws
 NAME                                                              SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                True     False   Waiting: ...resource claim is waiting for composite resource to become Ready
+Cluster/platform-ref-aws (default)                                True     False   Unready resources: cluster
 ```
 
 Use `--output=wide` to see the full message.
@@ -691,7 +651,7 @@ Use `--output=wide` to see the full message.
 ```shell {copy-lines="1"
 crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws --output=wide
 NAME                                                              SYNCED   READY   STATUS
-Cluster/platform-ref-aws (default)                                True     False   Waiting: Composite resource claim is waiting for composite resource to become Ready
+Cluster/platform-ref-aws (default)                                True     False   Unready resources: cluster
 ```
 
 #### Graphviz dot file output
