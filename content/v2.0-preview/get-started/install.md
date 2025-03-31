@@ -52,7 +52,7 @@ Crossplane creates and installs into the `crossplane-system` namespace.
 helm install crossplane \
 --namespace crossplane-system \
 --create-namespace crossplane-preview/crossplane \
---devel
+--version v2.0.0-preview.1
 ```
 
 View the installed Crossplane pods with `kubectl get pods -n crossplane-system`.
