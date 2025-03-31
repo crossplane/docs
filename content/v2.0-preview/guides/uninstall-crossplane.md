@@ -23,7 +23,7 @@ Removing Crossplane resources should happen in the following order:
 2. Remove all remaining _managed resources_
 3. Remove all _providers_
 
-Deleting the Crossplane pod removes remaining Crossplane components like _claims_.
+Deleting the Crossplane pod removes remaining Crossplane components.
 
 {{<hint "tip" >}}
 Collect an inventory of all external resources with `kubectl get managed`. 

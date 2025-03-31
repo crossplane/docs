@@ -31,8 +31,6 @@ The core CRDs installed by the init container include:
 * CompositeResourceDefinitions, Compositions, Configurations and Providers
 * Locks to manage package dependencies
 * DeploymentRuntimeConfigs to apply settings to installed Providers and Functions
-* StoreConfigs for connecting external secret stores like 
-[HashiCorp Vault](https://www.vaultproject.io/)
 
 {{< hint "note" >}}
 

@@ -21,7 +21,13 @@ Crossplane organizes its documentation into the following sections:
 * [Get Started]({{<ref "get-started">}}) explains how to install Crossplane and
   create a control plane.
 
-* [Concepts]({{<ref "concepts">}}) introduces Crossplane's key concepts.
+* [Composition]({{<ref "composition">}}) covers the key concepts of composition.
+
+* [Managed Resources]({{<ref "managed-resources">}}) covers the key concepts of
+  managed resources.
+
+* [Packages]({{<ref "packages">}}) covers the key concepts of the Crossplane
+  package manager.
 
 * [Guides]({{<ref "guides">}}) guide you through common use cases, like
   monitoring Crossplane or extending it by writing a composition function.

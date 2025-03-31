@@ -1,10 +1,10 @@
 ---
-title: Environment Configurations
+title: Environment Configs
 weight: 75
 state: beta
 alphaVersion: "1.11"
 betaVersion: "1.18"
-description: "Environment Configurations or EnvironmentConfigs are an in-memory datastore used in Compositions"
+description: "Environment Configs or EnvironmentConfigs are an in-memory datastore used in Compositions"
 ---
 
 <!--
@@ -472,7 +472,7 @@ spec:
       resources:
         - name: vpc
           base:
-            apiVersion: ec2.aws.upbound.io/v1beta1
+            apiVersion: ec2.aws.m.upbound.io/v1beta1
             kind: VPC
             spec:
               forProvider:

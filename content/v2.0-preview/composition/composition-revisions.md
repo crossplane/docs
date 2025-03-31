@@ -10,8 +10,8 @@ familiarity with Crossplane, and particularly with
 
 A `Composition` configures how Crossplane should reconcile a Composite Resource
 (XR). Put otherwise, when you create an XR the selected `Composition` determines
-what managed resources Crossplane will create in response. Let's say for example
-that you define a `PlatformDB` XR, which represents your organisation's common
+what resources Crossplane will create in response. Let's say for example that
+you define a `PlatformDB` XR, which represents your organisation's common
 database configuration of an Azure MySQL Server and a few firewall rules. The
 `Composition` contains the 'base' configuration for the MySQL server and the
 firewall rules that are extended by the configuration for the `PlatformDB`.
@@ -42,9 +42,9 @@ some XRs to previous `Composition` settings without rolling back all XRs.
 When Composition Revisions are enabled three things happen:
 
 1. Crossplane creates a `CompositionRevision` for each `Composition` update.
-1. Composite Resources gain a `spec.compositionRevisionRef` field that specifies
+1. Composite Resources gain a `spec.crossplane.compositionRevisionRef` field that specifies
    which `CompositionRevision` they use.
-1. Composite Resources gain a `spec.compositionUpdatePolicy` field that
+1. Composite Resources gain a `spec.crossplane.compositionUpdatePolicy` field that
    specifies how they should be updated to new Composition Revisions.
 
 Each time you edit a `Composition` Crossplane will automatically create a
@@ -91,15 +91,13 @@ kind: PlatformDB
 metadata:
   name: example
 spec:
-  parameters:
-    storageGB: 20
-  # The Manual policy specifies that you don't want this XR to update to the
-  # latest CompositionRevision automatically.
-  compositionUpdatePolicy: Manual
-  compositionRef:
-    name: example
-  writeConnectionSecretToRef:
-    name: db-conn
+  storageGB: 20
+  crossplane:
+    # The Manual policy specifies that you don't want this XR to update to the
+    # latest CompositionRevision automatically.
+    compositionUpdatePolicy: Manual
+    compositionRef:
+      name: example
 ```
 
 Crossplane sets an XR's `compositionRevisionRef` automatically at creation time
@@ -113,16 +111,14 @@ kind: PlatformDB
 metadata:
   name: example
 spec:
-  parameters:
-    storageGB: 20
-  compositionUpdatePolicy: Manual
-  compositionRef:
-    name: example
-  # Update the referenced CompositionRevision if and when you are ready.
-  compositionRevisionRef:
-    name: example-18pdg
-  writeConnectionSecretToRef:
-    name: db-conn
+  storageGB: 20
+  crossplane:
+    compositionUpdatePolicy: Manual
+    compositionRef:
+      name: example
+    # Update the referenced CompositionRevision if and when you are ready.
+    compositionRevisionRef:
+      name: example-18pdg
 ```
 
 ## Complete example
@@ -133,21 +129,6 @@ resource and continues with creating multiple XRs to observe different upgrade p
 assign different CompositionRevisions to the created composite resources each time the composition is updated. 
 
 ### Preparation 
-##### Install Crossplane
-Install Crossplane v1.11.0 or later and wait until the Crossplane pods are running.
-```shell
-kubectl create namespace crossplane-system
-helm repo add crossplane-master https://charts.crossplane.io/master/
-helm repo update
-helm install crossplane --namespace crossplane-system crossplane-master/crossplane --devel --version 1.11.0-rc.0.108.g0521c32e
-kubectl get pods -n crossplane-system
-```
-Expected Output:
-```shell
-NAME                                       READY   STATUS    RESTARTS   AGE
-crossplane-7f75ddcc46-f4d2z                1/1     Running   0          9s
-crossplane-rbac-manager-78bd597746-sdv6w   1/1     Running   0          9s
-```
 
 #### Deploy Composition and XRD Examples
 Apply the example Composition.
@@ -160,7 +141,6 @@ metadata:
     channel: dev
   name: myvpcs.aws.example.upbound.io
 spec:
-  writeConnectionSecretsToNamespace: crossplane-system
   compositeTypeRef:
     apiVersion: aws.example.upbound.io/v1alpha1
     kind: MyVPC
@@ -175,7 +155,7 @@ spec:
       resources:
       - name: my-vpc
         base:
-          apiVersion: ec2.aws.upbound.io/v1beta1
+          apiVersion: ec2.aws.m.upbound.io/v1beta1
           kind: VPC
           spec:
             forProvider:
@@ -241,6 +221,7 @@ Create an XR without a `compositionUpdatePolicy` defined. The update policy is `
 apiVersion: aws.example.upbound.io/v1alpha1
 kind: MyVPC
 metadata:
+  namespace: default
   name: vpc-auto
 spec:
   id: vpc-auto
@@ -256,12 +237,14 @@ Create a Composite Resource with `compositionUpdatePolicy: Manual` and `composit
 apiVersion: aws.example.upbound.io/v1alpha1
 kind: MyVPC
 metadata:
+  namespace: default
   name: vpc-man
 spec:
   id: vpc-man
-  compositionUpdatePolicy: Manual
-  compositionRevisionRef:
-    name: myvpcs.aws.example.upbound.io-ad265bc
+  crossplane:
+    compositionUpdatePolicy: Manual
+    compositionRevisionRef:
+      name: myvpcs.aws.example.upbound.io-ad265bc
 ```
 
 Expected Output:
@@ -275,12 +258,14 @@ Create an XR with a `compositionRevisionSelector` of `channel: dev`:
 apiVersion: aws.example.upbound.io/v1alpha1
 kind:  MyVPC
 metadata:
+  namespace: default
   name: vpc-dev
 spec:
   id: vpc-dev
-  compositionRevisionSelector:
-    matchLabels:
-      channel: dev
+  crossplane:
+    compositionRevisionSelector:
+      matchLabels:
+        channel: dev
 ```
 Expected Output:
 ```shell
@@ -292,12 +277,14 @@ Create an XR with a `compositionRevisionSelector` of `channel: staging`:
 apiVersion: aws.example.upbound.io/v1alpha1
 kind: MyVPC
 metadata:
+  namespace: default
   name: vpc-staging
 spec:
   id: vpc-staging
-  compositionRevisionSelector:
-    matchLabels:
-      channel: staging
+  crossplane:
+    compositionRevisionSelector:
+      matchLabels:
+        channel: staging
 ```
 
 Expected Output:
@@ -308,7 +295,7 @@ myvpc.aws.example.upbound.io/vpc-staging created
 Verify the Composite Resource with the label `channel: staging` doesn't have a `REVISION`.  
 All other XRs have a `REVISION` matching the created Composition Revision.
 ```shell
-kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.compositionRevisionRef.name,POLICY:.spec.compositionUpdatePolicy,MATCHLABEL:.spec.compositionRevisionSelector.matchLabels"
+kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.crossplane.compositionRevisionRef.name,POLICY:.spec.crossplane.compositionUpdatePolicy,MATCHLABEL:.spec.crossplane.compositionRevisionSelector.matchLabels"
 ```
 Expected Output:
 ```shell
@@ -352,7 +339,7 @@ Verify that Crossplane assigns the Composite Resources `vpc-auto` and `vpc-stagi
 XRs `vpc-man` and `vpc-dev` are still assigned to the original `revision:1`:
 
 ```shell
-kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.compositionRevisionRef.name,POLICY:.spec.compositionUpdatePolicy,MATCHLABEL:.spec.compositionRevisionSelector.matchLabels"
+kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.crossplane.compositionRevisionRef.name,POLICY:.spec.crossplane.compositionUpdatePolicy,MATCHLABEL:.spec.crossplane.compositionRevisionSelector.matchLabels"
 ```
 Expected Output:
 ```shell
@@ -380,7 +367,6 @@ metadata:
     channel: dev
   name: myvpcs.aws.example.upbound.io
 spec:
-  writeConnectionSecretsToNamespace: crossplane-system
   compositeTypeRef:
     apiVersion: aws.example.upbound.io/v1alpha1
     kind: MyVPC
@@ -395,7 +381,7 @@ spec:
       resources:
       - name: my-vpc
         base:
-          apiVersion: ec2.aws.upbound.io/v1beta1
+          apiVersion: ec2.aws.m.upbound.io/v1beta1
           kind: VPC
           spec:
             forProvider:
@@ -431,7 +417,7 @@ Verify Crossplane assigns the Composite Resources `vpc-auto` and `vpc-dev` to Co
 `vpc-staging` is assigned to `revision:2`, and `vpc-man` is still assigned to the original `revision:1`:
 
 ```shell
-kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.compositionRevisionRef.name,POLICY:.spec.compositionUpdatePolicy,MATCHLABEL:.spec.compositionRevisionSelector.matchLabels"
+kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.crossplane.compositionRevisionRef.name,POLICY:.spec.crossplane.compositionUpdatePolicy,MATCHLABEL:.spec.crossplane.compositionRevisionSelector.matchLabels"
 ```
 Expected Output:
 ```shell
@@ -449,7 +435,7 @@ vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[c
 {{< /hint >}}
 
 
-[composition type]: {{<ref "../../master/concepts/compositions" >}}
-[Compositions]: {{<ref "../../master/concepts/compositions" >}}
+[composition type]: {{<ref "compositions">}}
+[Compositions]: {{<ref "compositions">}}
 [canary]: https://martinfowler.com/bliki/CanaryRelease.html
-[install guide]: {{<ref "../../master/get-started/install" >}}
+[install guide]: {{<ref "../get-started/install">}}

@@ -5,14 +5,14 @@ aliases:
   - composition
   - composition-functions
   - /knowledge-base/guides/composition-functions
-description: "Compositions are a template for creating Crossplane resources"
+description: "Compositions are a template for creating composite resources"
 ---
 
-Compositions are a template for creating multiple managed resources as a single
-object.
+Compositions are a template for creating multiple Kubernetes resources as a
+single _composite_ resource.
 
-A Composition _composes_ individual managed resources together into a larger,
-reusable, solution.
+A Composition _composes_ individual resources together into a larger, reusable,
+solution.
 
 An example Composition may combine a virtual machine, storage resources and
 networking policies. A Composition template links all these individual
@@ -44,7 +44,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -52,15 +52,14 @@ spec:
 ```
 
 
-{{<expand "Confused about Compositions, XRDs and XRs?" >}}
-Crossplane has four core components that users commonly mix up:
+{{<expand "What are XRs, XRDs and Compositions?" >}}
+A [composite resource]({{<ref "./composite-resources">}}) or XR is a custom API.
 
-* Compositions - This page. A template to define how to create resources.
-* [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
-  (`XRD`) - A custom API specification.
-* [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
-  using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources.
+You use two Crossplane types to create a new custom API:
+
+* A [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
+  (XRD) - Defines the XR's schema. 
+* A Composition - This page. Configures how the XR creates other resources.
 {{</expand >}}
 
 ## Create a Composition
@@ -68,7 +67,7 @@ Crossplane has four core components that users commonly mix up:
 Creating a Composition consists of:
 * [Using composition functions](#use-a-function-in-a-composition) to define the
   resources to create.
-* [Enabling composite resources](#enable-composite-resources) to use the
+* [Enabling composite resources](#match-composite-resources) to use the
   Composition template.
 
 A Composition is a pipeline of composition functions.
@@ -79,39 +78,17 @@ to determine what resources it should create when you create a composite
 resource (XR).
 
 {{<hint "tip" >}}
-The Crossplane community has built lots of functions that let you template
-Crossplane resources using
-[CUE](https://github.com/crossplane-contrib/function-cue),
-[KCL](https://github.com/crossplane-contrib/function-kcl),
+Crossplane has functions that let you template composed resources using YAML
+[patch and transforms]({{<ref "../guides/function-patch-and-transform">}}).
 Helm-like
-[Go templates](https://github.com/crossplane-contrib/function-go-templating) or
-legacy Crossplane
-[Patch and Transforms]({{<ref "../guides/function-patch-and-transform">}}).
+[YAML templates](https://github.com/crossplane-contrib/function-go-templating),
+[CUE](https://github.com/crossplane-contrib/function-cue),
+[KCL](https://github.com/crossplane-contrib/function-kcl), or
+[Python](https://github.com/crossplane-contrib/function-python).
 
 You can also [write your own function](#write-a-composition-function) using Go
 or Python.
 {{< /hint >}}
-
-{{<hint "important" >}}
-Crossplane has two modes of composition:
-
-* `mode: Pipeline`
-* `mode: Resources`
-
-Use the `Pipeline` mode to use composition functions.
-
-<!-- vale write-good.Passive = NO -->
-The `Resources` mode is deprecated, and you shouldn't use it. Crossplane
-supports Compositions that use the `Resources` mode for backward compatibility,
-but the feature is no longer maintained. Crossplane doesn't accept new
-`Resources` features, and only accepts security bug fixes.
-<!-- vale write-good.Passive = YES -->
-
-See the [CLI documentation]({{<ref "../cli/command-reference#beta-convert">}})
-to learn how to use the `crossplane beta convert` command to convert a legacy
-`Resources` Composition to the `Pipeline` mode.
-{{< /hint >}}
-
 
 ### Install a composition function
 
@@ -137,7 +114,7 @@ spec:
 
 {{< hint "tip" >}}
 Functions are Crossplane Packages. Read more about Packages in the
-[Packages documentation]({{<ref "packages" >}}).
+[Packages documentation]({{<ref "../packages/functions" >}}).
 {{< /hint >}}
 
 By default, the Function pod installs in the same namespace as Crossplane
@@ -166,8 +143,8 @@ you create a composite resource. The Function also tells Crossplane what to do
 with these resources when you update or delete a composite resource.
 
 When Crossplane calls a Function it sends it the current state of the composite
-resource. It also sends it the current state of any managed resources the
-composite resource owns.
+resource. It also sends it the current state of any resources the composite
+resource owns.
 
 Crossplane knows what Function to call when a composite resource changes by
 looking at the Composition the composite resource uses.
@@ -183,14 +160,6 @@ Define a {{<hover label="single" line="7">}}pipeline{{</hover>}} of
 Each {{<hover label="single" line="8">}}step{{</hover>}} uses a
 {{<hover label="single" line="9">}}functionRef{{</hover>}} to reference the
 {{<hover label="single" line="10">}}name{{</hover>}} of the Function to call.
-
-{{<hint "important" >}}
-Compositions using {{<hover label="single" line="6">}}mode: Pipeline{{</hover>}}
-can't specify resource templates with a `resources` field.
-
-Use function "Patch and Transform" to create resource templates.
-{{< /hint >}}
-
 
 Some Functions also allow you to specify an
 {{<hover label="single" line="11">}}input{{</hover>}}.
@@ -221,7 +190,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -259,7 +228,7 @@ spec:
       export:
         target: Resources
         value: |
-          apiVersion: "s3.aws.upbound.io/v1beta1"
+          apiVersion: "s3.aws.m.upbound.io/v1beta1"
           kind: "Bucket"
           spec: forProvider: region: "us-east-2"
   - step: automatically-detect-readiness
@@ -268,11 +237,10 @@ spec:
 ```
 
 
-### Enable composite resources
+### Match composite resources
 
-A Composition is only a template defining how to create managed
-resources. A Composition limits which Composite Resources can use this
-template.
+A Composition is only a template defining how to create composed resources. A
+Composition limits which kind of composite resource (XR) can use this template.
 
 A Composition's {{<hover label="typeref" line="6">}}compositeTypeRef{{</hover>}}
 defines which Composite Resource type can use this Composition.
@@ -301,72 +269,11 @@ spec:
   # Removed for brevity
 ```
 
-### Store connection details
-
-Some managed resources generate unique details like usernames, passwords, IP
-addresses, ports or other connection details.
-
-When resources inside a Composition create connection details Crossplane creates
-a Kubernetes secret object for each managed resource generating connection
-details.
-
-#### Composed resource secrets
-
-Inside the `spec` of each resource producing connection details, define the
-`writeConnectionSecretToRef`, with a `namespace` and `name` of the secret object
-for the resource.
-
-If a `writeConnectionSecretToRef` isn't defined, Crossplane doesn't write any
-keys to the secret.
-
-```yaml {label="writeConnRes"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-spec:
-  writeConnectionSecretsToNamespace: other-namespace
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: key
-        base:
-          apiVersion: iam.aws.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-            # Removed for brevity
-            writeConnectionSecretToRef:
-              namespace: docs
-              name: key1
-```
-
-Crossplane saves a secret with the `name` in the `namespace` provided.
-
-```shell {label="viewComposedSec"}
-kubectl get secrets -n docs
-NAME   TYPE                                DATA   AGE
-key1   connection.crossplane.io/v1alpha1   4      4m30s
-```
-
-{{<hint "tip" >}}
-Remember to create a unique name for each secret.
-{{< /hint >}}
-
 ## Test a composition
 
 You can preview the output of any composition using the Crossplane CLI. You
 don't need a Crossplane control plane to do this. The Crossplane CLI uses Docker
 Engine to run functions.
-
-{{<hint "important">}}
-The `crossplane render` command only supports composition functions. It doesn't
-support `mode: Resources` Compositions.
-{{< /hint >}}
 
 {{<hint "tip">}}
 See the [Crossplane CLI docs]({{<ref "../cli">}}) to
@@ -391,11 +298,11 @@ created.
 ```yaml
 ---
 apiVersion: example.crossplane.io/v1
-kind: XBucket
+kind: Bucket
 metadata:
   name: example-render
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -407,7 +314,7 @@ metadata:
   - apiVersion: example.crossplane.io/v1
     blockOwnerDeletion: true
     controller: true
-    kind: XBucket
+    kind: Bucket
     name: example-render
     uid: ""
 spec:
@@ -424,7 +331,7 @@ The `xr.yaml` file contains the composite resource to render:
 
 ```yaml
 apiVersion: example.crossplane.io/v1
-kind: XBucket
+kind: Bucket
 metadata:
   name: example-render
 spec:
@@ -442,7 +349,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.crossplane.io/v1
-    kind: XBucket
+    kind: Bucket
   mode: Pipeline
   pipeline:
   - step: patch-and-transform
@@ -454,7 +361,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
         patches:
         - type: FromCompositeFieldPath
@@ -557,106 +464,6 @@ composite`.
 Composition.
 {{< /hint >}}
 
-## Composition validation
-
-When creating a Composition, Crossplane automatically validates its integrity,
-checking that the Composition is well formed, for example:
-
-If using `mode: Resources`:
-
-* The `resources` field isn't empty.
-* All resources either use a `name` or don't. Compositions can't use both named
-  and unnamed resources.
-* No duplicate resource names.
-* Patch sets must have names.
-* Patches that require a `fromFieldPath` value provide it.
-* Patches that require a `toFieldPath` value provide it.
-* Patches that require a `combine` field provide it.
-* Readiness checks using `matchString` aren't empty.
-* Readiness checks using `matchInteger` isn't `0`.
-* Readiness checks requiring a `fieldPath` value provide it.
-
-If using `mode: Pipeline` (Composition Functions):
-
-* The `pipeline` field isn't empty.
-* No duplicate step names.
-
-### Composition schema aware validation
-
-Crossplane also performs schema aware
-validation of Compositions. Schema validation checks that `patches`,
-`readinessChecks` and `connectionDetails` are valid according to the resource
-schemas. For example, checking that the source and destination fields of a patch
-are valid according to the source and destination resource schema.
-
-{{<hint "note" >}}
-Composition schema aware validation is a beta feature. Crossplane enables
-beta features by default.
-
-Disable schema aware validation by setting the
-`--enable-composition-webhook-schema-validation=false` flag on the Crossplane
-pod.
-
-The [Crossplane Pods]({{<ref "./pods#edit-the-deployment">}}) page has
-more information on enabling Crossplane flags.
-{{< /hint >}}
-
-#### Schema aware validation modes
-
-Crossplane always rejects Compositions in case of integrity errors.
-
-Set the schema aware validation mode to configure how Crossplane handles both
-missing resource schemas and schema aware validation errors.
-
-{{<hint "note" >}}
-If a resource schema is missing, Crossplane skips schema aware validation
-but still returns an error for integrity errors and a warning or an error
-for the missing schemas.
-{{< /hint >}}
-
-The following modes are available:
-
-{{< table "table table-sm table-striped" >}}
-| Mode     | Missing Schema | Schema Aware Error | Integrity Error |
-| -------- | -------------- |--------------------|-----------------|
-| `warn`   | Warning        | Warning            | Error           |
-| `loose`  | Warning        | Error              | Error           |
-| `strict` | Error          | Error              | Error           |
-{{< /table >}}
-
-Change the validation mode for a Composition with the
-{{<hover label="mode" line="5">}}crossplane.io/composition-schema-aware-validation-mode{{</hover>}}
-annotation.
-
-If not specified, the default mode is `warn`.
-
-For example, to enable `loose` mode checking set the annotation value to
-{{<hover label="mode" line="5">}}loose{{</hover>}}.
-
-```yaml {copy-lines="none",label="mode"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  annotations:
-    crossplane.io/composition-schema-aware-validation-mode: loose
-  # Removed for brevity
-spec:
-  # Removed for brevity
-```
-
-{{<hint "important" >}}
-Validation modes also apply to Compositions defined by Configuration packages.
-
-Depending on the mode configured in the Composition, schema aware validation
-issues may result in warnings or the rejection of the Composition.
-
-View the Crossplane logs for validation warnings.
-
-Crossplane sets a Configuration as unhealthy if there are validation errors.
-View the Configuration details with `kubectl describe configuration` to see the
-specific errors.
-{{< /hint >}}
-
 ## Write a composition function
 
 Composition functions let you replace complicated Compositions with code written
@@ -749,13 +556,8 @@ stable, so the Function returns the same exact request two times in a row.
 Crossplane errors if stability isn't reached after 5 iterations.
 
 {{<hint "tip">}}
-<!-- vale write-good.Weasel = NO -->
-<!-- Disable Weasel to say "usually", which is correct in this context. -->
 A _composed_ resource is a resource created by a composite resource. Composed
-resources are usually Crossplane managed resources (MRs), but they can be any
-kind of Crossplane resource. For example a composite resource could also create
-a ProviderConfig, or another kind of composite resource.
-<!-- vale write-good.Weasel = YES -->
+resources can be any kind of Kubernetes resource.
 {{</hint>}}
 
 ### Observed state
@@ -765,7 +567,7 @@ sends it to the composition function as part of the observed state.
 
 ```yaml
 apiVersion: example.crossplane.io/v1
-kind: XBucket
+kind: Bucket
 metadata:
   name: example-render
 spec:
@@ -845,7 +647,7 @@ For example, if all a function wants is to make sure an S3 bucket in region
 resources.
 
 ```yaml
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 spec:
   forProvider:
@@ -877,7 +679,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.crossplane.io/v1
-    kind: XBucket
+    kind: Bucket
   mode: Pipeline
   pipeline:
   - step: patch-and-transform
@@ -889,7 +691,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
         patches:
         - type: FromCompositeFieldPath
@@ -909,8 +711,3 @@ that isn't desired state. Functions can use context for this. Any function can
 write to the pipeline context. Crossplane passes the context to all following
 functions. When Crossplane has called all functions it discards the pipeline
 context.
-
-Crossplane can write context too. If you enable the alpha
-[composition environment]({{<ref "environment-configs">}}) feature Crossplane
-writes the environment to the top-level context field
-`apiextensions.crossplane.io/environment`.

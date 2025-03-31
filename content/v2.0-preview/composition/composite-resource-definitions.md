@@ -1,29 +1,28 @@
 ---
 title: Composite Resource Definitions
-weight: 40
+weight: 20
 description: "Composite Resource Definitions or XRDs define custom API schemas"
 ---
 
 Composite resource definitions (`XRDs`) define the schema for a custom API.  
 Users create composite resources (`XRs`) using the API schema defined by an
-`XRD`.
+XRD.
 
 
-{{< hint "note" >}}
-
+{{<hint "note">}}
 Read the [composite resources]({{<ref "./composite-resources">}}) page for more
 information about composite resources.
-{{</hint >}}
+{{</hint>}}
 
 
-{{<expand "Confused about Compositions, XRDs, and XRs?" >}}
-Crossplane has four core components that users commonly mix up:
+{{<expand "What are XRs, XRDs and Compositions?" >}}
+A [composite resource]({{<ref "./composite-resources">}}) or XR is a custom API.
 
-* [Compositions]({{<ref "./compositions" >}}) - A template to define how to create resources.
-* Composite Resource Definition (`XRD`) - This page. A custom API specification. 
-* [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
-  using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources. 
+You use two Crossplane types to create a new custom API:
+
+* A Composite Resource Definition (XRD) - This page. Defines the XR's schema. 
+* A [Composition]({{<ref "./compositions" >}}) - Configures how the XR creates
+  other resources.
 {{</expand >}}
 
 Crossplane XRDs are like 
@@ -39,7 +38,6 @@ Creating a CompositeResourceDefinition consists of:
 * [Defining a custom API schema and version](#xrd-versions).
   
 Optionally, CompositeResourceDefinitions also support:
-* [Defining connection secrets](#manage-connection-secrets).
 * [Setting composite resource defaults](#set-composite-resource-defaults).
  
 Composite resource definitions (`XRDs`) create new API endpoints inside a
@@ -54,12 +52,12 @@ Creating a new API requires defining an API
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata: 
-  name: xmydatabases.example.org
+  name: mydatabases.example.org
 spec:
   group: example.org
   names:
     kind: XMyDatabase
-    plural: xmydatabases
+    plural: mydatabases
   versions:
   - name: v1alpha1
   # Removed for brevity
@@ -69,14 +67,14 @@ After applying an XRD, Crossplane creates a new Kubernetes custom resource
 definition matching the defined API.
 
 For example, the XRD 
-{{<hover label="xrd1" line="4">}}xmydatabases.example.org{{</hover >}} 
+{{<hover label="xrd1" line="4">}}mydatabases.example.org{{</hover >}} 
 creates a custom resource definition 
-{{<hover label="kubeapi" line="2">}}xmydatabases.example.org{{</hover >}}.  
+{{<hover label="kubeapi" line="2">}}mydatabases.example.org{{</hover >}}.  
 
 ```shell {label="kubeapi",copy-lines="3"}
 kubectl api-resources
 NAME                              SHORTNAMES   APIVERSION          NAMESPACED   KIND
-xmydatabases.example.org                       v1alpha1            true         xmydatabases
+mydatabases.example.org                        v1alpha1            true         mydatabases
 # Removed for brevity
 ```
 
@@ -119,9 +117,9 @@ The XRD
 {{<hover label="xrdName" line="6">}}group{{</hover>}}.
 
 For example, {{<hover label="xrdName"
-line="4">}}xmydatabases.example.org{{</hover>}} matches the {{<hover
+line="4">}}mydatabases.example.org{{</hover>}} matches the {{<hover
 label="xrdName" line="9">}}plural{{</hover>}} name
-{{<hover label="xrdName" line="9">}}xmydatabases{{</hover>}}, `.` 
+{{<hover label="xrdName" line="9">}}mydatabases{{</hover>}}, `.` 
 {{<hover label="xrdName" line="6">}}group{{</hover>}} name, 
 {{<hover label="xrdName" line="6">}}example.org{{</hover>}}.
 
@@ -129,12 +127,12 @@ label="xrdName" line="9">}}plural{{</hover>}} name
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata: 
-  name: xmydatabases.example.org
+  name: mydatabases.example.org
 spec:
   group: example.org
   names:
     kind: XMyDatabase
-    plural: xmydatabases
+    plural: mydatabases
     # Removed for brevity
 ```
 {{</hint >}}
@@ -246,7 +244,7 @@ on what your OpenAPIv3 custom API can use.
 
 {{<hint "important" >}}
 
-Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
+Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "../guides/pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
 ##### Required fields
@@ -398,7 +396,7 @@ field indicates which version of the schema Compositions use. Only one
 version can be `referenceable`. 
 
 {{< hint "note" >}}
-Changing which version is `referenceable:true` requires [updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#enable-composite-resources" >}}) 
+Changing which version is `referenceable:true` requires [updating the `compositeTypeRef.apiVersion`]({{<ref "./compositions#match-composite-resources" >}}) 
 of any Compositions referencing that XRD.
 {{< /hint >}}
 
@@ -477,72 +475,8 @@ spec:
 
 {{<hint "important" >}}
 
-Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "./pods#crossplane-pod">}}) to take effect.
+Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "../guides/pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
-
-### Manage connection secrets
-
-When a composite resource creates managed resources, Crossplane provides any
-[connection secrets]({{<ref "./managed-resources#writeconnectionsecrettoref">}})
-to the composite resource. This requires the creators of composite resources to
-know the secrets provided by a managed resource. In other cases, Crossplane
-administrators may not want to expose some or all the generated connection
-secrets.
-
-XRDs can define a list of 
-{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}}
-to limit what's provided to a composite resource.
-
-Crossplane only provides the keys listed in the 
-{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}} 
-to the composite resource using this XRD. Any other connection secrets aren't
-passed to the composite resource. 
-
-{{<hint "important" >}}
-The keys listed in the
-{{<hover label="key" line="10">}}connectionSecretKeys{{</hover>}} must match the 
-key names listed in the Composition's `connectionDetails`.  
-
-An XRD ignores any keys listed that aren't created by a managed resource.
-
-For more information read the 
-[Composition documentation]({{<ref "./compositions#store-connection-details">}}).
-{{< /hint >}}
-
-
-For example, an XRD passes the keys 
-{{<hover label="key" line="11">}}username{{</hover>}}, 
-{{<hover label="key" line="12">}}password{{</hover>}} and 
-{{<hover label="key" line="13">}}address{{</hover>}}.
-
-Composite resources save these in the secret defined by their
-`writeConnectionSecretToRef` field. 
-
-```yaml {label="key",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xdatabases.custom-api.example.org
-spec:
-  group: custom-api.example.org
-  names:
-    kind: xDatabase
-    plural: xdatabases
-  connectionSecretKeys:
-    - username
-    - password
-    - address
-  versions:
-  # Removed for brevity
-```
-
-{{<hint "warning">}}
-You can't change the `connectionSecretKeys` of an XRD. You must delete and
-recreate the XRD to change the `connectionSecretKeys`.
-{{</hint >}}
-
-For more information on connection secrets read the 
-[Connection Secrets knowledge base article]({{<ref "connection-details">}}).
 
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources.
