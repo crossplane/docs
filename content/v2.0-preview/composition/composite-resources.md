@@ -13,15 +13,15 @@ Composite resources are a _composite_ of Kubernetes resources.
 A _Composition_ defines how to _compose_ the resources together.
 {{< /hint >}}
 
-{{<expand "Confused about Compositions, XRDs and XRs?" >}}
-Crossplane has four core components that users commonly mix up:
+{{<expand "What are XRs, XRDs and Compositions?" >}}
+A composite resource or XR (this page) is a custom API.
 
-* [Compositions]({{<ref "./compositions">}}) - A template to define how to create resources.
-* [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
-  (`XRD`) - A custom API specification. 
-* Composite Resource (`XR`) - This page. Created by
-  using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new resources. 
+You use two Crossplane types to create a new custom API:
+
+* A [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
+  (XRD) - Defines the XR's schema.
+* A [Composition]({{<ref "./compositions" >}}) - Configures how the XR creates
+  other resources.
 {{</expand >}}
 
 ## Create composite resources
@@ -29,7 +29,7 @@ Crossplane has four core components that users commonly mix up:
 Creating composite resources requires a 
 [Composition]({{<ref "./compositions">}}) and a 
 [CompositeResourceDefinition]({{<ref "./composite-resource-definitions">}}) 
-(`XRD`).  
+(XRD).  
 
 The Composition defines the set of resources to create. The XRD defines the
 custom API users call to request the set of resources.

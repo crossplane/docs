@@ -67,18 +67,6 @@ Patch and transform is best for simpler compositions. It intentionally doesn't
 support features like loops and conditionals.
 {{</hint >}}
 
-{{<expand "Confused about Compositions, XRDs and XRs?" >}}
-Crossplane has four core components that users commonly mix up:
-
-* [Composition]({{<ref "../composition/compositions">}}) - A template to define
-  how to create resources.
-* [composite resource Definition]({{<ref "../composition/composite-resource-definitions">}})
-  (`XRD`) - A custom API specification.
-* [composite resource]({{<ref "../composition/composite-resources">}}) (`XR`) -
-  Created by using the custom API defined in a composite resource Definition.
-  XRs use the Composition template to create new managed resources.
-{{</expand >}}
-
 ## Install the function
 
 You must install Function Patch and Transform before you can use it in a

@@ -6,7 +6,7 @@ description: "Composite Resource Definitions or XRDs define custom API schemas"
 
 Composite resource definitions (`XRDs`) define the schema for a custom API.  
 Users create composite resources (`XRs`) using the API schema defined by an
-`XRD`.
+XRD.
 
 
 {{<hint "note">}}
@@ -15,14 +15,14 @@ information about composite resources.
 {{</hint>}}
 
 
-{{<expand "Confused about Compositions, XRDs, and XRs?" >}}
-Crossplane has four core components that users commonly mix up:
+{{<expand "What are XRs, XRDs and Compositions?" >}}
+A [composite resource]({{<ref "./composite-resources">}}) or XR is a custom API.
 
-* [Compositions]({{<ref "./compositions" >}}) - A template to define how to create resources.
-* Composite Resource Definition (`XRD`) - This page. A custom API specification. 
-* [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
-  using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create other resources. 
+You use two Crossplane types to create a new custom API:
+
+* A Composite Resource Definition (XRD) - This page. Defines the XR's schema. 
+* A [Composition]({{<ref "./compositions" >}}) - Configures how the XR creates
+  other resources.
 {{</expand >}}
 
 Crossplane XRDs are like 

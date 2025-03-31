@@ -52,15 +52,14 @@ spec:
 ```
 
 
-{{<expand "Confused about Compositions, XRDs and XRs?" >}}
-Crossplane has four core components that users commonly mix up:
+{{<expand "What are XRs, XRDs and Compositions?" >}}
+A [composite resource]({{<ref "./composite-resources">}}) or XR is a custom API.
 
-* Compositions - This page. A template to define how to create resources.
-* [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
-  (`XRD`) - A custom API specification.
-* [Composite Resource]({{<ref "./composite-resources">}}) (`XR`) - Created by
-  using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new resources.
+You use two Crossplane types to create a new custom API:
+
+* A [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
+  (XRD) - Defines the XR's schema. 
+* A Composition - This page. Configures how the XR creates other resources.
 {{</expand >}}
 
 ## Create a Composition
@@ -79,14 +78,13 @@ to determine what resources it should create when you create a composite
 resource (XR).
 
 {{<hint "tip" >}}
-The Crossplane community has built lots of functions that let you template
-Crossplane resources using
-[CUE](https://github.com/crossplane-contrib/function-cue),
-[KCL](https://github.com/crossplane-contrib/function-kcl),
+Crossplane has functions that let you template composed resources using YAML
+[patch and transforms]({{<ref "../guides/function-patch-and-transform">}}).
 Helm-like
-[Go templates](https://github.com/crossplane-contrib/function-go-templating) or
-legacy Crossplane
-[Patch and Transforms]({{<ref "../guides/function-patch-and-transform">}}).
+[YAML templates](https://github.com/crossplane-contrib/function-go-templating),
+[CUE](https://github.com/crossplane-contrib/function-cue),
+[KCL](https://github.com/crossplane-contrib/function-kcl), or
+[Python](https://github.com/crossplane-contrib-function-python).
 
 You can also [write your own function](#write-a-composition-function) using Go
 or Python.
