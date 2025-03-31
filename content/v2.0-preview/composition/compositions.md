@@ -84,7 +84,7 @@ Helm-like
 [YAML templates](https://github.com/crossplane-contrib/function-go-templating),
 [CUE](https://github.com/crossplane-contrib/function-cue),
 [KCL](https://github.com/crossplane-contrib/function-kcl), or
-[Python](https://github.com/crossplane-contrib-function-python).
+[Python](https://github.com/crossplane-contrib/function-python).
 
 You can also [write your own function](#write-a-composition-function) using Go
 or Python.
