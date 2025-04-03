@@ -100,9 +100,8 @@ Crossplane _Composite Resource Definitions_, _Compositions_ and _Claims_.
 The `crossplane-rbac-manager` creates and manages Kubernetes _ClusterRoles_ for
 installed Crossplane _Provider_ and their _Custom Resource Definitions_.
 
-The
-[Crossplane RBAC Manager design document](https://github.com/crossplane/crossplane/blob/main/design/design-doc-rbac-manager.md)
-has more information on the installed _ClusterRoles_.
+You can follow a guide [Working without RBAC Manager]({{<ref "../guides/working-without-rbac-manager">}})
+to understand additional steps necessary when opting out of RBAC Manager.
 
 ## Installation options
 
