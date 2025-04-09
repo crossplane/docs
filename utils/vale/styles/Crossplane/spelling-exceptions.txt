@@ -11,6 +11,7 @@ cross-resource
 double-check
 double-checks
 dry-run
+dual-pushes
 end-points
 end-to-end
 free-form
@@ -41,6 +42,7 @@ right-hand
 run-time
 self-signed
 self-service
+space-delimited
 step-by-step
 subresources
 third-party

@@ -5,16 +5,16 @@ description: "Configuring build pipelines for Crossplane extensions with GitHub
 Actions"
 ---
 
-Crossplane extensions are built as OCI images in the [xpkg] format. Authors and
-maintainers of Crossplane extensions must push their packages to an OCI
-registry before they can be used and referenced by Crossplane.
+Building a Crossplane extension involves creating OCI images in the [xpkg]
+format. Authors and maintainers of Crossplane extensions must push their
+packages to an OCI registry before Crossplane can reference and use them.
 
 {{< hint "tip" >}}
-For more information about Crossplane packages, review the concepts
-[here]({{<ref "../concepts/packages" >}}).
+For more information about Crossplane packages, review the
+[xpkg concepts]({{<ref "../../master/concepts/packages" >}}).
 {{< /hint >}}
 
-## Typical Workflow
+## Typical workflow
 
 This guide covers configuring a GitHub Action for building Crossplane
 providers and functions and pushing them to an OCI registry such as `ghcr.io`.
@@ -27,22 +27,22 @@ A typical GitHub workflow definition contains the following steps:
 4. Pushing (publishing) the artifact
 
 {{< hint "warning" >}}
-The supplied credentials for the remote registry require read+write access, as
-subsequent requests to the registry will specify `push` authorization scope.
+The supplied credentials for the remote registry require read and write access
+as upload requests to the registry specify `push` authorization scope.
 {{< /hint >}}
 
-Fortunately, the template repositories for [providers] and [functions] provide
+The template GitHub repositories for [providers] and [functions] provide
 a functional GitHub Action in `.github/workflows/ci.yml`. The following
 sections of this guide cover configuration options and conventions for each.
 
 ## Common Configuration
 
 All workflows require references to credentials for a remote registry.
-Typically, these are stored as [GitHub Actions Secrets], and authentication
-is performed via the`docker/login-action`
+Typically, users configure them as [GitHub Actions Secrets], and the workflow
+performs authentication via the`docker/login-action`
 [action](http://github.com/docker/login-action).
 
-For example, adding the following step to a pipeline will authenticate
+For example, adding the following step to a pipeline authenticates
 the job to `ghcr.io` using the workflow's ephemeral GitHub OIDC token.
 
 ```yaml
@@ -55,12 +55,14 @@ the job to `ghcr.io` using the workflow's ephemeral GitHub OIDC token.
 ```
 
 {{< hint "important" >}}
-By default, the job's OIDC token will not have permission to write packages
-to `ghcr.io`. This can be configured in the GitHub repository's settings, or
-declared [explicitly](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token) in the workflow definition YAML file.
+By default, the job's OIDC token don't have permission to write packages
+to `ghcr.io`. Permissions are configurable in the GitHub repository's settings
+or declared
+[explicitly](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token)
+in the workflow definition YAML file.
 {{< /hint >}}
 
-For other registries, it is still best practice to reference credentials as
+For other registries, it's still best practice to reference credentials as
 custom Secret variables. For example:
 
 ```yaml
@@ -73,10 +75,10 @@ custom Secret variables. For example:
           password: ${{ secrets.XPKG_TOKEN }}
 ```
 
-## Branching Conventions
+## Branching conventions
 
 Repositories for Crossplane extensions follow similar branching conventions
-to upstream Crossplane, where the release process is predicated on the workflow
+to upstream Crossplane, where the release process assumes the workflow
 executing in branches with the `release-*` prefix. `main` is often included,
 though a conventional release process would not build and push off of tags on
 `main`.
@@ -91,18 +93,18 @@ on:
 
 For example, when releasing `v0.1.0` of an extension, the conventional
 process is to cut a release branch `release-0.1` at the git commit
-where it will be built, and tag it as `v0.1.0`.
+where it builds from, and tag it as `v0.1.0`.
 
 {{< hint "note" >}}
 Some custom workflows may accept an explicit input for the remote reference,
-which overrides inferring from a git ref or tag. The [ci.yml] file for
+which overrides inferring from a git ref or tag. The [`ci.yml`] file for
 `crossplane-contrib/function-python` is a good example.
 {{< /hint >}}
 
-## Configuring Workflows for Functions
+## Configuring workflows for function packages
 
-Function workflow definitions will differ based on the base language the
-function is implemented in. For example, a Python function will require
+Function workflow definitions differ based on the base language the
+function implementation uses. For example, a Python function requires
 a Python environment in the GitHub Action runner:
 
 ```yaml
@@ -121,9 +123,9 @@ a Python environment in the GitHub Action runner:
 While the template repository provides a working pipeline definition, users may
 choose to customize their environment with different tooling.
 
-Functions also require a runtime image of the core business logic to be
-built and embedded into the Function package. The default workflow definition
-will build for two platforms: `linux/amd64` and `linux/arm64`.
+Functions also require a runtime image of the core business logic to
+build and embed into the Function package. The default workflow definition
+builds for two platforms: `linux/amd64` and `linux/arm64`.
 
 ```yaml
       - name: Build Runtime
@@ -140,7 +142,7 @@ will build for two platforms: `linux/amd64` and `linux/arm64`.
           outputs: type=docker,dest=runtime-${{ matrix.arch }}.tar
 ```
 
-## Configuring Workflows for Providers
+## Configuring workflows for provider packages
 
 Providers, unlike Functions, use custom `make` targets in the [build submodule]
 for building and pushing Crossplane Provider packages.
@@ -151,13 +153,13 @@ Configuring the workflow for a specific registry involves two steps:
 2. Referencing GitHub Actions Secrets for authorized credentials to the
 registry.
 
-### Configure Target Registry
+### Configure target registry
 
 The provider template repository includes a top-level `Makefile`. Edit
 the following variables to define the target registry:
 
 1. `XPKG_REG_ORGS` - a space-delimited list of target repositories.
-2. `XPKG_REG_ORGS_NO_PROMOTE` - for registries that do not use or infer
+2. `XPKG_REG_ORGS_NO_PROMOTE` - for registries that don't use or infer
 channel tags, such as `xpkg.upbound.io`.
 
 For example, the following dual-pushes to `xpkg.upbound.io` as well as
@@ -169,10 +171,10 @@ XPKG_REG_ORGS ?= xpkg.upbound.io/crossplane-contrib index.docker.io/crossplaneco
 XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/crossplane-contrib
 ```
 
-## Reusable Workflows
+## Reusable workflows
 
 The [crossplane-contrib/provider-workflows] repository provide reusable
-workflow definitions that can be called from a custom CI pipeline.
+workflow definitions that are callable from a custom CI pipeline.
 
 For example, the following snippet references the callable workflow to
 build and push the `provider-kubernetes` package to both `ghcr.io` and
@@ -193,22 +195,22 @@ jobs:
 ```
 
 {{< hint "tip" >}}
-The reusable workflows referenced here will publish to `ghcr.io` by default.
-Ensure that the default GitHub Actions OIDC token is granted the
+The reusable workflows referenced here publish to `ghcr.io` by default.
+Ensure that the default GitHub Actions OIDC token inherits the
 `packages: write` permission.
 {{< /hint >}}
 
 ## Troubleshooting
 
 {{< expand "Why is my workflow is failing with a 404 error code?" >}}
-Ensure the target repository exists in the registry. You will need to create
-it if it does not already exist.
+Ensure the target repository exists in the registry. You need to create
+it if it doesn't already exist.
 {{</expand >}}
 
 {{< expand "Why is my workflow failing with a 401 error code?" >}}
-Ensure the credentials used during the registry login step are authorized to
+Ensure the credentials used during the registry login step has authorization to
 pull and push, and that the `{{ secrets.* }}` variable substitutions match
-what is configured in GitHub.
+what's configured in GitHub.
 {{</expand >}}
 
 <!-- Named Links -->
@@ -217,5 +219,5 @@ what is configured in GitHub.
 [providers]: https://github.com/crossplane/upjet-provider-template/blob/main/.github/workflows/ci.yml
 [GitHub Actions Secrets]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
 [build submodule]: https://github.com/crossplane/build
-[ci.yml]: https://github.com/crossplane-contrib/function-python/blob/main/.github/workflows/ci.yml
+[`ci.yml`]: https://github.com/crossplane-contrib/function-python/blob/main/.github/workflows/ci.yml
 [crossplane-contrib/provider-workflows]: https://github.com/crossplane-contrib/provider-workflows/blob/main/.github/workflows
