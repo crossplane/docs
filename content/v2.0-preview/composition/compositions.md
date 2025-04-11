@@ -269,6 +269,64 @@ spec:
   # Removed for brevity
 ```
 
+### Grant access to composed resources
+
+Crossplane uses its [service account](https://kubernetes.io/docs/concepts/security/service-accounts/)
+to create the composed resources that a function pipeline returns.
+
+Crossplane's service account has access to create, update, and delete any
+resource installed by a [provider]({{<ref "../packages/providers">}}), or
+defined by an XRD. This includes all
+[MRs]({{<ref "../managed-resources/managed-resources">}}) and
+[XRs]({{<ref "composite-resources">}}). It also has access to some types of
+Kubernetes resources that it needs to function - for example it can create
+deployments.
+
+You must grant Crossplane access to compose any other kind of resource. You do
+this by creating an [RBAC ClusterRole](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+
+<!-- vale write-good.TooWordy = NO -->
+<!-- TooWordy thinks "aggregate" is too wordy, but it's the name of the concept. -->
+The ClusterRole must aggregate to Crossplane's primary ClusterRole using
+[ClusterRole aggregation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles).
+<!-- vale write-good.TooWordy = YES -->
+
+Here's a ClusterRole that grants Crossplane access to manage
+[CloudNativePG](https://cloudnative-pg.io) PostgreSQL clusters.
+
+``` yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cnpg:aggregate-to-crossplane
+  labels:
+    rbac.crossplane.io/aggregate-to-crossplane: "true"
+rules:
+- apiGroups:
+  - postgresql.cnpg.io
+  resources:
+  - clusters
+  verbs:
+  - "*"
+```
+
+<!-- vale write-good.TooWordy = NO -->
+<!-- TooWordy thinks "aggregate" is too wordy, but it's the name of the concept. -->
+The `rbac.crossplane.io/aggregate-to-crossplane: "true"` label is critical. It
+configures the role to aggregate to Crossplane's primary cluster role.
+<!-- vale write-good.TooWordy = YES -->
+
+{{<hint "note" >}}
+The [RBAC manager]({{<ref "../guides/pods#rbac-manager-pod">}}) automatically
+grants Crossplane access to MRs and XRs. The RBAC manager uses
+[escalate access](https://kubernetes.io/docs/concepts/security/rbac-good-practices/#escalate-verb)
+to grant Crossplane access that the RBAC manager doesn't have.
+
+The RBAC manager is an optional Crossplane component that's enabled by default.
+**If you disable the RBAC manager, you must manually grant Crossplane access to
+_any_ kind of resource you wish to compose - including XRs and MRs.**
+{{< /hint >}}
+
 ## Test a composition
 
 You can preview the output of any composition using the Crossplane CLI. You
@@ -545,8 +603,8 @@ which composed resources it should create or update.
 
 If the function needs __extra resources__ to determine the desired state it can
 request any cluster-scoped resource Crossplane already has access to, either by
-by name or labels through the returned RunFunctionResponse. Crossplane then
-calls the function again including the requested __extra resources__ and the
+name or labels through the returned RunFunctionResponse. Crossplane then calls
+the function again including the requested __extra resources__ and the
 __context__ returned by the Function itself alongside the same __input__,
 __observed__ and __desired state__ of the previous RunFunctionRequest. Functions
 can iteratively request __extra resources__ if needed, but to avoid endlessly
