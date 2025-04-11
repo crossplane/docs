@@ -660,6 +660,13 @@ Functions can change the results of earlier functions in the pipeline.
 Crossplane uses the result returned by the last function.
 {{</hint>}}
 
+{{<hint "tip">}}
+If you edit this composition to include a different kind of resource you might
+need to grant Crossplane access to compose it. Read
+[the composition documentation]({{<ref "../composition/compositions#grant-access-to-composed-resources">}})
+to learn how to grant Crossplane access.
+{{</hint>}}
+
 ## Use the custom resource
 
 Crossplane now understands `App` custom resources.
