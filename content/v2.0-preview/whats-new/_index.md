@@ -207,6 +207,33 @@ compose-pg@{animate: true}
 This opens composition to exciting new use cases - for example building custom
 app models with Crossplane.
 
+### Beware Crossplane's default access
+
+Crossplane by default can only access a limited set of kubernetes resources beyond what gets configured by any providers.
+
+To grant access to additional resource resource types, create additional `ClusterRoles` and include them in the default Crossplane `ClusterRole` through [aggregation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles). Crossplane's default ClusterRole aggregates using a selector for the label `rbac.crossplane.io/aggregate-to-crossplane: "true"`
+
+If you don't include this you may experience RBAC issues composing third party custom resources.
+
+Here is an example of allowing Crossplane handle the lifecycle of CloudNativePG PostgreSQL `Cluster`.
+
+``` yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cnpg:aggregate-to-crossplane
+  labels:
+    app: crossplane    
+    rbac.crossplane.io/aggregate-to-crossplane: "true"
+rules:
+- apiGroups:
+  - postgresql.cnpg.io
+  resources:
+  - clusters
+  verbs:
+  - "*"
+```
+
 ## Backward compatibility
 
 Crossplane v2 makes the following breaking changes:
