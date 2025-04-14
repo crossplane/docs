@@ -21,10 +21,6 @@ Examples of providers include:
 * [Provider GCP](https://github.com/upbound/provider-gcp)
 * [Provider Kubernetes](https://github.com/crossplane-contrib/provider-kubernetes)
 
-{{< hint "tip" >}}
-Find more providers in Crossplane's [public package registries](https://www.crossplane.io/registries).
-{{< /hint >}}
-
 <!-- vale write-good.Passive = NO -->
 <!-- "are Managed" isn't passive in this context -->
 Providers define every external resource they can create in Kubernetes as a
