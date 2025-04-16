@@ -385,6 +385,8 @@ spec:
                   - name: S3ID
                     type: S
                 hashKey: S3ID
+              providerConfigRef:
+                name: default
           patches:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.location"
