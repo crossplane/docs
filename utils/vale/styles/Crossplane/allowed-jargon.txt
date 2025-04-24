@@ -73,6 +73,7 @@ ReplicaSets
 RPC
 RPCs
 RSS
+runtimeClassName
 sandboxed
 SCSS
 SDK
