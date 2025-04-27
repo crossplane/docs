@@ -1093,4 +1093,165 @@ crossplane beta validate schema resources.yaml
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
+### beta lint
 
+The `crossplane beta lint` command checks [composite resource definitions]({{<ref "../concepts/composite-resource-definitions">}})
+against a set of best practices. These rules help ensure that your XRDs are well-formed and follow Crossplane's API design guidelines.
+
+{{< hint "note" >}}
+The `crossplane beta lint` command performs all checks offline.
+
+A Kubernetes cluster running Crossplane isn't required.
+{{< /hint >}}
+
+### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag   | Long flag          | Description                                                              |
+| ------------ | ------------------ | ------------------------------------------------------------------------ |
+| `-h`         | `--help`           | Show context sensitive help.                                             |
+| `-o`         | `--output`         | Output format. Valid values are stdout (default) or json.                |
+|              | `--skip-reference` | Skip printing the reference docs to the rule that was violated.          |
+{{< /table >}}
+
+#### Rule XRD001 - No boolean fields
+
+Boolean fields are inflexible and cannot be extended. Replace them with enum-based strings so you can introduce additional states later.
+See [Kubernetes API conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#primitive-types) 
+
+```yaml {label="Incorrect:"}
+# Removed for brevity
+properties:
+  spec:
+    type: object
+    properties:
+      enabled:
+        type: boolean # flagged by XRD001
+```
+
+```yaml {label="Best practice:"}
+# Removed for brevity
+properties:
+  enabled:
+    type: string
+    enum:
+      - Enabled
+      - Disabled
+```
+
+#### Rule XRD002 - Check for required fields
+
+Marking fields as required up front forces every user to provide them and makes future changes risky - this rule flags any `required:`
+list in your XRD so you can decide if each field truly needs to be mandatory.
+
+```yaml
+# Removed for brevity
+properties:
+  spec:
+    type: object
+    properties:
+      version:
+        type: string
+    required: # flagged by XRD002
+      - version
+```
+
+#### Rule XRD003 - Check for missing descriptions
+
+Every property in your schema should include a description: so that `kubectl explain` and documentation generators can produce helpful output.
+
+```yaml {label="Incorrect:"}
+# Removed for brevity
+versions:
+- name: v1alpha1
+  schema:
+    openAPIV3Schema:
+      type: object
+      properties:
+        spec:
+          type: object
+          properties:
+            version: # flagged by XRD003
+              type: string
+
+```
+
+```yaml {label="Best practice:"}
+# Removed for brevity
+properties:
+  spec:
+    type: object
+    properties:
+      version:
+        type: string
+        description: |
+          The version of the database engine to deploy.
+```
+
+#### Ignore rules
+
+If you need to opt out of a specific check for example, a field that you know is safe even though it violates a rule
+you can append a `# nolint <RULE_ID>` comment directly above the violating node or line:
+
+```yaml {label="Missing description"}
+# Removed for brevity
+properties:
+  spec:
+    type: object
+    properties:
+      # nolint XRD003
+      version:
+        type: string
+```
+
+```yaml {label="Boolean field"}
+# Removed for brevity
+properties:
+  spec:
+    type: object
+    properties:
+      version:
+        # nolint XRD001
+        type: boolean
+```
+
+#### Example usage
+
+Running the command on an XRD file:
+
+```shell
+crossplane beta lint my-xrd.yaml
+xdatabases.custom-api.example.org:20 [XRD001] Boolean field detected at path spec.versions[0].schema.openAPIV3Schema.properties.spec.properties.enabled — consider using an enum instead for extensibility. More information: (https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#primitive-types)
+xdatabases.custom-api.example.org:25 [XRD002] Required field 'enabled' at path spec.versions[0].schema.openAPIV3Schema.properties.spec.required — consider making it optional with a default.
+Found 2 issues: 0 errors, 2 warnings
+exit status 2
+```
+
+This outputs any violations of the best practices, along with references to the relevant guidelines for fixing them.
+
+To integrate in CI or tooling, output as JSON (--output=json):
+
+```shell
+crossplane beta lint my-xrd.yaml --output=json
+{
+  "summary": {
+    "valid": false,
+    "total": 3,
+    "errors": 0,
+    "warnings": 3
+  },
+  "issues": [
+    {
+      "id": "XRD001",
+      "name": "xdatabases.custom-api.example.org",
+      "line": 20,
+      "error": false,
+      "reference": "https://github.com/kubernetes/community/blob/master/contributors/devel/sig-archi
+tecture/api-conventions.md#primitive-types",
+      "message": "Boolean field detected at path spec.versions[0].schema.openAPIV3Schema.properties.
+spec.properties.enabled — consider using an enum instead for extensibility."
+    },
+    ...
+  ]
+}
+```
