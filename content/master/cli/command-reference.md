@@ -1116,7 +1116,7 @@ A Kubernetes cluster running Crossplane isn't required.
 
 #### Rules
 
-##### Rule XRD001 - No boolean fields
+##### XRD001 - No boolean fields
 
 Boolean fields are inflexible and cannot be extended. Replace them with enum-based strings so you can introduce additional states later.
 See [Kubernetes API conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#primitive-types) 
@@ -1141,7 +1141,7 @@ properties:
       - Disabled
 ```
 
-##### Rule XRD002 - Check for required fields
+##### XRD002 - Check for required fields
 
 Marking fields as required up front forces every user to provide them and makes future changes risky - this rule flags any `required:`
 list in your XRD so you can decide if each field truly needs to be mandatory.
@@ -1158,7 +1158,7 @@ properties:
       - version
 ```
 
-##### Rule XRD003 - Check for missing descriptions
+##### XRD003 - Check for missing descriptions
 
 Every property in your schema should include a description: so that `kubectl explain` and documentation generators can produce helpful output.
 
