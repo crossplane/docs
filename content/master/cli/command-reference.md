@@ -1093,7 +1093,6 @@ crossplane beta validate schema resources.yaml
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
-
 ### beta lint
 
 The `crossplane beta lint` command checks [composite resource definitions]({{<ref "../concepts/composite-resource-definitions">}})
@@ -1105,7 +1104,7 @@ The `crossplane beta lint` command performs all checks offline.
 A Kubernetes cluster running Crossplane isn't required.
 {{< /hint >}}
 
-### Flags
+#### Flags
 
 {{< table "table table-sm table-striped" >}}
 | Short flag   | Long flag          | Description                                                              |
@@ -1115,7 +1114,9 @@ A Kubernetes cluster running Crossplane isn't required.
 |              | `--skip-reference` | Skip printing the reference docs to the rule that was violated.          |
 {{< /table >}}
 
-#### Rule XRD001 - No boolean fields
+#### Rules
+
+##### Rule XRD001 - No boolean fields
 
 Boolean fields are inflexible and cannot be extended. Replace them with enum-based strings so you can introduce additional states later.
 See [Kubernetes API conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#primitive-types) 
@@ -1140,7 +1141,7 @@ properties:
       - Disabled
 ```
 
-#### Rule XRD002 - Check for required fields
+##### Rule XRD002 - Check for required fields
 
 Marking fields as required up front forces every user to provide them and makes future changes risky - this rule flags any `required:`
 list in your XRD so you can decide if each field truly needs to be mandatory.
@@ -1157,7 +1158,7 @@ properties:
       - version
 ```
 
-#### Rule XRD003 - Check for missing descriptions
+##### Rule XRD003 - Check for missing descriptions
 
 Every property in your schema should include a description: so that `kubectl explain` and documentation generators can produce helpful output.
 
