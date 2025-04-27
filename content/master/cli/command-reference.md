@@ -1093,6 +1093,7 @@ crossplane beta validate schema resources.yaml
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
+
 ### beta lint
 
 The `crossplane beta lint` command checks [composite resource definitions]({{<ref "../concepts/composite-resource-definitions">}})
