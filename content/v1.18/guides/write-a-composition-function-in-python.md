@@ -453,19 +453,26 @@ if __name__ == "__main__":
 
 Run the unit tests using `hatch run`:
 
-```shell {copy-lines="1"}
-hatch run test:unit
-.
-----------------------------------------------------------------------
-Ran 1 test in 0.003s
+Run the unit tests using `hatch test`:
 
-OK
+```shell {copy-lines="1"}
+❯ hatch test
+================================== test session starts ==================================
+platform darwin -- Python 3.12.8, pytest-8.3.5, pluggy-1.5.0
+rootdir: ./function-template-python
+configfile: pyproject.toml
+plugins: rerunfailures-14.0, mock-3.14.0, xdist-3.6.1
+collected 1 item
+
+tests/test_fn.py .                                                                  [100%]
+
+=================================== 1 passed in 0.26s ===================================
 ```
 
 {{<hint "tip">}}
 [Hatch](https://hatch.pypa.io/) is a Python build tool. It builds Python
 artifacts like wheels. It also manages virtual environments, similar
-to `virtualenv` or `venv`. The `hatch run` command creates a virtual environment
+to `virtualenv` or `venv`. The `hatch test` command creates a virtual environment
 and runs a command in that environment.
 {{</hint>}}
 
