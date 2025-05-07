@@ -62,3 +62,20 @@ For example, to install CLI version `v1.14.0` add `XP_VERSION=v1.14.0` to the
 download script curl command:  
 
 `curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_VERSION=v1.14.0 sh`
+
+## Installing shell autocompletions
+
+The Crossplane CLI supports shell autocompletions for `bash`, `zsh` and `fish`.
+You can install the autocompletions with the `completions` command by adding it to
+your shell's configuration file.
+
+```shell
+source <(crossplane completions)
+```
+
+{{<hint "note" >}}
+The `completions` command generates the autocompletions for your default shell.
+It's not possible to generate autocompletions for a different shell, if you want to
+install the autocompletions for a different shell, you have to configure the Crossplane
+CLI as the completer manually.
+{{< /hint >}}
