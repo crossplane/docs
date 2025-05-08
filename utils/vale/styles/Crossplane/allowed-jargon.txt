@@ -60,6 +60,7 @@ namespaced
 namespaces
 NOTES.txt
 OCI
+OIDC
 PersistentVolumeClaim
 Pre-releases
 pre-releases
