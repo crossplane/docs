@@ -132,6 +132,9 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `extraVolumeMountsCrossplane` | Add custom `volumeMounts` to the Crossplane pod. | `{}` |
 | `extraVolumesCrossplane` | Add custom `volumes` to the Crossplane pod. | `{}` |
 | `function.packages` | A list of Function packages to install | `[]` |
+| `functionCache.medium` | Set to `Memory` to hold the function cache in a RAM backed file system. Useful for Crossplane development. | `""` |
+| `functionCache.pvc` | The name of a PersistentVolumeClaim to use as the function cache. Disables the default function cache `emptyDir` Volume. | `""` |
+| `functionCache.sizeLimit` | The size limit for the function cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"512Mi"` |
 | `hostNetwork` | Enable `hostNetwork` for the Crossplane deployment. Caution: enabling `hostNetwork` grants the Crossplane Pod access to the host network namespace. Consider setting `dnsPolicy` to `ClusterFirstWithHostNet`. | `false` |
 | `image.pullPolicy` | The image pull policy used for Crossplane and RBAC Manager pods. | `"IfNotPresent"` |
 | `image.repository` | Repository for the Crossplane pod image. | `"xpkg.crossplane.io/crossplane/crossplane"` |
@@ -145,7 +148,6 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `packageCache.medium` | Set to `Memory` to hold the package cache in a RAM backed file system. Useful for Crossplane development. | `""` |
 | `packageCache.pvc` | The name of a PersistentVolumeClaim to use as the package cache. Disables the default package cache `emptyDir` Volume. | `""` |
 | `packageCache.sizeLimit` | The size limit for the package cache. If medium is `Memory` the `sizeLimit` can't exceed Node memory. | `"20Mi"` |
-| `packageManager.enableAutomaticDependencyDowngrade` | Enable automatic dependency version downgrades. This configuration is only used when `--enable-dependency-version-upgrades` flag is passed. | `false` |
 | `podSecurityContextCrossplane` | Add a custom `securityContext` to the Crossplane pod. | `{}` |
 | `podSecurityContextRBACManager` | Add a custom `securityContext` to the RBAC Manager pod. | `{}` |
 | `priorityClassName` | The PriorityClass name to apply to the Crossplane and RBAC Manager pods. | `""` |
@@ -265,10 +267,12 @@ at the table below.
 | Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
 | Beta | `--enable-usages` | Enable support for Usages. |
 | Beta | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
+| Beta | `--enable-realtime-compositions` | Enable support for real time compositions. |
 | Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
-| Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
-| Alpha | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
+| Alpha | `--enable-dependency-version-upgrades` | Enable automatic version upgrades of dependencies when updating packages. |
+| Alpha | `--enable-dependency-version-downgrades` | Enable automatic version downgrades of dependencies when updating packages. |
 | Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
+| Alpha | `--enable-function-response-cache` | Enable support for caching composition function responses. |
 {{< /table >}}
 {{< /expand >}}
 
@@ -279,7 +283,7 @@ args='{"--enable-composition-functions","--enable-composition-webhook-schema-val
 #### Change the default package registry
 
 Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
-installing packages. 
+installing packages.
 
 Change the default registry location during the Crossplane install with
 `--set args='{"--registry=index.docker.io"}'`.
