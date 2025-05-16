@@ -24,7 +24,7 @@ Examples of providers include:
 <!-- vale write-good.Passive = NO -->
 <!-- "are Managed" isn't passive in this context -->
 Providers define every external resource they can create in Kubernetes as a
-Kubernetes API endpoint.  
+Kubernetes API endpoint.
 These endpoints are
 [_Managed Resources_]({{<ref "managed-resources" >}}).
 <!-- vale write-good.Passive = YES -->
@@ -32,10 +32,10 @@ These endpoints are
 
 ## Install a Provider
 
-Installing a provider creates new Kubernetes resources representing the 
-Provider's APIs. Installing a provider also creates a Provider pod that's 
-responsible for reconciling the Provider's APIs into the Kubernetes cluster. 
-Providers constantly watch the state of the desired managed resources and create 
+Installing a provider creates new Kubernetes resources representing the
+Provider's APIs. Installing a provider also creates a Provider pod that's
+responsible for reconciling the Provider's APIs into the Kubernetes cluster.
+Providers constantly watch the state of the desired managed resources and create
 any external resources that are missing.
 
 Install a Provider with a Crossplane
@@ -45,7 +45,7 @@ location of the provider package.
 
 {{< hint "important" >}}
 Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
-installing packages. 
+installing packages.
 
 Specify the full domain name with the `package` or change the default Crossplane
 registry with the `--registry` flag on the [Crossplane pod]({{<ref "./pods">}})
@@ -67,19 +67,19 @@ By default, the Provider pod installs in the same namespace as Crossplane
 (`crossplane-system`).
 
 {{<hint "note" >}}
-Providers are part of the 
-{{<hover label="install" line="1">}}pkg.crossplane.io{{</hover>}} group.  
+Providers are part of the
+{{<hover label="install" line="1">}}pkg.crossplane.io{{</hover>}} group.
 
 The {{<hover label="meta-pkg" line="1">}}meta.pkg.crossplane.io{{</hover>}}
-group is for creating Provider packages. 
+group is for creating Provider packages.
 
 Instructions on building Providers are outside of the scope of this
-document.  
-Read the Crossplane contributing 
+document.
+Read the Crossplane contributing
 [Provider Development Guide](https://github.com/crossplane/crossplane/blob/main/contributing/guide-provider-development.md)
 for more information.
 
-For information on the specification of Provider packages read the 
+For information on the specification of Provider packages read the
 [Crossplane Provider Package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md#provider-package-requirements).
 
 ```yaml {label="meta-pkg"}
@@ -113,9 +113,9 @@ crossplane-stable/crossplane \
 
 ### Install offline
 
-Installing Crossplane Providers offline requires a local container registry like 
+Installing Crossplane Providers offline requires a local container registry like
 [Harbor](https://goharbor.io/) to host Provider packages. Crossplane only
-supports installing Provider packages from a container registry. 
+supports installing Provider packages from a container registry.
 
 Crossplane doesn't support installing Provider packages directly from Kubernetes
 volumes.
@@ -123,11 +123,11 @@ volumes.
 ### Installation options
 
 Providers support multiple configuration options to change installation related
-settings. 
+settings.
 
 {{<hint "tip" >}}
 Crossplane supports installations with image digests instead of tags to get deterministic
-and repeatable installations.  
+and repeatable installations.
 
 ```yaml {label="digest"}
 apiVersion: pkg.crossplane.io/v1
@@ -145,26 +145,26 @@ Use a {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} to
 define when Crossplane should download the Provider package to the local
 Crossplane package cache.
 
-The `packagePullPolicy` options are: 
+The `packagePullPolicy` options are:
 * `IfNotPresent` - (**default**) Only download the package if it isn't in the cache.
 * `Always` - Check for new packages every minute and download any matching
   package that isn't in the cache.
 * `Never` - Never download the package. Packages are only installed from the
-  local package cache. 
+  local package cache.
 
 {{<hint "tip" >}}
-The Crossplane 
+The Crossplane
 {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} works
-like the Kubernetes container image 
-[image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy).  
+like the Kubernetes container image
+[image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy).
 
 Crossplane supports the use of tags and package digest hashes like
-Kubernetes images. 
+Kubernetes images.
 {{< /hint >}}
 
-For example, to `Always` download a given Provider package use the 
+For example, to `Always` download a given Provider package use the
 {{<hover label="pullpolicy" line="6">}}packagePullPolicy: Always{{</hover>}}
-configuration. 
+configuration.
 
 ```yaml {label="pullpolicy",copy-lines="6"}
 apiVersion: pkg.crossplane.io/v1
@@ -179,20 +179,20 @@ spec:
 #### Revision activation policy
 
 The `Active` package revision
-is the package controller actively reconciling resources. 
+is the package controller actively reconciling resources.
 
-By default Crossplane sets the most recently installed package revision as 
+By default Crossplane sets the most recently installed package revision as
 `Active`.
 
 Control the Provider upgrade behavior with a
 {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}}.
 
-The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}} 
+The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}}
 options are:
 * `Automatic` - (**default**) Automatically activate the last installed Provider.
 * `Manual` - Don't automatically activate a Provider.
 
-For example, to change the upgrade behavior to require manual upgrades, set 
+For example, to change the upgrade behavior to require manual upgrades, set
 {{<hover label="revision" line="6">}}revisionActivationPolicy: Manual{{</hover>}}.
 
 ```yaml {label="revision"}
@@ -207,26 +207,26 @@ spec:
 
 #### Package revision history limit
 
-When Crossplane installs a different version of the same Provider package 
-Crossplane creates a new _revision_. 
+When Crossplane installs a different version of the same Provider package
+Crossplane creates a new _revision_.
 
-By default Crossplane maintains one _Inactive_ revision. 
+By default Crossplane maintains one _Inactive_ revision.
 
 {{<hint "note" >}}
 Read the [Provider upgrade](#upgrade-a-provider) section for
 more information on the use of package revisions.
 {{< /hint >}}
 
-Change the number of revisions Crossplane maintains with a Provider Package 
-{{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}}. 
+Change the number of revisions Crossplane maintains with a Provider Package
+{{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}}.
 
 The {{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}}
-field is an integer.  
-The default value is `1`.  
-Disable storing revisions by setting 
+field is an integer.
+The default value is `1`.
+Disable storing revisions by setting
 {{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit{{</hover>}} to `0`.
 
-For example, to change the default setting and store 10 revisions use 
+For example, to change the default setting and store 10 revisions use
 {{<hover label="revHistoryLimit" line="6">}}revisionHistoryLimit: 10{{</hover>}}.
 
 ```yaml {label="revHistoryLimit"}
@@ -241,13 +241,13 @@ spec:
 
 #### Install a provider from a private registry
 
-Like Kubernetes uses `imagePullSecrets` to 
-[install images from private registries](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/), 
+Like Kubernetes uses `imagePullSecrets` to
+[install images from private registries](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/),
 Crossplane uses `packagePullSecrets` to install Provider packages from a private
-registry. 
+registry.
 
 Use {{<hover label="pps" line="6">}}packagePullSecrets{{</hover>}} to provide a
-Kubernetes secret to use for authentication when downloading a Provider package. 
+Kubernetes secret to use for authentication when downloading a Provider package.
 
 {{<hint "important" >}}
 The Kubernetes secret must be in the same namespace as Crossplane.
@@ -257,7 +257,7 @@ The {{<hover label="pps" line="6">}}packagePullSecrets{{</hover>}} is a list of
 secrets.
 
 For example, to use the secret named
-{{<hover label="pps" line="6">}}example-secret{{</hover>}} configure a 
+{{<hover label="pps" line="6">}}example-secret{{</hover>}} configure a
 {{<hover label="pps" line="6">}}packagePullSecrets{{</hover>}}.
 
 ```yaml {label="pps"}
@@ -266,25 +266,25 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  packagePullSecrets: 
+  packagePullSecrets:
     - name: example-secret
 # Removed for brevity
 ```
 
 {{<hint "note" >}}
 Configured `packagePullSecrets` aren't passed to any Provider package
-dependencies. 
+dependencies.
 {{< /hint >}}
 
 #### Ignore dependencies
 
 By default Crossplane installs any [dependencies](#manage-dependencies) listed
-in a Provider package. 
+in a Provider package.
 
-Crossplane can ignore a Provider package's dependencies with 
+Crossplane can ignore a Provider package's dependencies with
 {{<hover label="pkgDep" line="6" >}}skipDependencyResolution{{</hover>}}.
 
-For example, to disable dependency resolution configure 
+For example, to disable dependency resolution configure
 {{<hover label="pkgDep" line="6" >}}skipDependencyResolution: true{{</hover>}}.
 
 ```yaml {label="pkgDep"}
@@ -308,15 +308,15 @@ installations. Suppose configuration A, which depends on package X with the
 constraint`>=v0.0.0`, is installed on the control plane. In this case, the package
 manager installs the latest version of package X, such as `v3.0.0`. Later, you decide
 to install configuration B, which depends on package X with the constraint `<=v2.0.0`.
-Since version `v2.0.0`satisfies both conditions, package X must be downgraded to
+Since version `v2.0.0` satisfies both conditions, package X must be downgraded to
 allow the installation of configuration B which is disabled by default.
 
-For enabling automatic dependency version downgrades, there is a configuration
-option as a helm value `packageManager.enableAutomaticDependencyDowngrade=true`.
-Downgrading a package can cause unexpected behavior, therefore, this
-option is disabled by default. After enabling this option, the package manager will
-automatically downgrade a package's dependency version to the maximum valid version
-that satisfies the constraints.
+Automatic dependency version downgrades is also an alpha feature that can be
+enabled with the `--enable-dependency-version-downgrades` flag. Downgrading a
+package can cause unexpected behavior, therefore, this option is disabled by
+default. After enabling this option, the package manager will automatically
+downgrade a package's dependency version to the maximum valid version that
+satisfies the constraints.
 
 {{<hint "note" >}}
 This configuration requires the `--enable-dependency-version-upgrades` flag.
@@ -342,13 +342,13 @@ controllers to reconcile them.
 
 A Provider package may require a specific or minimum Crossplane version before
 installing. By default, Crossplane doesn't install a Provider if the Crossplane
-version doesn't meet the required version. 
+version doesn't meet the required version.
 
-Crossplane can ignore the required version with 
+Crossplane can ignore the required version with
 {{<hover label="xpVer" line="6">}}ignoreCrossplaneConstraints{{</hover>}}.
 
 For example, to install a Provider package into an unsupported Crossplane
-version, configure 
+version, configure
 {{<hover label="xpVer" line="6">}}ignoreCrossplaneConstraints: true{{</hover>}}.
 
 ```yaml {label="xpVer"}
@@ -364,10 +364,10 @@ spec:
 ### Manage dependencies
 
 Providers packages may include dependencies on other packages including
-Configurations or other Providers. 
+Configurations or other Providers.
 
 If Crossplane can't meet the dependencies of a Provider package the Provider
-reports `HEALTHY` as `False`. 
+reports `HEALTHY` as `False`.
 
 For example, this installation of the Getting Started Configuration is
 `HEALTHY: False`.
@@ -404,9 +404,9 @@ Events:
   Warning  LintPackage        41s (x3 over 47s)  packages/providerrevision.pkg.crossplane.io  incompatible Crossplane version: package isn't compatible with Crossplane version (v1.10.0)
 ```
 
-The {{<hover label="depend" line="17">}}Events{{</hover>}} show a 
+The {{<hover label="depend" line="17">}}Events{{</hover>}} show a
 {{<hover label="depend" line="20">}}Warning{{</hover>}} with a message that the
-current version of Crossplane doesn't meet the Configuration package 
+current version of Crossplane doesn't meet the Configuration package
 requirements.
 
 ## Upgrade a Provider
@@ -420,7 +420,7 @@ Crossplane installs the new image and creates a new `ProviderRevision`.
 The `ProviderRevision` allows Crossplane to store deprecated Provider CRDs
 without removing them until you decide.
 
-View the `ProviderRevisions` with 
+View the `ProviderRevisions` with
 {{<hover label="getPR" line="1">}}kubectl get providerrevisions{{</hover>}}
 
 ```shell {label="getPR",copy-lines="1"}
@@ -436,14 +436,14 @@ By default Crossplane keeps a single
 {{<hover label="getPR" line="5">}}Inactive{{</hover>}} Provider.
 
 Read the [revision history limit](#package-revision-history-limit) section to
-change the default value. 
+change the default value.
 
-Only a single revision of a Provider is 
+Only a single revision of a Provider is
 {{<hover label="getPR" line="4">}}Active{{</hover>}} at a time.
 
 ## Remove a Provider
 
-Remove a Provider by deleting the Provider object with 
+Remove a Provider by deleting the Provider object with
 `kubectl delete provider`.
 
 {{< hint "warning" >}}
@@ -495,7 +495,7 @@ The Crossplane community has more
 
 ### Provider conditions
 
-Crossplane uses a standard set of `Conditions` for Providers.  
+Crossplane uses a standard set of `Conditions` for Providers.
 View the conditions of a provider under their `Status` with
 `kubectl describe provider`.
 
@@ -622,7 +622,7 @@ Providers have two different types of configurations:
   an external provider. For example, cloud provider authentication.
 
 {{<hint "important" >}}
-Apply `ControllerConfig` objects to Providers.  
+Apply `ControllerConfig` objects to Providers.
 
 Apply `ProviderConfig` objects to managed resources.
 {{< /hint >}}
