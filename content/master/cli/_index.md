@@ -33,11 +33,25 @@ curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.s
 [The script](https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh)
 detects your CPU architecture and downloads the latest stable release.
 
+### Download the compressed file instead of the binary
+
+Since v1.18.0 there are also compressed files available. You can ask the
+install script to download and unpack the compressed files instead, which
+should save some bandwidth. Below is an example on how to do that:
+
+```shell
+curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | COMPRESSED=True sh
+```
+
 {{<expand "Manually install the Crossplane CLI" >}}
 
 If you don't want to run shell script you can manually download a binary from 
 the Crossplane releases repository at 
 https://releases.crossplane.io/stable/current/bin
+
+If you prefer to download a compressed file from the Crossplane releases
+repository, they are available at
+https://releases.crossplane.io/stable/current/bundle
 
 {{<hint "important" >}}
 <!-- vale write-good.Passive = NO -->
