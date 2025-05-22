@@ -258,9 +258,11 @@ Status:
 
 ### Interaction with other operations
 
+{{<hint "tip" >}}
 Image rewriting is always done before other `ImageConfig` operations. If you
 wish to configure pull secrets or signature verification as well as rewriting,
-other `ImageConfig` resources must match the rewritten image path.
+additional `ImageConfig` resources must match the rewritten image path.
+{{< /hint >}}
 
 For example, if you are mirroring packages from `xpkg.crossplane.io` to
 `registry1.com` and need to configure pull secrets for `registry1.com`, two
