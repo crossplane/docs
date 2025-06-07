@@ -599,6 +599,11 @@ the container, and `Orphan`, to leave it running.
   `Development` runtime this annotation tells the CLI to connect to a Function
   running at the specified target. It uses
   [gRPC target syntax](https://github.com/grpc/grpc/blob/v1.59.1/doc/naming.md).
+* `render.crossplane.io/runtime-docker-env` - When using the `Docker` runtime this
+  annotation specifies the environment variables that will be used for the
+  container. This is helpful to e.g. control KCL registry access to use a different
+  registry. The annotations value is a comma separated string of key=value pairs 
+  e.g. "key1=value1,key2=value2".
 
 ## Verify a Composition
 
