@@ -69,7 +69,7 @@ kind: Provider
 metadata:
   name: crossplane-contrib-provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.22.0-crossplane-v2-preview.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.23.0-crossplane-v2-preview.0
 ```
 
 Save this as `provider.yaml` and apply it:
@@ -83,8 +83,8 @@ Check that Crossplane installed the provider:
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                                     INSTALLED   HEALTHY   PACKAGE                                                                                     AGE
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.22.0-crossplane-v2-preview.0   27s
-crossplane-contrib-provider-aws-s3       True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.22.0-crossplane-v2-preview.0       31s
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.23.0-crossplane-v2-preview.0   27s
+crossplane-contrib-provider-aws-s3       True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.23.0-crossplane-v2-preview.0       31s
 ```
 
 {{<hint "note">}}
