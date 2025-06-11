@@ -104,9 +104,10 @@ YAML file that pushes to `xpkg.crossplane.io` without extra configuration.
 To build and push a new release to the registry:
 
 1. Cut a release branch with the `release-` prefix in the name in the GitHub UI. For example, `release-0.1`.
-2. Tag the desired commit on release branch with a valid semver release tag.
-For example, `v0.1.0`. By default, this is the inferred reference pushed to the registry.
+2. Tag the desired commit on release branch with a valid semver release tag for a corresponding
+GitHub Release. For example, `v0.1.0`.
 3. Manually run the workflow in the GitHub UI, targeting the release branch from step 1.
+The workflow generates a default version string if user input isn't provided.
 
 See [branching conventions](#branching-conventions) for more details on tagging
 practices and optionally overriding the inferred git tag version.
@@ -138,11 +139,14 @@ the job to `ghcr.io` using the workflow's ephemeral GitHub OIDC token.
 ```
 
 {{< hint "important" >}}
-By default, the job's OIDC token don't have permission to write packages
+By default, the job's OIDC token doesn't have permission to write packages
 to `ghcr.io`. Permissions are configurable in the GitHub repository's settings
 or declared
 [explicitly](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token)
 in the workflow definition YAML file.
+
+Writing packages requires a `permissions` block with `packages: write` if it
+isn't configured elsewhere for the repository.
 {{< /hint >}}
 
 For other registries, it's still best practice to reference credentials as
@@ -178,8 +182,8 @@ process is to cut a release branch `release-0.1` at the git commit
 where it builds from, and tag it as `v0.1.0`.
 
 {{< hint "note" >}}
-Some custom workflows may accept an explicit input for the remote reference,
-which overrides inferring from a git ref or tag. The [`ci.yml`](https://github.com/crossplane-contrib/function-python/blob/main/.github/workflows/ci.yml)
+Some custom workflows may accept an explicit input for the remote reference instead of
+inferring it from a git ref. The [`ci.yml`](https://github.com/crossplane-contrib/function-python/blob/main/.github/workflows/ci.yml)
 file for `crossplane-contrib/function-python` is a good example.
 {{< /hint >}}
 
