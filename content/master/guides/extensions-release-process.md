@@ -21,8 +21,8 @@ and pushing their packages as part of their git workflow.
 
 This guide provides step-by-step instructions for configuring automated
 CI pipelines in GitHub Actions for pushing your Crossplane extensions to
-`xpkg.crossplane.io` and/or `xpkg.upbound.io`, which are two registries
-that the Crossplane community use today.
+`xpkg.crossplane.io`, the main registry that the Crossplane community
+uses today.
 
 {{< hint "tip" >}}
 For more information about Crossplane packages, review the
@@ -31,7 +31,8 @@ For more information about Crossplane packages, review the
 
 ## Typical workflow
 
-A typical GitHub workflow definition contains the following steps:
+A typical GitHub workflow definition to build and release an extension
+contains the following steps:
 
 1. Fetching the source repository
 2. Authenticating to a remote registry
@@ -87,76 +88,28 @@ file `publish-provider-package.yaml`.
 3. Commit the workflow file to the default branch of the GitHub repository.
 4. The workflow should now be available to trigger via the GitHub UI in the
 `Actions` tab.
+5. Create a release branch with the `release-` prefix in the name in the GitHub UI. For example, `release-0.1`.
+6. Tag the desired commit on release branch with a valid semver release tag.
+For example, `v0.1.0`. By default, this is the inferred reference pushed to the registry.
+7. Manually run the workflow in the GitHub UI, targeting the release branch from step 5.
 
-### Optionally mirroring to `xpkg.upbound.io`
-
-`xpkg.upbound.io` is the registry known as the [Upbound Marketplace].
-
-To optionally push (mirror) the same package to this registry, you need
-an Upbound account.
-
-1. [Log in](https://accounts.upbound.io/login) to Upbound.
-2. Create an [access token](https://accounts.upbound.io/settings/tokens).
-3. Copy the token into a GitHub Actions secret, for example
-`XPKG_UPBOUND_TOKEN`.
-4. Reference the secret created in step 3 in the `secrets` block of the
-workflow YAML file. For example:
-
-    ```yaml
-    secrets:
-      GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
-      XPKG_UPBOUND_TOKEN: ${{ secrets.XPKG_UPBOUND_TOKEN }}
-    ```
-
-{{< hint "warning" >}}
-The process for optionally pushing to the Upbound Marketplace in this quickstart
-is changing to be consistent with how other pipelines authenticate to
-the Upbound registry.
-
-See https://github.com/crossplane-contrib/provider-workflows/issues/14 for
-details.
-{{< /hint >}}
+See [branching conventions](#branching-conventions) for more details on tagging
+practices and optionally overriding the inferred git tag version.
 
 ## Quickstart: Releasing a Function to `xpkg.crossplane.io`
 
 The template repository for [functions] provides a functional GitHub Action
 YAML file that pushes to `xpkg.crossplane.io` without extra configuration.
 
-To optionally configure pushing to the Upbound Marketplace (`xpkg.upbound.io`):
+To build and push a new release to the registry:
 
-1. [Log in](https://accounts.upbound.io/login) to Upbound.
-2. Create a [Repository](https://docs.upbound.io/build/repositories/store-configurations/#create-a-repository).
-3. Create a [Robot](https://docs.upbound.io/operate/accounts/identity-management/robots/)
-and a [Team](https://docs.upbound.io/operate/accounts/identity-management/teams/).
-4. Assign the Robot to the Team.
-5. Grant the team `WRITE` permission to the repository.
-6. Provision a token (key pair) for the Robot, and save the access ID and token
-as separate GitHub Actions secrets (for example `XPKG_ACCESS_ID` and `XPKG_TOKEN`).
-7. Change the workflow YAML file to authenticate to `xpkg.upbound.io`:
+1. Cut a release branch with the `release-` prefix in the name in the GitHub UI. For example, `release-0.1`.
+2. Tag the desired commit on release branch with a valid semver release tag.
+For example, `v0.1.0`. By default, this is the inferred reference pushed to the registry.
+3. Manually run the workflow in the GitHub UI, targeting the release branch from step 1.
 
-    ```yaml
-      # In env: block
-      XPKG: xpkg.upbound.io/${{ github.repository}}
-      [...]
-
-      # extra login step in the job
-      - name: Login to Upbound
-        uses: docker/login-action@v3
-        if: env.XPKG_ACCESS_ID != ''
-        with:
-          registry: xpkg.upbound.io
-          username: ${{ secrets.XPKG_ACCESS_ID }}
-          password: ${{ secrets.XPKG_TOKEN }}      
-    ```
-
-8. Change the workflow YAML file to push to `xpkg.upbound.io`:
-
-    ```yaml
-      # after login step above
-      - name: Push Multi-Platform Package to Upbound
-        if: env.XPKG_ACCESS_ID != ''
-        run: "./crossplane --verbose xpkg push --package-files $(echo *.xpkg|tr ' ' ,) ${{ env.XPKG }}:${{ env.XPKG_VERSION }}"
-    ```
+See [branching conventions](#branching-conventions) for more details on tagging
+practices and optionally overriding the inferred git tag version.
 
 ## Common Configuration
 
@@ -196,13 +149,12 @@ For other registries, it's still best practice to reference credentials as
 custom Secret variables. For example:
 
 ```yaml
-      - name: Login to Upbound
+      - name: Login to Another Registry
         uses: docker/login-action@v3
-        if: env.XPKG_ACCESS_ID != ''
         with:
-          registry: xpkg.upbound.io
-          username: ${{ env.XPKG_ACCESS_ID }}
-          password: ${{ secrets.XPKG_TOKEN }}
+          registry: my-registry.io
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 ```
 
 ## Branching conventions
@@ -290,15 +242,15 @@ Edit the following variables to define the target registry:
 
 1. `XPKG_REG_ORGS` - a space-delimited list of target repositories.
 2. `XPKG_REG_ORGS_NO_PROMOTE` - for registries that don't use or infer
-channel tags, such as `xpkg.upbound.io`.
+channel tags.
 
-For example, the following dual-pushes to `xpkg.upbound.io` as well as
+For example, the following dual-pushes to `xpkg.crossplane.io` as well as
 `index.docker.io`:
 
 ```make
-XPKG_REG_ORGS ?= xpkg.upbound.io/crossplane-contrib index.docker.io/crossplanecontrib
+XPKG_REG_ORGS ?= xpkg.crossplane.io/crossplane-contrib index.docker.io/crossplanecontrib
 
-XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/crossplane-contrib
+XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.crossplane.io/crossplane-contrib
 ```
 
 ## Reusable workflows
@@ -307,8 +259,7 @@ The [crossplane-contrib/provider-workflows] repository provide reusable
 workflow definitions that are callable from a custom CI pipeline.
 
 For example, the following snippet references the callable workflow to
-build and push the `provider-kubernetes` package to both `ghcr.io` and
-`xpkg.upbound.io`:
+build and push the `provider-kubernetes` package to `xpkg.crossplane.io`:
 
 ```yaml
 jobs:
@@ -321,7 +272,6 @@ jobs:
       cleanup-disk: true
     secrets:
       GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
-      XPKG_UPBOUND_TOKEN: ${{ secrets.XPKG_UPBOUND_TOKEN }}
 ```
 
 {{< hint "tip" >}}
@@ -349,4 +299,3 @@ what's configured in GitHub.
 [GitHub Actions Secrets]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
 [build submodule]: https://github.com/crossplane/build
 [crossplane-contrib/provider-workflows]: https://github.com/crossplane-contrib/provider-workflows/blob/main/.github/workflows
-[Upbound Marketplace]: https://marketplace.upbound.io
