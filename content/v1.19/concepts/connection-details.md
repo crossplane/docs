@@ -537,7 +537,7 @@ combined secret.
 When changing the {{<hover label="xrd" line="4">}}connectionSecretKeys{{</hover>}} of an XRD the change isn't immediately reflected.
 You have two options to change the keys in the combined secret object.
 - Delete and recreate the XRD. This only makes sense if the XRD isn't used as it leads to the deletion of XRs.
-- Restart the XR reconciler effectively restarting the Crossplane pods.
+- Restart the XR reconciler, which can be done by restarting the Crossplane pod.
 {{</hint >}}
 
 For example, an XRD may restrict the secrets to only the 
