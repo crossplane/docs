@@ -89,10 +89,10 @@ which are just "Crossplane stuff" they can ignore.
 {{</hint>}}
 
 Composite resource definitions (XRDs) now have a `scope` field. The `scope`
-field defaults to `Namespaced` in the new v2alpha1 version of the XRD API.
+field defaults to `Namespaced` in the new v2 version of the XRD API.
 
 ```yaml
-apiVersion: apiextensions.crossplane.io/v2alpha1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: apps.example.crossplane.io

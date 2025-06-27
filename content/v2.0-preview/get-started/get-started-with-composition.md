@@ -121,7 +121,7 @@ Create this _composite resource definition_ (XRD) to define the schema of the
 new `App` composite resource (XR).
 
 ```yaml
-apiVersion: apiextensions.crossplane.io/v2alpha1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: apps.example.crossplane.io
