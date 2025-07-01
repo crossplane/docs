@@ -236,8 +236,8 @@ Crossplane v2 drops the `--registry` flag that allowed users to specify a defaul
 registry value and now requires users to always specify a fully qualified URL when
 installing packages, both directly via `spec.package` and indirectly as dependencies.
 Using fully qualified images was already a best practice, but it's now enforced
-to avoid confusion and unexpected behavior, as well as to ensure users are aware
-of the registry used by their packages.
+to avoid confusion and unexpected behavior, to ensure users are aware of the
+registry used by their packages.
 
 {{<hint "important">}}
 As long as you're not using these deprecated or alpha features, Crossplane v2 is
@@ -246,9 +246,10 @@ backward compatible with Crossplane v1.x.
 
 {{<hint "important">}}
 Before upgrading to Crossplane v2, please ensure all your Packages are using fully
-qualified images that explicitly specify a registry, i.e. `registry.example.com/repo/package:tag`.
+qualified images that explicitly specify a registry (`registry.example.com/repo/package:tag`).
 
-Run `kubectl get pkg` to look for any packages that are not fully qualified, then update or rebuild any Packages to use fully qualified images as needed.
+Run `kubectl get pkg` to look for any packages that aren't fully qualified, then
+update or rebuild any Packages to use fully qualified images as needed.
 {{</hint>}}
 
 <!-- vale gitlab.FutureTense = NO -->
