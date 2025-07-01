@@ -221,6 +221,7 @@ Crossplane v2 makes the following breaking changes:
 * It removes native patch and transform composition.
 * It removes the `ControllerConfig` type.
 * It removes support for external secret stores.
+* It removes the default registry for Crossplane Packages.
 
 Crossplane deprecated native patch and transform composition in Crossplane
 v1.17. It's replaced by composition functions.
@@ -231,9 +232,24 @@ Crossplane deprecated the `ControllerConfig` type in v1.11. It's replaced by the
 Crossplane added external secret stores in v1.7. External secret stores have
 remained in alpha for over two years and are now unmaintained.
 
+Crossplane v2 drops the `--registry` flag that allowed users to specify a default
+registry value and now requires users to always specify a fully qualified URL when
+installing packages, both directly via `spec.package` and indirectly as dependencies.
+Using fully qualified images was already a best practice, but it's now enforced
+to avoid confusion and unexpected behavior, to ensure users are aware of the
+registry used by their packages.
+
 {{<hint "important">}}
 As long as you're not using these deprecated or alpha features, Crossplane v2 is
 backward compatible with Crossplane v1.x.
+{{</hint>}}
+
+{{<hint "important">}}
+Before upgrading to Crossplane v2, please ensure all your Packages are using fully
+qualified images that explicitly specify a registry (`registry.example.com/repo/package:tag`).
+
+Run `kubectl get pkg` to look for any packages that aren't fully qualified, then
+update or rebuild any Packages to use fully qualified images as needed.
 {{</hint>}}
 
 <!-- vale gitlab.FutureTense = NO -->
