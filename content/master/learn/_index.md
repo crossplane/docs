@@ -28,7 +28,7 @@ If you have any questions, please drop us a note on [Crossplane Slack][join-cros
 - Subscribe to our [YouTube Channel](https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw)
 <!-- vale Crossplane.Spelling = NO -->
 - Drop us a note on Twitter: [@crossplane_io](https://twitter.com/crossplane_io)
-- Email us: [info@crossplane.io](mailto:info@crossplane.io)
+- Email us: [crossplane-info@lists.cncf.io](mailto:crossplane-info@lists.cncf.io)
 <!-- vale Crossplane.Spelling = YES -->
 
 <!-- Named links -->
