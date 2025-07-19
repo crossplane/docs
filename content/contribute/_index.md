@@ -11,7 +11,7 @@ The Crossplane Contributing Guide is for anyone interested in contributing to
 the Crossplane documentation.
 
 Information on contributing to the Crossplane software project is in the
-Crossplane 
+Crossplane
 [`CONTRIBUTING.md`](https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md)
 file.
 
@@ -24,7 +24,7 @@ Taken directly from the code:
 >fostering an open and welcoming community, we pledge to respect all people who
 >contribute through reporting issues, posting feature requests, updating
 >documentation, submitting pull requests or patches, and other activities.
->  
+>
 >We are committed to making participation in the CNCF community a
 >harassment-free experience for everyone, regardless of level of experience,
 >gender, gender identity and expression, sexual orientation, disability,
@@ -32,9 +32,8 @@ Taken directly from the code:
 <!-- vale on -->
 
 ## Reporting violations
-To report violations contact the Crossplane maintainers at `info@crossplane.io`
+To report violations contact the Crossplane maintainers at `crossplane-info@lists.cncf.io`
 or the CNCF at `conduct@cncf.io`.
-
 
 All the information needed to contribute to the Crossplane documentation is
 here.
@@ -42,7 +41,7 @@ here.
 * Read [contributing to the docs]({{< ref "contribute" >}}) for information
   about the docs repository, cloning and local development.
 * The [writing style guide]({{< ref "writing-style-guide" >}}) describes the
-  guidelines for language, spelling and language style. 
+  guidelines for language, spelling and language style.
 * The [code styling guide]({{< ref "code-style-guide" >}}) covers the Crossplane guidelines
   specific to including code blocks in docs to provide the best reader
   experience.
