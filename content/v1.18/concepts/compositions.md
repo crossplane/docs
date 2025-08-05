@@ -811,7 +811,7 @@ which composed resources it should create or update.
 
 If the function needs __extra resources__ to determine the desired state it can
 request any cluster-scoped resource Crossplane already has access to, either by
-by name or labels through the returned RunFunctionResponse. Crossplane then
+name or labels through the returned RunFunctionResponse. Crossplane then
 calls the function again including the requested __extra resources__ and the
 __context__ returned by the Function itself alongside the same __input__,
 __observed__ and __desired state__ of the previous RunFunctionRequest. Functions

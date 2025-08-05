@@ -338,7 +338,7 @@ other Crossplane components.
 Crossplane adds the 
 {{<hover label="complabel" line="4">}} crossplane.io/composite{{</hover>}} label
 to all composed resources. The label matches the name of the composite.
-Crossplane applies the composite label to anyresource created by a composite,
+Crossplane applies the composite label to any resource created by a composite,
 creating a reference between the resource and owning composite resource. 
 
 ```shell {label="complabel",copy-lines="1"}
