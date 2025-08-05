@@ -1,13 +1,13 @@
 ---
 title: Function Patch and Transform
 weight: 70
-description: "A function that use patches and transforms to modify inputs from claims and composite resources before creating managed resources"
+description: "A function that use patches and transforms to modify inputs from composite resources before creating managed resources"
 ---
 
 Function Patch and Transform allows you to write a Composition that specifies
 managed resource (MR) templates, and uses "patch and transform" operations to
 fill them out. Crossplane fills the templates out with values copied from a
-claim or composite resource (XR).
+composite resource (XR).
 
 A [patch](#create-a-patch) copies a value from one resource and _patches_ it
 onto another resource. A [transform](#transform-a-patch) modifies the values
@@ -51,7 +51,7 @@ spec:
       resources:
       - name: storage-bucket
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -66,20 +66,6 @@ spec:
 Patch and transform is best for simpler compositions. It intentionally doesn't
 support features like loops and conditionals.
 {{</hint >}}
-
-{{<expand "Confused about Compositions, XRDs, XRs and Claims?" >}}
-Crossplane has four core components that users commonly mix up:
-
-* [Composition]({{<ref "../concepts/compositions">}}) - A template to define
-  how to create resources.
-* [composite resource Definition]({{<ref "../concepts/composite-resource-definitions">}})
-  (`XRD`) - A custom API specification.
-* [composite resource]({{<ref "../concepts/composite-resources">}}) (`XR`) -
-  Created by using the custom API defined in a composite resource Definition.
-  XRs use the Composition template to create new managed resources.
-* [Claim]({{<ref "../concepts/claims" >}}) (`XRC`) - Like a composite resource,
-  but with namespace scoping.
-{{</expand >}}
 
 ## Install the function
 
@@ -96,7 +82,7 @@ spec:
 ```
 
 {{<hint "tip" >}}
-Read the [Composition page]({{<ref "../concepts/compositions">}}) to learn more
+Read the [Composition page]({{<ref "../composition/compositions">}}) to learn more
 about Compositions and composition functions.
 {{< /hint >}}
 
@@ -119,7 +105,7 @@ identifies the resource inside the Composition. It isn't related to the external
 name used with the Provider.
 
 The contents of the `base` are identical to creating a standalone
-[managed resource]({{<ref "../concepts/managed-resources">}}).
+[managed resource]({{<ref "../managed-resources/managed-resources">}}).
 
 This example uses
 [provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws)
@@ -134,14 +120,14 @@ kind: Resources
 resources:
 - name: storage-bucket
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
         region: "us-east-2"
 - name: vm
   base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
+    apiVersion: ec2.aws.m.upbound.io/v1beta1
     kind: Instance
     spec:
       forProvider:
@@ -150,7 +136,7 @@ resources:
         region: "us-east-2"
 ```
 
-When a [composite resource]({{<ref "../concepts/composite-resources" >}}) uses
+When a [composite resource]({{<ref "../composition/composite-resources" >}}) uses
 this function, the composite resource creates two new managed resources with all
 the provided `spec.forProvider` settings.
 
@@ -163,12 +149,8 @@ the resource's name in the external system (like AWS).
 {{< /hint >}}
 
 {{<hint "tip" >}}
-You can use Function Patch and Transform to template other kinds of Crossplane
-resources, like ProviderConfigs.
-
-You can also template other kinds of composite resource (XR).
-
-You can't template namespaced resources.
+You can use Function Patch and Transform to template any kind of Kubernetes
+resource.
 {{< /hint >}}
 
 ## Create a patch
@@ -194,7 +176,7 @@ kind: Resources
 resources:
 - name: storage-bucket
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -223,34 +205,32 @@ Here are some example selectors from a composite resource object.
 | Selector | Selected element |
 | --- | --- |
 | `kind` | `kind` |
-| `metadata.labels['crossplane.io/claim-name']` | `my-example-claim` |
 | `spec.desiredRegion` | `eu-north-1` |
-| `spec.resourceRefs[0].name` | `my-example-claim-978mh-r6z64` |
+| `spec.resourceRefs[0].name` | `my-example-978mh-r6z64` |
 {{</table >}}
 
 ```yaml {label="select",copy-lines="none"}
 $ kubectl get composite -o yaml
 apiVersion: example.org/v1alpha1
-kind: XExample
+kind: Example
 metadata:
   # Removed for brevity
   labels:
-    crossplane.io/claim-name: my-example-claim
-    crossplane.io/claim-namespace: default
-    crossplane.io/composite: my-example-claim-978mh
+    crossplane.io/composite: my-example-978mh
 spec:
   desiredRegion: eu-north-1
   field1: field1-text
-  resourceRefs:
-  - apiVersion: s3.aws.upbound.io/v1beta1
-    kind: Bucket
-    name: my-example-claim-978mh-r6z64
-  - apiVersion: s3.aws.upbound.io/v1beta1
-    kind: Bucket
-    name: my-example-claim-978mh-cnlhj
-  - apiVersion: s3.aws.upbound.io/v1beta1
-    kind: Bucket
-    name: my-example-claim-978mh-rv5nm
+  crossplane:
+    resourceRefs:
+    - apiVersion: s3.aws.m.upbound.io/v1beta1
+      kind: Bucket
+      name: my-example-978mh-r6z64
+    - apiVersion: s3.aws.m.upbound.io/v1beta1
+      kind: Bucket
+      name: my-example-978mh-cnlhj
+    - apiVersion: s3.aws.m.upbound.io/v1beta1
+      kind: Bucket
+      name: my-example-978mh-rv5nm
 ```
 
 ## Reuse a patch
@@ -341,7 +321,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     # Removed for brevity
   patches:
@@ -350,7 +330,7 @@ resources:
       toFieldPath: status.secondResource
 - name: bucket2
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     # Removed for brevity
   patches:
@@ -364,26 +344,26 @@ Describe the composite resource to view the `resources` and the
 
 ```yaml {label="descCompPatch",copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-jp7rx
+Name:         my-example-jp7rx
 Spec:
   # Removed for brevity
   Resource Refs:
-    Name:         my-example-claim-jp7rx-gfg4m
+    Name:         my-example-jp7rx-gfg4m
     # Removed for brevity
-    Name:         my-example-claim-jp7rx-fttpj
+    Name:         my-example-jp7rx-fttpj
 Status:
   # Removed for brevity
-  Second Resource:         my-example-claim-jp7rx-gfg4m
+  Second Resource:         my-example-jp7rx-gfg4m
 ```
 
 Describe the destination managed resource to see the label `secondResource`.
 
 ```yaml {label="bucketlabel",copy-lines="none"}
 $ kubectl describe bucket
-kubectl describe bucket my-example-claim-jp7rx-fttpj
-Name:         my-example-claim-jp7rx-fttpj
-Labels:       crossplane.io/composite=my-example-claim-jp7rx
-              secondResource=my-example-claim-jp7rx-gfg4m
+kubectl describe bucket my-example-jp7rx-fttpj
+Name:         my-example-jp7rx-fttpj
+Labels:       crossplane.io/composite=my-example-jp7rx
+              secondResource=my-example-jp7rx-gfg4m
 ```
 
 ## Patch with EnvironmentConfigs
@@ -398,7 +378,7 @@ can read and write from this data store as part of the patch process.
 <!-- vale off -->
 {{< hint "note" >}}
 <!-- vale on -->
-Read the [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page
+Read the [EnvironmentConfigs]({{<ref "../composition/environment-configs" >}}) page
 for more information on using EnvironmentConfigs.
 {{< /hint >}}
 
@@ -410,8 +390,8 @@ to use with
 <!-- vale gitlab.SentenceLength = NO -->
 <!-- ignore false positive -->
 Use either a
-[reference]({{<ref "../concepts/managed-resources#matching-by-name-reference" >}})
-or a [selector]({{<ref "../concepts/managed-resources#matching-by-selector" >}}) to
+[reference]({{<ref "../managed-resources/managed-resources#matching-by-name-reference" >}})
+or a [selector]({{<ref "../managed-resources/managed-resources#matching-by-selector" >}}) to
 identify the EnvironmentConfigs to use.
 <!-- vale Google.Quotes = YES -->
 
@@ -467,7 +447,7 @@ kind: Resources
 resources:
 - name: vpc
   base:
-    apiVersion: ec2.aws.upbound.io/v1beta1
+    apiVersion: ec2.aws.m.upbound.io/v1beta1
     kind: VPC
     spec:
       forProvider:
@@ -481,7 +461,7 @@ resources:
     toFieldPath: spec.forProvider.tags
 ```
 
-The [EnvironmentConfigs]({{<ref "../concepts/environment-configs" >}}) page has
+The [EnvironmentConfigs]({{<ref "../composition/environment-configs" >}}) page has
 more information on EnvironmentConfigs options and usage.
 
 ## Types of patches
@@ -504,7 +484,7 @@ Summary of Crossplane patches
 
 {{<hint "note" >}}
 All the following examples use the same set of Compositions,
-CompositeResourceDefinitions, Claims and EnvironmentConfigs.
+CompositeResourceDefinitions and EnvironmentConfigs.
 Only the applied patches change between examples.
 
 All examples rely on
@@ -520,7 +500,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: example.org/v1alpha1
-    kind: xExample
+    kind: Example
   environment:
     environmentConfigs:
     - ref:
@@ -536,14 +516,14 @@ spec:
       resources:
       - name: bucket1
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
               region: us-east-2
       - name: bucket2
         base:
-          apiVersion: s3.aws.upbound.io/v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1
           kind: Bucket
           spec:
             forProvider:
@@ -556,15 +536,12 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xexamples.example.org
+  name: examples.example.org
 spec:
   group: example.org
   names:
-    kind: xExample
-    plural: xexamples
-  claimNames:
-    kind: ExampleClaim
-    plural: exampleclaims
+    kind: Example
+    plural: examples
   versions:
   - name: v1alpha1
     served: true
@@ -597,12 +574,13 @@ spec:
 {{< /expand >}}
 
 
-{{< expand "Reference Claim" >}}
+{{< expand "Reference XR" >}}
 ```yaml {copy-lines="all"}
 apiVersion: example.org/v1alpha1
-kind: ExampleClaim
+kind: Example
 metadata:
-  name: my-example-claim
+  namespace: default
+  name: my-example
 spec:
   field1: "field1-text"
   field2: "field2-text"
@@ -637,8 +615,8 @@ The `FromCompositeFieldPath` patch takes a value in a composite resource and
 applies it to a field in the composed resource.
 
 {{< hint "tip" >}}
-Use the `FromCompositeFieldPath` patch to apply options from users in their
-Claims to settings in managed resource `forProvider` settings.
+Use the `FromCompositeFieldPath` patch to apply options from users in their XRs
+to settings in managed resource `forProvider` settings.
 {{< /hint >}}
 
 For example, to use the value `desiredRegion` provided by a user in a composite
@@ -654,7 +632,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -669,7 +647,7 @@ View the managed resource to see the updated `region`
 
 ```yaml {label="fromCompMR",copy-lines="1"}
 $ kubectl describe bucket
-Name:         my-example-claim-qlr68-29nqf
+Name:         my-example-qlr68-29nqf
 # Removed for brevity
 Spec:
   For Provider:
@@ -697,7 +675,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -712,7 +690,7 @@ View the created managed resource to see the
 `Hosted Zone Id` field.
 ```yaml {label="toCompMR",copy-lines="none"}
 $ kubectl describe bucket
-Name:         my-example-claim-p5pxf-5vnp8
+Name:         my-example-p5pxf-5vnp8
 # Removed for brevity
 Status:
   At Provider:
@@ -724,7 +702,7 @@ Next view the composite resource and confirm the patch applied the `label`
 
 ```yaml {label="toCompositeXR",copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-p5pxf
+Name:         my-example-p5pxf
 Labels:       ZoneID=Z2O1EMRO9K5GLX
 ```
 
@@ -740,7 +718,7 @@ Use the `CombineFromComposite` patch to create complex strings, like security
 policies and apply them to a composed resource.
 {{< /hint >}}
 
-For example, use the Claim value `desiredRegion` and `field2` to generate the
+For example, use the XR value `desiredRegion` and `field2` to generate the
 managed resource's `name`
 
 The `CombineFromComposite` patch only supports the `combine` option.
@@ -763,7 +741,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -826,7 +804,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -847,25 +825,18 @@ View the composite resource to verify the applied patch.
 
 ```yaml {copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-bjdjw
+Name:         my-example-bjdjw
 API Version:  example.org/v1alpha1
-Kind:         xExample
+Kind:         Example
 # Removed for brevity
 Status:
   # Removed for brevity
-  URL:                     https://my-example-claim-bjdjw-r6ncd.us-east-2.com
+  URL:                     https://my-example-bjdjw-r6ncd.us-east-2.com
 ```
 
 <!-- vale Google.Headings = NO -->
 ### FromEnvironmentFieldPath
 <!-- vale Google.Headings = YES -->
-
-{{<hint "important" >}}
-EnvironmentConfigs are an alpha feature. They aren't enabled by default.
-
-For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
-{{< /hint >}}
 
 The `FromEnvironmentFieldPath` patch takes values from the in-memory environment
 and applies them to the composed resource.
@@ -884,7 +855,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -899,8 +870,7 @@ Verify managed resource to confirm the applied patch.
 
 ```yaml {copy-lines="none"}
 kubectl describe bucket
-Name:         my-example-claim-8vrvc-xx5sr
-Labels:       crossplane.io/claim-name=my-example-claim
+Name:         my-example-8vrvc-xx5sr
 # Removed for brevity
 Spec:
   For Provider:
@@ -914,7 +884,7 @@ Spec:
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `ToEnvironmentFieldPath` patch takes a value from the composed resource and
@@ -935,7 +905,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -956,7 +926,7 @@ wrote the value to the environment.
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `CombineFromEnvironment` patch combines multiple values from the in-memory
@@ -990,7 +960,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -1012,7 +982,7 @@ Describe the managed resource to see new
 
 ```yaml {copy-lines="none",label="combineFromEnvDesc"}
 $ kubectl describe bucket
-Name:         my-example-claim-zmxdg-grl6p
+Name:         my-example-zmxdg-grl6p
 # Removed for brevity
 Annotations:  EnvironmentPatch: value1-value2
 # Removed for brevity
@@ -1024,7 +994,7 @@ Annotations:  EnvironmentPatch: value1-value2
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
-[EnvironmentConfigs documentation]({{<ref "../concepts/environment-configs">}}).
+[EnvironmentConfigs documentation]({{<ref "../composition/environment-configs">}}).
 {{< /hint >}}
 
 The `CombineToEnvironment` patch combines multiple values from the composed
@@ -1059,7 +1029,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -1113,7 +1083,7 @@ kind: Resources
 resources:
 - name: bucket1
   base:
-    apiVersion: s3.aws.upbound.io/v1beta1
+    apiVersion: s3.aws.m.upbound.io/v1beta1
     kind: Bucket
     spec:
       forProvider:
@@ -1295,7 +1265,7 @@ In this example, the value of `spec.field1` is `field1-text`.
 
 ```yaml {label="comositeMap",copy-lines="none"}
 $ kubectl describe composite
-Name:         my-example-claim-twx7n
+Name:         my-example-twx7n
 Spec:
   # Removed for brevity
   field1:         field1-text
@@ -1305,7 +1275,7 @@ The annotation applied to the managed resource is `firstField`.
 
 ```yaml {label="mrMap",copy-lines="none"}
 $ kubectl describe bucket
-Name:         my-example-claim-twx7n-ndb2f
+Name:         my-example-twx7n-ndb2f
 Annotations:  crossplane.io/composition-resource-name: bucket1
               myAnnotation: firstField
 # Removed for brevity.
@@ -1763,7 +1733,6 @@ only appears in the combined composite resource secret.
 ```yaml {label="conDeet",copy-lines="none"}
 kind: Composition
 spec:
-  writeConnectionSecretsToNamespace: other-namespace
   mode: Pipeline
   pipeline:
   - step: patch-and-transform
@@ -1841,18 +1810,16 @@ the composite resources.
 By default an XRD writes all secret keys listed in the composed resources
 `connectionDetails` to the combined secret object.
 
-Read the
-[CompositeResourceDefinition documentation]({{<ref "../concepts/composite-resource-definitions#manage-connection-secrets">}})
-for more information on restricting secret keys.
-{{< /hint >}}
 
-For more information on connection secrets read the
-[Connection Secrets concepts age]({{<ref "../concepts/connection-details">}}).
+For more information on connection secrets read about
+[managed resources]({{<ref "../managed-resources/managed-resources">}}).
+{{</hint>}}
 
 ## Resource readiness checks
 
-By default Crossplane considers a composite resource or Claim as `READY` when
-the status of all created resource are `Type: Ready` and `Status: True`
+By default function-patch-and-transform considers a composite resource as
+`READY` when the status of all created resource are `Type: Ready` and `Status:
+True`
 
 Some resources, for example, a ProviderConfig, don't have a Kubernetes status
 and are never considered `Ready`.

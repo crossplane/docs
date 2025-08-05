@@ -133,7 +133,6 @@ data:
           "Composition",
           "CompositionRevision",
           "DeploymentRuntimeConfig",
-          "ControllerConfig",
           "ProviderConfig",
           "ProviderConfigUsage"
         }

@@ -26,7 +26,7 @@ uses today.
 
 {{< hint "tip" >}}
 For more information about Crossplane packages, review the
-[xpkg concepts]({{<ref "../concepts/packages" >}}).
+[xpkg concepts]({{<ref "../packages" >}}).
 {{< /hint >}}
 
 ## Typical workflow
