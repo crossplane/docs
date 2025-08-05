@@ -304,16 +304,16 @@ dedicated control planes to many tenants within a single organization.
 
 
 <!-- Named Links -->
-[managed resources]: {{<ref "../../master/concepts/managed-resources" >}}
+[managed resources]: {{<ref "../concepts/managed-resources" >}}
 [RBAC]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
-[Composition]: {{<ref "../../master/concepts/compositions" >}}
+[Composition]: {{<ref "../concepts/compositions" >}}
 [CustomResourceDefinitions]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 [Open Policy Agent]: https://www.openpolicyagent.org/
 [Rego]: https://www.openpolicyagent.org/docs/latest/policy-language/
 [Gatekeeper]: https://open-policy-agent.github.io/gatekeeper/website/docs/
 [here]: https://youtu.be/TaF0_syejXc
 [Multiple Source Field patching]: https://github.com/crossplane/crossplane/pull/2093
-[Configuration packages]: {{<ref "../../master/concepts/packages" >}}
+[Configuration packages]: {{<ref "../concepts/packages" >}}
 [OCI images]: https://github.com/opencontainers/image-spec
 [EKS Cluster]: https://github.com/crossplane-contrib/provider-upjet-aws/blob/main/examples/eks/v1beta2/cluster.yaml
 [provider-aws]: https://github.com/crossplane-contrib/provider-upjet-aws

@@ -47,7 +47,7 @@ Read about Crossplane v2's [backward compatibility](#backward-compatibility).
 
 {{<hint "note">}}
 This page assumes you're familiar with Crossplane. New to Crossplane? Read
-[What's Crossplane]({{<ref "whats-crossplane">}}) instead.
+[What's Crossplane]({{<ref "../whats-crossplane">}}) instead.
 {{</hint>}}
 
 

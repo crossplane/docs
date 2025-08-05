@@ -241,7 +241,7 @@ Debugging Composite Resource Definition (XRD) is like debugging Compositions.
 
 You can use install providers in two ways: `configuration.pkg.crossplane.io` and `provider.pkg.crossplane.io`. You can use either one to install providers with no functional differences to providers themselves.
 If you define a `configuration.pkg.crossplane.io` object, Crossplane creates a
-`provider.pkg.crossplane.io` object and manages it. Refer to [the Packages documentation]({{<ref "/master/concepts/packages">}})
+`provider.pkg.crossplane.io` object and manages it. Refer to [the Packages documentation]({{<ref "../concepts/packages">}})
 for more information about Crossplane Packages.
 
 If you are experiencing provider issues, steps below are a good starting point. 
@@ -451,7 +451,7 @@ To follow the references:
 [Pausing Providers]: #pausing-providers
 [Deleting When a Resource Hangs]: #deleting-when-a-resource-hangs
 [Installing Crossplane Package]: #installing-crossplane-package
-[Crossplane package]: /master/concepts/packages/
+[Crossplane package]: ../concepts/packages/
 [Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
 [semver spec]: https://github.com/Masterminds/semver#basic-comparisons
 

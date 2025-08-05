@@ -449,7 +449,7 @@ vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[c
 {{< /hint >}}
 
 
-[composition type]: {{<ref "../../master/concepts/compositions" >}}
-[Compositions]: {{<ref "../../master/concepts/compositions" >}}
+[composition type]: {{<ref "../concepts/compositions" >}}
+[Compositions]: {{<ref "../concepts/compositions" >}}
 [canary]: https://martinfowler.com/bliki/CanaryRelease.html
-[install guide]: {{<ref "../../master/software/install" >}}
+[install guide]: {{<ref "../software/install" >}}

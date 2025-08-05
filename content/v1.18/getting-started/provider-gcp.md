@@ -22,7 +22,7 @@ This quickstart requires:
 * GCP [account keys](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
 * GCP [Project ID](https://support.google.com/googleapi/answer/7014113?hl=en)
 
-{{<include file="/master/getting-started/install-crossplane-include.md" type="page" >}}
+{{<include file="v1.18/getting-started/install-crossplane-include" type="page" >}}
 
 ## Install the GCP provider
 
