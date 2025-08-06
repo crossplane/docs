@@ -16,7 +16,7 @@
 
 # The version of Hugo to use for the Netlify build.
 [build.environment]
-  HUGO_VERSION = "0.119.0"
+  HUGO_VERSION = "0.147.3"
 
 #
 # The following are Netlify redirects for moved docs pages
