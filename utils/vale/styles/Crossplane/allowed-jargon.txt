@@ -20,7 +20,10 @@ ClusterRole
 ClusterRoles
 command-line
 ConfigMap
+ConfigMaps
 CRD
+cron
+CronJobs
 crt
 CSS
 CUE
@@ -39,6 +42,7 @@ float64
 GitOps
 Go
 gRPC
+hostname
 IAM
 imagePullSecret
 init.sh
@@ -64,6 +68,7 @@ OIDC
 PersistentVolumeClaim
 Pre-releases
 pre-releases
+Prepopulate
 PriorityClass
 proselint
 protobuf
@@ -98,6 +103,7 @@ Substrings
 syscall
 templated
 TLS
+walkthrough
 tolerations
 UI
 VM

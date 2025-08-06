@@ -23,6 +23,8 @@ Crossplane organizes its documentation into the following sections:
 
 * [Composition]({{<ref "composition">}}) covers the key concepts of composition.
 
+* [Operations]({{<ref "operations">}}) covers the key concepts of operations.
+
 * [Managed Resources]({{<ref "managed-resources">}}) covers the key concepts of
   managed resources.
 
