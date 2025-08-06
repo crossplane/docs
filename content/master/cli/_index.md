@@ -17,17 +17,17 @@ The Crossplane CLI includes:
 The Crossplane CLI is a single standalone binary with no external dependencies.
 
 {{<hint "note" >}}
-Install the Crossplane CLI on a user's computer. 
+Install the Crossplane CLI on a user's computer.
 
-Most Crossplane CLI commands are independent of Kubernetes and 
+Most Crossplane CLI commands are independent of Kubernetes and
 don't require access to a Crossplane pod.
-{{< /hint >}} 
+{{< /hint >}}
 
 To download the latest version for your CPU architecture with the Crossplane
 install script.
 
 ```shell
-curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | sh
+curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_CHANNEL=preview sh
 ```
 
 [The script](https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh)
@@ -35,13 +35,13 @@ detects your CPU architecture and downloads the latest stable release.
 
 {{<expand "Manually install the Crossplane CLI" >}}
 
-If you don't want to run shell script you can manually download a binary from 
-the Crossplane releases repository at 
+If you don't want to run shell script you can manually download a binary from
+the Crossplane releases repository at
 https://releases.crossplane.io/stable/current/bin
 
 {{<hint "important" >}}
 <!-- vale write-good.Passive = NO -->
-The CLI is named `crank` in the release repository. Download this file. 
+The release repository names the CLI `crank`. Download this file.
 <!-- vale write-good.Passive = YES -->
 
 The `crossplane` binary is the Kubernetes Crossplane pod image.
@@ -53,29 +53,12 @@ Move the binary to a location in your `$PATH`, for example `/usr/local/bin`.
 ### Download other CLI versions
 
 Download different Crossplane CLI versions or different release branches with
-the `XP_CHANNEL` and `XP_VERSION` environmental variables. 
+the `XP_CHANNEL` and `XP_VERSION` environmental variables.
 
-By default the CLI installs from the `XP_CHANNEL` named `stable` and the 
+By default the CLI installs from the `XP_CHANNEL` named `stable` and the
 `XP_VERSION` of `current`, matching the most recent stable release.
 
-For example, to install CLI version `v1.14.0` add `XP_VERSION=v1.14.0` to the 
-download script curl command:  
+For example, to install CLI version `v1.14.0` add `XP_VERSION=v1.14.0` to the
+download script curl command:
 
 `curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_VERSION=v1.14.0 sh`
-
-## Installing shell autocompletions
-
-The Crossplane CLI supports shell autocompletions for `bash`, `zsh` and `fish`.
-You can install the autocompletions with the `completions` command by adding it to
-your shell's configuration file.
-
-```shell
-source <(crossplane completions)
-```
-
-{{<hint "note" >}}
-The `completions` command generates the autocompletions for your default shell.
-It's not possible to generate autocompletions for a different shell, if you want to
-install the autocompletions for a different shell, you have to configure the Crossplane
-CLI as the completer manually.
-{{< /hint >}}

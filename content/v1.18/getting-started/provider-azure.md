@@ -25,7 +25,7 @@ This quickstart requires:
   [Virtual Network](https://learn.microsoft.com/en-us/azure/virtual-network/)
 * an Azure account with permissions to create an Azure [service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) and an [Azure resource group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
 
-{{<include file="/master/getting-started/install-crossplane-include.md" type="page" >}}
+{{<include file="v1.18/getting-started/install-crossplane-include" type="page" >}}
 
 ## Install the Azure provider
 

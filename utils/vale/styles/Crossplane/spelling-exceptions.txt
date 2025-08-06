@@ -1,5 +1,6 @@
 /tab
 /tabs
+backporting
 built-in
 call-outs
 ClusterRoles`
@@ -8,6 +9,7 @@ conformant
 cross-reference
 Cross-resource
 cross-resource
+datastore
 double-check
 double-checks
 dry-run
@@ -52,5 +54,6 @@ untrusted
 UpperCamelCase
 UpperCamelCased
 user-defined
-version-specific
 v2
+version-specific
+backporting

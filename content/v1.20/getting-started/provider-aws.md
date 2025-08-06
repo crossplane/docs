@@ -23,7 +23,7 @@ This quickstart requires:
 * an AWS account with permissions to create an S3 storage bucket
 * AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
-{{<include file="/master/getting-started/install-crossplane-include.md" type="page" >}}
+{{<include file="v1.20/getting-started/install-crossplane-include" type="page" >}}
 
 ## Install the AWS provider
 

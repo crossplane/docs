@@ -1,11 +1,15 @@
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.HeadingAcronyms = NO -->
 ---  
 title: Configuring Crossplane with Argo CD
 weight: 270
----  
+---
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.HeadingAcronyms = YES -->  
 
 [Argo CD](https://argoproj.github.io/cd/) and [Crossplane](https://crossplane.io)
 are a great combination. Argo CD provides GitOps while Crossplane turns any Kubernetes
-cluster into a Universal Control Plane for all of your resources. Configuration details are 
+cluster into a Universal Control Plane for all your resources. Configuration details are 
 required in order for the two to work together properly.
 This doc will help you understand these requirements. It is recommended to use
 Argo CD version 2.4.8 or later with Crossplane.
@@ -15,12 +19,16 @@ with those running in a Kubernetes cluster (GitOps). Argo CD has different ways 
 how it tracks resources. With Crossplane, you need to configure Argo CD 
 to use Annotation based resource tracking. See the [Argo CD docs](https://argo-cd.readthedocs.io/en/latest/user-guide/resource_tracking/) for additional detail.
  
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Configuring Argo CD with Crossplane
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.HeadingAcronyms = YES -->
 
-#### Set Resource Tracking Method
+#### Set resource tracking method
 
-In order for Argo CD to correctly track Application resources that contain Crossplane related objects it needs
-to be configured to use the annotation mechanism.
+In order for Argo CD to track Application resources that contain Crossplane related objects, configure it
+to use the annotation mechanism.
 
 To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
 ```yaml
@@ -30,11 +38,11 @@ data:
   application.resourceTrackingMethod: annotation
 ```
 
-#### Set Health Status
+#### Set health status
 
-Argo CD has a built-in health assessment for Kubernetes resources. Some checks are supported by the community directly
+Argo CD has a built-in health assessment for Kubernetes resources. The community directly supports some checks
 in Argo's [repository](https://github.com/argoproj/argo-cd/tree/master/resource_customizations). For example the `Provider`
-from `pkg.crossplane.io` has already been declared which means there no further configuration needed.
+from `pkg.crossplane.io` already exists which means there no further configuration needed.
 
 Argo CD also enable customising these checks per instance, and that's the mechanism used to provide support
 of Provider's CRDs.
@@ -133,7 +141,6 @@ data:
           "Composition",
           "CompositionRevision",
           "DeploymentRuntimeConfig",
-          "ControllerConfig",
           "ProviderConfig",
           "ProviderConfigUsage"
         }
@@ -181,13 +188,13 @@ data:
         return health_status
 ```
 
-#### Set Resource Exclusion
+#### Set resource exclusion
 
-Crossplane providers generates a `ProviderConfigUsage` for each of the managed resource (MR) it handles. This resource
-enable representing the relationship between MR and a ProviderConfig so that the controller can use it as finalizer when a
-ProviderConfig is deleted. End users of Crossplane aren't expected to interact with this resource.
+Crossplane providers generate a `ProviderConfigUsage` for each managed resource (MR) they handle. This resource
+enables representing the relationship between MR and a ProviderConfig so that the controller can use it as a finalizer when you delete a
+ProviderConfig. End users of Crossplane don't need to interact with this resource.
 
-Argo CD UI reactivity can be impacted as the number of resource and types grow. To help keep this number low we
+A growing number of resources and types can impact Argo CD UI reactivity. To help keep this number low, Crossplane
 recommend hiding all `ProviderConfigUsage` resources from Argo CD UI.
 
 To configure resource exclusion edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
@@ -202,15 +209,19 @@ data:
         - ProviderConfigUsage
 ```
 
-The use of `"*"` as apiGroups will enable the mechanism for all Crossplane Providers.
+The use of `"*"` as apiGroups enables the mechanism for all Crossplane Providers.
 
-#### Increase Kubernetes Client QPS
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.HeadingAcronyms = NO -->
+#### Increase Kubernetes client QPS
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.HeadingAcronyms = YES -->
 
-As the number of CRDs grow on a control plane it will increase the amount of queries Argo CD Application Controller
+As the number of CRDs grow on a control plane it increases the amount of queries Argo CD Application Controller
 needs to send to the Kubernetes API. If this is the case you can increase the rate limits of the Argo CD Kubernetes client.
 
-Set the environment variable `ARGOCD_K8S_CLIENT_QPS` to `300` for improved compatibility with a large number of CRDs.
+Set the environment variable `ARGOCD_K8S_CLIENT_QPS` to `300` for improved compatibility with multiple CRDs.
 
-The default value of `ARGOCD_K8S_CLIENT_QPS` is 50, modifying the value will also update `ARGOCD_K8S_CLIENT_BURST` as it
+The default value of `ARGOCD_K8S_CLIENT_QPS` is 50, modifying the value also updates `ARGOCD_K8S_CLIENT_BURST` as it
 is default to `ARGOCD_K8S_CLIENT_QPS` x 2.
 

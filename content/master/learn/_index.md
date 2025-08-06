@@ -4,7 +4,7 @@ description: Learn more about Crossplane.
 weight: 500
 ---
 
-If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us].
+If you have any questions, please post in [Crossplane Slack][join-crossplane-slack] or [contact the team][contact-us].
 
 ***Learn more about using Crossplane***
  - [Latest Design Docs](https://github.com/crossplane/crossplane/tree/main/design)
@@ -12,7 +12,9 @@ If you have any questions, please drop us a note on [Crossplane Slack][join-cros
  - [Crossplane Architecture](https://docs.google.com/document/d/1whncqdUeU2cATGEJhHvzXWC9xdK29Er45NJeoemxebo/edit?usp=sharing)
  - [GitLab deploys into multiple clouds from kubectl using Crossplane](https://about.gitlab.com/2019/05/20/gitlab-first-deployed-kubernetes-api-to-multiple-clouds/)
  - [CNCF Talks & Community Presentations](https://www.youtube.com/playlist?list=PL510POnNVaaZJj9OG6PbgsZvgYbhwJRyE)
+<!-- vale write-good.Weasel = NO -->
  - [Software Engineering Daily - Intro Podcast](https://softwareengineeringdaily.com/2019/01/02/crossplane-multicloud-control-plane-with-bassam-tabbara/)
+<!-- vale write-good.Weasel = YES -->
 
 ***Writing Kubernetes controllers to extend Crossplane***
  - [Keep the Space Shuttle Flying: Writing Robust Operators](https://www.youtube.com/watch?v=uf97lOApOv8)
@@ -21,14 +23,16 @@ If you have any questions, please drop us a note on [Crossplane Slack][join-cros
  - [Contributor Guide](https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md)
 
 ***Join the growing Crossplane community and get involved***
-- Join our [Community Slack](https://slack.crossplane.io/)!
+- Join the [Community Slack](https://slack.crossplane.io/)!
 - Submit an issue on [GitHub](https://github.com/crossplane/crossplane)
-- Attend our biweekly [Community Meeting](https://github.com/crossplane/crossplane#get-involved)
-- Join our biweekly live stream: [The Binding Status](https://github.com/crossplane/tbs)
-- Subscribe to our [YouTube Channel](https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw)
+- Attend the biweekly [Community Meeting](https://github.com/crossplane/crossplane#get-involved)
+- Join the biweekly live stream: [The Binding Status](https://github.com/crossplane/tbs)
+- Subscribe to the [YouTube Channel](https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw)
 <!-- vale Crossplane.Spelling = NO -->
-- Drop us a note on Twitter: [@crossplane_io](https://twitter.com/crossplane_io)
-- Email us: [crossplane-info@lists.cncf.io](mailto:crossplane-info@lists.cncf.io)
+- Follow on Twitter: [@crossplane_io](https://twitter.com/crossplane_io)
+<!-- vale gitlab.SubstitutionWarning = NO -->
+- email: [crossplane-info@lists.cncf.io](mailto:crossplane-info@lists.cncf.io)
+<!-- vale gitlab.SubstitutionWarning = YES -->
 <!-- vale Crossplane.Spelling = YES -->
 
 <!-- Named links -->

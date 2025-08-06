@@ -693,7 +693,7 @@ The {{<hover label="build" line="3">}}--embed-runtime-image{{</hover>}} flag
 specifies the runtime image tag built using Docker.
 
 The {{<hover label="build" line="4">}}--package-file{{</hover>}} flag specifies
-specifies where to write the package file to disk. Crossplane package files use
+where to write the package file to disk. Crossplane package files use
 the extension `.xpkg`.
 
 ```shell {label="build"}

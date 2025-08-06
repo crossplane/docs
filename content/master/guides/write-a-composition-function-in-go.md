@@ -8,7 +8,7 @@ Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
 determine what resources it should create when you create a composite resource
 (XR). Read the
-[concepts]({{<ref "../concepts/compositions" >}})
+[concepts]({{<ref "../composition/compositions" >}})
 page to learn more about composition functions.
 
 You can write a function to template resources using a general purpose
@@ -19,7 +19,7 @@ conditionals. This guide explains how to write a composition function in
 
 {{< hint "important" >}}
 It helps to be familiar with
-[how composition functions work]({{<ref "../concepts/compositions#how-composition-functions-work" >}})
+[how composition functions work]({{<ref "../composition/compositions#how-composition-functions-work" >}})
 before following this guide.
 {{< /hint >}}
 
@@ -139,7 +139,7 @@ should delete the `input` and `package/input` directories.
 
 The `input` directory defines a Go struct that a function can use to take input,
 using the `input` field from a Composition. The
-[composition functions]({{<ref "../concepts/compositions/#function-input" >}})
+[composition functions]({{<ref "../composition/compositions/#function-input" >}})
 documentation explains how to pass an input to a composition function.
 
 The `package/input` directory contains an OpenAPI schema generated from the
@@ -306,17 +306,17 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) 
 	// to add desired managed resources.
 	xr, err := request.GetObservedCompositeResource(req)
 	if err != nil {
-		// You can set a custom status condition on the claim. This
+		// You can set a custom status condition on the XR. This
 		// allows you to communicate with the user.
 		response.ConditionFalse(rsp, "FunctionSuccess", "InternalError").
 			WithMessage("Something went wrong.").
-			TargetCompositeAndClaim()
+			TargetComposite()
 
-		// You can emit an event regarding the claim. This allows you to
+		// You can emit an event regarding the XR. This allows you to
 		// communicate with the user. Note that events should be used 
 		// sparingly and are subject to throttling
 		response.Warning(rsp, errors.New("something went wrong")).
-			TargetCompositeAndClaim()
+			TargetComposite()
 
 		// If the function can't read the XR, the request is malformed. This
 		// should never happen. The function returns a fatal result. This tells
@@ -408,10 +408,10 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) 
 	// Kubernetes events associated with the XR it's operating on.
 	log.Info("Added desired buckets", "region", region, "count", len(names))
 
-	// You can set a custom status condition on the claim. This allows you
+	// You can set a custom status condition on the XR. This allows you
 	// to communicate with the user.
 	response.ConditionTrue(rsp, "FunctionSuccess", "Success").
-		TargetCompositeAndClaim()
+		TargetComposite()
 
 	return rsp, nil
 }
@@ -568,7 +568,7 @@ func TestRunFunction(t *testing.T) {
 							Type:   "FunctionSuccess",
 							Status: fnv1.Status_STATUS_CONDITION_TRUE,
 							Reason: "Success",
-							Target: fnv1.Target_TARGET_COMPOSITE_AND_CLAIM.Enum(),
+							Target: fnv1.Target_TARGET_COMPOSITE.Enum(),
 						},
 					},
 				},
@@ -775,7 +775,7 @@ spec:
 
 {{<hint "tip">}}
 Read the composition functions documentation to learn more about
-[testing composition functions]({{< ref "../concepts/compositions#test-a-composition" >}}).
+[testing composition functions]({{< ref "../composition/compositions#test-a-composition" >}}).
 {{</hint>}}
 
 ## Build and push the function to a package registry
@@ -792,7 +792,7 @@ then pushing all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
-[composition functions documentation]({{<ref "../concepts/compositions" >}})
+[composition functions documentation]({{<ref "../composition/compositions" >}})
 to learn how to use a function in a control plane.
 
 Use Docker to build a runtime for each platform.
@@ -823,8 +823,8 @@ metadata about the package.
 The {{<hover label="build" line="3">}}--embed-runtime-image{{</hover>}} flag
 specifies the runtime image tag built using Docker.
 
-The {{<hover label="build" line="4">}}--package-file{{</hover>}} flag specifies
-specifies where to write the package file to disk. Crossplane package files use
+The {{<hover label="build" line="4">}}--package-file{{</hover>}} flag specifies 
+where to write the package file to disk. Crossplane package files use
 the extension `.xpkg`.
 
 ```shell {label="build"}
@@ -843,7 +843,7 @@ crossplane xpkg build \
 
 {{<hint "tip">}}
 Crossplane packages are special OCI images. Read more about packages in the
-[packages documentation]({{< ref "../concepts/packages" >}}).
+[packages documentation]({{< ref "../packages/configurations" >}}).
 {{</hint>}}
 
 Push both package files to a registry. Pushing both files to one tag in the
