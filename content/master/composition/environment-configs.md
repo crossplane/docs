@@ -34,8 +34,10 @@ environment.
 {{< /hint >}}
 
 <!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## Create an EnvironmentConfig
 <!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 An {{<hover label="env1" line="2">}}EnvironmentConfig{{</hover>}} has a single
 object field,
@@ -63,27 +65,30 @@ data:
     - item2
 ```
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## Access EnvironmentConfigs
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
-`EnvironmentConfigs` can be accessed by [Composition Functions] supporting
+[Composition Functions] supporting
 [extra-resources], for example [function-environment-configs] or
 [function-go-templating].
 
-## Migration from Alpha Composition Environment
+## Migration from alpha composition environment
 
 Crossplane (`<=v1.17`) natively supported selecting `EnvironmentConfigs`,
 merging them into an `in-memory environment` and patching between that,
-composed and composite resources. From `v1.18`, this native capability has been
-removed, in favor of [Composition Functions].
+composed and composite resources. From `v1.18`, Crossplane removed this native capability, in favor of [Composition Functions].
 
 Users that enabled Alpha Composition Environments
-(`--enable-environment-configs`) and leveraged the native functionality
+(`--enable-environment-configs`) and leveraged the native features
 (`spec.environment.patches`, `spec.environment.environmentConfigs` and
-`*Environment` patches), will have to migrate to Composition Functions to
+`*Environment` patches), have to migrate to Composition Functions to
 continue doing so.
 
 Automated migration to `Pipeline` mode is available through `crossplane beta
-convert pipeline-composition`, which will move a composition using `Resource`
+convert pipeline-composition`, which moves a composition using `Resource`
 mode, to [function-patch-and-transform] and, if needed,
 [function-environment-configs].
 
@@ -96,8 +101,8 @@ migration.
 
 Select the EnvironmentConfigs to use through [function-environment-configs]'s `Input`.
 
-The `environmentConfigs` field is a list of `EnvironmentConfigs` we want
-retrieved, merged and passed to the next step in the pipeline through the
+The `environmentConfigs` field is a list of `EnvironmentConfigs` to
+retrieve, merge and pass to the next step in the pipeline through the
 [Context] at a well known key, `apiextensions.crossplane.io/environment`.
 
 Select an environment by `Reference` or by `Selector`:
@@ -217,7 +222,7 @@ only uses the first environment in the sorted list.
 
 Set the `selector.mode` to `Multiple` to return all matched EnvironmentConfigs.
 Use `mode: Single` to return a single environment, and error out if more than
-one match is found.
+Crossplane finds one match.
 
 Sorting and the selection mode only applies to a single `Selector`.
 
@@ -347,7 +352,7 @@ the `key` first using a `Value` selector, then define the `Optional`
 
 For example, the Composition below defines `value: my-default-value` for the key
 `my-second-label-key`. If the Composite resource defines
-`spec.parameters.deploy`, [function-environment-configs] will use that instead.
+`spec.parameters.deploy`, [function-environment-configs] uses that instead.
 
 ```yaml {label="byLabelOptionalDefault",copy-lines="all"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -391,12 +396,12 @@ value.
 
 ## Patching with EnvironmentConfigs using function-patch-and-transform
 
-`EnvironmentConfigs` selected as explained above, are then merged in an
+`EnvironmentConfigs` selected as explained earlier, are then merged in an
 `in-memory environment` by [function-environment-configs] and passed to the
 next function in the pipeline at a well known key,
 `apiextensions.crossplane.io/environment`.
 
-[function-patch-and-transform] can be used to read or write data between the in-memory environment and
+You can use [function-patch-and-transform] to read or write data between the in-memory environment and
 composite resource or individual composed resources.
 
 {{<hint "tip" >}}
@@ -442,7 +447,7 @@ spec:
 
 Individual resources can use any data written to the in-memory environment.
 
-`CombineFromComposite` and `CombineToComposite` can be used to combine multiple
+You can use `CombineFromComposite` and `CombineToComposite` to combine multiple
 values and write the result either to the in-memory environment or the
 Composite resource, respectively.
 

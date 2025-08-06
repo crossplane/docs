@@ -91,12 +91,12 @@ Signature verification is an alpha feature and needs to be enabled with the
 {{< /hint >}}
 
 You can use `ImageConfig` to configure signature verification for images. When
-signature verification is enabled, the package manager verifies the signature of
+you enable signature verification, the package manager verifies the signature of
 each image before pulling it. If the signature isn't valid, the package manager
 rejects the package deployment.
 
 In the following example, the `ImageConfig` resource named `verify-acme-packages`
-is configured to verify the signature of images with the prefixes
+configures verification of the signature of images with the prefixes
 `registry1.com/acme-co/configuration-foo` and
 `registry1.com/acme-co/configuration-bar`. 
 
@@ -152,7 +152,7 @@ secret configuration, as described in the previous section.
 
 ### Checking the signature verification status
 
-When signature verification is enabled, the respective controller reports the
+When you enable signature verification, the respective controller reports the
 verification status as a condition of type `Verified` on the package revision
 resources. This condition indicates whether the signature verification was
 successful, failed, skipped, or incomplete due to an error.
@@ -209,6 +209,6 @@ verifying the signature of the image in the package revision.
 
 If you can't see this condition on the package revision resource, namely
 `ProviderRevision`, `ConfigurationRevision`, or `FunctionRevision`, ensure that
-the feature is enabled.
+you enable the feature.
 
 <!-- vale write-good.Passive = YES -->

@@ -1,24 +1,28 @@
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.HeadingAcronyms = NO -->
 ---  
-title: Self-Signed CA Certs
+title: Self-signed CA certs
 weight: 270   
----  
+---
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.HeadingAcronyms = YES -->  
 
 >  Using self-signed certificates isn't advised in production, it's 
 recommended to only use self-signed certificates for testing.
 
 When Crossplane loads Configuration and Provider Packages from private 
-registries, it must be configured to trust the CA and Intermediate certs. 
+registries, you must configure it to trust the CA and Intermediate certs. 
 
-Crossplane needs to be installed via the Helm chart with the 
+You need to install Crossplane via the Helm chart with the 
 `registryCaBundleConfig.name` and `registryCaBundleConfig.key` parameters 
 defined. See [Install Crossplane]({{<ref "../get-started/install" >}}).
 
 ## Configure
 
 1. Create a CA Bundle (A file containing your Root and Intermediate 
-certificates in a specific order). This can be done with any text editor or 
+certificates in a specific order). You can do this with any text editor or 
 from the command line, so long as the resulting file contains all required crt 
-files in the proper order. In many cases, this will be either a single 
+files in the proper order. Often, this is either a single 
 self-signed Root CA crt file, or an Intermediate crt and Root crt file. The 
 order of the crt files should be from lowest to highest in signing order. 
 For example, if you have a chain of two certificates below your Root 
@@ -39,7 +43,7 @@ kubectl -n [Crossplane system namespace] create cm ca-bundle-config \
 `ca-bundle-config` and the `registryCaBundleConfig.key` parameter to 
 `ca-bundle`.
 
-> Providing Helm with parameter values is covered in the Helm docs, 
+> The Helm docs cover providing Helm with parameter values, 
 [Helm install](https://helm.sh/docs/helm/helm_install/). An example block  
 in an `override.yaml` file would look like this:
 ```

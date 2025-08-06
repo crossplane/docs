@@ -127,7 +127,7 @@ logic, and work in your preferred language.
 {{<hint "important">}}
 Composition functions are like configuration language plugins.
 
-Functions allow you to write your configuration in several languages, including
+Functions allow you to write your configuration in multiple languages, including
 [YAML](https://yaml.org), [KCL](https://www.kcl-lang.io),
 [Python](https://python.org), and [Go](https://go.dev).
 {{</hint>}}
@@ -229,7 +229,7 @@ The Crossplane package manager lets you install new managed resources and
 composition functions.
 
 You can also package any part of a control plane's configuration and install it
-using the package manager. This allows you to deploy several control planes with
+using the package manager. This allows you to deploy multiple control planes with
 identical capabilities - for example one control plane per region or per
 service.
 

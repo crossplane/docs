@@ -41,7 +41,7 @@ https://releases.crossplane.io/stable/current/bin
 
 {{<hint "important" >}}
 <!-- vale write-good.Passive = NO -->
-The CLI is named `crank` in the release repository. Download this file.
+The release repository names the CLI `crank`. Download this file.
 <!-- vale write-good.Passive = YES -->
 
 The `crossplane` binary is the Kubernetes Crossplane pod image.

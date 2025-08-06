@@ -171,7 +171,7 @@ spec:
 Matching a controller reference ensures that the matching resource has the same
 Kubernetes controller reference.
 
-This is useful for matching a resource that's composed by the same composite
+Matching a controller reference is useful for matching a resource that's composed by the same composite
 resource (XR).
 
 {{<hint "note" >}}
@@ -206,7 +206,7 @@ doesn't apply the change. Crossplane never deletes a resource based on a
 Crossplane behaves differently than other tools like Terraform. Terraform
 deletes and recreates a resource to change an immutable field. Crossplane only
 deletes an external resource if their corresponding managed 
-resource object is deleted from Kubernetes.
+you delete the resource object from Kubernetes.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
@@ -615,7 +615,7 @@ that it might have leaked a resource.
 {{<hint "note">}}
 Providers don't remove the creation annotations. They use the timestamps to
 determine which is most recent. It's normal for a managed resource to have
-several creation annotations.
+multiple creation annotations.
 {{</hint>}}
 
 The provider knows it might have leaked a resource because it updates all the

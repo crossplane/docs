@@ -319,15 +319,17 @@ Spec:
 
 ### Composite resource conditions
 
+<!-- vale Google.Colons = NO -->
 A composite resource has two status conditions: Synced and Ready.
+<!-- vale Google.Colons = YES -->
 
 Crossplane sets the Synced status condition to True when it's able to
 successfully reconcile the composite resource. If Crossplane can't reconcile the
-composite resource it'll report an error in the Synced condition.
+composite resource it reports an error in the Synced condition.
 
 Crossplane sets the Ready status condition to True when the composite resource's
-composition function pipeline reports that all of its composed resources are
-ready. If a composed resource isn't ready Crossplane will report it in the
+composition function pipeline reports that all its composed resources are
+ready. If a composed resource isn't ready Crossplane reports it in the
 Ready condition.
 
 ## Composite resource labels

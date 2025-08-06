@@ -22,7 +22,7 @@ Read the [composition]({{<ref "../composition/compositions">}}) documentation to
 learn how to use functions in a composition.
 {{</hint>}}
 
-## Install a Function
+## Install a function
 
 Install a Function with a Crossplane
 {{<hover label="install" line="2">}}Function{{</hover >}} object setting the

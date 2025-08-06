@@ -139,7 +139,7 @@ kubectl create secret generic aws-secret \
 
 {{<hint "important">}}
 Crossplane providers don't have to store their credentials in a secret. They
-can load their credentials from various sources.
+can load their credentials from multiple sources.
 {{</hint>}}
 
 Next, [configure the provider](#configure-the-provider) to use the credentials.

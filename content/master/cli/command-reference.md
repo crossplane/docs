@@ -24,7 +24,11 @@ The following flags are available for all commands.
 
 {{< /table >}}
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## version
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 The `crossplane version` command returns the version of Crossplane CLI
 and the control plane.
@@ -35,7 +39,9 @@ Client Version: v1.17.0
 Server Version: v1.17.0
 ```
 
+<!-- vale Google.Headings = NO -->
 ## render
+<!-- vale Google.Headings = YES -->
 
 The `crossplane render` command previews the output of a 
 [composite resource]({{<ref "../composition/composite-resources">}}) after applying
@@ -167,7 +173,7 @@ spec:
 
 The schema of the resource isn't validated and may contain any data.
 
-### Mock Extra Resources
+### Mock extra resources
 
 Extra Resources allow a Composition to request Crossplane Objects on the cluster that aren't
 part of the Composition. The `--extra-resources` option points at a directory containing
@@ -175,13 +181,17 @@ YAML manifests of resources to mock. Use Extra Resources in combination with a f
 [function-extra-resources](https://github.com/crossplane-contrib/function-extra-resources) or the 
 built-in support in [function-go-templating](https://github.com/crossplane-contrib/function-go-templating?tab=readme-ov-file#extraresources).
 
+<!-- vale Google.Headings = NO -->
 ## xpkg
+<!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg` commands create, install and update Crossplane
-[packages]({{<ref "../packages/configurations">}}) as well as enable authentication
+[packages]({{<ref "../packages/configurations">}}) and enable authentication
 and publishing of Crossplane packages to a Crossplane package registry.
 
+<!-- vale Google.Headings = NO -->
 ### xpkg build
+<!-- vale Google.Headings = YES -->
 
 Using `crossplane xpkg build` provides automation and simplification to build
 Crossplane packages.  
@@ -243,7 +253,7 @@ Include YAML files demonstrating how to use the package with `--examples-root`.
 #### Include a runtime image
 
 Functions and Providers require YAML files describing their dependencies and 
-settings as well as a container image for their runtime.
+settings and a container image for their runtime.
 
 Using `--embed-runtime-image-name` runs a specified image and 
 includes the image inside the function or provider package.
@@ -258,7 +268,9 @@ Use `docker pull` to download a missing image.
 The `--embed-runtime-image-tarball` flag includes a local OCI image tarball 
 inside the function or provider package.
 
+<!-- vale Google.Headings = NO -->
 ### xpkg init
+<!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg init` command populates the current directory with 
 files to build a package. 
@@ -279,14 +291,18 @@ The `<template>` value may be one of four well known templates:
 Instead of a well known template the `<template>` value can be a git repository 
 URL.
 
+<!-- vale Google.Headings = NO -->
 #### NOTES.txt
+<!-- vale Google.Headings = YES -->
 
 If the template repository contains a `NOTES.txt` file in its root directory,
 the `crossplane xpkg init` command prints the contents of the file to the
 terminal after populating the directory with the template files. This can be
 useful for providing information about the template.
 
+<!-- vale Google.Headings = NO -->
 #### init.sh
+<!-- vale Google.Headings = YES -->
 
 If the template repository contains an `init.sh` file in its root directory, the
 `crossplane xpkg init` command starts a dialog after populating the
@@ -305,7 +321,9 @@ personalize the template.
 {{< /table >}}
 
 
+<!-- vale Google.Headings = NO -->
 ### xpkg install
+<!-- vale Google.Headings = YES -->
 
 Download and install packages into Crossplane with  `crossplane xpkg install`.
 
@@ -375,7 +393,9 @@ Read more about
 [package revisions]({{< ref "../packages/configurations#configuration-revisions" >}}) 
 in the package documentation. 
 
+<!-- vale Google.Headings = NO -->
 ### xpkg login
+<!-- vale Google.Headings = YES -->
 
 Use `xpkg login` to authenticate to registries that host Crossplane packages.
 
@@ -430,7 +450,9 @@ Authenticate to a registered organization in the Upbound Marketplace with the
 For example, 
 `crossplane xpkg login --account=Upbound --username=my-user --password -`.
 
+<!-- vale Google.Headings = NO -->
 ### xpkg logout
+<!-- vale Google.Headings = YES -->
 
 Use `crossplane xpkg logout` to invalidate the current `crossplane xpkg login` 
 session.
@@ -440,7 +462,9 @@ Using `crossplane xpkg logout` removes the `session` from the
 `~/.crossplane/config.json` file, but doesn't delete the configuration file.
 {{< /hint >}}
 
+<!-- vale Google.Headings = NO -->
 ### xpkg push
+<!-- vale Google.Headings = YES -->
 
 Push a Crossplane package file to a package registry. 
 
@@ -478,7 +502,9 @@ DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
 | `-f`         | `--package-files=PATH` | A comma-separated list of xpkg files to push. |
 {{< /table >}}
 
+<!-- vale Google.Headings = NO -->
 ### xpkg update
+<!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg update` command downloads and updates an existing package.
 
@@ -499,7 +525,9 @@ For example, to update to the latest version of the
 `crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`
 
 
+<!-- vale Google.Headings = NO -->
 ## beta
+<!-- vale Google.Headings = YES -->
 
 Crossplane `beta` commands are experimental. These commands may change the 
 flags, options or outputs in future releases. 
@@ -508,7 +536,9 @@ Crossplane maintainers may promote or remove commands under `beta` in future
 releases.
 
 
+<!-- vale Google.Headings = NO -->
 ### beta convert
+<!-- vale Google.Headings = YES -->
 
 As Crossplane evolves, its APIs and resources may change. To help with the 
 migration to the new APIs and resources, the `crossplane beta convert` command
@@ -547,7 +577,9 @@ By default the function name is "function-patch-and-transform."
 {{< /table >}}
 
 
+<!-- vale Google.Headings = NO -->
 ### beta top
+<!-- vale Google.Headings = YES -->
 
 The command `crossplane beta top` shows CPU and memory usage of Crossplane
 related pods. 
@@ -591,7 +623,9 @@ running the `top` command may produce an error, for example,
 `crossplane: error: error adding metrics to pod, check if metrics-server is running or wait until metrics are available for the pod: the server is currently unable to handle the request (get pods.metrics.k8s.io crossplane-contrib-provider-helm-b4cc4c2c8db3-6d787f9686-qzmz2)`
 
 
+<!-- vale Google.Headings = NO -->
 ### beta trace
+<!-- vale Google.Headings = YES -->
 
 Use the `crossplane beta trace` command to display a visual relationship of
 Crossplane objects. The `trace` command supports XRs, compositions, 
@@ -826,7 +860,9 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 # Removed for brevity
 ```
 
+<!-- vale Google.Headings = NO -->
 ### beta validate
+<!-- vale Google.Headings = YES -->
 
 The `crossplane beta validate` command validates 
 [compositions]({{<ref "../composition/compositions">}}) against provider or XRD 
@@ -953,7 +989,9 @@ crossplane render xr.yaml composition.yaml function.yaml --include-full-xr | cro
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
+<!-- vale Google.Headings = NO -->
 #### Validate Common Expression Language rules
+<!-- vale Google.Headings = YES -->
 
 XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
 ([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).

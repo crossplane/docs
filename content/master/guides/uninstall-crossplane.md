@@ -10,7 +10,9 @@ in order.
 This can leave cloud resources running, requiring manual deletion.
 {{< /hint >}}
 
+<!-- vale Google.Headings = NO -->
 ## Ordered Crossplane uninstall
+<!-- vale Google.Headings = YES -->
 Most Crossplane resources have dependencies on other Crossplane resources. 
 
 For example, a _managed resource_ is dependent on the _provider_.
@@ -128,7 +130,9 @@ Use `kubectl delete` to remove the resources.
 kubectl delete bucket.s3.aws.upbound.io/crossplane-bucket-867737b10
 ```
 
+<!-- vale Google.Headings = NO -->
 ### Remove Crossplane providers
+<!-- vale Google.Headings = YES -->
 
 List the installed _providers_ with `kubectl get providers`.
 
@@ -144,7 +148,9 @@ Remove the installed _providers_ with `kubectl delete provider`.
 kubectl delete provider crossplane-contrib-provider-aws
 ```
 
-## Uninstall the Crossplane deployment 
+<!-- vale Google.Headings = NO -->
+## Uninstall the Crossplane deployment
+<!-- vale Google.Headings = YES --> 
 
 Uninstall Crossplane using Helm with `helm uninstall`
 
@@ -159,7 +165,9 @@ kubectl get pods -n crossplane-system
 No resources found in crossplane-system namespace.
 ```
 
+<!-- vale Google.Headings = NO -->
 ## Delete the Crossplane namespace
+<!-- vale Google.Headings = YES -->
 
 When Helm installs Crossplane it creates the `crossplane-system` namespace. Helm
 doesn't uninstall this namespace with `helm uninstall`.

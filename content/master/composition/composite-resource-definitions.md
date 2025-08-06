@@ -30,7 +30,11 @@ Crossplane XRDs are like
 XRDs require fewer fields and add options related to Crossplane, like connection
 secrets. 
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## Creating a CompositeResourceDefinition
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 Creating a CompositeResourceDefinition consists of:
 * [Defining a custom API group](#xrd-groups).
@@ -88,7 +92,11 @@ recreate the XRD to change the
 {{<hover label="xrd1" line="7">}}names{{</hover>}}.
 {{</hint >}}
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ### XRD groups
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 Groups define a collection of related API endpoints. The `group` can be any
 value, but common convention is to map to a fully qualified domain name.
@@ -98,7 +106,11 @@ Many XRDs may use the same `group` to create a logical collection of APIs.
 <!-- vale write-good.Weasel = YES -->
 For example a `database` group may have a `relational` and `nosql` kinds. 
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ### XRD names
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 The `names` field defines how to refer to this specific XRD.  
 The required name fields are: 
@@ -137,7 +149,11 @@ spec:
 ```
 {{</hint >}}
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ### XRD versions
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 <!-- vale gitlab.SentenceLength = NO -->
 The XRD `version` is like the 
@@ -567,7 +583,11 @@ spec:
   # Removed for brevity
 ```
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## Verify a CompositeResourceDefinition
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 Verify an XRD with `kubectl get compositeresourcedefinition` or the short form, 
 {{<hover label="getxrd" line="1">}}kubectl get xrd{{</hover>}}.
@@ -581,7 +601,11 @@ xdatabases.custom-api.example.org   True          True      22m
 The `ESTABLISHED` field indicates Crossplane installed the Kubernetes custom
 resource definition for this XRD.
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ### XRD conditions
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 Crossplane uses a standard set of `Conditions` for XRDs.  
 View the conditions of a XRD under their `Status` with 
 `kubectl describe xrd`. 

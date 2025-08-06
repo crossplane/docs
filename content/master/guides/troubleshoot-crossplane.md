@@ -2,22 +2,22 @@
 title: Troubleshoot Crossplane
 weight: 306
 ---
-## Requested Resource Not Found
+## Requested resource not found
 
 If you use the Crossplane CLI to install a `Provider` or
 `Configuration` (for example, `crossplane xpkg install provider
 xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`) and get `the server
 could not find the requested resource` error, more often than not, that's an
-indicator that the Crossplane CLI you're using is outdated. In other words
-some Crossplane API has been graduated from alpha to beta or stable and the old
+indicator that your Crossplane CLI needs updating. In other words
+Crossplane graduated some API from alpha to beta or stable and the old
 plugin isn't aware of this change.
 
 
-## Resource Status and Conditions
+## Resource status and conditions
 
 Most Crossplane resources have a `status` section that can represent the current
 state of that particular resource. Running `kubectl describe` against a
-Crossplane resource will frequently give insightful information about its
+Crossplane resource frequently gives insightful information about its
 condition. For example, to determine the status of a GCP `CloudSQLInstance`
 managed resource use `kubectl describe` for the resource.
 
@@ -35,7 +35,7 @@ Most Crossplane resources set the `Ready` condition. `Ready` represents the
 availability of the resource - whether it's creating, deleting, available,
 unavailable, binding, etc.
 
-## Resource Events
+## Resource events
 
 Most Crossplane resources emit _events_ when something interesting happens. You
 can see the events associated with a resource by running `kubectl describe` -
@@ -49,11 +49,15 @@ Events:
   Warning  CannotConnectToProvider  16s (x4 over 46s)  managed/postgresqlserver.database.azure.crossplane.io  cannot get referenced ProviderConfig: ProviderConfig.azure.crossplane.io "default" not found
 ```
 
-> Note that events are namespaced, while many Crossplane resources (XRs, etc)
+> Note that Kubernetes namespaces events, while most Crossplane resources (XRs, etc)
 > are cluster scoped. Crossplane emits events for cluster scoped resources to
 > the 'default' namespace.
 
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## Crossplane Logs
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
 
 The next place to look to get more information or investigate a failure would be
 in the Crossplane pod logs, which should be running in the `crossplane-system`
@@ -63,16 +67,16 @@ namespace. To get the current Crossplane logs, run the following:
 kubectl -n crossplane-system logs -lapp=crossplane
 ```
 
-> Note that Crossplane emits few logs by default - events are typically the best
+> Note that Crossplane emits minimal logs by default - events are typically the best
 > place to look for information about what Crossplane is doing. You may need to
 > restart Crossplane with the `--debug` flag if you can't find what you're
 > looking for.
 
-## Provider Logs
+## Provider logs
 
-Remember that much of Crossplane's functionality is provided by providers. You
+Remember that providers provide much of Crossplane's features. You
 can use `kubectl logs` to view provider logs too. By convention, they also emit
-few logs by default.
+minimal logs by default.
 
 ```shell
 kubectl -n crossplane-system logs <name-of-provider-pod>
@@ -110,21 +114,21 @@ spec:
     name: debug-config
 ```
 
-> Note that a reference to a `DeploymentRuntimeConfig` can be added to an already
-> installed `Provider` and it will update its `Deployment` accordingly.
+> Note that you can add a reference to a `DeploymentRuntimeConfig` to an already
+> installed `Provider` and it updates its `Deployment` accordingly.
 
 ## Pausing Crossplane
 
 Sometimes, for example when you encounter a bug, it can be useful to pause
 Crossplane if you want to stop it from actively attempting to manage your
-resources. To pause Crossplane without deleting all of its resources, run the
+resources. To pause Crossplane without deleting all its resources, run the
 following command to scale down its deployment:
 
 ```shell
 kubectl -n crossplane-system scale --replicas=0 deployment/crossplane
 ```
 
-Once you have been able to rectify the problem or smooth things out, you can
+After you have been able to rectify the problem or smooth things out, you can
 unpause Crossplane by scaling its deployment back up:
 
 ```shell
@@ -133,10 +137,9 @@ kubectl -n crossplane-system scale --replicas=1 deployment/crossplane
 
 ## Pausing Providers
 
-Providers can also be paused when troubleshooting an issue or orchestrating a
+You can also pause Providers when troubleshooting an issue or orchestrating a
 complex migration of resources. Creating and referencing a `DeploymentRuntimeConfig` is
-the easiest way to scale down a provider, and the `DeploymentRuntimeConfig` can be
-modified or the reference can be removed to scale it back up:
+the easiest way to scale down a provider, and you can change the `DeploymentRuntimeConfig` or remove the reference to scale it back up:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
@@ -162,23 +165,23 @@ spec:
     name: scale-config
 ```
 
-> Note that a reference to a `DeploymentRuntimeConfig` can be added to an already
-> installed `Provider` and it will update its `Deployment` accordingly.
+> Note that you can add a reference to a `DeploymentRuntimeConfig` to an already
+> installed `Provider` and it updates its `Deployment` accordingly.
 
-## Deleting When a Resource Hangs
+## Deleting when a resource hangs
 
-The resources that Crossplane manages will automatically be cleaned up so as not
-to leave anything running behind. This is accomplished by using finalizers, but
+The resources that Crossplane manages are automatically cleaned up so as not
+to leave anything running behind. Crossplane accomplishes this by using finalizers, but
 in certain scenarios the finalizer can prevent the Kubernetes object from
 getting deleted.
 
-To deal with this, we essentially want to patch the object to remove its
-finalizer, which will then allow it to be deleted completely. Note that this
-won't necessarily delete the external resource that Crossplane was managing, so
-you will want to go to your cloud provider's console and look there for any
+To deal with this, patch the object to remove its
+finalizer, which then allows Kubernetes to delete it. Note that this
+doesn't necessarily delete the external resource that Crossplane was managing, so
+you want to go to your cloud provider's console and look there for any
 lingering resources to clean up.
 
-In general, a finalizer can be removed from an object with this command:
+In general, you can remove a finalizer from an object with this command:
 
 ```shell
 kubectl patch <resource-type> <resource-name> -p '{"metadata":{"finalizers": []}}' --type=merge
@@ -191,9 +194,9 @@ For example, for a `CloudSQLInstance` managed resource (`database.gcp.crossplane
 kubectl patch cloudsqlinstance my-db -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
 
-## Tips, Tricks, and Troubleshooting
+## Tips, tricks, and troubleshooting
 
-In this section we'll cover some common tips, tricks, and troubleshooting steps
+This section covers some common tips, tricks, and troubleshooting steps
 for working with Composite Resources. If you're trying to track down why your
 Composite Resources aren't working the [Troubleshooting][trouble-ref] page also
 has some useful information.

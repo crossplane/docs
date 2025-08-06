@@ -5,7 +5,9 @@ description: "Configuring build pipelines for Crossplane extensions with GitHub
 Actions"
 ---
 
+<!-- vale Google.Headings = NO -->
 ## Distributing Crossplane extensions
+<!-- vale Google.Headings = YES -->
 
 Crossplane provides a packaging specification for extending a Crossplane
 instance with APIs and business logic for composing resources.
@@ -112,7 +114,7 @@ The workflow generates a default version string if user input isn't provided.
 See [branching conventions](#branching-conventions) for more details on tagging
 practices and optionally overriding the inferred git tag version.
 
-## Common Configuration
+## Common configuration
 
 While the reusable workflows referenced in the quickstart guides are for
 convenience, users may choose to write their own custom GitHub Actions.
@@ -248,7 +250,7 @@ Edit the following variables to define the target registry:
 2. `XPKG_REG_ORGS_NO_PROMOTE` - for registries that don't use or infer
 channel tags.
 
-For example, the following dual-pushes to `xpkg.crossplane.io` as well as
+For example, the following dual-pushes to `xpkg.crossplane.io` and
 `index.docker.io`:
 
 ```make

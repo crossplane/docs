@@ -62,7 +62,7 @@ You use two Crossplane types to create a new custom API:
 * A Composition - This page. Configures how the XR creates other resources.
 {{</expand >}}
 
-## Create a Composition
+## Create a composition
 
 Creating a Composition consists of:
 * [Using composition functions](#use-a-function-in-a-composition) to define the
@@ -492,7 +492,7 @@ the container, and `Orphan`, to leave it running.
   running at the specified target. It uses
   [gRPC target syntax](https://github.com/grpc/grpc/blob/v1.59.1/doc/naming.md).
 
-## Verify a Composition
+## Verify a composition
 
 View all available Compositions with `kubectl get composition`.
 

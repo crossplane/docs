@@ -20,7 +20,7 @@ for the second one.
 
 ## Enable usages
 <!-- vale write-good.Passive = NO -->
-Usages are a beta feature. Beta features are enabled by default.
+Usages are a beta feature. Crossplane enables beta features by default.
 <!-- vale write-good.Passive = YES -->
 
 Disable `Usage` support by 
@@ -270,7 +270,9 @@ spec:
       name: my-prometheus-chart
 ```
 
+<!-- vale Google.Headings = NO -->
 ## ClusterUsages
+<!-- vale Google.Headings = YES -->
 
 Use a `ClusterUsage` to protect cluster scoped resources.
 
