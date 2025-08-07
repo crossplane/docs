@@ -92,16 +92,12 @@ You can change the default activation policy directly and changes persist:
 # View current default policy
 kubectl get mrap crossplane-default-activation-policy -o yaml
 
-# Permanently change to disable default activation
-kubectl patch mrap crossplane-default-activation-policy --type='merge' \
-  -p='{"spec":{"activations":["nonexistent.example.com"]}}'
-
-# Or remove all activations
-kubectl patch mrap crossplane-default-activation-policy --type='merge' \
-  -p='{"spec":{"activations":[]}}'
-
-# Or delete the default policy entirely
+# Delete the default policy and restart Crossplane using Helm
 kubectl delete mrap crossplane-default-activation-policy
+helm upgrade crossplane crossplane-stable/crossplane \
+  --set provider.defaultActivations=null \
+  --namespace crossplane-system --reuse-values
+kubectl rollout restart deployment/crossplane -n crossplane-system
 ```
 
 {{< hint "note" >}}

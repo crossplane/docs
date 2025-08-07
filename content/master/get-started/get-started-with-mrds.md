@@ -51,13 +51,12 @@ You can edit the default activation policy directly:
 {{< tabs >}}
 {{< tab "Edit Existing Policy" >}}
 ```shell
-# Permanently disable by using a non-matching pattern
-kubectl patch mrap crossplane-default-activation-policy --type='merge' \
-  -p='{"spec":{"activations":["nonexistent.example.com"]}}'
-
-# Or remove all activations entirely
-kubectl patch mrap crossplane-default-activation-policy --type='merge' \
-  -p='{"spec":{"activations":[]}}'
+# Delete the default policy and restart Crossplane using Helm
+kubectl delete mrap crossplane-default-activation-policy
+helm upgrade crossplane crossplane-stable/crossplane \
+  --set provider.defaultActivations=null \
+  --namespace crossplane-system --reuse-values
+kubectl rollout restart deployment/crossplane -n crossplane-system
 ```
 
 {{< hint "note" >}}

@@ -9,7 +9,7 @@ Kubernetes Custom Resource Definitions (CRDs) that enables selective
 installation and better documentation of managed resources.
 
 {{< hint "note" >}}
-MRDs are available in Crossplane v2.0+ as an alpha feature.
+MRDs are available in Crossplane v2.0+ as a beta feature.
 {{< /hint >}}
 
 <!-- vale write-good.Passive = NO -->
@@ -193,7 +193,7 @@ Without safe-start, all MRDs are active by default for backward compatibility.
 # In provider package metadata
 spec:
   capabilities:
-  - name: safe-start
+  - safe-start
 ```
 
 {{< hint "note" >}}

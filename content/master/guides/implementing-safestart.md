@@ -19,12 +19,12 @@ Plan for breaking changes and thorough testing before implementing.
 safe-start transforms how your provider handles resource installation:
 
 **Without safe-start:**
-- All managed resources become CRDs when provider installs
+- All resources become MRDs that are automatically active and create CRDs
 - Users get all ~200 AWS resources even if they need only 5
 - Higher memory usage and slower API server responses
 
 **With safe-start:**
-- All managed resources become inactive MRDs when provider installs
+- All resources become MRDs that are inactive by default
 - Users activate only needed resources through policies
 - Lower resource overhead and better performance
 
@@ -51,7 +51,7 @@ metadata:
 spec:
   package: registry.example.com/provider-example:v1.0.0
   capabilities:
-  - name: safe-start
+  - safe-start
 ```
 
 {{< hint "tip" >}}
@@ -148,42 +148,27 @@ func configureConnectionDetails(p *ujconfig.Provider) {
 {{< /tab >}}
 {{< /tabs >}}
 
-### Step 3: Handle namespaced resources
+### Step 3: Update RBAC Permissions
 
-safe-start works best with namespaced managed resources. Update your resources 
-to support both cluster and namespaced scopes:
+safe-start providers need extra permissions to manage CRDs dynamically. Crossplane's RBAC manager automatically provides these permissions when you install safe-start providers.
 
-```go
-// Update resource definitions to support namespacing
-type Database struct {
-    metav1.TypeMeta   `json:",inline"`
-    metav1.ObjectMeta `json:"metadata,omitempty"`
-    
-    Spec   DatabaseSpec   `json:"spec"`
-    Status DatabaseStatus `json:"status,omitempty"`
-}
+{{< hint "note" >}}
+Manual RBAC configuration is only required if you disable Crossplane's RBAC manager (with `--args=--disable-rbac-manager`).
+{{< /hint >}}
 
-// Update your CRD generation
-//+kubebuilder:resource:scope=Namespaced
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-type Database struct {
-    // ... resource definition
-}
-
-// Optionally create cluster-scoped variants
-//+kubebuilder:resource:scope=Cluster
-//+kubebuilder:object:root=true  
-//+kubebuilder:subresource:status
-type ClusterDatabase struct {
-    // ... same spec but cluster scoped
-}
+**Automatically provided permissions:**
+```yaml
+# Crossplane RBAC manager grants these permissions automatically
+# safe-start permissions
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["apiextensions.crossplane.io"] 
+  resources: ["managedresourcedefinitions"]
+  verbs: ["get", "list", "watch", "update", "patch"]
 ```
 
-### Step 4: Update RBAC Permissions
-
-safe-start providers need extra permissions to manage CRDs dynamically:
-
+**Manual configuration (only if you disable RBAC manager):**
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -207,7 +192,7 @@ rules:
   verbs: ["get", "list", "watch", "update", "patch"]
 ```
 
-### Step 5: Implement managed resource definition controller logic
+### Step 4: Implement managed resource definition controller logic
 
 Add controller logic to handle MRD activation and CRD lifecycle:
 
@@ -280,7 +265,7 @@ func (r *MRDReconciler) createCRD(ctx context.Context, mrd *xpv1alpha1.ManagedRe
 }
 ```
 
-### Step 6: Update build and continuous integration processes
+### Step 5: Update build and continuous integration processes
 
 Update your build process to generate MRDs alongside CRDs:
 
@@ -311,7 +296,7 @@ build-package: generate
 	echo "kind: Provider" >> package/provider.yaml
 	echo "spec:" >> package/provider.yaml
 	echo "  capabilities:" >> package/provider.yaml
-	echo "  - name: safe-start" >> package/provider.yaml
+	echo "  - safe-start" >> package/provider.yaml
 ```
 {{< /tab >}}
 
@@ -378,7 +363,7 @@ jobs:
 {{< /tab >}}
 {{< /tabs >}}
 
-### Step 7: Add connection details documentation
+### Step 6: Add connection details documentation
 
 Document connection details in your MRDs to help users understand resource 
 capabilities:
@@ -496,7 +481,7 @@ metadata:
 spec:
   package: registry.example.com/provider-example:latest
   capabilities:
-  - name: safe-start
+  - safe-start
 EOF
 
 # Wait for provider installation

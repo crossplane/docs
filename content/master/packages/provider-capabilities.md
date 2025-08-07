@@ -22,8 +22,8 @@ metadata:
   name: provider-aws
 spec:
   capabilities:
-  - name: safe-start
-  - name: CustomCapability
+  - safe-start
+  - CustomCapability
 ```
 
 Crossplane reads these capabilities and modifies its behavior when installing 
@@ -39,19 +39,19 @@ The `safe-start` capability changes how Managed Resource Definitions (MRDs) are
 activated when you install the provider.
 
 **Without safe-start:**
-- All MRDs are automatically activated
-- Crossplane creates all corresponding CRDs when provider installs
+- All resources become MRDs that are automatically active
+- Active MRDs create corresponding CRDs
 - Compatible with legacy providers and existing workflows
 
 **With safe-start:**
-- All MRDs start in `Inactive` state
+- All resources become MRDs that start in `Inactive` state
 - No CRDs until you explicitly activate MRDs
 - Reduces initial resource overhead and improves performance
 
 ```yaml
 spec:
   capabilities:
-  - name: safe-start
+  - safe-start
 ```
 
 {{< hint "tip" >}}
@@ -79,7 +79,7 @@ Don't use safe-start when:
 Crossplane supports flexible matching for capability names:
 
 * **Exact match**: `safe-start`
-* **Case variations**: `safestart`, `safe-start`, `safe-start`
+* **Case variations**: `SafeStart`, `safestart`, `safe-start`
 * **Fuzzy matching**: Handles common spelling variations
 
 This flexibility prevents issues when providers use different naming conventions.
@@ -180,7 +180,7 @@ metadata:
 spec:
   package: registry.example.com/my-provider:v2.0.0
   capabilities:
-  - name: safe-start
+  - safe-start
 ```
 
 ### Managed resource definition generation with connection details
@@ -304,15 +304,6 @@ kubectl get mrap -o wide
 # Monitor resource usage
 kubectl top nodes
 ```
-
-## Future capabilities
-
-The capability system is extendable. Future capabilities might include:
-
-* **ResourceQuotas** - Automatic resource limit management
-* **NetworkPolicies** - Provider-specific network isolation
-* **CustomValidation** - Enhanced resource validation
-* **TelemetryOpt** - Telemetry and observability features
 
 ## Troubleshooting capabilities
 
