@@ -5,14 +5,14 @@ description: Understand provider capabilities and how they affect resource behav
 ---
 
 Provider capabilities are declarative features that providers can implement to 
-modify their behavior and integration with Crossplane. Capabilities enable 
+change their behavior and integration with Crossplane. Capabilities enable 
 providers to opt into new features while maintaining backward compatibility.
 
-## What are provider capabilities?
+## What are provider capabilities
 
 Provider capabilities are metadata declarations in provider packages that tell 
-Crossplane how the provider should behave. They're similar to feature flags 
-but are declared at the package level.
+Crossplane how the provider should behave. They're like feature flags 
+but you declare them at the package level.
 
 ```yaml
 # In provider package metadata
@@ -22,7 +22,7 @@ metadata:
   name: provider-aws
 spec:
   capabilities:
-  - name: SafeStart
+  - name: safe-start
   - name: CustomCapability
 ```
 
@@ -31,43 +31,45 @@ and managing the provider.
 
 ## Available capabilities
 
-### SafeStart
+<!-- vale Google.Headings = NO -->
+### safe-start
+<!-- vale Google.Headings = YES -->
 
-The `SafeStart` capability changes how Managed Resource Definitions (MRDs) are 
-activated when the provider is installed.
+The `safe-start` capability changes how Managed Resource Definitions (MRDs) are 
+activated when you install the provider.
 
-**Without SafeStart:**
+**Without safe-start:**
 - All MRDs are automatically activated
-- All corresponding CRDs are created immediately
+- Crossplane creates all corresponding CRDs when provider installs
 - Compatible with legacy providers and existing workflows
 
-**With SafeStart:**
+**With safe-start:**
 - All MRDs start in `Inactive` state
-- No CRDs are created until MRDs are explicitly activated
+- No CRDs until you explicitly activate MRDs
 - Reduces initial resource overhead and improves performance
 
 ```yaml
 spec:
   capabilities:
-  - name: SafeStart
+  - name: safe-start
 ```
 
 {{< hint "tip" >}}
-SafeStart is particularly valuable for large providers like AWS that define 
+safe-start is valuable for large providers like AWS that define 
 hundreds of managed resources. It prevents performance issues by avoiding the 
 creation of unused CRDs.
 {{< /hint >}}
 
-#### When to use SafeStart
+#### When to use safe-start
 
-Use SafeStart when:
-* Your provider defines many managed resources (>50)
+Use safe-start when:
+* Your provider defines over 50 managed resources
 * Users typically need only a subset of available resources
 * Installation performance and resource usage are concerns
 * You want to provide better resource discovery through MRDs
 
-Don't use SafeStart when:
-* Your provider has few managed resources (<20)
+Don't use safe-start when:
+* Your provider has under 20 managed resources
 * Most users need all available resources
 * Backward compatibility with existing installations is critical
 * Your users aren't ready to manage resource activation
@@ -76,8 +78,8 @@ Don't use SafeStart when:
 
 Crossplane supports flexible matching for capability names:
 
-* **Exact match**: `SafeStart`
-* **Case variations**: `safestart`, `safe-start`, `SafeStart`
+* **Exact match**: `safe-start`
+* **Case variations**: `safestart`, `safe-start`, `safe-start`
 * **Fuzzy matching**: Handles common spelling variations
 
 This flexibility prevents issues when providers use different naming conventions.
@@ -90,7 +92,7 @@ The provider installation process changes based on declared capabilities:
 flowchart TD
     install[Install Provider Package]
     readCaps[Read Capabilities]
-    checkSafe{Has SafeStart?}
+    checkSafe{Has safe-start?}
     activateAll[Activate All MRDs]
     keepInactive[Keep MRDs Inactive]
     createCRDs[Create All CRDs]
@@ -111,23 +113,23 @@ flowchart TD
 
 ### Legacy providers
 
-Providers without any capabilities work exactly as before:
+Providers without any capabilities work as before:
 * All MRDs are active by default
-* All CRDs are created immediately
+* Crossplane creates all CRDs when provider installs
 * No changes required for existing compositions or configurations
 
 ### Modern providers
 
-Providers with SafeStart capability require additional setup:
+Providers with safe-start capability require extra setup:
 * Create ManagedResourceActivationPolicy to activate needed resources
 * Verify required CRDs exist before creating managed resources  
 * Use MRD connection details documentation for resource planning
 
-## Implementing SafeStart in providers
+## Implementing safe-start in providers
 
-SafeStart implementation requires several technical changes to provider code and 
+safe-start implementation requires several technical changes to provider code and 
 build processes. This section provides an overview - see the 
-[complete SafeStart implementation guide]({{< ref "../guides/implementing-safestart" >}}) 
+[complete safe-start implementation guide]({{< ref "../guides/implementing-safestart" >}}) 
 for detailed instructions.
 
 ### Key implementation requirements
@@ -140,11 +142,11 @@ for detailed instructions.
 
 **Build process changes:**
 - Update Makefile to generate MRDs alongside CRDs
-- Modify CI/CD to test SafeStart behavior
+- Change CI/CD to test safe-start behavior
 - Include MRDs in provider package artifacts
 
 **RBAC updates:**
-SafeStart providers need additional permissions to manage CRDs dynamically:
+safe-start providers need extra permissions to manage CRDs dynamically:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -157,7 +159,7 @@ rules:
   resources: ["events"]
   verbs: ["create", "update", "patch"]
   
-# Additional SafeStart permissions
+# Additional safe-start permissions
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"] 
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
@@ -168,7 +170,7 @@ rules:
 
 ### Provider package metadata
 
-Declare SafeStart capability in your provider package:
+Declare safe-start capability in your provider package:
 
 ```yaml
 apiVersion: meta.pkg.crossplane.io/v1
@@ -178,10 +180,10 @@ metadata:
 spec:
   package: registry.example.com/my-provider:v2.0.0
   capabilities:
-  - name: SafeStart
+  - name: safe-start
 ```
 
-### MRD generation with connection details
+### Managed resource definition generation with connection details
 
 Generate MRDs that document connection details for better user experience:
 
@@ -219,21 +221,21 @@ spec:
 
 ### Implementation examples
 
-The [provider-nop SafeStart implementation](https://github.com/crossplane-contrib/provider-nop/pull/24) 
+The [provider-nop safe-start implementation](https://github.com/crossplane-contrib/provider-nop/pull/24) 
 demonstrates:
 - Adding both namespaced and cluster-scoped resource variants
 - MRD controller integration
-- Build process updates for SafeStart support
-- Testing strategies for SafeStart behavior
+- Build process updates for safe-start support
+- Testing strategies for safe-start behavior
 
 {{< hint "tip" >}}
-See the [complete SafeStart implementation guide]({{< ref "../guides/implementing-safestart" >}}) 
+See the [complete safe-start implementation guide]({{< ref "../guides/implementing-safestart" >}}) 
 for step-by-step instructions, code examples, and testing strategies.
 {{< /hint >}}
 
 ### Migration considerations
 
-When adding SafeStart to existing providers:
+When adding safe-start to existing providers:
 
 **Backward compatibility:**
 - Existing provider installations continue working unchanged
@@ -244,19 +246,19 @@ When adding SafeStart to existing providers:
 ```yaml
 # Document version compatibility clearly
 # Provider v1.x: Traditional CRD installation  
-# Provider v2.0+: SafeStart support with MRDs
+# Provider v2.0+: safe-start support with MRDs
 ```
 
 ## Best practices
 
 ### For provider developers
 
-**Do use SafeStart when:**
+**Do use safe-start when:**
 * Your provider has >50 managed resources
 * Resource activation patterns vary by environment
 * Performance optimization is important
 
-**Document capabilities clearly:**
+**Document capabilities:**
 * Explain what each capability does
 * Provide migration guides for existing users
 * Include examples of activation policies
@@ -291,7 +293,7 @@ spec:
   - "*.example.com"  # Activate all resources
 ```
 
-**Monitor activation status:**
+**Track activation status:**
 ```shell
 # Check which MRDs are active
 kubectl get mrds -l provider=my-provider
@@ -305,7 +307,7 @@ kubectl top nodes
 
 ## Future capabilities
 
-The capability system is extensible. Future capabilities might include:
+The capability system is extendable. Future capabilities might include:
 
 * **ResourceQuotas** - Automatic resource limit management
 * **NetworkPolicies** - Provider-specific network isolation
@@ -318,7 +320,7 @@ The capability system is extensible. Future capabilities might include:
 
 **MRDs not activating:**
 ```shell
-# Check if provider has SafeStart capability
+# Check if provider has safe-start capability
 kubectl get provider my-provider -o yaml | grep -A5 capabilities
 
 # Verify activation policy exists and matches
@@ -362,10 +364,10 @@ kubectl get mrds -l state=Active | wc -l
 
 Provider capabilities integrate with:
 
-* **MRDs** - SafeStart controls default activation state
+* **MRDs** - safe-start controls default activation state
 * **Activation policies** - Work together to control resource availability  
-* **Package manager** - Capabilities are read during package installation
-* **RBAC** - Some capabilities require additional permissions
+* **Package manager** - Crossplane reads capabilities during package installation
+* **RBAC** - Some capabilities require extra permissions
 * **Compositions** - May need updates when capabilities change resource availability
 
 Capabilities provide a foundation for evolving provider behavior while 

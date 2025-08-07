@@ -12,9 +12,11 @@ installation and better documentation of managed resources.
 MRDs are available in Crossplane v2.0+ as an alpha feature.
 {{< /hint >}}
 
-## What are managed resource definitions?
+<!-- vale write-good.Passive = NO -->
+## What are managed resource definitions
+<!-- vale write-good.Passive = YES -->
 
-A Managed Resource Definition (MRD) is essentially a CRD with additional 
+A Managed Resource Definition (MRD) is essentially a CRD with extra 
 metadata that provides:
 
 * **Connection details schema** - Documents what connection details the 
@@ -25,7 +27,7 @@ metadata that provides:
   available
 
 **Every managed resource in a provider package has an associated MRD.** The MRD 
-contains the same schema as the CRD, plus additional Crossplane-specific 
+contains the same schema as the CRD, plus extra Crossplane-specific 
 metadata.
 
 ```mermaid
@@ -43,7 +45,7 @@ flowchart LR
     style crd fill:#f3e5f5
 ```
 
-## Why use managed resource definitions?
+## Why use managed resource definitions
 
 MRDs solve several challenges with traditional provider packages:
 
@@ -69,7 +71,7 @@ needs the full set.
 
 **MRDs enable environment-specific resource activation** through policies.
 
-## How MRDs work
+## How managed resource definitions work
 
 When you install a provider package, Crossplane creates:
 
@@ -78,7 +80,7 @@ When you install a provider package, Crossplane creates:
 3. **Activation policies** - ManagedResourceActivationPolicy controls which 
    MRDs become active
 
-### MRD lifecycle
+### Managed resource definition lifecycle
 
 ```mermaid
 flowchart TD
@@ -99,7 +101,7 @@ flowchart TD
     style inactive fill:#ffcdd2
 ```
 
-### MRD states
+### Managed resource definition states
 
 MRDs can be in one of two states:
 
@@ -109,7 +111,7 @@ MRDs can be in one of two states:
 You can change an MRD's state by:
 * Editing the MRD directly (`spec.state: Active`)
 * Using a ManagedResourceActivationPolicy
-* Provider package capabilities (SafeStart)
+* Provider package capabilities (safe-start)
 
 ## Connection details schema
 
@@ -142,13 +144,15 @@ spec:
 The `connectionDetails` field documents:
 * **Connection detail names** - What keys appear in connection secrets
 * **Descriptions** - What each connection detail contains
-* **Types** - The data type of each detail
+* **Types** - The data each detail's type
 * **Source keys** - How details map from provider responses
 
+<!-- vale Google.Headings = NO -->
 ## Managed Resource Activation Policy
+<!-- vale Google.Headings = YES -->
 
 ManagedResourceActivationPolicy (MRAP) provides pattern-based control over 
-which MRDs become active. This is more scalable than manually activating 
+which MRDs become active. Pattern-based control is more scalable than manually activating 
 individual MRDs.
 
 ```yaml
@@ -171,44 +175,48 @@ MRAP supports several activation patterns:
 * **Wildcard prefix**: `*.rds.aws.crossplane.io` (all RDS resources)
 * **Provider wildcard**: `*.aws.crossplane.io` (all AWS resources)
 
-Multiple MRAPs can exist, and their activations are combined.
+Multiple MRAPs can exist, and their activations combine.
 
 ## Provider capabilities
 
 Providers can declare capabilities that affect MRD behavior:
 
-### SafeStart capability
-Providers with the `SafeStart` capability start with all MRDs inactive by 
+<!-- vale Google.Headings = NO -->
+### safe-start capability
+<!-- vale Google.Headings = YES -->
+Providers with the `safe-start` capability start with all MRDs inactive by 
 default. This prevents performance issues when installing large providers.
 
-Without SafeStart, all MRDs are active by default for backward compatibility.
+Without safe-start, all MRDs are active by default for backward compatibility.
 
 ```yaml
 # In provider package metadata
 spec:
   capabilities:
-  - name: SafeStart
+  - name: safe-start
 ```
 
 {{< hint "note" >}}
-Implementing SafeStart requires significant provider code changes. Provider 
+Implementing safe-start requires significant provider code changes. Provider 
 developers should follow the 
-[SafeStart implementation guide]({{< ref "../guides/implementing-safestart" >}}) 
+[safe-start implementation guide]({{< ref "../guides/implementing-safestart" >}}) 
 for detailed technical requirements and examples.
 {{< /hint >}}
 
-### SafeStart implementation examples
+<!-- vale Google.Headings = NO -->
+### safe-start implementation examples
+<!-- vale Google.Headings = YES -->
 
-The Crossplane community has implemented SafeStart in several providers:
+The Crossplane community has implemented safe-start in several providers:
 
 * **provider-nop** - [Reference implementation](https://github.com/crossplane-contrib/provider-nop/pull/24) 
-  showing SafeStart integration with both namespaced and cluster-scoped resources
-* **provider-aws** - Large provider demonstrating SafeStart performance benefits
+  showing safe-start integration with both namespaced and cluster-scoped resources
+* **provider-aws** - Large provider demonstrating safe-start performance benefits
 
 These implementations provide real-world examples of:
 - MRD controller integration
 - Build process modifications  
-- Testing strategies for SafeStart behavior
+- Testing strategies for safe-start behavior
 - Migration approaches for existing users
 
 ## Key concepts
@@ -217,9 +225,9 @@ Understanding these terms helps when working with MRDs:
 
 * **MRD** - The definition that may or may not have an active CRD
 * **MRAP** - Policy that controls which MRDs become active
-* **Active state** - MRD has an underlying CRD, resources can be created
+* **Active state** - MRD has an underlying CRD, you can create resources
 * **Inactive state** - No CRD exists, resource creation fails
-* **SafeStart** - Provider capability that defaults MRDs to inactive
+* **safe-start** - Provider capability that defaults MRDs to inactive
 * **Connection details schema** - Documentation of what connection details 
   a managed resource provides
 
@@ -228,10 +236,10 @@ Understanding these terms helps when working with MRDs:
 MRDs integrate with existing Crossplane concepts:
 
 * **Providers** - Create MRDs when installed
-* **Managed resources** - Can only be created when their MRD is active
+* **Managed resources** - You can only create when their MRD is active
 * **Compositions** - Can reference both active and inactive managed resources 
   (composition validation occurs at render time)
-* **Claims** - Work normally once the underlying managed resources are active
+* **Claims** - Work after the underlying managed resources are active
 
 MRDs are backward compatible. Existing providers and compositions continue to 
 work without modification.

@@ -1,5 +1,5 @@
 ---
-title: Writing MRD Activation Policies
+title: Writing MRD activation policies
 weight: 150
 description: Learn how to create effective activation policies for managed resources
 ---
@@ -15,7 +15,7 @@ Crossplane automatically creates a default ManagedResourceActivationPolicy when
 installed. Understanding and configuring this default policy is crucial for 
 effective MRD management.
 
-### What is the default MRAP?
+### What's the default activation policy
 
 The default MRAP is automatically created by Crossplane and activates managed 
 resources according to configurable patterns. By default, it uses a wildcard 
@@ -32,7 +32,7 @@ spec:
 ```
 
 {{< hint "important" >}}
-The default `"*"` pattern means SafeStart providers will still create all CRDs, 
+The default `"*"` pattern means safe-start providers still create all CRDs, 
 defeating the performance benefits. Most users should customize this behavior.
 {{< /hint >}}
 
@@ -86,13 +86,13 @@ provider:
 
 ### Modifying the default policy after installation
 
-The default activation policy can be modified directly and changes will persist:
+You can change the default activation policy directly and changes persist:
 
 ```shell
 # View current default policy
 kubectl get mrap crossplane-default-activation-policy -o yaml
 
-# Permanently modify to disable default activation
+# Permanently change to disable default activation
 kubectl patch mrap crossplane-default-activation-policy --type='merge' \
   -p='{"spec":{"activations":["nonexistent.example.com"]}}'
 
@@ -105,8 +105,8 @@ kubectl delete mrap crossplane-default-activation-policy
 ```
 
 {{< hint "note" >}}
-**Changes to the default policy are permanent.** Once the default MRAP exists, 
-Crossplane will not modify it. The Helm chart `provider.defaultActivations` 
+**Changes to the default policy are permanent.** After the default MRAP exists, 
+Crossplane doesn't change it. The Helm chart `provider.defaultActivations` 
 value is only used when creating the policy if it doesn't already exist.
 {{< /hint >}}
 
@@ -161,12 +161,12 @@ EOF
 - **Performance**: Only activates resources you actually use
 - **Security**: Principle of least privilege for resource access
 - **Clarity**: Explicit about which resources are available
-- **Maintainability**: Easier to understand and modify activation patterns
+- **Maintainability**: Easier to understand and change activation patterns
 
 ## Policy basics
 
 Beyond the default policy, you can create custom activation policies that 
-specify which MRDs should be activated using pattern matching:
+specify which MRDs should activate using pattern matching:
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1alpha1
@@ -200,7 +200,7 @@ spec:
 ```
 
 Use exact matching when:
-* You know exactly which resources you need
+* You know which resources you need
 * You want fine-grained control over individual resources
 * Security policies require explicit resource approval
 
@@ -234,7 +234,7 @@ spec:
 ```
 
 Use provider-wide activation when:
-* You're migrating from non-SafeStart providers
+* You're migrating from non-safe-start providers
 * Your applications use diverse resources from a single provider
 * Development environments need broad resource access
 
@@ -267,7 +267,7 @@ spec:
 
 ### Staging environment  
 
-Include additional resources for integration testing:
+Include resources for integration testing:
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1alpha1
@@ -396,9 +396,9 @@ spec:
   - "*.insights.azure.crossplane.io"
 ```
 
-### Application team
+### App team
 
-Resources needed by application developers:
+Resources needed by app developers:
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1alpha1
@@ -451,8 +451,8 @@ spec:
   - "*.lambda.aws.crossplane.io"
 ```
 
-You can delete the `advanced-resources` policy to quickly deactivate optional 
-resources while keeping base functionality.
+You can delete the `advanced-resources` policy to deactivate optional 
+resources while keeping base capability.
 
 ### Feature flag patterns
 
@@ -477,7 +477,7 @@ spec:
 
 ### Check activation status
 
-Verify your policies are working correctly:
+Verify your policies work:
 
 ```shell
 # List all activation policies
@@ -495,7 +495,7 @@ kubectl get mrds -l crossplane.io/provider=provider-aws --field-selector spec.st
 
 ### Test resource creation
 
-Verify activated resources work correctly:
+Verify activated resources work:
 
 ```shell
 # Try creating a managed resource
@@ -523,7 +523,7 @@ Common issues and solutions:
 kubectl get mrd my-resource.provider.example.com
 kubectl describe mrd my-resource.provider.example.com
 
-# Verify policy is matching correctly  
+# Verify policy is matching  
 kubectl get mrap my-policy -o yaml | grep -A20 status
 
 # Look for controller errors
@@ -551,7 +551,7 @@ spec:
 
 ### Policy consolidation
 
-Multiple small policies vs. few large policies:
+Multiple small policies vs. large policies:
 
 {{< tabs >}}
 {{< tab "Multiple Small Policies (Recommended)" >}}
@@ -599,7 +599,9 @@ spec:
 
 ## Policy lifecycle management
 
+<!-- vale Google.Headings = NO -->
 ### GitOps workflow
+<!-- vale Google.Headings = YES -->
 
 Store activation policies in Git for proper change management:
 
@@ -687,5 +689,5 @@ spec:
   # ... composition definition
 ```
 
-This helps operators understand which activation policies are needed for 
-specific compositions to work correctly.
+This helps operators understand which activation policies you need for 
+specific compositions to work.

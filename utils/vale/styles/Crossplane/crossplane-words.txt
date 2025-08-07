@@ -81,6 +81,8 @@ RunFunctionRequest
 RunFunctionResponse
 SafeStart
 SafeStart-capable
+safe-start
+safe-start-capable
 Sigstore
 SSL
 StoreConfig
@@ -108,3 +110,7 @@ XRD's
 XRDs
 XR's
 XRs
+ResourceQuotas
+NetworkPolicies
+CustomValidation
+TelemetryOpt

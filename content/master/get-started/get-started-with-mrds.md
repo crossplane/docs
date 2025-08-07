@@ -36,7 +36,7 @@ that, by default, activates **all** managed resources with a `"*"` pattern.
 
 {{< hint "important" >}}
 The default `"*"` activation pattern defeats the performance benefits of 
-SafeStart by activating all resources. For this tutorial, we work with the 
+safe-start by activating all resources. For this tutorial, the guide works with the 
 default behavior, but production setups should use more selective activation.
 {{< /hint >}}
 
@@ -46,7 +46,7 @@ Check if you have a default activation policy:
 kubectl get mrap crossplane-default-activation-policy -o yaml
 ```
 
-You can modify the default activation policy directly:
+You can edit the default activation policy directly:
 
 {{< tabs >}}
 {{< tab "Edit Existing Policy" >}}
@@ -62,7 +62,7 @@ kubectl patch mrap crossplane-default-activation-policy --type='merge' \
 
 {{< hint "note" >}}
 Changes to the default policy are permanent. After the policy exists, Crossplane 
-won't modify it, even if you change Helm values.
+doesn't change it, even if you change Helm values.
 {{< /hint >}}
 {{< /tab >}}
 
@@ -85,9 +85,9 @@ Learn more about configuring default activation policies during installation
 and best practices in the [MRD activation policies guide]({{< ref "../guides/mrd-activation-policies#default-activation-policy" >}}).
 {{< /hint >}}
 
-## Install a SafeStart provider
+## Install a provider with safe-start capability
 
-Now install a provider that supports SafeStart. This provider creates MRDs 
+Now install a provider that supports safe-start. This provider creates MRDs 
 that activation policies control.
 
 ```yaml
@@ -123,7 +123,7 @@ NAME           INSTALLED   HEALTHY   PACKAGE                                    
 provider-aws   True        True      xpkg.upbound.io/crossplane-contrib/provider-aws   2m
 ```
 
-## Examine the MRDs
+## Examine the managed resource definitions
 
 List the MRDs created by the provider:
 
@@ -146,7 +146,7 @@ clusters.eks.aws.crossplane.io        Active     2m
 # ... many more, all Active
 ```
 
-The default policy activates all MRDs, so SafeStart providers behave like 
+The default policy activates all MRDs, so safe-start providers behave like 
 traditional providers.
 {{< /tab >}}
 
@@ -162,14 +162,14 @@ clusters.eks.aws.crossplane.io        Inactive   2m
 # ... many more, all Inactive
 ```
 
-This demonstrates true SafeStart behavior where resources must be explicitly 
+This demonstrates true safe-start behavior where resources must be explicitly 
 activated.
 {{< /tab >}}
 {{< /tabs >}}
 
 {{< hint "note" >}}
-For the rest of this tutorial, we assume you have default activation 
-disabled to demonstrate selective activation. If you have default activation 
+For the rest of this tutorial, the guide assumes you have default activation 
+disabled to show selective activation. If you have default activation 
 enabled, the MRDs are already active.
 {{< /hint >}}
 
@@ -195,7 +195,7 @@ spec:
     type: string
 ```
 
-## Verify CRD creation behavior
+## Verify resource creation behavior
 
 The presence of CRDs depends on whether MRDs are active:
 
@@ -207,8 +207,8 @@ Because MRDs are active due to the default `"*"` policy, CRDs exist:
 kubectl get crds | grep aws.crossplane.io | wc -l
 ```
 
-This shows many CRDs (100+), demonstrating that active MRDs 
-create CRDs immediately.
+This shows 100+ CRDs, demonstrating that active MRDs 
+create CRDs.
 {{< /tab >}}
 
 {{< tab "With Disabled Default Activation" >}}
@@ -288,9 +288,9 @@ dbinstances.rds.aws.crossplane.io        Active   5m
 # ... other RDS resources
 ```
 
-## Verify CRDs are created
+## Verify custom resource definition creation
 
-Now that MRDs are active, CRDs should exist:
+Now that MRDs are active, CRDs exist:
 
 ```shell
 kubectl get crds | grep -E "(instances.ec2|buckets.s3|rds)" | head -5
@@ -321,8 +321,8 @@ spec:
 ```
 
 {{< hint "note" >}}
-This example assumes you have AWS credentials configured. See the 
-[AWS Provider documentation]({{< ref "../guides/aws-provider" >}}) for 
+This example assumes you have AWS credentials configured. See 
+[ProviderConfig documentation]({{< ref "../managed-resources/managed-resources#providerconfigref" >}}) for 
 authentication setup.
 {{< /hint >}}
 
@@ -428,16 +428,16 @@ status:
 Compare the resource usage with traditional provider installation:
 
 **Without MRDs (traditional):**
-- All ~200 AWS CRDs created immediately
+- All ~200 AWS CRDs created when provider installs
 - Higher memory usage in kube-apiserver
 - Longer provider installation time
 
 **With MRDs and selective activation:**
-- Only activated CRDs created (~10-20 in this example)
+- Only activated CRDs created (10 to 20 in this example)
 - Lower memory footprint
 - Faster resource discovery and management
 
-Check the number of AWS CRDs currently in your cluster:
+Check the number of AWS CRDs in your cluster:
 
 ```shell
 kubectl get crds | grep aws.crossplane.io | wc -l
@@ -463,7 +463,7 @@ spec:
 EOF
 ```
 
-The activations from both policies are combined, giving you fine-grained 
+Both policies combine their activations, giving you fine-grained 
 control over resource availability.
 
 ## Clean up
@@ -522,9 +522,9 @@ Now that you understand MRDs and activation policies, you can:
 * **Optimize cluster performance** by using selective activation
 * **Improve resource discovery** through MRD connection details documentation
 * **Implement environment-specific policies** for different deployment stages
-* **Plan provider adoption** using SafeStart-capable providers
+* **Plan provider adoption** using safe-start-capable providers
 
 Learn more about:
 * [MRD activation policies best practices]({{< ref "../guides/mrd-activation-policies" >}}) - Comprehensive guide including default policy configuration
 * [Managed Resource Definitions concepts]({{< ref "managed-resource-definitions" >}})
-* [Provider capabilities and SafeStart]({{< ref "../packages/provider-capabilities" >}})
+* [Provider capabilities and safe-start]({{< ref "../packages/provider-capabilities" >}})

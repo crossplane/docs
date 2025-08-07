@@ -173,14 +173,14 @@ deprecate and remove cluster scoped MRs at a future date.
 Read more about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
-## Managed Resource Definitions
+## Managed resource definitions
 
 Crossplane v2 introduces Managed Resource Definitions (MRDs) that provide 
 selective resource activation and improved resource discovery.
 
 **MRDs solve performance and usability challenges with large providers.** 
 Installing a provider like AWS traditionally creates hundreds of CRDs, even if 
-you only need a few resources. MRDs let you activate only the resources you 
+you only need some resources. MRDs let you activate only the resources you 
 actually use.
 
 ```mermaid
@@ -211,7 +211,7 @@ flowchart LR
     style crd2 fill:#e8f5e8
 ```
 
-### Key MRD benefits
+### Key managed resource definition benefits
 
 **Performance optimization** - Only create CRDs for resources you need, reducing 
 cluster overhead and improving provider installation speed.
@@ -222,7 +222,7 @@ managed resource provides, making it easier to understand resource capabilities.
 **Policy-based activation** - Use ManagedResourceActivationPolicy (MRAP) to 
 activate resources with flexible pattern matching.
 
-**SafeStart providers** - Providers can opt into SafeStart capability, starting 
+**safe-start providers** - Providers can opt into safe-start capability, starting 
 with all MRDs inactive for better performance.
 
 Learn more about [Managed Resource Definitions]({{<ref "../managed-resources/managed-resource-definitions">}}) 

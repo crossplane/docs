@@ -1,36 +1,36 @@
 ---
-title: Implementing SafeStart in Providers
+title: Implementing safe-start in Providers
 weight: 160
-description: Guide for provider developers to implement SafeStart capability
+description: Guide for provider developers to implement safe-start capability
 ---
 
-This guide shows provider developers how to implement SafeStart capability in 
-their Crossplane providers. SafeStart enables selective resource activation 
+This guide shows provider developers how to implement safe-start capability in 
+their Crossplane providers. safe-start enables selective resource activation 
 through Managed Resource Definitions (MRDs), improving performance and resource 
 management.
 
 {{< hint "important" >}}
-SafeStart requires Crossplane v2.0+ and involves significant provider changes. 
+safe-start requires Crossplane v2.0+ and involves significant provider changes. 
 Plan for breaking changes and thorough testing before implementing.
 {{< /hint >}}
 
-## What SafeStart provides
+## What safe-start provides
 
-SafeStart transforms how your provider handles resource installation:
+safe-start transforms how your provider handles resource installation:
 
-**Without SafeStart:**
-- All managed resources become CRDs immediately when provider installs
+**Without safe-start:**
+- All managed resources become CRDs when provider installs
 - Users get all ~200 AWS resources even if they need only 5
 - Higher memory usage and slower API server responses
 
-**With SafeStart:**
+**With safe-start:**
 - All managed resources become inactive MRDs when provider installs
 - Users activate only needed resources through policies
 - Lower resource overhead and better performance
 
 ## Prerequisites
 
-Before implementing SafeStart, ensure you have:
+Before implementing safe-start, ensure you have:
 
 * Provider built with Crossplane v2.0+ runtime
 * Understanding of [MRDs and activation policies]({{< ref "mrd-activation-policies" >}})
@@ -39,9 +39,9 @@ Before implementing SafeStart, ensure you have:
 
 ## Implementation steps
 
-### Step 1: Update provider metadata
+### Step 1: Update Provider Metadata
 
-Declare SafeStart capability in your provider package metadata:
+Declare safe-start capability in your provider package metadata:
 
 ```yaml
 apiVersion: meta.pkg.crossplane.io/v1
@@ -51,15 +51,15 @@ metadata:
 spec:
   package: registry.example.com/provider-example:v1.0.0
   capabilities:
-  - name: SafeStart
+  - name: safe-start
 ```
 
 {{< hint "tip" >}}
-Crossplane supports flexible capability matching. `SafeStart`, `safestart`, 
+Crossplane supports flexible capability matching. `safe-start`, `safestart`, 
 and `safe-start` are all recognized as the same capability.
 {{< /hint >}}
 
-### Step 2: Enhance MRD generation
+### Step 2: Enhance managed resource definition generation
 
 Update your MRD generation to include connection details documentation:
 
@@ -81,7 +81,7 @@ type ManagedResourceDefinitionSpec struct {
     Names   Names  `json:"names"`
     Scope   string `json:"scope"`
     
-    // SafeStart-specific fields
+    // safe-start-specific fields
     ConnectionDetails []ConnectionDetail `json:"connectionDetails,omitempty"`
     State             ResourceState      `json:"state,omitempty"`
 }
@@ -103,10 +103,10 @@ func GetProvider() *ujconfig.Provider {
         ujconfig.WithIncludeList(ExternalNameConfigured()),
         ujconfig.WithDefaultResourceOptions(
             ExternalNameConfigurations(),
-            SafeStartConfiguration(), // Add SafeStart config
+            safe-startConfiguration(), // Add safe-start config
         ))
     
-    // Configure SafeStart for specific resources
+    // Configure safe-start for specific resources
     for _, configure := range []func(provider *ujconfig.Provider){
         configureConnectionDetails,
         configureMRDDocumentation,
@@ -150,7 +150,7 @@ func configureConnectionDetails(p *ujconfig.Provider) {
 
 ### Step 3: Handle namespaced resources
 
-SafeStart works best with namespaced managed resources. Update your resources 
+safe-start works best with namespaced managed resources. Update your resources 
 to support both cluster and namespaced scopes:
 
 ```go
@@ -180,9 +180,9 @@ type ClusterDatabase struct {
 }
 ```
 
-### Step 4: Update RBAC permissions
+### Step 4: Update RBAC Permissions
 
-SafeStart providers need additional permissions to manage CRDs dynamically:
+safe-start providers need extra permissions to manage CRDs dynamically:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -198,7 +198,7 @@ rules:
   resources: ["*"]
   verbs: ["*"]
 
-# Additional SafeStart permissions
+# safe-start permissions
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
@@ -207,7 +207,7 @@ rules:
   verbs: ["get", "list", "watch", "update", "patch"]
 ```
 
-### Step 5: Implement MRD controller logic
+### Step 5: Implement managed resource definition controller logic
 
 Add controller logic to handle MRD activation and CRD lifecycle:
 
@@ -280,7 +280,7 @@ func (r *MRDReconciler) createCRD(ctx context.Context, mrd *xpv1alpha1.ManagedRe
 }
 ```
 
-### Step 6: Update build and CI processes
+### Step 6: Update build and continuous integration processes
 
 Update your build process to generate MRDs alongside CRDs:
 
@@ -306,18 +306,18 @@ build-package: generate
 	mkdir -p package/
 	cp package/crds/*.yaml package/
 	cp package/mrds/*.yaml package/
-	echo "# Package metadata with SafeStart capability" > package/provider.yaml
+	echo "# Package metadata with safe-start capability" > package/provider.yaml
 	echo "apiVersion: meta.pkg.crossplane.io/v1" >> package/provider.yaml
 	echo "kind: Provider" >> package/provider.yaml
 	echo "spec:" >> package/provider.yaml
 	echo "  capabilities:" >> package/provider.yaml
-	echo "  - name: SafeStart" >> package/provider.yaml
+	echo "  - name: safe-start" >> package/provider.yaml
 ```
 {{< /tab >}}
 
 {{< tab "GitHub Actions" >}}
 ```yaml
-name: Build and Test SafeStart Provider
+name: Build and Test safe-start Provider
 
 on:
   push:
@@ -351,13 +351,13 @@ jobs:
         echo "Generated MRDs:"
         ls -la package/mrds/
         
-    - name: Test SafeStart Integration
+    - name: Test safe-start Integration
       run: |
         # Start local cluster
         make kind-up
         make install-crossplane-v2
         
-        # Install provider with SafeStart
+        # Install provider with safe-start
         make install-provider
         
         # Verify MRDs created but inactive
@@ -396,7 +396,7 @@ spec:
     plural: databases
   scope: Namespaced
   
-  # SafeStart-specific fields
+  # safe-start-specific fields
   connectionDetails:
   - name: endpoint
     description: "The RDS instance connection endpoint"
@@ -427,7 +427,7 @@ spec:
     # ... rest of CRD spec
 ```
 
-## Testing SafeStart implementation
+## Testing safe-start implementation
 
 ### Unit testing
 
@@ -435,7 +435,7 @@ Test your MRD generation and controller logic:
 
 ```go
 func TestMRDGeneration(t *testing.T) {
-    // Test that MRDs are generated with correct connection details
+    // Test MRD generation with correct connection details
     mrd := generateMRDForResource("Database")
     
     assert.Equal(t, "databases.rds.aws.example.io", mrd.Name)
@@ -463,7 +463,7 @@ func TestMRDActivation(t *testing.T) {
     assert.NoError(t, err)
     assert.False(t, result.Requeue)
     
-    // Verify CRD was created
+    // Verify CRD creation
     crd := &apiextv1.CustomResourceDefinition{}
     err = fakeClient.Get(ctx, types.NamespacedName{Name: "databases.rds.aws.example.io"}, crd)
     assert.NoError(t, err)
@@ -472,13 +472,13 @@ func TestMRDActivation(t *testing.T) {
 
 ### Integration testing
 
-Test SafeStart behavior in a real cluster:
+Test safe-start behavior in a real cluster:
 
-```bash
+```shell
 #!/bin/bash
 set -e
 
-echo "Starting SafeStart integration test..."
+echo "Starting safe-start integration test..."
 
 # Install Crossplane v2.0
 kubectl create namespace crossplane-system
@@ -487,7 +487,7 @@ helm install crossplane crossplane-stable/crossplane \
   --version v2.0.0 \
   --wait
 
-# Install provider with SafeStart
+# Install provider with safe-start
 kubectl apply -f - <<EOF
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
@@ -496,7 +496,7 @@ metadata:
 spec:
   package: registry.example.com/provider-example:latest
   capabilities:
-  - name: SafeStart
+  - name: safe-start
 EOF
 
 # Wait for provider installation
@@ -553,24 +553,24 @@ EOF
 # Verify resource creation
 kubectl wait --for=condition=Ready database/test-db --timeout=300s --namespace default
 
-echo "✓ SafeStart integration test passed"
+echo "✓ safe-start integration test passed"
 ```
 
 ## Migration considerations
 
 ### For existing users
 
-When you add SafeStart to an existing provider:
+When you add safe-start to an existing provider:
 
 **Breaking change considerations:**
-- Existing installations will continue working (backward compatibility)
-- New installations will have inactive MRDs by default
+- Existing installations continue to work (backward compatibility)
+- New installations have inactive MRDs by default
 - Users need activation policies for new installations
 
 **Migration strategy:**
 ```yaml
 # Provide migration documentation like:
-# For users upgrading to SafeStart-enabled provider v2.0:
+# For users upgrading to safe-start-enabled provider v2.0:
 
 # 1. Existing resources continue working unchanged
 # 2. For new installations, create activation policy:
@@ -585,31 +585,33 @@ spec:
 
 ### Version compatibility matrix
 
-Document version compatibility clearly:
+Document version compatibility:
 
-| Provider Version | Crossplane Version | SafeStart Support | Notes |
+| Provider Version | Crossplane Version | safe-start Support | Notes |
 |------------------|-------------------|------------------|-------|
 | v1.x            | v1.x - v2.x       | No               | Legacy CRD-only mode |  
-| v2.0            | v2.0+             | Yes              | Full SafeStart support |
+| v2.0            | v2.0+             | Yes              | Full safe-start support |
 | v2.1            | v2.0+             | Yes              | Enhanced MRD features |
 
 ## Documentation requirements
 
 Update your provider documentation to include:
 
+<!-- vale Google.Headings = NO -->
 ### README updates
+<!-- vale Google.Headings = YES -->
 
 ```markdown
 # Provider Example
 
-## SafeStart Support
+## safe-start Support
 
-This provider supports SafeStart capability, which provides:
+This provider supports safe-start capability, which provides:
 - Selective resource activation
 - Improved performance for large providers  
 - Connection details documentation
 
-### Quick Start with SafeStart
+### Quick Start with safe-start
 
 1. Install the provider:
 ```yaml
@@ -633,10 +635,10 @@ spec:
   - "*.s3.aws.example.io"
 ```
 
-3. Create resources normally - only activated resources work.
+3. Create resources - only activated resources work.
 ```
 
-### Connection details documentation
+### Connection Details Documentation
 
 Document what connection details each resource provides:
 
@@ -658,10 +660,10 @@ Document what connection details each resource provides:
 
 ## Troubleshooting
 
-### Common issues
+### Common Issues
 
 **MRDs not activating:**
-```bash
+```shell
 # Check activation policy exists and matches
 kubectl get mrap
 kubectl describe mrap my-policy
@@ -672,7 +674,7 @@ kubectl describe mrd my-resource.provider.example.io
 ```
 
 **CRDs not created:**
-```bash
+```shell
 # Check MRD controller logs
 kubectl logs -n crossplane-system deployment/provider-example
 
@@ -681,7 +683,7 @@ kubectl auth can-i create customresourcedefinitions --as=system:serviceaccount:c
 ```
 
 **Resource creation fails:**
-```bash
+```shell
 # Verify MRD is active
 kubectl get mrd my-resource.provider.example.io -o jsonpath='{.spec.state}'
 
@@ -702,13 +704,13 @@ kubectl describe my-resource my-instance
 ### User experience
 - Include helpful error messages when resources aren't activated
 - Provide clear migration guides for existing users
-- Document connection details thoroughly
+- Document connection details
 
 ### Testing strategy  
-- Test both with and without SafeStart in CI
-- Verify activation/deactivation cycles work correctly
+- Test both with and without safe-start in CI
+- Verify activation/deactivation cycles work
 - Test resource creation after activation
 
-SafeStart provides significant value for large providers and improves the 
-overall Crossplane user experience. Following this guide helps ensure your 
+safe-start provides significant value for large providers and improves the 
+ Crossplane user experience. Following this guide helps ensure your 
 implementation is robust, well-documented, and user-friendly.

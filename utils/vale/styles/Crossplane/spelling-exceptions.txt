@@ -104,4 +104,9 @@ Crossplane-specific
 non-SafeStart
 GitOps
 Makefile
-backporting
+provider-wide
+ResourceQuotas
+NetworkPolicies  
+CustomValidation
+TelemetryOpt
+non-safe-start
