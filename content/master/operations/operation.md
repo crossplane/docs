@@ -475,6 +475,86 @@ Use caution with Operations that change resources managed by other controllers.
 Operations force ownership when applying changes, which can cause conflicts.
 {{</hint>}}
 
+## Test an operation
+
+You can preview the output of any Operation using the Crossplane CLI. You
+don't need a Crossplane control plane to do this. The Crossplane CLI uses Docker
+Engine to run functions.
+
+{{<hint "tip">}}
+See the [Crossplane CLI docs]({{<ref "../cli">}}) to
+learn how to install and use the Crossplane CLI.
+{{< /hint >}}
+
+{{<hint "important">}}
+Running `crossplane alpha render op` requires [Docker](https://www.docker.com).
+{{< /hint >}}
+
+Provide an operation, composition functions, and any required resources to render
+the output locally.
+
+```shell
+crossplane alpha render op operation.yaml functions.yaml --required-resources=ingress.yaml
+```
+
+`crossplane alpha render op` prints the Operation status and any resources the
+operation functions created or modified. It shows what would happen if you
+applied the Operation to a cluster.
+
+```yaml
+---
+# Operation status showing function results
+apiVersion: ops.crossplane.io/v1alpha1
+kind: Operation
+metadata:
+  name: ingress-cert-monitor
+status:
+  conditions:
+  - type: Succeeded
+    status: "True"
+    reason: PipelineSuccess
+  pipeline:
+  - step: check-ingress-certificate
+    output:
+      certificateExpires: "Sep 29 08:34:02 2025 GMT"
+      daysUntilExpiry: 53
+      hostname: google.com
+      ingressName: example-app
+      status: ok
+---
+# Modified Ingress resource with certificate annotations
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-monitor.crossplane.io/expires: Sep 29 08:34:02 2025 GMT
+    cert-monitor.crossplane.io/days-until-expiry: "53"
+    cert-monitor.crossplane.io/status: ok
+  name: example-app
+  namespace: default
+spec:
+  # ... ingress spec unchanged
+```
+
+Use `--required-resources` to provide resources that your operation functions
+need access to. You can specify multiple files or use glob patterns:
+
+```shell
+# Multiple specific files
+crossplane alpha render op operation.yaml functions.yaml \
+  --required-resources=deployment.yaml,service.yaml,configmap.yaml
+
+# Glob pattern for all YAML files in a directory
+crossplane alpha render op operation.yaml functions.yaml \
+  --required-resources="resources/*.yaml"
+```
+
+{{<hint "tip">}}
+Use the `crossplane alpha render op` command to test your Operations locally
+before deploying them to a cluster. The command helps validate function logic 
+and required resource access patterns.
+{{</hint>}}
+
 ## Best practices
 
 ### Operation-specific practices
