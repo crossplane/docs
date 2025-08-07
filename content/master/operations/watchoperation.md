@@ -354,7 +354,8 @@ spec:
           renewBefore: "720h"  # 30 days
 ```
 
-The function examines the watched Ingress and dynamically requests related resources:
+The function examines the watched Ingress and dynamically requests related
+resources:
 
 ```python
 from crossplane.function import request, response
@@ -363,38 +364,70 @@ def operate(req, rsp):
     # Access the watched Ingress resource
     ingress = request.get_required_resource(req, "ops.crossplane.io/watched-resource")
     if not ingress:
-        response.set_output(rsp, {"error": "No watched resource found"})
+        response.fatal(rsp, "No watched resource found")
         return
     
     # Extract the service name from the Ingress backend
     rules = ingress.get("spec", {}).get("rules", [])
     if not rules:
+        response.fatal(rsp, "Could not extract service name from ingress")
         return
         
     backend = rules[0].get("http", {}).get("paths", [{}])[0].get("backend", {})
     service_name = backend.get("service", {}).get("name")
     if not service_name:
+        response.fatal(rsp, "Could not extract service name from ingress")
         return
         
     ingress_namespace = ingress.get("metadata", {}).get("namespace", "default")
     
-    # Always declare what resources we need (requirements must be stable across calls)
-    rsp.requirements.resources["related-service"].api_version = "v1"
-    rsp.requirements.resources["related-service"].kind = "Service"
-    rsp.requirements.resources["related-service"].match_name = service_name
-    rsp.requirements.resources["related-service"].namespace = ingress_namespace
+    # CRITICAL: Always request the same resources to ensure requirement
+    # stabilization. Crossplane calls the function repeatedly until 
+    # requirements don't change.
+    response.require_resources(
+        rsp, 
+        name="related-service",
+        api_version="v1",
+        kind="Service",
+        match_name=service_name,
+        namespace=ingress_namespace
+    )
     
-    # Process the service if Crossplane fetched it after our previous response
+    # Check if the service is available and process accordingly
     service = request.get_required_resource(req, "related-service")
     if service:
-        create_certificate_for_service(ingress, service, rsp)
+        # Success: Both resources available
+        response.set_output(rsp, {
+            "status": "success",
+            "message": "Certificate management completed",
+            "ingress_host": ingress.get("spec", {}).get("rules", [{}])[0].get("host"),
+            "service_name": service.get("metadata", {}).get("name")
+        })
+        return
+        
+    # Waiting: Service not available yet
+    response.set_output(rsp, {
+        "status": "waiting", 
+        "message": f"Waiting for service '{service_name}' to be available"
+    })
 ```
 
+{{<hint "important">}}
+**Critical resource stabilization pattern**: functions must return the **same
+requirements** in each iteration to signal completion. The function in the
+preceding example always calls `response.require_resources()` regardless of
+whether the service exists. This ensures Crossplane knows when to stop calling
+the function.
+
+Common mistake: only requesting resources when missing breaks the stabilization
+contract and causes timeout errors.
+{{</hint>}}
+
 This pattern allows functions to:
-1. Examine the watched resource
-2. Dynamically determine what other resources you need  
-3. Request those resources in the next response
-4. Process the more resources in next calls
+1. Examine the watched resource (injected automatically)
+2. Dynamically determine what other resources the function needs
+3. Request those resources consistently using `response.require_resources()`
+4. Process all resources when available, or provide status when waiting
 
 ## Status and monitoring
 
