@@ -59,96 +59,7 @@ Crossplane supports flexible capability matching. `safe-start`, `safestart`,
 and `safe-start` are all recognized as the same capability.
 {{< /hint >}}
 
-### Step 2: Enhance managed resource definition generation
-
-Update your MRD generation to include connection details documentation:
-
-{{< tabs >}}
-{{< tab "Go Controller Runtime" >}}
-```go
-// In your MRD generation code
-type ManagedResourceDefinition struct {
-    metav1.TypeMeta   `json:",inline"`
-    metav1.ObjectMeta `json:"metadata,omitempty"`
-    
-    Spec   ManagedResourceDefinitionSpec   `json:"spec"`
-    Status ManagedResourceDefinitionStatus `json:"status,omitempty"`
-}
-
-type ManagedResourceDefinitionSpec struct {
-    // Standard CRD fields
-    Group   string `json:"group"`
-    Names   Names  `json:"names"`
-    Scope   string `json:"scope"`
-    
-    // safe-start-specific fields
-    ConnectionDetails []ConnectionDetail `json:"connectionDetails,omitempty"`
-    State             ResourceState      `json:"state,omitempty"`
-}
-
-type ConnectionDetail struct {
-    Name        string `json:"name"`
-    Description string `json:"description"`
-    Type        string `json:"type"`
-    FromConnectionSecretKey string `json:"fromConnectionSecretKey,omitempty"`
-}
-```
-{{< /tab >}}
-
-{{< tab "Terrajet/Upjet Provider" >}}
-```go
-// In your provider configuration
-func GetProvider() *ujconfig.Provider {
-    pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath,
-        ujconfig.WithIncludeList(ExternalNameConfigured()),
-        ujconfig.WithDefaultResourceOptions(
-            ExternalNameConfigurations(),
-            safe-startConfiguration(), // Add safe-start config
-        ))
-    
-    // Configure safe-start for specific resources
-    for _, configure := range []func(provider *ujconfig.Provider){
-        configureConnectionDetails,
-        configureMRDDocumentation,
-    } {
-        configure(pc)
-    }
-    
-    return pc
-}
-
-func configureConnectionDetails(p *ujconfig.Provider) {
-    // Example: RDS Instance connection details
-    p.AddResourceConfigurator("aws_db_instance", func(r *ujconfig.Resource) {
-        r.ConnectionDetails = map[string]ujconfig.ConnectionDetail{
-            "endpoint": {
-                Description: "The RDS instance endpoint",
-                Type:        "string",
-                FromConnectionSecretKey: "endpoint",
-            },
-            "port": {
-                Description: "The port on which the DB accepts connections",
-                Type:        "integer", 
-                FromConnectionSecretKey: "port",
-            },
-            "username": {
-                Description: "The master username for the database",
-                Type:        "string",
-                FromConnectionSecretKey: "username", 
-            },
-            "password": {
-                Description: "The master password for the database",
-                Type:        "string",
-                FromConnectionSecretKey: "password",
-            },
-        }
-    })
-}
-```
-{{< /tab >}}
-{{< /tabs >}}
-
-### Step 3: Update RBAC Permissions
+### Step 2: Update RBAC Permissions
 
 safe-start providers need extra permissions to manage CRDs dynamically. Crossplane's RBAC manager automatically provides these permissions when you install safe-start providers.
 
@@ -162,10 +73,7 @@ Manual RBAC configuration is only required if you disable Crossplane's RBAC mana
 # safe-start permissions
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: ["apiextensions.crossplane.io"] 
-  resources: ["managedresourcedefinitions"]
-  verbs: ["get", "list", "watch", "update", "patch"]
+  verbs: ["get", "list", "watch"]
 ```
 
 **Manual configuration (only if you disable RBAC manager):**
@@ -186,184 +94,10 @@ rules:
 # safe-start permissions
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: ["apiextensions.crossplane.io"] 
-  resources: ["managedresourcedefinitions"]
-  verbs: ["get", "list", "watch", "update", "patch"]
+  verbs: ["get", "list", "watch"]
 ```
 
-### Step 4: Implement managed resource definition controller logic
-
-Add controller logic to handle MRD activation and CRD lifecycle:
-
-```go
-package controller
-
-import (
-    "context"
-    
-    apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-    "sigs.k8s.io/controller-runtime/pkg/reconcile"
-    
-    xpv1alpha1 "github.com/crossplane/crossplane/apis/apiextensions/v1alpha1"
-)
-
-// MRDReconciler handles MRD activation
-type MRDReconciler struct {
-    client.Client
-    Scheme *runtime.Scheme
-}
-
-func (r *MRDReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
-    mrd := &xpv1alpha1.ManagedResourceDefinition{}
-    if err := r.Get(ctx, req.NamespacedName, mrd); err != nil {
-        return reconcile.Result{}, client.IgnoreNotFound(err)
-    }
-    
-    // Check if MRD should be active
-    if mrd.Spec.State != nil && *mrd.Spec.State == xpv1alpha1.ResourceStateActive {
-        return r.ensureCRDExists(ctx, mrd)
-    }
-    
-    // If inactive, ensure CRD is removed
-    return r.ensureCRDRemoved(ctx, mrd)
-}
-
-func (r *MRDReconciler) ensureCRDExists(ctx context.Context, mrd *xpv1alpha1.ManagedResourceDefinition) (reconcile.Result, error) {
-    crd := &apiextv1.CustomResourceDefinition{}
-    crdName := mrd.Spec.Names.Plural + "." + mrd.Spec.Group
-    
-    err := r.Get(ctx, types.NamespacedName{Name: crdName}, crd)
-    if client.IgnoreNotFound(err) != nil {
-        return reconcile.Result{}, err
-    }
-    
-    if err != nil { // CRD doesn't exist
-        return r.createCRD(ctx, mrd)
-    }
-    
-    // CRD exists, ensure it's up to date
-    return r.updateCRD(ctx, mrd, crd)
-}
-
-func (r *MRDReconciler) createCRD(ctx context.Context, mrd *xpv1alpha1.ManagedResourceDefinition) (reconcile.Result, error) {
-    crd := &apiextv1.CustomResourceDefinition{
-        ObjectMeta: metav1.ObjectMeta{
-            Name: mrd.Spec.Names.Plural + "." + mrd.Spec.Group,
-            OwnerReferences: []metav1.OwnerReference{{
-                APIVersion: mrd.APIVersion,
-                Kind:       mrd.Kind,
-                Name:       mrd.Name,
-                UID:        mrd.UID,
-                Controller: pointer.Bool(true),
-            }},
-        },
-        Spec: mrd.Spec.CustomResourceDefinitionSpec,
-    }
-    
-    return reconcile.Result{}, r.Create(ctx, crd)
-}
-```
-
-### Step 5: Update build and continuous integration processes
-
-Update your build process to generate MRDs alongside CRDs:
-
-{{< tabs >}}
-{{< tab "Makefile" >}}
-```makefile
-# Update your Makefile to generate both CRDs and MRDs
-.PHONY: generate
-generate: controller-gen
-	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
-	$(CONTROLLER_GEN) crd:allowDangerousTypes=true paths="./..." output:crd:artifacts:config=package/crds
-	$(CONTROLLER_GEN) mrd:allowDangerousTypes=true paths="./..." output:mrd:artifacts:config=package/mrds
-
-# Add MRD generation tool
-MRD_GEN = $(shell pwd)/bin/mrd-gen
-.PHONY: mrd-gen
-mrd-gen: ## Download mrd-gen locally if necessary.
-	$(call go-get-tool,$(MRD_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.13.0)
-
-# Update package generation to include MRDs
-.PHONY: build-package
-build-package: generate
-	mkdir -p package/
-	cp package/crds/*.yaml package/
-	cp package/mrds/*.yaml package/
-	echo "# Package metadata with safe-start capability" > package/provider.yaml
-	echo "apiVersion: meta.pkg.crossplane.io/v1" >> package/provider.yaml
-	echo "kind: Provider" >> package/provider.yaml
-	echo "spec:" >> package/provider.yaml
-	echo "  capabilities:" >> package/provider.yaml
-	echo "  - safe-start" >> package/provider.yaml
-```
-{{< /tab >}}
-
-{{< tab "GitHub Actions" >}}
-```yaml
-name: Build and Test safe-start Provider
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test-safestart:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.21'
-        
-    - name: Run Tests
-      run: make test
-      
-    - name: Generate MRDs
-      run: make generate
-      
-    - name: Verify MRD Generation
-      run: |
-        if [ ! -d "package/mrds" ]; then
-          echo "MRD generation failed"
-          exit 1
-        fi
-        echo "Generated MRDs:"
-        ls -la package/mrds/
-        
-    - name: Test safe-start Integration
-      run: |
-        # Start local cluster
-        make kind-up
-        make install-crossplane-v2
-        
-        # Install provider with safe-start
-        make install-provider
-        
-        # Verify MRDs created but inactive
-        kubectl get mrds
-        kubectl get mrds -o jsonpath='{.items[*].spec.state}' | grep -q "Inactive"
-        
-        # Test activation policy
-        kubectl apply -f examples/activation-policy.yaml
-        
-        # Verify resources activate
-        sleep 30
-        kubectl get mrds -o jsonpath='{.items[*].spec.state}' | grep -q "Active"
-        
-        # Test resource creation
-        kubectl apply -f examples/example-resource.yaml
-        kubectl wait --for=condition=Ready --timeout=300s -f examples/example-resource.yaml
-```
-{{< /tab >}}
-{{< /tabs >}}
-
-### Step 6: Add connection details documentation
+### Step 3: Add connection details documentation
 
 Document connection details in your MRDs to help users understand resource 
 capabilities:
@@ -414,47 +148,6 @@ spec:
 
 ## Testing safe-start implementation
 
-### Unit testing
-
-Test your MRD generation and controller logic:
-
-```go
-func TestMRDGeneration(t *testing.T) {
-    // Test MRD generation with correct connection details
-    mrd := generateMRDForResource("Database")
-    
-    assert.Equal(t, "databases.rds.aws.example.io", mrd.Name)
-    assert.NotEmpty(t, mrd.Spec.ConnectionDetails)
-    
-    // Verify specific connection details
-    endpointDetail := findConnectionDetail(mrd, "endpoint")
-    assert.NotNil(t, endpointDetail)
-    assert.Equal(t, "string", endpointDetail.Type)
-    assert.Contains(t, endpointDetail.Description, "endpoint")
-}
-
-func TestMRDActivation(t *testing.T) {
-    // Test MRD activation creates CRD
-    ctx := context.Background()
-    mrd := &v1alpha1.ManagedResourceDefinition{
-        Spec: v1alpha1.ManagedResourceDefinitionSpec{
-            State: &[]v1alpha1.ResourceState{v1alpha1.ResourceStateActive}[0],
-        },
-    }
-    
-    reconciler := &MRDReconciler{Client: fakeClient}
-    result, err := reconciler.Reconcile(ctx, reconcile.Request{})
-    
-    assert.NoError(t, err)
-    assert.False(t, result.Requeue)
-    
-    // Verify CRD creation
-    crd := &apiextv1.CustomResourceDefinition{}
-    err = fakeClient.Get(ctx, types.NamespacedName{Name: "databases.rds.aws.example.io"}, crd)
-    assert.NoError(t, err)
-}
-```
-
 ### Integration testing
 
 Test safe-start behavior in a real cluster:
@@ -480,8 +173,6 @@ metadata:
   name: provider-example
 spec:
   package: registry.example.com/provider-example:latest
-  capabilities:
-  - safe-start
 EOF
 
 # Wait for provider installation
@@ -567,16 +258,6 @@ spec:
   activations:
   - "*.aws.example.io"  # Activate all resources (legacy behavior)
 ```
-
-### Version compatibility matrix
-
-Document version compatibility:
-
-| Provider Version | Crossplane Version | safe-start Support | Notes |
-|------------------|-------------------|------------------|-------|
-| v1.x            | v1.x - v2.x       | No               | Legacy CRD-only mode |  
-| v2.0            | v2.0+             | Yes              | Full safe-start support |
-| v2.1            | v2.0+             | Yes              | Enhanced MRD features |
 
 ## Documentation requirements
 
