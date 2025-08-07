@@ -20,11 +20,11 @@ Examples of managed resources include:
 * Microsoft Azure PostgreSQL `Database` defined in [provider-upjet-azure](https://github.com/crossplane-contrib/provider-upjet-azure).
 
 {{<hint "important">}}
-Only AWS managed resources support the Crossplane v2 preview.
+AWS managed resources fully support Crossplane v2.
 
 <!-- vale gitlab.FutureTense = NO -->
-Maintainers will update the managed resources for other systems including Azure,
-GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
+Maintainers are actively working to update managed resources for other systems including Azure,
+GCP, Terraform, Helm, GitHub, etc to support Crossplane v2.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
@@ -419,7 +419,7 @@ For example, when creating an AWS RDS database instance with the Crossplane
 [community AWS provider](https://github.com/crossplane-contrib/provider-aws) 
 generates an endpoint, password, port and username data. The Provider saves
 these variables in the Kubernetes secret 
-{{<hover label="secretname" line="9" >}}rds-secret{{</hover>}}, referenced by
+{{<hover label="secretname" line="10" >}}rds-secret{{</hover>}}, referenced by
 the 
 {{<hover label="secretname" line="9" >}}writeConnectionSecretToRef{{</hover>}}
 field. 
@@ -428,6 +428,7 @@ field.
 apiVersion: database.aws.m.crossplane.io/v1beta1
 kind: RDSInstance
 metadata:
+  namespace: default
   name: my-rds-instance
 spec:
   forProvider:

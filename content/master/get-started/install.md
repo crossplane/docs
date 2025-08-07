@@ -28,14 +28,14 @@ Install Crossplane using the _Helm chart_.
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
-### Add the Crossplane Preview Helm repository
+### Add the Crossplane Helm repository
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.Headings = YES -->
 
-Add the Crossplane preview repository with the `helm repo add` command.
+Add the Crossplane stable repository with the `helm repo add` command.
 
 ```shell
-helm repo add crossplane-preview https://charts.crossplane.io/preview
+helm repo add crossplane-stable https://charts.crossplane.io/stable
 ```
 
 Update the
@@ -46,11 +46,11 @@ helm repo update
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
-### Install the Crossplane Preview Helm chart
+### Install the Crossplane Helm chart
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.Headings = YES -->
 
-Install the Crossplane Preview Helm chart with `helm install`.
+Install the Crossplane Helm chart with `helm install`.
 
 {{< hint "tip" >}}
 View the changes Crossplane makes to your cluster with the
@@ -63,8 +63,7 @@ Crossplane creates and installs into the `crossplane-system` namespace.
 ```shell
 helm install crossplane \
 --namespace crossplane-system \
---create-namespace crossplane-preview/crossplane \
---version v2.0.0-preview.1
+--create-namespace crossplane-stable/crossplane
 ```
 
 View the installed Crossplane pods with `kubectl get pods -n crossplane-system`.

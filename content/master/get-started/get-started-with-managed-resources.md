@@ -32,16 +32,16 @@ Kubernetes calls third party API resources _custom resources_.
 This guide requires:
 
 * A Kubernetes cluster with at least 2 GB of RAM
-* The Crossplane v2 preview [installed on the Kubernetes cluster]({{<ref "install">}})
+* Crossplane v2 [installed on the Kubernetes cluster]({{<ref "install">}})
 * An AWS account with permissions to create an S3 storage bucket
 * AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
 {{<hint "note">}}
-Only AWS managed resources support the Crossplane v2 preview.
+AWS managed resources fully support Crossplane v2.
 
 <!-- vale gitlab.FutureTense = NO -->
-Maintainers will update the managed resources for other systems including Azure,
-GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
+Maintainers are actively working to update managed resources for other systems including Azure,
+GCP, Terraform, Helm, GitHub, etc to support Crossplane v2.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
@@ -69,7 +69,7 @@ kind: Provider
 metadata:
   name: crossplane-contrib-provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.24.0-crossplane-v2-preview.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
 ```
 
 Save this as `provider.yaml` and apply it:
@@ -83,8 +83,8 @@ Check that Crossplane installed the provider:
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                                     INSTALLED   HEALTHY   PACKAGE                                                                                     AGE
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.24.0-crossplane-v2-preview.0   27s
-crossplane-contrib-provider-aws-s3       True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.24.0-crossplane-v2-preview.0       31s
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v2.0.0   27s
+crossplane-contrib-provider-aws-s3       True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0       31s
 ```
 
 {{<hint "note">}}

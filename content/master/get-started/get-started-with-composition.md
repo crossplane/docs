@@ -89,7 +89,7 @@ that supports REST APIs to work with apps.
 This guide requires:
 
 * A Kubernetes cluster with at least 2 GB of RAM
-* The Crossplane v2 preview [installed on the Kubernetes cluster]({{<ref "install">}})
+* Crossplane v2 [installed on the Kubernetes cluster]({{<ref "install">}})
 
 ## Create the custom resource
 

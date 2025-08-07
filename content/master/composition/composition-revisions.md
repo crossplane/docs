@@ -16,10 +16,10 @@ database configuration of an Azure MySQL Server and some firewall rules. The
 `Composition` contains the 'base' configuration for the MySQL server and the
 firewall rules that the `PlatformDB` configuration extends.
 
-A `Composition` associates with multiple XRs that use it. You might 
-define a `Composition` named `big-platform-db` that's used by ten different 
-`PlatformDB` XRs. Often, in the interest of self-service, a different team manages the `Composition` 
-than the actual `PlatformDB` XRs. For example 
+A `Composition` associates with multiple XRs that use it. You might
+define a `Composition` named `big-platform-db` that's used by ten different
+`PlatformDB` XRs. Often, in the interest of self-service, a different team manages the `Composition`
+than the actual `PlatformDB` XRs. For example
 a platform team member may write and maintain the `Composition`,
 while individual app teams create `PlatformDB` XRs that use said
 `Composition`.
@@ -88,6 +88,7 @@ manually update it when you wish it to use another `CompositionRevision`.
 apiVersion: example.org/v1alpha1
 kind: PlatformDB
 metadata:
+  namespace: default
   name: example
 spec:
   storageGB: 20
@@ -108,6 +109,7 @@ use a different `CompositionRevision`.
 apiVersion: example.org/v1alpha1
 kind: PlatformDB
 metadata:
+  namespace: default
   name: example
 spec:
   storageGB: 20
@@ -125,9 +127,9 @@ spec:
 This tutorial discusses how CompositionRevisions work and how they manage Composite Resource
 (XR) updates. This starts with a `Composition` and `CompositeResourceDefinition` (XRD) that defines a `MyVPC`
 resource and continues with creating multiple XRs to observe different upgrade paths. Crossplane
-assigns different CompositionRevisions to composite resources each time you update the composition. 
+assigns different CompositionRevisions to composite resources each time you update the composition.
 
-### Preparation 
+### Preparation
 
 #### Deploy composition and XRD examples
 Apply the example Composition.
@@ -177,18 +179,18 @@ spec:
     plural: myvpcs
   versions:
   - name: v1alpha1
-    served: true 
-    referenceable: true 
+    served: true
+    referenceable: true
     schema:
       openAPIV3Schema:
-        type: object 
+        type: object
         properties:
           spec:
-            type: object 
+            type: object
             properties:
               id:
-                type: string 
-                description: ID of this VPC that other objects will use to refer to it. 
+                type: string
+                description: ID of this VPC that other objects will use to refer to it.
             required:
             - id
 ```
@@ -228,7 +230,7 @@ spec:
 Expected Output:
 ```shell
 myvpc.aws.example.upbound.io/vpc-auto created
-``` 
+```
 
 #### Manual update policy
 Create a Composite Resource with `compositionUpdatePolicy: Manual` and `compositionRevisionRef`.
@@ -249,7 +251,7 @@ spec:
 Expected Output:
 ```shell
 myvpc.aws.example.upbound.io/vpc-man created
-``` 
+```
 
 #### Using a selector
 Create an XR with a `compositionRevisionSelector` of `channel: dev`:
@@ -269,7 +271,7 @@ spec:
 Expected Output:
 ```shell
 myvpc.aws.example.upbound.io/vpc-dev created
-``` 
+```
 
 Create an XR with a `compositionRevisionSelector` of `channel: staging`:
 ```yaml
@@ -289,9 +291,9 @@ spec:
 Expected Output:
 ```shell
 myvpc.aws.example.upbound.io/vpc-staging created
-``` 
+```
 
-Verify the Composite Resource with the label `channel: staging` doesn't have a `REVISION`.  
+Verify the Composite Resource with the label `channel: staging` doesn't have a `REVISION`.
 All other XRs have a `REVISION` matching the created Composition Revision.
 ```shell
 kubectl get composite -o="custom-columns=NAME:.metadata.name,SYNCED:.status.conditions[0].status,REVISION:.spec.crossplane.compositionRevisionRef.name,POLICY:.spec.crossplane.compositionUpdatePolicy,MATCHLABEL:.spec.crossplane.compositionRevisionSelector.matchLabels"
@@ -303,7 +305,7 @@ vpc-auto      True     myvpcs.aws.example.upbound.io-ad265bc   Automatic   <none
 vpc-dev       True     myvpcs.aws.example.upbound.io-ad265bc   Automatic   map[channel:dev]
 vpc-man       True     myvpcs.aws.example.upbound.io-ad265bc   Manual      <none>
 vpc-staging   False    <none>                                  Automatic   map[channel:staging]
-``` 
+```
 
 {{< hint "note" >}}
 The `vpc-staging` XR label doesn't match any existing Composition Revisions.
@@ -311,7 +313,7 @@ The `vpc-staging` XR label doesn't match any existing Composition Revisions.
 
 ### Create new composition revisions
 Crossplane creates a new CompositionRevision when you create or update a Composition. Label and annotation changes
-also trigger a new CompositionRevision. 
+also trigger a new CompositionRevision.
 
 #### Update the composition label
 Update the `Composition` label to `channel: staging`:
@@ -321,7 +323,7 @@ kubectl label composition myvpcs.aws.example.upbound.io channel=staging --overwr
 Expected Output:
 ```shell
 composition.apiextensions.crossplane.io/myvpcs.aws.example.upbound.io labeled
-``` 
+```
 
 Verify that Crossplane creates a new Composition revision:
 ```shell
@@ -332,9 +334,9 @@ Expected Output:
 NAME                                    REVISION   CHANNEL
 myvpcs.aws.example.upbound.io-727b3c8   2          staging
 myvpcs.aws.example.upbound.io-ad265bc   1          dev
-``` 
+```
 
-Verify that Crossplane assigns the Composite Resources `vpc-auto` and `vpc-staging` to Composite `revision:2`.  
+Verify that Crossplane assigns the Composite Resources `vpc-auto` and `vpc-staging` to Composite `revision:2`.
 XRs `vpc-man` and `vpc-dev` are still assigned to the original `revision:1`:
 
 ```shell
@@ -347,10 +349,10 @@ vpc-auto      True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   <none
 vpc-dev       True     myvpcs.aws.example.upbound.io-ad265bc   Automatic   map[channel:dev]
 vpc-man       True     myvpcs.aws.example.upbound.io-ad265bc   Manual      <none>
 vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[channel:staging]
-``` 
+```
 
 {{< hint "note" >}}
-`vpc-auto` always use the latest Revision.  
+`vpc-auto` always use the latest Revision.
 `vpc-staging` now matches the label applied to Revision `revision:2`.
 {{< /hint >}}
 
@@ -393,7 +395,7 @@ spec:
 Expected Output:
 ```shell
 composition.apiextensions.crossplane.io/myvpcs.aws.example.upbound.io configured
-``` 
+```
 
 Verify that Crossplane creates a new Composition revision:
 
@@ -406,13 +408,13 @@ NAME                                    REVISION   CHANNEL
 myvpcs.aws.example.upbound.io-727b3c8   2          staging
 myvpcs.aws.example.upbound.io-ad265bc   1          dev
 myvpcs.aws.example.upbound.io-f81c553   3          dev
-``` 
+```
 
 {{< hint "note" >}}
 Changing the label and the spec values simultaneously is critical for deploying new changes to the `dev` channel.
 {{< /hint >}}
 
-Verify Crossplane assigns the Composite Resources `vpc-auto` and `vpc-dev` to Composite `revision:3`.  
+Verify Crossplane assigns the Composite Resources `vpc-auto` and `vpc-dev` to Composite `revision:3`.
 Crossplane assigns `vpc-staging` to `revision:2`, and still assigns `vpc-man` to the original `revision:1`:
 
 ```shell
@@ -425,7 +427,7 @@ vpc-auto      True     myvpcs.aws.example.upbound.io-f81c553   Automatic   <none
 vpc-dev       True     myvpcs.aws.example.upbound.io-f81c553   Automatic   map[channel:dev]
 vpc-man       True     myvpcs.aws.example.upbound.io-ad265bc   Manual      <none>
 vpc-staging   True     myvpcs.aws.example.upbound.io-727b3c8   Automatic   map[channel:staging]
-``` 
+```
 
 
 {{< hint "note" >}}
