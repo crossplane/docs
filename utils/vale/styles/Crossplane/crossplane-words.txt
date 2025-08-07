@@ -61,7 +61,15 @@ initProvider
 KCL
 LateInitialize
 managementPolicies
+ManagedResourceActivationPolicy
+ManagedResourceDefinition
+ManagedResourceDefinitions
+MRAP
+MRAPs
 MR
+MRD
+MRD's
+MRDs
 MRs
 Operation-specific
 PatchSet
@@ -71,6 +79,8 @@ ProviderConfigs
 ProviderRevision
 RunFunctionRequest
 RunFunctionResponse
+SafeStart
+SafeStart-capable
 Sigstore
 SSL
 StoreConfig
