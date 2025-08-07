@@ -57,7 +57,7 @@ CronOperations are an alpha feature. You must enable Operations by adding
 
 CronOperations use standard cron syntax:
 
-```
+```console {linenos=false,copy-lines="none"}
 ┌───────────── minute (0 - 59)
 │ ┌───────────── hour (0 - 23)
 │ │ ┌───────────── day of the month (1 - 31)
