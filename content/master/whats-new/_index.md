@@ -173,61 +173,6 @@ deprecate and remove cluster scoped MRs at a future date.
 Read more about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
-## Managed resource definitions
-
-Crossplane v2 introduces Managed Resource Definitions (MRDs) that provide 
-selective resource activation and improved resource discovery.
-
-**MRDs solve performance and usability challenges with large providers.** 
-Installing a provider like AWS traditionally creates hundreds of CRDs, even if 
-you only need some resources. MRDs let you activate only the resources you 
-actually use.
-
-```mermaid
-flowchart LR
-    provider(Provider Package)
-    mrd1(S3 Bucket MRD)
-    mrd2(EC2 Instance MRD) 
-    mrd3(RDS DB MRD)
-    crd1(S3 Bucket CRD)
-    crd2(EC2 Instance CRD)
-    policy(Activation Policy)
-    
-    provider --> mrd1
-    provider --> mrd2
-    provider --> mrd3
-    
-    policy -.->|activates| mrd1
-    policy -.->|activates| mrd2
-    mrd3 -.->|inactive| 
-    
-    mrd1 --> crd1
-    mrd2 --> crd2
-    
-    style mrd1 fill:#c8e6c9
-    style mrd2 fill:#c8e6c9  
-    style mrd3 fill:#ffcdd2
-    style crd1 fill:#e8f5e8
-    style crd2 fill:#e8f5e8
-```
-
-### Key managed resource definition benefits
-
-**Performance optimization** - Only create CRDs for resources you need, reducing 
-cluster overhead and improving provider installation speed.
-
-**Connection details discovery** - MRDs document what connection details each 
-managed resource provides, making it easier to understand resource capabilities.
-
-**Policy-based activation** - Use ManagedResourceActivationPolicy (MRAP) to 
-activate resources with flexible pattern matching.
-
-**safe-start providers** - Providers can opt into safe-start capability, starting 
-with all MRDs inactive for better performance.
-
-Learn more about [Managed Resource Definitions]({{<ref "../managed-resources/managed-resource-definitions">}}) 
-and [get started with MRDs]({{<ref "../get-started/get-started-with-mrds">}}).
-
 ## Compose any resource
 
 Crossplane v2 isn't opinionated about using composition together with managed

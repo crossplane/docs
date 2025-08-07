@@ -46,14 +46,14 @@ involved in writing a controller.
 
 ## Crossplane components
 
-Crossplane has four major components:
+Crossplane has three major components:
 
 * [Composition](#composition)
 * [Managed resources](#managed-resources)
 * [Operations](#operations)
 * [Package manager](#package-manager)
 
-You can use all four components to build your control plane, or pick only the
+You can use all three components to build your control plane, or pick only the
 ones you need.
 
 ### Composition

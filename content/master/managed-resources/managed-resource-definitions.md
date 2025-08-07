@@ -123,22 +123,42 @@ resources.
 apiVersion: apiextensions.crossplane.io/v1alpha1
 kind: ManagedResourceDefinition
 metadata:
-  name: instances.ec2.aws.crossplane.io
+  name: databases.rds.aws.crossplane.io
 spec:
+  group: rds.aws.crossplane.io
+  names:
+    kind: Database
+    plural: databases
+  scope: Namespaced
+  
+  # Connection details documentation
   connectionDetails:
   - name: endpoint
-    description: The connection endpoint for the database
+    description: "The RDS instance connection endpoint"
     type: string
+    fromConnectionSecretKey: endpoint
   - name: port
-    description: The port number for connections
+    description: "The port number for database connections"
     type: integer
+    fromConnectionSecretKey: port
   - name: username
-    description: The master username for the database
+    description: "The master username for the database"
     type: string
+    fromConnectionSecretKey: username
   - name: password
-    description: The master password for the database
+    description: "The master password for the database"
     type: string
     fromConnectionSecretKey: password
+  - name: ca_certificate
+    description: "The CA certificate for SSL connections"
+    type: string
+    fromConnectionSecretKey: ca_certificate
+    
+  # Standard CRD specification follows...
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ```
 
 The `connectionDetails` field documents:

@@ -97,55 +97,6 @@ rules:
   verbs: ["get", "list", "watch"]
 ```
 
-### Step 3: Add connection details documentation
-
-Document connection details in your MRDs to help users understand resource 
-capabilities:
-
-```yaml
-# Example generated MRD with connection details
-apiVersion: apiextensions.crossplane.io/v1alpha1
-kind: ManagedResourceDefinition
-metadata:
-  name: databases.rds.aws.example.io
-spec:
-  group: rds.aws.example.io
-  names:
-    kind: Database
-    plural: databases
-  scope: Namespaced
-  
-  # safe-start-specific fields
-  connectionDetails:
-  - name: endpoint
-    description: "The RDS instance connection endpoint"
-    type: string
-    fromConnectionSecretKey: endpoint
-  - name: port  
-    description: "The port number for database connections"
-    type: integer
-    fromConnectionSecretKey: port
-  - name: username
-    description: "The master username for the database"
-    type: string
-    fromConnectionSecretKey: username
-  - name: password
-    description: "The master password for the database"
-    type: string
-    fromConnectionSecretKey: password
-  - name: ca_certificate
-    description: "The CA certificate for SSL connections"
-    type: string
-    fromConnectionSecretKey: ca_certificate
-    
-  # Standard CRD specification  
-  versions:
-  - name: v1alpha1
-    served: true
-    storage: true
-    # ... rest of CRD spec
-```
-
 ## Testing safe-start implementation
 
 ### Integration testing
