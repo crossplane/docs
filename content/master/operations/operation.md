@@ -417,7 +417,14 @@ kubectl describe operation my-operation
 
 **Common failure scenarios:**
 
-1. **ValidPipeline condition is False** - Function doesn't support operations:
+1. **Operations do nothing** - Operations feature not enabled:
+   ```yaml
+   # Operation exists but has no status conditions and never progresses
+   status: {}
+   ```
+   *Solution*: enable Operations by adding `--enable-operations` to Crossplane's startup arguments.
+
+2. **ValidPipeline condition is False** - Function doesn't support operations:
    ```yaml
    conditions:
    - type: ValidPipeline
@@ -427,7 +434,7 @@ kubectl describe operation my-operation
    ```
    *Solution*: use a function that declares `operation` capability.
 
-2. **Succeeded condition is False** - Function run failed:
+3. **Succeeded condition is False** - Function run failed:
    ```yaml
    conditions:
    - type: Succeeded
@@ -437,7 +444,7 @@ kubectl describe operation my-operation
    ```
    *Solution*: view function logs and fix the underlying issue.
 
-3. **Resource apply failures** - View events for details:
+4. **Resource apply failures** - View events for details:
    ```shell
    kubectl get events --field-selector involvedObject.name=my-operation
    ```
