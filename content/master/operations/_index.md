@@ -2,6 +2,6 @@
 title: Operations
 weight: 52
 state: alpha
-alphaVersion: v2.0-preview
+alphaVersion: 2.0
 description: Understand Crossplane's Operations feature
 ---
