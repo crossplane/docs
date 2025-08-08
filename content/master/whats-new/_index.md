@@ -6,11 +6,12 @@ description: Learn what's new in the Crossplane v2 preview
 **Crossplane v2 makes Crossplane more useful, more intuitive, and less
 opinionated.**
 
-Crossplane v2 makes three major changes:
+Crossplane v2 makes four major changes:
 
 * **Composite resources are now namespaced**
 * **Managed resources are now namespaced**
 * **Composition supports any Kubernetes resource**
+* **Operations enable operational workflows**
 
 **Crossplane v2 is better suited to building control planes for applications,
 not just infrastructure.** It removes the need for awkward abstractions like
@@ -212,6 +213,48 @@ You must grant Crossplane access to compose resources that aren't Crossplane
 resources like MRs or XRs. Read
 [the composition documentation]({{<ref "../composition/compositions#grant-access-to-composed-resources">}})
 to learn how to grant Crossplane access.
+{{</hint>}}
+
+## Operations enable operational workflows
+
+Crossplane v2 introduces Operations - a new way to run operational tasks using
+function pipelines.
+
+Operations handle tasks that don't fit the typical resource creation pattern.
+Things like certificate monitoring, rolling upgrades, scheduled maintenance, or
+responding to resource changes.
+
+**Operations run function pipelines to completion, like a Kubernetes Job.**
+Instead of continuously managing resources, they perform specific tasks and
+report the results.
+
+```yaml
+apiVersion: ops.crossplane.io/v1alpha1
+kind: CronOperation
+metadata:
+  name: cert-monitor
+spec:
+  schedule: "0 6 * * *"  # Daily at 6 AM
+  mode: Pipeline
+  pipeline:
+  - step: check-certificates
+    functionRef:
+      name: crossplane-contrib-function-python
+    # function checks SSL certificates and reports status
+```
+
+Operations support three modes:
+
+* **Operation** - Run once to completion
+* **CronOperation** - Run on a scheduled basis  
+* **WatchOperation** - Run when resources change
+
+Operations can read existing resources and optionally change them. This enables
+workflows like annotating resources with operational data, triggering
+maintenance tasks, or implementing custom operational policies.
+
+{{<hint "note">}}
+Operations are an alpha feature in Crossplane v2.
 {{</hint>}}
 
 ## Backward compatibility

@@ -46,13 +46,14 @@ involved in writing a controller.
 
 ## Crossplane components
 
-Crossplane has three major components:
+Crossplane has four major components:
 
 * [Composition](#composition)
 * [Managed resources](#managed-resources)
+* [Operations](#operations)
 * [Package manager](#package-manager)
 
-You can use all three components to build your control plane, or pick only the
+You can use all four components to build your control plane, or pick only the
 ones you need.
 
 ### Composition
@@ -221,6 +222,68 @@ Only AWS managed resources support the Crossplane v2 preview.
 Maintainers will update the managed resources for other systems including Azure,
 GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
 <!-- vale gitlab.FutureTense = YES -->
+{{</hint>}}
+
+### Operations
+
+Operations let you run operational tasks using function pipelines.
+
+While composition and managed resources focus on creating and managing
+infrastructure, operations handle tasks that don't fit the typical resource
+creation pattern - like certificate monitoring, rolling upgrades, or scheduled
+maintenance.
+
+**Operations run function pipelines to completion like a Kubernetes Job.**
+Instead of continuously managing resources, they perform specific tasks and
+report the results.
+
+<!-- vale Google.WordList = NO -->
+Say you want your control plane to watch SSL certificates on Kubernetes
+`Ingress` resources. When someone creates an Operation, the control plane
+should check the certificate and annotate the `Ingress` with expiry information.
+<!-- vale Google.WordList = YES -->
+
+```mermaid
+flowchart TD
+user(User)
+
+subgraph control [Control Plane]
+  operation(SSL Monitor Operation)
+  
+  subgraph crossplane [Operation Engine]
+    fn(Python Function)
+  end
+  
+  ingress(Ingress API)
+end
+
+subgraph ext [External System]
+  cert(SSL Certificate)
+end
+
+user -- create --> operation
+crossplane watch@<-- watch --> operation
+crossplane -- read --> ingress
+crossplane -- check --> cert
+crossplane -- annotate --> ingress
+
+watch@{animate: true}
+```
+
+Operations support three modes:
+
+* **Operation** - Run once to completion
+* **CronOperation** - Run on a scheduled basis
+* **WatchOperation** - Run when resources change
+
+You can use operations alongside composition and managed resources to build
+complete operational workflows for your control plane.
+
+Follow [Get Started with Operations]({{<ref "../get-started/get-started-with-operations">}})
+to see how operations work.
+
+{{<hint "note">}}
+Operations are an alpha feature available in Crossplane v2.
 {{</hint>}}
 
 ### Package manager
