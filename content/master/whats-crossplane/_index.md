@@ -242,7 +242,7 @@ flowchart TD
 user(User)
 
 subgraph control [Control Plane]
-  operation(SSL Monitor Operation API)
+  operation(SSL Monitor Operation)
   
   subgraph crossplane [Operation Engine]
     fn(Python Function)
