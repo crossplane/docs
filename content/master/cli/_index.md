@@ -27,7 +27,7 @@ To download the latest version for your CPU architecture with the Crossplane
 install script.
 
 ```shell
-curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_CHANNEL=preview sh
+curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | sh
 ```
 
 [The script](https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh)

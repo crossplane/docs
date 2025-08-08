@@ -1,7 +1,7 @@
 ---
 title: What's New in v2?
 weight: 4
-description: Learn what's new in the Crossplane v2 preview
+description: Learn what's new in Crossplane v2
 ---
 **Crossplane v2 makes Crossplane more useful, more intuitive, and less
 opinionated.**
@@ -151,12 +151,11 @@ opinionated about using composition and MRs together. Namespaces enable fine
 grained access control over who can create what MRs.
 
 {{<hint "note">}}
-During the Crossplane v2 preview only namespaced AWS managed resources are
-available.
+Namespaced AWS managed resources are fully available in Crossplane v2.
 
 <!-- vale gitlab.FutureTense = NO -->
-Maintainers will update the managed resources for other systems including Azure,
-GCP, Terraform, Helm, GitHub, etc to support namespaced MRs soon.
+Maintainers are actively working to update managed resources for other systems including Azure,
+GCP, Terraform, Helm, GitHub, etc to support namespaced MRs.
 <!-- vale gitlab.FutureTense = YES -->
 {{</hint>}}
 
