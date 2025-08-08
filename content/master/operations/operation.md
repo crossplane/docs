@@ -408,10 +408,15 @@ Operations emit Kubernetes events for important activities:
 
 ### Troubleshooting operations
 
-**Select operation status:**
+**Check operation status:**
 
 ```shell
 kubectl get operation my-operation -o wide
+```
+
+**View detailed information:**
+
+```shell
 kubectl describe operation my-operation
 ```
 

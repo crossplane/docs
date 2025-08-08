@@ -115,13 +115,12 @@ spec:
 
 ## Resource injection
 
-When a WatchOperation creates an Operation, it automatically injects the 
-changed
 <!-- vale write-good.TooWordy = NO -->
-resource using the special requirement name 
-`ops.crossplane.io/watched-resource`.
+When a WatchOperation creates an Operation, it automatically injects the changed
+resource using the special requirement name
+`ops.crossplane.io/watched-resource`. Functions can access this resource without
+explicitly requesting it.
 <!-- vale write-good.TooWordy = YES -->
-Functions can access this resource without explicitly requesting it.
 
 For example, when a ConfigMap with label `validate: "true"` changes, the 
 WatchOperation creates an Operation like this:
@@ -498,10 +497,10 @@ kubectl get events --field-selector involvedObject.name=my-watchop
 
 ### Event handling
 
+<!-- vale write-good.TooWordy = NO -->
 1. **Implement event filtering** - Check generation, deletion timestamp, 
    and status conditions
    to avoid processing irrelevant changes
-<!-- vale write-good.TooWordy = NO -->
 1. **Monitor operation volume** - Popular resources can create numerous 
    Operations
 <!-- vale write-good.TooWordy = YES -->
