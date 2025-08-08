@@ -237,6 +237,12 @@ maintenance.
 Instead of continuously managing resources, they perform specific tasks and
 report the results.
 
+<!-- vale Google.WordList = NO -->
+Say you want your control plane to watch SSL certificates on Kubernetes
+`Ingress` resources. When someone creates an Operation, the control plane
+should check the certificate and annotate the `Ingress` with expiry information.
+<!-- vale Google.WordList = YES -->
+
 ```mermaid
 flowchart TD
 user(User)
