@@ -6,14 +6,14 @@ alphaVersion: 2.0
 ---
 
 This guide shows how to use Crossplane Operations to automate day-two
-operational tasks. You create an Operation that checks SSL certificate
+operational tasks. You create an `Operation` that checks SSL certificate
 expiry for a website.
 
 **Crossplane calls this _Operations_.** Operations run function pipelines to
 perform tasks that don't fit the typical resource creation pattern - like
 certificate monitoring, rolling upgrades, or scheduled maintenance.
 
-An Operation looks like this:
+An `Operation` looks like this:
 
 ```yaml
 apiVersion: ops.crossplane.io/v1alpha1
@@ -60,15 +60,15 @@ spec:
 ```
 
 <!-- vale Crossplane.Spelling = NO -->
-**The Operation runs once to completion, like a Kubernetes Job.**
+**The `Operation` runs once to completion, like a Kubernetes `Job`.**
 <!-- vale Crossplane.Spelling = YES -->
 
-When you create the Operation, Crossplane runs the function pipeline. The
+When you create the `Operation`, Crossplane runs the function pipeline. The
 function checks SSL certificate expiry for google.com and returns the results
 in the operation's output.
 
 This basic example shows the concept. In the walkthrough below, you create
-a more realistic Operation that reads Kubernetes Ingress resources and
+a more realistic `Operation` that reads Kubernetes `Ingress` resources and
 annotates them with certificate expiry information for monitoring tools.
 
 ## Prerequisites
@@ -91,17 +91,17 @@ helm upgrade --install crossplane crossplane-stable/crossplane \
 
 ## Create an operation
 
-Follow these steps to create your first Operation:
+Follow these steps to create your first `Operation`:
 
 1. [Create a sample Ingress](#create-a-sample-ingress) for certificate checking
 1. [Install the function](#install-the-function) you want to use for the
    operation
-1. [Create the Operation](#create-the-operation) that checks the Ingress
+1. [Create the Operation](#create-the-operation) that checks the `Ingress`
 1. [Check the Operation](#check-the-operation) as it runs
 
 ### Create a sample Ingress
 
-Create an Ingress that references a real hostname but doesn't route actual
+Create an `Ingress` that references a real hostname but doesn't route actual
 traffic:
 
 ```yaml
@@ -132,8 +132,8 @@ kubectl apply -f ingress.yaml
 
 ### Grant Ingress permissions
 
-Operations need permission to access and change Ingresses. Create a ClusterRole
-that grants Crossplane access to Ingresses:
+`Operations` need permission to access and change `Ingresses`. Create a `ClusterRole`
+that grants Crossplane access to `Ingresses`:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -186,7 +186,7 @@ crossplane-contrib-function-python   True        True      xpkg.crossplane.io/cr
 
 ### Create the operation
 
-Create this Operation that monitors the Ingress certificate:
+Create this `Operation` that monitors the `Ingress` certificate:
 
 ```yaml
 apiVersion: ops.crossplane.io/v1alpha1
@@ -275,7 +275,7 @@ kubectl apply -f operation.yaml
 
 ### Check the operation
 
-Check that the Operation runs successfully:
+Check that the `Operation` runs successfully:
 
 ```shell {copy-lines="1"}
 kubectl get -f operation.yaml
@@ -284,10 +284,10 @@ ingress-cert-monitor   True     True        15s
 ```
 
 {{<hint "tip">}}
-Operations show `SUCCEEDED=True` when they complete successfully.
+`Operations` show `SUCCEEDED=True` when they complete successfully.
 {{</hint>}}
 
-Check the Operation's detailed status:
+Check the `Operation`'s detailed status:
 
 ```shell {copy-lines="1"}
 kubectl describe operation ingress-cert-monitor
@@ -317,7 +317,7 @@ The `status.pipeline` field shows the output returned by each function step.
 Use this field for tracking what the operation accomplished.
 {{</hint>}}
 
-Check that the Operation annotated the Ingress with certificate information:
+Check that the `Operation` annotated the `Ingress` with certificate information:
 
 ```shell {copy-lines="1"}
 kubectl get ingress example-app -o yaml
@@ -335,8 +335,8 @@ spec:
 ```
 
 {{<hint "tip">}}
-This pattern shows how Operations can both read and change existing Kubernetes
-resources. The Operation annotated the Ingress with certificate expiry
+This pattern shows how `Operations` can both read and change existing Kubernetes
+resources. The `Operation` annotated the `Ingress` with certificate expiry
 information that other tools can use for monitoring and alerting.
 {{</hint>}}
 
@@ -353,14 +353,14 @@ kubectl delete -f function.yaml
 
 ## Next steps
 
-Operations are powerful building blocks for operational workflows. Learn more
+`Operations` are powerful building blocks for operational workflows. Learn more
 about:
 
-* [**Operation concepts**]({{<ref "../operations/operation">}}) - Core
-  Operation features and best practices
-* [**CronOperation**]({{<ref "../operations/cronoperation">}}) - Schedule
+* [**`Operation` concepts**]({{<ref "../operations/operation">}}) - Core
+  `Operation` features and best practices
+* [**`CronOperation`**]({{<ref "../operations/cronoperation">}}) - Schedule
   operations to run automatically
-* [**WatchOperation**]({{<ref "../operations/watchoperation">}}) - Trigger
+* [**`WatchOperation`**]({{<ref "../operations/watchoperation">}}) - Trigger
   operations when resources change
 
 Explore the complete [Operations documentation]({{<ref "../operations">}}) for
