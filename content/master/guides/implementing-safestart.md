@@ -20,7 +20,7 @@ safe-start transforms how your provider handles resource installation:
 
 **Without safe-start:**
 - All resources become MRDs that are automatically active and create CRDs
-- Users get all ~200 AWS resources even if they need only 5
+- Users get all ~100 resources even if they need only 5
 - Higher memory usage and slower API server responses
 
 **With safe-start:**
@@ -32,7 +32,7 @@ safe-start transforms how your provider handles resource installation:
 
 Before implementing safe-start, ensure you have:
 
-* Provider built with Crossplane v2.0+ runtime
+* Provider built with `crossplane-runtime` v2.0+
 * Understanding of [MRDs and activation policies]({{< ref "mrd-activation-policies" >}})
 * Test environment with Crossplane v2.0+
 * CI/CD pipeline that can build and test provider changes
@@ -210,71 +210,6 @@ spec:
   - "*.aws.example.io"  # Activate all resources (legacy behavior)
 ```
 
-## Documentation requirements
-
-Update your provider documentation to include:
-
-<!-- vale Google.Headings = NO -->
-### README updates
-<!-- vale Google.Headings = YES -->
-
-```markdown
-# Provider Example
-
-## safe-start Support
-
-This provider supports safe-start capability, which provides:
-- Selective resource activation
-- Improved performance for large providers  
-- Connection details documentation
-
-### Quick Start with safe-start
-
-1. Install the provider:
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-example
-spec:
-  package: registry.example.com/provider-example:v2.0.0
-```
-
-2. Create activation policy:
-```yaml
-apiVersion: apiextensions.crossplane.io/v1alpha1  
-kind: ManagedResourceActivationPolicy
-metadata:
-  name: example-resources
-spec:
-  activations:
-  - "databases.rds.aws.example.io"
-  - "*.s3.aws.example.io"
-```
-
-3. Create resources - only activated resources work.
-```
-
-### Connection Details Documentation
-
-Document what connection details each resource provides:
-
-```markdown
-## Connection Details Reference
-
-### Database (`databases.rds.aws.example.io`)
-- `endpoint` (string): RDS instance connection endpoint
-- `port` (integer): Database connection port  
-- `username` (string): Master database username
-- `password` (string): Master database password
-- `ca_certificate` (string): CA certificate for SSL connections
-
-### Storage Bucket (`buckets.s3.aws.example.io`) 
-- `bucket_name` (string): The S3 bucket name
-- `region` (string): AWS region where bucket is located
-- `arn` (string): Full ARN of the S3 bucket
-```
-
 ## Troubleshooting
 
 ### Common Issues
@@ -327,7 +262,3 @@ kubectl describe my-resource my-instance
 - Test both with and without safe-start in CI
 - Verify activation/deactivation cycles work
 - Test resource creation after activation
-
-safe-start provides significant value for large providers and improves the 
- Crossplane user experience. Following this guide helps ensure your 
-implementation is robust, well-documented, and user-friendly.
