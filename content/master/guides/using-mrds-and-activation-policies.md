@@ -25,7 +25,7 @@ By the end of this guide, you understand how to:
 This guide requires:
 
 * A Kubernetes cluster with at least 2 GB of RAM
-* Crossplane v2.0+ [installed on the cluster]({{< ref "install" >}})
+* Crossplane v2.0+ [installed on the cluster]({{< ref "../get-started/install" >}})
 * `kubectl` configured to access your cluster
 
 ## Understand the default activation policy
@@ -79,11 +79,6 @@ This approach lets you use Helm chart values to control the default policy.
 {{< /tab >}}
 {{< /tabs >}}
 
-{{< hint "tip" >}}
-Learn more about configuring default activation policies during installation 
-and best practices in the [MRD activation policies guide]({{< ref "../guides/mrd-activation-policies#default-activation-policy" >}}).
-{{< /hint >}}
-
 ## Install a provider with safe-start capability
 
 Now install a provider that supports safe-start. This provider creates MRDs 
@@ -95,7 +90,7 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.45.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v2.0.0
 ```
 
 Apply this configuration:
@@ -107,7 +102,7 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-aws:v0.45.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v2.0.0
 EOF
 ```
 
@@ -524,6 +519,5 @@ Now that you understand MRDs and activation policies, you can:
 * **Plan provider adoption** using safe-start-capable providers
 
 Learn more about:
-* [MRD activation policies best practices]({{< ref "../guides/mrd-activation-policies" >}}) - Comprehensive guide including default policy configuration
 * [Managed Resource Definitions concepts]({{< ref "managed-resource-definitions" >}})
 * [Provider capabilities and safe-start]({{< ref "../packages/provider-capabilities" >}})

@@ -33,7 +33,7 @@ safe-start transforms how your provider handles resource installation:
 Before implementing safe-start, ensure you have:
 
 * Provider built with `crossplane-runtime` v2.0+
-* Understanding of [MRDs and activation policies]({{< ref "mrd-activation-policies" >}})
+* Understanding of [MRDs and activation policies]({{< ref "using-mrds-and-activation-policies" >}})
 * Test environment with Crossplane v2.0+
 * CI/CD pipeline that can build and test provider changes
 
