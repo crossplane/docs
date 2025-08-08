@@ -1,5 +1,5 @@
 ---
-title: Get Started with Managed Resource Definitions
+title: Managed Resource Definitions and Activation Policies
 weight: 220
 description: Learn how to use MRDs and activation policies to optimize your Crossplane installation
 ---
