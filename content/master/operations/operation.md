@@ -392,11 +392,11 @@ status:
 ```
 
 **Key status fields:**
-- **Conditions**: Standard Crossplane conditions (Synced) and Operation-specific conditions:
-  - **Succeeded**: `True` when the operation completed successfully, `False` when it failed
-  - **ValidPipeline**: `True` when all functions have the required `operation` capability
-- **Failures**: Number of times the operation has failed and retried
-- **Pipeline**: Output from each function step for tracking progress
+- **`Conditions`**: Standard Crossplane conditions (Synced) and Operation-specific conditions:
+  - **`Succeeded`**: `True` when the operation completed successfully, `False` when it failed
+  - **`ValidPipeline`**: `True` when all functions have the required `operation` capability
+- **`Failures`**: Number of times the operation has failed and retried
+- **`Pipeline`**: Output from each function step for tracking progress
 - **`AppliedResourceRefs`**: References to all resources the Operation created or modified
 
 ### Events
