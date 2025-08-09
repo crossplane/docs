@@ -1,5 +1,5 @@
 ---
-title: WatchOperation
+title: Watch Operations
 weight: 130
 state: alpha
 alphaVersion: 2.0
