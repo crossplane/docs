@@ -6,12 +6,13 @@ description: Learn what's new in Crossplane v2
 **Crossplane v2 makes Crossplane more useful, more intuitive, and less
 opinionated.**
 
-Crossplane v2 makes four major changes:
+Crossplane v2 makes five major changes:
 
 * **Composite resources are now namespaced**
-* **Managed resources are now namespaced**
+* **Managed resources are now namespaced**  
 * **Composition supports any Kubernetes resource**
 * **Operations enable operational workflows**
+* **Managed Resource Definitions provide selective resource activation**
 
 **Crossplane v2 is better suited to building control planes for applications,
 not just infrastructure.** It removes the need for awkward abstractions like
