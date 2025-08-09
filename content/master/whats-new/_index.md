@@ -171,6 +171,11 @@ deprecate and remove cluster scoped MRs at a future date.
 Read more about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
+Crossplane v2 also introduces 
+[managed resource definitions]({{<ref "../managed-resources/managed-resource-definitions">}}) 
+for selective activation of provider resources, reducing cluster overhead by 
+installing only the managed resources you actually need.
+
 ## Compose any resource
 
 Crossplane v2 isn't opinionated about using composition together with managed

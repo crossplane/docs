@@ -27,6 +27,7 @@ CronJobs
 crt
 CSS
 CUE
+CustomResourceDefinitions
 CVEs
 DatabaseInstance
 DevOps
@@ -41,6 +42,7 @@ ESS
 float64
 GitOps
 Go
+godoc
 gRPC
 hostname
 IAM
@@ -56,7 +58,9 @@ kube-controller-manager
 kubectl
 kv
 KV
+main.go
 metrics-server
+MiB
 minikube
 multi-platform
 namespace
