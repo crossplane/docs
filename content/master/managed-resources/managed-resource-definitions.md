@@ -63,9 +63,9 @@ managing instances of that resource.
 apiVersion: apiextensions.crossplane.io/v1alpha1
 kind: ManagedResourceDefinition
 metadata:
-  name: buckets.s3.aws.crossplane.io
+  name: buckets.s3.aws.m.crossplane.io
 spec:
-  group: s3.aws.crossplane.io
+  group: s3.aws.m.crossplane.io
   names:
     kind: Bucket
     plural: buckets
@@ -197,7 +197,7 @@ kubectl get managedresourcedefinitions
 View MRD details:
 
 ```shell
-kubectl describe mrd buckets.s3.aws.crossplane.io
+kubectl describe mrd buckets.s3.aws.m.crossplane.io
 ```
 
 <!-- vale Google.Headings = NO -->
@@ -238,7 +238,7 @@ status:
 You can manually activate an MRD by changing its state:
 
 ```shell
-kubectl patch mrd buckets.s3.aws.crossplane.io --type='merge' \
+kubectl patch mrd buckets.s3.aws.m.crossplane.io --type='merge' \
   -p='{"spec":{"state":"Active"}}'
 ```
 

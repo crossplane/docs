@@ -54,9 +54,9 @@ metadata:
   name: aws-core-resources
 spec:
   activate:
-  - buckets.s3.aws.crossplane.io
-  - instances.rds.aws.crossplane.io
-  - "*.ec2.aws.crossplane.io"  # All EC2 resources
+  - buckets.s3.aws.m.crossplane.io      # Modern v2 style S3 buckets
+  - instances.rds.aws.m.crossplane.io   # Modern v2 style RDS instances
+  - "*.ec2.aws.m.crossplane.io"         # All modern v2 style EC2 resources
 ```
 
 When you apply this MRAP, Crossplane activates the specified S3 Bucket, RDS
@@ -80,9 +80,9 @@ Specify complete MRD names for precise control:
 ```yaml
 spec:
   activate:
-  - buckets.s3.aws.crossplane.io
-  - databases.rds.aws.crossplane.io
-  - clusters.eks.aws.crossplane.io
+  - buckets.s3.aws.m.crossplane.io
+  - databases.rds.aws.m.crossplane.io
+  - clusters.eks.aws.m.crossplane.io
 ```
 
 ### Wildcard patterns
@@ -92,15 +92,15 @@ Use `*` wildcards to match multiple resources:
 ```yaml
 spec:
   activate:
-  - "*.s3.aws.crossplane.io"      # All S3 resources
-  - "*.ec2.aws.crossplane.io"     # All EC2 resources  
-  - "*.rds.aws.crossplane.io"        # All RDS databases
+  - "*.s3.aws.m.crossplane.io"      # All S3 resources
+  - "*.ec2.aws.m.crossplane.io"     # All EC2 resources  
+  - "*.rds.aws.m.crossplane.io"     # All RDS databases
 ```
 
 {{<hint "important">}}
 MRAPs use prefix-only wildcards, not full regular expressions. Only `*` at
-the beginning of a pattern works (for example, `*.s3.aws.crossplane.io`).
-Patterns like `s3.*.aws.crossplane.io` or `*.s3.*` aren't valid.
+the beginning of a pattern works (for example, `*.s3.aws.m.crossplane.io`).
+Patterns like `s3.*.aws.m.crossplane.io` or `*.s3.*` aren't valid.
 {{</hint>}}
 
 {{<hint "tip">}}
@@ -108,11 +108,53 @@ You can mix exact names and wildcards for flexible activation:
 ```yaml
 spec:
   activate:
-  - buckets.s3.aws.crossplane.io        # Exact S3 buckets
-  - "*.ec2.aws.crossplane.io"           # All EC2 resources
-  - clusters.eks.aws.crossplane.io      # Exact EKS clusters
+  - buckets.s3.aws.m.crossplane.io        # Exact S3 buckets
+  - "*.ec2.aws.m.crossplane.io"           # All EC2 resources
+  - clusters.eks.aws.m.crossplane.io      # Exact EKS clusters
 ```
 {{</hint>}}
+
+## Legacy and modern resource versions
+
+Crossplane v2 supports two styles of managed resources:
+
+- **Modern v2 style** (recommended): Use `*.m.crossplane.io` domains for
+  namespaced managed resources with better isolation and security
+- **Legacy v1 style**: Use `*.crossplane.io` domains for cluster-scoped
+  managed resources (maintained for backward compatibility)
+
+### Activating modern resources
+
+Most examples in this guide use modern v2 style resources:
+
+```yaml
+spec:
+  activate:
+  - buckets.s3.aws.m.crossplane.io         # Modern v2 S3 bucket
+  - "*.ec2.aws.m.crossplane.io"            # All modern v2 EC2 resources
+```
+
+### Activating legacy resources
+
+To activate legacy v1 style resources, use patterns without `.m`:
+
+```yaml
+spec:
+  activate:
+  - buckets.s3.aws.crossplane.io           # Legacy v1 S3 bucket
+  - "*.ec2.aws.crossplane.io"              # All legacy v1 EC2 resources
+```
+
+### Mixed activation
+
+You can activate both modern and legacy resources in the same MRAP:
+
+```yaml
+spec:
+  activate:
+  - "*.aws.m.crossplane.io"                # All modern AWS resources
+  - "*.aws.crossplane.io"                  # All legacy AWS resources
+```
 
 ## Common activation strategies
 
@@ -140,7 +182,7 @@ helm install crossplane crossplane-stable/crossplane \
 # Or provide custom default activations
 helm install crossplane crossplane-stable/crossplane \
   --set provider.defaultActivations={\
-    "*.s3.aws.crossplane.io","*.ec2.aws.crossplane.io"}
+    "*.s3.aws.m.crossplane.io","*.ec2.aws.m.crossplane.io"}
 ```
 
 ### Provider-specific activation
@@ -169,10 +211,10 @@ metadata:
   name: storage-and-compute
 spec:
   activate:
-  - "*.s3.aws.crossplane.io"           # AWS S3 resources
-  - "*.ec2.aws.crossplane.io"          # AWS EC2 resources
-  - "*.storage.gcp.crossplane.io"      # GCP Storage resources
-  - "*.compute.gcp.crossplane.io"      # GCP Compute resources
+  - "*.s3.aws.m.crossplane.io"         # AWS S3 resources
+  - "*.ec2.aws.m.crossplane.io"        # AWS EC2 resources
+  - "*.storage.gcp.m.crossplane.io"    # GCP Storage resources
+  - "*.compute.gcp.m.crossplane.io"    # GCP Compute resources
 ```
 
 ### Minimal activation
@@ -186,9 +228,9 @@ metadata:
   name: minimal-footprint
 spec:
   activate:
-  - buckets.s3.aws.crossplane.io       # Just S3 buckets
-  - instances.ec2.aws.crossplane.io    # Just EC2 instances
-  - databases.rds.aws.crossplane.io    # Just RDS databases
+  - buckets.s3.aws.m.crossplane.io       # Just S3 buckets
+  - instances.ec2.aws.m.crossplane.io    # Just EC2 instances
+  - databases.rds.aws.m.crossplane.io    # Just RDS databases
 ```
 
 <!-- vale Google.Headings = NO -->
@@ -212,8 +254,8 @@ metadata:
   name: storage-team
 spec:
   activate:
-  - "*.s3.aws.crossplane.io"
-  - "*.storage.gcp.crossplane.io"
+  - "*.s3.aws.m.crossplane.io"
+  - "*.storage.gcp.m.crossplane.io"
 ---
 # Database team MRAP  
 apiVersion: apiextensions.crossplane.io/v1alpha1
@@ -222,8 +264,8 @@ metadata:
   name: database-team
 spec:
   activate:
-  - "*.rds.aws.crossplane.io"
-  - "*.sql.gcp.crossplane.io"
+  - "*.rds.aws.m.crossplane.io"
+  - "*.sql.gcp.m.crossplane.io"
 ```
 
 ### Configuration package activation
@@ -238,10 +280,10 @@ metadata:
   name: web-platform-dependencies
 spec:
   activate:
-  - buckets.s3.aws.crossplane.io       # For static assets
-  - instances.ec2.aws.crossplane.io    # For web servers
-  - databases.rds.aws.crossplane.io    # For application data
-  - certificates.acm.aws.crossplane.io # For HTTPS
+  - buckets.s3.aws.m.crossplane.io       # For static assets
+  - instances.ec2.aws.m.crossplane.io    # For web servers
+  - databases.rds.aws.m.crossplane.io    # For application data
+  - certificates.acm.aws.m.crossplane.io # For HTTPS
 ```
 
 <!-- vale Google.Headings = NO -->
@@ -291,12 +333,12 @@ status:
     status: "True"
     reason: Running
   activated:
-  - buckets.s3.aws.crossplane.io
-  - instances.ec2.aws.crossplane.io  
-  - instances.rds.aws.crossplane.io
-  - securitygroups.ec2.aws.crossplane.io
-  - subnets.ec2.aws.crossplane.io
-  - vpcs.ec2.aws.crossplane.io
+  - buckets.s3.aws.m.crossplane.io
+  - instances.ec2.aws.m.crossplane.io  
+  - instances.rds.aws.m.crossplane.io
+  - securitygroups.ec2.aws.m.crossplane.io
+  - subnets.ec2.aws.m.crossplane.io
+  - vpcs.ec2.aws.m.crossplane.io
 ```
 
 <!-- vale Google.Headings = NO -->
@@ -407,7 +449,7 @@ package dependencies.
    add wildcards only when beneficial for maintainability
 2. **Plan for provider evolution** - Design wildcard patterns that
    accommodate new resources as providers add them (for example,
-   `*.s3.aws.crossplane.io` works for future S3 resources)
+   `*.s3.aws.m.crossplane.io` works for future S3 resources)
 3. **Group related resources logically** - Create MRAPs that activate
    resources teams actually use together
 4. **Include activation dependencies in Configuration packages** -

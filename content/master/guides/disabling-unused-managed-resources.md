@@ -124,7 +124,7 @@ kubectl get mrds -o jsonpath='{.items[*].spec.state}' \
 Notice that Crossplane didn't create any CRDs yet:
 
 ```shell
-kubectl get crds | grep ec2.aws.crossplane.io
+kubectl get crds | grep ec2.aws.m.crossplane.io
 # No output - CRDs don't exist until MRDs are activated
 ```
 
@@ -140,9 +140,9 @@ metadata:
   name: my-app-resources
 spec:
   activate:
-  - instances.ec2.aws.crossplane.io        # EC2 instances for compute
-  - securitygroups.ec2.aws.crossplane.io   # Security groups for networking
-  - vpcs.ec2.aws.crossplane.io             # VPCs for isolation
+  - instances.ec2.aws.m.crossplane.io        # EC2 instances for compute
+  - securitygroups.ec2.aws.m.crossplane.io   # Security groups for networking
+  - vpcs.ec2.aws.m.crossplane.io             # VPCs for isolation
 ```
 
 Save this as `activation-policy.yaml` and apply it:
@@ -162,18 +162,18 @@ Check that Crossplane activated only the specified resources:
 kubectl get mrds \
   -o jsonpath='{range .items[*]}{.metadata.name}: {.spec.state}{"\n"}{end}' \
   | grep Active
-# instances.ec2.aws.crossplane.io: Active
-# securitygroups.ec2.aws.crossplane.io: Active
-# vpcs.ec2.aws.crossplane.io: Active
+# instances.ec2.aws.m.crossplane.io: Active
+# securitygroups.ec2.aws.m.crossplane.io: Active
+# vpcs.ec2.aws.m.crossplane.io: Active
 
 # Verify Crossplane created corresponding CRDs
-kubectl get crds | grep ec2.aws.crossplane.io
-# instances.ec2.aws.crossplane.io
-# securitygroups.ec2.aws.crossplane.io
-# vpcs.ec2.aws.crossplane.io
+kubectl get crds | grep ec2.aws.m.crossplane.io
+# instances.ec2.aws.m.crossplane.io
+# securitygroups.ec2.aws.m.crossplane.io
+# vpcs.ec2.aws.m.crossplane.io
 
 # Count CRDs from EC2 provider - should match activated MRDs
-kubectl get crds | grep ec2.aws.crossplane.io | wc -l
+kubectl get crds | grep ec2.aws.m.crossplane.io | wc -l
 # 3 (only the activated resources)
 ```
 

@@ -181,7 +181,7 @@ kubectl get mrds
 # All should show STATE: Inactive
 
 # No CRDs should exist yet
-kubectl get crds | grep yourprovider.io
+kubectl get crds | grep yourprovider.m.crossplane.io
 # Should return no results
 
 # Create activation policy
@@ -192,15 +192,15 @@ metadata:
   name: test-activation
 spec:
   activate:
-  - "myresource.yourprovider.io"
+  - "myresource.yourprovider.m.crossplane.io"
 EOF
 
 # Verify activation worked
-kubectl get mrd myresource.yourprovider.io
+kubectl get mrd myresource.yourprovider.m.crossplane.io
 # Should show STATE: Active
 
 # CRD should now exist
-kubectl get crd myresource.yourprovider.io
+kubectl get crd myresource.yourprovider.m.crossplane.io
 ```
 
 ## Troubleshooting
