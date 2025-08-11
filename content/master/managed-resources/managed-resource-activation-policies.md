@@ -56,7 +56,7 @@ spec:
   activate:
   - buckets.s3.aws.crossplane.io
   - instances.rds.aws.crossplane.io
-  - *.ec2.aws.crossplane.io  # All EC2 resources
+  - "*.ec2.aws.crossplane.io"  # All EC2 resources
 ```
 
 When you apply this MRAP, Crossplane activates the specified S3 Bucket, RDS
