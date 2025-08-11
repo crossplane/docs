@@ -101,7 +101,7 @@ Save this as `provider.yaml` and apply it:
 kubectl apply -f provider.yaml
 
 # Wait for provider to be ready
-kubectl wait --for condition=Healthy provider/provider-aws-ec2 --timeout=5m
+kubectl wait --for=condition=Healthy provider/provider-aws-ec2 --timeout=5m
 ```
 
 ## Step 3: Verify Crossplane created MRDs
