@@ -6,7 +6,7 @@ weight: 306
 
 If you use the Crossplane CLI to install a `Provider` or
 `Configuration` (for example, `crossplane xpkg install provider
-xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`) and get `the server
+xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0`) and get `the server
 could not find the requested resource` error, more often than not, that's an
 indicator that your Crossplane CLI needs updating. In other words
 Crossplane graduated some API from alpha to beta or stable and the old
@@ -105,9 +105,9 @@ spec:
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.33.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
   runtimeConfigRef:
     apiVersion: pkg.crossplane.io/v1beta1
     kind: DeploymentRuntimeConfig
@@ -156,9 +156,9 @@ spec:
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.33.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
   runtimeConfigRef:
     apiVersion: pkg.crossplane.io/v1beta1
     kind: DeploymentRuntimeConfig

@@ -143,11 +143,11 @@ customizes the settings of the AWS Provider.
 
 All providers need a configuration to tell them where to load credentials.
 
-Create this provider configuration:
+Create this cluster-wide provider configuration:
 
 ```yaml {label="providerconfig",copy-lines="all"}
-apiVersion: aws.upbound.io/v1beta1
-kind: ProviderConfig
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
 metadata:
   name: default
 spec:
@@ -167,6 +167,15 @@ kubectl apply -f providerconfig.yaml
 
 This tells the provider to load credentials from
 [the secret](#save-the-providers-credentials).
+
+{{<hint "note">}}
+This example uses a `ClusterProviderConfig` that applies to managed resources
+across all namespaces.
+
+You can also use a namespaced `ProviderConfig` that only applies to managed
+resources in a specific namespace. See the [`providerConfigRef`]({{<ref "../managed-resources/managed-resources#providerconfigref">}}) 
+section in the managed resources docs for more details.
+{{</hint>}}
 
 ## Use the managed resource
 

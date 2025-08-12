@@ -186,7 +186,7 @@ resource that created the `InternetGateway`.
 
 Some providers don't support changing the fields of some managed resources after
 creation. For example, you can't change the `region` of an Amazon AWS
-`RDSInstance`. These fields are _immutable fields_. Amazon requires you delete 
+RDS `Instance`. These fields are _immutable fields_. Amazon requires you delete 
 and recreate the resource.
 
 Crossplane allows you to edit the immutable field of a managed resource, but
@@ -273,12 +273,13 @@ spec:
   managementPolicies: ["Observe", "Create", "Update", "Delete"]
   initProvider:
     scalingConfig:
-      - desiredSize: 1
+      desiredSize: 1
   forProvider:
     region: us-west-1
+    clusterName: my-cluster
     scalingConfig:
-      - maxSize: 4
-        minSize: 1
+      maxSize: 4
+      minSize: 1
 ```
 
 <!-- vale off -->
@@ -377,16 +378,22 @@ This matches the {{<hover label="pc" line="4">}}name{{</hover>}} of a ProviderCo
 ```yaml {label="pcref",copy-lines="none"}}
 apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Instance
+metadata:
+  namespace: default
+  name: my-instance
 spec:
   forProvider:
     # Removed for brevity
-  providerConfigRef: user-keys
+  providerConfigRef:
+    name: user-keys
+    kind: ProviderConfig
 ```
 
 ```yaml {label="pc"}
-apiVersion: aws.m.crossplane.io/v1beta1
+apiVersion: aws.m.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
+  namespace: default
   name: user-keys
 # Removed for brevity
 ```
@@ -396,6 +403,52 @@ Each managed resource can reference different ProviderConfigs. This allows
 different managed resources to authenticate with different credentials to the
 same Provider. 
 {{< /hint >}}
+
+#### ProviderConfig types
+
+The AWS provider supports two types of ProviderConfig resources:
+
+**ProviderConfig** (namespace-scoped):
+```yaml
+# ProviderConfig - only applies to MRs in same namespace
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  namespace: default
+  name: my-config
+```
+
+**ClusterProviderConfig** (cluster-wide):
+```yaml
+# ClusterProviderConfig - applies to MRs across all namespaces  
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
+metadata:
+  name: my-cluster-config
+```
+
+When referencing any ProviderConfig, managed resources must specify both `name` and `kind`:
+```yaml
+spec:
+  providerConfigRef:
+    name: my-cluster-config
+    kind: ClusterProviderConfig
+```
+
+```yaml  
+spec:
+  providerConfigRef:
+    name: my-config
+    kind: ProviderConfig  # References namespaced ProviderConfig
+```
+
+If you omit `providerConfigRef` entirely, it defaults to:
+```yaml
+spec:
+  providerConfigRef:
+    name: default
+    kind: ClusterProviderConfig
+```
 
 <!-- vale off -->
 ### writeConnectionSecretToRef
@@ -408,7 +461,7 @@ Crossplane stores these details in a Kubernetes Secret object specified by the
 `writeConnectionSecretToRef` values. 
 
 For example, when creating an AWS RDS database instance with the Crossplane 
-[community AWS provider](https://github.com/crossplane-contrib/provider-aws) 
+[AWS provider](https://github.com/crossplane-contrib/provider-upjet-aws) 
 generates an endpoint, password, port and username data. The Provider saves
 these variables in the Kubernetes secret 
 {{<hover label="secretname" line="10" >}}rds-secret{{</hover>}}, referenced by
@@ -417,8 +470,8 @@ the
 field. 
 
 ```yaml {label="secretname",copy-lines="none"}
-apiVersion: database.aws.m.crossplane.io/v1beta1
-kind: RDSInstance
+apiVersion: rds.aws.m.upbound.io/v1beta1
+kind: Instance
 metadata:
   namespace: default
   name: my-rds-instance
@@ -475,15 +528,15 @@ the name `my-rds-instance` as an external resource inside the Provider's
 environment. 
 
 ```yaml {label="external-name",copy-lines="none"}
-apiVersion: database.aws.m.crossplane.io/v1beta1
-kind: RDSInstance
+apiVersion: rds.aws.m.upbound.io/v1beta1
+kind: Instance
 metadata:
   namespace: default
   name: my-rds-instance
 ```
 
 ```shell
-kubectl get rdsinstance
+kubectl get instance
 NAME                 READY   SYNCED   EXTERNAL-NAME        AGE
 my-rds-instance      True    True     my-rds-instance      11m
 ```
@@ -498,8 +551,8 @@ the name {{<hover label="custom-name" line="5">}}my-custom-name{{</hover >}}
 for the external resource inside AWS.
 
 ```yaml {label="custom-name",copy-lines="none"}
-apiVersion: database.aws.m.crossplane.io/v1beta1
-kind: RDSInstance
+apiVersion: rds.aws.m.upbound.io/v1beta1
+kind: Instance
 metadata:
   namespace: default
   name: my-rds-instance  
@@ -508,7 +561,7 @@ metadata:
 ```
 
 ```shell {copy-lines="1"}
-kubectl get rdsinstance
+kubectl get instance
 NAME                 READY   SYNCED   EXTERNAL-NAME        AGE
 my-rds-instance      True    True     my-custom-name       11m
 ```
