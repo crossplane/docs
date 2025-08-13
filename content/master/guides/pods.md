@@ -137,7 +137,7 @@ Kubernetes API server when a composed resource changes. For example, when
 a provider sets the `Ready` condition to `true`.
 
 {{<hint "important" >}}
-Real time compositions are an alpha feature. Alpha features aren't enabled by
+Real time compositions are a beta feature. Beta features are enabled by
 default. 
 {{< /hint >}}
 
