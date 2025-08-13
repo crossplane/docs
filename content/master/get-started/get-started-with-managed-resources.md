@@ -36,14 +36,6 @@ This guide requires:
 * An AWS account with permissions to create an S3 storage bucket
 * AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
-{{<hint "note">}}
-AWS managed resources fully support Crossplane v2.
-
-<!-- vale gitlab.FutureTense = NO -->
-Maintainers are actively working to update managed resources for other systems including Azure,
-GCP, Terraform, Helm, GitHub, etc to support Crossplane v2.
-<!-- vale gitlab.FutureTense = YES -->
-{{</hint>}}
 
 ## Install support for the managed resource
 

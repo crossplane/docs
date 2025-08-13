@@ -19,14 +19,6 @@ Examples of managed resources include:
 * Google Cloud GKE `Cluster` defined in [provider-upjet-gcp](https://github.com/crossplane-contrib/provider-upjet-gcp).
 * Microsoft Azure PostgreSQL `Database` defined in [provider-upjet-azure](https://github.com/crossplane-contrib/provider-upjet-azure).
 
-{{<hint "important">}}
-AWS managed resources fully support Crossplane v2.
-
-<!-- vale gitlab.FutureTense = NO -->
-Maintainers are actively working to update managed resources for other systems including Azure,
-GCP, Terraform, Helm, GitHub, etc to support Crossplane v2.
-<!-- vale gitlab.FutureTense = YES -->
-{{</hint>}}
 
 
 ## Managed resource fields
