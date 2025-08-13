@@ -3,6 +3,7 @@ Adler32
 apiGroups
 clampMax
 clampMin
+ClusterProviderConfig
 ClusterUsages
 CombineFromComposite
 CombineFromEnvironment

@@ -275,7 +275,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
 
-	"github.com/upbound/provider-aws/apis/s3/v1beta1"
+	"github.com/crossplane-contrib/provider-upjet-aws/apis/s3/v1beta1"
 
 	"github.com/crossplane/function-sdk-go/errors"
 	"github.com/crossplane/function-sdk-go/logging"
@@ -432,7 +432,7 @@ using the same strongly typed structs Crossplane uses in its providers.
 You must get the AWS Provider Go module to use this type:
 
 ```shell
-go get github.com/upbound/provider-aws@v1.14.0
+go get github.com/crossplane-contrib/provider-upjet-aws@v2.0.0
 ```
 
 Crossplane provides a
@@ -528,7 +528,7 @@ func TestRunFunction(t *testing.T) {
 					Desired: &fnv1.State{
 						Resources: map[string]*fnv1.Resource{
 							"xbuckets-test-bucket-a": {Resource: resource.MustStructJSON(`{
-								"apiVersion": "s3.aws.upbound.io/v1beta1",
+								"apiVersion": "s3.aws.m.upbound.io/v1beta1",
 								"kind": "Bucket",
 								"metadata": {
 									"annotations": {
@@ -545,7 +545,7 @@ func TestRunFunction(t *testing.T) {
 								}
 							}`)},
 							"xbuckets-test-bucket-b": {Resource: resource.MustStructJSON(`{
-								"apiVersion": "s3.aws.upbound.io/v1beta1",
+								"apiVersion": "s3.aws.m.upbound.io/v1beta1",
 								"kind": "Bucket",
 								"metadata": {
 									"annotations": {
@@ -727,7 +727,7 @@ kind: XBuckets
 metadata:
   name: example-buckets
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -742,7 +742,7 @@ spec:
   forProvider:
     region: us-east-2
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -757,7 +757,7 @@ spec:
   forProvider:
     region: us-east-2
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
