@@ -154,7 +154,7 @@ All providers need a configuration to tell them where to load credentials.
 Create this provider configuration:
 
 ```yaml {label="providerconfig",copy-lines="all"}
-apiVersion: aws.upbound.io/v1beta1
+apiVersion: aws.m.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default
