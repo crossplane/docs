@@ -2,6 +2,7 @@
 {{ $group := .group }}
 {{ $kind  := .kind  }}
 {{ $version := .version }}
+{{ $deprecated  := .deprecated  }}
 {{ $bigName := partial "apiBuilder/checkBigName" $kind }}
 
 {{/* Collapse/Expand Button and Kind name */}}
@@ -11,7 +12,7 @@
 
     {{/* CRD name text */}}
     <button class="crd-root collapsed align-middle" data-bs-toggle="collapse" data-bs-target="#{{$kind}}" type="button" aria-expanded="false" aria-controls="{{$kind}}">
-        <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}</a></span>
+        <span class="align-middle {{ $kind }}"><a class="expansion-link" name="{{ $kind }}">{{ $kind }}{{ if $deprecated }} (deprecated){{ end }}</a></span>
     </button>
 </div>
 

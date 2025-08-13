@@ -84,3 +84,7 @@ jekyll_files/*
 # Ignore htmltest generated /tmp folder
 ######################
 tmp/*
+
+# AI stuff
+CLAUDE.md
+.claude

@@ -2,6 +2,7 @@ Algolia
 ArgoCD
 Bootstrap
 CC-BY
+CloudNativePG
 CloudSQL
 CNCF
 Commonmark
@@ -9,6 +10,7 @@ DockerHub
 DocSearch
 FluxCD
 Geekdocs
+GitHub
 Goldmark
 Grammarly
 Graphviz

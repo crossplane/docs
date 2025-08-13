@@ -68,7 +68,7 @@ During feature freeze, no new functionality should be merged into the main
 development branch. Bug fixes, documentation changes, and non critical changes
 may be made. In the case that a new feature is deemed absolutely necessary for a
 release, the Crossplane maintainers will weigh the impact of the change and make
-a decision on whether it should be included. 
+a decision on whether it should be included.
 
 ### Code freeze
 
@@ -97,4 +97,4 @@ reviews, testing, and bug fixing to ensure a quality release.
 [Feature Freeze]: #feature-freeze
 [Code Freeze]: #code-freeze
 [CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md
-[community calendar]: https://calendar.google.com/calendar/embed?src=c_2cdn0hs9e2m05rrv1233cjoj1k%40group.calendar.google.com
+[community calendar]: https://zoom-lfx.platform.linuxfoundation.org/meetings/crossplane

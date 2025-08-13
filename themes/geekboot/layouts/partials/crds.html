@@ -27,13 +27,14 @@
             {{ $versionAndSchema := partial "apiBuilder/getVersionAndSchema" $crdContent.spec }}
             {{ $schema := $versionAndSchema.schema.openAPIV3Schema }}
             {{ $version := $versionAndSchema.version }}
+            {{ $deprecated := $versionAndSchema.deprecated }}
             {{ $description := $schema.description }}
 
             {{/* The div containing the entire CRD information including the Expand All/Collapse All row */}}
             <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
                 {{/* generate the GKV line to expand/collapse the CRD data */}}
-                {{ partial "apiBuilder/printGKVExpander" (dict  "group" $group "version" $version "kind" $kind) }}
+                {{ partial "apiBuilder/printGKVExpander" (dict  "group" $group "version" $version "kind" $kind "deprecated" $deprecated) }}
 
 
                 {{/* The container to show/hide with information related to the CRD */}}

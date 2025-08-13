@@ -1,86 +1,118 @@
 ---
 title: Get Started With Managed Resources
-weight: 200
+weight: 300
 ---
 
-Connect Crossplane to AWS to create and manage cloud resources from Kubernetes
-with [provider-upjet-aws](https://github.com/crossplane-contrib/provider-upjet-aws).
+This guide shows how to install and use a new kind of custom resource called
+`Bucket`. When a user calls the custom resource API to create a `Bucket`,
+Crossplane creates a bucket in AWS S3.
 
-A _managed resource_ is anything Crossplane creates and manages outside of the
-control plane.
+**Crossplane calls this a _managed resource_**. A managed resource is a
+ready-made custom resource that manages something outside of the control plane.
 
-This guide creates an AWS S3 bucket with Crossplane. The S3 bucket is a _managed resource_.
+A `Bucket` managed resource looks like this:
+
+```yaml
+apiVersion: s3.aws.m.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  namespace: default
+  name: crossplane-bucket-example
+spec:
+  forProvider:
+    region: us-east-2
+```
+
+{{<hint "note">}}
+Kubernetes calls third party API resources _custom resources_.
+{{</hint>}}
 
 ## Prerequisites
-This quickstart requires:
+
+This guide requires:
 
 * A Kubernetes cluster with at least 2 GB of RAM
 * The Crossplane v2 preview [installed on the Kubernetes cluster]({{<ref "install">}})
 * An AWS account with permissions to create an S3 storage bucket
 * AWS [access keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 
-## Install the AWS provider
-Install the AWS S3 provider into the Kubernetes cluster with a Kubernetes
-configuration file.
+{{<hint "note">}}
+Only AWS managed resources support the Crossplane v2 preview.
+
+<!-- vale gitlab.FutureTense = NO -->
+Maintainers will update the managed resources for other systems including Azure,
+GCP, Terraform, Helm, GitHub, etc to support Crossplane v2 soon.
+<!-- vale gitlab.FutureTense = YES -->
+{{</hint>}}
+
+## Install support for the managed resource
+
+Follow these steps to install support for the `Bucket` managed resource:
+
+1. [Install](#install-the-provider) the provider
+1. [Save](#save-the-providers-credentials) the provider's credentials as a secret
+1. [Configure](#configure-the-provider) the provider to use the secret
+
+After you complete these steps you can
+[use the `Bucket` managed resource](#use-the-managed-resource).
+
+### Install the provider
+
+A Crossplane _provider_ installs support for a set of related managed resources.
+The AWS S3 provider installs support for all the AWS S3 managed resources.
+
+Create this provider to install the AWS S3 provider:
 
 ```yaml {label="provider",copy-lines="all"}
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws-s3
+  name: crossplane-contrib-provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.22.0-crossplane-v2-preview.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.24.0-crossplane-v2-preview.0
 ```
 
-Save this to a file called `provider.yaml`, then apply it with:
+Save this as `provider.yaml` and apply it:
+
 ```shell {label="kube-apply-provider",copy-lines="all"}
 kubectl apply -f provider.yaml
 ```
 
-The Crossplane {{< hover label="provider" line="2" >}}Provider{{</hover>}}
-installs the Kubernetes _Custom Resource Definitions_ (CRDs) representing AWS S3
-services. These CRDs allow you to create AWS resources directly inside
-Kubernetes.
-
-Verify the provider installed with `kubectl get providers`.
-
+Check that Crossplane installed the provider:
 
 ```shell {copy-lines="1",label="getProvider"}
 kubectl get providers
 NAME                                     INSTALLED   HEALTHY   PACKAGE                                                                                     AGE
-crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.22.0-crossplane-v2-preview.0   27s
-provider-aws-s3                          True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.22.0-crossplane-v2-preview.0       31s
+crossplane-contrib-provider-family-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.24.0-crossplane-v2-preview.0   27s
+crossplane-contrib-provider-aws-s3       True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.24.0-crossplane-v2-preview.0       31s
 ```
 
-The S3 Provider installs a second Provider, the
+{{<hint "note">}}
+The S3 provider installs a second provider, the
 {{<hover label="getProvider" line="4">}}crossplane-contrib-provider-family-aws{{</hover >}}.
 The family provider manages authentication to AWS across all AWS family
-Providers.
+providers.
+{{</hint>}}
 
-You can view the new CRDs with `kubectl get crds`.
-Every CRD maps to a unique AWS service Crossplane can provision and manage.
+Crossplane installed the AWS S3 provider. The provider needs credentials to
+connect to AWS. Before you can use managed resources, you have to
+[save the provider's credentials](#save-the-providers-credentials) and
+[configure the provider to use them](#configure-the-provider).
 
-{{< hint "tip" >}}
-See details about all the supported CRDs in the
-[provider examples](https://github.com/crossplane-contrib/provider-upjet-aws/tree/main/examples).
-{{< /hint >}}
+### Save the provider's credentials
 
-## Create a Kubernetes secret for AWS
-The provider requires credentials to create and manage AWS resources.
-Providers use a Kubernetes _Secret_ to connect the credentials to the provider.
+The provider needs credentials to create and manage AWS resources. Providers use
+a Kubernetes _secret_ to connect the credentials to the provider.
 
-Generate a Kubernetes _Secret_ from your AWS key-pair and
-then configure the Provider to use it.
+Generate a secret from your AWS key-pair.
 
-### Generate an AWS key-pair file
-For basic user authentication, use an AWS Access keys key-pair file.
-
-{{< hint "tip" >}}
+{{<hint "tip">}}
 The [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
 provides information on how to generate AWS Access keys.
-{{< /hint >}}
+{{</hint>}}
 
-Create a text file containing the AWS account `aws_access_key_id` and `aws_secret_access_key`.
+Create a file containing the AWS account `aws_access_key_id` and
+`aws_secret_access_key`:
 
 {{< editCode >}}
 ```ini {copy-lines="all"}
@@ -90,32 +122,36 @@ aws_secret_access_key = $@<aws_secret_key>$@
 ```
 {{< /editCode >}}
 
-Save this text file as `aws-credentials.txt`.
+Save the text file as `aws-credentials.ini`.
 
-{{< hint "note" >}}
-The [Authentication](https://docs.upbound.io/providers/provider-aws/authentication/) section of the AWS Provider documentation describes other authentication methods.
-{{< /hint >}}
+{{<hint "note">}}
+The [Authentication](https://docs.upbound.io/providers/provider-aws/authentication/)
+section of the AWS Provider documentation describes other authentication methods.
+{{</hint>}}
 
-### Create a Kubernetes secret with the AWS credentials
-A Kubernetes generic secret has a name and contents.
-Use
-{{< hover label="kube-create-secret" line="1">}}kubectl create secret{{</hover >}}
-to generate the secret object named
-{{< hover label="kube-create-secret" line="2">}}aws-secret{{< /hover >}}
-in the {{< hover label="kube-create-secret" line="3">}}crossplane-system{{</ hover >}} namespace.
-
-Use the {{< hover label="kube-create-secret" line="4">}}--from-file={{</hover>}} argument to set the value to the contents of the  {{< hover label="kube-create-secret" line="4">}}aws-credentials.txt{{< /hover >}} file.
+Create a secret from the text file:
 
 ```shell {label="kube-create-secret",copy-lines="all"}
-kubectl create secret \
-generic aws-secret \
--n crossplane-system \
---from-file=creds=./aws-credentials.txt
+kubectl create secret generic aws-secret \
+  --namespace=crossplane-system \
+  --from-file=creds=./aws-credentials.ini
 ```
 
-## Create a ProviderConfig
-A {{< hover label="providerconfig" line="2">}}ProviderConfig{{</ hover >}}
-customizes the settings of the AWS Provider:
+{{<hint "important">}}
+Crossplane providers don't have to store their credentials in a secret. They
+can load their credentials from various sources.
+{{</hint>}}
+
+Next, [configure the provider](#configure-the-provider) to use the credentials.
+
+### Configure the provider
+
+A {{< hover label="providerconfig" line="2">}}provider configuration{{</ hover >}}
+customizes the settings of the AWS Provider.
+
+All providers need a configuration to tell them where to load credentials.
+
+Create this provider configuration:
 
 ```yaml {label="providerconfig",copy-lines="all"}
 apiVersion: aws.upbound.io/v1beta1
@@ -131,20 +167,21 @@ spec:
       key: creds
 ```
 
-Save this to a file called `providerconfig.yaml`, then apply it with:
+Save the provider configuration as `providerconfig.yaml` and apply it:
 
 ```shell {label="kube-apply-providerconfig",copy-lines="all"}
 kubectl apply -f providerconfig.yaml
 ```
 
-This attaches the AWS credentials, saved as a Kubernetes secret, as a
-{{< hover label="providerconfig" line="8">}}secretRef{{</ hover>}}.
+This tells the provider to load credentials from
+[the secret](#save-the-providers-credentials).
 
-## Create a managed resource
-{{< hint "note" >}}
-AWS S3 bucket names must be globally unique. To generate a unique name the example uses a random hash.
-Any unique name is acceptable.
-{{< /hint >}}
+## Use the managed resource
+
+{{<hint "note">}}
+AWS S3 bucket names must be globally unique. This example uses `generateName` to
+generate a random name. Any unique name is acceptable.
+{{</hint>}}
 
 ```yaml {label="bucket"}
 apiVersion: s3.aws.m.upbound.io/v1beta1
@@ -155,57 +192,48 @@ metadata:
 spec:
   forProvider:
     region: us-east-2
-  providerConfigRef:
-    name: default
 ```
 
-Save this to a file called `bucket.yaml`, then apply it with:
+Save the bucket to `bucket.yaml` and apply it:
 
 ```shell {label="kube-create-bucket",copy-lines="all"}
 kubectl create -f bucket.yaml
 ```
 
-The {{< hover label="bucket" line="5">}}metadata.generateName{{< /hover >}} gives a
-pattern that Kubernetes will use to create a unique name for the bucket in S3.
-The generated name will look like `crossplane-bucket-<hash>`.
-
-Use `kubectl -n default get buckets.s3.aws.m.upbound.io` to verify Crossplane created the bucket.
-
-{{< hint "tip" >}}
-Crossplane created the bucket when the values `READY` and `SYNCED` are `True`.
-This may take up to 5 minutes.
-{{< /hint >}}
+Check that Crossplane created the bucket:
 
 ```shell {copy-lines="1"}
-kubectl -n default get buckets.s3.aws.m.upbound.io
+kubectl get buckets.s3.aws.m.upbound.io
 NAME                      SYNCED   READY   EXTERNAL-NAME             AGE
 crossplane-bucket-7tfcj   True     True    crossplane-bucket-7tfcj   3m4s
 ```
 
-## Delete the managed resource
-When you are finished with your S3 bucket, use `kubectl -n default
-delete buckets.s3.aws.m.upbound.io <bucketname>` to remove the bucket.
+{{<hint "tip">}}
+Crossplane created the bucket when the values `READY` and `SYNCED` are `True`.
+{{</hint>}}
+
+Delete the bucket:
 
 ```shell {copy-lines="1"}
-kubectl -n default delete buckets.s3.aws.m.upbound.io crossplane-bucket-7tfcj
+kubectl delete buckets.s3.aws.m.upbound.io crossplane-bucket-7tfcj
 bucket.s3.aws.m.upbound.io "crossplane-bucket-7tfcj" deleted
 ```
 
-{{< hint "important" >}}
+When you delete the bucket managed resource, Crossplane deletes the S3 bucket
+from AWS.
+
+{{<hint "important">}}
 Make sure to delete the S3 bucket before uninstalling the provider or shutting
 down your control plane. If those are no longer running, they can't clean up any
 managed resources and you would need to do so manually.
-{{< /hint >}}
+{{</hint>}}
 
-## Composing managed resources
-Crossplane allows you to compose **any type of resource** into custom APIs for
+## Next steps
+
+Crossplane allows you to compose **any kind of resource** into custom APIs for
 your users, which includes managed resources. Enjoy the freedom that Crossplane
 gives you to compose the diverse set of resources your applications need for
 their unique environments, scenarios, and requirements.
 
 Follow [Get Started with Composition]({{<ref "../get-started/get-started-with-composition">}})
 to learn more about how composition works.
-
-## Next steps
-* Join the [Crossplane Slack](https://slack.crossplane.io/) and connect with
-  Crossplane users and contributors.
