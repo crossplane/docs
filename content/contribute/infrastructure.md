@@ -18,7 +18,7 @@ The Crossplane docs tools consist of:
 
 ## Netlify
 
-Builds for production deploys and PR previews are automatically done by Netlify. 
+Builds for production deploys and PR previews are automatically done by Netlify.
 
 {{< hint "note" >}}
 The CNCF controls Netlify access.
@@ -31,7 +31,7 @@ Settings inside the `netlify.toml` file override any settings in the Netlify web
 interface.
 
 The
-[`build`](https://github.com/crossplane/docs/blob/3e9e10671c32e368f5381d83e406e16bc38c93bc/netlify.toml#L1) 
+[`build`](https://github.com/crossplane/docs/blob/3e9e10671c32e368f5381d83e406e16bc38c93bc/netlify.toml#L1)
 directive defines what Netlify does to build the site.
 
 The
@@ -42,7 +42,7 @@ The
 [`redirects`](https://github.com/crossplane/docs/blob/3e9e10671c32e368f5381d83e406e16bc38c93bc/netlify.toml#L9)
 are server side HTTP redirects for moved pages.
 
-The [Netlify documentation](https://docs.netlify.com/configure-builds/file-based-configuration/) 
+The [Netlify documentation](https://docs.netlify.com/configure-builds/file-based-configuration/)
 has more information about configuring `netlify.toml`.
 
 Netlify automatically detects the
@@ -51,32 +51,32 @@ file and loads the listed NodeJS dependencies.
 
 <!-- vale off -->
 ### netlify_build.sh
-<!-- vale on --> 
+<!-- vale on -->
 
 During a build Netlify runs the Bash script
-[`netlify_build.sh`](https://github.com/crossplane/docs/blob/master/netlify_build.sh). 
+[`netlify_build.sh`](https://github.com/crossplane/docs/blob/master/netlify_build.sh).
 
-The script creates a new docs section called `latest` and copies the defined 
+The script creates a new docs section called `latest` and copies the defined
 `LATEST_VER` to `/latest`.
 
-Next the script enables `writeStats` in the Hugo configuration file. 
+Next the script enables `writeStats` in the Hugo configuration file.
 
-Then, using the Netlify `$CONTEXT` 
+Then, using the Netlify `$CONTEXT`
 [environmental variable](https://docs.netlify.com/configure-builds/environment-variables/#build-metadata)
 Hugo runs, defining the [`BaseURL`](https://gohugo.io/methods/site/baseurl/) to
 use for generating internal links.
 
 ## Hugo
-Crossplane uses [Hugo](https://gohugo.io/), a static site generator. 
+Crossplane uses [Hugo](https://gohugo.io/), a static site generator.
 
 Hugo combines HTML templates, markdown content and generates static HTML
-content. 
+content.
 
 {{<hint "note" >}}
 The Hugo web server is only used for local development. Crossplane documentation
-uses Netlify for hosting. 
+uses Netlify for hosting.
 
-Hugo only acts as an HTML compiler. 
+Hugo only acts as an HTML compiler.
 {{< /hint >}}
 
 Hugo influences the directory structure of the repository.
@@ -101,9 +101,9 @@ The docs import _all_ Bootstrap SCSS files and rely on Hugo and PostCSS to
 optimize the compiled CSS file.
 
 The unmodified Bootstrap SCSS files are in
-`/themes/geekboot/assets/scss/bootstrap/`. 
+`/themes/geekboot/assets/scss/bootstrap/`.
 
-Any docs-specific overrides are in per-element SCSS files located one directory 
+Any docs-specific overrides are in per-element SCSS files located one directory
 higher in `/themes/geekboot/assets/scss/`.
 
 {{<hint "important" >}}
@@ -111,11 +111,11 @@ Don't edit the original Bootstrap stylesheets. It makes the ability to
 upgrade to future Bootstrap versions difficult or impossible.
 {{< /hint >}}
 
-The file `/themes/geekboot/assets/scss/docs.scss` defines all the stylesheets 
+The file `/themes/geekboot/assets/scss/docs.scss` defines all the stylesheets
 Hugo loads and compiles. Add any new styles to the `docs.scss` file to include
 them.
 
-### Color themes 
+### Color themes
 Crossplane docs support a light and dark color theme that's applied via CSS
 variables.
 
@@ -143,35 +143,35 @@ Hugo compiles the SCSS to CSS. Local development doesn't require SCSS installed.
 For local development (when using `hugo server`) Hugo compiles SCSS without
 any optimizations.
 
-In production, when publishing on Netlify or using 
-`hugo server --environment production`, Hugo compiles SCSS and optimizes the 
-CSS with [PostCSS](https://postcss.org/).  
+In production, when publishing on Netlify or using
+`hugo server --environment production`, Hugo compiles SCSS and optimizes the
+CSS with [PostCSS](https://postcss.org/).
 
 
-The PostCSS configuration is in `/postcss.config.js`. 
+The PostCSS configuration is in `/postcss.config.js`.
 
 The optimizations includes:
 * [postcss-lightningcss](https://github.com/onigoetz/postcss-lightningcss) - for
   building, minimizing and generating a source map.
 * [PurgeCSS](https://purgecss.com/plugins/postcss.html) - removes unused styles
-  to reduce the CSS file size. 
-* [postcss-sort-media-queries](https://github.com/yunusga/postcss-sort-media-queries)- 
+  to reduce the CSS file size.
+* [postcss-sort-media-queries](https://github.com/yunusga/postcss-sort-media-queries)-
 to organize the output CSS for another small performance boost.
 
 #### How optimization works
 
-Crossplane runs a 
-[different Hugo CSS command](https://github.com/crossplane/docs/blob/3e9e10671c32e368f5381d83e406e16bc38c93bc/themes/geekboot/layouts/partials/stylesheet-dynamic.html#L4) 
-if it's in local development or production. 
+Crossplane runs a
+[different Hugo CSS command](https://github.com/crossplane/docs/blob/3e9e10671c32e368f5381d83e406e16bc38c93bc/themes/geekboot/layouts/partials/stylesheet-dynamic.html#L4)
+if it's in local development or production.
 
-Hugo is in "production" when using `hugo` to only build HTML or with 
+Hugo is in "production" when using `hugo` to only build HTML or with
 `hugo server --environment production`.
 
 {{<hint "important" >}}
 Running Hugo in `production` mode requires the Hugo _extended_ version to
 support PostCSS.
 
-Standard Hugo fails to build the documentation. 
+Standard Hugo fails to build the documentation.
 {{< /hint >}}
 
 <!-- vale Crossplane.Spelling = NO -->
@@ -182,15 +182,15 @@ website and only preserves the matching CSS styles. The resulting file is around
 <!-- vale Crossplane.Spelling = YES -->
 
 Hugo generates the JSON file with the `buildStats` (or `writeStats`)
-[configuration setting](https://gohugo.io/getting-started/configuration/#configure-build) 
+[configuration setting](https://gohugo.io/getting-started/configuration/#configure-build)
 enabled.
 
 {{<hint "important" >}}
 Some tags or classes are dynamically created or not always enabled, like light
-or dark mode. 
+or dark mode.
 
 Exclude these style sheets from CSS optimization with the
-`purgecss start ignore` comment. 
+`purgecss start ignore` comment.
 
 For example, the Crossplane documentation ignores the `color-modes` style sheet.
 
@@ -210,9 +210,9 @@ Optimizing CSS locally with PostCSS requires installing extra packages.
 * NPM packages defined in `/package.json` with `npm install`.
 
 ## JavaScript
-A goal of the documentation website is to use as little JavaScript as possible. 
-Unless the script provides a significant improvement in performance, capability 
-or user experience. 
+A goal of the documentation website is to use as little JavaScript as possible.
+Unless the script provides a significant improvement in performance, capability
+or user experience.
 
 Local development has no run-time JavaScript dependencies. To prevent
 dependencies, making JavaScript changes requires compiling and committing to git.
@@ -226,7 +226,7 @@ JavaScript filename.
 
 {{< hint "important" >}}
 The JavaScript source in `/utils/webpack/src`, newly compiled JavaScript in
-`/themes/geekboot/assets/js` and updated `/themes/geekboot/data/assets.json` 
+`/themes/geekboot/assets/js` and updated `/themes/geekboot/data/assets.json`
 must be in git for production and preview deploys to use the changed JavaScript.
 {{< /hint >}}
 
@@ -238,13 +238,13 @@ must be in git for production and preview deploys to use the changed JavaScript.
 * `globalScripts.js` is the point of entry for Webpack to determine all
   dependencies. This bundles [instant.page](https://instant.page/) and
   [Bootstrap's JavaScript](https://getbootstrap.com/docs/5.2/getting-started/javascript/).
-* `hoverHighlight.js` provides dynamic "hover to highlight" function. 
+* `hoverHighlight.js` provides dynamic "hover to highlight" function.
 * `slackNotify.js` creates the "Join Crossplane Slack" bubble on the home page.
 * `tabDeepAnchor.js` rewrites anchor links inside tabs to open a tab and present
-  the anchor. 
-  
+  the anchor.
+
 The `globalScripts.js` file is the entry point for Webpack. Any JavaScript
-modules or scripts must be in `globalScripts.js` to get compiled. 
+modules or scripts must be in `globalScripts.js` to get compiled.
 
 #### Building JavaScript
 
@@ -260,14 +260,14 @@ npm install
 ```
 
 Building JavaScript has two options:
-1. `npm run dev` 
+1. `npm run dev`
 2. `npm run prod`
 
 Using the `dev` argument doesn't optimize the JavaScript, simplifying
-debugging. 
+debugging.
 
 Using the `prod` argument optimizes the JavaScript but makes debugging more
-difficult. 
+difficult.
 
 {{<hint "important" >}}
 Always use `npm run prod` to build the compiled JavaScript to use on the
@@ -301,14 +301,14 @@ webpack 5.89.0 compiled successfully in 1248 ms
 [DocSearch](https://docsearch.algolia.com/) program.
 
 {{< hint note >}}
-Crossplane docs don't use the Netlify Algolia plugin and relies on the 
+Crossplane docs don't use the Netlify Algolia plugin and relies on the
 [Algolia Crawler](https://www.algolia.com/doc/tools/crawler/getting-started/overview/) to
 discover new content and changes.
 {{< /hint >}}
 
 ## Sitemap and robots
 
-Hugo generates the `robots.txt` 
+Hugo generates the `robots.txt`
 [automatically](https://gohugo.io/templates/robots/).
 
 For search engine discovery Crossplane uses a `sitemap.xml` file generated from
@@ -322,21 +322,21 @@ Crossplane checks links with Hugo and
 Hugo builds fail for any broken links in a Hugo `ref` shortcode.
 
 To catch markdown links `htmltest` crawls rendered HTML and validates all
-internal links. 
+internal links.
 
 On Monday a
-[GitHub Action](https://github.com/crossplane/docs/blob/master/.github/workflows/weekly-link-checker.yml) 
+[GitHub Action](https://github.com/crossplane/docs/blob/master/.github/workflows/weekly-link-checker.yml)
 runs to validate external links with `htmltest`.
 
-The configuration for `htmltest` is in 
-[`/utils/htmlstest`](https://github.com/crossplane/docs/blob/master/utils/htmltest/.htmltest.yml). 
+The configuration for `htmltest` is in
+[`/utils/htmlstest`](https://github.com/crossplane/docs/blob/master/utils/htmltest/.htmltest.yml).
 
 
 ## Annotated website tree
 Expand the tab below to see an annotated `tree` output of the website repository.
 
 {{<expand >}}
-```shell 
+```shell
 ├── config.yaml    # Hugo configuration file
 ├── content        # Root for all page content
 │   ├── contribute
@@ -352,7 +352,7 @@ Expand the tab below to see an annotated `tree` output of the website repository
 ├── package.json      # NodeJS dependencies
 ├── postcss.config.js # PostCSS configuration
 ├── static            # Legacy docs site images
-├── themes    
+├── themes
 │   └── geekboot      # The Hugo theme used by Crossplane
 │       ├── LICENSE-bootstrap
 │       ├── LICENSE-geekdoc
@@ -388,12 +388,10 @@ Expand the tab below to see an annotated `tree` output of the website repository
 │       │   │   ├── master-version-alert.html   # Alert box for the master version
 │       │   │   ├── mermaid.html      # Styling and JavaScript for mermaid diagrams
 │       │   │   ├── meta-common.html  # <meta> tags used on all pages
-│       │   │   ├── ms-clarity.html   # Microsoft Clarity tags
 │       │   │   ├── old-version-alert.html  # Alert box for versions that aren't the latest
 │       │   │   ├── preview-version-alert.html  # Alert box for preview versions
 │       │   │   ├── redirect.html     # HTML meta redirect
 │       │   │   ├── release-notes.html  # Release note summary page generator
-│       │   │   ├── rollworks.html    # Rollworks analytics tags
 │       │   │   ├── scripts.html      # Global JavaScript includes
 │       │   │   ├── search-button.html  # Algolia search button
 │       │   │   ├── sidebar           # Static links in the left-side nav
@@ -411,7 +409,7 @@ Expand the tab below to see an annotated `tree` output of the website repository
 │       │       ├── expand.html       # Expand button
 │       │       ├── getCRDs.html      # Generate API pages
 │       │       ├── hint.html         # Hint boxes
-│       │       ├── hover.html        # Hover to highlight 
+│       │       ├── hover.html        # Hover to highlight
 │       │       ├── img.html          # Image optimizer
 │       │       ├── include.html      # Include an external file
 │       │       ├── markdown.html     # Run content through the markdown engine again
@@ -439,13 +437,13 @@ Expand the tab below to see an annotated `tree` output of the website repository
     └── webpack   # JavaScript tools
         ├── package-lock.json # NodeJS dependency version lock
         ├── package.json      # NodeJS dependencies
-        ├── src 
+        ├── src
         │   └── js
         │       ├── bootstrap/          # Unmodified Bootstrap JavaScript
         │       ├── colorMode.js        # Color mode switcher
         │       ├── customClipboard.js  # Custom copy-to-clipboard tool
         │       ├── globalScripts.js    # Point of entry for all scripts compiled by Webpack
-        │       ├── hoverHighlight.js   # Hover to highlight 
+        │       ├── hoverHighlight.js   # Hover to highlight
         │       ├── slackNotify.js      # "Join Crossplane Slack" bubble
         │       └── tabDeepAnchor.js    # Link inside a tab
         └── webpack.config.js
