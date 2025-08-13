@@ -140,7 +140,12 @@ reports `True`.
 
 Crossplane calls a Function to determine what resources it should create when
 you create a composite resource. The Function also tells Crossplane what to do
-with these resources when you update or delete a composite resource.
+with these resources when you update a composite resource.
+
+{{<hint "note" >}}
+Composition functions don't run when you delete a composite resource.
+Crossplane handles deletion of composed resources automatically.
+{{< /hint >}}
 
 When Crossplane calls a Function it sends it the current state of the composite
 resource. It also sends it the current state of any resources the composite
@@ -576,7 +581,7 @@ sequenceDiagram
     Crossplane Pod->>+API Server: Apply desired composed resources
 ```
 
-When you create, update, or delete a composite resource that uses composition
+When you create or update a composite resource that uses composition
 functions Crossplane calls each function in the order they appear in the
 Composition's pipeline. Crossplane calls each function by sending it a gRPC
 RunFunctionRequest. The function must respond with a gRPC RunFunctionResponse.
