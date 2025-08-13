@@ -16,7 +16,7 @@ logic for any external resources.
 
 Examples of providers include:
 
-* [Provider AWS](https://github.com/upbound/provider-aws)
+* [Provider AWS](https://github.com/crossplane-contrib/provider-upjet-aws)
 * [Provider Azure](https://github.com/upbound/provider-azure)
 * [Provider GCP](https://github.com/upbound/provider-gcp)
 * [Provider Kubernetes](https://github.com/crossplane-contrib/provider-kubernetes)
@@ -52,15 +52,15 @@ registry with the `--registry` flag on the [Crossplane pod]({{<ref "../guides/po
 {{< /hint >}}
 
 For example, to install the
-[AWS Community Provider](https://github.com/crossplane-contrib/provider-aws),
+[AWS Provider](https://github.com/crossplane-contrib/provider-upjet-aws),
 
 ```yaml {label="install"}
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
 ```
 
 By default, the Provider pod installs in the same namespace as Crossplane
@@ -86,7 +86,7 @@ For information on the specification of Provider packages read the
 apiVersion: meta.pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
 # Removed for brevity
 ```
@@ -105,14 +105,14 @@ Use the
 {{<hover label="helm" line="5" >}}--set provider.packages{{</hover >}}
 argument with `helm install`.
 
-For example, to install the AWS Community Provider,
+For example, to install the AWS S3 Provider,
 
 ```shell {label="helm"}
 helm install crossplane \
 crossplane-stable/crossplane \
 --namespace crossplane-system \
 --create-namespace \
---set provider.packages='{xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0}'
+--set provider.packages='{xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0}'
 ```
 
 ### Install offline
@@ -137,9 +137,9 @@ and repeatable installations.
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws@sha256:ee6bece46dbb54cc3f0233961f5baac317fa4e4a81b41198bdc72fc472d113d0
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3@sha256:ee6bece46dbb54cc3f0233961f5baac317fa4e4a81b41198bdc72fc472d113d0
 ```
 {{< /hint >}}
 
@@ -174,7 +174,7 @@ configuration.
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
   packagePullPolicy: Always
 # Removed for brevity
@@ -203,7 +203,7 @@ For example, to change the upgrade behavior to require manual upgrades, set
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
   revisionActivationPolicy: Manual
 # Removed for brevity
@@ -237,7 +237,7 @@ For example, to change the default setting and store 10 revisions use
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
   revisionHistoryLimit: 10
 # Removed for brevity
@@ -268,7 +268,7 @@ For example, to use the secret named
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
   packagePullSecrets: 
     - name: example-secret
@@ -295,7 +295,7 @@ For example, to disable dependency resolution configure
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
   skipDependencyResolution: true
 # Removed for brevity
@@ -363,7 +363,7 @@ version, configure
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
+  name: crossplane-contrib-provider-aws-s3
 spec:
   ignoreCrossplaneConstraints: true
 # Removed for brevity
@@ -382,8 +382,8 @@ For example, this installation of the Getting Started Configuration is
 
 ```shell {copy-lines="1"}
 kubectl get providers
-NAME              INSTALLED   HEALTHY   PACKAGE                                           AGE
-provider-aws-s3   True        False     xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1   12s
+NAME                                     INSTALLED   HEALTHY   PACKAGE                                                       AGE
+crossplane-contrib-provider-aws-s3       True        False     xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0   12s
 ```
 
 To see more information on why the Provider isn't `HEALTHY` use
@@ -396,7 +396,7 @@ API Version:  pkg.crossplane.io/v1
 Kind:         ProviderRevision
 Spec:
   Desired State:                  Active
-  Image:                          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
+  Image:                          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
   Revision:                       1
 Status:
   Conditions:
@@ -434,10 +434,10 @@ View the `ProviderRevisions` with
 ```shell {label="getPR",copy-lines="1"}
 kubectl get providerrevisions
 NAME                                       HEALTHY   REVISION   IMAGE                                                    STATE      DEP-FOUND   DEP-INSTALLED   AGE
-provider-aws-s3-dbc7f981d81f               True      1          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1           Active     1           1               10d
+provider-aws-s3-dbc7f981d81f               True      1          xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0           Active     1           1               10d
 provider-nop-552a394a8acc                  True      2          xpkg.crossplane.io/crossplane-contrib/provider-nop:v0.3.0   Active                                 11d
 provider-nop-7e62d2a1a709                  True      1          xpkg.crossplane.io/crossplane-contrib/provider-nop:v0.2.0   Inactive                               13d
-crossplane-contrib-provider-family-aws-710d8cfe9f53   True      1          xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v1.21.1        Active                                 10d
+crossplane-contrib-provider-family-aws-710d8cfe9f53   True      1          xpkg.crossplane.io/crossplane-contrib/provider-family-aws:v2.0.0        Active                                 10d
 ```
 
 By default Crossplane keeps a single
@@ -480,7 +480,7 @@ During the install a Provider report `INSTALLED` as `True` and `HEALTHY` as
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
-crossplane-contrib-provider-aws   True        Unknown   xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0   63s
+crossplane-contrib-provider-aws-s3   True        Unknown   xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0   63s
 ```
 
 After the Provider install completes and it's ready for use the `HEALTHY` status
@@ -489,7 +489,7 @@ reports `True`.
 ```shell {copy-lines="1"}
 kubectl get providers
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                   AGE
-crossplane-contrib-provider-aws   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws:v0.39.0   88s
+crossplane-contrib-provider-aws-s3   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0   88s
 ```
 
 {{<hint "important" >}}
@@ -657,7 +657,7 @@ kind: Provider
 metadata:
   name: provider-gcp-iam
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-iam:v1.12.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-iam:v2.0.0
   runtimeConfigRef:
     name: enable-ess
 ---
@@ -819,9 +819,10 @@ the key named
 {{<hover label="providerconfig" line="10" >}}aws-creds{{</hover >}}.
 <!-- vale write-good.Weasel = YES -->
 ```yaml {label="providerconfig"}
-apiVersion: aws.crossplane.io/v1beta1
+apiVersion: aws.m.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
+  namespace: default
   name: aws-provider
 spec:
   credentials:
@@ -839,6 +840,52 @@ Read the documentation on a specific Provider for instructions on configuring
 authentication for that Provider.
 {{< /hint >}}
 
+#### ProviderConfig types
+
+The AWS provider supports two types of ProviderConfig resources:
+
+**ProviderConfig** (namespace-scoped):
+```yaml
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  namespace: default
+  name: my-config
+# Applies only to MRs in the same namespace
+```
+
+**ClusterProviderConfig** (cluster-wide):
+```yaml
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
+metadata:
+  name: my-cluster-config
+# Applies to MRs across all namespaces
+```
+
+When referencing any ProviderConfig, managed resources must specify both `name` and `kind`:
+```yaml
+spec:
+  providerConfigRef:
+    name: my-cluster-config
+    kind: ClusterProviderConfig
+```
+
+```yaml
+spec:
+  providerConfigRef:
+    name: my-config
+    kind: ProviderConfig  # References namespaced ProviderConfig
+```
+
+If you omit `providerConfigRef` entirely, it defaults to:
+```yaml
+spec:
+  providerConfigRef:
+    name: default
+    kind: ClusterProviderConfig
+```
+
 <!-- vale write-good.TooWordy = NO -->
 <!-- allow multiple -->
 ProviderConfig objects apply to individual Managed Resources. A single
@@ -855,9 +902,10 @@ For example, two AWS ProviderConfigs, named
 use different Kubernetes secrets.
 
 ```yaml {label="user"}
-apiVersion: aws.crossplane.io/v1beta1
+apiVersion: aws.m.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
+  namespace: default
   name: user-keys
 spec:
   credentials:
@@ -869,9 +917,10 @@ spec:
 ```
 
 ```yaml {label="admin"}
-apiVersion: aws.crossplane.io/v1beta1
+apiVersion: aws.m.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
+  namespace: default
   name: admin-keys
 spec:
   credentials:
@@ -889,15 +938,17 @@ resource using the
 {{<hover label="user-bucket" line="9" >}}user-keys{{< /hover >}} ProviderConfig.
 
 ```yaml {label="user-bucket"}
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
+  namespace: default
   name: user-bucket
 spec:
   forProvider:
     region: us-east-2
   providerConfigRef:
     name: user-keys
+    kind: ProviderConfig
 ```
 
 This creates a second {{<hover label="admin-bucket" line="2" >}}Bucket{{< /hover >}}
@@ -905,13 +956,15 @@ resource using the
 {{<hover label="admin-bucket" line="9" >}}admin-keys{{< /hover >}} ProviderConfig.
 
 ```yaml {label="admin-bucket"}
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: user-bucket
+  namespace: default
+  name: admin-bucket
 spec:
   forProvider:
     region: us-east-2
   providerConfigRef:
     name: admin-keys
+    kind: ProviderConfig
 ```

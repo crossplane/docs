@@ -215,14 +215,6 @@ watch-rds@{animate: true}
 Follow [Get Started with Managed Resources]({{<ref "../get-started/get-started-with-managed-resources">}})
 to see how managed resources work.
 
-{{<hint "note">}}
-AWS managed resources fully support Crossplane v2.
-
-<!-- vale gitlab.FutureTense = NO -->
-Maintainers are actively working to update managed resources for other systems including Azure,
-GCP, Terraform, Helm, GitHub, etc to support Crossplane v2.
-<!-- vale gitlab.FutureTense = YES -->
-{{</hint>}}
 
 ### Operations
 
