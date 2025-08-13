@@ -1,5 +1,5 @@
 ---
-title: Operation
+title: Operations
 weight: 110
 state: alpha
 alphaVersion: 2.0
