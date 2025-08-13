@@ -1,5 +1,5 @@
 ---
 title: Managed Resources
 weight: 52
-description: Understand Crossplane's core components
+description: Understand Crossplane's managed resources and selective activation
 ---

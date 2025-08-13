@@ -1,5 +1,5 @@
 ---
-title: CronOperation
+title: Cron Operations
 weight: 120
 state: alpha
 alphaVersion: 2.0

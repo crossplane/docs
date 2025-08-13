@@ -454,6 +454,8 @@ password:  27 bytes
 {{<hint "important" >}}
 The Provider determines the data written to the Secret object. Refer to the
 specific Provider documentation for the generated Secret data.
+
+[ManagedResourceDefinitions]({{<ref "managed-resource-definitions">}}) can document what connection details a managed resource provides, though most providers don't yet populate this information.
 {{< /hint >}}
 
 ## Annotations
