@@ -78,7 +78,7 @@ metadata:
 status:
   bucketRegion: us-east-2
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -86,6 +86,7 @@ metadata:
   generateName: test-xrender-
   labels:
     crossplane.io/composite: test-xrender
+  namespace: default
   ownerReferences:
   - apiVersion: nopexample.org/v1
     blockOwnerDeletion: true
@@ -343,7 +344,7 @@ The `<package-kind>` is either a `configuration`, `function` or `provider`.
 For example, to install the latest version of the
 [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):
 
-`crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`
+`crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0`
 
 #### Flags
 {{< table "table table-sm table-striped">}}
@@ -522,7 +523,7 @@ already installed in Crossplane.
 For example, to update to the latest version of the
 [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws):
 
-`crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1`
+`crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0`
 
 
 <!-- vale Google.Headings = NO -->
@@ -746,52 +747,52 @@ Configuration/platform-ref-aws                                                  
 ├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active   HealthyPackageRevision
 ├─ Configuration/upbound-configuration-aws-network                                 v0.7.0    True        True      -        HealthyPackageRevision
 │  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1         v0.7.0    -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
-│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v2.0.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v2.0.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v2.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v2.0.0    -           True      Active   HealthyPackageRevision
 │  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
 │     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
 ├─ Configuration/upbound-configuration-aws-database                                v0.5.0    True        True      -        HealthyPackageRevision
 │  ├─ ConfigurationRevision/upbound-configuration-aws-database-3112f0a765c5        v0.5.0    -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-rds                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  ├─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
-│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-rds                                            v2.0.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-rds-58f96aa9fc4b                    v2.0.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v2.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v2.0.0    -           True      Active   HealthyPackageRevision
 │  └─ Configuration/upbound-configuration-aws-network                              v0.7.0    True        True      -        HealthyPackageRevision
 │     ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1      v0.7.0    -           True      Active   HealthyPackageRevision
-│     ├─ Provider/upbound-provider-aws-ec2                                         v0.47.0   True        True      -        HealthyPackageRevision
-│     │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v0.47.0   -           True      Active   HealthyPackageRevision
-│     │  └─ Provider/upbound-provider-family-aws                                   v1.0.0    True        True      -        HealthyPackageRevision
-│     │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v1.0.0    -           True      Active   HealthyPackageRevision
+│     ├─ Provider/upbound-provider-aws-ec2                                         v2.0.0   True        True      -        HealthyPackageRevision
+│     │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v2.0.0   -           True      Active   HealthyPackageRevision
+│     │  └─ Provider/upbound-provider-family-aws                                   v2.0.0    True        True      -        HealthyPackageRevision
+│     │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v2.0.0    -           True      Active   HealthyPackageRevision
 │     └─ Function/upbound-function-patch-and-transform                             v0.2.1    True        True      -        HealthyPackageRevision
 │        └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715     v0.2.1    -           True      Active   HealthyPackageRevision
 ├─ Configuration/upbound-configuration-aws-eks                                     v0.5.0    True        True      -        HealthyPackageRevision
 │  ├─ ConfigurationRevision/upbound-configuration-aws-eks-83c9d65f4a47             v0.5.0    -           True      Active   HealthyPackageRevision
 │  ├─ Configuration/upbound-configuration-aws-network                              v0.7.0    True        True      -        HealthyPackageRevision
 │  │  ├─ ConfigurationRevision/upbound-configuration-aws-network-97be9100cfe1      v0.7.0    -           True      Active   HealthyPackageRevision
-│  │  ├─ Provider/upbound-provider-aws-ec2                                         v0.47.0   True        True      -        HealthyPackageRevision
-│  │  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  │  └─ Provider/upbound-provider-family-aws                                   v1.0.0    True        True      -        HealthyPackageRevision
-│  │  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v1.0.0    -           True      Active   HealthyPackageRevision
+│  │  ├─ Provider/upbound-provider-aws-ec2                                         v2.0.0   True        True      -        HealthyPackageRevision
+│  │  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                 v2.0.0   -           True      Active   HealthyPackageRevision
+│  │  │  └─ Provider/upbound-provider-family-aws                                   v2.0.0    True        True      -        HealthyPackageRevision
+│  │  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964           v2.0.0    -           True      Active   HealthyPackageRevision
 │  │  └─ Function/upbound-function-patch-and-transform                             v0.2.1    True        True      -        HealthyPackageRevision
 │  │     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715     v0.2.1    -           True      Active   HealthyPackageRevision
 │  ├─ Provider/crossplane-contrib-provider-helm                                    v0.16.0   True        True      -        HealthyPackageRevision
 │  │  └─ ProviderRevision/crossplane-contrib-provider-helm-b4cc4c2c8db3            v0.16.0   -           True      Active   HealthyPackageRevision
 │  ├─ Provider/crossplane-contrib-provider-kubernetes                              v0.10.0   True        True      -        HealthyPackageRevision
 │  │  └─ ProviderRevision/crossplane-contrib-provider-kubernetes-63506a3443e0      v0.10.0   -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-ec2                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
-│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-eks                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  ├─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
-│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
-│  ├─ Provider/upbound-provider-aws-iam                                            v0.47.0   True        True      -        HealthyPackageRevision
-│  │  ├─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v0.47.0   -           True      Active   HealthyPackageRevision
-│  │  └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -        HealthyPackageRevision
-│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-ec2                                            v2.0.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-ec2-cfeb0cd0f1d2                    v2.0.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v2.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v2.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-eks                                            v2.0.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-eks-641a096d79d8                    v2.0.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v2.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v2.0.0    -           True      Active   HealthyPackageRevision
+│  ├─ Provider/upbound-provider-aws-iam                                            v2.0.0   True        True      -        HealthyPackageRevision
+│  │  ├─ ProviderRevision/upbound-provider-aws-iam-438eac423037                    v2.0.0   -           True      Active   HealthyPackageRevision
+│  │  └─ Provider/upbound-provider-family-aws                                      v2.0.0    True        True      -        HealthyPackageRevision
+│  │     └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v2.0.0    -           True      Active   HealthyPackageRevision
 │  └─ Function/upbound-function-patch-and-transform                                v0.2.1    True        True      -        HealthyPackageRevision
 │     └─ FunctionRevision/upbound-function-patch-and-transform-a2f88f8d8715        v0.2.1    -           True      Active   HealthyPackageRevision
 ├─ Configuration/upbound-configuration-app                                         v0.2.0    True        True      -        HealthyPackageRevision
@@ -841,10 +842,10 @@ Configuration/platform-ref-aws                                                  
 ├─ ConfigurationRevision/platform-ref-aws-9ad7b5db2899                             v0.9.0    -           True      Active     HealthyPackageRevision
 ├─ Configuration/upbound-configuration-aws-network                                 v0.2.0    True        True      -          HealthyPackageRevision
 │  ├─ ConfigurationRevision/upbound-configuration-aws-network-288fcd1b88dd         v0.2.0    -           True      Active     HealthyPackageRevision
-│  └─ Provider/upbound-provider-aws-ec2                                            v1.0.0    True        True      -          HealthyPackageRevision
-│     ├─ ProviderRevision/upbound-provider-aws-ec2-5cfd948d082f                    v1.0.0    -           True      Active     HealthyPackageRevision
-│     └─ Provider/upbound-provider-family-aws                                      v1.0.0    True        True      -          HealthyPackageRevision
-│        └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v1.0.0    -           True      Active     HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-ec2                                            v2.0.0    True        True      -          HealthyPackageRevision
+│     ├─ ProviderRevision/upbound-provider-aws-ec2-5cfd948d082f                    v2.0.0    -           True      Active     HealthyPackageRevision
+│     └─ Provider/upbound-provider-family-aws                                      v2.0.0    True        True      -          HealthyPackageRevision
+│        └─ ProviderRevision/upbound-provider-family-aws-48b3b5ccf964              v2.0.0    -           True      Active     HealthyPackageRevision
 # Removed for brevity
 ```
 
@@ -855,8 +856,8 @@ crossplane beta trace configuration platform-ref-aws --show-package-revisions no
 NAME                                                       VERSION   INSTALLED   HEALTHY   STATE   STATUS
 Configuration/platform-ref-aws                             v0.9.0    True        True      -       HealthyPackageRevision
 ├─ Configuration/upbound-configuration-aws-network         v0.2.0    True        True      -       HealthyPackageRevision
-│  └─ Provider/upbound-provider-aws-ec2                    v1.0.0    True        True      -       HealthyPackageRevision
-│     └─ Provider/upbound-provider-family-aws              v1.0.0    True        True      -       HealthyPackageRevision
+│  └─ Provider/upbound-provider-aws-ec2                    v2.0.0    True        True      -       HealthyPackageRevision
+│     └─ Provider/upbound-provider-family-aws              v2.0.0    True        True      -       HealthyPackageRevision
 # Removed for brevity
 ```
 
@@ -936,9 +937,9 @@ provider manifests of the resources to validate.
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws-iam
+  name: crossplane-contrib-provider-aws-iam
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam:v1.21.1
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam:v2.0.0
 ```
 
 Now include the XR or managed resource to validate.
@@ -948,9 +949,10 @@ For example, to validate an
 provide a managed resource YAML file. 
 
 ```yaml {label="iamAK"}
-apiVersion: iam.aws.upbound.io/v1beta1
+apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: AccessKey
 metadata:
+  namespace: default
   name: sample-access-key-0
 spec:
   forProvider:
@@ -964,7 +966,7 @@ resource YAML files as input.
 
 ```shell
 crossplane beta validate provider.yaml managedResource.yaml
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
 Total 1 resources: 0 missing schemas, 1 success case, 0 failure cases
 ```
 
@@ -982,10 +984,10 @@ option with `crossplane beta validate` to pipe the output from
 crossplane render xr.yaml composition.yaml function.yaml --include-full-xr | crossplane beta validate schemas.yaml -
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Required value
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
@@ -1082,10 +1084,10 @@ Provide the directory name and a resource YAML file to the
 crossplane beta validate schema resources.yaml
 [x] schema validation error example.crossplane.io/v1beta1, Kind=XR, example : status.conditions[0].lastTransitionTime: Invalid value: "null": status.conditions[0].lastTransitionTime in body must be of type string: "null"
 [x] CEL validation error example.crossplane.io/v1beta1, Kind=XR, example : spec: Invalid value: "object": no such key: minReplicas evaluating rule: replicas should be greater than or equal to minReplicas.
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
-[✓] iam.aws.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-0 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=AccessKey, sample-access-key-1 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=User, test-user-0 validated successfully
+[✓] iam.aws.m.upbound.io/v1beta1, Kind=User, test-user-1 validated successfully
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 

@@ -187,7 +187,7 @@ async def RunFunction(self, req: fnv1.RunFunctionRequest, _: grpc.aio.ServicerCo
     for name in names:
         rsp.desired.resources[f"xbuckets-{name}"].resource.update(
             {
-                "apiVersion": "s3.aws.upbound.io/v1beta1",
+                "apiVersion": "s3.aws.m.upbound.io/v1beta1",
                 "kind": "Bucket",
                 "metadata": {
                     "annotations": {
@@ -261,7 +261,7 @@ class FunctionRunner(grpcv1.FunctionRunnerService):
             # https://protobuf.dev/reference/python/python-generated/#map-fields
             rsp.desired.resources[f"xbuckets-{name}"].resource.update(
                 {
-                    "apiVersion": "s3.aws.upbound.io/v1beta1",
+                    "apiVersion": "s3.aws.m.upbound.io/v1beta1",
                     "kind": "Bucket",
                     "metadata": {
                         "annotations": {
@@ -399,7 +399,7 @@ class TestFunctionRunner(unittest.IsolatedAsyncioTestCase):
                             "xbuckets-test-bucket-a": fnv1.Resource(
                                 resource=resource.dict_to_struct(
                                     {
-                                        "apiVersion": "s3.aws.upbound.io/v1beta1",
+                                        "apiVersion": "s3.aws.m.upbound.io/v1beta1",
                                         "kind": "Bucket",
                                         "metadata": {
                                             "annotations": {
@@ -415,7 +415,7 @@ class TestFunctionRunner(unittest.IsolatedAsyncioTestCase):
                             "xbuckets-test-bucket-b": fnv1.Resource(
                                 resource=resource.dict_to_struct(
                                     {
-                                        "apiVersion": "s3.aws.upbound.io/v1beta1",
+                                        "apiVersion": "s3.aws.m.upbound.io/v1beta1",
                                         "kind": "Bucket",
                                         "metadata": {
                                             "annotations": {
@@ -588,7 +588,7 @@ kind: XBuckets
 metadata:
   name: example-buckets
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -603,7 +603,7 @@ spec:
   forProvider:
     region: us-east-2
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
@@ -618,7 +618,7 @@ spec:
   forProvider:
     region: us-east-2
 ---
-apiVersion: s3.aws.upbound.io/v1beta1
+apiVersion: s3.aws.m.upbound.io/v1beta1
 kind: Bucket
 metadata:
   annotations:
