@@ -774,3 +774,35 @@ that isn't desired state. Functions can use context for this. Any function can
 write to the pipeline context. Crossplane passes the context to all following
 functions. When Crossplane has called all functions it discards the pipeline
 context.
+
+### Function response cache
+
+{{<hint "note" >}}
+Function response caching is an alpha feature. Enable it by setting the 
+`--enable-function-response-cache` feature flag.
+{{< /hint >}}
+
+Crossplane can cache function responses to improve performance by reducing 
+repeated function calls. When enabled, Crossplane caches responses from 
+composition functions that include a Time-To-Live (TTL) value.
+
+The cache works by:
+- Storing function responses on disk based on a hash of the request
+- Only caching responses with a non-zero TTL
+- Automatically removing expired cache entries
+- Reusing cached responses for identical requests until they expire
+
+This feature is particularly useful for functions that:
+- Perform expensive computations or external API calls
+- Return stable results for the same inputs
+- Include appropriate TTL values in their responses
+
+#### Cache configuration
+
+Control the cache behavior with these Crossplane pod arguments:
+
+- `--xfn-cache-max-ttl` - Maximum cache duration (default: 24 hours)
+
+The cache stores files in the `/cache/xfn/` directory within the Crossplane pod.
+For better performance, consider using an in-memory cache by mounting an 
+emptyDir volume with `medium: Memory`.
