@@ -106,8 +106,9 @@ at the table below.
 | --- | --- | --- |
 | Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
 | Beta | `--enable-usages` | Enable support for Usages. |
-| Alpha | `--enable-realtime-compositions` | Enable support for real time compositions. |
+| Beta | `--enable-realtime-compositions` | Enable support for real time compositions. |
 | Alpha | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
+| Alpha | `--enable-function-response-cache` | Enable caching of composition function responses to improve performance. |
 | Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
 {{< /table >}}
 {{< /expand >}}

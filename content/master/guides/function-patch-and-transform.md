@@ -424,7 +424,7 @@ environment:
   patches:
   - type: ToCompositeFieldPath
     fromFieldPath: tags
-    toFieldPath: metadata.labels[envTag]
+    toFieldPath: status.envTag
   - type: FromCompositeFieldPath
     fromFieldPath: metadata.name
     toFieldPath: newEnvironmentKey
@@ -667,7 +667,12 @@ Composition and use it in a second composed resource in the same Composition.
 {{< /hint >}}
 
 For example, after Crossplane creates a new managed resource, take the value
-`hostedZoneID` and apply it as a `label` in the composite resource.
+`hostedZoneID` and store it in the composite resource's status.
+
+{{< hint "important" >}}
+To patch to composite resource status fields, you must first define the custom 
+status fields in the CompositeResourceDefinition.
+{{< /hint >}}
 
 ```yaml {label="toComposite",copy-lines="9-11"}
 apiVersion: pt.fn.crossplane.io/v1beta1
@@ -683,7 +688,7 @@ resources:
   patches:
     - type: ToCompositeFieldPath
       fromFieldPath: status.atProvider.hostedZoneId
-      toFieldPath: metadata.labels['ZoneID']
+      toFieldPath: status.hostedZoneId
 ```
 
 View the created managed resource to see the
@@ -698,12 +703,14 @@ Status:
     # Removed for brevity
 ```
 
-Next view the composite resource and confirm the patch applied the `label`
+Next view the composite resource and confirm the patch applied to the status
 
 ```yaml {label="toCompositeXR",copy-lines="none"}
 $ kubectl describe composite
 Name:         my-example-p5pxf
-Labels:       ZoneID=Z2O1EMRO9K5GLX
+# Removed for brevity
+Status:
+  Hosted Zone Id: Z2O1EMRO9K5GLX
 ```
 
 <!-- vale Google.Headings = NO -->
