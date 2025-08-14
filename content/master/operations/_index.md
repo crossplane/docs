@@ -5,3 +5,5 @@ state: alpha
 alphaVersion: 2.0
 description: Understand Crossplane's Operations feature
 ---
+
+{{< auto-index >}}
