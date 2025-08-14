@@ -3,7 +3,7 @@ title: Operations
 weight: 110
 state: alpha
 alphaVersion: 2.0
-description: Operations run function pipelines once to completion for operational tasks
+description: Run function pipelines once to completion
 ---
 
 An `Operation` runs a function pipeline once to completion to perform operational
@@ -296,6 +296,31 @@ that your Operations need to access.
 For more details on RBAC configuration, see the 
 [Compositions RBAC documentation]({{<ref "../composition/compositions#grant-access-to-composed-resources">}}).
 {{</hint>}}
+
+### Function response cache
+
+{{<hint "note" >}}
+Function response caching is an alpha feature. Enable it by setting the 
+`--enable-function-response-cache` feature flag.
+{{< /hint >}}
+
+Operations can use function response caching to improve performance
+for operations that:
+- Call the same functions often with identical inputs
+- Use functions that perform expensive computations or external API calls
+- Run frequently through CronOperation or WatchOperation
+
+The cache works the same way as for Compositions - function responses with
+time to live values cache and reuse identical requests until
+they expire.
+
+Function response caching helps Operations that:
+- Validate configurations using expensive checks
+- Query external systems for status information
+- Perform complex calculations that don't change frequently
+
+For cache configuration details, see the 
+[Function response cache documentation]({{<ref "../composition/compositions#function-response-cache">}}).
 
 ### Required resources
 

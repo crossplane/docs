@@ -1,6 +1,7 @@
 ---
 title: Composition Revisions
 weight: 35
+description: "Manage changes to Compositions with revisions"
 ---
 
 This guide discusses the use of "Composition Revisions" to make and roll

@@ -2,7 +2,8 @@
 <!-- vale Microsoft.HeadingAcronyms = NO -->
 ---  
 title: Self-signed CA certs
-weight: 270   
+weight: 270
+description: "Configure Crossplane with self-signed certificates"
 ---
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.HeadingAcronyms = YES -->  

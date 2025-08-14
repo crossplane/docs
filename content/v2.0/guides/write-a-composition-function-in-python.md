@@ -1,7 +1,7 @@
 ---
 title: Write a Composition Function in Python
 weight: 81
-description: "Composition functions allow you to template resources using Python"
+description: "Build composition functions in Python"
 ---
 
 Composition functions (or just functions, for short) are custom programs that

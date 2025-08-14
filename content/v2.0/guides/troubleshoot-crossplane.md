@@ -1,6 +1,7 @@
 ---
 title: Troubleshoot Crossplane
 weight: 306
+description: "Debug common Crossplane issues"
 ---
 ## Requested resource not found
 

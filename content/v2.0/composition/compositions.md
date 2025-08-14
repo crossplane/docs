@@ -5,7 +5,7 @@ aliases:
   - composition
   - composition-functions
   - /knowledge-base/guides/composition-functions
-description: "Compositions are a template for creating composite resources"
+description: "Define which resources to create and how"
 ---
 
 Compositions are a template for creating multiple Kubernetes resources as a
@@ -140,7 +140,12 @@ reports `True`.
 
 Crossplane calls a Function to determine what resources it should create when
 you create a composite resource. The Function also tells Crossplane what to do
-with these resources when you update or delete a composite resource.
+with these resources when you update a composite resource.
+
+{{<hint "note" >}}
+Composition functions don't run when you delete a composite resource.
+Crossplane handles deletion of composed resources automatically.
+{{< /hint >}}
 
 When Crossplane calls a Function it sends it the current state of the composite
 resource. It also sends it the current state of any resources the composite
@@ -576,7 +581,7 @@ sequenceDiagram
     Crossplane Pod->>+API Server: Apply desired composed resources
 ```
 
-When you create, update, or delete a composite resource that uses composition
+When you create or update a composite resource that uses composition
 functions Crossplane calls each function in the order they appear in the
 Composition's pipeline. Crossplane calls each function by sending it a gRPC
 RunFunctionRequest. The function must respond with a gRPC RunFunctionResponse.
@@ -769,3 +774,35 @@ that isn't desired state. Functions can use context for this. Any function can
 write to the pipeline context. Crossplane passes the context to all following
 functions. When Crossplane has called all functions it discards the pipeline
 context.
+
+### Function response cache
+
+{{<hint "note" >}}
+Function response caching is an alpha feature. Enable it by setting the 
+`--enable-function-response-cache` feature flag.
+{{< /hint >}}
+
+Crossplane can cache function responses to improve performance by reducing 
+repeated function calls. When enabled, Crossplane caches responses from 
+composition functions that include a time to live (TTL) value.
+
+The cache works by:
+- Storing function responses on disk based on a hash of the request
+- Only caching responses with a nonzero TTL
+- Automatically removing expired cache entries
+- Reusing cached responses for identical requests until they expire
+
+This feature helps functions that:
+- Perform expensive computations or external API calls
+- Return stable results for the same inputs
+- Include appropriate TTL values in their responses
+
+#### Cache configuration
+
+Control the cache behavior with these Crossplane pod arguments:
+
+- `--xfn-cache-max-ttl` - Maximum cache duration (default: 24 hours)
+
+The cache stores files in the `/cache/xfn/` directory in the Crossplane pod.
+For better performance, consider using an in-memory cache by mounting an 
+emptyDir volume with `medium: Memory`.
