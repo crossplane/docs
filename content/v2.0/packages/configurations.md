@@ -1,6 +1,6 @@
 ---
 title: Configurations
-description: "Packages combine multiple Crossplane resources into a single, portable, OCI image."
+description: "Portable packages of Crossplane resources"
 altTitle: "Crossplane Packages"
 weight: 200
 ---

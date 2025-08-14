@@ -1,7 +1,7 @@
 ---
 title: Composite Resource Definitions
 weight: 20
-description: "Composite Resource Definitions or XRDs define custom API schemas"
+description: "Define schemas for composite resources"
 ---
 
 Composite resource definitions (`XRDs`) define the schema for a custom API.

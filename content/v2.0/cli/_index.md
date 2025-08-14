@@ -1,7 +1,7 @@
 ---
 weight: 200
 title: CLI Reference
-description: "Documentation for the Crossplane command-line interface"
+description: "Command-line tools for Crossplane development"
 ---
 
 The Crossplane CLI helps simplify some development and administration aspects of

@@ -3,8 +3,7 @@ title: Implementing safe-start in Providers
 weight: 90
 state: alpha
 alphaVersion: 2.0
-description: Guide for provider developers to add safe-start capability for
-  selective resource activation
+description: Add selective resource activation to providers
 ---
 
 This guide shows provider developers how to implement safe-start capability in

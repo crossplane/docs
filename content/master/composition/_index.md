@@ -1,5 +1,7 @@
 ---
 title: Composition
 weight: 51
-description: Understand Crossplane's core components
+description: Build custom APIs by composing Kubernetes resources
 ---
+
+{{< auto-index >}}

@@ -1,7 +1,7 @@
 ---
 title: Managed Resources
 weight: 10
-description: "Managed resources are the Crossplane representation of external provider resources"
+description: "Kubernetes representations of cloud resources"
 ---
 
 A _managed resource_ (`MR`) represents an external service in a Provider. When

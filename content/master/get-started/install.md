@@ -1,6 +1,7 @@
 ---
 title: Install Crossplane
 weight: 100
+description: "Install Crossplane in a Kubernetes cluster"
 ---
 
 Crossplane installs into an existing Kubernetes cluster, creating the

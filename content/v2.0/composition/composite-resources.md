@@ -1,7 +1,7 @@
 ---
 title: Composite Resources
 weight: 10
-description: "Composite resources, an XR or XRs, represent a collection of related cloud resources."
+description: "Custom APIs created by composing Kubernetes resources"
 ---
 
 A composite resource, or XR, represents a set of Kubernetes resources as a

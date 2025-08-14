@@ -1,8 +1,7 @@
 ---
 title: Releasing Crossplane Extensions
 weight: 80
-description: "Configuring build pipelines for Crossplane extensions with GitHub
-Actions"
+description: "Build pipelines for Crossplane extensions"
 ---
 
 <!-- vale Google.Headings = NO -->

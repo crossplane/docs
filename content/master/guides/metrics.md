@@ -1,7 +1,7 @@
 ---
 title: Metrics
 weight: 60
-description: "Metrics are essential for monitoring Crossplane's operations, helping to identify and resolve potential issues."
+description: "Monitor Crossplane operations with metrics"
 ---
 
 Crossplane produces [Prometheus style metrics](https://prometheus.io/docs/introduction/overview/#what-are-metrics) for effective monitoring and alerting in your environment.

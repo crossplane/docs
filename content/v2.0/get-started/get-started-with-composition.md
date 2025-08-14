@@ -1,6 +1,7 @@
 ---
 title: Get Started With Composition
 weight: 200
+description: "Build custom APIs with Crossplane composition"
 ---
 
 This guide shows how to create a new kind of custom resource named `App`. When a

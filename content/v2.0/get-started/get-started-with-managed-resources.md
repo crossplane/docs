@@ -1,6 +1,7 @@
 ---
 title: Get Started With Managed Resources
 weight: 300
+description: "Manage cloud resources in Kubernetes with Crossplane providers"
 ---
 
 This guide shows how to install and use a new kind of custom resource called

@@ -1,6 +1,7 @@
 ---
 title: Uninstall Crossplane
 weight: 500
+description: "Remove Crossplane from your cluster"
 ---
 
 {{<hint "warning" >}}

@@ -1,6 +1,7 @@
 ---
 title: "Welcome"
 weight: -1
+description: "Control plane framework for building cloud native platforms"
 cascade:
     version: "master"
 ---

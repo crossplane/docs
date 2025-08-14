@@ -3,6 +3,7 @@ title: Feature Lifecycle
 toc: true
 weight: 309
 indent: true
+description: "Crossplane's feature development process"
 ---
 
 # Feature lifecycle

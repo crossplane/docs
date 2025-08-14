@@ -1,7 +1,7 @@
 ---
 title: Image Configs
 weight: 400
-description: "Image Configs is an API for centralized control of the configuration of Crossplane package images."
+description: "Centralized control of package image configuration"
 ---
 
 <!-- vale write-good.Passive = NO -->

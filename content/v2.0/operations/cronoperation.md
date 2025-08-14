@@ -3,7 +3,7 @@ title: Cron Operations
 weight: 120
 state: alpha
 alphaVersion: 2.0
-description: CronOperations create Operations on a schedule for recurring tasks
+description: Run function pipelines on a schedule
 ---
 
 A `CronOperation` creates [Operations]({{<ref "operation">}}) on a schedule,

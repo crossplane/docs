@@ -1,6 +1,7 @@
 ---
 title: Release Cycle
 weight: 308
+description: "When and how Crossplane releases are cut"
 ---
 
 Starting with the v1.10.0 release, Crossplane releases on a quarterly (13

@@ -3,8 +3,7 @@ title: Managed Resource Definitions
 weight: 15
 state: alpha
 alphaVersion: 2.0
-description: ManagedResourceDefinitions enable selective activation of provider
-  resources and reduce CRD overhead
+description: Enable selective activation of provider resources
 ---
 
 {{<hint "important">}}

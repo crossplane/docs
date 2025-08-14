@@ -4,7 +4,7 @@ weight: 30
 state: beta
 alphaVersion: "1.14"
 betaVersion: "1.19"
-description: "Usage indicates a resource is in use"
+description: "Block deletion of in-use resources"
 ---
 
 A `Usage` indicates a resource is in use. Two main use cases for Usages are
