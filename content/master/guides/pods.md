@@ -137,7 +137,7 @@ Kubernetes API server when a composed resource changes. For example, when
 a provider sets the `Ready` condition to `true`.
 
 {{<hint "important" >}}
-Real time compositions are a beta feature. Beta features are enabled by
+Real time compositions are a beta feature. Crossplane enables beta features by
 default. 
 {{< /hint >}}
 

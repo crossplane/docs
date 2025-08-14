@@ -784,15 +784,15 @@ Function response caching is an alpha feature. Enable it by setting the
 
 Crossplane can cache function responses to improve performance by reducing 
 repeated function calls. When enabled, Crossplane caches responses from 
-composition functions that include a Time-To-Live (TTL) value.
+composition functions that include a time to live (TTL) value.
 
 The cache works by:
 - Storing function responses on disk based on a hash of the request
-- Only caching responses with a non-zero TTL
+- Only caching responses with a nonzero TTL
 - Automatically removing expired cache entries
 - Reusing cached responses for identical requests until they expire
 
-This feature is particularly useful for functions that:
+This feature helps functions that:
 - Perform expensive computations or external API calls
 - Return stable results for the same inputs
 - Include appropriate TTL values in their responses
@@ -803,6 +803,6 @@ Control the cache behavior with these Crossplane pod arguments:
 
 - `--xfn-cache-max-ttl` - Maximum cache duration (default: 24 hours)
 
-The cache stores files in the `/cache/xfn/` directory within the Crossplane pod.
+The cache stores files in the `/cache/xfn/` directory in the Crossplane pod.
 For better performance, consider using an in-memory cache by mounting an 
 emptyDir volume with `medium: Memory`.

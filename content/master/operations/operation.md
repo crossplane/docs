@@ -304,17 +304,17 @@ Function response caching is an alpha feature. Enable it by setting the
 `--enable-function-response-cache` feature flag.
 {{< /hint >}}
 
-Operations can benefit from function response caching to improve performance,
-especially for operations that:
-- Call the same functions repeatedly with identical inputs
+Operations can use function response caching to improve performance
+for operations that:
+- Call the same functions often with identical inputs
 - Use functions that perform expensive computations or external API calls
 - Run frequently through CronOperation or WatchOperation
 
 The cache works the same way as for Compositions - function responses with
-time to live values are cached and reused for identical requests until
+time to live values cache and reuse identical requests until
 they expire.
 
-This is particularly useful for Operations that:
+Function response caching helps Operations that:
 - Validate configurations using expensive checks
 - Query external systems for status information
 - Perform complex calculations that don't change frequently
