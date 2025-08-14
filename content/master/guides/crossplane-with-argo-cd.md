@@ -3,6 +3,7 @@
 ---  
 title: Configuring Crossplane with Argo CD
 weight: 270
+description: "Deploy Crossplane resources with GitOps"
 ---
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.HeadingAcronyms = YES -->  

@@ -1,7 +1,7 @@
 ---
 title: Crossplane Pods
 weight: 1
-description: Background on the components installed with Crossplane and their functions.
+description: Components installed with Crossplane
 ---
 
 The base Crossplane installation consists of two pods, the `crossplane` pod and

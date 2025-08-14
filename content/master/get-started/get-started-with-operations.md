@@ -3,6 +3,7 @@ title: Get Started With Operations
 weight: 300
 state: alpha
 alphaVersion: 2.0
+description: "Run operational tasks with Crossplane operations"
 ---
 
 This guide shows how to use Crossplane Operations to automate day-two

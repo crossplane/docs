@@ -3,7 +3,7 @@ title: Watch Operations
 weight: 130
 state: alpha
 alphaVersion: 2.0
-description: WatchOperations create Operations when watched resources change
+description: Run function pipelines on resource changes
 ---
 
 A `WatchOperation` creates [Operations]({{<ref "operation">}}) when watched

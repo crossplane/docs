@@ -1,7 +1,7 @@
 ---
 title: Managed Resources
 weight: 52
-description: Understand Crossplane's managed resources and selective activation
+description: Manage cloud resources in Kubernetes
 ---
 
 {{< auto-index >}}

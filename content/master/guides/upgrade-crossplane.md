@@ -1,6 +1,7 @@
 ---
 title: Upgrade Crossplane
 weight: 400
+description: "Upgrade Crossplane to newer versions"
 ---
 
 The recommended upgrade method for an existing Crossplane install is to use

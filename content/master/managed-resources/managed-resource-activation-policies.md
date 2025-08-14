@@ -3,9 +3,7 @@ title: Managed Resource Activation Policies
 weight: 20
 state: alpha
 alphaVersion: 2.0
-description: ManagedResourceActivationPolicies control which
-  ManagedResourceDefinitions activate for selective provider resource
-  installation
+description: Choose which provider resources Crossplane activates
 ---
 
 {{<hint "important">}}

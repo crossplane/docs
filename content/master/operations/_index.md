@@ -3,7 +3,7 @@ title: Operations
 weight: 52
 state: alpha
 alphaVersion: 2.0
-description: Understand Crossplane's Operations feature
+description: Run operational tasks with Crossplane
 ---
 
 {{< auto-index >}}

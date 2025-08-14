@@ -3,7 +3,7 @@ title: Operations
 weight: 110
 state: alpha
 alphaVersion: 2.0
-description: Operations run function pipelines once to completion for operational tasks
+description: Run function pipelines once to completion
 ---
 
 An `Operation` runs a function pipeline once to completion to perform operational
