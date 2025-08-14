@@ -4,6 +4,9 @@ Usage: {{ partial "auto-index" . }}
 */}}
 {{ if .RegularPages }}
 <div class="auto-index">
+  {{ if .Params.description }}
+  <p>{{ .Params.description }}</p>
+  {{ end }}
   <p>Topics in this section:</p>
   <ul>
   {{ range .RegularPages.ByWeight }}
