@@ -232,8 +232,23 @@ Existing Compositions work with Crossplane v2 with minimal changes. v2 managed
 resources are schematically identical to v1 managed resources - they're just
 namespaced.
 
-To use v2 namespaced managed resources in compositions, update the API group
-from `.crossplane.io` to `.m.crossplane.io`:
+To use v2 namespaced managed resources in compositions:
+
+1. **Update the API group** from `.crossplane.io` to `.m.crossplane.io`
+2. **Check the API version** - v2 namespaced providers often reset the API
+   version to `v1beta1`
+
+For example `provider-aws-s3:v2.0.0` has two `Bucket` MRs:
+
+* `apiVersion: s3.aws.upbound.io/v1beta2` - Legacy, cluster scoped
+* `apiVersion: s3.aws.m.upbound.io/v1beta1` - Namespaced
+
+The `spec.forProvider` and `status.atProvider` fields are schematically
+identical.
+
+{{<hint "note">}}
+Use `kubectl get mrds` to see available MR API versions.
+{{</hint>}}
 
 **Before (v1 cluster-scoped)**:
 ```yaml
@@ -256,7 +271,7 @@ spec:
       source: Inline
       inline:
         template: |
-          apiVersion: s3.aws.crossplane.io/v1beta1
+          apiVersion: s3.aws.crossplane.io/v1beta2
           kind: Bucket
           metadata:
             name: {{ .observed.composite.resource.metadata.name }}
@@ -286,7 +301,7 @@ spec:
       source: Inline
       inline:
         template: |
-          apiVersion: s3.aws.m.crossplane.io/v1beta1  # Added .m
+          apiVersion: s3.aws.m.crossplane.io/v1beta1  # Added .m, reset to v1beta1
           kind: Bucket
           metadata:
             name: {{ .observed.composite.resource.metadata.name }}
