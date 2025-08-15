@@ -299,11 +299,9 @@ Run `kubectl get pkg` to look for any packages that aren't fully qualified, then
 update or rebuild any Packages to use fully qualified images as needed.
 {{</hint>}}
 
-<!-- vale gitlab.FutureTense = NO -->
-Crossplane v2 supports legacy v1-style XRs and MRs. Most users will be able to
-upgrade from v1.x to Crossplane v2 without breaking changes.
+Crossplane v2 supports legacy v1-style XRs and MRs. Most users can upgrade from 
+v1.x to Crossplane v2 without breaking changes.
 
-Existing Compositions will require minor updates to work with Crossplane v2
-style XRs. A migration guide will be available closer to the final release of
-Crossplane v2.
-<!-- vale gitlab.FutureTense = YES -->
+Existing Compositions require minor updates to work with Crossplane v2
+style XRs and MRs. Follow the [Crossplane v2 upgrade guide]({{<ref "../guides/upgrade-to-crossplane-v2">}}) 
+for step-by-step migration instructions.
