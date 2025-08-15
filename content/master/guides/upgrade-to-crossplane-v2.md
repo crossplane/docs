@@ -177,17 +177,17 @@ metadata:
 spec:
   activate:
   # Legacy cluster-scoped resources (existing v1 resources)
-  - buckets.s3.aws.crossplane.io
-  - instances.ec2.aws.crossplane.io
+  - buckets.s3.aws.upbound.io
+  - instances.ec2.aws.upbound.io
   
   # Modern namespaced resources (new v2 resources)  
-  - buckets.s3.aws.m.crossplane.io
-  - instances.ec2.aws.m.crossplane.io
+  - buckets.s3.aws.m.upbound.io
+  - instances.ec2.aws.m.upbound.io
 ```
 
 {{<hint "tip">}}
-Notice the distinction: `s3.aws.crossplane.io` (legacy cluster-scoped) vs 
-`s3.aws.m.crossplane.io` (v2 namespaced). The `.m.` indicates modern 
+Notice the distinction: `s3.aws.upbound.io` (legacy cluster-scoped) vs 
+`s3.aws.m.upbound.io` (v2 namespaced). The `.m.` indicates modern 
 namespaced managed resources.
 {{</hint>}}
 
@@ -246,8 +246,16 @@ For example `provider-aws-s3:v2.0.0` has two `Bucket` MRs:
 The `spec.forProvider` and `status.atProvider` fields are schematically
 identical.
 
-{{<hint "note">}}
+{{<hint "tip">}}
 Use `kubectl get mrds` to see available MR API versions.
+{{</hint>}}
+
+{{<hint "note">}}
+Not all providers use `.crossplane.io` domains. For example, `provider-aws-s3`
+uses `.upbound.io` domains for historical reasons. The general pattern for
+namespaced resources is adding `.m` to the existing domain: `<domain>` becomes
+`m.<domain>` (like `upbound.io` → `m.upbound.io` or `crossplane.io` →
+`m.crossplane.io`).
 {{</hint>}}
 
 **Before (v1 cluster-scoped)**:
@@ -271,7 +279,7 @@ spec:
       source: Inline
       inline:
         template: |
-          apiVersion: s3.aws.crossplane.io/v1beta2
+          apiVersion: s3.aws.upbound.io/v1beta2
           kind: Bucket
           metadata:
             name: {{ .observed.composite.resource.metadata.name }}
@@ -301,7 +309,7 @@ spec:
       source: Inline
       inline:
         template: |
-          apiVersion: s3.aws.m.crossplane.io/v1beta1  # Added .m, reset to v1beta1
+          apiVersion: s3.aws.m.upbound.io/v1beta1  # Added .m, reset to v1beta1
           kind: Bucket
           metadata:
             name: {{ .observed.composite.resource.metadata.name }}
