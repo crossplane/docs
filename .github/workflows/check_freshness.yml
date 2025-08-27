@@ -1,0 +1,115 @@
+name: Documentation Freshness Check
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Run monthly on the 1st at midnight
+  workflow_dispatch:      # Allow manual trigger
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check_freshness:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0    # Need full history for git log
+    
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+        
+    - name: Create and run freshness check script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cat > check_freshness.py << 'EOL'
+        import os
+        import subprocess
+        import requests
+        from datetime import datetime, timedelta
+
+        # Configuration
+        FRESHNESS_PERIOD = timedelta(days=180)  # 180 days (6 months)
+        IGNORED_FILES = ["_index.md"]
+        GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+        GITHUB_REPO = os.environ.get('GITHUB_REPOSITORY', 'owner/repo')
+        GITHUB_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/issues"
+
+        now = datetime.now()
+
+        def get_last_modified_time(file_path):
+            result = subprocess.run(
+                ['git', 'log', '-1', '--format=%ct', file_path],
+                stdout=subprocess.PIPE,
+                text=True
+            )
+            if not result.stdout.strip():
+                return now  # Return current time for new files
+            timestamp = int(result.stdout.strip())
+            return datetime.fromtimestamp(timestamp)
+
+        def check_freshness(directory):
+            stale_files = []
+            for root, _, files in os.walk(directory):
+                for file in files:
+                    if file.endswith(".md"):
+                        relative_path = os.path.relpath(os.path.join(root, file), start=directory)
+                        if file in IGNORED_FILES:
+                            continue
+                        last_modified = get_last_modified_time(os.path.join(root, file))
+                        time_diff = now - last_modified
+                        if time_diff > FRESHNESS_PERIOD:
+                            stale_files.append((relative_path, last_modified))
+            return stale_files
+
+        def create_github_issue(body):
+            if not GITHUB_TOKEN:
+                print("Error: GITHUB_TOKEN environment variable not set")
+                return False
+            
+            headers = {
+                'Authorization': f'token {GITHUB_TOKEN}',
+                'Accept': 'application/vnd.github.v3+json'
+            }
+            
+            issue_data = {
+                'title': '📚 Documentation Freshness Check Results',
+                'body': body,
+                'labels': ['documentation', 'maintenance']
+            }
+            
+            response = requests.post(GITHUB_API_URL, headers=headers, json=issue_data)
+            if response.status_code == 201:
+                print(f"Issue created successfully: {response.json()['html_url']}")
+                return True
+            else:
+                print(f"Failed to create issue. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return False
+
+        # Main execution
+        docs_directory = "content"
+        stale_docs = check_freshness(docs_directory)
+        sorted_stale_docs = sorted(stale_docs, key=lambda x: x[1])
+
+        if sorted_stale_docs:
+            issue_body = "## Stale Documentation Alert\n\n"
+            issue_body += "The following documentation files have not been modified in the last 6 months:\n\n"
+            for doc, mod_time in sorted_stale_docs:
+                issue_body += f"- `{doc}` (Last Modified: {mod_time.strftime('%Y-%m-%d')})\n"
+            issue_body += "\nPlease review these documents to ensure they are up-to-date and accurate."
+            
+            print(issue_body)  # Print to console
+            create_github_issue(issue_body)  # Create GitHub issue
+        else:
+            print("All documentation is up to date!")
+        EOL
+        
+        python check_freshness.py
