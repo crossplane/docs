@@ -50,4 +50,7 @@
 /* purgecss end ignore */
 @import "skippy";
 @import "fonts";
+// TODO(negz): Does import order matter? Can this go in the existing ignore block above?
+/* purgecss start ignore */
 @import "mermaid";
+/* purgecss end ignore */

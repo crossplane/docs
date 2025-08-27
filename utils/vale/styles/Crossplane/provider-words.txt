@@ -1,3 +1,4 @@
+crossplane-contrib
 Dataflow
 DynmoDB
 EC2
@@ -12,9 +13,14 @@ provider-aws-iam
 provider-aws-s3
 provider-gcp
 provider-helm
+provider-kubernetes
+provider-upjet-aws
+provider-upjet-azure
+provider-upjet-gcp
 Pub/Sub
 PubSub
 S3
 us-central1
 us-east-2
 VPC
+xpkg.crossplane.io
