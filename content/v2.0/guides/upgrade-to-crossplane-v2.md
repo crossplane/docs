@@ -4,12 +4,12 @@ weight: 410
 description: "Upgrade from Crossplane v1 to v2"
 ---
 
-Crossplane v2 introduces significant improvements while maintaining backward 
-compatibility with most v1 configurations. This guide helps you upgrade from 
+Crossplane v2 introduces significant improvements while maintaining backward
+compatibility with most v1 configurations. This guide helps you upgrade from
 Crossplane v1.x to v2.
 
-Learn about [new features in Crossplane v2]({{<ref "../whats-new">}}) including 
-namespaced resources, the ability to compose any Kubernetes resource, and new 
+Learn about [new features in Crossplane v2]({{<ref "../whats-new">}}) including
+namespaced resources, the ability to compose any Kubernetes resource, and new
 operational workflows.
 
 {{<hint "important">}}
@@ -18,11 +18,11 @@ If you're running an earlier version, upgrade to v1.20 first.
 {{</hint>}}
 
 {{<hint "note">}}
-There's no automated tooling yet to migrate existing v1 cluster-scoped XRs and 
-MRs to v2 namespaced style. You can upgrade to Crossplane v2 and 
-start using the new namespaced features right away - your existing v1 
-resources continue working unchanged. See 
-[crossplane/crossplane#6726](https://github.com/crossplane/crossplane/issues/6726) 
+There's no automated tooling yet to migrate existing v1 cluster-scoped XRs and
+MRs to v2 namespaced style. You can upgrade to Crossplane v2 and
+start using the new namespaced features right away - your existing v1
+resources continue working unchanged. See
+[crossplane/crossplane#6726](https://github.com/crossplane/crossplane/issues/6726)
 for migration tooling progress.
 {{</hint>}}
 
@@ -45,7 +45,7 @@ Crossplane v2 removes these deprecated features:
 * [Default registry flag](#default-registry-flag)
 
 ### Native patch and transform composition
-**Deprecated in**: v1.17  
+**Deprecated in**: v1.17
 **Replaced by**: [Composition functions]({{<ref "../composition/compositions">}})
 
 If you're using `spec.mode: Resources` in your Compositions, migrate to
@@ -55,14 +55,14 @@ composition functions before upgrading.
 Compositions:
 
 ```shell
-# Convert patch and transform to function pipelines  
+# Convert patch and transform to function pipelines
 crossplane beta convert pipeline-composition old-composition.yaml -o new-composition.yaml
 ```
 
 <!-- vale Google.Headings = NO -->
 ### ControllerConfig type
 <!-- vale Google.Headings = YES -->
-**Deprecated in**: v1.11  
+**Deprecated in**: v1.11
 **Replaced by**: [DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration">}})
 
 Update any ControllerConfig resources to use DeploymentRuntimeConfig instead.
@@ -78,13 +78,13 @@ crossplane beta convert deployment-runtime controller-config.yaml -o deployment-
 ### External secret stores
 **Status**: alpha feature, unmaintained
 
-If you're using external secret stores, migrate to native Kubernetes secrets 
+If you're using external secret stores, migrate to native Kubernetes secrets
 or [External Secrets Operator](https://external-secrets.io/latest/) before upgrading.
 
 ### Default registry flag
 **Removed**: `--registry` flag for default package registry
 
-All packages must now use fully qualified names including the registry 
+All packages must now use fully qualified names including the registry
 host name. Check your packages with:
 
 ```shell
@@ -92,7 +92,7 @@ kubectl get pkg -o wide
 ```
 
 Update any packages without registry host names before upgrading. For example:
-- ❌ `crossplane-contrib/provider-aws-s3:v1.23.0` 
+- ❌ `crossplane-contrib/provider-aws-s3:v1.23.0`
 - ✅ `xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.23.0`
 
 ## Who can upgrade
@@ -112,7 +112,7 @@ If you're using any removed features, migrate away from them first.
 The recommended upgrade approach:
 
 1. [Prepare for upgrade](#1-prepare-for-upgrade)
-2. [Upgrade Crossplane core](#2-upgrade-crossplane-core)  
+2. [Upgrade Crossplane core](#2-upgrade-crossplane-core)
 3. [Configure managed resource activation policies](#3-configure-managed-resource-activation-policies)
 4. [Upgrade providers](#4-upgrade-providers)
 5. [Start using v2 features](#5-start-using-v2-features)
@@ -148,7 +148,7 @@ kubectl get pods -n crossplane-system
 
 ### 3. Configure managed resource activation policies
 
-Crossplane v2 automatically creates a default [MRAP]({{<ref "../managed-resources/managed-resource-activation-policies">}}) that activates all managed 
+Crossplane v2 automatically creates a default [MRAP]({{<ref "../managed-resources/managed-resource-activation-policies">}}) that activates all managed
 resources (`*`). Before installing v2 providers, you can optionally customize
 this for better cluster resource efficiency.
 
@@ -159,7 +159,7 @@ Check what managed resources you use:
 kubectl get managed
 ```
 
-Optionally, replace the default MRAP with a targeted one that activates only 
+Optionally, replace the default MRAP with a targeted one that activates only
 the resources you need:
 
 ```shell
@@ -179,21 +179,21 @@ spec:
   # Legacy cluster-scoped resources (existing v1 resources)
   - buckets.s3.aws.upbound.io
   - instances.ec2.aws.upbound.io
-  
-  # Modern namespaced resources (new v2 resources)  
+
+  # Modern namespaced resources (new v2 resources)
   - buckets.s3.aws.m.upbound.io
   - instances.ec2.aws.m.upbound.io
 ```
 
 {{<hint "tip">}}
-Notice the distinction: `s3.aws.upbound.io` (legacy cluster-scoped) vs 
-`s3.aws.m.upbound.io` (v2 namespaced). The `.m.` indicates modern 
+Notice the distinction: `s3.aws.upbound.io` (legacy cluster-scoped) vs
+`s3.aws.m.upbound.io` (v2 namespaced). The `.m.` indicates modern
 namespaced managed resources.
 {{</hint>}}
 
 ### 4. Upgrade providers
 
-Upgrade your providers to versions that support both namespaced and 
+Upgrade your providers to versions that support both namespaced and
 cluster-scoped managed resources:
 
 ```shell
@@ -231,6 +231,15 @@ After upgrading, you can begin using Crossplane v2 features:
 Existing Compositions work with Crossplane v2 with minimal changes. v2 managed
 resources are schematically identical to v1 managed resources - they're just
 namespaced.
+
+{{<hint "important">}}
+**Don't update existing compositions that are actively used by composite
+resources in your control plane.**
+
+Updating a live composition that's in use by existing XRs could disrupt or
+replace your resources. Use the below migration approach only when creating new
+compositions for new resources.
+{{</hint>}}
 
 To use v2 namespaced managed resources in compositions:
 
@@ -337,7 +346,7 @@ Your existing v1 resources continue working in Crossplane v2:
 * **Legacy cluster-scoped MRs**: Continue working unchanged
 * **Existing Compositions**: Continue working with legacy XRs
 
-These resources use `LegacyCluster` scope internally and maintain full 
+These resources use `LegacyCluster` scope internally and maintain full
 backward compatibility.
 
 For example, existing v1-style XRDs continue working with claims:
@@ -383,5 +392,5 @@ After upgrading:
 3. **Try Operations**: Experiment with operational workflows
 4. **Plan migration**: Consider which existing resources to migrate to v2 patterns
 
-Read more about [what's new in v2]({{<ref "../whats-new">}}) and explore the 
+Read more about [what's new in v2]({{<ref "../whats-new">}}) and explore the
 updated [composition documentation]({{<ref "../composition/compositions">}}).
