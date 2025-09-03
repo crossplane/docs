@@ -3,6 +3,7 @@ title: "Welcome"
 weight: -1
 cascade:
     version: "2.0-preview"
+    hidden: true
 ---
 
 Welcome to the Crossplane documentation. Crossplane is a control plane framework

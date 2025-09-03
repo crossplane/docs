@@ -6,15 +6,18 @@
 
 <!-- get all the versions and break out semver order -->
 {{ range .Site.Sections }}
-    {{ if eq .Page.Params.version "master" }}
-        {{$sorted_list = $sorted_list | append  "master" }}
-    {{ else if ne .Page.Params.version nil }}
-        {{ $splitver := split .Page.Params.version "." }}
-        {{ if eq (len $splitver) 2 }}
-                {{ $verlist := (index $majordict (index $splitver 0)) }}
-                {{ $verlist = $verlist | append (index $splitver 1) }}
-                {{ $majordict = merge $majordict (dict (index $splitver 0) $verlist) }}
-                {{ $majorlist = $majorlist | append (index $splitver 0) }}
+    {{/* Skip versions marked as hidden */}}
+    {{ if not .Page.Params.hidden }}
+        {{ if eq .Page.Params.version "master" }}
+            {{$sorted_list = $sorted_list | append  "master" }}
+        {{ else if ne .Page.Params.version nil }}
+            {{ $splitver := split .Page.Params.version "." }}
+            {{ if eq (len $splitver) 2 }}
+                    {{ $verlist := (index $majordict (index $splitver 0)) }}
+                    {{ $verlist = $verlist | append (index $splitver 1) }}
+                    {{ $majordict = merge $majordict (dict (index $splitver 0) $verlist) }}
+                    {{ $majorlist = $majorlist | append (index $splitver 0) }}
+            {{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
