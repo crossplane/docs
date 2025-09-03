@@ -87,7 +87,7 @@ crossplane-rbac-manager-86d9b5cf9f-2vc4s   1/1     Running   0          26m
 Crossplane supports customizations at install time by configuring the Helm
 chart.
 
-Read [the Helm chart README](https://github.com/crossplane/crossplane/blob/v2/cluster/charts/crossplane/README.md#configuration) 
+Read [the Helm chart README](https://github.com/crossplane/crossplane/blob/v2/cluster/charts/crossplane/README.md#configuration)
 to learn what customizations are available.
 
 Read [the Helm documentation](https://helm.sh/docs/) to learn how to run Helm
@@ -103,25 +103,17 @@ at the table below.
 
 {{< expand "Feature flags" >}}
 {{< table caption="Feature flags" >}}
-| Status | Flag | Description |
-| --- | --- | --- |
-| Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
-| Beta | `--enable-usages` | Enable support for Usages. |
-| Beta | `--enable-realtime-compositions` | Enable support for real time compositions. |
-| Alpha | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
-| Alpha | `--enable-function-response-cache` | Enable caching of composition function responses to improve performance. |
-| Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
+| Status | Flag                                    | Description                                                               |
+|--------|-----------------------------------------|---------------------------------------------------------------------------|
+| Beta   | `--enable-deployment-runtime-configs`   | Enable support for DeploymentRuntimeConfigs.                              |
+| Beta   | `--enable-usages`                       | Enable support for Usages.                                                |
+| Beta   | `--enable-realtime-compositions`        | Enable support for real time compositions.                                |
+| Alpha  | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
+| Alpha  | `--enable-function-response-cache`      | Enable caching of composition function responses to improve performance.  |
+| Alpha  | `--enable-signature-verification`       | Enable support for package signature verification via ImageConfig API.    |
 {{< /table >}}
 {{< /expand >}}
 
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
 args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
-
-#### Change the default package registry
-
-Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
-installing packages. 
-
-Change the default registry location during the Crossplane install with
-`--set args='{"--registry=index.docker.io"}'`.
