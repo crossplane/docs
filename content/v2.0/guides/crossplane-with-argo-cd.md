@@ -71,6 +71,7 @@ data:
         end
 
         local has_no_status = {
+          "ClusterProviderConfig",
           "ProviderConfig",
           "ProviderConfigUsage"
         }
@@ -82,7 +83,7 @@ data:
         end
 
         if obj.status == nil or next(obj.status) == nil or obj.status.conditions == nil then
-          if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
+          if (obj.kind == "ProviderConfig" or obj.kind == "ClusterProviderConfig") and obj.status.users ~= nil then
             health_status.status = "Healthy"
             health_status.message = "Resource is in use."
             return health_status
@@ -138,6 +139,7 @@ data:
           "Composition",
           "CompositionRevision",
           "DeploymentRuntimeConfig",
+          "ClusterProviderConfig",
           "ProviderConfig",
           "ProviderConfigUsage"
         }
@@ -148,7 +150,7 @@ data:
         end
 
         if obj.status == nil or next(obj.status) == nil or obj.status.conditions == nil then
-          if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
+          if (obj.kind == "ProviderConfig" or obj.kind == "ClusterProviderConfig") and obj.status.users ~= nil then
             health_status.status = "Healthy"
             health_status.message = "Resource is in use."
             return health_status
@@ -173,7 +175,7 @@ data:
             end
           end
 
-          if contains({"Ready", "Healthy", "Offered", "Established"}, condition.type) then
+          if contains({"Ready", "Healthy", "Offered", "Established", "ValidPipeline", "RevisionHealthy"}, condition.type) then
             if condition.status == "True" then
               health_status.status = "Healthy"
               health_status.message = "Resource is up-to-date."
