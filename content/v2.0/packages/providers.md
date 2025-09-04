@@ -684,28 +684,28 @@ package runtime container.
 
 <!-- vale write-good.Passive = NO -->
 The package manager is opinionated about some fields to ensure
-<!-- vale write-good.Passive = YES -->
 the runtime is working and overlay them on top of the values
 in the runtime configuration. For example, it defaults the replica count
 to 1 if not set and overrides the label selectors to make sure the Deployment
 and Service match. It also injects any necessary environment variables,
 ports and volumes and volume mounts.
+<!-- vale write-good.Passive = YES -->
 
+<!-- vale gitlab.FutureTense = NO -->
 The `Provider` or `Functions`'s `spec.runtimeConfigRef.name` field defaults
 to value `default`, which means Crossplane uses the default runtime configuration
 if not specified. Crossplane ensures there is always a default runtime
-<!-- vale gitlab.FutureTense = NO -->
 configuration in the cluster, but won't change it if it already exists. This
-<!-- vale gitlab.FutureTense = YES -->
 allows users to customize the default runtime configuration to their needs.
+<!-- vale gitlab.FutureTense = YES -->
 
 {{<hint "tip" >}}
 <!-- vale gitlab.SubstitutionWarning = NO -->
 Since `DeploymentRuntimeConfig` uses the same schema as Kubernetes `Deployment`
-<!-- vale gitlab.SubstitutionWarning = YES -->
 spec, you may need to pass empty values to bypass the schema validation.
 For example, if you just want to change the `replicas` field, you would
 need to pass the following:
+<!-- vale gitlab.SubstitutionWarning = YES -->
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
