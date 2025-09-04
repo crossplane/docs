@@ -26,11 +26,12 @@
         <p>
             This feature was introduced in v{{.Page.Params.alphaVersion}}.
             {{ if eq .Page.Params.state "beta" }}
-            <br />
-            This feature graduated to beta status in v{{.Page.Params.betaVersion}}.
+                <br />
+                This feature graduated to beta status in v{{.Page.Params.betaVersion}}.
             {{ end }}
-            {{ $ver := (printf "v%s" .Page.Params.version) }}
-            {{ if eq .Page.Params.version "master" }}
+            {{ $verParam := .Page.Params.version | default .Site.Params.latest }}
+            {{ $ver := (printf "v%s" $verParam) }}
+            {{ if eq $verParam "master" }}
                 {{ $ver = "master" }}
             {{ end }}
             <br /><br />

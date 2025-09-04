@@ -25,20 +25,6 @@ arbitrarily. Please note that this situation occurs only if there are
 overlapping prefixes in the `matchImages` lists of different `ImageConfig`
 resources, which should be avoided.
 
-The default registry isn't taken into account for `ImageConfig` matching. That
-is, an `ImageConfig` matching the prefix `xpkg.crossplane.io/crossplane-contrib`
-doesn't match the following provider, even if the default registry is
-`xpkg.crossplane.io`:
-
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-nop
-spec:
-  package: crossplane-contrib/provider-nop:v0.4.0
-```
-
 ## Configuring a pull secret
 
 You can use `ImageConfig` to inject a pull secret into the Crossplane package
@@ -90,7 +76,7 @@ rejects the package deployment.
 In the following example, the `ImageConfig` resource named `verify-acme-packages`
 configures verification of the signature of images with the prefixes
 `registry1.com/acme-co/configuration-foo` and
-`registry1.com/acme-co/configuration-bar`. 
+`registry1.com/acme-co/configuration-bar`.
 
 In the example below, the `ImageConfig` resource named `verify-acme-packages` is
 set up to verify the signatures of images with the prefixes

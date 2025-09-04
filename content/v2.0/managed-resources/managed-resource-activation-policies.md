@@ -83,6 +83,13 @@ spec:
   - clusters.eks.aws.m.crossplane.io
 ```
 
+{{<hint "important">}}
+Use the **plural** name when using a complete MRD name, aligning with how
+Kubernetes expresses the complete names of CRDs.
+
+For example, use `buckets`, as opposed to `bucket`, in `buckets.s3.aws.m.crossplane.io`.
+{{</hint>}}
+
 ### Wildcard patterns
 
 Use `*` wildcards to match multiple resources:
@@ -91,7 +98,7 @@ Use `*` wildcards to match multiple resources:
 spec:
   activate:
   - "*.s3.aws.m.crossplane.io"      # All S3 resources
-  - "*.ec2.aws.m.crossplane.io"     # All EC2 resources  
+  - "*.ec2.aws.m.crossplane.io"     # All EC2 resources
   - "*.rds.aws.m.crossplane.io"     # All RDS databases
 ```
 
@@ -255,7 +262,7 @@ spec:
   - "*.s3.aws.m.crossplane.io"
   - "*.storage.gcp.m.crossplane.io"
 ---
-# Database team MRAP  
+# Database team MRAP
 apiVersion: apiextensions.crossplane.io/v1alpha1
 kind: ManagedResourceActivationPolicy
 metadata:
@@ -332,7 +339,7 @@ status:
     reason: Running
   activated:
   - buckets.s3.aws.m.crossplane.io
-  - instances.ec2.aws.m.crossplane.io  
+  - instances.ec2.aws.m.crossplane.io
   - instances.rds.aws.m.crossplane.io
   - securitygroups.ec2.aws.m.crossplane.io
   - subnets.ec2.aws.m.crossplane.io
@@ -373,7 +380,7 @@ status:
    ```shell
    # List available MRDs
    kubectl get mrds
-   
+
    # Check your pattern matches
    kubectl get mrds -o name | grep "your-pattern"
    ```
@@ -405,7 +412,7 @@ status:
 ```yaml
 conditions:
 - type: Healthy
-  status: "Unknown"  
+  status: "Unknown"
   reason: EncounteredErrors
   message: "failed to activate 2 of 5 ManagedResourceDefinitions"
 ```
@@ -443,8 +450,9 @@ conflicts. This enables team-based activation strategies and Configuration
 package dependencies.
 
 <!-- vale alex.ProfanityUnlikely = NO -->
-1. **Start specific, broaden as needed** - Begin with exact resource names,
-   add wildcards only when beneficial for maintainability
+1. **Start specific, broaden as needed** - Begin with exact resource names
+   (using the plural name for each resource), add wildcards only when beneficial for
+   maintainability
 2. **Plan for provider evolution** - Design wildcard patterns that
    accommodate new resources as providers add them (for example,
    `*.s3.aws.m.crossplane.io` works for future S3 resources)
