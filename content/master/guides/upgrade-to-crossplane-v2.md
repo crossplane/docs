@@ -217,6 +217,14 @@ Provider v2 releases support both legacy cluster-scoped and new namespaced
 managed resources. Your existing cluster-scoped MRs continue working unchanged.
 {{</hint>}}
 
+{{<hint "tip">}}
+If you're switching from Upbound family providers (like 
+`xpkg.upbound.io/upbound/provider-gcp-compute`) to Crossplane Contrib family 
+providers (like `xpkg.crossplane.io/crossplane-contrib/provider-gcp-compute`), 
+see the [changing provider registries guide]({{<ref "change-provider-registries">}}) for 
+step-by-step instructions to handle family provider dependencies.
+{{</hint>}}
+
 ### 5. Start using v2 features
 
 After upgrading, you can begin using Crossplane v2 features:
