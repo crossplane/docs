@@ -337,26 +337,22 @@ Crossplane supports the following policies:
 | `LateInitialize` | Crossplane initializes some external resource settings not defined in the `spec.forProvider` of the managed resource. See [the late initialization]({{<ref "./managed-resources#late-initialization" >}}) section for more details. |
 | `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for observe only resources. |
 | `Update` | Crossplane changes the external resource when changing the managed resource. |
-|`Orphan` | Orphan is shorthand for the combination `Observe`, `Create`, `Update`, `LateInitialize`. It supports migration from the deprecated `deletionPolicy` attribute. |
-|`MustCreate` | A stricter version of `Create` that requires the desired resource to _not_ already exist. The Managed Resource stops processing with conditions `Synced: False` and `Ready: False`. |
 {{</table >}}
 
 The following is a list of common policy combinations:
 {{<table "table table-sm table-hover table-striped-columns" >}}
-| Create | Delete | LateInitialize | Observe | Update | Orphan | MustCreate | Description |
-| :---:  | :---:  | :---:          | :---:   | :---:  | :---:  | :---:      |---         |
-| {{<check>}}      | {{<check>}}      | {{<check>}}              | {{<check>}}       | {{<check>}}      |        |        | _Default policy_. Crossplane has full control over the resource.                                                                                                     |
-| {{<check>}}      | {{<check>}}      | {{<check>}}              | {{<check>}}       |        |        |        | After creation any changes made to the managed resource aren't passed to the external resource. Useful for immutable external resources. |
-| {{<check>}}      | {{<check>}}      |                | {{<check>}}       | {{<check>}}      |        |        | Prevent Crossplane from managing any settings not defined in the managed resource. Useful for immutable fields in an external resource. |
-| {{<check>}}      | {{<check>}}      |                | {{<check>}}       |        |        |        | Crossplane doesn't import any settings from the external resource and doesn't push changes to the managed resource. Crossplane recreates the external resource if it's deleted. |
-| {{<check>}}      |        | {{<check>}}              | {{<check>}}       | {{<check>}}      |        |        | Crossplane doesn't delete the external resource when deleting the managed resource. |
-| {{<check>}}      |        | {{<check>}}              | {{<check>}}       |        |        |        | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't apply changes to the external resource after creation. |
-| {{<check>}}      |        |                | {{<check>}}       | {{<check>}}      |        |        | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't import any settings from the external resource. |
-| {{<check>}}      |        |                | {{<check>}}       |        |        |        | Crossplane creates the external resource but doesn't apply any changes to the external resource or managed resource. Crossplane can't delete the resource. |
-|        |        |                | {{<check>}}       |        |        |        | Crossplane only observes a resource. |
-|        |        |                |         |        |        |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
-|        |        |                |         |        | {{<check>}}      |        | Crossplane doesn't delete the external resource when deleting the managed resource. Equivalent to Observe, Create, Update, LateInitialize. |
-| }      | {{<check>}}      | {{<check>}}              | {{<check>}}       | {{<check>}}      |        | {{<check>}}      | _Default policy_. Crossplane has full control over the resource.  The resource must not already exist when the Managed Resource is created.                                                                                                     |
+| Create | Delete | LateInitialize | Observe | Update | Description |
+| :---:  | :---:  | :---:          | :---:   | :---:  | ---         |
+| {{<check>}}      | {{<check>}}      | {{<check>}}              | {{<check>}}       | {{<check>}}      | _Default policy_. Crossplane has full control over the resource.                                                                                                     |
+| {{<check>}}      | {{<check>}}      | {{<check>}}              | {{<check>}}       |        | After creation any changes made to the managed resource aren't passed to the external resource. Useful for immutable external resources. |
+| {{<check>}}      | {{<check>}}      |                | {{<check>}}       | {{<check>}}      | Prevent Crossplane from managing any settings not defined in the managed resource. Useful for immutable fields in an external resource. |
+| {{<check>}}      | {{<check>}}      |                | {{<check>}}       |        | Crossplane doesn't import any settings from the external resource and doesn't push changes to the managed resource. Crossplane recreates the external resource if it's deleted. |
+| {{<check>}}      |        | {{<check>}}              | {{<check>}}       | {{<check>}}      | Crossplane doesn't delete the external resource when deleting the managed resource. |
+| {{<check>}}      |        | {{<check>}}              | {{<check>}}       |        | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't apply changes to the external resource after creation. |
+| {{<check>}}      |        |                | {{<check>}}       | {{<check>}}      | Crossplane doesn't delete the external resource when deleting the managed resource. Crossplane doesn't import any settings from the external resource. |
+| {{<check>}}      |        |                | {{<check>}}       |        | Crossplane creates the external resource but doesn't apply any changes to the external resource or managed resource. Crossplane can't delete the resource. |
+|        |        |                | {{<check>}}       |        | Crossplane only observes a resource. |
+|        |        |                |         |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
 {{< /table >}}
 
 <!-- vale off -->
