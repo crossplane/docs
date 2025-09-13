@@ -337,8 +337,8 @@ Crossplane supports the following policies:
 | `LateInitialize` | Crossplane initializes some external resource settings not defined in the `spec.forProvider` of the managed resource. See [the late initialization]({{<ref "./managed-resources#late-initialization" >}}) section for more details. |
 | `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for observe only resources. |
 | `Update` | Crossplane changes the external resource when changing the managed resource. |
-|`Orphan` | This is equivalent to the combination `Observe`, `Create`, `Update`, `LateInitialize`.  It is intended to facilitate migration from the deprecated `deletionPolicy` attribute. |
-|`MustCreate` | This is a stricter version of `Create` that requires the desired resource to _not_ already exist.  When `MustCreate` is used in place of `Create`, and the desired resource already exists, the Managed Resource will stop processing and remain `Synced: False` and `Ready: False` with a condition indicating that the desired resource already exists.  No changes will be made to the existing resource. `MustCreate` can be used in place of `Create` in all valid policy combinations. |
+|`Orphan` | Orphan is shorthand for the combination `Observe`, `Create`, `Update`, `LateInitialize`. It supports migration from the deprecated `deletionPolicy` attribute. |
+|`MustCreate` | A stricter version of `Create` that requires the desired resource to _not_ already exist. The Managed Resource stops processing with conditions `Synced: False` and `Ready: False`. |
 {{</table >}}
 
 The following is a list of common policy combinations:
