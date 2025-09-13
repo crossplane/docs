@@ -337,8 +337,8 @@ Crossplane supports the following policies:
 | `LateInitialize` | Crossplane initializes some external resource settings not defined in the `spec.forProvider` of the managed resource. See [the late initialization]({{<ref "./managed-resources#late-initialization" >}}) section for more details. |
 | `Observe` | Crossplane only observes the resource and doesn't make any changes. Used for observe only resources. |
 | `Update` | Crossplane changes the external resource when changing the managed resource. |
-|`Orphan` | Orphan is shorthand for the combination `Observe`, `Create`, `Update`, `LateInitialize`. It supports migration from the deprecated `deletionPolicy` attribute. |
-|`MustCreate` | A stricter version of `Create` that requires the desired resource to _not_ already exist. The Managed Resource stops processing with conditions `Synced: False` and `Ready: False`. |
+|`Orphan` | Shorthand for the combination `Observe`, `Create`, `Update`, `LateInitialize`. Supports migration from the deprecated `deletionPolicy` attribute. |
+|`MustCreate` | A stricter version of `Create` that requires the desired resource to _not_ already exist. |
 {{</table >}}
 
 The following is a list of common policy combinations:
@@ -356,7 +356,7 @@ The following is a list of common policy combinations:
 |        |        |                | {{<check>}}       |        |        |        | Crossplane only observes a resource. |
 |        |        |                |         |        |        |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
 |        |        |                |         |        | {{<check>}}      |        | Crossplane doesn't delete the external resource when deleting the managed resource. Equivalent to Observe, Create, Update, LateInitialize. |
-| }      | {{<check>}}      | {{<check>}}              | {{<check>}}       | {{<check>}}      |        | {{<check>}}      | _Default policy_. Crossplane has full control over the resource. The resource must not already exist when the Managed Resource is created.                                                                                                     |
+|        | {{<check>}}      | {{<check>}}              | {{<check>}}       | {{<check>}}      |        | {{<check>}}      | Crossplane has full control over the resource. The resource must not already exist when the Managed Resource is created.                                                                                                     |
 {{< /table >}}
 
 <!-- vale off -->
