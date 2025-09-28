@@ -190,3 +190,23 @@ kube-node-lease   Active   2m47s
 kube-public       Active   2m47s
 kube-system       Active   2m47s
 ```
+
+{{<hint "warning" >}}
+Custom Resource Definitions (CRDs) aren't automatically removed by `helm uninstall`.
+
+CRDs with names ending in `*.crossplane.io` remain in your cluster after uninstalling Crossplane.
+
+If desired, manually delete these CRDs:
+
+```shell
+# View remaining Crossplane CRDs
+kubectl get crd | grep crossplane.io
+
+# Example: Delete a specific CRD
+kubectl delete crd providers.pkg.crossplane.io
+```
+
+{{<hint "important" >}}
+Deleting CRDs removes all custom resources of that type. Ensure no important data exists before deletion.
+{{< /hint >}}
+{{< /hint >}}
