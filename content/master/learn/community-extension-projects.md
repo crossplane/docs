@@ -4,23 +4,26 @@ description: List of current Crossplane Community Extension Projects
 weight: 310
 ---
 
-The Crossplane community has built a rich set of [Community Extension
-Projects](https://github.com/crossplane/crossplane/blob/main/GOVERNANCE.md#community-extension-projects)
+The Crossplane community has built a rich set of
+[Community Extension Projects](https://github.com/crossplane/crossplane/blob/main/GOVERNANCE.md#community-extension-projects)
 for use by Crossplane adopters to extend the usefulness of their Crossplane powered
-control planes. They are all hosted under the
+control planes. They're all hosted under the
 [crossplane-contrib](https://github.com/crossplane-contrib) organization.
 
+<!-- vale write-good.Passive = NO -->
 {{< hint "note" >}}
-All Community Extension Projects are expected to maintain good project health and adhere to
+All Community Extension Projects should maintain good project health and adhere to
 the policies stated in the [project governance](https://github.com/crossplane/crossplane/blob/main/GOVERNANCE.md#policies-for-community-extension-projects).
 
-If a project falls out of compliance then they will be archived and removed from
-this list. Therefore, all projects on this page should be ready to use by
-Crossplane adopters.
+If a project falls out of compliance then the repository is archived and the
+project is removed from this list. All projects on this page should be ready to
+use by Crossplane adopters.
 {{< /hint >}}
+<!-- vale write-good.Passive = YES -->
 
 ## Providers
 
+<!-- vale off -->
 - [provider-upjet-alibabacloud](https://github.com/crossplane-contrib/provider-upjet-alibabacloud)
 - [provider-ansible](https://github.com/crossplane-contrib/provider-ansible)
 - [provider-argocd](https://github.com/crossplane-contrib/provider-argocd)
@@ -74,9 +77,11 @@ Crossplane adopters.
 - [provider-jet-vault](https://github.com/crossplane-contrib/provider-jet-vault)
 - [provider-workflows](https://github.com/crossplane-contrib/provider-workflows)
 - [provider-zpa](https://github.com/crossplane-contrib/provider-zpa)
+<!-- vale on -->
 
 ## Functions
 
+<!-- vale off -->
 - [function-auto-ready](https://github.com/crossplane-contrib/function-auto-ready)
 - [function-cel-filter](https://github.com/crossplane-contrib/function-cel-filter)
 - [function-cue](https://github.com/crossplane-contrib/function-cue)
@@ -93,13 +98,17 @@ Crossplane adopters.
 - [function-status-transformer](https://github.com/crossplane-contrib/function-status-transformer)
 - [function-tag-manager](https://github.com/crossplane-contrib/function-tag-manager)
 - [function-unit-test](https://github.com/crossplane-contrib/function-unit-test)
+<!-- vale on -->
 
 ## Configurations
 
+<!-- vale off -->
 - [configuration-quickstart](https://github.com/crossplane-contrib/configuration-quickstart)
+<!-- vale on -->
 
-## Tools and Utilities
+## Tools and utilities
 
+<!-- vale off -->
 - [crossplane-cdk8s](https://github.com/crossplane-contrib/crossplane-cdk8s)
 - [crossplane-diff](https://github.com/crossplane-contrib/crossplane-diff)
 - [crossplane-lint](https://github.com/crossplane-contrib/crossplane-lint)
@@ -108,3 +117,4 @@ Crossplane adopters.
 - [x-generation](https://github.com/crossplane-contrib/x-generation)
 - [xp-testing](https://github.com/crossplane-contrib/xp-testing)
 - [xpkg-action](https://github.com/crossplane-contrib/xpkg-action)
+<!-- vale on -->
