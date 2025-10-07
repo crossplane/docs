@@ -29,14 +29,6 @@ Install a Function with a Crossplane
 {{<hover label="install" line="6">}}spec.package{{</hover >}} value to the
 location of the function package.
 
-{{< hint "important" >}}
-Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
-installing packages. 
-
-Specify the full domain name with the `package` or change the default Crossplane
-registry with the `--registry` flag on the [Crossplane pod]({{<ref "../guides/pods">}})
-{{< /hint >}}
-
 For example, to install the
 [patch and transform function](https://github.com/crossplane-contrib/function-patch-and-transform),
 
@@ -53,19 +45,19 @@ By default, the Function pod installs in the same namespace as Crossplane
 (`crossplane-system`).
 
 {{<hint "note" >}}
-Functions are part of the 
-{{<hover label="install" line="1">}}pkg.crossplane.io{{</hover>}} group.  
+Functions are part of the
+{{<hover label="install" line="1">}}pkg.crossplane.io{{</hover>}} group.
 
 The {{<hover label="meta-pkg" line="1">}}meta.pkg.crossplane.io{{</hover>}}
-group is for creating Function packages. 
+group is for creating Function packages.
 
 Instructions on building Functions are outside of the scope of this
-document.  
-Read the Crossplane contributing 
+document.
+Read the Crossplane contributing
 [Function Development Guide](https://github.com/crossplane/crossplane/blob/main/contributing/guide-provider-development.md)
 for more information.
 
-For information on the specification of Function packages read the 
+For information on the specification of Function packages read the
 [Crossplane Function Package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md#provider-package-requirements).
 
 ```yaml {label="meta-pkg"}
