@@ -90,6 +90,11 @@ happens on the Tuesday of the last week of the quarter, as shown on the
 **approximate**. A lot of factors can alter the date slightly, such as code
 reviews, testing, and bug fixing to ensure a quality release.
 
+## Release process
+
+The release process for the Crossplane project is fully documented in the
+[`crossplane/release`] repository.
+
 <!-- Named links -->
 
 [Active Development]: #active-development
@@ -97,3 +102,4 @@ reviews, testing, and bug fixing to ensure a quality release.
 [Code Freeze]: #code-freeze
 [CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/main/CONTRIBUTING.md
 [community calendar]: https://zoom-lfx.platform.linuxfoundation.org/meetings/crossplane
+[`crossplane/release`]: https://github.com/crossplane/release
