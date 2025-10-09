@@ -52,23 +52,6 @@ git checkout v2.0.2
 ```
 {{< /hint >}}
 
-### Determine your cluster architecture
-
-Identify your cluster's CPU architecture before building. You must build
-Crossplane for the same architecture as your cluster nodes. Here is one possible
-way to find the architecture of your cluster:
-
-```shell {copy-lines="1"}
-kubectl get nodes -o jsonpath='{.items[0].status.nodeInfo.architecture}'
-arm64
-```
-
-Save this architecture in an environment variable:
-
-```shell
-export CLUSTER_ARCH=<your cluster arch>
-```
-
 ### Determine artifacts destination
 
 <!-- vale gitlab.FutureTense = NO -->
@@ -83,23 +66,12 @@ export REGISTRY="your-registry.com/your-org"; \
 
 ### Build the artifacts
 
-Build Crossplane binaries for your cluster's architecture:
+Build Crossplane binaries, container image, and Helm chart for multi-platform architectures:
 
 ```shell {copy-lines="all"}
-earthly --platform=linux/${CLUSTER_ARCH} +go-build --CROSSPLANE_VERSION=${VERSION}
-```
-
-Build the Crossplane container image:
-
-```shell {copy-lines="all"}
-earthly --platform=linux/${CLUSTER_ARCH} +image \
+earthly +multiplatform-build \
   --CROSSPLANE_REPO=${REGISTRY}/crossplane \
   --CROSSPLANE_VERSION=${VERSION}
-```
-
-Build the Helm chart:
-```shell {copy-lines="all"}
-earthly +helm-build --CROSSPLANE_VERSION=${VERSION}
 ```
 
 Earthly creates the container image locally and saves the binaries and Helm
