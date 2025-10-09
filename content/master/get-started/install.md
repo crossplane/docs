@@ -121,5 +121,5 @@ args='{"--enable-composition-functions","--enable-composition-webhook-schema-val
 ## Build and install from source
 
 Building Crossplane from the source code gives you complete control over the build and
-installation process. Full instructions for this advanced installation path can
-be found in the [install from source code guide]({{<ref "../guides/install-from-source.md">}}).
+installation process. Full instructions for this advanced installation path is in the
+[install from source code guide]({{<ref "../guides/install-from-source.md">}}).

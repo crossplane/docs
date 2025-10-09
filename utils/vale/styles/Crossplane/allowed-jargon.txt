@@ -2,6 +2,7 @@
 64-bit
 API's
 APIs
+ARM64
 autoscaler
 backoff
 backported
@@ -40,6 +41,7 @@ Env
 EOL
 ESS
 float64
+GHCR
 GitOps
 Go
 godoc
@@ -58,6 +60,7 @@ kube-controller-manager
 kubectl
 kv
 KV
+macOS
 main.go
 metrics-server
 MiB

@@ -12,7 +12,7 @@ code, push the image to your own registry, and install to your Kubernetes
 cluster.
 
 {{< hint "important" >}}
-This is an advanced installation path for users who
+Installing Crossplane from source is an advanced installation path for users who
 require complete control over the build and deployment process. Most users
 should follow the [standard installation instructions]({{<ref "../get-started/install.md">}})
 {{< /hint >}}
@@ -20,7 +20,7 @@ should follow the [standard installation instructions]({{<ref "../get-started/in
 This approach is useful when you want to:
 - Control the entire build and deployment pipeline
 - Use your own container registry and cluster
-- Deploy to air-gapped or restricted environments
+- Deploy to offline or restricted environments
 - Build from a specific commit or branch
 
 ### Prerequisites
@@ -32,12 +32,12 @@ Building Crossplane from source requires:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) configured for your target cluster
 - An actively [supported Kubernetes version](https://kubernetes.io/releases/patch-releases/#support-period)
 - [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
-- Access to a container registry (Docker Hub, GHCR, Harbor, or any OCI-compliant
+- Access to a container registry (Docker Hub, GHCR, Harbor, or any OCI compliant
   registry)
 
 ### Clone the Crossplane repository
 
-Clone the Crossplane repository and optionally check out a specific release.
+Clone the Crossplane repository and optionally checkout a specific release.
 
 ```shell {copy-lines="all"}
 git clone https://github.com/crossplane/crossplane.git
@@ -45,7 +45,7 @@ cd crossplane
 ```
 
 {{< hint "tip" >}}
-To build a specific release, check out the release tag before building.
+To build a specific release, checkout the release tag before building.
 
 ```shell
 git checkout v2.0.2
@@ -54,9 +54,9 @@ git checkout v2.0.2
 
 ### Determine your cluster architecture
 
-Identify your cluster's CPU architecture before building. Crossplane must be
-built for the same architecture as your cluster nodes. Here is one possible way to check the
-architecture of your cluster:
+Identify your cluster's CPU architecture before building. You must build
+Crossplane for the same architecture as your cluster nodes. Here is one possible
+way to find the architecture of your cluster:
 
 ```shell {copy-lines="1"}
 kubectl get nodes -o jsonpath='{.items[0].status.nodeInfo.architecture}'
@@ -71,8 +71,10 @@ export CLUSTER_ARCH=<your cluster arch>
 
 ### Determine artifacts destination
 
-Identify the registry and version tag where you will be pushing your built
+<!-- vale gitlab.FutureTense = NO -->
+Identify the registry and version tag where you will push your built
 software artifacts and save them in environment variables:
+<!-- vale gitlab.FutureTense = YES -->
 
 ```shell {copy-lines="all"}
 export REGISTRY="your-registry.com/your-org"; \
@@ -105,7 +107,10 @@ chart under `_output/bin` and `_output/charts/` respectively.
 
 ### Push the image to your registry
 
-Log in to your registry of choice and push the Crossplane image that we built in the previous steps.
+<!-- vale write-good.Passive = NO -->
+Log in to your registry of choice and push the Crossplane image that was built
+in the previous steps.
+<!-- vale write-good.Passive = YES -->
 
 {{< hint "tip" >}}
 Ensure you log into your registry before attempting to `push`.
@@ -172,9 +177,9 @@ your-registry.com/your-org/crossplane:v2.0.0-yourtag
 
 ### Optional: Build the Crossplane CLI
 
-The `crossplane` CLI provides additional commands for managing Crossplane
-resources. You can optionally build this binary from source code for your local
-machine and use it to manage your control plane.
+The `crossplane` CLI provides commands for managing Crossplane resources. You
+can optionally build this binary from source code for your local machine and use
+it to manage your control plane.
 
 Build the CLI for your local machine.
 
