@@ -117,3 +117,9 @@ at the table below.
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
 args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
+
+## Build and install from source
+
+Building Crossplane from the source code gives you complete control over the build and
+installation process. Full instructions for this advanced installation path is in the
+[install from source code guide]({{<ref "../guides/install-from-source.md">}}).
