@@ -30,6 +30,12 @@ For more information about Crossplane packages, review the
 [xpkg concepts]({{<ref "../packages" >}}).
 {{< /hint >}}
 
+{{< hint "note" >}}
+This guide focuses on building and releasing Crossplane extensions. The release
+process for the core Crossplane software is available in the
+[`crossplane/release`](https://github.com/crossplane/release) repository.
+{{< /hint >}}
+
 ## Typical workflow
 
 A typical GitHub workflow definition to build and release an extension
