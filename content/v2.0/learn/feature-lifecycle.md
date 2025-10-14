@@ -22,11 +22,11 @@ Alpha features are off by default, and you must enable them by a feature flag, f
 removal or breaking changes without notice**, and aren't considered ready
 for use in production. 
 
-Sometimes alpha features require Crossplane to add fields to existing beta or GA
 <!-- vale alex.Condescending = NO -->
+Sometimes alpha features require Crossplane to add fields to existing beta or GA
 API types. In these cases you must mark fields (for instance in their OpenAPI
-<!-- vale alex.Condescending = YES -->
 schema) as alpha and subject to alpha API constraints (or lack thereof).
+<!-- vale alex.Condescending = YES -->
 
 All alpha features should have an issue tracking their graduation to beta.
 
@@ -43,11 +43,11 @@ instructions for migrating to the next version. This may require deleting,
 editing, and recreating API objects. The editing process may require some
 thought. This may require downtime for applications that rely on the feature.
 
-Sometimes beta features require Crossplane to add fields to existing GA API types. In
 <!-- vale alex.Condescending = NO -->
+Sometimes beta features require Crossplane to add fields to existing GA API types. In
 these cases you must mark fields (for instance in their OpenAPI schema) as beta
-<!-- vale alex.Condescending = YES -->
 and subject to beta API constraints (or lack thereof).
+<!-- vale alex.Condescending = YES -->
 
 All beta features should have an issue tracking their graduation to GA.
 
