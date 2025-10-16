@@ -87,7 +87,7 @@ crossplane-rbac-manager-86d9b5cf9f-2vc4s   1/1     Running   0          26m
 Crossplane supports customizations at install time by configuring the Helm
 chart.
 
-Read [the Helm chart README](https://github.com/crossplane/crossplane/blob/v2/cluster/charts/crossplane/README.md#configuration)
+Read [the Helm chart README](https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md#configuration)
 to learn what customizations are available.
 
 Read [the Helm documentation](https://helm.sh/docs/) to learn how to run Helm
@@ -117,6 +117,43 @@ at the table below.
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
 args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
+
+## Install pre-release Crossplane versions
+
+Install pre-release versions of Crossplane from the `master` Crossplane Helm channel.
+
+Versions in the `master` channel are under active development and may be unstable.
+
+{{< hint "warning" >}}
+Don't use Crossplane `master` releases in production. Only use `stable` channel.
+Only use `master` for testing and development.
+{{< /hint >}}
+
+### Add the Crossplane master Helm repository
+
+Add the Crossplane repository with the `helm repo add` command.
+
+```shell
+helm repo add crossplane-master https://charts.crossplane.io/master/
+```
+
+Update the
+local Helm chart cache with `helm repo update`.
+```shell
+helm repo update
+```
+
+### Install the Crossplane master Helm chart
+
+Install the Crossplane Helm chart from the `master` channel with `helm install`. Use the
+`--devel` flag to install the latest pre-release version.
+
+```shell
+helm install crossplane \
+--namespace crossplane-system \
+--create-namespace crossplane-master/crossplane \
+--devel
+```
 
 ## Build and install from source
 
