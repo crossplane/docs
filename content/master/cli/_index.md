@@ -58,7 +58,15 @@ the `XP_CHANNEL` and `XP_VERSION` environmental variables.
 By default the CLI installs from the `XP_CHANNEL` named `stable` and the
 `XP_VERSION` of `current`, matching the most recent stable release.
 
-For example, to install CLI version `v1.14.0` add `XP_VERSION=v1.14.0` to the
+For example, to install CLI version `v1.20.0` add `XP_VERSION=v1.20.0` to the
 download script curl command:
 
-`curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_VERSION=v1.14.0 sh`
+```shell
+curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_VERSION=v1.20.0 sh
+```
+
+To install the CLI from the `master` channel add `XP_CHANNEL=master`:
+
+```shell
+curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/main/install.sh" | XP_CHANNEL=master sh
+```
