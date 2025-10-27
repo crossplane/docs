@@ -214,7 +214,7 @@ The `crossplane` CLI supports building
 
 | Short flag   | Long flag                            | Description                    |
 | ------------ | -------------                        | ------------------------------ |
-|              | `--embed-runtime-image-name=NAME`    |  The image name and tag of an image to include in the package. Only for provider and function packages. |
+|              | `--embed-runtime-image=NAME`    |  The image name and tag of an image to include in the package. Only for provider and function packages. |
 |              | `--embed-runtime-image-tarball=PATH` |  The filename of an image to include in the package. Only for provider and function packages.                              |
 | `-e`         | `--examples-root="./examples"`       |  The path to a directory of examples related to the package.                               |
 |              | `--ignore=PATH,...`                  |  List of files and directories to ignore.                              |
@@ -256,11 +256,11 @@ Include YAML files demonstrating how to use the package with `--examples-root`.
 Functions and Providers require YAML files describing their dependencies and 
 settings and a container image for their runtime.
 
-Using `--embed-runtime-image-name` runs a specified image and 
+Using `--embed-runtime-image` runs a specified image and 
 includes the image inside the function or provider package.
 
 {{<hint "note" >}}
-Images referenced with `--embed-runtime-image-name` must be in the local Docker 
+Images referenced with `--embed-runtime-image` must be in the local Docker 
 cache.  
 
 Use `docker pull` to download a missing image.
