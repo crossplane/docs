@@ -864,6 +864,6 @@ crossplane xpkg push \
 If you push the function to a GitHub repository, the template automatically sets
 up continuous integration (CI) using [GitHub Actions](https://github.com/features/actions).
 <!-- vale gitlab.SentenceLength = YES -->
-The CI workflow will lint, test, and build your function.
+The CI workflow lints, tests, and builds your function.
 You can see how the template configures CI by reading `.github/workflows/ci.yaml`.
 {{</hint>}}
