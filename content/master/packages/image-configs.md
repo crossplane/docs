@@ -28,12 +28,12 @@ resources, which should be avoided.
 ## Configuring a pull secret
 
 You can use `ImageConfig` to inject a pull secret into the Crossplane package
-manager registry client whenever it interacts with the registry, such as for
-dependency resolution or image pulls.
+manager registry client. The secret applies whenever the client interacts with
+the registry, such as for dependency resolution or image pulls.
 
-In the following example, the `ImageConfig` resource named `acme-packages` is
-configured to inject the pull secret named `acme-registry-credentials` whenever
-it needs to interact with the registry for images with the prefix
+In the following example, the `ImageConfig` resource named `acme-packages`
+injects the pull secret named `acme-registry-credentials`. This applies whenever
+the client interacts with the registry for images with the prefix
 `registry1.com/acme-co/`.
 
 ```yaml
@@ -73,14 +73,11 @@ you enable signature verification, the package manager verifies the signature of
 each image before pulling it. If the signature isn't valid, the package manager
 rejects the package deployment.
 
-In the following example, the `ImageConfig` resource named `verify-acme-packages`
-configures verification of the signature of images with the prefixes
+The following example shows the `ImageConfig` resource `verify-acme-packages`.
+It configures signature verification for images with these prefixes:
 `registry1.com/acme-co/configuration-foo` and
 `registry1.com/acme-co/configuration-bar`.
 
-In the example below, the `ImageConfig` resource named `verify-acme-packages` is
-set up to verify the signatures of images with the prefixes
-`registry1.com/acme-co/configuration-foo` and `registry1.com/acme-co/configuration-bar`.
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
@@ -114,10 +111,11 @@ configuration for the authorities that sign the images. The `attestations` field
 contains the configuration for verifying the attestations of the images.
 
 The `ImageConfig` API follows the same API shape as [Policy Controller](https://docs.sigstore.dev/policy-controller/overview/)
-from [Sigstore](https://docs.sigstore.dev/). Crossplane initially supports a
-subset of the Policy Controller configuration options which can be found in the
+from [Sigstore](https://docs.sigstore.dev/). Crossplane initially supports a subset of the Policy Controller configuration
+options.
+Find these options in the
 [API reference]({{<ref "../api/#ImageConfig-spec-verification-cosign">}})
-for the `ImageConfig` resource together with their descriptions.
+for the `ImageConfig` resource.
 
 When multiple authorities are provided, the package manager verifies the
 signature against each authority until it finds a valid one. If any of the
@@ -130,16 +128,16 @@ secret configuration, as described in the previous section.
 
 ### Checking the signature verification status
 
-When you enable signature verification, the respective controller reports the
-verification status as a condition of type `Verified` on the package revision
-resources. This condition indicates whether the signature verification was
-successful, failed, skipped, or incomplete due to an error.
+When you enable signature verification, the controller reports the verification
+status as a `Verified` condition on package revision resources.
+This condition shows whether verification was successful, failed, skipped or
+incomplete due to an error.
 
 #### Example conditions
 
-**Verification skipped:** The package manager skipped signature verification for
-the package revision because there were no matching `ImageConfig` with signature
-verification configuration.
+<!-- vale gitlab.SentenceLength = NO -->
+**Verification skipped:** Signature verification was skipped. There were no
+matching `ImageConfig` with signature verification configuration.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:38:51Z"
@@ -148,8 +146,9 @@ verification configuration.
     type: Verified
 ```
 
-**Verification successful:** The package manager successfully verified the
-signature of the image in the package revision.
+**Verification successful**
+
+Image signature verified.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:43:05Z"
@@ -159,8 +158,7 @@ signature of the image in the package revision.
     type: Verified
 ```
 
-**Verification failed:** The package manager failed to verify the signature of
-the image in the package revision.
+**Verification failed:** Signature verification failed for the image.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:42:44Z"
@@ -172,8 +170,7 @@ the image in the package revision.
     type: Verified
 ```
 
-**Verification incomplete:** The package manager encountered an error while
-verifying the signature of the image in the package revision.
+**Verification incomplete:** An error occurred during signature verification.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:44:22Z"
@@ -184,6 +181,7 @@ verifying the signature of the image in the package revision.
     status: "False"
     type: Verified
 ```
+<!-- vale gitlab.SentenceLength = YES -->
 
 If you can't see this condition on the package revision resource, namely
 `ProviderRevision`, `ConfigurationRevision`, or `FunctionRevision`, ensure that
@@ -195,10 +193,11 @@ You can use an `ImageConfig` to pull package images from an alternative location
 such as a private registry. `spec.rewriteImages` specifies how to rewrite the
 paths of matched images.
 
-Only prefix replacement is supported. The prefix specified in
-`spec.rewriteImage.prefix` replaces the matched prefix from `matchImages`. For
-example, the following `ImageConfig` replaces `xpkg.crossplane.io` with
-`registry1.com` for any image with the prefix `xpkg.crossplane.io`.
+Only prefix replacement is supported. Specify the replacement prefix in
+`spec.rewriteImage.prefix`. This replaces the matched prefix from `matchImages`.
+
+For example, the following `ImageConfig` replaces `xpkg.crossplane.io` with
+`registry1.com` for any image with that prefix.
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
@@ -218,18 +217,19 @@ package manager pulling the provider from
 `registry1.com/crossplane-contrib/provider-nop:v0.4.0`.
 
 Rewriting image paths via `ImageConfig` is useful when mirroring packages to a
-private registry, because it allows a package and all its dependencies to be
-pulled from the same registry. For example, the provider
+private registry. It allows a package and all its dependencies to be pulled from
+the same registry. For example, the provider
 `xpkg.crossplane.io/crossplane-contrib/provider-aws-s3` has a dependency on
-`xpkg.crossplane.io/crossplane-contrib/provider-family-aws`. If you mirror the
-packages to your own registry at `registry1.com` and install them without an
-`ImageConfig`, the package manager still attempts to pull the dependency from
-`xpkg.crossplane.io`. With the preceding `ImageConfig`, the dependency is pulled
-from `registry1.com`.
+`xpkg.crossplane.io/crossplane-contrib/provider-family-aws`. If you mirror packages to `registry1.com` and install them without an
+`ImageConfig`, the package manager still pulls the dependency from
+`xpkg.crossplane.io`.
+With the preceding `ImageConfig`, the dependency is pulled from `registry1.com`.
 
-Rewriting an image path with `ImageConfig` doesn't change the `spec.package`
-field of the package resource. The rewritten path is recorded in the
-`status.resolvedPackage` field. The preceding example results in the following:
+Rewriting an image path with `ImageConfig` doesn't change `spec.package`.
+Instead, the rewritten path appears in `status.resolvedPackage`.
+
+Example output:
+<!-- vale gitlab.SentenceLength = NO --><!-- vale gitlab.SentenceLength = YES -->
 
 ```shell
 kubectl describe provider crossplane-contrib-provider-family-aws
@@ -245,14 +245,13 @@ Status:
 ### Interaction with other operations
 
 {{<hint "tip" >}}
-Image rewriting is always done before other `ImageConfig` operations. If you
-wish to also configure pull secrets or signature verification as well as
-rewriting, those `ImageConfig` resources must match the rewritten image path.
+Image rewriting is always done before other `ImageConfig` operations.
+If you also configure pull secrets or signature verification, those
+`ImageConfig` resources must match the rewritten image path.
 {{< /hint >}}
 
-For example, if you are mirroring packages from `xpkg.crossplane.io` to
-`registry1.com` and need to configure pull secrets for `registry1.com`, two
-`ImageConfig` resources are necessary:
+For example, if you mirror packages from `xpkg.crossplane.io` to
+`registry1.com` and need pull secrets, create two `ImageConfig` resources:
 
 ```yaml
 # Rewrite xpkg.crossplane.io -> registry1.com
@@ -286,15 +285,15 @@ spec:
 ## Debugging
 
 When the package manager selects an `ImageConfig` for a package, it throws an
-event with the reason `ImageConfigSelection` and the name of the selected
-`ImageConfig` and injected pull secret. You can find these events both on the
-package and package revision resources. The package manager also updates the
+event with the reason `ImageConfigSelection`. The event includes the name of the
+selected `ImageConfig` and injected pull secret. Find these events on package
+and package revision resources. The package manager also updates the
 `appliedImageConfigRefs` field in the package status to show the purpose for
 which each `ImageConfig` was selected.
 
-For example, the following event and status show that the `ImageConfig` named
-`acme-packages` was used to provide a pull secret for the configuration named
-`acme-configuration-foo`:
+For example, the following event and status show the selected `ImageConfig`.
+The `ImageConfig` named `acme-packages` provided a pull secret for the
+configuration `acme-configuration-foo`:
 
 ```shell
 kubectl describe configuration acme-configuration-foo
@@ -310,8 +309,8 @@ Events:
   Normal   ImageConfigSelection  45s                packages/configuration.pkg.crossplane.io          Selected pullSecret "acme-registry-credentials" from ImageConfig "acme-packages" for registry authentication
 ```
 
-If you can't find the expected event and `appliedImageConfigRefs` entry, ensure
-the prefix of the image reference matches the `matchImages` list of any
-`ImageConfig` resources in the cluster.
+If you can't find the expected event and `appliedImageConfigRefs` entry, check
+your configuration. Ensure the prefix of the image reference matches the
+`matchImages` list of any `ImageConfig` resources in the cluster.
 
 <!-- vale write-good.Passive = YES -->

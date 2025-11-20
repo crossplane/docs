@@ -20,9 +20,10 @@ information from individual resources or to apply patches.
 Crossplane supports multiple `EnvironmentConfigs`, each acting as a unique
 data store.
 
-When Crossplane creates a composite resource, Crossplane merges all the
-EnvironmentConfigs referenced in the associated Composition and creates a unique
-in-memory environment for that composite resource.
+When Crossplane creates a composite resource, it merges all the
+EnvironmentConfigs referenced in the associated Composition.
+Crossplane then creates a unique in-memory environment for that composite
+resource.
 
 The composite resource can read and write data to their unique
 in-memory environment.
@@ -82,15 +83,15 @@ merging them into an `in-memory environment` and patching between that,
 composed and composite resources. From `v1.18`, Crossplane removed this native capability, in favor of [Composition Functions].
 
 Users that enabled Alpha Composition Environments
-(`--enable-environment-configs`) and leveraged the native features
-(`spec.environment.patches`, `spec.environment.environmentConfigs` and
-`*Environment` patches), have to migrate to Composition Functions to
-continue doing so.
+(`--enable-environment-configs`) and used the native features must migrate
+to Composition Functions.
+The native features include `spec.environment.patches`,
+`spec.environment.environmentConfigs` and `*Environment` patches.
 
-Automated migration to `Pipeline` mode is available through `crossplane beta
-convert pipeline-composition`, which moves a composition using `Resource`
-mode, to [function-patch-and-transform] and, if needed,
-[function-environment-configs].
+Use `crossplane beta convert pipeline-composition` for automated migration to
+`Pipeline` mode.
+This converts a composition from `Resource` mode to
+[function-patch-and-transform] and [function-environment-configs].
 
 See the documentation of [function-environment-configs] for more details about manual
 migration.
@@ -101,9 +102,10 @@ migration.
 
 Select the EnvironmentConfigs to use through [function-environment-configs]'s `Input`.
 
-The `environmentConfigs` field is a list of `EnvironmentConfigs` to
-retrieve, merge and pass to the next step in the pipeline through the
-[Context] at a well known key, `apiextensions.crossplane.io/environment`.
+The `environmentConfigs` field is a list of `EnvironmentConfigs` to retrieve
+and merge.
+The function passes them to the next pipeline step through the [Context] using
+the key `apiextensions.crossplane.io/environment`.
 
 Select an environment by `Reference` or by `Selector`:
 
@@ -269,9 +271,8 @@ with `maxMatch` and define the maximum number to select.
 
 Use `minMatch` and define the minimum number of environments returned.
 
-The Function sorts the returned environments alphabetically by name by default.
-Sort the environments on a different field with `sortByFieldPath` and define
-the field to sort by. 
+By default, the Function sorts returned environments alphabetically by name.
+To sort on a different field, use `sortByFieldPath`. 
 
 
 ```yaml {label="maxMatch"}
@@ -303,9 +304,11 @@ spec:
                 type: FromCompositeFieldPath
                 valueFromFieldPath: spec.parameters.deploy
 ```
+<!-- vale gitlab.SentenceLength = NO -->
 
-The EnvironmentConfigs selected by `matchLabels` are then merged with all the
-other ones specified.
+Crossplane merges the EnvironmentConfigs selected by `matchLabels` with all
+other specified ones.
+<!-- vale gitlab.SentenceLength = YES -->
 
 #### Optional selector labels
 By default, Crossplane issues an error if the specified `valueFromFieldPath`
@@ -387,33 +390,37 @@ spec:
 ```
 
 {{<hint "warning" >}}
+<!-- vale gitlab.SentenceLength = NO -->
 [function-environment-configs](https://github.com/crossplane-contrib/function-environment-configs)
-applies values in order. The value of the last key defined always takes precedence.
+applies values in order. Later keys override earlier keys.
 
-Defining the default value _after_ the label always overwrites the label
-value.
+Defining the default value _after_ the label overwrites the label value.
+<!-- vale gitlab.SentenceLength = YES -->
 {{< /hint >}}
 
 ## Patching with EnvironmentConfigs using function-patch-and-transform
 
-`EnvironmentConfigs` selected as explained earlier, are then merged in an
-`in-memory environment` by [function-environment-configs] and passed to the
-next function in the pipeline at a well known key,
+[function-environment-configs] merges selected `EnvironmentConfigs` into an
+`in-memory environment`.
+It passes this to the next pipeline function using the key
 `apiextensions.crossplane.io/environment`.
 
-You can use [function-patch-and-transform] to read or write data between the in-memory environment and
-composite resource or individual composed resources.
+You can use [function-patch-and-transform] to read or write data between
+the in-memory environment and composite resources.
+You can also patch individual composed resources.
 
 {{<hint "tip" >}}
 The Patch and Transform function can use the environment to patch composed
-resources. Read about EnvironmentConfig patch types in the
+resources.
+Read about EnvironmentConfig patch types in the
 [Patch and Transform function documentation]({{<ref "../guides/function-patch-and-transform">}}).
 {{< /hint >}}
 
 ### Patch between Composite resource and environment
 
-To patch between Composite resource and environment define patches at
-`spec.environment.patches` in the `Resources` input of [function-patch-and-transform].
+To patch between the Composite resource and environment, define patches at
+`spec.environment.patches`.
+Use the `Resources` input of [function-patch-and-transform].
 
 Use the `ToCompositeFieldPath` patch type to copy data from the in-memory
 environment to the Composite resource. Use the `FromCompositeFieldPath` to
@@ -453,9 +460,11 @@ Composite resource, respectively.
 
 ### Patch an individual resource
 
-To patch between individual resources and the in-memory environment, inside the
-patches of the resource, use `ToEnvironmentFieldPath` to copy data from the
-resource to the in-memory environment. Use `FromEnvironmentFieldPath` to copy
+To patch between individual resources and the in-memory environment, use patch
+types inside the patches of the resource.
+Use `ToEnvironmentFieldPath` to copy data from the resource to the in-memory
+environment.
+Use `FromEnvironmentFieldPath` to copy
 data to the resource from the in-memory environment.
 
 ```yaml {label="envpatch",copy-lines="none"}
