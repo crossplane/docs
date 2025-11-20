@@ -189,9 +189,11 @@ data:
 
 #### Set resource exclusion
 
-Crossplane providers generate a `ProviderConfigUsage` for each managed resource (MR) they handle. This resource
-enables representing the relationship between MR and a ProviderConfig so that the controller can use it as a finalizer when you delete a
-ProviderConfig. End users of Crossplane don't need to interact with this resource.
+Crossplane providers generate a `ProviderConfigUsage` for each managed resource
+(MR) they handle.
+This resource represents the relationship between MR and a ProviderConfig.
+The controller uses it as a finalizer when you delete a ProviderConfig.
+End users of Crossplane don't need to interact with this resource.
 
 A growing number of resources and types can impact Argo CD UI reactivity. To help keep this number low, Crossplane
 recommend hiding all `ProviderConfigUsage` resources from Argo CD UI.
@@ -216,8 +218,10 @@ The use of `"*"` as apiGroups enables the mechanism for all Crossplane Providers
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.HeadingAcronyms = YES -->
 
-As the number of CRDs grow on a control plane it increases the amount of queries Argo CD Application Controller
-needs to send to the Kubernetes API. If this is the case you can increase the rate limits of the Argo CD Kubernetes client.
+As the number of CRDs grow on a control plane, Argo CD Application Controller
+needs to send more queries to the Kubernetes API.
+You can increase the rate limits of the Argo CD Kubernetes client to handle
+this.
 
 Set the environment variable `ARGOCD_K8S_CLIENT_QPS` to `300` for improved compatibility with multiple CRDs.
 

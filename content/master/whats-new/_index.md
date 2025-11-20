@@ -128,9 +128,9 @@ Read more about Crossplane v2's [backward compatibility](#backward-compatibility
 
 Crossplane v2 makes all managed resources (MRs) namespaced.
 
-This enables a namespaced XR to consist of entirely namespaced resources -
-whether they're a Crossplane MR like an `RDSInstance`, a Kubernetes resource
-like a `Deployment`, or a third party custom resource like a
+This enables a namespaced XR to consist of entirely namespaced resources.
+These resources can be a Crossplane MR like an `RDSInstance`, a Kubernetes
+resource like a `Deployment`, or a third party custom resource like a
 [Cluster API](https://cluster-api.sigs.k8s.io) `Cluster`.
 
 A namespaced MR looks like this:
@@ -181,9 +181,9 @@ installing only the managed resources you actually need.
 Crossplane v2 isn't opinionated about using composition together with managed
 resources.
 
-You can create a composite resource (XR) that composes any resource, whether
-it's a Crossplane MR like an `RDSInstance`, a Kubernetes resource like a
-`Deployment`, or a third party custom resource like a
+You can create a composite resource (XR) that composes any resource.
+This includes a Crossplane MR like an `RDSInstance`, a Kubernetes resource like
+a `Deployment`, or a third party custom resource like a
 [CloudNativePG](https://cloudnative-pg.io) PostgreSQL `Cluster`.
 
 ```mermaid
@@ -280,11 +280,11 @@ Crossplane added external secret stores in v1.7. External secret stores have
 remained in alpha for over two years and are now unmaintained.
 
 Crossplane v2 drops the `--registry` flag that allowed users to specify a default
-registry value and now requires users to always specify a fully qualified URL when
-installing packages, both directly via `spec.package` and indirectly as dependencies.
-Using fully qualified images was already a best practice, but it's now enforced
-to avoid confusion and unexpected behavior, to ensure users are aware of the
-registry used by their packages.
+registry value. Users must now always specify a fully qualified URL when
+installing packages, both directly via `spec.package` and indirectly as
+dependencies. Using fully qualified images was already a best practice. It's now
+enforced to avoid confusion and unexpected behavior, ensuring users are aware of
+the registry used by their packages.
 
 {{<hint "important">}}
 As long as you're not using these deprecated or alpha features, Crossplane v2 is

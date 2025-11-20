@@ -297,9 +297,9 @@ URL.
 <!-- vale Google.Headings = YES -->
 
 If the template repository contains a `NOTES.txt` file in its root directory,
-the `crossplane xpkg init` command prints the contents of the file to the
-terminal after populating the directory with the template files. This can be
-useful for providing information about the template.
+the `crossplane xpkg init` command prints its contents to the terminal.
+This happens after populating the directory with the template files.
+This can be useful for providing information about the template.
 
 <!-- vale Google.Headings = NO -->
 #### init.sh
@@ -865,10 +865,10 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 ### beta validate
 <!-- vale Google.Headings = YES -->
 
-The `crossplane beta validate` command validates 
-[compositions]({{<ref "../composition/compositions">}}) against provider or XRD 
-schemas using the Kubernetes API server's validation library
-with extra validation such as checking for unknown fields,
+The `crossplane beta validate` command validates
+[compositions]({{<ref "../composition/compositions">}}) against provider or XRD
+schemas using the Kubernetes API server's validation library.
+It includes extra validation such as checking for unknown fields,
 a common source of difficult to debug issues in Crossplane.
 
 The `crossplane beta validate` command supports validating the following 

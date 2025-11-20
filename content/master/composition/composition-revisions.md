@@ -81,9 +81,11 @@ policies:
 * `Automatic`: Automatically use the latest `CompositionRevision`. (Default)
 * `Manual`: Require manual intervention to change `CompositionRevision`.
 
-The below XR uses the `Manual` policy. When you use this policy the XR
-selects the latest `CompositionRevision` when it's first created, but must
-manually update it when you wish it to use another `CompositionRevision`.
+The below XR uses the `Manual` policy.
+When you use this policy, the XR selects the latest `CompositionRevision` when
+it's first created.
+You must manually update it when you wish it to use another
+`CompositionRevision`.
 
 ```yaml
 apiVersion: example.org/v1alpha1

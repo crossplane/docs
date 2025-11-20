@@ -20,16 +20,18 @@ updates a resource outside of Crossplane, for example via the AWS console or
 enforces the declared state and corrects the unexpected change
 without any user interaction.
 
-With Crossplane acting continuously and autonomously to update critical
-infrastructure, it's vital for users to have insight into the operations the provider performs,
-so they can build and maintain a strong sense of confidence and trust
-in their control planes. Change logs provide details about all changes the
-provider makes, so users can remain aware of any changes, even when they aren't
-explicitly expecting any.
+Crossplane acts continuously and autonomously to update critical
+infrastructure.
+Users need insight into the operations the provider performs to build and
+maintain confidence and trust in their control planes.
+Change logs provide details about all changes the provider makes.
+This keeps users aware of any changes, even when they aren't explicitly
+expecting any.
 
 {{<hint "tip">}} Change logs help you understand all the changes a provider is
-making to your resources, even when changes weren't explicitly requested, for
-example because of Crossplane's automatic correction of configuration drift.
+making to your resources.
+This includes changes that weren't explicitly requested, such as Crossplane's
+automatic correction of configuration drift.
 {{</hint>}}
 
 ## Enabling change logs
@@ -185,9 +187,9 @@ EOF
 
 ### Create a resource
 
-After installing and configuring the provider with change logs enabled,
-create a resource that generates change log entries that reflect the actions
-the control plane takes.
+After installing and configuring the provider with change logs enabled, create
+a resource that generates change log entries.
+These entries reflect the actions the control plane takes.
 
 ```yaml {label="provider",copy-lines="all"}
 cat <<EOF | kubectl apply -f -

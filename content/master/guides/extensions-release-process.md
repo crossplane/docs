@@ -20,9 +20,10 @@ and developed its own conventions and common configurations. Authors of these
 extensions should follow this guide to enable automation for building
 and pushing their packages as part of their git workflow.
 
-This guide provides step-by-step instructions for configuring automated
-CI pipelines in GitHub Actions for pushing your Crossplane extensions to
-`xpkg.crossplane.io`, the main registry that the Crossplane community
+This guide provides step-by-step instructions for configuring automated CI
+pipelines in GitHub Actions.
+These pipelines push your Crossplane extensions to `xpkg.crossplane.io`, the
+main registry that the Crossplane community
 uses today.
 
 {{< hint "tip" >}}
@@ -299,9 +300,10 @@ it if it doesn't already exist.
 {{</expand >}}
 
 {{< expand "Why is my workflow failing with a 401 error code?" >}}
-Ensure the credentials used during the registry login step has authorization to
-pull and push, and that the `{{ secrets.* }}` variable substitutions match
-what's configured in GitHub.
+Ensure the credentials used during the registry login step have authorization to
+pull and push.
+Also verify that the `{{ secrets.* }}` variable substitutions match what's
+configured in GitHub.
 {{</expand >}}
 
 <!-- Named Links -->

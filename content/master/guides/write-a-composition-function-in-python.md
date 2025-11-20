@@ -310,9 +310,9 @@ The Python SDK automatically generates the `RunFunctionRequest` and
 The fields of the generated Python objects behave similarly to builtin Python
 types like dictionaries and lists. Be aware that there are some differences.
 
-Notably, you access the map of observed and desired resources like a dictionary
-but you can't add a new desired resource by assigning to a map key. Instead,
-access and mutate the map key as if it already exists.
+Notably, you access the map of observed and desired resources like a dictionary.
+However, you can't add a new desired resource by assigning to a map key.
+Instead, access and mutate the map key as if it already exists.
 
 Instead of adding a new resource like this:
 
@@ -647,9 +647,9 @@ function. You then embed that runtime in a package, and push it to a package
 registry. The Crossplane CLI uses `xpkg.crossplane.io` as its default package
 registry.
 
-A function supports a single platform, like `linux/amd64`, by default. You can
-support multiple platforms by building a runtime and package for each platform,
-then pushing all the packages to a single tag in the registry.
+A function supports a single platform, like `linux/amd64`, by default.
+To support multiple platforms, build a runtime and package for each platform.
+Then push all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
@@ -727,9 +727,10 @@ crossplane xpkg push \
 ```
 
 {{<hint "tip">}}
-If you push the function to a GitHub repository the template automatically sets
-up continuous integration (CI) using
-[GitHub Actions](https://github.com/features/actions). The CI workflow will
-lint, test, and build your function. You can see how the template configures CI
-by reading `.github/workflows/ci.yaml`.
+<!-- vale gitlab.SentenceLength = NO -->
+If you push the function to a GitHub repository, the template automatically sets
+up continuous integration (CI) using [GitHub Actions](https://github.com/features/actions).
+<!-- vale gitlab.SentenceLength = YES -->
+The CI workflow will lint, test, and build your function.
+You can see how the template configures CI by reading `.github/workflows/ci.yaml`.
 {{</hint>}}

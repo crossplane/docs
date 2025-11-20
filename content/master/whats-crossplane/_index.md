@@ -220,10 +220,9 @@ to see how managed resources work.
 
 Operations let you run operational tasks using function pipelines.
 
-While composition and managed resources focus on creating and managing
-infrastructure, operations handle tasks that don't fit the typical resource
-creation pattern - like certificate monitoring, rolling upgrades, or scheduled
-maintenance.
+Composition and managed resources focus on creating and managing infrastructure.
+Operations handle tasks that don't fit the typical resource creation pattern,
+like certificate monitoring, rolling upgrades, or scheduled maintenance.
 
 **Operations run function pipelines to completion like a Kubernetes Job.**
 Instead of continuously managing resources, they perform specific tasks and

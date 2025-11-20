@@ -5,8 +5,9 @@ description: "Write legacy Compositions"
 ---
 
 Function Patch and Transform allows you to write a Composition that specifies
-managed resource (MR) templates, and uses "patch and transform" operations to
-fill them out. Crossplane fills the templates out with values copied from a
+managed resource (MR) templates.
+It uses "patch and transform" operations to fill them out.
+Crossplane fills the templates out with values copied from a
 composite resource (XR).
 
 A [patch](#create-a-patch) copies a value from one resource and _patches_ it
@@ -312,8 +313,8 @@ Inside the function input the resource with the source data uses a
 in the composite resource.
 
 The destination resource uses a `FromCompositeFieldPath` patch to read data from
-the composite resource `status.secondResource` field in the composite resource
-and write it to a label named `secondResource` in the managed resource.
+the composite resource `status.secondResource` field.
+It writes this data to a label named `secondResource` in the managed resource.
 
 ```yaml {label="patchBetween",copy-lines="9-11"}
 apiVersion: pt.fn.crossplane.io/v1beta1

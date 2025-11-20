@@ -119,8 +119,9 @@ some other files in the template:
 
 {{<hint "tip">}}
 Starting with v1.15 of the Crossplane CLI, `crossplane xpkg init` gives you the
-option of running an initialization script to automate tasks like replacing the
-template name with the new function's name.
+option of running an initialization script.
+This automates tasks like replacing the template name with the new function's
+name.
 {{</hint>}}
 
 You must make some changes before you start adding code:
@@ -426,8 +427,9 @@ This code:
 1. Returns the desired S3 buckets in a `RunFunctionResponse`.
 
 The code uses the `v1beta1.Bucket` type from the [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws).
-One advantage of writing a function in Go is that you can compose resources
-using the same strongly typed structs Crossplane uses in its providers.
+Writing a function in Go has an advantage. You can compose resources using
+strongly typed structs. These are the same structs Crossplane uses in its
+providers.
 
 You must get the AWS Provider Go module to use this type:
 
@@ -786,9 +788,9 @@ function. You then embed that runtime in a package, and push it to a package
 registry. The Crossplane CLI uses `xpkg.crossplane.io` as its default package
 registry.
 
-A function supports a single platform, like `linux/amd64`, by default. You can
-support multiple platforms by building a runtime and package for each platform,
-then pushing all the packages to a single tag in the registry.
+A function supports a single platform, like `linux/amd64`, by default.
+To support multiple platforms, build a runtime and package for each platform.
+Then push all the packages to a single tag in the registry.
 
 Pushing your function to a registry allows you to use your function in a
 Crossplane control plane. See the
@@ -858,9 +860,10 @@ crossplane xpkg push \
 ```
 
 {{<hint "tip">}}
-If you push the function to a GitHub repository the template automatically sets
-up continuous integration (CI) using
-[GitHub Actions](https://github.com/features/actions). The CI workflow will
-lint, test, and build your function. You can see how the template configures CI
-by reading `.github/workflows/ci.yaml`.
+<!-- vale gitlab.SentenceLength = NO -->
+If you push the function to a GitHub repository, the template automatically sets
+up continuous integration (CI) using [GitHub Actions](https://github.com/features/actions).
+<!-- vale gitlab.SentenceLength = YES -->
+The CI workflow will lint, test, and build your function.
+You can see how the template configures CI by reading `.github/workflows/ci.yaml`.
 {{</hint>}}

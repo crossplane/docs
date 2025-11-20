@@ -5,12 +5,10 @@ description: "Debug common Crossplane issues"
 ---
 ## Requested resource not found
 
-If you use the Crossplane CLI to install a `Provider` or
-`Configuration` (for example, `crossplane xpkg install provider
-xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0`) and get `the server
-could not find the requested resource` error, more often than not, that's an
-indicator that your Crossplane CLI needs updating. In other words
-Crossplane graduated some API from alpha to beta or stable and the old
+If you use the Crossplane CLI to install a `Provider` or `Configuration` and
+get `the server could not find the requested resource` error, that usually means
+your Crossplane CLI needs updating. In other words, Crossplane graduated some
+API from alpha to beta or stable and the old
 plugin isn't aware of this change.
 
 
@@ -60,9 +58,10 @@ Events:
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.Headings = YES -->
 
-The next place to look to get more information or investigate a failure would be
-in the Crossplane pod logs, which should be running in the `crossplane-system`
-namespace. To get the current Crossplane logs, run the following:
+The next place to look for more information or to investigate a failure is in
+the Crossplane pod logs.
+The pod should be running in the `crossplane-system` namespace.
+To get the current Crossplane logs, run the following:
 
 ```shell
 kubectl -n crossplane-system logs -lapp=crossplane
@@ -120,9 +119,10 @@ spec:
 
 ## Pausing Crossplane
 
-Sometimes, for example when you encounter a bug, it can be useful to pause
-Crossplane if you want to stop it from actively attempting to manage your
-resources. To pause Crossplane without deleting all its resources, run the
+Sometimes it can be useful to pause Crossplane, for example when you encounter a
+bug.
+Pausing stops Crossplane from actively attempting to manage your resources.
+To pause Crossplane without deleting all its resources, run the
 following command to scale down its deployment:
 
 ```shell
@@ -139,8 +139,11 @@ kubectl -n crossplane-system scale --replicas=1 deployment/crossplane
 ## Pausing Providers
 
 You can also pause Providers when troubleshooting an issue or orchestrating a
-complex migration of resources. Creating and referencing a `DeploymentRuntimeConfig` is
-the easiest way to scale down a provider, and you can change the `DeploymentRuntimeConfig` or remove the reference to scale it back up:
+complex migration of resources.
+Creating and referencing a `DeploymentRuntimeConfig` is the easiest way to scale
+down a provider.
+You can change the `DeploymentRuntimeConfig` or remove the reference to scale it
+back up:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1beta1
@@ -176,10 +179,11 @@ to leave anything running behind. Crossplane accomplishes this by using finalize
 in certain scenarios the finalizer can prevent the Kubernetes object from
 getting deleted.
 
-To deal with this, patch the object to remove its
-finalizer, which then allows Kubernetes to delete it. Note that this
-doesn't necessarily delete the external resource that Crossplane was managing, so
-you want to go to your cloud provider's console and look there for any
+To deal with this, patch the object to remove its finalizer.
+This allows Kubernetes to delete it.
+Note that this doesn't necessarily delete the external resource that Crossplane
+was managing.
+Check your cloud provider's console for any
 lingering resources to clean up.
 
 In general, you can remove a finalizer from an object with this command:

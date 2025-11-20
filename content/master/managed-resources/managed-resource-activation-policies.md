@@ -16,9 +16,10 @@ Crossplane.
 
 A `ManagedResourceActivationPolicy` (MRAP) controls which
 [ManagedResourceDefinitions]({{<ref "managed-resource-definitions">}})
-become active in your cluster. MRAPs enable selective installation of provider
-resources, allowing you to activate only the 10 managed resources you need
-instead of the 100+ that a provider ships.
+become active in your cluster.
+MRAPs enable selective installation of provider resources.
+You can activate only the 10 managed resources you need instead of the 100+
+that a provider ships.
 
 ## The selective activation problem
 
