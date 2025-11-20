@@ -208,7 +208,7 @@ Crossplane can ask more than one Function what to do when a composite resource
 changes. When a Composition has a pipeline of two or more steps, Crossplane
 calls them all. It calls them in the order they appear in the pipeline.
 
-Crossplane passes each Function in the pipeline the result of the previous
+Crossplane passes each Function in the pipeline the result of the earlier
 Function. This enables powerful combinations of Functions. In this example,
 Crossplane calls {{<hover label="double" line="10">}}function-cue{{</hover>}} to
 create an S3 bucket. Crossplane then passes the bucket to
@@ -617,7 +617,7 @@ RunFunctionResponse.
 Crossplane then calls the function again with:
 - The requested __required resources__
 - The __context__ returned by the Function
-- The same __input__, __observed__ and __desired state__ from the previous
+- The same __input__, __observed__ and __desired state__ from the earlier
   RunFunctionRequest
 Functions can iteratively request __required resources__ if needed.
 To avoid endlessly looping, Crossplane limits the number of iterations to 5.
@@ -680,8 +680,8 @@ A function can't change:
 * The connection details of any composed resource.
 
 A pipeline of functions _accumulates_ desired state. This means that each
-function builds upon the desired state of previous functions in the pipeline.
-Crossplane sends a function the desired state accumulated by all previous
+function builds upon the desired state of earlier functions in the pipeline.
+Crossplane sends a function the desired state accumulated by all earlier
 functions in the pipeline. The function adds to or updates the desired state and
 then passes it on. When the last function in the pipeline has run, Crossplane
 applies the desired state it returns.
@@ -975,7 +975,7 @@ The cache works by:
 - Storing function responses on disk based on a hash of the request
 - Only caching responses with a nonzero TTL
 - Automatically removing expired cache entries
-- Reusing cached responses for identical requests until they expire
+- Reusing cached responses for the same requests until they expire
 
 This feature helps functions that:
 - Perform expensive computations or external API calls

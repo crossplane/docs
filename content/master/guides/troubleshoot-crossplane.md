@@ -16,7 +16,7 @@ plugin isn't aware of this change.
 
 Most Crossplane resources have a `status` section that can represent the current
 state of that particular resource. Running `kubectl describe` against a
-Crossplane resource frequently gives insightful information about its
+Crossplane resource often gives insightful information about its
 condition. For example, to determine the status of a GCP `CloudSQLInstance`
 managed resource use `kubectl describe` for the resource.
 
@@ -115,7 +115,7 @@ spec:
 ```
 
 > You can add a reference to a `DeploymentRuntimeConfig` to an already
-> installed `Provider` and it updates its `Deployment` accordingly.
+> installed `Provider` and it updates its `Deployment`.
 
 ## Pausing Crossplane
 
@@ -170,7 +170,7 @@ spec:
 ```
 
 > You can add a reference to a `DeploymentRuntimeConfig` to an already
-> installed `Provider` and it updates its `Deployment` accordingly.
+> installed `Provider` and it updates its `Deployment`.
 
 ## Deleting when a resource hangs
 

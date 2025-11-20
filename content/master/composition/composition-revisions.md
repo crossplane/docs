@@ -36,7 +36,7 @@ any updates you make to the `big-platform-db` `Composition`.
 Composition Revisions allow XRs to opt out of automatic updates. Instead you can
 update your XRs to use the latest `Composition` settings at your own pace.
 This enables you to [canary] changes to your infrastructure, or to roll back
-some XRs to previous `Composition` settings without rolling back all XRs.
+some XRs to earlier `Composition` settings without rolling back all XRs.
 
 ## Using composition revisions
 

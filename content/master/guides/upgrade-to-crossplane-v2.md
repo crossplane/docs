@@ -229,7 +229,7 @@ After upgrading, you can begin using Crossplane v2 features:
 ## Updating compositions for v2
 
 Existing Compositions work with Crossplane v2 with minimal changes. v2 managed
-resources are schematically identical to v1 managed resources - they're just
+resources are schematically the same as v1 managed resources - they're just
 namespaced.
 
 {{<hint "important">}}
@@ -253,7 +253,7 @@ For example `provider-aws-s3:v2.0.0` has two `Bucket` MRs:
 * `apiVersion: s3.aws.m.upbound.io/v1beta1` - Namespaced
 
 The `spec.forProvider` and `status.atProvider` fields are schematically
-identical.
+the same.
 
 {{<hint "tip">}}
 Use `kubectl get mrds` to see available MR API versions.

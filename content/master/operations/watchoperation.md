@@ -156,7 +156,7 @@ WatchOperations support the same concurrency policies as CronOperations:
 
 - **Allow (default)**: Multiple Operations can run simultaneously. Use this 
   when operations don't interfere with each other.
-- **Forbid**: New Operations don't start if previous ones are still running. 
+- **Forbid**: New Operations don't start if earlier ones are still running. 
   Use this for operations that can't run concurrently.
 - **Replace**: New Operations stop running ones before starting. Use this 
   when you always want the latest operation to run.
@@ -491,7 +491,7 @@ kubectl get events --field-selector involvedObject.name=my-watchop
 
 1. **Use specific label selectors** - Prevent unnecessary Operations with 
    precise filtering
-1. **Avoid high-churn resources** - Be careful watching frequently changing 
+1. **Avoid high-churn resources** - Be careful watching often changing
    resources
 1. **Start small** - Begin with narrow selectors and expand as needed
 
@@ -582,7 +582,7 @@ operational considerations, see [Operation best practices]({{<ref "operation#bes
 
 1. Refine label selectors to match fewer resources
 1. Consider using `Forbid` or `Replace` concurrency policy
-1. Check if resources are changing more frequently than expected
+1. Check if resources are changing more often than expected
 1. Review function logic to ensure it's not causing resource updates
 
 ### Operations failing to process watched resources

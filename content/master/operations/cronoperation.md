@@ -80,7 +80,7 @@ CronOperations support three concurrency policies:
 
 - **Allow (default)**: Multiple Operations can run simultaneously. Use this 
   when operations don't interfere with each other.
-- **Forbid**: New Operations don't start if previous ones are still running. 
+- **Forbid**: New Operations don't start if earlier ones are still running. 
   Use this for operations that can't run concurrently.
 - **Replace**: New Operations stop running ones before starting. Use this 
   when you always want the latest operation to run.

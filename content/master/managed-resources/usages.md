@@ -184,7 +184,7 @@ spec:
           baz: qux
 ```
 
-### Replay blocked deletion attempt
+### Replay blocked deletion try
 
 By default, deleting a `Usage` resource doesn't trigger deletion of the resource
 in use.

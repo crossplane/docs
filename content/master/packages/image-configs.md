@@ -124,7 +124,7 @@ Similarly, when you provide multiple identities or attestations, the package
 manager verifies until it finds a valid match and fails if none of them matches.
 
 Matching the image reference to the `ImageConfig` works similarly to the pull
-secret configuration, as described in the previous section.
+secret configuration, as described in the earlier section.
 
 ### Checking the signature verification status
 

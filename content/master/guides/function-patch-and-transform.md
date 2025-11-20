@@ -105,7 +105,7 @@ The `resources` field lists the individual resources with a `name`. This name
 identifies the resource inside the Composition. It isn't related to the external
 name used with the Provider.
 
-The contents of the `base` are identical to creating a standalone
+The contents of the `base` are the same as creating a standalone
 [managed resource]({{<ref "../managed-resources/managed-resources">}}).
 
 This example uses
@@ -1298,7 +1298,7 @@ strings and can provide default values if there isn't a match.
 
 A `match` object requires a `patterns` object.
 
-The `patterns` is a list of one or more patterns to attempt to match the input
+The `patterns` is a list of one or more patterns to try to match the input
 value against.
 
 ```yaml {label="match",copy-lines="1-8"}

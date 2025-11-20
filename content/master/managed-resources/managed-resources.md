@@ -913,7 +913,7 @@ Conditions:
 #### LastAsyncOperation
 <!-- vale on -->
 
-The Upjet `Type: LastAsyncOperation` captures the previous asynchronous
+The Upjet `Type: LastAsyncOperation` captures the earlier asynchronous
 operation status as either `Success` or a failure `Reason`. 
 
 <!-- vale off -->

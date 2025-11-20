@@ -81,7 +81,7 @@ Earthly creates the container image locally and saves the binaries under
 
 <!-- vale write-good.Passive = NO -->
 Log in to your registry of choice and push the Crossplane image from the
-previous steps.
+earlier steps.
 <!-- vale write-good.Passive = YES -->
 
 {{< hint "tip" >}}

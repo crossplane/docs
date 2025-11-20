@@ -284,7 +284,7 @@ composition functions.
 
 You can also package any part of a control plane's configuration and install it
 using the package manager. This allows you to deploy multiple control planes with
-identical capabilities - for example one control plane per region or per
+the same capabilities - for example one control plane per region or per
 service.
 
 Read about Crossplane [packages]({{<ref "../packages">}})
