@@ -300,10 +300,13 @@ valid version that satisfies all the constraints. It's an alpha feature that
 requires enabling with the `--enable-dependency-version-upgrades` flag.
 
 Sometimes, Crossplane requires dependency version downgrade for proceeding with
-installations. Suppose configuration A, which depends on package X with the
-constraint`>=v0.0.0`, installs on the control plane. In this case, the package
-manager installs the latest version of package X, such as `v3.0.0`. Later, you decide
-to install configuration B, which depends on package X with the constraint `<=v2.0.0`.
+installations. Consider this example:
+
+- Configuration A installs on the control plane
+- Configuration A depends on package X with the constraint`>=v0.0.0`
+- The package manager installs the latest version of package X (`v3.0.0`)
+- Later, you decide to install configuration B
+- Configuration B depends on package X with the constraint `<=v2.0.0`
 Since version `v2.0.0`satisfies both conditions, Crossplane must downgrade package X to
 allow the installation of configuration B, which Crossplane disables by default.
 
@@ -675,12 +678,12 @@ manager introduces it as a sidecar container instead of modifying the
 package runtime container.
 
 <!-- vale write-good.Passive = NO -->
-The package manager is opinionated about some fields to ensure
-the runtime is working and overlay them on top of the values
-in the runtime configuration. For example, it defaults the replica count
-to 1 if not set and overrides the label selectors to make sure the Deployment
-and Service match. It also injects any necessary environment variables,
-ports and volumes and volume mounts.
+The package manager enforces opinionated settings for some fields to ensure the
+runtime works. It overlays them on top of the values in the runtime
+configuration. For example, it defaults the replica count to 1 if not set. It
+also overrides the label selectors to make sure the Deployment and Service
+match. It also injects any necessary environment variables, ports and volumes
+and volume mounts.
 <!-- vale write-good.Passive = YES -->
 
 <!-- vale gitlab.FutureTense = NO -->
@@ -781,8 +784,8 @@ Setting the `serviceAccountTemplate.metadata.name` field will override the
 name of service account created by the package manager and used in the
 provider deployment. The package manager will own that service account and
 may conflict with other owners attempting to take ownership. A common mistake
-is configuring the same service account for multiple packages in this way
-which ends up causing frequent reconciliation loops and loads on the API server.
+is configuring the same service account for multiple packages in this way.
+This causes frequent reconciliation loops and loads on the API server.
 
 If you just want to use an existing service account, you should instead only
 set the `deploymentTemplate.spec.template.spec.serviceAccountName` field.

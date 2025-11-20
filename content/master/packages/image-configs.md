@@ -8,22 +8,22 @@ description: "Centralized control of package image configuration"
 
 `ImageConfig` is an API for centralized control over the configuration of
 Crossplane package images. It allows you to configure package manager behavior
-for images globally, without needing to be referenced by other objects.
+for images globally, without other objects needing to reference it.
 
 ## Matching image references
 
 `spec.matchImages` is a list of image references that the `ImageConfig` applies
 to. Each item in the list specifies the type and configuration of the image
 reference to match. The only supported type is `Prefix`, which matches the
-prefix of the image reference. No wildcards are supported. The `type` defaults
-to `Prefix` and can be omitted.
+prefix of the image reference. Crossplane doesn't support wildcards. The `type`
+defaults to `Prefix` and you can omit it.
 
-When there are multiple `ImageConfigs` matching an image reference, the one with
-the longest matching prefix is selected. If there are multiple `ImageConfigs`
-with the same longest matching prefix, one of them is selected
-arbitrarily. Please note that this situation occurs only if there are
+When there are multiple `ImageConfigs` matching an image reference, Crossplane
+selects the one with the longest matching prefix. If there are multiple
+`ImageConfigs` with the same longest matching prefix, Crossplane selects one of
+them arbitrarily. Please note that this situation occurs only if there are
 overlapping prefixes in the `matchImages` lists of different `ImageConfig`
-resources, which should be avoided.
+resources. Avoid this situation.
 
 ## Configuring a pull secret
 
@@ -52,7 +52,7 @@ spec:
 ```
 
 `spec.registry.authentication.pullSecretRef` is a reference to the pull secret
-that should be injected into the registry client. The secret must be of type
+to inject into the registry client. The secret must be of type
 `kubernetes.io/dockerconfigjson` and must be in the Crossplane installation
 namespace, typically `crossplane-system`. One can create the secret using the
 following command:
@@ -64,7 +64,7 @@ kubectl -n crossplane-system create secret docker-registry acme-registry-credent
 ## Configuring signature verification
 
 {{<hint "important" >}}
-Signature verification is an alpha feature and needs to be enabled with the
+Signature verification is an alpha feature. Enable it with the
 `--enable-signature-verification` feature flag.
 {{< /hint >}}
 
@@ -117,10 +117,10 @@ Find these options in the
 [API reference]({{<ref "../api/#ImageConfig-spec-verification-cosign">}})
 for the `ImageConfig` resource.
 
-When multiple authorities are provided, the package manager verifies the
+When you provide multiple authorities, the package manager verifies the
 signature against each authority until it finds a valid one. If any of the
 authorities' signatures are valid, the package manager accepts the image.
-Similarly, when multiple identities or attestations are provided, the package
+Similarly, when you provide multiple identities or attestations, the package
 manager verifies until it finds a valid match and fails if none of them matches.
 
 Matching the image reference to the `ImageConfig` works similarly to the pull
@@ -136,8 +136,8 @@ incomplete due to an error.
 #### Example conditions
 
 <!-- vale gitlab.SentenceLength = NO -->
-**Verification skipped:** Signature verification was skipped. There were no
-matching `ImageConfig` with signature verification configuration.
+**Verification skipped:** The controller skipped signature verification. There
+were no matching `ImageConfig` with signature verification configuration.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:38:51Z"
@@ -193,7 +193,7 @@ You can use an `ImageConfig` to pull package images from an alternative location
 such as a private registry. `spec.rewriteImages` specifies how to rewrite the
 paths of matched images.
 
-Only prefix replacement is supported. Specify the replacement prefix in
+Crossplane only supports prefix replacement. Specify the replacement prefix in
 `spec.rewriteImage.prefix`. This replaces the matched prefix from `matchImages`.
 
 For example, the following `ImageConfig` replaces `xpkg.crossplane.io` with
@@ -217,13 +217,14 @@ package manager pulling the provider from
 `registry1.com/crossplane-contrib/provider-nop:v0.4.0`.
 
 Rewriting image paths via `ImageConfig` is useful when mirroring packages to a
-private registry. It allows a package and all its dependencies to be pulled from
+private registry. It allows you to pull a package and all its dependencies from
 the same registry. For example, the provider
 `xpkg.crossplane.io/crossplane-contrib/provider-aws-s3` has a dependency on
 `xpkg.crossplane.io/crossplane-contrib/provider-family-aws`. If you mirror packages to `registry1.com` and install them without an
 `ImageConfig`, the package manager still pulls the dependency from
 `xpkg.crossplane.io`.
-With the preceding `ImageConfig`, the dependency is pulled from `registry1.com`.
+With the preceding `ImageConfig`, the package manager pulls the dependency from
+`registry1.com`.
 
 Rewriting an image path with `ImageConfig` doesn't change `spec.package`.
 Instead, the rewritten path appears in `status.resolvedPackage`.
@@ -289,7 +290,7 @@ event with the reason `ImageConfigSelection`. The event includes the name of the
 selected `ImageConfig` and injected pull secret. Find these events on package
 and package revision resources. The package manager also updates the
 `appliedImageConfigRefs` field in the package status to show the purpose for
-which each `ImageConfig` was selected.
+which it selected each `ImageConfig`.
 
 For example, the following event and status show the selected `ImageConfig`.
 The `ImageConfig` named `acme-packages` provided a pull secret for the

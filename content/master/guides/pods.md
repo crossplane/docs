@@ -320,8 +320,7 @@ Enable leader elections with the `--leader-election` pod argument.
 <!-- vale write-good.TooWordy = NO -->
 <!-- "multiple" -->
 <!-- vale write-good.Passive = NO -->
-<!-- allow "is unsupported" --> 
-Running multiple Crossplane pods without leader election is unsupported.
+Crossplane doesn't support running multiple pods without leader election.
 <!-- vale write-good.Passive = YES -->
 <!-- vale write-good.TooWordy = YES -->
 {{< /hint >}}

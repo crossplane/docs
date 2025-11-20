@@ -158,11 +158,13 @@ spec:
 <!-- vale Microsoft.Headings = YES -->
 
 <!-- vale gitlab.SentenceLength = NO -->
+<!-- vale Microsoft.SentenceLength = NO -->
 The XRD `version` is like the
 [API versioning used by Kubernetes](https://kubernetes.io/docs/reference/using-api/#api-versioning).
-The version shows how mature or stable the API is and increments when changing,
-adding or removing fields in the API.
+The version shows how mature or stable the API is.
+The version increments when changing, adding or removing fields in the API.
 <!-- vale gitlab.SentenceLength = YES -->
+<!-- vale Microsoft.SentenceLength = YES -->
 
 Crossplane doesn't require specific versions or a specific version naming
 convention, but following
@@ -178,9 +180,8 @@ is strongly recommended.
 
 <!-- vale write-good.Passive = NO -->
 <!-- vale write-good.TooWordy = NO -->
-The `schema` defines the names
-of the parameters, the data types of the parameters and which parameters are
-required or optional.
+The `schema` defines the parameter names, their data types, and which
+parameters require values or are optional.
 <!-- vale write-good.Passive = YES -->
 <!-- vale write-good.TooWordy = YES -->
 

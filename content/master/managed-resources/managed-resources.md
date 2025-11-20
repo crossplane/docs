@@ -216,7 +216,7 @@ assigns an availability zone, Crossplane uses that value to populate the
 {{<hint "note" >}}
 <!-- vale write-good.Passive = NO -->
 With [managementPolicies]({{<ref "./managed-resources#managementpolicies" >}}),
-this behavior can be turned off by not including the `LateInitialize` policy in
+you can turn off this behavior by not including the `LateInitialize` policy in
 the `managementPolicies` list.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
@@ -568,9 +568,9 @@ my-rds-instance      True    True     my-custom-name       11m
 
 ### Creation annotations
 
-When an external system like AWS generates nondeterministic resource names it's
-possible for a provider to create a resource but not record that it did. When
-this happens the provider can't manage the resource.
+When an external system like AWS generates nondeterministic resource names, a
+provider might create a resource but not record that it did.
+When this happens, the provider can't manage the resource.
 
 {{<hint "tip">}}
 Crossplane calls resources that a provider creates but doesn't manage _leaked
@@ -630,8 +630,8 @@ the provider it's safe to proceed.
 Anytime an external system generates a resource's name there is a risk the
 provider could leak the resource.
 
-The safest thing for a provider to do when it detects that it might have leaked
-a resource is to stop and wait for human intervention.
+The safest action when a provider detects a potential resource leak is to stop
+and wait for human intervention.
 
 This ensures the provider doesn't create duplicates of the leaked resource.
 Duplicate resources can be costly and dangerous.
@@ -655,10 +655,11 @@ Events:
 Providers use the creation annotations to detect that they might have leaked a
 resource.
 
-Each time a provider reconciles a managed resource it checks the resource's
-creation annotations. If the provider sees a create pending time that's more
-recent than the most recent create succeeded or create failed time, it knows
-that it might have leaked a resource.
+Each time a provider reconciles a managed resource, it checks the resource's
+creation annotations.
+The provider compares the create pending time with the most recent create
+succeeded or create failed time. If the pending time is more recent, the
+provider knows it might have leaked a resource.
 
 {{<hint "note">}}
 Providers don't remove the creation annotations. They use the timestamps to

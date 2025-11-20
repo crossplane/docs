@@ -1,7 +1,7 @@
 ---
 title: Release Cycle
 weight: 308
-description: "When and how Crossplane releases are cut"
+description: "The Crossplane release schedule and process"
 ---
 
 Starting with the v1.10.0 release, Crossplane releases on a quarterly (13
@@ -18,14 +18,17 @@ for nine months.
 
 ### Definition of maintenance
 
-The Crossplane community defines maintenance in that relevant bug fixes that
-merge to the main development branch are eligible for backporting to the
-release branch of any maintained version, and Crossplane cuts patch releases
-appropriately. It's also possible that maintainers merge a fix directly to the
-release branch if no longer applicable on the main development branch.
+The Crossplane community defines maintenance as follows:
+- Relevant bug fixes that merge to the main development branch are eligible for
+  backporting to the release branch of any maintained version
+- Crossplane cuts patch releases appropriately
+- Maintainers may merge a fix directly to the release branch if it's no longer
+  applicable on the main development branch
+
 Maintenance doesn't include any SLA on response time for user support in the
-form of Slack messages or issues, but maintainers and contributors address problems on a best
-effort basis for maintained releases.
+form of Slack messages or issues.
+However, maintainers and contributors address problems on a best effort basis
+for maintained releases.
 
 ### Patch releases
 
@@ -55,19 +58,26 @@ The following stages are the main milestones in a Crossplane release.
 
 ### Active development
 
-During active development, maintainers merge any code that meets the requisite criteria (such as
-passing appropriate tests, approved by a maintainer, etc.) into
-the main development branch. At present, there is no need to formally
-submit an enhancement proposal before the start of the release cycle, but
-Crossplane encourages contributors to open an issue and gather feedback before starting
-work on a major implementation (see [CONTRIBUTING.md] for more information).
+During active development, maintainers merge code that meets the requisite
+criteria into the main development branch.
+This includes code that passes appropriate tests and that a maintainer
+approves.
+
+At present, you don't need to formally submit an enhancement proposal before the
+release cycle starts.
+However, Crossplane encourages contributors to open an issue and gather feedback
+before starting work on a major implementation.
+See [CONTRIBUTING.md] for more information.
 
 ### Feature freeze
 
 During feature freeze, maintainers shouldn't merge new features into the main
-development branch. Maintainers may make bug fixes, documentation changes, and non critical changes. In the case that maintainers deem a new feature essential for a
-release, the Crossplane maintainers weigh the impact of the change and make
-a decision on whether to include it.
+development branch.
+Maintainers may make bug fixes, documentation changes, and non critical changes.
+
+If maintainers deem a new feature essential for a release, the Crossplane
+maintainers weigh the impact of the change.
+They then make a decision on whether to include it.
 
 ### Code freeze
 

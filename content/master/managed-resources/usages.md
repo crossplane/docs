@@ -4,7 +4,7 @@ weight: 30
 state: beta
 alphaVersion: "1.14"
 betaVersion: "1.19"
-description: "Block deletion of in-use resources"
+description: "Block deletion of in use resources"
 ---
 
 A `Usage` indicates a resource is in use. Two main use cases for Usages are
@@ -63,8 +63,8 @@ A {{<hover label="protect" line="2">}}Usage{{</hover>}}
 in use or protected. The 
 {{<hover label="protect" line="11">}}reason{{</hover>}} field defines the reason
 for protection and the {{<hover label="order" line="11">}}by{{</hover>}} field
-defines the using resource. Both fields are optional, but at least one of them
-must be provided.
+defines the using resource. Both fields are optional, but you must provide at
+least one of them.
 <!-- vale write-good.Passive = YES -->
 
 ### Usage for deletion protection
@@ -153,8 +153,9 @@ selectors.
 
 {{<hint "important" >}}
 <!-- vale write-good.Passive = NO -->
-The selectors are resolved only once. If there are more than one matches, a
-random resource is selected from the list of matched resources.
+The controller resolves the selectors only once. If there are more than one
+matches, the controller selects a random resource from the list of matched
+resources.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
@@ -185,9 +186,10 @@ spec:
 
 ### Replay blocked deletion attempt
 
-By default, the deletion of a `Usage` resource doesn't trigger the deletion of
-the resource in use even if there were deletion attempts blocked by the `Usage`.
-Replaying the blocked deletion is possible by setting the
+By default, deleting a `Usage` resource doesn't trigger deletion of the resource
+in use.
+This is true even if there were deletion attempts blocked by the `Usage`.
+You can replay the blocked deletion by setting the
 {{<hover label="replay" line="6">}}replayDeletion{{</hover>}} field to `true`.
 
 ```yaml {label="replay"}
@@ -213,10 +215,11 @@ spec:
 {{<hint "tip" >}}
 
 Replay deletion is useful when the used resource is part of a composition.
-This configuration radically decreases time for the deletion of the used
-resource, hence the composite owning it, by replaying the deletion of the
-used resource right after the using resource disappears instead of waiting
-for the long exponential backoff durations of the Kubernetes garbage collector.
+This configuration radically decreases deletion time for the used resource and
+the composite owning it.
+It replays the deletion of the used resource right after the using resource
+disappears. This avoids waiting for the long exponential backoff durations of
+the Kubernetes garbage collector.
 {{< /hint >}}
 
 ## Usage in a Composition
@@ -232,8 +235,8 @@ resource in the same way as [cross-resource referencing]({{<ref "./managed-resou
 <!-- vale write-good.Passive = NO -->
 When there are multiple resources of same type in a Composition, the
 {{<hover label="composition" line="18">}}Usage{{</hover>}} resource must
-uniquely identify the resource in use or the using one. This could be
-accomplished by using extra labels and combining
+uniquely identify the resource in use or the using one. You can accomplish this
+by using extra labels and combining
 {{<hover label="composition" line="24">}}matchControllerRef{{</hover>}}
 with a `matchLabels` selector. 
 <!-- vale write-good.Passive = YES -->

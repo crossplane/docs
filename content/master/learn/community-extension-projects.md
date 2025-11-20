@@ -5,9 +5,9 @@ weight: 310
 ---
 
 The Crossplane community has built a rich set of
-[Community Extension Projects](https://github.com/crossplane/crossplane/blob/main/GOVERNANCE.md#community-extension-projects)
-for use by Crossplane adopters to extend the usefulness of their Crossplane powered
-control planes. They're all hosted under the
+[Community Extension Projects](https://github.com/crossplane/crossplane/blob/main/GOVERNANCE.md#community-extension-projects).
+Crossplane adopters use these to extend their Crossplane powered control planes.
+They're all hosted under the
 [crossplane-contrib](https://github.com/crossplane-contrib) organization.
 
 <!-- vale write-good.Passive = NO -->
@@ -15,9 +15,9 @@ control planes. They're all hosted under the
 All Community Extension Projects should maintain good project health and adhere to
 the policies stated in the [project governance](https://github.com/crossplane/crossplane/blob/main/GOVERNANCE.md#policies-for-community-extension-projects).
 
-If a project falls out of compliance then the repository is archived and the
-project is removed from this list. All projects on this page should be ready to
-use by Crossplane adopters.
+If a project falls out of compliance, Crossplane maintainers archive the
+repository and remove the project from this list. All projects on this page
+should be ready to use by Crossplane adopters.
 {{< /hint >}}
 <!-- vale write-good.Passive = YES -->
 

@@ -8,8 +8,8 @@ Building Crossplane from the source code gives you complete control over the
 build and installation process.
 
 You build the Crossplane container image and Helm chart directly from the source
-code, push the image to your own registry, and install to your Kubernetes
-cluster.
+code.
+Then push the image to your own registry and install to your Kubernetes cluster.
 
 {{< hint "important" >}}
 Installing Crossplane from source is an advanced installation path for users who
@@ -80,8 +80,8 @@ chart under `_output/bin` and `_output/charts/` respectively.
 ### Push the image to your registry
 
 <!-- vale write-good.Passive = NO -->
-Log in to your registry of choice and push the Crossplane image that was built
-in the previous steps.
+Log in to your registry of choice and push the Crossplane image from the
+previous steps.
 <!-- vale write-good.Passive = YES -->
 
 {{< hint "tip" >}}

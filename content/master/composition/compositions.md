@@ -535,7 +535,7 @@ development kits (SDKs) and templates to help you write a function.
 
 
 <!-- vale write-good.Passive = NO -->
-Here's an example of a tiny, hello world function. This example is written in
+Here's an example of a tiny, hello world function. This example uses
 [Go](https://go.dev).
 <!-- vale write-good.Passive = YES -->
 
@@ -582,8 +582,9 @@ sequenceDiagram
 ```
 
 When you create or update a composite resource that uses composition
-functions Crossplane calls each function in the order they appear in the
-Composition's pipeline. Crossplane calls each function by sending it a gRPC
+functions, Crossplane calls each function in order.
+The order matches how they appear in the Composition's pipeline.
+Crossplane calls each function by sending it a gRPC
 RunFunctionRequest. The function must respond with a gRPC RunFunctionResponse.
 
 {{<hint "tip">}}
@@ -606,16 +607,23 @@ Most composition functions read the observed state of the composite resource,
 and use it to add composed resources to the desired state. This tells Crossplane
 which composed resources it should create or update.
 
-If the function needs __required resources__ to determine the desired state it can
-request any cluster-scoped or namespaced resource Crossplane already has access to, either by
-name or labels through the returned RunFunctionResponse. Crossplane then calls
-the function again including the requested __required resources__ and the
-__context__ returned by the Function itself alongside the same __input__,
-__observed__ and __desired state__ of the previous RunFunctionRequest. Functions
-can iteratively request __required resources__ if needed, but to avoid endlessly
-looping Crossplane limits the number of iterations to 5. Crossplane considers
-the function satisfied as soon as the __required resources__ requests become
-stable, so the Function returns the same exact request two times in a row.
+<!-- vale gitlab.SentenceLength = NO -->
+Functions can request __required resources__ to determine the desired state.
+They can request any cluster-scoped or namespaced resource.
+Crossplane must have access to the resource.
+You can request resources either by name or labels through the returned
+RunFunctionResponse.
+<!-- vale gitlab.SentenceLength = YES -->
+Crossplane then calls the function again with:
+- The requested __required resources__
+- The __context__ returned by the Function
+- The same __input__, __observed__ and __desired state__ from the previous
+  RunFunctionRequest
+Functions can iteratively request __required resources__ if needed.
+To avoid endlessly looping, Crossplane limits the number of iterations to 5.
+Crossplane considers the function satisfied as soon as the __required
+resources__ requests become stable (the function returns the same exact request
+two times in a row).
 Crossplane errors if stability isn't reached after 5 iterations.
 
 {{<hint "tip">}}
@@ -691,12 +699,13 @@ resource from existing.
 Most function SDKs handle copying desired state automatically.
 {{</hint>}}
 
-A function should only add the fields it cares about to the desired state. It
-should add these fields every time Crossplane calls it. If a function adds a
-field to the desired state once, but doesn't add it the next time it's called,
-Crossplane deletes the field. The same is true for composed resources. If a
-function adds a composed resource to the desired state, but doesn't add it the
-next time it's called, Crossplane deletes the composed resource.
+A function should only add the fields it cares about to the desired state.
+It should add these fields every time Crossplane calls it.
+If a function adds a field to the desired state once, but doesn't add it the
+next time, Crossplane deletes the field.
+The same is true for composed resources.
+If a function adds a composed resource to the desired state, but doesn't add
+it the next time, Crossplane deletes the composed resource.
 
 {{<hint "tip">}}
 Crossplane uses
@@ -705,9 +714,8 @@ to apply the desired state returned by a function pipeline. In server side apply
 terminology, the desired state is a _fully specified intent_.
 {{</hint>}}
 
-For example, if all a function wants is to make sure an S3 bucket in region
-`us-east-2` exists, it should add this resource to its desired composed
-resources.
+For example, if a function wants to make sure an S3 bucket exists in region
+`us-east-2`, it should add this resource to its desired composed resources.
 
 ```yaml
 apiVersion: s3.aws.m.upbound.io/v1beta1
