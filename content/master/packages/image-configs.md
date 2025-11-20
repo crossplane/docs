@@ -21,7 +21,7 @@ defaults to `Prefix` and you can omit it.
 When there are multiple `ImageConfigs` matching an image reference, Crossplane
 selects the one with the longest matching prefix. If there are multiple
 `ImageConfigs` with the same longest matching prefix, Crossplane selects one of
-them arbitrarily. Please note that this situation occurs only if there are
+them arbitrarily. This situation occurs only if there are
 overlapping prefixes in the `matchImages` lists of different `ImageConfig`
 resources. Avoid this situation.
 

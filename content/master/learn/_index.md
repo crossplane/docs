@@ -4,7 +4,7 @@ description: Learn more about Crossplane.
 weight: 500
 ---
 
-If you have any questions, please post in [Crossplane Slack][join-crossplane-slack] or [contact the team][contact-us].
+If you have any questions, post in [Crossplane Slack][join-crossplane-slack] or [contact the team][contact-us].
 
 ***Learn more about using Crossplane***
  - [Latest Design Docs](https://github.com/crossplane/crossplane/tree/main/design)

@@ -48,7 +48,7 @@ Events:
   Warning  CannotConnectToProvider  16s (x4 over 46s)  managed/postgresqlserver.database.azure.crossplane.io  cannot get referenced ProviderConfig: ProviderConfig.azure.crossplane.io "default" not found
 ```
 
-> Note that Kubernetes namespaces events, while most Crossplane resources (XRs, etc)
+> Kubernetes namespaces events, while most Crossplane resources (XRs, etc)
 > are cluster scoped. Crossplane emits events for cluster scoped resources to
 > the 'default' namespace.
 
@@ -67,7 +67,7 @@ To get the current Crossplane logs, run the following:
 kubectl -n crossplane-system logs -lapp=crossplane
 ```
 
-> Note that Crossplane emits minimal logs by default - events are typically the best
+> Crossplane emits minimal logs by default - events are typically the best
 > place to look for information about what Crossplane is doing. You may need to
 > restart Crossplane with the `--debug` flag if you can't find what you're
 > looking for.
@@ -114,7 +114,7 @@ spec:
     name: debug-config
 ```
 
-> Note that you can add a reference to a `DeploymentRuntimeConfig` to an already
+> You can add a reference to a `DeploymentRuntimeConfig` to an already
 > installed `Provider` and it updates its `Deployment` accordingly.
 
 ## Pausing Crossplane
@@ -169,7 +169,7 @@ spec:
     name: scale-config
 ```
 
-> Note that you can add a reference to a `DeploymentRuntimeConfig` to an already
+> You can add a reference to a `DeploymentRuntimeConfig` to an already
 > installed `Provider` and it updates its `Deployment` accordingly.
 
 ## Deleting when a resource hangs
@@ -181,7 +181,7 @@ getting deleted.
 
 To deal with this, patch the object to remove its finalizer.
 This allows Kubernetes to delete it.
-Note that this doesn't necessarily delete the external resource that Crossplane
+This doesn't necessarily delete the external resource that Crossplane
 was managing.
 Check your cloud provider's console for any
 lingering resources to clean up.

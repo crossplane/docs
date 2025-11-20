@@ -74,8 +74,8 @@ earthly +multiplatform-build \
   --CROSSPLANE_VERSION=${VERSION}
 ```
 
-Earthly creates the container image locally and saves the binaries and Helm
-chart under `_output/bin` and `_output/charts/` respectively.
+Earthly creates the container image locally and saves the binaries under
+`_output/bin` and the Helm chart under `_output/charts/`.
 
 ### Push the image to your registry
 

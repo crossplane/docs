@@ -319,11 +319,11 @@ that satisfies the constraints.
 
 {{<hint "note" >}}
 This configuration requires the `--enable-dependency-version-upgrades` flag.
-Please see the
+See the
 [configuration options]({{<ref "../get-started/install#customize-the-crossplane-helm-chart">}})
 and
 [feature flags]({{<ref "../get-started/install#feature-flags">}})
-are available in the
+available in the
 [Crossplane Install]({{<ref "../get-started/install">}})
 section for more details.
 {{</hint >}}
@@ -672,7 +672,7 @@ spec:
                 - --enable-external-secret-stores
 ```
 
-Please note that the packages manager uses  `package-runtime` as the name of
+The packages manager uses  `package-runtime` as the name of
 the runtime container. When you use a different container name, the package
 manager introduces it as a sidecar container instead of modifying the
 package runtime container.

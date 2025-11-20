@@ -292,7 +292,7 @@ backward compatible with Crossplane v1.x.
 {{</hint>}}
 
 {{<hint "important">}}
-Before upgrading to Crossplane v2, please ensure all your Packages are using fully
+Before upgrading to Crossplane v2, ensure all your Packages are using fully
 qualified images that explicitly specify a registry (`registry.example.com/repo/package:tag`).
 
 Run `kubectl get pkg` to look for any packages that aren't fully qualified, then

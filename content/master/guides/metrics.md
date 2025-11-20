@@ -8,7 +8,7 @@ Crossplane produces [Prometheus style metrics](https://prometheus.io/docs/introd
 These metrics are essential for helping to identify and resolve potential issues.
 This page offers explanations of all these metrics gathered from Crossplane.
 Understanding these metrics helps you maintain the health and performance of your resources.
-Please note that this document focuses on Crossplane specific metrics and doesn't cover standard Go metrics.
+This document focuses on Crossplane specific metrics and doesn't cover standard Go metrics.
 
 To enable the export of metrics it's necessary to configure the `--set metrics.enabled=true` option in the [helm chart](https://github.com/crossplane/crossplane/blob/main/cluster/charts/crossplane/README.md#configuration).
 ```yaml {label="value",copy-lines="none"}

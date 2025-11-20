@@ -295,11 +295,11 @@ that satisfies the constraints.
 
 {{<hint "note" >}}
 This configuration requires the `--enable-dependency-version-upgrades` flag.
-Please see the
+See the
 [configuration options]({{<ref "../get-started/install#customize-the-crossplane-helm-chart">}})
 and
 [feature flags]({{<ref "../get-started/install#feature-flags">}})
-are available in the
+available in the
 [Crossplane Install]({{<ref "../get-started/install">}})
 section for more details.
 {{</hint >}}

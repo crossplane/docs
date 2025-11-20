@@ -455,8 +455,9 @@ spec:
 Individual resources can use any data written to the in-memory environment.
 
 You can use `CombineFromComposite` and `CombineToComposite` to combine multiple
-values and write the result either to the in-memory environment or the
-Composite resource, respectively.
+values and write the result. Use `CombineFromComposite` to write to the
+in-memory environment. Use `CombineToComposite` to write to the Composite
+resource.
 
 ### Patch an individual resource
 
