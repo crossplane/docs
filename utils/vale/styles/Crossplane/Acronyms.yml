@@ -1,0 +1,96 @@
+extends: conditional
+message: "'%s' has no definition."
+link: https://docs.crossplane.io/contribute/writing-style-guide/#spelling-out-acronyms
+level: suggestion
+ignorecase: false
+# Ensures that the existence of 'first' implies the existence of 'second'.
+first: '\b([A-Z]{3,5})\b'
+second: '(?:\b[A-Z][a-z]+ )+\(([A-Z]{3,5})\)'
+# Based on Microsoft.Acronyms and Google.Acronyms but with cloud-native
+# and technical acronym exceptions appropriate for Crossplane documentation.
+#
+# IMPORTANT: Crossplane-specific acronyms (XRD, CRD, MRD, MRAP, XPKG, CEL)
+# are NOT included in exceptions - they should be properly defined in the docs
+# for readers new to Crossplane.
+#
+# Cloud-native and technical acronyms well-known to Kubernetes audience:
+exceptions:
+  - API
+  - ASP
+  - AWS
+  - CLI
+  - CNCF
+  - CPU
+  - CSS
+  - CSV
+  - CUE  # CUE configuration language
+  - DEBUG
+  - DNS
+  - DOM
+  - DPI
+  - DST  # Daylight Saving Time
+  - EOL  # End of Life
+  - FAQ
+  - GCC
+  - GCP  # Google Cloud Platform
+  - GDB
+  - GET
+  - GHCR  # GitHub Container Registry
+  - GKE  # Google Kubernetes Engine
+  - GPU
+  - GTK
+  - GUI
+  - HTML
+  - HTTP
+  - HTTPS
+  - IAM  # Identity and Access Management (cloud-native concept)
+  - IDE
+  - JAR
+  - JSON
+  - JSX
+  - KCL
+  - LESS
+  - LLDB
+  - NET
+  - NOTE
+  - NOTES  # Helm chart NOTES section
+  - NVDA
+  - OCI  # Open Container Initiative (container registry standard)
+  - OIDC  # OpenID Connect (authentication standard)
+  - OSS
+  - PATH
+  - PDF
+  - PHP
+  - POST
+  - QPS  # Queries Per Second
+  - RAM
+  - RBAC
+  - RDS  # Relational Database Service (AWS)
+  - REPL
+  - REST  # Representational State Transfer
+  - RPC  # Remote Procedure Call
+  - RSA
+  - SCM
+  - SCSS
+  - SDK
+  - SHA  # Secure Hash Algorithm
+  - SLA  # Service Level Agreement
+  - SQL
+  - SSH
+  - SSL
+  - SVG
+  - TBD
+  - TCP
+  - TLS
+  - TODO
+  - TTL  # Time To Live (networking/DNS concept)
+  - URI
+  - URL
+  - USB
+  - UTC  # Coordinated Universal Time
+  - UTF
+  - VPC
+  - XML
+  - XSS
+  - YAML
+  - ZIP
