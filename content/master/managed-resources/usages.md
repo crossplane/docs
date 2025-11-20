@@ -235,7 +235,7 @@ resource in the same way as [cross-resource referencing]({{<ref "./managed-resou
 <!-- vale write-good.Passive = NO -->
 When there are multiple resources of same type in a Composition, the
 {{<hover label="composition" line="18">}}Usage{{</hover>}} resource must
-uniquely identify the resource in use or the using one. You can accomplish this
+uniquely identify the resource in use or the using one. You can do this
 by using extra labels and combining
 {{<hover label="composition" line="24">}}matchControllerRef{{</hover>}}
 with a `matchLabels` selector. 

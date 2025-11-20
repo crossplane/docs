@@ -308,7 +308,7 @@ spec:
 ```
 
 According to the OpenAPIv3 specification, the `required` field is per-object. If
-a schema contains multiple objects the schema may need multiple `required`
+a schema has multiple objects the schema may need multiple `required`
 fields.
 
 This XRD defines two objects:

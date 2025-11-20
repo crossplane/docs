@@ -52,7 +52,7 @@ git checkout v2.0.2
 ```
 {{< /hint >}}
 
-### Determine artifacts destination
+### Choose artifacts destination
 
 <!-- vale gitlab.FutureTense = NO -->
 Identify the registry and version tag where you will push your built

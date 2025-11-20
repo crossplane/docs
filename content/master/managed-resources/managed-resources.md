@@ -297,11 +297,11 @@ management policies.
 
 Crossplane
 {{<hover label="managementPol1" line="4">}}managementPolicies{{</hover>}}
-determine which actions Crossplane can take on a
-managed resource and its corresponding external resource.  
+decide which actions Crossplane can take on a
+managed resource and its corresponding external resource.
 Apply one or more
 {{<hover label="managementPol1" line="4">}}managementPolicies{{</hover>}}
-to a managed resource to determine what permissions
+to a managed resource to decide what permissions
 Crossplane has over the resource.
 
 For example, give Crossplane permission to create and delete an external resource,
@@ -455,7 +455,7 @@ spec:
 <!-- vale on --> 
 
 When a Provider creates a managed resource it may generate resource-specific
-details, like usernames, passwords or connection details like an IP address. 
+details, like usernames, passwords or connection info like an IP address. 
 
 Crossplane stores these details in a Kubernetes Secret object specified by the
 `writeConnectionSecretToRef` values. 
@@ -606,7 +606,7 @@ A provider uses the
 {{<hover label="creation" line="7">}}crossplane.io/external-name{{</hover>}}
 annotation to lookup a managed resource in an external system.
 
-The provider looks up the resource in the external system to determine if it
+The provider looks up the resource in the external system to find if it
 exists, and if it matches the managed resource's desired state. If the provider
 can't find the resource, it creates it.
 
@@ -663,7 +663,7 @@ provider knows it might have leaked a resource.
 
 {{<hint "note">}}
 Providers don't remove the creation annotations. They use the timestamps to
-determine which is most recent. It's normal for a managed resource to have
+find which is most recent. It's normal for a managed resource to have
 multiple creation annotations.
 {{</hint>}}
 
@@ -677,7 +677,7 @@ If a resource has a `cannot determine creation result` error, inspect the
 external system.
 
 Use the timestamp from the `crossplane.io/external-create-pending` annotation to
-determine when the provider might have leaked a resource. Look for resources
+find when the provider might have leaked a resource. Look for resources
 created around this time.
 
 If you find a leaked resource, and it's safe to do so, delete it from the
@@ -696,7 +696,7 @@ would fail if the provider was reconciling an old version of the managed
 resource.
 
 If the provider reconciled an old version with an outdated
-`crossplane.io/external-name` annotation it could mistakenly determine that the
+`crossplane.io/external-name` annotation it could mistakenly find that the
 resource didn't exist. The provider would create a new resource, and leak the
 existing one.
 
@@ -704,7 +704,7 @@ Some external systems have a delay between when a provider creates a resource
 and when the system reports that it exists. The provider uses the most recent
 create succeeded time to account for this delay.
 
-If the provider didn't account for the delay, it could mistakenly determine
+If the provider didn't account for the delay, it could mistakenly find
 that the resource didn't exist. The provider would create a new resource, and
 leak the existing one.
 

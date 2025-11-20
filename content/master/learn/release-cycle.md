@@ -27,7 +27,7 @@ The Crossplane community defines maintenance as follows:
 
 Maintenance doesn't include any SLA on response time for user support in the
 form of Slack messages or issues.
-However, maintainers and contributors address problems on a best effort basis
+However, maintainers and contributors fix problems on a best effort basis
 for maintained releases.
 
 ### Patch releases
@@ -97,7 +97,7 @@ branch with the following exceptions:
 Crossplane releases once a quarter (every 13 weeks). Typically, the release
 happens on the Tuesday of the last week of the quarter, as shown on the
 [community calendar][community calendar]. Keep in mind that the specific date is
-**approximate**. A lot of factors can alter the date slightly, such as code
+**about**. A lot of factors can alter the date slightly, such as code
 reviews, testing, and bug fixing to ensure a quality release.
 
 ## Release process

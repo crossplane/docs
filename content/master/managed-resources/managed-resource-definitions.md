@@ -38,7 +38,7 @@ cluster performance:
 - **Unnecessary resource overhead**: Most users only need a subset of provider
   resources
 
-MRDs address this by allowing providers to ship resource definitions that only
+MRDs solve this by allowing providers to ship resource definitions that only
 become active CRDs when explicitly needed.
 
 <!-- vale Google.Headings = NO -->
@@ -47,7 +47,7 @@ become active CRDs when explicitly needed.
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.HeadingAcronyms = YES -->
 
-An MRD contains the same schema as a CRD but adds two key fields:
+An MRD has the same schema as a CRD but adds two key fields:
 
 - **`connectionDetails`**: Documents what connection secrets the resource
   provides

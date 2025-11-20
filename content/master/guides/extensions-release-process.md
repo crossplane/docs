@@ -40,7 +40,7 @@ process for the core Crossplane software is available in the
 ## Typical workflow
 
 A typical GitHub workflow definition to build and release an extension
-contains the following steps:
+has the following steps:
 
 1. Fetching the source repository
 2. Authenticating to a remote registry

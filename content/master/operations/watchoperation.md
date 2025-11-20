@@ -424,7 +424,7 @@ contract and causes timeout errors.
 
 This pattern allows functions to:
 1. Examine the watched resource (injected automatically)
-2. Dynamically determine what other resources the function needs
+2. Dynamically decide what other resources the function needs
 3. Request those resources consistently using `response.require_resources()`
 4. Process all resources when available, or provide status when waiting
 
@@ -467,7 +467,7 @@ WatchOperations emit events for important activities:
 <!-- vale write-good.TooWordy = YES -->
 
 <!-- vale write-good.TooWordy = NO -->
-Monitor WatchOperations using:
+Watch WatchOperations using:
 <!-- vale write-good.TooWordy = YES -->
 
 ```shell
@@ -501,7 +501,7 @@ kubectl get events --field-selector involvedObject.name=my-watchop
 1. **Implement event filtering** - Check generation, deletion timestamp, 
    and status conditions
    to avoid processing irrelevant changes
-1. **Monitor operation volume** - Popular resources can create numerous 
+1. **Watch operation volume** - Popular resources can create many
    Operations
 <!-- vale write-good.TooWordy = YES -->
 

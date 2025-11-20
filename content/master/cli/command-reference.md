@@ -296,7 +296,7 @@ URL.
 #### NOTES.txt
 <!-- vale Google.Headings = YES -->
 
-If the template repository contains a `NOTES.txt` file in its root directory,
+If the template repository has a `NOTES.txt` file in its root directory,
 the `crossplane xpkg init` command prints its contents to the terminal.
 This happens after populating the directory with the template files.
 This can be useful for providing information about the template.
@@ -305,7 +305,7 @@ This can be useful for providing information about the template.
 #### init.sh
 <!-- vale Google.Headings = YES -->
 
-If the template repository contains an `init.sh` file in its root directory, the
+If the template repository has an `init.sh` file in its root directory, the
 `crossplane xpkg init` command starts a dialog after populating the
 directory with the template files. The dialog prompts the user if they want
 to view or run the script. Use the initialization script to automatically

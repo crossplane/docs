@@ -14,7 +14,7 @@ A `Composition` configures how Crossplane should reconcile a Composite Resource
 what resources Crossplane creates in response. For example,
 you define a `PlatformDB` XR, which represents your organisation's common
 database configuration of an Azure MySQL Server and some firewall rules. The
-`Composition` contains the 'base' configuration for the MySQL server and the
+`Composition` has the 'base' configuration for the MySQL server and the
 firewall rules that the `PlatformDB` configuration extends.
 
 A `Composition` associates with multiple XRs that use it. You might

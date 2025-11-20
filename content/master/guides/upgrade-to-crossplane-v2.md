@@ -119,7 +119,7 @@ The recommended upgrade approach:
 
 ### 1. Prepare for upgrade
 
-Review your cluster for [removed features](#removed-features) and address any
+Review your cluster for [removed features](#removed-features) and fix any
 that you're using. Each removed feature section includes commands to inspect
 your cluster and migration tools to help convert resources.
 

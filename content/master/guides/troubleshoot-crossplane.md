@@ -17,7 +17,7 @@ plugin isn't aware of this change.
 Most Crossplane resources have a `status` section that can represent the current
 state of that particular resource. Running `kubectl describe` against a
 Crossplane resource often gives insightful information about its
-condition. For example, to determine the status of a GCP `CloudSQLInstance`
+condition. For example, to find the status of a GCP `CloudSQLInstance`
 managed resource use `kubectl describe` for the resource.
 
 ```shell {copy-lines="1"}
@@ -119,7 +119,7 @@ spec:
 
 ## Pausing Crossplane
 
-Sometimes it can be useful to pause Crossplane, for example when you encounter a
+Sometimes it can be useful to pause Crossplane, for example when you meet a
 bug.
 Pausing stops Crossplane from actively attempting to manage your resources.
 To pause Crossplane without deleting all its resources, run the

@@ -229,7 +229,7 @@ kubectl -n crossplane-system logs -l pkg.crossplane.io/provider=provider-kuberne
   ...(omitted for brevity)...
 ```
 
-Each change log entry contains rich information about the state of the resource
+Each change log entry has rich information about the state of the resource
 when the change operation occurred. Because each entry is a structured `JSON`
 object, you can filter and query them to find any subset of information that
 interests you:

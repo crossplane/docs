@@ -10,6 +10,9 @@ action:
 # - 'provide' (technical standard: provide credentials, provide configuration)
 # - 'multiple' (technical standard: multiple resources, multiple instances)
 # - 'maintain' (technical standard: maintain software, maintain compatibility)
+# - 'aggregate' (technical term: Kubernetes ClusterRole aggregation)
+# - 'component' (technical term: software component, system component)
+# - 'address' (technical term: IP address, memory address)
 swap:
   "approximate(?:ly)?": about
   abundance: plenty
@@ -24,14 +27,14 @@ swap:
   acquiesce: agree
   acquire: get|buy
   additional: more|extra
-  address: discuss
+  # address: discuss  # EXCLUDED - technical term (IP address, memory address)
   addressees: you
   adjacent to: next to
   adjustment: change
   admissible: allowed
   advantageous: helpful
   advise: tell
-  aggregate: total
+  # aggregate: total  # EXCLUDED - technical term (Kubernetes RBAC aggregation)
   aircraft: plane
   alleviate: ease
   allocate: assign|divide
@@ -52,7 +55,7 @@ swap:
   collaborate: work together
   commence: begin
   compensate: pay
-  component: part
+  # component: part  # EXCLUDED - technical term (software/system component)
   comprise: form|include
   concept: idea
   concerning: about

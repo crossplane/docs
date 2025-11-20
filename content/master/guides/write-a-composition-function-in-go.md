@@ -6,7 +6,7 @@ description: "Build composition functions in Go"
 
 Composition functions (or just functions, for short) are custom programs that
 template Crossplane resources. Crossplane calls composition functions to
-determine what resources it should create when you create a composite resource
+decide what resources it should create when you create a composite resource
 (XR). Read the
 [concepts]({{<ref "../composition/compositions" >}})
 page to learn more about composition functions.
@@ -115,7 +115,7 @@ some other files in the template:
 * `main.go` runs the function. You don't need to edit `main.go`.
 * `Dockerfile` builds the function runtime. You don't need to edit `Dockerfile`.
 * The `input` directory defines the function's input type.
-* The `package` directory contains metadata used to build the function package.
+* The `package` directory has metadata used to build the function package.
 
 {{<hint "tip">}}
 Starting with v1.15 of the Crossplane CLI, `crossplane xpkg init` gives you the
@@ -143,7 +143,7 @@ using the `input` field from a Composition. The
 [composition functions]({{<ref "../composition/compositions/#function-input" >}})
 documentation explains how to pass an input to a composition function.
 
-The `package/input` directory contains an OpenAPI schema generated from the
+The `package/input` directory has an OpenAPI schema generated from the
 structs in the `input` directory.
 
 {{<hint "tip">}}
@@ -165,7 +165,7 @@ go generate ./...
 
 You add your function's logic to the
 {{<hover label="hello-world" line="1">}}RunFunction{{</hover>}}
-method in `fn.go`. When you first open the file it contains a "hello world"
+method in `fn.go`. When you first open the file it has a "hello world"
 function.
 
 ```go {label="hello-world"}
@@ -622,7 +622,7 @@ Expand the following block to see example files.
 You can recreate the output below using by running `crossplane render` with
 these files.
 
-The `xr.yaml` file contains the composite resource to render:
+The `xr.yaml` file has the composite resource to render:
 
 ```yaml
 apiVersion: example.crossplane.io/v1
@@ -639,7 +639,7 @@ spec:
 
 <br />
 
-The `composition.yaml` file contains the Composition to use to render the
+The `composition.yaml` file has the Composition to use to render the
 composite resource:
 
 ```yaml
@@ -660,7 +660,7 @@ spec:
 
 <br />
 
-The `functions.yaml` file contains the Functions the Composition references in
+The `functions.yaml` file has the Functions the Composition references in
 its pipeline steps:
 
 ```yaml
@@ -819,7 +819,7 @@ Use the Crossplane CLI to build a package for each platform. Each package embeds
 a runtime image. 
 
 The {{<hover label="build" line="2">}}--package-root{{</hover>}} flag specifies
-the `package` directory, which contains `crossplane.yaml`. This includes
+the `package` directory, which has `crossplane.yaml`. This includes
 metadata about the package.
 
 The {{<hover label="build" line="3">}}--embed-runtime-image{{</hover>}} flag

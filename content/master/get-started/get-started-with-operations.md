@@ -68,7 +68,7 @@ When you create the `Operation`, Crossplane runs the function pipeline. The
 function checks SSL certificate expiry for google.com and returns the results
 in the operation's output.
 
-This basic example shows the concept. In the walkthrough below, you create
+This basic example shows the idea. In the walkthrough below, you create
 a more realistic `Operation` that reads Kubernetes `Ingress` resources and
 annotates them with certificate expiry information for monitoring tools.
 

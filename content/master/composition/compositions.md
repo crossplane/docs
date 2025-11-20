@@ -74,7 +74,7 @@ A Composition is a pipeline of composition functions.
 
 Composition functions (or just functions, for short) are Crossplane extensions
 that template Crossplane resources. Crossplane calls the composition functions
-to determine what resources it should create when you create a composite
+to decide what resources it should create when you create a composite
 resource (XR).
 
 {{<hint "tip" >}}
@@ -138,7 +138,7 @@ reports `True`.
 
 ### Use a function in a composition
 
-Crossplane calls a Function to determine what resources it should create when
+Crossplane calls a Function to decide what resources it should create when
 you create a composite resource. The Function also tells Crossplane what to do
 with these resources when you update a composite resource.
 
@@ -390,7 +390,7 @@ spec:
 You can recreate the output below by running `crossplane render` with
 these files.
 
-The `xr.yaml` file contains the composite resource to render:
+The `xr.yaml` file has the composite resource to render:
 
 ```yaml
 apiVersion: example.crossplane.io/v1
@@ -401,7 +401,7 @@ spec:
   bucketRegion: us-east-2
 ```
 
-The `composition.yaml` file contains the Composition to use to render the
+The `composition.yaml` file has the Composition to use to render the
 composite resource:
 
 ```yaml
@@ -432,7 +432,7 @@ spec:
           toFieldPath: spec.forProvider.region
 ```
 
-The `functions.yaml` file contains the Functions the Composition references in
+The `functions.yaml` file has the Functions the Composition references in
 its pipeline steps:
 
 ```yaml
@@ -608,7 +608,7 @@ and use it to add composed resources to the desired state. This tells Crossplane
 which composed resources it should create or update.
 
 <!-- vale gitlab.SentenceLength = NO -->
-Functions can request __required resources__ to determine the desired state.
+Functions can request __required resources__ to decide the desired state.
 They can request any cluster-scoped or namespaced resource.
 Crossplane must have access to the resource.
 You can request resources either by name or labels through the returned
@@ -782,7 +782,7 @@ Crossplane v1 called this feature "extra resources." The v2 API
 uses the name "required resources" and adds support for bootstrap requirements.
 {{</hint>}}
 
-Functions can request access to existing Kubernetes resources to help determine
+Functions can request access to existing Kubernetes resources to help decide
 the desired state. Functions use this capability to read configuration from
 ConfigMaps, select the status of other resources, or make decisions based on
 existing cluster state.

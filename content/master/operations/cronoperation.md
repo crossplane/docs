@@ -262,7 +262,7 @@ status:
 
 **Key status fields:**
 - **Conditions**: Standard Crossplane conditions (Synced) and CronOperation-specific conditions:
-  - **Scheduling**: `True` when the CronOperation is actively scheduling operations, `False` when paused or has incorrect schedule syntax
+  - **Scheduling**: `True` when the CronOperation is actively scheduling operations, `False` when paused or has wrong schedule syntax
 - **`lastScheduleTime`**: When the CronOperation last created an Operation
 - **`lastSuccessfulTime`**: When an Operation last completed successfully
 - **`runningOperationRefs`**: Running Operations
@@ -280,7 +280,7 @@ CronOperations emit events for important activities:
 <!-- vale write-good.TooWordy = YES -->
 
 <!-- vale write-good.TooWordy = NO -->
-Monitor CronOperations using:
+Watch CronOperations using:
 <!-- vale write-good.TooWordy = YES -->
 
 ```shell

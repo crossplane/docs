@@ -19,7 +19,7 @@ container installs the core Crossplane
 Configurations. 
 
 {{<hint "tip" >}}
-The Kubernetes documentation contains more information about 
+The Kubernetes documentation has more information about 
 [init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/).
 {{< /hint >}}
 

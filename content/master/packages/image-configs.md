@@ -105,10 +105,10 @@ spec:
 ```
 
 `spec.verification.provider` specifies the signature verification provider.
-The only supported provider is `Cosign`. `spec.verification.cosign` contains the
-configuration for the Cosign provider. The `authorities` field contains the
+The only supported provider is `Cosign`. `spec.verification.cosign` has the
+configuration for the Cosign provider. The `authorities` field has the
 configuration for the authorities that sign the images. The `attestations` field
-contains the configuration for verifying the attestations of the images.
+has the configuration for verifying the attestations of the images.
 
 The `ImageConfig` API follows the same API shape as [Policy Controller](https://docs.sigstore.dev/policy-controller/overview/)
 from [Sigstore](https://docs.sigstore.dev/). Crossplane initially supports a subset of the Policy Controller configuration
