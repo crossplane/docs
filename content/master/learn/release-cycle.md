@@ -27,7 +27,7 @@ The Crossplane community defines maintenance as follows:
 
 Maintenance doesn't include any SLA on response time for user support in the
 form of Slack messages or issues.
-However, maintainers and contributors fix problems on a best effort basis
+Maintainers and contributors fix problems on a best effort basis
 for maintained releases.
 
 ### Patch releases
@@ -65,7 +65,7 @@ approves.
 
 At present, you don't need to formally submit an enhancement proposal before the
 release cycle starts.
-However, Crossplane encourages contributors to open an issue and gather feedback
+Crossplane encourages contributors to open an issue and gather feedback
 before starting work on a major implementation.
 See [CONTRIBUTING.md] for more information.
 

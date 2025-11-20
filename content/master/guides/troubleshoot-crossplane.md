@@ -6,7 +6,7 @@ description: "Debug common Crossplane issues"
 ## Requested resource not found
 
 If you use the Crossplane CLI to install a `Provider` or `Configuration` and
-get `the server could not find the requested resource` error, that usually means
+get `the server could not find the requested resource` error, that means
 your Crossplane CLI needs updating. In other words, Crossplane graduated some
 API from alpha to beta or stable and the old
 plugin isn't aware of this change.

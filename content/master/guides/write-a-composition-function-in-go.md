@@ -428,7 +428,7 @@ This code:
 
 The code uses the `v1beta1.Bucket` type from the [AWS S3 provider](https://github.com/crossplane-contrib/provider-upjet-aws).
 Writing a function in Go has an advantage. You can compose resources using
-strongly typed structs. These are the same structs Crossplane uses in its
+strongly typed structs. The structs are the same structs Crossplane uses in its
 providers.
 
 You must get the AWS Provider Go module to use this type:

@@ -136,7 +136,7 @@ incomplete due to an error.
 #### Example conditions
 
 <!-- vale gitlab.SentenceLength = NO -->
-**Verification skipped:** The controller skipped signature verification. There
+**Verification skipped:** the controller skipped signature verification. There
 were no matching `ImageConfig` with signature verification configuration.
 
 ```yaml
@@ -158,7 +158,7 @@ Image signature verified.
     type: Verified
 ```
 
-**Verification failed:** Signature verification failed for the image.
+**Verification failed:** signature verification failed for the image.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:42:44Z"
@@ -170,7 +170,7 @@ Image signature verified.
     type: Verified
 ```
 
-**Verification incomplete:** An error occurred during signature verification.
+**Verification incomplete:** an error occurred during signature verification.
 
 ```yaml
   - lastTransitionTime: "2024-10-23T16:44:22Z"
@@ -310,7 +310,7 @@ Events:
   Normal   ImageConfigSelection  45s                packages/configuration.pkg.crossplane.io          Selected pullSecret "acme-registry-credentials" from ImageConfig "acme-packages" for registry authentication
 ```
 
-If you can't find the expected event and `appliedImageConfigRefs` entry, check
+If you can't find the expected event and `appliedImageConfigRefs` entry, review
 your configuration. Ensure the prefix of the image reference matches the
 `matchImages` list of any `ImageConfig` resources in the cluster.
 

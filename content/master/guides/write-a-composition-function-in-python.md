@@ -311,7 +311,7 @@ The fields of the generated Python objects behave similarly to builtin Python
 types like dictionaries and lists. Be aware that there are some differences.
 
 Notably, you access the map of observed and desired resources like a dictionary.
-However, you can't add a new desired resource by assigning to a map key.
+You can't add a new desired resource by assigning to a map key.
 Instead, access and mutate the map key as if it already exists.
 
 Instead of adding a new resource like this:

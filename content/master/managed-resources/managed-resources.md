@@ -455,7 +455,7 @@ spec:
 <!-- vale on --> 
 
 When a Provider creates a managed resource it may generate resource-specific
-details, like usernames, passwords or connection info like an IP address. 
+details, like usernames, passwords or connection information like an IP address. 
 
 Crossplane stores these details in a Kubernetes Secret object specified by the
 `writeConnectionSecretToRef` values. 

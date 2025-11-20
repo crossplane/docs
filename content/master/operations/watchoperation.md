@@ -498,10 +498,10 @@ kubectl get events --field-selector involvedObject.name=my-watchop
 ### Event handling
 
 <!-- vale write-good.TooWordy = NO -->
-1. **Implement event filtering** - Check generation, deletion timestamp, 
+1. **Implement event filtering** - Check generation, deletion timestamp,
    and status conditions
    to avoid processing irrelevant changes
-1. **Watch operation volume** - Popular resources can create many
+1. **Watch operation volume** - Popular resources can create a high volume of
    Operations
 <!-- vale write-good.TooWordy = YES -->
 

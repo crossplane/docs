@@ -188,7 +188,8 @@ spec:
 
 By default, deleting a `Usage` resource doesn't trigger deletion of the resource
 in use.
-This is true even if there were deletion attempts blocked by the `Usage`.
+Deleting a `Usage` resource doesn't trigger deletion of the resource in use even
+if there were deletion attempts blocked by the `Usage`.
 You can replay the blocked deletion by setting the
 {{<hover label="replay" line="6">}}replayDeletion{{</hover>}} field to `true`.
 
