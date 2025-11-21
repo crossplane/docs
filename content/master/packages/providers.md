@@ -568,7 +568,7 @@ Reason: ActivePackageRevision
 The Provider is fully installed and ready to use.
 
 {{<hint "tip" >}}
-`Reason: HealthyPackageRevision` is the normal state of a working Provider.
+`Reason: HealthyPackageRevision` is the expected state of a working Provider.
 {{< /hint >}}
 
 <!-- vale Google.Headings = YES -->

@@ -15,9 +15,9 @@ installing Crossplane.
 {{</hint>}}
 
 A `ManagedResourceDefinition` (MRD) is a lightweight abstraction over
-Kubernetes CustomResourceDefinitions (CRDs) that enables selective activation of
+Kubernetes CustomResourceDefinitions (CRDs). It enables selective activation of
 managed resources. MRDs solve the problem of providers installing hundreds of
-CRDs when you only need one or two, reducing API server overhead and improving
+CRDs when you only need one or two. This reduces API server overhead and improves
 cluster performance.
 
 <!-- vale Google.Headings = NO -->
@@ -38,8 +38,8 @@ cluster performance:
 - **Unnecessary resource overhead**: Most users only need a subset of provider
   resources
 
-MRDs solve this by allowing providers to ship resource definitions that only
-become active CRDs when explicitly needed.
+MRDs solve this problem. Providers ship resource definitions that only become
+active CRDs when you need them.
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.HeadingAcronyms = NO -->
@@ -54,9 +54,9 @@ An MRD has the same schema as a CRD but adds two key fields:
 - **`state`**: Controls whether the underlying CRD exists (`Active` or
   `Inactive`)
 
-When an MRD's state is `Inactive`, no CRD exists in the cluster. When
-activated, Crossplane creates the corresponding CRD and the provider can start
-managing instances of that resource.
+When an MRD's state is `Inactive`, no CRD exists in the cluster. When you
+activate it, Crossplane creates the corresponding CRD. The provider can then
+start managing instances of that resource.
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1alpha1

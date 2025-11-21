@@ -353,7 +353,9 @@ status:
 <!-- vale Microsoft.HeadingAcronyms = YES -->
 <!-- vale Google.Headings = YES -->
 
+<!-- vale Microsoft.Accessibility = NO -->
 ### Healthy condition
+<!-- vale Microsoft.Accessibility = YES -->
 
 - **`Healthy: True, Reason: Running`**: MRAP works
 - **`Healthy: Unknown, Reason: EncounteredErrors`**: Some MRDs failed to
@@ -429,7 +431,7 @@ kubectl describe mrap <name>
 
 **Symptoms**: more resources are active than expected
 
-**Cause**: multiple MRAPs with overlapping patterns (this is normal behavior)
+**Cause**: multiple MRAPs with overlapping patterns (this behavior is by design)
 
 **Solution**: review all MRAP patterns to understand which policies are
 activating which resources

@@ -57,10 +57,15 @@ key-value
 kube-apiserver
 kubeconfig
 kube-controller-manager
+KCL
 kubectl
 kv
 KV
 macOS
+MRAP
+MRD
+XRD
+XPKG
 main.go
 metrics-server
 MiB

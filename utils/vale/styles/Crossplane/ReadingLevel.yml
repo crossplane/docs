@@ -1,0 +1,14 @@
+---
+# Suggestion: Crossplane.ReadingLevel
+#
+# Checks the Flesch-Kincaid reading level for technical documentation.
+# Uses a higher threshold (12.5) appropriate for developer-focused content.
+#
+# Based on gitlab.ReadingLevel but adjusted for technical audience.
+extends: metric
+message: "The grade level is %s. Aim for 12.5 or lower by using shorter sentences and simpler words."
+link: https://docs.crossplane.io/contribute/writing-style-guide/
+level: suggestion
+formula: |
+  (0.39 * (words / sentences)) + (11.8 * (syllables / words)) - 15.59
+condition: "> 12.5"

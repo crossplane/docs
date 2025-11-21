@@ -16,13 +16,13 @@ which Crossplane v2.0+ enables by default. To disable this behavior, set
 Crossplane.
 {{</hint>}}
 
-Large Crossplane providers can install 100+ managed resource CRDs, consuming
-significant cluster resources even when you only need one or two resource
-types. This guide shows how to use
+Large Crossplane providers can install 100+ managed resource CRDs. This
+consumes significant cluster resources even when you only need one or two
+resource types. This guide shows how to use
 [ManagedResourceDefinitions]({{<ref "../managed-resources/managed-resource-definitions">}})
 and
 [ManagedResourceActivationPolicies]({{<ref "../managed-resources/managed-resource-activation-policies">}})
-to install only the provider resources you actually need.
+to install only the provider resources you need.
 
 ## Before you begin
 
@@ -56,7 +56,7 @@ lets you install just what you need.
 
 ## Step 1: Disable automatic activation
 
-By default, the Crossplane Helm chart creates an activation policy that
+The Crossplane Helm chart creates an activation policy by default. This policy
 enables all provider resources. To use selective activation, disable this
 default behavior.
 
@@ -83,7 +83,7 @@ kubectl delete managedresourceactivationpolicy default
 
 ## Step 2: Install your provider
 
-Install your provider as normal. Crossplane automatically converts the
+Install your provider as usual. Crossplane automatically converts the
 provider's CRDs to ManagedResourceDefinitions:
 
 ```yaml
@@ -107,8 +107,8 @@ kubectl wait --for=condition=Healthy provider/provider-aws-ec2 --timeout=5m
 ## Step 3: Verify Crossplane created MRDs
 
 <!-- vale Google.WordList = NO -->
-After the provider installs, check ManagedResourceDefinitions that Crossplane
-created in inactive state:
+After the provider installs, check the ManagedResourceDefinitions. Crossplane
+creates them in an inactive state:
 <!-- vale Google.WordList = YES -->
 
 ```shell
@@ -199,8 +199,8 @@ kubectl get mrds | wc -l
 # 200 total MRDs (3 active, 197 inactive)
 ```
 
-The selective activation provides massive resource savings while maintaining
-full capability for the resources you actually use.
+Selective activation provides massive resource savings. It maintains full
+capability for the resources you use.
 
 ## Next steps
 

@@ -204,8 +204,8 @@ you delete the resource object from Kubernetes.
 
 #### Late initialization
 
-Crossplane treats the managed resource as the source of truth by default;
-it expects to have all values under `spec.forProvider` including the
+Crossplane treats the managed resource as the source of truth by default.
+It expects to have all values under `spec.forProvider` including the
 optional ones. If not provided, Crossplane populates the empty fields with
 the values assigned by the provider. For example, consider fields such as
 `region` and `availabilityZone`. You might specify only the region and let the
@@ -663,7 +663,7 @@ provider knows it might have leaked a resource.
 
 {{<hint "note">}}
 Providers don't remove the creation annotations. They use the timestamps to
-find which is most recent. It's normal for a managed resource to have
+find which is most recent. It's typical for a managed resource to have
 multiple creation annotations.
 {{</hint>}}
 

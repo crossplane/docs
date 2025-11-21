@@ -57,5 +57,5 @@ prometheus.io/scrape: "true"
 | {{<hover label="upjet_resource_ttr_bucket" line="29">}}upjet_resource_ttr_bucket{{</hover>}} | Measures in seconds the `time-to-readiness` `(TTR)` for managed resources |  |
 | {{<hover label="circuit_breaker_opens_total" line="30">}}circuit_breaker_opens_total{{</hover>}} | Total number of times the XR watch circuit breaker opened |  |
 | {{<hover label="circuit_breaker_closes_total" line="31">}}circuit_breaker_closes_total{{</hover>}} | Total number of times the XR watch circuit breaker closed again |  |
-| {{<hover label="circuit_breaker_events_total" line="32">}}circuit_breaker_events_total{{</hover>}} | Total number of watched events handled by the XR circuit breaker | Labeled by outcome (`Allowed`, `HalfOpenAllowed`, `Dropped`); deletion events skip the breaker. |
+| {{<hover label="circuit_breaker_events_total" line="32">}}circuit_breaker_events_total{{</hover>}} | Total number of watched events handled by the XR circuit breaker | Labeled by outcome (`Allowed`, `HalfOpenAllowed`, `Dropped`). Deletion events skip the breaker. |
 {{</table >}}

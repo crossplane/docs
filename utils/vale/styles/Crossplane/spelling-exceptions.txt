@@ -1,4 +1,8 @@
+against
+allow
+allows
 backporting
+beta
 built-in
 call-outs
 ClusterRoles`
@@ -15,6 +19,7 @@ dry-run
 dual-pushes
 e.g.
 end-points
+ensure
 end-to-end
 event-driven
 free-form
@@ -69,6 +74,7 @@ resource-specific
 right-hand
 run-time
 safe-start
+sample
 schema-only
 self-service
 self-signed

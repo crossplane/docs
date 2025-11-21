@@ -54,7 +54,7 @@ bash netlify_build.sh
 vale --config="./utils/vale/.vale.ini" content/master/path/to/file.md
 
 # Lint all changed files (what CI does)
-vale --config="./utils/vale/.vale.ini" $(git diff --name-only main...HEAD | grep "^content/")
+vale --config="./utils/vale/.vale.ini" $(git diff --name-only master...HEAD | grep "^content/")
 ```
 
 Vale checks against multiple style guides (alex, Google, Microsoft, proselint, write-good, Crossplane, gitlab).

@@ -8,16 +8,16 @@ description: Run function pipelines on resource changes
 
 A `WatchOperation` creates [Operations]({{<ref "operation">}}) when watched
 Kubernetes resources change. Use WatchOperations for reactive operational
-workflows such as backing up databases before deletion, validating
+workflows. Examples include backing up databases before deletion, validating
 configurations after updates, or triggering alerts when resources fail.
 
 <!-- vale Google.Headings = NO -->
 ## How WatchOperations work
 <!-- vale Google.Headings = YES -->
 
-WatchOperations watch specific Kubernetes resources and create new Operations
+WatchOperations watch specific Kubernetes resources. They create new Operations
 whenever those resources change. The changed resource is automatically injected
-into the Operation for the function to process.
+into the Operation. The function can then process it.
 
 ```yaml
 apiVersion: ops.crossplane.io/v1alpha1
@@ -116,10 +116,10 @@ spec:
 ## Resource injection
 
 <!-- vale write-good.TooWordy = NO -->
-When a WatchOperation creates an Operation, it automatically injects the changed
-resource using the special requirement name
-`ops.crossplane.io/watched-resource`. Functions can access this resource without
-explicitly requesting it.
+WatchOperations automatically inject the changed resource when they create an
+Operation. They use the special requirement name
+`ops.crossplane.io/watched-resource`. Functions can access this resource. They
+don't need to explicitly request it.
 <!-- vale write-good.TooWordy = YES -->
 
 For example, when a ConfigMap with label `validate: "true"` changes, the 
@@ -324,8 +324,8 @@ spec:
 
 ### Cross-resource workflows
 
-WatchOperations can watch one resource type and dynamically fetch related 
-resources. Here's a WatchOperation that watches Ingresses and manages 
+WatchOperations can watch one resource type. They can also dynamically fetch
+related resources. Here's a WatchOperation that watches Ingresses. It manages
 certificates:
 
 ```yaml
@@ -499,10 +499,9 @@ kubectl get events --field-selector involvedObject.name=my-watchop
 
 <!-- vale write-good.TooWordy = NO -->
 1. **Implement event filtering** - Check generation, deletion timestamp,
-   and status conditions
-   to avoid processing irrelevant changes
+   and status conditions. This avoids processing irrelevant changes.
 1. **Watch operation volume** - Popular resources can create a high volume of
-   Operations
+   Operations.
 <!-- vale write-good.TooWordy = YES -->
 
 ### Concurrency policies
@@ -536,8 +535,8 @@ spec:
 ### Watched resource injection
 
 <!-- vale write-good.TooWordy = NO -->
-WatchOperations automatically inject the changed resource into the created 
-Operation using a special requirement name 
+WatchOperations automatically inject the changed resource into the created
+Operation. They use a special requirement name called
 `ops.crossplane.io/watched-resource`:
 <!-- vale write-good.TooWordy = YES -->
 
