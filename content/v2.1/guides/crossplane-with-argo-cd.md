@@ -112,7 +112,6 @@ data:
             if condition.status == "True" then
               health_status.status = "Healthy"
               health_status.message = "Resource is up-to-date."
-              return health_status
             end
           end
         end
@@ -179,7 +178,6 @@ data:
             if condition.status == "True" then
               health_status.status = "Healthy"
               health_status.message = "Resource is up-to-date."
-              return health_status
             end
           end
         end
