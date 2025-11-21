@@ -1680,7 +1680,7 @@ patches:
 
 #### Replace
 
-The `type: Replace` replaces all occurrences of the `search` string with the `replace` string. If `replace` is an empty string, then the `search` string is removed.
+The `type: Replace` replaces all occurrences of the `search` string with the `replace` string. If `replace` is an empty string, it removes the `search` string.
 
 
 ```yaml {label="typeReplace"}
