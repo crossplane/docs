@@ -42,7 +42,7 @@ enabled for each provider through the use of a `DeploymentRuntimeConfig`.
 
 To enable change logs for a provider, use a `DeploymentRuntimeConfig` to
 configure each provider pod that should start producing change logs. The
-`DeploymentRuntimeConfig` has several important configuration details:
+`DeploymentRuntimeConfig` has important configuration details:
 
 1. A command line argument to the provider container that enables the change
    logs feature, for example `--enable-changelogs`.

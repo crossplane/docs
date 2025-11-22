@@ -844,7 +844,7 @@ crossplane xpkg build \
 ```
 
 {{<hint "tip">}}
-Crossplane packages are special OCI images. Read more about packages in the
+Crossplane packages are OCI images. Read more about packages in the
 [packages documentation]({{< ref "../packages/configurations" >}}).
 {{</hint>}}
 

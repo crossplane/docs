@@ -52,9 +52,7 @@ describes enabling feature flags like
 with Helm.
 {{< /hint >}}
 
-<!-- vale Google.Headings = NO -->
 ## Create a usage
-<!-- vale Google.Headings = YES -->
 
 <!-- vale write-good.Passive = NO -->
 A {{<hover label="protect" line="2">}}Usage{{</hover>}}
@@ -274,9 +272,7 @@ spec:
       name: my-prometheus-chart
 ```
 
-<!-- vale Google.Headings = NO -->
 ## ClusterUsages
-<!-- vale Google.Headings = YES -->
 
 Use a `ClusterUsage` to protect cluster scoped resources.
 

@@ -61,11 +61,7 @@ spec:
 Crossplane installs the Compositions, Composite Resource Definitions and
 Providers listed in the Configuration.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### Install with Helm
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Crossplane supports installing Configurations during an initial Crossplane
 installation with the Crossplane Helm chart.
@@ -313,11 +309,7 @@ controllers to reconcile them.
 3) Changes in the CRD storage version, which may prevent package version update.
 {{</hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 #### Ignore Crossplane version requirements
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 A Configuration package may require a specific or minimum Crossplane version
 before installing. By default, Crossplane doesn't install a Configuration if
@@ -424,9 +416,7 @@ for package requirements when building packages with third-party tools.
 A Configuration package requires a `crossplane.yaml` file and may include
 Composition and CompositeResourceDefinition files.
 
-<!-- vale Google.Headings = NO -->
 ### The crossplane.yaml file
-<!-- vale Google.Headings = YES -->
 
 To build a Configuration package using the Crossplane CLI, create a file
 named

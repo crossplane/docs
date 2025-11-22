@@ -16,11 +16,7 @@ with those running in a Kubernetes cluster (GitOps). Argo CD has different ways 
 how it tracks resources. With Crossplane, you need to configure Argo CD
 to use Annotation based resource tracking. See the [Argo CD docs](https://argo-cd.readthedocs.io/en/latest/user-guide/resource_tracking/) for additional detail.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Configuring Argo CD with Crossplane
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 #### Set resource tracking method
 
@@ -212,11 +208,7 @@ data:
 
 The use of `"*"` as apiGroups enables the mechanism for all Crossplane Providers.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 #### Increase Kubernetes client QPS
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 As the number of CRDs grow on a control plane, Argo CD Application Controller
 needs to send more queries to the Kubernetes API.

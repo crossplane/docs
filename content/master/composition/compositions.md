@@ -535,7 +535,7 @@ development kits (SDKs) and templates to help you write a function.
 
 
 <!-- vale write-good.Passive = NO -->
-Here's an example of a tiny, hello world function. This example uses
+Here's an example of a basic hello world function. This example uses
 [Go](https://go.dev).
 <!-- vale write-good.Passive = YES -->
 
@@ -600,8 +600,10 @@ things in the RunFunctionRequest.
 1. The function's __input__.
 1. The function pipeline's __context__.
 
+<!-- vale Vale.Terms = NO -->
 A function's main job is to update the __desired state__ and return it to
 Crossplane. It does this by returning a RunFunctionResponse.
+<!-- vale Vale.Terms = YES -->
 
 Most composition functions read the observed state of the composite resource,
 and use it to add composed resources to the desired state. This tells Crossplane
@@ -938,15 +940,19 @@ spec:
 ```
 
 {{<hint "tip">}}
+<!-- vale Vale.Terms = NO -->
 Use bootstrap requirements when possible for better performance. Dynamic requests
 require more function calls and work best when the
 required resources depend on the observed state or earlier function results.
+<!-- vale Vale.Terms = YES -->
 {{</hint>}}
 
 Functions can request resources by:
+<!-- vale Vale.Terms = NO -->
 - **Name**: `name: "my-configmap"` for a specific resource
 - **Labels**: `matchLabels: {"env": "prod"}` for multiple resources
 - **Namespace**: Include `namespace: "production"` for namespaced resources
+<!-- vale Vale.Terms = YES -->
 
 Crossplane limits dynamic resource requests to 5 iterations to prevent infinite
 loops. The function signals completion by returning the same resource requirements

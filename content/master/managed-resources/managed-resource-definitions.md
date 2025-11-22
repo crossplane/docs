@@ -20,11 +20,7 @@ managed resources. MRDs solve the problem of providers installing hundreds of
 CRDs when you only need one or two. This reduces API server overhead and improves
 cluster performance.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## The CRD scaling problem
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 Large Crossplane providers can install 100+ managed resource CRDs. Each CRD
 consumes about 3 MiB of API server memory and creates API endpoints that affect
@@ -41,11 +37,7 @@ cluster performance:
 MRDs solve this problem. Providers ship resource definitions that only become
 active CRDs when you need them.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## How MRDs work
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 An MRD has the same schema as a CRD but adds two key fields:
 
@@ -104,11 +96,7 @@ spec:
 - **One-way state transition**: MRDs can go from `Inactive` to `Active` but not
   back
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## MRD states
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 ### Inactive state
 
@@ -175,17 +163,9 @@ is available for future implementation.
 <!-- vale write-good.Passive = YES -->
 {{</hint>}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## Working with MRDs
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Viewing MRDs
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 List all MRDs in your cluster:
 
@@ -199,11 +179,7 @@ View MRD details:
 kubectl describe mrd buckets.s3.aws.m.crossplane.io
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Checking MRD status
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 MRDs provide status information about their lifecycle:
 
@@ -228,11 +204,7 @@ status:
 - **`Healthy: Unknown, Reason: EncounteredErrors`**: MRD controller
   experiencing issues
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Manually activating MRDs
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 You can manually activate an MRD by changing its state:
 
@@ -279,17 +251,9 @@ capability.
 - Full resource overhead like traditional providers
 
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## Troubleshooting MRDs
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### MRD exists but no CRD appears
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 <!-- vale Google.Colons = NO -->
 **Symptoms**: MRD is present but `kubectl get <resource>` shows "no
@@ -310,11 +274,7 @@ kubectl get mrd <name> -o jsonpath='{.spec.state}'
 kubectl patch mrd <name> --type='merge' -p='{"spec":{"state":"Active"}}'
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### MRD activation fails
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 <!-- vale Google.Colons = NO -->
 **Symptoms**: MRD state is `Active` but `Established` condition remains `False`

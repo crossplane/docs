@@ -30,11 +30,7 @@ Crossplane XRDs are like
 XRDs require fewer fields and add options related to Crossplane, like connection
 secrets.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## Creating a CompositeResourceDefinition
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Creating a CompositeResourceDefinition consists of:
 * [Defining a custom API group](#xrd-groups).
@@ -94,11 +90,7 @@ recreate the XRD to change the
 {{<hover label="xrd1" line="7">}}names{{</hover>}}.
 {{</hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### XRD groups
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Groups define a collection of related API endpoints. The `group` can be any
 value, but common convention is to map to a fully qualified domain name.
@@ -108,11 +100,7 @@ Many XRDs may use the same `group` to create a logical collection of APIs.
 <!-- vale write-good.Weasel = YES -->
 For example a `database` group may have a `relational` and `nosql` kinds.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### XRD names
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 The `names` field defines how to refer to this specific XRD.
 The required name fields are:
@@ -151,11 +139,7 @@ spec:
 ```
 {{</hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### XRD versions
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 <!-- vale gitlab.SentenceLength = NO -->
 <!-- vale Microsoft.SentenceLength = NO -->
@@ -257,7 +241,7 @@ the Swagger documentation provides a list of examples using data types and input
 restrictions.
 
 The Kubernetes documentation lists
-[the set of special restrictions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation)
+[the set of specific restrictions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation)
 on what your OpenAPIv3 custom API can use.
 {{< /hint >}}
 
@@ -431,14 +415,12 @@ Breaking schema changes between versions requires the use of [conversion webhook
 New versions may define new optional parameters, but new required fields are
 a "breaking change."
 
-<!-- vale Crossplane.Spelling = NO -->
 <!-- ignore to allow for CRDs -->
 <!-- don't add to the spelling exceptions to catch when it's used instead of XRD -->
 Crossplane XRDs use Kubernetes custom resource definitions for versioning.
 Read the Kubernetes documentation on
 [versions in CustomResourceDefinitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/)
 for more background on versions and breaking changes.
-<!-- vale Crossplane.Spelling = YES -->
 
 Crossplane recommends implementing breaking schema changes as brand new XRDs.
 {{< /hint >}}
@@ -497,11 +479,7 @@ spec:
 Changing or expanding the XRD schema requires restarting the [Crossplane pod]({{<ref "../guides/pods#crossplane-pod">}}) to take effect.
 {{< /hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### XRD scope
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 The {{<hover label="xrdscope" line="6">}}scope{{</hover>}} field determines
 whether composite resources created from this XRD exist in a namespace or
@@ -535,9 +513,7 @@ for platform level resources like RBAC or cluster configuration.
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources.
 
-<!-- vale off -->
 #### defaultCompositionRef
-<!-- vale on -->
 It's possible for multiple [Compositions]({{<ref "./compositions">}}) to
 reference the same XRD. If more than one Composition references the same XRD,
 the composite resource must select which Composition to use.
@@ -564,9 +540,7 @@ spec:
   # Removed for brevity
 ```
 
-<!-- vale off -->
 #### defaultCompositionUpdatePolicy
-<!-- vale on -->
 
 Changes to a Composition generate a new Composition revision. By default all
 composite resources use the updated Composition revision.
@@ -594,9 +568,7 @@ spec:
   # Removed for brevity
 ```
 
-<!-- vale off -->
 #### enforcedCompositionRef
-<!-- vale on -->
 To require all composite resources to use a specific Composition use the
 `enforcedCompositionRef` setting in the XRD.
 
@@ -621,11 +593,7 @@ spec:
   # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## Verify a CompositeResourceDefinition
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Verify an XRD with `kubectl get compositeresourcedefinition` or the short form,
 {{<hover label="getxrd" line="1">}}kubectl get xrd{{</hover>}}.
@@ -639,11 +607,7 @@ xdatabases.custom-api.example.org   True          True      22m
 The `ESTABLISHED` field indicates Crossplane installed the Kubernetes custom
 resource definition for this XRD.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### XRD conditions
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 Crossplane uses a standard set of `Conditions` for XRDs.
 View the conditions of a XRD under their `Status` with
 `kubectl describe xrd`.
@@ -662,9 +626,7 @@ Status:
 # Removed for brevity
 ```
 
-<!-- vale off -->
 #### WatchingCompositeResource
-<!-- vale on -->
 `Reason: WatchingCompositeResource` indicates Crossplane defined the new
 Kubernetes custom resource definitions related to the composite resource and is
 watching for the creation of new composite resources.
@@ -675,9 +637,7 @@ Status: True
 Reason: WatchingCompositeResource
 ```
 
-<!-- vale off -->
 #### TerminatingCompositeResource
-<!-- vale on -->
 `Reason: TerminatingCompositeResource` indicates Crossplane is deleting the
 custom resource definitions related to the composite resource and is
 terminating the composite resource controller.

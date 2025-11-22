@@ -608,9 +608,7 @@ data:
 {{< /expand >}}
 {{< /hint >}}
 
-<!-- vale Google.Headings = NO -->
 ### FromCompositeFieldPath
-<!-- vale Google.Headings = YES -->
 
 The `FromCompositeFieldPath` patch takes a value in a composite resource and
 applies it to a field in the composed resource.
@@ -655,9 +653,7 @@ Spec:
     Region:  eu-north-1
 ```
 
-<!-- vale Google.Headings = NO -->
 ### ToCompositeFieldPath
-<!-- vale Google.Headings = YES -->
 
 The `ToCompositeFieldPath` writes data from an individual composed resource to
 the composite resource that created it.
@@ -714,9 +710,7 @@ Status:
   Hosted Zone Id: Z2O1EMRO9K5GLX
 ```
 
-<!-- vale Google.Headings = NO -->
 ### CombineFromComposite
-<!-- vale Google.Headings = YES -->
 
 The `CombineFromComposite` patch takes values from the composite resource,
 combines them and applies them to the composed resource.
@@ -773,9 +767,7 @@ $ kubectl describe bucket
 Name:         my-resource-eu-north-1-field2-text
 ```
 
-<!-- vale Google.Headings = NO -->
 ### CombineToComposite
-<!-- vale Google.Headings = YES -->
 
 The `CombineToComposite` patch takes values from the composed resource, combines
 them and applies them to the composite resource.
@@ -842,9 +834,7 @@ Status:
   URL:                     https://my-example-bjdjw-r6ncd.us-east-2.com
 ```
 
-<!-- vale Google.Headings = NO -->
 ### FromEnvironmentFieldPath
-<!-- vale Google.Headings = YES -->
 
 The `FromEnvironmentFieldPath` patch takes values from the in-memory environment
 and applies them to the composed resource.
@@ -886,9 +876,7 @@ Spec:
   # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
 ### ToEnvironmentFieldPath
-<!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
@@ -928,9 +916,7 @@ Because the environment is in-memory, there is no command to confirm the patch
 wrote the value to the environment.
 
 
-<!-- vale Google.Headings = NO -->
 ### CombineFromEnvironment
-<!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
@@ -996,9 +982,7 @@ Annotations:  EnvironmentPatch: value1-value2
 # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
 ### CombineToEnvironment
-<!-- vale Google.Headings = YES -->
 
 {{<hint "important" >}}
 For more information about using an EnvironmentConfig, read the
@@ -1437,9 +1421,7 @@ patches:
           ...
 ```
 
-<!-- vale Google.Headings = NO -->
 #### clampMin
-<!-- vale Google.Headings = YES -->
 
 The `type: clampMin` uses a defined minimum value if an input is larger than the
 `type: clampMin` value.
@@ -1461,9 +1443,7 @@ patches:
           clampMin: 20
 ```
 
-<!-- vale Google.Headings = NO -->
 #### clampMax
-<!-- vale Google.Headings = YES -->
 
 The `type: clampMax` uses a defined minimum value if an input is larger than the
 `type: clampMax` value.
@@ -1485,9 +1465,7 @@ patches:
           clampMax: 5
 ```
 
-<!-- vale Google.Headings = NO -->
 #### Multiply
-<!-- vale Google.Headings = YES -->
 
 The `type: multiply` multiplies the input by the `multiply` value.
 
@@ -1662,9 +1640,7 @@ Crossplane supports two types of patch policies:
 * `fromFieldPath`
 * `toFieldPath`
 
-<!-- vale Google.Headings = NO -->
 ### fromFieldPath policy
-<!-- vale Google.Headings = YES -->
 
 Using a `fromFieldPath: Required` policy on a patch requires the `fromFieldPath`
 to exist in the data source resource.
@@ -1690,9 +1666,7 @@ patches:
       fromFieldPath: Required
 ```
 
-<!-- vale Google.Headings = NO -->
 ### toFieldPath policy
-<!-- vale Google.Headings = YES -->
 
 By default when applying a patch the function replaces the destination data. Use
 `toFieldPath` to allow patches to merge arrays and objects without overwriting

@@ -60,9 +60,7 @@ spec:
             })
 ```
 
-<!-- vale Crossplane.Spelling = NO -->
 **The `Operation` runs once to completion, like a Kubernetes `Job`.**
-<!-- vale Crossplane.Spelling = YES -->
 
 When you create the `Operation`, Crossplane runs the function pipeline. The
 function checks SSL certificate expiry for google.com and returns the results

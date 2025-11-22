@@ -4,16 +4,16 @@ weight: 80
 description: "Build pipelines for Crossplane extensions"
 ---
 
-<!-- vale Google.Headings = NO -->
 ## Distributing Crossplane extensions
-<!-- vale Google.Headings = YES -->
 
 Crossplane provides a packaging specification for extending a Crossplane
 instance with APIs and business logic for composing resources.
 
+<!-- vale Vale.Terms = NO -->
 Building a Crossplane extension involves creating OCI images in the [xpkg]
 format. Authors and maintainers of Crossplane extensions must push their
 packages to an OCI registry before users can reference and use them.
+<!-- vale Vale.Terms = YES -->
 
 The release process for Crossplane extensions grew organically in the community
 and developed its own conventions and common configurations. Authors of these
@@ -22,6 +22,7 @@ and pushing their packages as part of their git workflow.
 
 This guide provides step-by-step instructions for configuring automated CI
 pipelines in GitHub Actions.
+<!-- vale Vale.Terms = NO -->
 These pipelines push your Crossplane extensions to `xpkg.crossplane.io`, the
 main registry that the Crossplane community
 uses today.
@@ -30,6 +31,7 @@ uses today.
 For more information about Crossplane packages, review the
 [xpkg concepts]({{<ref "../packages" >}}).
 {{< /hint >}}
+<!-- vale Vale.Terms = YES -->
 
 {{< hint "note" >}}
 This guide focuses on building and releasing Crossplane extensions. The release
@@ -134,6 +136,7 @@ Typically, users configure them as [GitHub Actions Secrets], and the workflow
 performs authentication via the`docker/login-action`
 [action](http://github.com/docker/login-action).
 
+<!-- vale Vale.Terms = NO -->
 For example, adding the following step to a pipeline authenticates
 the job to `ghcr.io` using the workflow's ephemeral GitHub OIDC token.
 
@@ -152,6 +155,7 @@ to `ghcr.io`. Permissions are configurable in the GitHub repository's settings
 or declared
 [explicitly](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token)
 in the workflow definition YAML file.
+<!-- vale Vale.Terms = YES -->
 
 Writing packages requires a `permissions` block with `packages: write` if it
 isn't configured elsewhere for the repository.

@@ -51,11 +51,7 @@ and subject to beta API constraints (or lack thereof).
 
 All beta features should have an issue tracking their graduation to GA.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## GA features
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.HeadingAcronyms = YES -->
 
 GA features are always enabled - you can't disable them. API types pertaining
 to GA features use `vN` style API versions, like `v1`. GA features are widely

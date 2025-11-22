@@ -1,0 +1,11 @@
+# Forbidden terms for Crossplane documentation
+# Each term on a new line (supports regex patterns)
+# These terms will be flagged by Vale.Avoid rule
+
+# Deprecated terminology
+# (Add deprecated terms here as they are identified)
+
+# Marketing jargon (duplicates from CorporateSpeak.yml are OK)
+synergize
+leverage\s+
+circle\s+back

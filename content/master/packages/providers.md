@@ -84,11 +84,7 @@ spec:
 ```
 {{</hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### Install with Helm
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Crossplane supports installing Providers during an initial Crossplane
 installation with the Crossplane Helm chart.
@@ -337,11 +333,7 @@ controllers to reconcile them.
 3) Changes in the CRD storage version, which may prevent package version update.
 {{</hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 #### Ignore Crossplane version requirements
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 A Provider package may require a specific or minimum Crossplane version before
 installing. By default, Crossplane doesn't install a Provider if the Crossplane
@@ -531,22 +523,17 @@ Provider `Conditions` support two `Types`:
 Each `Reason` relates to a specific `Type` and `Status`. Crossplane uses the
 following `Reasons` for Provider `Conditions`.
 
-<!-- vale Google.Headings = NO -->
 ##### InactivePackageRevision
 
 `Reason: InactivePackageRevision` indicates the Provider Package is using an
 inactive Provider Package Revision.
-
-<!-- vale Google.Headings = YES -->
 ```yaml
 Type: Installed
 Status: False
 Reason: InactivePackageRevision
 ```
 
-<!-- vale Google.Headings = NO -->
 ##### ActivePackageRevision
-<!-- vale Google.Headings = YES -->
 The Provider Package is the current Package Revision, but Crossplane hasn't
 finished installing the Package Revision yet.
 
@@ -562,7 +549,6 @@ Status: True
 Reason: ActivePackageRevision
 ```
 
-<!-- vale Google.Headings = NO -->
 ##### HealthyPackageRevision
 
 The Provider is fully installed and ready to use.
@@ -570,17 +556,13 @@ The Provider is fully installed and ready to use.
 {{<hint "tip" >}}
 `Reason: HealthyPackageRevision` is the expected state of a working Provider.
 {{< /hint >}}
-
-<!-- vale Google.Headings = YES -->
 ```yaml
 Type: Healthy
 Status: True
 Reason: HealthyPackageRevision
 ```
 
-<!-- vale Google.Headings = NO -->
 ##### UnhealthyPackageRevision
-<!-- vale Google.Headings = YES -->
 
 There was an error installing the Provider Package Revision, preventing
 Crossplane from installing the Provider Package.
@@ -595,9 +577,7 @@ Type: Healthy
 Status: False
 Reason: UnhealthyPackageRevision
 ```
-<!-- vale Google.Headings = NO -->
 ##### UnknownPackageRevisionHealth
-<!-- vale Google.Headings = YES -->
 
 The status of the Provider Package Revision is `Unknown`. The Provider Package
 Revision may be installing or has an issue.

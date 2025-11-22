@@ -32,11 +32,7 @@ MRAPs solve this by providing pattern-based activation of
 ManagedResourceDefinitions, letting you choose which provider resources to
 enable.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## How MRAPs work
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 MRAPs contain activation patterns that match ManagedResourceDefinition names.
 When you create or update an MRAP, Crossplane:
@@ -239,11 +235,7 @@ spec:
   - databases.rds.aws.m.crossplane.io    # Just RDS databases
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## Multiple MRAPs
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 You can have multiple MRAPs in your cluster. Crossplane processes all MRAPs
 together and activates any MRD that matches at least one pattern.
@@ -292,17 +284,9 @@ spec:
   - certificates.acm.aws.m.crossplane.io # For HTTPS
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## Working with MRAPs
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Creating MRAPs
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 Apply an MRAP like any Kubernetes resource:
 
@@ -310,11 +294,7 @@ Apply an MRAP like any Kubernetes resource:
 kubectl apply -f my-activation-policy.yaml
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### Viewing MRAPs
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 List all MRAPs:
 
@@ -347,11 +327,7 @@ status:
   - vpcs.ec2.aws.m.crossplane.io
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## MRAP status conditions
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 <!-- vale Microsoft.Accessibility = NO -->
 ### Healthy condition
@@ -361,17 +337,9 @@ status:
 - **`Healthy: Unknown, Reason: EncounteredErrors`**: Some MRDs failed to
   activate
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ## Troubleshooting MRAPs
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### MRAP exists but resources aren't activated
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 <!-- vale Google.Colons = NO -->
 **Symptoms**: MRAP shows `activated: []` or missing expected resources
@@ -400,11 +368,7 @@ status:
    # Look for "safe-start"
    ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
 ### MRAP shows activation errors
-<!-- vale Microsoft.HeadingAcronyms = YES -->
-<!-- vale Google.Headings = YES -->
 
 <!-- vale Google.Colons = NO -->
 **Symptoms**: MRAP has `Healthy: Unknown` status with errors

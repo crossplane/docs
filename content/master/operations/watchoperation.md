@@ -11,9 +11,7 @@ Kubernetes resources change. Use WatchOperations for reactive operational
 workflows. Examples include backing up databases before deletion, validating
 configurations after updates, or triggering alerts when resources fail.
 
-<!-- vale Google.Headings = NO -->
 ## How WatchOperations work
-<!-- vale Google.Headings = YES -->
 
 WatchOperations watch specific Kubernetes resources. They create new Operations
 whenever those resources change. The changed resource is automatically injected
@@ -117,7 +115,7 @@ spec:
 
 <!-- vale write-good.TooWordy = NO -->
 WatchOperations automatically inject the changed resource when they create an
-Operation. They use the special requirement name
+Operation. They use the reserved requirement name
 `ops.crossplane.io/watched-resource`. Functions can access this resource. They
 don't need to explicitly request it.
 <!-- vale write-good.TooWordy = YES -->
@@ -146,8 +144,8 @@ spec:
     # ... other pipeline steps from operationTemplate
 ```
 
-The watched resource is automatically available to functions in 
-`req.required_resources` under the special name 
+The watched resource is automatically available to functions in
+`req.required_resources` under the reserved name
 `ops.crossplane.io/watched-resource`.
 
 ## Concurrency policies
@@ -536,7 +534,7 @@ spec:
 
 <!-- vale write-good.TooWordy = NO -->
 WatchOperations automatically inject the changed resource into the created
-Operation. They use a special requirement name called
+Operation. They use a reserved requirement name called
 `ops.crossplane.io/watched-resource`:
 <!-- vale write-good.TooWordy = YES -->
 
@@ -564,20 +562,16 @@ operational considerations, see [Operation best practices]({{<ref "operation#bes
 
 ## Troubleshooting
 
-<!-- vale Google.Headings = NO -->
 ### WatchOperation not creating Operations
-<!-- vale Google.Headings = YES -->
 
 1. Verify the WatchOperation has `Watching=True` condition
 1. Check that watched resources exist and match the selector
 1. Ensure resources are actually changing
 1. Look for events indicating watch establishment failures
 
-<!-- vale Google.Headings = NO -->
 <!-- vale write-good.Weasel = NO -->
 ### Too many Operations created
 <!-- vale write-good.Weasel = YES -->
-<!-- vale Google.Headings = YES -->
 
 1. Refine label selectors to match fewer resources
 1. Consider using `Forbid` or `Replace` concurrency policy

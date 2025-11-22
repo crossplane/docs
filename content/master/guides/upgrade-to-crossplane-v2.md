@@ -59,9 +59,7 @@ Compositions:
 crossplane beta convert pipeline-composition old-composition.yaml -o new-composition.yaml
 ```
 
-<!-- vale Google.Headings = NO -->
 ### ControllerConfig type
-<!-- vale Google.Headings = YES -->
 **Deprecated in**: v1.11
 **Replaced by**: [DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration">}})
 

@@ -10,9 +10,7 @@ A `CronOperation` creates [Operations]({{<ref "operation">}}) on a schedule,
 like Kubernetes CronJobs. Use CronOperations for recurring operational tasks
 such as database backups, certificate rotation, or periodic maintenance.
 
-<!-- vale Google.Headings = NO -->
 ## How CronOperations work
-<!-- vale Google.Headings = YES -->
 
 CronOperations contain a template for an Operation and create new Operations
 based on a cron schedule. Each scheduled run creates a new Operation that
@@ -319,9 +317,7 @@ operational considerations, see [Operation best practices]({{<ref "operation#bes
 
 ## Troubleshooting
 
-<!-- vale Google.Headings = NO -->
 ### CronOperation not creating Operations
-<!-- vale Google.Headings = YES -->
 
 1. Check the cron schedule syntax
 1. Verify the CronOperation has `Synced=True` condition

@@ -41,10 +41,12 @@ prometheus.io/scrape: "true"
 | {{<hover label="workqueue_adds_total" line="13">}}workqueue_adds_total{{</hover>}} | Total number of adds handled by `workqueue` |  |
 | {{<hover label="workqueue_depth" line="14">}}workqueue_depth{{</hover>}} | Current depth of `workqueue` |  |
 | {{<hover label="workqueue_longest_running_processor_seconds" line="15">}}workqueue_longest_running_processor_seconds{{</hover>}} | The number of seconds has the longest running processor for `workqueue` been running |  |
+<!-- vale Vale.Terms = NO -->
 | {{<hover label="workqueue_queue_duration_seconds_bucket" line="16">}}workqueue_queue_duration_seconds_bucket{{</hover>}} | How long in seconds an item stays in `workqueue` before requested | Time from when a job enters the `workqueue` until processing starts. |
 | {{<hover label="workqueue_retries_total" line="17">}}workqueue_retries_total{{</hover>}} | Total number of retries handled by `workqueue` |  |
 | {{<hover label="workqueue_unfinished_work_seconds" line="18">}}workqueue_unfinished_work_seconds{{</hover>}} | The number of seconds of work done that's in progress and hasn't observed by `work_duration`. Large values means stuck threads. |  |
 | {{<hover label="workqueue_work_duration_seconds_bucket" line="19">}}workqueue_work_duration_seconds_bucket{{</hover>}} | How long in seconds processing an item from `workqueue` takes | Time from when the job starts until it finishes (successfully or with an error). |
+<!-- vale Vale.Terms = YES -->
 | {{<hover label="crossplane_managed_resource_exists" line="20">}}crossplane_managed_resource_exists{{</hover>}} | The number of managed resources that exist |  |
 | {{<hover label="crossplane_managed_resource_ready" line="21">}}crossplane_managed_resource_ready{{</hover>}} | The number of managed resources in `Ready=True` state |  |
 | {{<hover label="crossplane_managed_resource_synced" line="22">}}crossplane_managed_resource_synced{{</hover>}} | The number of managed resources in `Synced=True` state |  |

@@ -18,20 +18,12 @@ If you don't have a Kubernetes cluster create one locally with [Kind](https://ki
 * An actively [supported Kubernetes version](https://kubernetes.io/releases/patch-releases/#support-period)
 * [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## Install Crossplane
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Install Crossplane using the _Helm chart_.
 
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### Add the Crossplane Helm repository
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Add the Crossplane stable repository with the `helm repo add` command.
 
@@ -45,11 +37,7 @@ local Helm chart cache with `helm repo update`.
 helm repo update
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### Install the Crossplane Helm chart
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Install the Crossplane Helm chart with `helm install`.
 
@@ -78,11 +66,7 @@ crossplane-rbac-manager-86d9b5cf9f-2vc4s   1/1     Running   0          26m
 
 ## Installation options
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ### Customize the Crossplane Helm chart
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 Crossplane supports customizations at install time by configuring the Helm
 chart.

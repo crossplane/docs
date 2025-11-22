@@ -215,9 +215,7 @@ kubectl get mrds -o wide
 kubectl describe mrap <activation-policy-name>
 ```
 
-<!-- vale Google.Headings = NO -->
 ### CRDs don't appear
-<!-- vale Google.Headings = YES -->
 <!-- vale Google.Colons = NO -->
 **Cause**: MRDs might not activate or activation policy doesn't match.
 <!-- vale Google.Colons = YES -->

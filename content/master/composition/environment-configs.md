@@ -34,11 +34,7 @@ A composite resource can't read data in another composite resource's
 environment.
 {{< /hint >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## Create an EnvironmentConfig
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 An {{<hover label="env1" line="2">}}EnvironmentConfig{{</hover>}} has a single
 object field,
@@ -66,11 +62,7 @@ data:
     - item2
 ```
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## Access EnvironmentConfigs
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 [Composition Functions] supporting
 [extra-resources], for example [function-environment-configs] or
@@ -96,9 +88,7 @@ This converts a composition from `Resource` mode to
 See the documentation of [function-environment-configs] for more details about manual
 migration.
 
-<!-- vale Google.Headings = NO -->
 ## Select an EnvironmentConfig using function-environment-configs
-<!-- vale Google.Headings = YES -->
 
 Select the EnvironmentConfigs to use through [function-environment-configs]'s `Input`.
 

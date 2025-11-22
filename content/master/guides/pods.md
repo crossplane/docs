@@ -250,20 +250,16 @@ cluster.
 The RBAC manager creates four Kubernetes ClusterRoles. These Roles grant 
 permissions over cluster wide Crossplane resources. 
 
-<!-- vale Google.Headings = NO -->
-<!-- disable heading checking for the role names -->
 <!-- vale Google.WordList = NO -->
 <!-- allow "admin" -->
 ##### crossplane-admin
 <!-- vale Google.WordList = YES -->
-<!-- vale Crossplane.Spelling = NO -->
 The `crossplane-admin` ClusterRole has the following permissions:
   * full access to all Crossplane types
   * full access to all secrets and namespaces (even those unrelated to Crossplane)
   * read-only access to all cluster RBAC roles, CustomResourceDefinitions and
     events
   * ability to bind RBAC roles to other entities. 
-<!-- vale Crossplane.Spelling = YES -->
 View the full RBAC policy with 
 
 ```shell

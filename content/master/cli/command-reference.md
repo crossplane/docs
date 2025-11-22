@@ -4,8 +4,6 @@ title: Command Reference
 description: "Command reference for the Crossplane CLI"
 ---
 
-
-<!-- vale Google.Headings = NO -->
 The `crossplane` CLI provides utilities to make using Crossplane easier.
 
 Read the [Crossplane CLI overview]({{<ref "../cli">}}) page for information on
@@ -24,11 +22,7 @@ The following flags are available for all commands.
 
 {{< /table >}}
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## version
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 The `crossplane version` command returns the version of Crossplane CLI
 and the control plane.
@@ -39,9 +33,7 @@ Client Version: v1.17.0
 Server Version: v1.17.0
 ```
 
-<!-- vale Google.Headings = NO -->
 ## render
-<!-- vale Google.Headings = YES -->
 
 The `crossplane render` command previews the output of a 
 [composite resource]({{<ref "../composition/composite-resources">}}) after applying
@@ -182,17 +174,14 @@ YAML manifests of resources to mock. Use Extra Resources in combination with a f
 [function-extra-resources](https://github.com/crossplane-contrib/function-extra-resources) or the 
 built-in support in [function-go-templating](https://github.com/crossplane-contrib/function-go-templating?tab=readme-ov-file#extraresources).
 
-<!-- vale Google.Headings = NO -->
+<!-- vale Vale.Terms = NO -->
 ## xpkg
-<!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg` commands create, install and update Crossplane
 [packages]({{<ref "../packages/configurations">}}) and enable authentication
 and publishing of Crossplane packages to a Crossplane package registry.
 
-<!-- vale Google.Headings = NO -->
 ### xpkg build
-<!-- vale Google.Headings = YES -->
 
 Using `crossplane xpkg build` provides automation and simplification to build
 Crossplane packages.  
@@ -269,9 +258,7 @@ Use `docker pull` to download a missing image.
 The `--embed-runtime-image-tarball` flag includes a local OCI image tarball 
 inside the function or provider package.
 
-<!-- vale Google.Headings = NO -->
 ### xpkg init
-<!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg init` command populates the current directory with 
 files to build a package. 
@@ -283,27 +270,25 @@ with the command
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
 The `<template>` value may be one of four well known templates:
+<!-- vale Vale.Terms = NO -->
 * `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../packages/configurations">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
 * `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
 * `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
 * `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
+<!-- vale Vale.Terms = YES -->
 
 Instead of a well known template the `<template>` value can be a git repository 
 URL.
 
-<!-- vale Google.Headings = NO -->
 #### NOTES.txt
-<!-- vale Google.Headings = YES -->
 
 If the template repository has a `NOTES.txt` file in its root directory,
 the `crossplane xpkg init` command prints its contents to the terminal.
 This happens after populating the directory with the template files.
 This can be useful for providing information about the template.
 
-<!-- vale Google.Headings = NO -->
 #### init.sh
-<!-- vale Google.Headings = YES -->
 
 If the template repository has an `init.sh` file in its root directory, the
 `crossplane xpkg init` command starts a dialog after populating the
@@ -322,9 +307,7 @@ personalize the template.
 {{< /table >}}
 
 
-<!-- vale Google.Headings = NO -->
 ### xpkg install
-<!-- vale Google.Headings = YES -->
 
 Download and install packages into Crossplane with  `crossplane xpkg install`.
 
@@ -394,9 +377,7 @@ Read more about
 [package revisions]({{< ref "../packages/configurations#configuration-revisions" >}}) 
 in the package documentation. 
 
-<!-- vale Google.Headings = NO -->
 ### xpkg login
-<!-- vale Google.Headings = YES -->
 
 Use `xpkg login` to authenticate to registries that host Crossplane packages.
 
@@ -451,9 +432,7 @@ Authenticate to a registered organization in the Upbound Marketplace with the
 For example, 
 `crossplane xpkg login --account=Upbound --username=my-user --password -`.
 
-<!-- vale Google.Headings = NO -->
 ### xpkg logout
-<!-- vale Google.Headings = YES -->
 
 Use `crossplane xpkg logout` to invalidate the current `crossplane xpkg login` 
 session.
@@ -463,9 +442,7 @@ Using `crossplane xpkg logout` removes the `session` from the
 `~/.crossplane/config.json` file, but doesn't delete the configuration file.
 {{< /hint >}}
 
-<!-- vale Google.Headings = NO -->
 ### xpkg push
-<!-- vale Google.Headings = YES -->
 
 Push a Crossplane package file to a package registry. 
 
@@ -503,16 +480,15 @@ DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
 | `-f`         | `--package-files=PATH` | A comma-separated list of xpkg files to push. |
 {{< /table >}}
 
-<!-- vale Google.Headings = NO -->
 ### xpkg update
-<!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg update` command downloads and updates an existing package.
+<!-- vale Vale.Terms = YES -->
 
-By default the `crossplane xpkg update` command uses the Kubernetes 
-configuration defined in `~/.kube/config`.  
+By default the `crossplane xpkg update` command uses the Kubernetes
+configuration defined in `~/.kube/config`.
 
-Define a custom Kubernetes configuration file location with the environmental 
+Define a custom Kubernetes configuration file location with the environmental
 variable `KUBECONFIG`.
 
 Specify the package kind, package file and optionally the name of the package 
@@ -526,9 +502,7 @@ For example, to update to the latest version of the
 `crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0`
 
 
-<!-- vale Google.Headings = NO -->
 ## beta
-<!-- vale Google.Headings = YES -->
 
 Crossplane `beta` commands are experimental. These commands may change the 
 flags, options or outputs in future releases. 
@@ -537,9 +511,7 @@ Crossplane maintainers may promote or remove commands under `beta` in future
 releases.
 
 
-<!-- vale Google.Headings = NO -->
 ### beta convert
-<!-- vale Google.Headings = YES -->
 
 As Crossplane evolves, its APIs and resources may change. To help with the 
 migration to the new APIs and resources, the `crossplane beta convert` command
@@ -578,9 +550,7 @@ By default the function name is "function-patch-and-transform."
 {{< /table >}}
 
 
-<!-- vale Google.Headings = NO -->
 ### beta top
-<!-- vale Google.Headings = YES -->
 
 The command `crossplane beta top` shows CPU and memory usage of Crossplane
 related pods. 
@@ -607,14 +577,12 @@ Follow the installation instructions on the
 
 #### Flags
 {{< table "table table-sm table-striped">}}
-<!-- vale Crossplane.Spelling = NO -->
 <!-- vale flags `dot` as an error but only the trailing tick. -->
 | Short flag   | Long flag                   | Description                                                                        |
 | ------------ | -------------               | ------------------------------                                                     |
 | `-n`         | `--namespace`               | The namespace where the Crossplane pod runs. Default is `crossplane-system`.                                                    |
 | `-s`         | `--summary`                 | Print a summary of all Crossplane pods along with the output.                |
 |              | `--verbose`                 | Print verbose logging information with the output.                                                     |
-<!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
 The Kubernetes metrics server may take some time to collect data for the
@@ -624,9 +592,7 @@ running the `top` command may produce an error, for example,
 `crossplane: error: error adding metrics to pod, check if metrics-server is running or wait until metrics are available for the pod: the server is currently unable to handle the request (get pods.metrics.k8s.io crossplane-contrib-provider-helm-b4cc4c2c8db3-6d787f9686-qzmz2)`
 
 
-<!-- vale Google.Headings = NO -->
 ### beta trace
-<!-- vale Google.Headings = YES -->
 
 Use the `crossplane beta trace` command to display a visual relationship of
 Crossplane objects. The `trace` command supports XRs, compositions, 
@@ -651,17 +617,17 @@ variable `KUBECONFIG`.
 
 #### Flags
 {{< table "table table-sm table-striped">}}
-<!-- vale Crossplane.Spelling = NO -->
 <!-- vale flags `dot` as an error but only the trailing tick. -->
 | Short flag   | Long flag                   | Description                                                                        |
 | ------------ | -------------               | ------------------------------                                                     |
 | `-n`         | `--namespace`               | The namespace of the resource.                                                     |
+<!-- vale Crossplane.Spelling = NO -->
 | `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. |
+<!-- vale Crossplane.Spelling = YES -->
 |              | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
 |              | `--show-package-dependencies <filter>` | Show package dependencies. Options are `all` to show every dependency, `unique` to only print a package once or `none` to not print any dependencies. By default the `trace` command uses `--show-package-dependencies unique`.                |
 |              | `--show-package-revisions <output>`    | Print package revision versions. Options are `active`, showing only the active revisions, `all` showing all revisions or `none` to print not print any revisions.                 |
 |              | `--show-package-runtime-configs` | Print DeploymentRuntimeConfig dependencies.                |
-<!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
 #### Output options
@@ -861,9 +827,7 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 # Removed for brevity
 ```
 
-<!-- vale Google.Headings = NO -->
 ### beta validate
-<!-- vale Google.Headings = YES -->
 
 The `crossplane beta validate` command validates
 [compositions]({{<ref "../composition/compositions">}}) against provider or XRD
@@ -991,9 +955,7 @@ crossplane render xr.yaml composition.yaml function.yaml --include-full-xr | cro
 Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 ```
 
-<!-- vale Google.Headings = NO -->
 #### Validate Common Expression Language rules
-<!-- vale Google.Headings = YES -->
 
 XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
 ([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).

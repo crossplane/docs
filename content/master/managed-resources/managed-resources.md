@@ -39,9 +39,7 @@ apiVersion: ec2.aws.m.upbound.io/v1beta1
 kind: Instance
 ```
 
-<!-- vale off -->
 ### forProvider
-<!-- vale on -->
 
 The {{<hover label="forProvider" line="4">}}spec.forProvider{{</hover>}} of a 
 managed resource maps to the parameters of the external resource. 
@@ -221,9 +219,7 @@ the `managementPolicies` list.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
-<!-- vale off -->
 ### initProvider
-<!-- vale on -->
 
 {{<hint "important" >}}
 The managed resource `initProvider` option is a beta feature related to
@@ -282,9 +278,7 @@ spec:
       minSize: 1
 ```
 
-<!-- vale off -->
 ### managementPolicies
-<!-- vale on --> 
 
 {{<hint "note" >}}
 The managed resource `managementPolicies` option is a beta feature. Crossplane enables
@@ -355,9 +349,7 @@ The following is a list of common policy combinations:
 |        |        |                |         |        | No policy set. An alternative method for [pausing](#paused) a resource.                                                                                              |
 {{< /table >}}
 
-<!-- vale off -->
 ### providerConfigRef
-<!-- vale on -->
 
 The `providerConfigRef` on a managed resource tells the Provider which
 [ProviderConfig]({{<ref "../packages/providers#provider-configuration">}}) to
@@ -450,9 +442,7 @@ spec:
     kind: ClusterProviderConfig
 ```
 
-<!-- vale off -->
 ### writeConnectionSecretToRef
-<!-- vale on --> 
 
 When a Provider creates a managed resource it may generate resource-specific
 details, like usernames, passwords or connection information like an IP address. 
@@ -808,9 +798,7 @@ Conditions:
   Reason:                Deleting
 ```
 
-<!-- vale off -->
 ### ReconcilePaused
-<!-- vale on -->
 `Reason: ReconcilePaused` indicates the managed resource has a [Pause](#paused)
 annotation 
 
@@ -821,9 +809,7 @@ Conditions:
   Reason:                ReconcilePaused
 ```
 
-<!-- vale off -->
 ### ReconcileError
-<!-- vale on -->
 `Reason: ReconcileError` indicates Crossplane encountered an error while
 reconciling the managed resource. The `Message:` value of the `Condition` helps
 identify the Crossplane error. 
@@ -835,9 +821,7 @@ Conditions:
   Reason:                ReconcileError
 ```
 
-<!-- vale off -->
 ### ReconcileSuccess
-<!-- vale on -->
 `Reason: ReconcileSuccess` indicates the Provider created and is monitoring the 
 managed resource.
 
@@ -877,9 +861,7 @@ Conditions:
 Crossplane Providers, also has a set of standard `Conditions`.
 
 
-<!-- vale off -->
 #### AsyncOperation
-<!-- vale on -->
 
 Some resources may take more than a minute to create. Upjet based providers can 
 complete their Kubernetes command before creating the managed resource by using 
@@ -909,16 +891,12 @@ Conditions:
   Reason:                Ongoing
 ```
 
-<!-- vale off -->
 #### LastAsyncOperation
-<!-- vale on -->
 
 The Upjet `Type: LastAsyncOperation` captures the earlier asynchronous
 operation status as either `Success` or a failure `Reason`. 
 
-<!-- vale off -->
 ##### ApplyFailure
-<!-- vale on -->
 
 `Reason: ApplyFailure` indicates the Provider failed to apply a setting to the
 managed resource. The `conditions.message` provides more information on what
@@ -931,9 +909,7 @@ Conditions:
   Reason:                ApplyFailure
 ```
 
-<!-- vale off -->
 ##### DestroyFailure
-<!-- vale on -->
 
 `Reason: DestroyFailure` indicates the Provider failed to delete the managed
 resource. The `conditions.message` provides more information on what

@@ -21,14 +21,15 @@ jobs:
         with:
           files: content/**
 
-      - name: Install Vale
-        env:
-          VALE_VERSION: "3.7.1"
-        run: wget https://github.com/errata-ai/vale/releases/download/v${{env.VALE_VERSION}}/vale_${{env.VALE_VERSION}}_Linux_64-bit.tar.gz && tar -xvzf vale_${{env.VALE_VERSION}}_Linux_64-bit.tar.gz
-
-      - name: Run Vale
+      - name: Run Vale on changed files
         if: steps.changed-files.outputs.any_changed == 'true'
-        # Run vale and display the output. Fail if the output is greater than 1 line.
-        # Vale uses a 0 return code for warnings and suggestions. These should be considered failures.
-        run: |
-          ./vale --config="./utils/vale/.vale.ini" ${{ steps.changed-files.outputs.all_changed_files }} | tee /dev/stderr | wc -l | { read wc; test $wc -eq 1; }
+        uses: errata-ai/vale-action@reviewdog
+        with:
+          version: 3.13.0
+          files: ${{ steps.changed-files.outputs.all_changed_files }}
+          reporter: github-pr-review
+          fail_on_error: true
+          filter_mode: nofilter
+          vale_flags: '--config=./utils/vale/.vale.ini'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

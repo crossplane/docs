@@ -118,7 +118,7 @@ and cluster scoped XRs in Crossplane v2 don't support claims.**
 {{<hint "tip">}}
 Crossplane v2 is backward compatible with v1-style XRs.
 
-When you use v1 of the XRD API `scope` defaults to a special `LegacyCluster`
+When you use v1 of the XRD API `scope` defaults to `LegacyCluster`
 mode. `LegacyCluster` XRs support claims and don't use `spec.crossplane`.
 
 Read more about Crossplane v2's [backward compatibility](#backward-compatibility).

@@ -73,6 +73,7 @@ swap:
   detox center: treatment center
   diffability: has a disability|person with a disability|people with disabilities
   differently abled: has a disability|person with a disability|people with disabilities
+  disabled: turned off|has a disability|person with a disability|people with disabilities
   downs syndrome: Down Syndrome
   dumb: foolish|ludicrous|speechless|silent
   dummy: test double|placeholder|fake|stub
@@ -156,9 +157,6 @@ swap:
   nuts: rude|malicious|mean|disgusting|incredible|vile|person with symptoms of mental
     illness|person with mental illness|person with symptoms of a mental disorder|person
     with a mental disorder
-  o.c.d: has an anxiety disorder|obsessive|pedantic|niggly|picky
-  o.c.d.: has an anxiety disorder|obsessive|pedantic|niggly|picky
-  ocd: has an anxiety disorder|obsessive|pedantic|niggly|picky
   panic attack: fit of terror|scare
   paraplegic: person with paraplegia
   psycho: rude|malicious|mean|disgusting|incredible|vile|person with symptoms of mental
@@ -192,6 +190,7 @@ swap:
   sociopaths: people with psychopathic personalities|people with a personality disorder
   spastic: person with cerebral palsy|twitch|flinch
   spaz: person with cerebral palsy|twitch|flinch|hectic
+  special: has a disability|person with a disability|people with disabilities
   special needs: has a disability|person with a disability|people with disabilities
   special olympians: athletes|Special Olympics athletes
   special olympic athletes: athletes|Special Olympics athletes

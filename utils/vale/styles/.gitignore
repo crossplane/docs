@@ -1,0 +1,5 @@
+# Package-managed styles - Vale automatically downloads these via `vale sync`
+# See ../.vale.ini Packages directive
+alex/
+proselint/
+write-good/

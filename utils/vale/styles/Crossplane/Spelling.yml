@@ -4,6 +4,7 @@
 #
 # Checks for possible spelling mistakes in content, not code. Results from links using angle brackets (<https://example.com>) should be corrected.
 #
+# Uses Vale 3 Vocab feature - vocabulary terms loaded from config/vocabularies/Crossplane/accept.txt
 #
 # For a list of all options, see https://errata-ai.gitbook.io/vale/getting-started/styles
 extends: spelling
@@ -11,11 +12,7 @@ message: 'Spelling check: "%s"?'
 level: error
 custom: true
 ignore:
-  - Crossplane/spelling-exceptions.txt
-  - Crossplane/brands.txt
-  - Crossplane/crossplane-words.txt
-  - Crossplane/provider-words.txt
-  - Crossplane/allowed-jargon.txt
+  - $Vocab
 filters:
   - v\d # e.g. v1, v2
   - v\d\.[x\d]\d?  # e.g. v1.1, v2.10, v1.x

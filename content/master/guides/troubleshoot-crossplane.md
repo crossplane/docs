@@ -52,11 +52,7 @@ Events:
 > are cluster scoped. Crossplane emits events for cluster scoped resources to
 > the 'default' namespace.
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
 ## Crossplane Logs
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
 
 The next place to look for more information or to investigate a failure is in
 the Crossplane pod logs.

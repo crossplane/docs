@@ -60,9 +60,7 @@ The Crossplane Helm chart creates an activation policy by default. This policy
 enables all provider resources. To use selective activation, disable this
 default behavior.
 
-<!-- vale Google.Headings = NO -->
 ### Option A: Helm installation
-<!-- vale Google.Headings = YES -->
 
 ```shell
 helm install crossplane crossplane-stable/crossplane \
@@ -71,9 +69,7 @@ helm install crossplane crossplane-stable/crossplane \
   --set provider.defaultActivations={}
 ```
 
-<!-- vale Google.Headings = NO -->
 ### Option B: Existing installation
-<!-- vale Google.Headings = YES -->
 
 Delete the default activation policy:
 
