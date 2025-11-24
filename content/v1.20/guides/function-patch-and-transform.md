@@ -1678,6 +1678,25 @@ patches:
           trim: `-north-1'
 ```
 
+#### Replace
+
+The `type: Replace` replaces all occurrences of the `search` string with the `replace` string. If `replace` is an empty string, it removes the `search` string.
+
+
+```yaml {label="typeReplace"}
+patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.location
+    toFieldPath: spec.forProvider.region
+    transforms:
+      - type: string
+        string:
+          type: Replace
+          replace:
+            search: "europe"
+            replace: "eu"
+```
+
 ## Patch policies
 
 Crossplane supports two types of patch policies:
