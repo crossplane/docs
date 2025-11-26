@@ -4,11 +4,19 @@
 {{ $deprecated := false }}
 
 {{ range .versions }}
-    {{ if index . "storage" }}
+    {{ if and (index . "storage") (not .deprecated) }}
         {{ $version = .name }}
         {{ $schema = .schema }}
         {{ $deprecated = .deprecated }}
-    {{ else if (and (index . "served") (not $version)) }}
+    {{ else if and (index . "served") (not .deprecated) (not $version) }}
+        {{ $version = .name }}
+        {{ $schema = .schema }}
+        {{ $deprecated = .deprecated }}
+    {{ else if and (index . "storage") (not $version) }}
+        {{ $version = .name }}
+        {{ $schema = .schema }}
+        {{ $deprecated = .deprecated }}
+    {{ else if and (index . "served") (not $version) }}
         {{ $version = .name }}
         {{ $schema = .schema }}
         {{ $deprecated = .deprecated }}
