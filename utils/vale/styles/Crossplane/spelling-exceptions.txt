@@ -47,6 +47,7 @@ one-time
 One-time
 one-way
 One-way
+out-of-sync
 Operation-level
 pattern-based
 Pattern-based
@@ -84,6 +85,8 @@ team-based
 Team-based
 third-party
 Time-sensitive
+time-to-readiness
+Upjet-based
 top-level
 unpause
 untrusted
