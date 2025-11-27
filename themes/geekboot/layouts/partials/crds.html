@@ -22,47 +22,49 @@
             {{/* bigName is the kind length limit to change CSS styles when it needs to be truncated */}}
             {{ $bigName := partial "apiBuilder/checkBigName" $kind }}
 
+            {{/* Iterate over each served version and create separate entries */}}
+            {{ range $versionItem := $crdContent.spec.versions }}
+                {{ if $versionItem.served }}
+                    {{ $schema := $versionItem.schema.openAPIV3Schema }}
+                    {{ $version := $versionItem.name }}
+                    {{ $deprecated := $versionItem.deprecated }}
+                    {{ $description := $schema.description }}
 
-            {{/* Find the active version. We prefer the "storage: true" value but use "served: true" as a backup */}}
-            {{ $versionAndSchema := partial "apiBuilder/getVersionAndSchema" $crdContent.spec }}
-            {{ $schema := $versionAndSchema.schema.openAPIV3Schema }}
-            {{ $version := $versionAndSchema.version }}
-            {{ $deprecated := $versionAndSchema.deprecated }}
-            {{ $description := $schema.description }}
+                    {{/* The div containing the entire CRD information including the Expand All/Collapse All row */}}
+                    <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
 
-            {{/* The div containing the entire CRD information including the Expand All/Collapse All row */}}
-            <div class="crd-root-row crd-container row align-middle bigName-row" data-kind="{{ $kind }}" data-group="{{ $group }}-{{ $kind}}" data-version="{{ $version }}-{{ $kind }}">
-
-                {{/* generate the GKV line to expand/collapse the CRD data */}}
-                {{ partial "apiBuilder/printGKVExpander" (dict  "group" $group "version" $version "kind" $kind "deprecated" $deprecated) }}
+                        {{/* generate the GKV line to expand/collapse the CRD data */}}
+                        {{ partial "apiBuilder/printGKVExpander" (dict  "group" $group "version" $version "kind" $kind "deprecated" $deprecated) }}
 
 
-                {{/* The container to show/hide with information related to the CRD */}}
-                <div class="collapse crd-expand {{$kind}}" id="{{$kind}}">
-                    {{/* Generate the "Download YAML" link */}}
-                    {{ partial "apiBuilder/downloadLink" (dict  "group" $group "version" $version "kind" $kind "downloadPath" $downloadPath) }}
+                        {{/* The container to show/hide with information related to the CRD */}}
+                        <div class="collapse crd-expand {{$kind}}" id="{{$kind}}-{{$version}}">
+                            {{/* Generate the "Download YAML" link */}}
+                            {{ partial "apiBuilder/downloadLink" (dict  "group" $group "version" $version "kind" $kind "downloadPath" $downloadPath) }}
 
-                    {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
-                    <div class="description bigName-reset">
-                        {{ $description | markdownify}}
-                        <br />
+                            {{/* bigName-reset prevents the description from expanding into the x-scroll */}}
+                            <div class="description bigName-reset">
+                                {{ $description | markdownify}}
+                                <br />
+                            </div>
+
+                            {{/* Loop over each key inside the schema */}}
+                            {{ range $key, $contents := $schema.properties }}
+
+                                {{/* Skip irrelevant keys at the top level */}}
+                                {{ if not (in (slice "apiVersion" "description" "kind" "metadata") $key) }}
+                                    {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind) }}
+                                {{ end }}
+
+                            {{ end }}
+
+                            {{/* Generate the "Return to top" link */}}
+                            {{ partialCached "apiBuilder/backToTopButton" . }}
+
+                        </div>
                     </div>
-
-                    {{/* Loop over each key inside the schema */}}
-                    {{ range $key, $contents := $schema.properties }}
-
-                        {{/* Skip irrelevant keys at the top level */}}
-                        {{ if not (in (slice "apiVersion" "description" "kind" "metadata") $key) }}
-                            {{ partial "apiBuilder/processSpec" (dict "key" $key "contents" $contents "page" . "kind" $kind) }}
-                        {{ end }}
-
-                    {{ end }}
-
-                    {{/* Generate the "Return to top" link */}}
-                    {{ partialCached "apiBuilder/backToTopButton" . }}
-
-                </div>
-            </div>
+                {{ end }}
+            {{ end }}
         {{ end}}
     </div>
 
