@@ -29,6 +29,8 @@ Crossplane
 crossplane-admin
 crossplane-browse
 crossplane-edit
+controller-runtime
+Controller-runtime
 crossplane-runtime
 Crossplane's
 crossplane-view
@@ -81,7 +83,9 @@ ProviderConfig
 ProviderConfigs
 ProviderRevision
 RunFunctionRequest
+RunFunctionRequests
 RunFunctionResponse
+RunFunctionResponses
 Sigstore
 SSL
 StoreConfig
@@ -91,6 +95,7 @@ ToEnvironmentFieldPath
 toFieldPath
 TrimPrefix
 TrimSuffix
+TTR
 UnhealthyPackageRevision
 UnknownPackageRevisionHealth
 ValidPipeline
