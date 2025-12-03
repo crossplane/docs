@@ -62,7 +62,7 @@ spec:
   scope: Namespaced
   group: example.org
   names:
-    kind: XMyDatabase
+    kind: MyDatabase
     plural: mydatabases
   versions:
   - name: v1alpha1
@@ -119,8 +119,6 @@ The required name fields are:
 
 * `kind` - the `kind` value to use when calling this API. The kind is
   [UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
-  Crossplane recommends starting XRD `kinds` with an `X` to show
-  it's a custom Crossplane API definition.
 * `plural` - the plural name used for the API URL. The plural name must be
   lowercase.
 
@@ -145,7 +143,7 @@ metadata:
 spec:
   group: example.org
   names:
-    kind: XMyDatabase
+    kind: MyDatabase
     plural: mydatabases
     # Removed for brevity
 ```
@@ -211,12 +209,12 @@ is a {{<hover label="schema" line="20">}}string{{</hover>}}.
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: Database
+    plural: databases
   versions:
   - name: v1alpha1
     schema:
@@ -239,7 +237,7 @@ A composite resource using this API references the
 
 ```yaml {label="xr"}
 apiVersion: custom-api.example.org/v1alpha1
-kind: xDatabase
+kind: Database
 metadata:
   name: my-composite-resource
 spec:
@@ -279,12 +277,12 @@ In this example the XRD requires
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: Database
+    plural: databases
   versions:
   - name: v1alpha1
     schema:
@@ -377,12 +375,12 @@ and
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: Database
+    plural: databases
   versions:
   - name: v1alpha1
     served: true
@@ -460,12 +458,12 @@ A second version,
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: Database
+    plural: databases
   versions:
   - name: v1alpha1
     schema:
@@ -552,7 +550,7 @@ to set the default Composition.
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   defaultCompositionRef:
     name: myComposition
@@ -583,7 +581,7 @@ this XRD.
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   defaultCompositionUpdatePolicy: Manual
   group: custom-api.example.org
@@ -609,7 +607,7 @@ set
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: databases.custom-api.example.org
 spec:
   enforcedCompositionRef:
     name: myComposition
@@ -632,7 +630,7 @@ Verify an XRD with `kubectl get compositeresourcedefinition` or the short form,
 ```yaml {label="getxrd",copy-lines="1"}
 kubectl get xrd
 NAME                                ESTABLISHED   OFFERED   AGE
-xdatabases.custom-api.example.org   True          True      22m
+databases.custom-api.example.org   True          True      22m
 ```
 
 The `ESTABLISHED` field indicates Crossplane installed the Kubernetes custom
@@ -649,7 +647,7 @@ View the conditions of a XRD under their `Status` with
 
 ```yaml {copy-lines="none"}
 kubectl describe xrd
-Name:         xpostgresqlinstances.database.starter.org
+Name:         postgresqlinstances.database.starter.org
 API Version:  apiextensions.crossplane.io/v1
 Kind:         CompositeResourceDefinition
 # Removed for brevity
