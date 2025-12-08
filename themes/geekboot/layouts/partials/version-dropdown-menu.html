@@ -1,33 +1,5 @@
-{{ $versionList := slice }}
-{{ $majordict := dict }}
-{{ $majorlist := slice }}
-{{ $sorted_list := slice }}
+{{ $sorted_list := partial "utils/sorted-versions" . }}
 {{ $cur_ver := .Page.Params.version | default .Site.Params.latest }}
-
-<!-- get all the versions and break out semver order -->
-{{ range .Site.Sections }}
-    {{/* Skip versions marked as hidden */}}
-    {{ if not .Page.Params.hidden }}
-        {{ if eq .Page.Params.version "master" }}
-            {{$sorted_list = $sorted_list | append  "master" }}
-        {{ else if ne .Page.Params.version nil }}
-            {{ $splitver := split .Page.Params.version "." }}
-            {{ if eq (len $splitver) 2 }}
-                    {{ $verlist := (index $majordict (index $splitver 0)) }}
-                    {{ $verlist = $verlist | append (index $splitver 1) }}
-                    {{ $majordict = merge $majordict (dict (index $splitver 0) $verlist) }}
-                    {{ $majorlist = $majorlist | append (index $splitver 0) }}
-            {{ end }}
-        {{ end }}
-    {{ end }}
-{{ end }}
-
-{{ range sort ($majorlist | uniq) "value" "desc" }}
-    {{ $majorver := . }}
-    {{ range sort (index $majordict .) "value" "desc"  }}
-        {{$sorted_list = $sorted_list | append  (printf "%s.%s" $majorver .) }}
-    {{ end }}
-{{ end }}
 
 <div class="dropdown float-end bd-dropdown">
     <a class="btn btn-outline-secondary dropdown-toggle bd-dropdown-item text-reset" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

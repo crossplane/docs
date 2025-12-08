@@ -34,17 +34,34 @@
           The page you're looking for couldn't be found.
           <br /><br />
           Only currently maintained versions of Crossplane are documented. Try
-          looking one of the following sections-
+          looking at one of the following sections:
           <br /><br />
-          {{ range .Site.Sections }}
-          {{ if and (.Page.Params.version) (ne .Page.Params.version "0") (ne .Page.Params.version "master") }}
-              <a href="{{.Permalink}}">v{{ .Page.Params.version }}</a><br />
-            {{ else }}
-              {{ if (eq .Page.Params.version "master") }}
-              {{ else }}
-                <a href="{{.Permalink}}">{{ .Title }}</a><br />
+          {{ $sorted_list := partial "utils/sorted-versions" . }}
+
+          <strong>Documentation Versions:</strong><br />
+          {{ range $sorted_list }}
+              {{ $versionPage := $.Site.GetPage (printf "v%s" .) | default ($.Site.GetPage .) }}
+              {{ with $versionPage }}
+                  <a href="{{ .Permalink }}">{{ if ne .Page.Params.version "master" }}v{{ end }}{{ .Page.Params.version }}</a>
+                  {{ if eq .Page.Params.version $.Site.Params.latest }}
+                      <span class="badge rounded-pill latest">Latest</span>
+                  {{ end }}
+                  {{ if eq .Page.Params.version "master" }}
+                      <small><em>(unreleased upcoming version)</em></small>
+                  {{ end }}
+                  <br />
               {{ end }}
-            {{ end }}
+          {{ end }}
+
+          <br />
+          <p><small>Looking for an older version? Archived versions are available as tags in the <a href="https://github.com/crossplane/docs/tags">GitHub repository</a> (e.g., v1.19-archive, v1.18-archive).</small></p>
+
+          <br />
+          <strong>Other Resources:</strong><br />
+          {{ range .Site.Sections }}
+              {{ if and (not .Page.Params.hidden) (eq .Page.Params.version "0") }}
+                  <a href="{{ .Permalink }}">{{ .Title }}</a><br />
+              {{ end }}
           {{ end }}
         </div>
     </main>
