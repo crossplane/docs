@@ -28,7 +28,7 @@
         {{$semver_sorted = $semver_sorted | append (printf "%s.%s" $majorver .) }}
     {{ end }}
 {{ end }}
-{{/* Prepend semver sorted versions before master */}}
-{{ $sorted_list = $semver_sorted | append $sorted_list }}
+{{/* Append semver sorted versions after master */}}
+{{ $sorted_list = $sorted_list | append $semver_sorted }}
 
 {{ return $sorted_list }}
