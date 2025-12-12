@@ -11,44 +11,44 @@ Using connection details in Crossplane requires the following components:
   [Composition]({{<ref "../concepts/compositions#composed-resource-secrets">}}).
 * Define the list of secret keys produced by each composed resource with in the
   [Composition]({{<ref "../concepts/compositions">}}).
-* Optionally, define the `connectionSecretKeys` in a 
+* Optionally, define the `connectionSecretKeys` in a
   [CompositeResourceDefinition]({{<ref "../concepts/composite-resource-definitions#manage-connection-secrets">}}).
 
 {{<hint "note">}}
-This guide discusses creating Kubernetes secrets.  
-Crossplane also supports using external secret stores like [HashiCorp Vault](https://www.vaultproject.io/). 
+This guide discusses creating Kubernetes secrets.
+Crossplane also supports using external secret stores like [HashiCorp Vault](https://www.vaultproject.io/).
 
 Read the [external secrets store guide]({{<ref "../guides/vault-as-secret-store">}}) for more information on using Crossplane
-with an external secret store. 
+with an external secret store.
 {{</hint >}}
 
 ## Background
 When a [Provider]({{<ref "../concepts/providers">}}) creates a managed
-resource, the resource may generate resource-specific details. These details can include 
-usernames, passwords or connection details like an IP address.  
+resource, the resource may generate resource-specific details. These details can include
+usernames, passwords or connection details like an IP address.
 
-Crossplane refers to this information as the _connection details_ or 
-_connection secrets_.   
+Crossplane refers to this information as the _connection details_ or
+_connection secrets_.
 
 The Provider
 defines what information to present as a _connection
-detail_ from a managed resource. 
+detail_ from a managed resource.
 
 <!-- vale gitlab.SentenceLength = NO -->
 <!-- wordy because of type names -->
-When a managed resource is part of a 
-[Composition]({{<ref "../concepts/compositions">}}), the Composition, 
-[Composite Resource Definition]({{<ref "../concepts/composite-resource-definitions">}}) 
-and optionally, the 
+When a managed resource is part of a
+[Composition]({{<ref "../concepts/compositions">}}), the Composition,
+[Composite Resource Definition]({{<ref "../concepts/composite-resource-definitions">}})
+and optionally, the
 [Claim]({{<ref "../concepts/claims">}}) define what details are visible
-and where they're stored. 
+and where they're stored.
 <!-- vale gitlab.SentenceLength = YES -->
 
 {{<hint "note">}}
 All the following examples use the same set of Compositions,
 CompositeResourceDefinitions and Claims.
 
-All examples rely on 
+All examples rely on
 [provider-aws-iam](https://github.com/crossplane-contrib/provider-upjet-aws)
 to create resources.
 
@@ -90,7 +90,7 @@ spec:
         - name: password
           type: FromConnectionSecretKey
           fromConnectionSecretKey: password
-        - name: key
+        - name: secret
           type: FromConnectionSecretKey
           fromConnectionSecretKey: attribute.secret
         - name: smtp
@@ -165,12 +165,12 @@ metadata:
 spec:
   group: example.org
   connectionSecretKeys:
-    - username
+    - user
     - password
-    - attribute.secret
-    - attribute.ses_smtp_password_v4
+    - secret
+    - smtp
     - key2-user
-    - key2-pass
+    - key2-password
     - key2-secret
     - key2-smtp
   names:
@@ -211,30 +211,30 @@ spec:
 <!-- vale gitlab.Substitutions = NO -->
 <!-- vale gitlab.SentenceLength = NO -->
 <!-- under 25 words -->
-When a managed resource creates connection secrets, Crossplane can write the 
-secrets to a 
+When a managed resource creates connection secrets, Crossplane can write the
+secrets to a
 [Kubernetes secret]({{<ref "../concepts/managed-resources#publish-secrets-to-kubernetes">}})
-or an 
+or an
 [external secret store]({{<ref "../concepts/managed-resources#publish-secrets-to-an-external-secrets-store">}}).
 <!-- vale gitlab.SentenceLength = YES -->
 <!-- vale gitlab.Substitutions = YES -->
 
 Creating an individual managed resource shows the connection secrets the
-resource creates. 
+resource creates.
 
 {{<hint "note" >}}
 Read the [managed resources]({{<ref "../concepts/managed-resources">}})
 documentation for more information on configuring resources and storing
-connection secrets for individual resources. 
+connection secrets for individual resources.
 {{< /hint >}}
 
 
 For example, create an
 {{<hover label="mr" line="2">}}AccessKey{{</hover>}} resource and save the
-connection secrets in a Kubernetes secret named 
+connection secrets in a Kubernetes secret named
 {{<hover label="mr" line="12">}}my-accesskey-secret{{</hover>}}
-in the 
-{{<hover label="mr" line="11">}}default{{</hover>}} namespace. 
+in the
+{{<hover label="mr" line="11">}}default{{</hover>}} namespace.
 
 ```yaml {label="mr"}
 apiVersion: iam.aws.upbound.io/v1beta1
@@ -252,11 +252,11 @@ spec:
 ```
 
 View the Kubernetes secret to see the connection details from the managed
-resource.  
-This includes an 
+resource.
+This includes an
 {{<hover label="mrSecret" line="11">}}attribute.secret{{</hover>}},
 {{<hover label="mrSecret" line="12">}}attribute.ses_smtp_password_v4{{</hover>}},
-{{<hover label="mrSecret" line="13">}}password{{</hover>}} and 
+{{<hover label="mrSecret" line="13">}}password{{</hover>}} and
 {{<hover label="mrSecret" line="14">}}username{{</hover>}}
 
 ```yaml {label="mrSecret",copy-lines="1"}
@@ -277,29 +277,29 @@ username:                        20 bytes
 ```
 
 Compositions and CompositeResourceDefinitions require the exact names of the
-secrets generated by a resource. 
+secrets generated by a resource.
 
 ## Connection secrets in Compositions
 
 Resources in a Composition that create connection details still create a
-secret object containing their connection details.  
+secret object containing their connection details.
 Crossplane also generates
-another secret object for each composite resource, 
+another secret object for each composite resource,
 containing the secrets from all the defined resources.
 
-For example, a Composition defines two 
+For example, a Composition defines two
 {{<hover label="comp1" line="9">}}AccessKey{{</hover>}}
-objects.  
+objects.
 Each {{<hover label="comp1" line="9">}}AccessKey{{</hover>}} writes a
 connection secrets to the {{<hover label="comp1" line="15">}}name{{</hover>}}
 inside the {{<hover label="comp1" line="14">}}namespace{{</hover>}} defined by
-the resource 
+the resource
 {{<hover label="comp1" line="13">}}writeConnectionSecretToRef{{</hover>}}.
 
-Crossplane also creates a secret object for the entire Composition 
-saved in the namespace defined by 
+Crossplane also creates a secret object for the entire Composition
+saved in the namespace defined by
 {{<hover label="comp1" line="4">}}writeConnectionSecretsToNamespace{{</hover>}}
-with a Crossplane generated name. 
+with a Crossplane generated name.
 
 ```yaml {label="comp1",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -339,17 +339,17 @@ spec:
 ```
 
 After applying a Claim, view the Kubernetes secrets to see three secret objects
-created. 
+created.
 
-The secret 
-{{<hover label="compGetSec" line="3">}}key1-secret{{</hover>}} is from the resource 
-{{<hover label="comp1" line="6">}}key1{{</hover>}}, 
-{{<hover label="compGetSec" line="4">}}key2-secret{{</hover>}} is from the resource 
+The secret
+{{<hover label="compGetSec" line="3">}}key1-secret{{</hover>}} is from the resource
+{{<hover label="comp1" line="6">}}key1{{</hover>}},
+{{<hover label="compGetSec" line="4">}}key2-secret{{</hover>}} is from the resource
 {{<hover label="comp1" line="16">}}key2{{</hover>}}.
 
-Crossplane creates another secret in the namespace 
+Crossplane creates another secret in the namespace
 {{<hover label="compGetSec" line="5">}}other-namespace{{</hover>}} with the
-secrets from resource in the Composition. 
+secrets from resource in the Composition.
 
 
 ```shell {label="compGetSec",copy-lines="1"}
@@ -361,7 +361,7 @@ other-namespace     70975471-c44f-4f6d-bde6-6bbdc9de1eb8   connection.crossplane
 ```
 
 Although Crossplane creates a secret object, by default, Crossplane doesn't add
-any data to the object. 
+any data to the object.
 
 ```yaml {copy-lines="none"}
 kubectl describe secret 70975471-c44f-4f6d-bde6-6bbdc9de1eb8 -n other-namespace
@@ -374,19 +374,19 @@ Data
 ====
 ```
 
-The Composition must list the connection secrets to store for each resource.  
-Use the 
+The Composition must list the connection secrets to store for each resource.
+Use the
 {{<hover label="comp2" line="16">}}connectionDetails{{</hover>}} object under
-each resource and define the secret keys the resource creates.  
+each resource and define the secret keys the resource creates.
 
 
 {{<hint "warning">}}
-You can't change the 
-{{<hover label="comp2" line="16">}}connectionDetails{{</hover>}} 
-of a Composition.  
+You can't change the
+{{<hover label="comp2" line="16">}}connectionDetails{{</hover>}}
+of a Composition.
 You must delete and
-recreate the Composition to change the 
-{{<hover label="comp2" line="16">}}connectionDetails{{</hover>}}.  
+recreate the Composition to change the
+{{<hover label="comp2" line="16">}}connectionDetails{{</hover>}}.
 {{</hint >}}
 
 ```yaml {label="comp2",copy-lines="16-20"}
@@ -420,7 +420,7 @@ spec:
           - name: password
             type: FromConnectionSecretKey
             fromConnectionSecretKey: password
-          - name: key
+          - name: secret
             type: FromConnectionSecretKey
             fromConnectionSecretKey: attribute.secret
           - name: smtp
@@ -442,19 +442,19 @@ Type:  connection.crossplane.io/v1alpha1
 
 Data
 ====
-username:                        20 bytes
-attribute.secret:                40 bytes
-attribute.ses_smtp_password_v4:  44 bytes
-password:                        40 bytes
+password:     40 bytes
+secret:       40 bytes
+smtp:         44 bytes
+user:         20 bytes
 ```
 
 {{<hint "important">}}
-If a key isn't listed in the 
+If a key isn't listed in the
 {{<hover label="comp2" line="16">}}connectionDetails{{</hover>}}
 it isn't stored in the secret object.
 {{< /hint >}}
 
-### Managing conflicting secret keys 
+### Managing conflicting secret keys
 If resources produce conflicting keys, create a unique name with a connection
 details
 {{<hover label="comp3" line="25">}}name{{</hover>}}.
@@ -499,7 +499,7 @@ spec:
             fromConnectionSecretKey: username
 ```
 
-The secret object contains both keys, 
+The secret object contains both keys,
 {{<hover label="comp3Sec" line="9">}}username{{</hover>}}
 and
 {{<hover label="comp3Sec" line="10">}}key2-user{{</hover>}}
@@ -513,17 +513,17 @@ Type:  connection.crossplane.io/v1alpha1
 
 Data
 ====
-username:                        20 bytes
+user:                            20 bytes
 key2-user:                       20 bytes
 # Removed for brevity.
 ```
 
 ## Connection secrets in Composite Resource Definitions
 
-The CompositeResourceDefinition (`XRD`), can restrict which secrets keys are 
-put in the combined secret and provided to a Claim. 
+The CompositeResourceDefinition (`XRD`), can restrict which secrets keys are
+put in the combined secret and provided to a Claim.
 
-By default an XRD writes all secret keys listed in the composed resource 
+By default an XRD writes all secret keys listed in the composed resource
 `connectionDetails` to the combined secret object.
 
 Limit the keys passed to the combined secret object and Claims with a
@@ -540,10 +540,10 @@ You have two options to change the keys in the combined secret object.
 - Restart the XR reconciler, which can be done by restarting the Crossplane pod.
 {{</hint >}}
 
-For example, an XRD may restrict the secrets to only the 
+For example, an XRD may restrict the secrets to only the
 {{<hover label="xrd" line="5">}}username{{</hover>}},
 {{<hover label="xrd" line="6">}}password{{</hover>}} and custom named
-{{<hover label="xrd" line="7">}}key2-user{{</hover>}} keys. 
+{{<hover label="xrd" line="7">}}key2-user{{</hover>}} keys.
 
 ```yaml {label="xrd",copy-lines="4-12"}
 kind: CompositeResourceDefinition
@@ -556,7 +556,7 @@ spec:
 ```
 
 The secret from an individual resource contains all the resources detailed in
-the Composition's `connectionDetails`. 
+the Composition's `connectionDetails`.
 
 ```shell {label="xrdSec",copy-lines="1"}
 kubectl describe secret key1 -n docs
@@ -572,9 +572,9 @@ attribute.ses_smtp_password_v4:  44 bytes
 ```
 
 The Claim's secret only contains the
-keys allowed by the XRD 
-{{<hover label="xrd" line="4">}}connectionSecretKeys{{</hover>}} 
-fields. 
+keys allowed by the XRD
+{{<hover label="xrd" line="4">}}connectionSecretKeys{{</hover>}}
+fields.
 
 ```shell {label="xrdSec2",copy-lines="2"}
 kubectl describe secret my-access-key-secret
@@ -589,14 +589,14 @@ username:   20 bytes
 
 ## Secret objects
 Compositions create a secret object for each resource and an extra secret
-containing all the secrets from all resources. 
+containing all the secrets from all resources.
 
 Crossplane saves the resource secret objects in the location defined by the
-resource's 
+resource's
 {{<hover label="comp4" line="11">}}writeConnectionSecretToRef{{</hover>}}.
 
 Crossplane saves the combined secret with a Crossplane generated name in the
-namespace defined in the Composition's 
+namespace defined in the Composition's
 {{<hover label="comp4" line="4">}}writeConnectionSecretsToNamespace{{</hover>}}.
 
 ```yaml {label="comp4",copy-lines="none"}
@@ -640,7 +640,7 @@ spec:
 ```
 
 If a Claim uses a secret, it's stored in the same namespace as the Claim with
-the name defined in the Claim's 
+the name defined in the Claim's
 {{<hover label="claim3" line="7">}}writeConnectionSecretToRef{{</hover>}}.
 
 ```yaml {label="claim3",copy-lines="none"}
@@ -655,14 +655,14 @@ spec:
 ```
 
 After applying the Claim Crossplane creates the following secrets:
-* The Claim's secret, {{<hover label="allSec" line="3">}}my-access-key-secret{{</hover>}} 
+* The Claim's secret, {{<hover label="allSec" line="3">}}my-access-key-secret{{</hover>}}
   in the Claim's {{<hover label="claim3" line="5">}}namespace{{</hover>}}.
 * The first resource's secret object, {{<hover label="allSec" line="4">}}key1{{</hover>}}.
 * The second resource's secret object, {{<hover label="allSec" line="5">}}key2{{</hover>}}.
-* The composite resource secret object in the 
+* The composite resource secret object in the
   {{<hover label="allSec" line="6">}}other-namespace{{</hover>}} defined by the
   Composition's `writeConnectionSecretsToNamespace`.
-  
+
 
 ```shell {label="allSec",copy-lines="none"}
  kubectl get secret -A
