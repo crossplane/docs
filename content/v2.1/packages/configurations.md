@@ -457,7 +457,7 @@ or required versions is optional.
 
 ```yaml {label="cfgMeta",copy-lines="all"}
 $ cat crossplane.yaml
-apiVersion: meta.pkg.crossplane.io/v1alpha1
+apiVersion: meta.pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: test-configuration
@@ -501,7 +501,7 @@ The
 Crossplane CLI builds a package named `test-configuration-e8c244f6bf21.xpkg`.
 
 ```yaml {label="xpkgName"}
-apiVersion: meta.pkg.crossplane.io/v1alpha1
+apiVersion: meta.pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: test-configuration

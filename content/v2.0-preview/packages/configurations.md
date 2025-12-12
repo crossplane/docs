@@ -5,43 +5,43 @@ altTitle: "Crossplane Packages"
 weight: 200
 ---
 
-A _Configuration_ package is an 
+A _Configuration_ package is an
 [OCI container image](https://opencontainers.org/) containing a collection of
-[Compositions]({{<ref "../composition/compositions" >}}), 
+[Compositions]({{<ref "../composition/compositions" >}}),
 [Composite Resource Definitions]({{<ref "../composition/composite-resource-definitions" >}})
-and any required [Providers]({{<ref "./providers">}}) or 
+and any required [Providers]({{<ref "./providers">}}) or
 [Functions]({{<ref "./functions" >}}).
 
-Configuration packages make your Crossplane configuration fully portable. 
+Configuration packages make your Crossplane configuration fully portable.
 
 {{<hint "important" >}}
-Crossplane Providers and Functions are also Crossplane packages.  
+Crossplane Providers and Functions are also Crossplane packages.
 
-This document describes how to install and manage configuration packages.  
+This document describes how to install and manage configuration packages.
 
-Refer to the 
-[Provider]({{<ref "./providers">}}) and 
+Refer to the
+[Provider]({{<ref "./providers">}}) and
 [Functions]({{<ref "./functions">}}) chapters for
-details on their usage of packages. 
+details on their usage of packages.
 {{< /hint >}}
 
 ## Install a Configuration
 
-Install a Configuration with a Crossplane 
-{{<hover line="2" label="install">}}Configuration{{</hover>}} object by setting 
+Install a Configuration with a Crossplane
+{{<hover line="2" label="install">}}Configuration{{</hover>}} object by setting
 the {{<hover line="6" label="install">}}spec.package{{</hover>}} value to the
 location of the configuration package.
 
 {{< hint "important" >}}
 Beginning with Crossplane version 1.20.0 Crossplane uses the [crossplane-contrib](https://github.com/orgs/crossplane-contrib/packages) GitHub Container Registry at `xpkg.crossplane.io` by default for downloading and
-installing packages. 
+installing packages.
 
 Specify the full domain name with the `package` or change the default Crossplane
 registry with the `--registry` flag on the [Crossplane pod]({{<ref "../guides/pods">}})
 {{< /hint >}}
 
-For example to install the 
-[Getting Started Configuration](https://github.com/crossplane-contrib/configuration-quickstart), 
+For example to install the
+[Getting Started Configuration](https://github.com/crossplane-contrib/configuration-quickstart),
 
 ```yaml {label="install"}
 apiVersion: pkg.crossplane.io/v1
@@ -67,7 +67,7 @@ spec:
 {{< /hint >}}
 
 Crossplane installs the Compositions, Composite Resource Definitions and
-Providers listed in the Configuration. 
+Providers listed in the Configuration.
 
 ### Install with Helm
 
@@ -92,7 +92,7 @@ crossplane-stable/crossplane \
 
 Installing Crossplane packages offline requires a local container registry, such as
 [Harbor](https://goharbor.io/) to host the packages. Crossplane only
-supports installing packages from a container registry. 
+supports installing packages from a container registry.
 
 Crossplane doesn't support installing packages directly from Kubernetes
 volumes.
@@ -100,15 +100,15 @@ volumes.
 ### Installation options
 
 Configurations support multiple options to change configuration package related
-settings. 
+settings.
 
 
 #### Configuration revisions
 
 When installing a newer version of an existing Configuration Crossplane creates
-a new configuration revision. 
+a new configuration revision.
 
-View the configuration revisions with 
+View the configuration revisions with
 {{<hover label="rev" line="1">}}kubectl get configurationrevisions{{</hover>}}.
 
 ```shell {label="rev",copy-lines="1"}
@@ -119,20 +119,20 @@ platform-ref-aws-3ac761211893   True      1          xpkg.crossplane.io/crosspla
 ```
 
 Only a single revision is active at a time. The active revision determines the
-available resources, including Compositions and Composite Resource Definitions. 
+available resources, including Compositions and Composite Resource Definitions.
 
 By default Crossplane keeps only a single _Inactive_ revision.
 
-Change the number of revisions Crossplane maintains with a Configuration package 
-{{<hover label="revHistory" line="6">}}revisionHistoryLimit{{</hover>}}. 
+Change the number of revisions Crossplane maintains with a Configuration package
+{{<hover label="revHistory" line="6">}}revisionHistoryLimit{{</hover>}}.
 
 The {{<hover label="revHistory" line="6">}}revisionHistoryLimit{{</hover>}}
-field is an integer.  
-The default value is `1`.  
-Disable storing revisions by setting 
+field is an integer.
+The default value is `1`.
+Disable storing revisions by setting
 {{<hover label="revHistory" line="6">}}revisionHistoryLimit{{</hover>}} to `0`.
 
-For example, to change the default setting and store 10 revisions use 
+For example, to change the default setting and store 10 revisions use
 {{<hover label="revHistory" line="6">}}revisionHistoryLimit: 10{{</hover>}}.
 
 ```yaml {label="revHistory"}
@@ -151,26 +151,26 @@ Use a {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} to
 define when Crossplane should download the Configuration package to the local
 Crossplane package cache.
 
-The `packagePullPolicy` options are: 
+The `packagePullPolicy` options are:
 * `IfNotPresent` - (**default**) Only download the package if it isn't in the cache.
 * `Always` - Check for new packages every minute and download any matching
   package that isn't in the cache.
 * `Never` - Never download the package. Packages are only installed from the
-  local package cache. 
+  local package cache.
 
 {{<hint "tip" >}}
-The Crossplane 
+The Crossplane
 {{<hover label="pullpolicy" line="6">}}packagePullPolicy{{</hover>}} works
-like the Kubernetes container image 
-[image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy).  
+like the Kubernetes container image
+[image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy).
 
 Crossplane supports the use of tags and package digest hashes like
-Kubernetes images. 
+Kubernetes images.
 {{< /hint >}}
 
-For example, to `Always` download a given Configuration package use the 
+For example, to `Always` download a given Configuration package use the
 {{<hover label="pullpolicy" line="6">}}packagePullPolicy: Always{{</hover>}}
-configuration. 
+configuration.
 
 ```yaml {label="pullpolicy",copy-lines="6"}
 apiVersion: pkg.crossplane.io/v1
@@ -185,20 +185,20 @@ spec:
 #### Revision activation policy
 
 The `Active` package revision
-is the package controller actively reconciling resources. 
+is the package controller actively reconciling resources.
 
-By default Crossplane sets the most recently installed package revision as 
+By default Crossplane sets the most recently installed package revision as
 `Active`.
 
 Control the Configuration upgrade behavior with a
 {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}}.
 
-The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}} 
+The {{<hover label="revision" line="6">}}revisionActivationPolicy{{</hover>}}
 options are:
 * `Automatic` - (**default**) Automatically activate the last installed configuration.
-* `Manual` - Don't automatically activate a configuration. 
+* `Manual` - Don't automatically activate a configuration.
 
-For example, to change the upgrade behavior to require manual upgrades, set 
+For example, to change the upgrade behavior to require manual upgrades, set
 {{<hover label="revision" line="6">}}revisionActivationPolicy: Manual{{</hover>}}.
 
 ```yaml {label="revision"}
@@ -214,14 +214,14 @@ spec:
 
 #### Install a Configuration from a private registry
 
-Like Kubernetes uses `imagePullSecrets` to 
-[install images from private registries](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/), 
-Crossplane uses `packagePullSecrets` to install Configuration packages from a 
-private registry. 
+Like Kubernetes uses `imagePullSecrets` to
+[install images from private registries](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/),
+Crossplane uses `packagePullSecrets` to install Configuration packages from a
+private registry.
 
 Use {{<hover label="pps" line="6">}}packagePullSecrets{{</hover>}} to provide a
-Kubernetes secret to use for authentication when downloading a Configuration 
-package. 
+Kubernetes secret to use for authentication when downloading a Configuration
+package.
 
 {{<hint "important" >}}
 The Kubernetes secret must be in the same namespace as Crossplane.
@@ -231,7 +231,7 @@ The {{<hover label="pps" line="6">}}packagePullSecrets{{</hover>}} is a list of
 secrets.
 
 For example, to use the secret named
-{{<hover label="pps" line="6">}}example-secret{{</hover>}} configure a 
+{{<hover label="pps" line="6">}}example-secret{{</hover>}} configure a
 {{<hover label="pps" line="6">}}packagePullSecrets{{</hover>}}.
 
 ```yaml {label="pps"}
@@ -240,7 +240,7 @@ kind: Configuration
 metadata:
   name: platform-ref-aws
 spec:
-  packagePullSecrets: 
+  packagePullSecrets:
     - name: example-secret
 # Removed for brevity
 ```
@@ -248,19 +248,19 @@ spec:
 #### Ignore dependencies
 
 By default Crossplane installs any [dependencies](#manage-dependencies) listed
-in a Configuration package. 
+in a Configuration package.
 
-Crossplane can ignore a Configuration package's dependencies with 
+Crossplane can ignore a Configuration package's dependencies with
 {{<hover label="pkgDep" line="6" >}}skipDependencyResolution{{</hover>}}.
 
 {{< hint "warning" >}}
-Most Configurations include dependencies for the required Providers. 
+Most Configurations include dependencies for the required Providers.
 
-If a Configuration ignores dependencies, the required Providers must be 
+If a Configuration ignores dependencies, the required Providers must be
 manually installed.
 {{< /hint >}}
 
-For example, to disable dependency resolution configure 
+For example, to disable dependency resolution configure
 {{<hover label="pkgDep" line="6" >}}skipDependencyResolution: true{{</hover>}}.
 
 ```yaml {label="pkgDep"}
@@ -308,7 +308,7 @@ section for more details.
 {{<hint "important" >}}
 Enabling automatic dependency downgrades may have unintended consequences, such as:
 
-1) CRDs missing in the downgraded version, possibly leaving orphaned MRs without 
+1) CRDs missing in the downgraded version, possibly leaving orphaned MRs without
 controllers to reconcile them.
 2) Loss of data if downgraded CRD versions omit fields that were set before.
 3) Changes in the CRD storage version, which may prevent package version update.
@@ -316,15 +316,15 @@ controllers to reconcile them.
 
 #### Ignore Crossplane version requirements
 
-A Configuration package may require a specific or minimum Crossplane version 
-before installing. By default, Crossplane doesn't install a Configuration if 
-the Crossplane version doesn't meet the required version. 
+A Configuration package may require a specific or minimum Crossplane version
+before installing. By default, Crossplane doesn't install a Configuration if
+the Crossplane version doesn't meet the required version.
 
-Crossplane can ignore the required version with 
+Crossplane can ignore the required version with
 {{<hover label="xpVer" line="6">}}ignoreCrossplaneConstraints{{</hover>}}.
 
 For example, to install a Configuration package into an unsupported Crossplane
-version, configure 
+version, configure
 {{<hover label="xpVer" line="6">}}ignoreCrossplaneConstraints: true{{</hover>}}.
 
 ```yaml {label="xpVer"}
@@ -340,7 +340,7 @@ spec:
 
 ### Verify a Configuration
 
-Verify a Configuration with 
+Verify a Configuration with
 {{<hover label="verify" line="1">}}kubectl get configuration{{</hover >}}.
 
 A working configuration reports `Installed` and `Healthy` as `True`.
@@ -354,10 +354,10 @@ platform-ref-aws   True        True      xpkg.crossplane.io/crossplane-contrib/c
 ### Manage dependencies
 
 Configuration packages may include dependencies on other packages including
-Functions, Providers or other Configurations. 
+Functions, Providers or other Configurations.
 
 If Crossplane can't meet the dependencies of a Configuration the Configuration
-reports `HEALTHY` as `False`. 
+reports `HEALTHY` as `False`.
 
 For example, this installation of the Getting Started Configuration is
 `HEALTHY: False`.
@@ -368,7 +368,7 @@ NAME               INSTALLED   HEALTHY   PACKAGE                                
 platform-ref-aws   True        False     xpkg.crossplane.io/crossplane-contrib/configuration-quickstart:v0.1.0   71s
 ```
 
-To see more information on why the Configuration isn't `HEALTHY` use 
+To see more information on why the Configuration isn't `HEALTHY` use
 {{<hover label="depend" line="1">}}kubectl describe configurationrevisions{{</hover>}}.
 
 ```yaml {copy-lines="1",label="depend"}
@@ -395,69 +395,69 @@ Events:
   Warning  LintPackage  29s (x2 over 29s)  packages/configurationrevision.pkg.crossplane.io  incompatible Crossplane version: package isn't compatible with Crossplane version (v1.12.0)
 ```
 
-The {{<hover label="depend" line="18">}}Events{{</hover>}} show a 
+The {{<hover label="depend" line="18">}}Events{{</hover>}} show a
 {{<hover label="depend" line="21">}}Warning{{</hover>}} with a message that the
-current version of Crossplane doesn't meet the Configuration package 
+current version of Crossplane doesn't meet the Configuration package
 requirements.
 
 ## Create a Configuration
 
-Crossplane Configuration packages are 
+Crossplane Configuration packages are
 [OCI container images](https://opencontainers.org/) containing one or more YAML
-files. 
+files.
 
 {{<hint "important" >}}
 Configuration packages are fully OCI compliant. Any tool that builds OCI images
-can build Configuration packages.  
+can build Configuration packages.
 
 It's strongly recommended to use the Crossplane command-line tool to
-provide error checking and formatting to Crossplane package builds. 
+provide error checking and formatting to Crossplane package builds.
 
-Read the 
-[Crossplane package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md) 
+Read the
+[Crossplane package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md)
 for package requirements when building packages with third-party tools.
 {{</hint >}}
 
 A Configuration package requires a `crossplane.yaml` file and may include
-Composition and CompositeResourceDefinition files. 
+Composition and CompositeResourceDefinition files.
 
 <!-- vale Google.Headings = NO -->
 ### The crossplane.yaml file
 <!-- vale Google.Headings = YES -->
 
 To build a Configuration package using the Crossplane CLI, create a file
-named 
-{{<hover label="cfgMeta" line="1">}}crossplane.yaml{{</hover>}}.  
-The 
+named
+{{<hover label="cfgMeta" line="1">}}crossplane.yaml{{</hover>}}.
+The
 {{<hover label="cfgMeta" line="1">}}crossplane.yaml{{</hover>}}
-file defines the requirements and name of the 
+file defines the requirements and name of the
 Configuration.
 
 {{<hint "important" >}}
 The Crossplane CLI only supports a file named `crossplane.yaml`.
 {{< /hint >}}
 
-Configuration package uses the 
+Configuration package uses the
 {{<hover label="cfgMeta" line="2">}}meta.pkg.crossplane.io{{</hover>}}
 Crossplane API group.
 
-Specify any other Configurations, Functions or Providers in the 
-{{<hover label="cfgMeta" line="7">}}dependsOn{{</hover>}} list.  
-Optionally, you can require a specific or minimum package version with the 
+Specify any other Configurations, Functions or Providers in the
+{{<hover label="cfgMeta" line="7">}}dependsOn{{</hover>}} list.
+Optionally, you can require a specific or minimum package version with the
 {{<hover label="cfgMeta" line="9">}}version{{</hover>}} option.
 
 You can also define a specific or minimum version of Crossplane for this
-Configuration with the 
-{{<hover label="cfgMeta" line="11">}}crossplane.version{{</hover>}} option. 
+Configuration with the
+{{<hover label="cfgMeta" line="11">}}crossplane.version{{</hover>}} option.
 
 {{<hint "note" >}}
-Defining the {{<hover label="cfgMeta" line="10">}}crossplane{{</hover>}} object 
-or required versions is optional. 
+Defining the {{<hover label="cfgMeta" line="10">}}crossplane{{</hover>}} object
+or required versions is optional.
 {{< /hint >}}
 
 ```yaml {label="cfgMeta",copy-lines="all"}
 $ cat crossplane.yaml
-apiVersion: meta.pkg.crossplane.io/v1alpha1
+apiVersion: meta.pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: test-configuration
@@ -473,8 +473,8 @@ spec:
 
 ### Build the package
 
-Create the package using the 
-[Crossplane CLI]({{<ref "../cli">}}) command 
+Create the package using the
+[Crossplane CLI]({{<ref "../cli">}}) command
 `crossplane xpkg build --package-root=<directory>`.
 
 Where the `<directory>` is the directory containing the `crossplane.yaml` file
@@ -484,24 +484,24 @@ The CLI recursively searches for `.yml` or `.yaml` files in the directory to
 include in the package.
 
 {{<hint "important" >}}
-You must ignore any other YAML files with `--ignore=<file_list>`.  
+You must ignore any other YAML files with `--ignore=<file_list>`.
 For
 example, `crossplane xpkg build --package-root=test-directory --ignore=".tmp/*"`.
 
-Including YAML files that aren't Compositions or CompositeResourceDefinitions 
+Including YAML files that aren't Compositions or CompositeResourceDefinitions
 isn't supported.
 {{</hint >}}
 
-By default, Crossplane creates a `.xpkg` file of the Configuration name and 
+By default, Crossplane creates a `.xpkg` file of the Configuration name and
 a SHA-256 hash of the package contents.
 
 For example, a {{<hover label="xpkgName" line="2">}}Configuration{{</hover>}}
-named {{<hover label="xpkgName" line="4">}}test-configuration{{</hover>}}.  
+named {{<hover label="xpkgName" line="4">}}test-configuration{{</hover>}}.
 The
 Crossplane CLI builds a package named `test-configuration-e8c244f6bf21.xpkg`.
 
 ```yaml {label="xpkgName"}
-apiVersion: meta.pkg.crossplane.io/v1alpha1
+apiVersion: meta.pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: test-configuration
