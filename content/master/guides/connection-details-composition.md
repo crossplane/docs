@@ -6,15 +6,17 @@ description: "Expose connection details for composite resources aggregated from 
 
 This guide shows how to expose connection details for composite resources (XRs).
 Because composite resources can compose multiple resources, the connection
+<!-- vale write-good.TooWordy = NO -->
 details they expose are often an aggregate of the connection details from their
+<!-- vale write-good.TooWordy = YES -->
 composed resources.
 
-The recommended approach to do this is to simply include a Kubernetes `Secret`
+The recommended approach is to include a Kubernetes `Secret`
 resource in your Composition that aggregates the connection details from other
 resources and exposes them for the XR.
 
 {{<hint "note">}}
-Crossplane v1 included functionality that automatically created connection details
+Crossplane v1 included a feature that automatically created connection details
 for XRs.
 
 To learn more about how to specify XR connection details in Crossplane v1, please see the
@@ -23,15 +25,15 @@ To learn more about how to specify XR connection details in Crossplane v1, pleas
 
 ## Example overview
 
-To demonstrate how composite resources can expose connection details, this guide
-creates a `UserAccessKey` composite resource. This XR represents an AWS IAM user
+This guide shows how composite resources can expose connection details by
+creating a `UserAccessKey` composite resource. This XR represents an AWS IAM user
 with multiple access keys.
 
 When a user creates a `UserAccessKey`, Crossplane provisions an IAM User and two
 AccessKeys in AWS. Each AccessKey produces their own connection details like a
 username and password. The `UserAccessKey` also composes a `Secret` resource
 that exposes the aggregated connection details of its composed resources, allowing
-users and applications to easily consume them.
+users and applications to consume them.
 
 An example `UserAccessKey` XR looks like this:
 
@@ -107,7 +109,7 @@ After you complete these steps you can
 
 ### Define the schema
 
-Composite resources are defined using a CompositeResourceDefinition (XRD).
+A CompositeResourceDefinition (XRD) defines composite resources.
 
 For this example, create an XRD for the `UserAccessKey` composite resource:
 
@@ -144,9 +146,11 @@ spec:
 This XRD schema defines a `.spec.writeConnectionSecretToRef.name` field that
 allows the user to optionally set the name for the XR connection details secret.
 
+<!-- vale write-good.Passive = NO -->
 For a `Cluster` scoped XRD, a `.spec.writeConnectionSecretToRef.namespace` field
 could also be added to allow the user to specify the namespace of the secret
 too.
+<!-- vale write-good.Passive = YES -->
 {{</hint>}}
 
 Save the XRD as `xrd.yaml` and apply it:
@@ -160,7 +164,7 @@ resource.
 
 ### Install the function
 
-Composition functions provide general functionality to help you compose
+Composition functions provide general features to help you compose
 resources and expose connection details. This guide shows how to compose
 connection details with multiple functions. Pick the language you want to use
 from the tabs below.
@@ -282,12 +286,12 @@ composite resource's connection details.
 The general pattern is:
 
 1. Composed resources write their connection details to individual secrets
-2. The Composition reads those connection details during execution
+2. The Composition reads those connection details when the function runs
 3. The Composition creates a composed `Secret` representing the aggregated connection details for the XR
 
 {{<hint "tip">}}
 The composite resource's connection details secret can contain any data you want
-and it can be transformed however you need.
+and you can transform it as needed.
 
 You're not limited to connection details from managed resources - you can
 include data from any composed resource, including arbitrary Kubernetes
@@ -377,6 +381,8 @@ spec:
       name: function-auto-ready
 ```
 
+<!-- vale write-good.Passive = NO -->
+<!-- vale Google.WordList = NO -->
 **How this Composition exposes connection details:**
 
 * Each composed {{<hover label="comp-gotmpl" line="30">}}AccessKey{{</hover>}} has
@@ -386,10 +392,10 @@ spec:
   {{<hover label="comp-gotmpl" line="54">}}Secret{{</hover>}} resource that
   represents the composite resource's connection details.
 * The {{<hover label="comp-gotmpl" line="56">}}name{{</hover>}} of the `Secret` is set using the
-{{<hover label="comp-gotmpl" line="56">}}dig{{</hover>}} function to safely read the XR's
+{{<hover label="comp-gotmpl" line="56">}}dig{{</hover>}} function to read the XR's
   `.spec.writeConnectionSecretToRef.name` field if it exists.
 * Crossplane observes the connection details from each `AccessKey` and makes them
-  available to the composition when the function is executed.
+  available to the composition when the function runs.
 * The Secret reads connection details via
   {{<hover label="comp-gotmpl" line="63">}}$.observed.resources{{</hover>}} from
   the observed composed resources.
@@ -397,6 +403,8 @@ spec:
   check handles the initial phase when composed resources are still being created.
 * In `function-go-templating`, connection details are **already base64-encoded**, so you
   use them directly in the Secret's data field.
+<!-- vale Google.WordList = YES -->
+<!-- vale write-good.Passive = YES -->
 
 {{< /tab >}}
 
@@ -506,6 +514,8 @@ spec:
 
 ```
 
+<!-- vale write-good.Passive = NO -->
+<!-- vale Google.WordList = NO -->
 **How this Composition exposes connection details:**
 
 * Each composed {{<hover label="comp-python" line="51">}}AccessKey{{</hover>}} has
@@ -514,10 +524,10 @@ spec:
 * The Composition creates an explicit
   {{<hover label="comp-python" line="67">}}Secret{{</hover>}} resource that
   represents the composite resource's connection details.
-* The {{<hover label="comp-python" line="74">}}secret_name{{</hover>}} is set only after safely checking that the XR's
+* The {{<hover label="comp-python" line="74">}}secret_name{{</hover>}} is set only after checking that the XR's
   {{<hover label="comp-python" line="73">}}.spec.writeConnectionSecretToRef.name{{</hover>}} field exists.
 * Crossplane observes the connection details from each AccessKey and makes them
-  available to the composition when the function is executed.
+  available to the composition when the function runs.
 * The Secret reads connection details via
   {{<hover label="comp-python" line="81">}}req.observed.resources["accesskey-0"].connection_details{{</hover>}}
   from the observed composed resources.
@@ -526,6 +536,8 @@ spec:
 * In `function-python`, connection details are **plaintext bytes**. To store them on the `Secret`, first
   convert them to strings with {{<hover label="comp-python" line="83">}}.decode("utf-8"){{</hover>}}
   and then save them using the secret's {{<hover label="comp-python" line="95">}}stringData{{</hover>}} field.
+<!-- vale Google.WordList = YES -->
+<!-- vale write-good.Passive = YES -->
 
 {{< /tab >}}
 
@@ -603,6 +615,7 @@ spec:
       name: function-auto-ready
 ```
 
+<!-- vale write-good.Passive = NO -->
 **How this Composition exposes connection details:**
 
 * Each composed {{<hover label="comp-kcl" line="31">}}AccessKey{{</hover>}} has
@@ -612,17 +625,18 @@ spec:
   {{<hover label="comp-kcl" line="51">}}Secret{{</hover>}} resource that
   represents the composite resource's connection details.
 * The {{<hover label="comp-kcl" line="54">}}name{{</hover>}} of the `Secret` is set using
-  {{<hover label="comp-kcl" line="54">}}?.{{</hover>}} optional chaining operators to safely read the XR's
+  {{<hover label="comp-kcl" line="54">}}?.{{</hover>}} optional chaining operators to read the XR's
   {{<hover label="comp-kcl" line="54">}}.spec.writeConnectionSecretToRef.name{{</hover>}} field if it exists.
 * Crossplane observes the connection details from each
-  `AccessKey` and makes them available to the composition when the function is executed.
+  `AccessKey` and makes them available to the composition when the function runs.
 * The Secret reads connection details via
   {{<hover label="comp-kcl" line="59">}}ocds["accesskey-0"]?.ConnectionDetails?.username{{</hover>}}
-  from the observed composed resources, safely handling the case where connection details don't exist yet.
+  from the observed composed resources, handling the case where connection details don't exist yet.
 * The {{<hover label="comp-kcl" line="63">}}if ocds else {}{{</hover>}} handles
   the phase when composed resources are still being created.
 * In `function-kcl`, connection details are **already base64-encoded**, so you use them
   directly in the Secret's data field.
+<!-- vale write-good.Passive = YES -->
 
 {{< /tab >}}
 
@@ -708,10 +722,10 @@ my-keys-586e2994bda1   Opaque   4      5m37s
 
 {{<hint "tip">}}
 The composite resource's connection details Secret has a label
-`crossplane.io/composite=my-keys` that makes it easy to find.
+`crossplane.io/composite=my-keys` for convenient lookup.
 
-If `.spec.writeConnectionSecretToRef.name` was set on the XR, then the `Secret`
-will have that exact name.
+If you set `.spec.writeConnectionSecretToRef.name` on the XR, the `Secret`
+has that exact name.
 {{</hint>}}
 
 Verify the composite resource's connection details `Secret` contains all the
@@ -740,27 +754,27 @@ kubectl get secret -n default -l crossplane.io/composite=my-keys -o jsonpath='{.
 
 ## Understanding how composing connection details works
 
-Let's review the basic steps to expose connection details for a composite resource:
+The basic steps to expose connection details for a composite resource are:
 
 1. **Compose resources**: Create composed resources as usual in your
-   composition, such as IAM `User` and `AccessKeys`. These resources will expose
+   composition, such as IAM `User` and `AccessKeys`. These resources expose
    their connection details in a `Secret`.
 
 2. **Set `writeConnectionSecretToRef`**: Each composed resource that should have
    connection details stored in their own individual `Secret` should have their
    `writeConnectionSecretToRef` set in the composition.
 
-3. **Observed connection details**: Crossplane will observe the actual state of
-   each composed resource, including its connection details, and make this data
-   available when it calls the function.
+3. **Observed connection details**: Crossplane observes the actual state of
+   each composed resource, including its connection details, and makes this data
+   available when it runs the function.
 
-4. **Compose the aggregate `Secret`**: With the observed connection details of
+4. **Compose the combined `Secret`**: With the observed connection details of
    your composed resources in hand, compose a `Secret` resource that combines
    the important connection details you want to expose for the XR.
 
-5. **Safely handle transient state**: When your XR is first created, the
+5. **Handle transient state**: When your XR is first created, the
    composed resources and/or their connection details may not exist yet. Your
-   Composition should safely handle these cases by checking if resources and
+   Composition should handle these cases by checking if resources and
    their connection details exist before accessing them.
 
 
@@ -770,31 +784,39 @@ Let's review the basic steps to expose connection details for a composite resour
 
 **Causes:**
 
+<!-- vale write-good.Weasel = NO -->
 * Composed resources don't have `writeConnectionSecretToRef` set
 * Composed resources aren't ready/healthy yet
 * Not handling initial nil state correctly in the Composition
+<!-- vale write-good.Weasel = YES -->
 
+<!-- vale write-good.Passive = NO -->
+<!-- vale Google.WordList = NO -->
 **Solutions**:
 
 * Verify `writeConnectionSecretToRef` is set on all composed managed resources
-* Wait for composed resources to become ready (`kubectl get` and check `READY` column)
+* Wait for composed resources to become ready (`kubectl get` and check the `READY` column)
 * Verify the composed resource is actually producing connection details:
   `kubectl get secret <composed-resource-secret-name> -o yaml`
 * Add nil/empty checks in your Composition logic to safeguard access to data that may not exist yet
+<!-- vale Google.WordList = YES -->
+<!-- vale write-good.Passive = YES -->
 
-### Connection details are not encoded properly
+<!-- vale write-good.Weasel = NO -->
+### Connection details aren't encoded correctly
 
-**Cause:** Not encoding the aggregate secret data properly in your Composition logic
+**Cause:** not encoding the combined secret data correctly in your Composition logic
 
-**Solution:** Ensure that your connection details data is properly encoded for
+**Solution:** Ensure that your connection details data is correctly encoded for
 the function you're using. For example, `function-python` requires you to
 convert connection details to base64-encoded strings, while connection details
 in `function-go-templating` and `function-kcl` are already encoded this way and
 require no conversion logic.
+<!-- vale write-good.Weasel = YES -->
 
 ## Clean up
 
-Delete the composite resource to clean-up:
+Delete the composite resource to clean up:
 
 ```shell
 kubectl delete -f my-keys.yaml
