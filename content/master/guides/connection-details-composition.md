@@ -9,9 +9,9 @@ Because composite resources can compose multiple resources, the connection
 details they expose are often an aggregate of the connection details from their
 composed resources.
 
-The recommended approach to do this is by including a `Secret` resource in your
-Composition that aggregates connection details from other resources and
-exposes them for the XR.
+The recommended approach to do this is to simply include a Kubernetes `Secret`
+resource in your Composition that aggregates the connection details from other
+resources and exposes them for the XR.
 
 {{<hint "note">}}
 Crossplane v1 included functionality that automatically created connection details
@@ -19,7 +19,6 @@ for XRs.
 
 To learn more about how to specify XR connection details in Crossplane v1, please see the
 [v1 connection details]({{<ref "../../v1.20/concepts/connection-details">}}) docs page.
-
 {{</hint>}}
 
 ## Example overview
@@ -133,7 +132,22 @@ spec:
         properties:
           spec:
             type: object
+            properties:
+              writeConnectionSecretToRef:
+                type: object
+                properties:
+                  name:
+                    type: string
 ```
+
+{{<hint "tip">}}
+This XRD schema defines a `.spec.writeConnectionSecretToRef.name` field that
+allows the user to optionally set the name for the XR connection details secret.
+
+For a `Cluster` scoped XRD, a `.spec.writeConnectionSecretToRef.namespace` field
+could also be added to allow the user to specify the namespace of the secret
+too.
+{{</hint>}}
 
 Save the XRD as `xrd.yaml` and apply it:
 
@@ -239,7 +253,7 @@ function-kcl                      True        True      xpkg.crossplane.io/cross
 ```
 {{< /tab >}}
 
-{{</ tabs >}}
+{{< /tabs >}}
 
 This guide also uses `function-auto-ready`. This function automatically
 marks composed resources as ready when they're healthy:
@@ -284,7 +298,7 @@ Create a Composition that exposes connection details for the `UserAccessKey`
 composite resource.
 
 In this example, the Composition creates two `AccessKey` managed resources and
-exposes their credentials as the composite resource's connection details:
+exposes their credentials as the composite resource's connection details `Secret`:
 
 {{< tabs >}}
 
@@ -346,6 +360,7 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
+            name: {{ dig "spec" "writeConnectionSecretToRef" "name" "" $.observed.composite.resource}}
             annotations:
               {{ setResourceNameAnnotation "connection-secret" }}
           {{ if eq $.observed.resources nil }}
@@ -370,12 +385,15 @@ spec:
 * The Composition creates an explicit
   {{<hover label="comp-gotmpl" line="54">}}Secret{{</hover>}} resource that
   represents the composite resource's connection details.
+* The {{<hover label="comp-gotmpl" line="56">}}name{{</hover>}} of the `Secret` is set using the
+{{<hover label="comp-gotmpl" line="56">}}dig{{</hover>}} function to safely read the XR's
+  `.spec.writeConnectionSecretToRef.name` field if it exists.
 * Crossplane observes the connection details from each `AccessKey` and makes them
   available to the composition when the function is executed.
 * The Secret reads connection details via
-  {{<hover label="comp-gotmpl" line="62">}}$.observed.resources{{</hover>}} from
+  {{<hover label="comp-gotmpl" line="63">}}$.observed.resources{{</hover>}} from
   the observed composed resources.
-* The {{<hover label="comp-gotmpl" line="58">}}{{ if eq $.observed.resources nil }}{{</hover>}}
+* The {{<hover label="comp-gotmpl" line="59">}}{{ if eq $.observed.resources nil }}{{</hover>}}
   check handles the initial phase when composed resources are still being created.
 * In `function-go-templating`, connection details are **already base64-encoded**, so you
   use them directly in the Secret's data field.
@@ -451,55 +469,63 @@ spec:
             # Secret representing the composite resource's connection details
             secret_resource = {
                 "apiVersion": "v1",
-                "kind": "Secret"
+                "kind": "Secret",
+                "metadata": {}
             }
 
-            import base64
+            # If a secret name was provided then use it
+            secret_name = ""
+            if "writeConnectionSecretToRef" in oxr["spec"] and "name" in oxr["spec"]["writeConnectionSecretToRef"]:
+              secret_name = oxr["spec"]["writeConnectionSecretToRef"]["name"]
+
+            secret_resource["metadata"]["name"] = secret_name
 
             # Only add data if we have connection details to populate
-            secret_data = {}
+            data = {}
             if "accesskey-0" in req.observed.resources:
                 accesskey0_conn = req.observed.resources["accesskey-0"].connection_details
                 if "username" in accesskey0_conn:
-                    secret_data["user-0"] = base64.b64encode(accesskey0_conn["username"]).decode("utf-8")
+                    data["user-0"] = accesskey0_conn["username"].decode("utf-8")
                 if "password" in accesskey0_conn:
-                    secret_data["password-0"] = base64.b64encode(accesskey0_conn["password"]).decode("utf-8")
+                    data["password-0"] = accesskey0_conn["password"].decode("utf-8")
 
             if "accesskey-1" in req.observed.resources:
                 accesskey1_conn = req.observed.resources["accesskey-1"].connection_details
                 if "username" in accesskey1_conn:
-                    secret_data["user-1"] = base64.b64encode(accesskey1_conn["username"]).decode("utf-8")
+                    data["user-1"] = accesskey1_conn["username"].decode("utf-8")
                 if "password" in accesskey1_conn:
-                    secret_data["password-1"] = base64.b64encode(accesskey1_conn["password"]).decode("utf-8")
+                    data["password-1"] = accesskey1_conn["password"].decode("utf-8")
 
-            if secret_data:
-                secret_resource["data"] = secret_data
+            if data:
+                secret_resource["stringData"] = data
 
             rsp.desired.resources["connection-secret"].resource.update(secret_resource)
   - step: ready
     functionRef:
       name: function-auto-ready
+
 ```
 
 **How this Composition exposes connection details:**
 
-* Each composed {{<hover label="comp-python" line="33">}}AccessKey{{</hover>}} has
-  {{<hover label="comp-python" line="42">}}writeConnectionSecretToRef{{</hover>}} set. This
+* Each composed {{<hover label="comp-python" line="51">}}AccessKey{{</hover>}} has
+  {{<hover label="comp-python" line="58">}}writeConnectionSecretToRef{{</hover>}} set. This
   tells each AccessKey to write its credentials to an individual Secret.
 * The Composition creates an explicit
-  {{<hover label="comp-python" line="65">}}Secret{{</hover>}} resource that
+  {{<hover label="comp-python" line="67">}}Secret{{</hover>}} resource that
   represents the composite resource's connection details.
+* The {{<hover label="comp-python" line="74">}}secret_name{{</hover>}} is set only after safely checking that the XR's
+  {{<hover label="comp-python" line="73">}}.spec.writeConnectionSecretToRef.name{{</hover>}} field exists.
 * Crossplane observes the connection details from each AccessKey and makes them
   available to the composition when the function is executed.
 * The Secret reads connection details via
-  {{<hover label="comp-python" line="75">}}req.observed.resources["accesskey-0"].connection_details{{</hover>}}
+  {{<hover label="comp-python" line="81">}}req.observed.resources["accesskey-0"].connection_details{{</hover>}}
   from the observed composed resources.
-* The {{<hover label="comp-python" line="74">}}if "accesskey-0" in req.observed.resources{{</hover>}}
+* The {{<hover label="comp-python" line="80">}}if "accesskey-0" in req.observed.resources{{</hover>}}
   check handles the initial phase when composed resources are still being created.
-* In `function-python`, connection details are **plaintext bytes**, but the Secret's data field requires base64-encoded strings.
-  Therefore, you must first use {{<hover label="comp-python" line="77">}}b64encode(){{</hover>}} to encode
-  and then use {{<hover label="comp-python" line="77">}}.decode("utf-8"){{</hover>}}
-  to convert to a string.
+* In `function-python`, connection details are **plaintext bytes**. To store them on the `Secret`, first
+  convert them to strings with {{<hover label="comp-python" line="83">}}.decode("utf-8"){{</hover>}}
+  and then save them using the secret's {{<hover label="comp-python" line="95">}}stringData{{</hover>}} field.
 
 {{< /tab >}}
 
@@ -559,6 +585,7 @@ spec:
           secret = {
               apiVersion = "v1"
               kind = "Secret"
+              metadata.name = oxr?.spec?.writeConnectionSecretToRef?.name or ""
               metadata.annotations = {
                   "krm.kcl.dev/composition-resource-name" = "connection-secret"
               }
@@ -584,19 +611,22 @@ spec:
 * The Composition creates an explicit
   {{<hover label="comp-kcl" line="51">}}Secret{{</hover>}} resource that
   represents the composite resource's connection details.
+* The {{<hover label="comp-kcl" line="54">}}name{{</hover>}} of the `Secret` is set using
+  {{<hover label="comp-kcl" line="54">}}?.{{</hover>}} optional chaining operators to safely read the XR's
+  {{<hover label="comp-kcl" line="54">}}.spec.writeConnectionSecretToRef.name{{</hover>}} field if it exists.
 * Crossplane observes the connection details from each
   `AccessKey` and makes them available to the composition when the function is executed.
 * The Secret reads connection details via
-  {{<hover label="comp-kcl" line="58">}}ocds["accesskey-0"]?.ConnectionDetails?.username{{</hover>}}
+  {{<hover label="comp-kcl" line="59">}}ocds["accesskey-0"]?.ConnectionDetails?.username{{</hover>}}
   from the observed composed resources, safely handling the case where connection details don't exist yet.
-* The {{<hover label="comp-kcl" line="62">}}if ocds else {}{{</hover>}} handles
+* The {{<hover label="comp-kcl" line="63">}}if ocds else {}{{</hover>}} handles
   the phase when composed resources are still being created.
 * In `function-kcl`, connection details are **already base64-encoded**, so you use them
   directly in the Secret's data field.
 
 {{< /tab >}}
 
-{{</ tabs >}}
+{{< /tabs >}}
 
 Save the composition as `composition.yaml` and apply it:
 
@@ -617,7 +647,9 @@ kind: UserAccessKey
 metadata:
   namespace: default
   name: my-keys
-spec: {}
+spec:
+  writeConnectionSecretToRef:
+    name: my-keys-connection-details
 ```
 
 Save the composite resource as `my-keys.yaml` and apply it:
@@ -644,7 +676,8 @@ resource becomes `READY` when all composed resources are healthy.
 Composite resources expose their connection details through a `Secret`. Check that
 Crossplane created the `Secret`.
 
-View all the composed resources and connection secrets together using the `crossplane` CLI.
+View all the composed resources (including the connection details `Secret`)
+together using the `crossplane` CLI.
 
 {{<hint "tip">}}
 See the [Crossplane CLI docs]({{<ref "../cli">}}) to
@@ -652,20 +685,18 @@ learn how to install and use the Crossplane CLI.
 {{< /hint >}}
 
 ```shell {copy-lines="1"}
-crossplane beta trace useraccesskey.example.org/my-keys -s
-NAME                                                SYNCED   READY   STATUS
-UserAccessKey/my-keys (default)                     True     True    Available
-├─ AccessKey/my-keys-080cea13962f (default)         True     True    Available
-│  └─ Secret/my-keys-accesskey-secret-0 (default)   -        -
-├─ AccessKey/my-keys-8204b6e191f5 (default)         True     True    Available
-│  └─ Secret/my-keys-accesskey-secret-1 (default)   -        -
-├─ User/my-keys-2d87fa8c5609 (default)              True     True    Available
-└─ Secret/my-keys-586e2994bda1 (default)            -        -
+crossplane beta trace useraccesskey.example.org/my-keys
+NAME                                             SYNCED   READY   STATUS
+UserAccessKey/my-keys (default)                  True     True    Available
+├─ AccessKey/my-keys-14c0578cad85 (default)      True     True    Available
+├─ AccessKey/my-keys-e420789d13a3 (default)      True     True    Available
+├─ User/my-keys-c63b530f8e68 (default)           True     True    Available
+└─ Secret/my-keys-connection-details (default)   -        -
 ```
 
-Each composed `AccessKey` wrote its connection details to an individual `Secret`
-and another `Secret` was composed that contains the aggregated connection details
-for the `my-keys` composite resource.
+The `my-keys` composite resource created an IAM `User` and two IAM `AccessKeys`,
+and a `Secret` was also created that contains the aggregated connection details
+for the composite resource.
 
 Check the composite resource's aggregated connection details `Secret`:
 
@@ -678,9 +709,12 @@ my-keys-586e2994bda1   Opaque   4      5m37s
 {{<hint "tip">}}
 The composite resource's connection details Secret has a label
 `crossplane.io/composite=my-keys` that makes it easy to find.
+
+If `.spec.writeConnectionSecretToRef.name` was set on the XR, then the `Secret`
+will have that exact name.
 {{</hint>}}
 
-Verify the composite resource's connection details Secret contains all the
+Verify the composite resource's connection details `Secret` contains all the
 expected credentials:
 
 ```shell
