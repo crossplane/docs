@@ -770,7 +770,9 @@ The basic steps to expose connection details for a composite resource are:
 
 4. **Compose the combined `Secret`**: With the observed connection details of
    your composed resources in hand, compose a `Secret` resource that combines
-   the important connection details you want to expose for the XR.
+   the important connection details you want to expose for the XR. Consider
+   allowing the consumer of the XR to specify the name they want this secret to
+   have.
 
 5. **Handle transient state**: When your XR is first created, the
    composed resources and/or their connection details may not exist yet. Your
@@ -803,9 +805,10 @@ The basic steps to expose connection details for a composite resource are:
 <!-- vale write-good.Passive = YES -->
 
 <!-- vale write-good.Weasel = NO -->
+<!-- vale Google.Colons = NO -->
 ### Connection details aren't encoded correctly
 
-**Cause:** not encoding the combined secret data correctly in your Composition logic
+**Cause:** Not encoding the combined secret data correctly in your Composition logic
 
 **Solution:** Ensure that your connection details data is correctly encoded for
 the function you're using. For example, `function-python` requires you to
@@ -813,6 +816,19 @@ convert connection details to base64-encoded strings, while connection details
 in `function-go-templating` and `function-kcl` are already encoded this way and
 require no conversion logic.
 <!-- vale write-good.Weasel = YES -->
+<!-- vale Google.Colons = YES -->
+
+### Secret has an empty namespace
+
+**Cause:** Not setting the namespace of the `Secret` for a Cluster scoped XR,
+resulting in an error message like `an empty namespace may not be set
+when a resource name is provided`
+
+**Solution:** When Cluster scoped XRs compose namespace-scoped resources like a
+`Secret`, you must explicitly set a namespace on the resource. Consider allowing
+the XR consumer to specify the namespace value in your composition. Namespaced
+XRs don't have this problem because Crossplane defaults any composed resource's
+namespace to the XR's namespace if left empty.
 
 ## Clean up
 
