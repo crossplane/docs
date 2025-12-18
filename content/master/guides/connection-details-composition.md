@@ -4,12 +4,12 @@ weight: 83
 description: "Expose connection details for composite resources aggregated from their composed resources"
 ---
 
+<!-- vale write-good.TooWordy = NO -->
 This guide shows how to expose connection details for composite resources (XRs).
 Because composite resources can compose multiple resources, the connection
-<!-- vale write-good.TooWordy = NO -->
 details they expose are often an aggregate of the connection details from their
-<!-- vale write-good.TooWordy = YES -->
 composed resources.
+<!-- vale write-good.TooWordy = YES -->
 
 The recommended approach is to include a Kubernetes `Secret`
 resource in your Composition that aggregates the connection details from other
@@ -37,7 +37,7 @@ users and applications to consume them.
 
 An example `UserAccessKey` XR looks like this:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: example.org/v1alpha1
 kind: UserAccessKey
 metadata:
@@ -53,7 +53,7 @@ metadata:
 
 The composite resource's connection details `Secret` looks like this:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: v1
 kind: Secret
 metadata:
