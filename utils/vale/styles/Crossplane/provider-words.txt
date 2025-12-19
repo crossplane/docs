@@ -1,3 +1,5 @@
+AccessKey
+AccessKeys
 crossplane-contrib
 Dataflow
 DynmoDB
