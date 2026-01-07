@@ -1783,11 +1783,35 @@ depending on if the XR is Crossplane `v1` or `v2` style.
 The function determines where to write the aggregated connection details secret
 in this priority order:
 
+#### Composite resource reference
+
+If you have included a `spec.writeConnectionSecretToRef` field in your XR's
+schema and the XR has this field set, the function uses its values to
+configure the name and namespace of the connection details secret.
+
+```yaml
+apiVersion: example.org/v1alpha1
+kind: UserAccessKey
+metadata:
+  namespace: default
+  name: my-keys
+spec:
+  writeConnectionSecretToRef:
+    name: my-keys-connection-details
+```
+
+You don't need to configure anything else in the Composition.
+
+{{<hint "note">}}
+The XRD must include `spec.writeConnectionSecretToRef` in its schema for users
+to set this field.
+{{</hint>}}
+
 #### Function input
 
-Configure the secret's name and namespace directly in the Composition's function
-input using the `writeConnectionSecretToRef` field. This field supports both
-static values and patches.
+You can also configure the secret's name and namespace directly in the
+Composition's function input using the `writeConnectionSecretToRef` field. This
+field supports both static values and patches.
 
 Use patches to read values from the XR:
 
@@ -1822,41 +1846,17 @@ This approach gives you full control and is useful for Cluster-scoped XRs where
 you need to explicitly set the namespace, or when you want to transform the
 secret name.
 
-#### Composite resource reference
-
-If you don't configure `writeConnectionSecretToRef` in the function input, the
-function reads the XR's `spec.writeConnectionSecretToRef` field if it exists in
-the XR's schema:
-
-```yaml
-apiVersion: example.org/v1alpha1
-kind: UserAccessKey
-metadata:
-  namespace: default
-  name: my-keys
-spec:
-  writeConnectionSecretToRef:
-    name: my-keys-connection-details
-```
-
-You don't need to configure anything else in the Composition.
-
-{{<hint "note">}}
-The XRD must include `spec.writeConnectionSecretToRef` in its schema for users
-to set this field.
-{{</hint>}}
-
 #### Automatically generated
 
-If the function can't determine the secret's name from the function input or XR
-reference, it automatically generates a name based on the XR's name using the
-format `<xr-name>-connection`.
+If the function can't determine the secret's name from the XR reference or
+function input, it automatically generates a name based on the XR's name using
+the format `<xr-name>-connection`.
 
 For namespaced XRs, the function creates the secret in the same namespace as the XR.
 
-For Cluster-scoped XRs, you must use either the function input or XR reference
-approach to specify a namespace. Automatic generation doesn't work for Cluster-scoped
-XRs because the function can't determine which namespace to use.
+For Cluster-scoped XRs, you must use either the XR reference or function input
+approach to specify a namespace. Automatic generation doesn't work for
+Cluster-scoped XRs because the function can't determine which namespace to use.
 
 ### Connection detail types
 
