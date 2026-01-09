@@ -171,9 +171,9 @@ deprecate and remove cluster scoped MRs at a future date.
 Read more about Crossplane v2's [backward compatibility](#backward-compatibility).
 {{</hint>}}
 
-Crossplane v2 also introduces 
-[managed resource definitions]({{<ref "../managed-resources/managed-resource-definitions">}}) 
-for selective activation of provider resources, reducing cluster overhead by 
+Crossplane v2 also introduces
+[managed resource definitions]({{<ref "../managed-resources/managed-resource-definitions">}})
+for selective activation of provider resources, reducing cluster overhead by
 installing only the managed resources you actually need.
 
 ## Compose any resource
@@ -250,7 +250,7 @@ spec:
 Operations support three modes:
 
 * **Operation** - Run once to completion
-* **CronOperation** - Run on a scheduled basis  
+* **CronOperation** - Run on a scheduled basis
 * **WatchOperation** - Run when resources change
 
 Operations can read existing resources and optionally change them. This enables
@@ -268,6 +268,7 @@ Crossplane v2 makes the following breaking changes:
 * It removes native patch and transform composition.
 * It removes the `ControllerConfig` type.
 * It removes support for external secret stores.
+* It removes composite resource connection details support.
 * It removes the default registry for Crossplane Packages.
 
 Crossplane deprecated native patch and transform composition in Crossplane
@@ -278,6 +279,10 @@ Crossplane deprecated the `ControllerConfig` type in v1.11. It's replaced by the
 
 Crossplane added external secret stores in v1.7. External secret stores have
 remained in alpha for over two years and are now unmaintained.
+
+Composite resources no longer have native connection details support. You
+can recreate this feature by composing your own connection details `Secret`
+as described in the [connection details composition guide]({{<ref "../guides/connection-details-composition">}}).
 
 Crossplane v2 drops the `--registry` flag that allowed users to specify a default
 registry value and now requires users to always specify a fully qualified URL when
@@ -299,9 +304,9 @@ Run `kubectl get pkg` to look for any packages that aren't fully qualified, then
 update or rebuild any Packages to use fully qualified images as needed.
 {{</hint>}}
 
-Crossplane v2 supports legacy v1-style XRs and MRs. Most users can upgrade from 
+Crossplane v2 supports legacy v1-style XRs and MRs. Most users can upgrade from
 v1.x to Crossplane v2 without breaking changes.
 
 Existing Compositions require minor updates to work with Crossplane v2
-style XRs and MRs. Follow the [Crossplane v2 upgrade guide]({{<ref "../guides/upgrade-to-crossplane-v2">}}) 
+style XRs and MRs. Follow the [Crossplane v2 upgrade guide]({{<ref "../guides/upgrade-to-crossplane-v2">}})
 for step-by-step migration instructions.

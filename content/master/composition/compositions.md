@@ -58,7 +58,7 @@ A [composite resource]({{<ref "./composite-resources">}}) or XR is a custom API.
 You use two Crossplane types to create a new custom API:
 
 * A [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
-  (XRD) - Defines the XR's schema. 
+  (XRD) - Defines the XR's schema.
 * A Composition - This page. Configures how the XR creates other resources.
 {{</expand >}}
 
@@ -659,11 +659,11 @@ A function can change:
 * The `status` of the composite resource.
 * The `metadata` and `spec` of any composed resource.
 
-A function can also change the connection details and readiness of the composite
-resource. A function indicates that the composite resource is ready by telling
-Crossplane whether its composed resources are ready. When the function pipeline
-tells Crossplane that all composed resources are ready, Crossplane marks the
-composite resource as ready.
+A function can also change the readiness of the composite resource. A function
+indicates that the composite resource is ready by telling Crossplane whether its
+composed resources are ready. When the function pipeline tells Crossplane that
+all composed resources are ready, Crossplane marks the composite resource as
+ready.
 
 A function can't change:
 
@@ -812,20 +812,20 @@ spec:
       kind: Script
       script: |
         from crossplane.function import request
-        
+
         def compose(req, rsp):
             observed_xr = req.observed.composite.resource
-            
+
             # Access the required ConfigMap using the helper function
             config_map = request.get_required_resource(req, "app-config")
-            
+
             if not config_map:
                 # Fallback image if ConfigMap not found
                 image = "nginx:latest"
             else:
                 # Read image from ConfigMap data
                 image = config_map.get("data", {}).get("image", "nginx:latest")
-            
+
             # Create deployment with the configured image
             rsp.desired.resources["deployment"].resource.update({
                 "apiVersion": "apps/v1",
@@ -877,33 +877,33 @@ spec:
       kind: Script
       script: |
         from crossplane.function import request, response
-        
+
         def compose(req, rsp):
             observed_xr = req.observed.composite.resource
-            
+
             # Always request the ConfigMap to ensure stable requirements
             config_name = observed_xr["spec"].get("configName", "default-config")
             namespace = observed_xr["metadata"].get("namespace", "default")
-            
+
             response.require_resources(
-                rsp, 
+                rsp,
                 name="dynamic-config",
                 api_version="v1",
                 kind="ConfigMap",
                 match_name=config_name,
                 namespace=namespace
             )
-            
+
             # Check if we have the required ConfigMap
             config_map = request.get_required_resource(req, "dynamic-config")
-            
+
             if not config_map:
                 # ConfigMap not found yet - Crossplane will call us again
                 return
-            
+
             # ConfigMap found - use the image data to create deployment
             image = config_map.get("data", {}).get("image", "nginx:latest")
-            
+
             rsp.desired.resources["deployment"].resource.update({
                 "apiVersion": "apps/v1",
                 "kind": "Deployment",
@@ -955,12 +955,12 @@ context.
 ### Function response cache
 
 {{<hint "note" >}}
-Function response caching is an alpha feature. Enable it by setting the 
+Function response caching is an alpha feature. Enable it by setting the
 `--enable-function-response-cache` feature flag.
 {{< /hint >}}
 
-Crossplane can cache function responses to improve performance by reducing 
-repeated function calls. When enabled, Crossplane caches responses from 
+Crossplane can cache function responses to improve performance by reducing
+repeated function calls. When enabled, Crossplane caches responses from
 composition functions that include a time to live (TTL) value.
 
 The cache works by:
@@ -981,5 +981,5 @@ Control the cache behavior with these Crossplane pod arguments:
 - `--xfn-cache-max-ttl` - Maximum cache duration (default: 24 hours)
 
 The cache stores files in the `/cache/xfn/` directory in the Crossplane pod.
-For better performance, consider using an in-memory cache by mounting an 
+For better performance, consider using an in-memory cache by mounting an
 emptyDir volume with `medium: Memory`.

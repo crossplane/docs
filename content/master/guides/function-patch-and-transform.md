@@ -670,7 +670,7 @@ For example, after Crossplane creates a new managed resource, take the value
 `hostedZoneID` and store it in the composite resource's status.
 
 {{< hint "important" >}}
-To patch to composite resource status fields, you must first define the custom 
+To patch to composite resource status fields, you must first define the custom
 status fields in the CompositeResourceDefinition.
 {{< /hint >}}
 
@@ -1738,7 +1738,129 @@ patches:
 
 ## Composite resource connection details
 
-Function patch and Transform must define the specific secret keys a resource
+Function Patch and Transform automatically aggregates connection details from
+composed resources. Unlike other composition functions, Function Patch and
+Transform can't access observed connection details to enable manually composing a
+`Secret` resource. Instead, it provides built-in automatic aggregation.
+
+To expose connection details for a composite resource:
+
+1. Set `writeConnectionSecretToRef` on each composed resource that produces
+   connection details
+2. Define `connectionDetails` on each resource to specify which secret keys to
+   include in the aggregated secret
+3. Configure where to write the aggregated connection details secret (see
+   [options below](#setting-the-connection-secret-name-and-namespace))
+
+The function automatically creates a `Secret` composed resource containing all
+the aggregated connection details.
+
+{{<hint "tip">}}
+For a complete example of connection details aggregation with Function Patch and
+Transform, see the [Connection Details Composition guide]({{<ref "connection-details-composition">}}).
+
+If you need to transform connection details or manually compose a `Secret`
+resource with more complex logic, use other functions like
+`function-go-templating`, `function-python`, or `function-kcl` instead. Those
+functions have access to observed connection details, which Function Patch and
+Transform doesn't provide.
+{{</hint>}}
+
+<!-- vale Google.Headings = NO -->
+### v1 vs v2 behavior
+<!-- vale Google.Headings = YES -->
+
+This function handles composite resource connection details differently
+depending on if the XR is Crossplane `v1` or `v2` style.
+
+* `v1`: The function pipeline returns connection details and
+  Crossplane creates a separate connection secret for the XR/claim.
+* `v2`: This function automatically composes a `Secret` containing the connection
+  details and includes it along with the XR's other composed resources.
+
+### Setting the connection secret name and namespace
+
+The function determines where to write the aggregated connection details secret
+in this priority order:
+
+#### Composite resource reference
+
+If you have included a `spec.writeConnectionSecretToRef` field in your XR's
+schema and the XR has this field set, the function uses its values to
+configure the name and namespace of the connection details secret.
+
+```yaml
+apiVersion: example.org/v1alpha1
+kind: UserAccessKey
+metadata:
+  namespace: default
+  name: my-keys
+spec:
+  writeConnectionSecretToRef:
+    name: my-keys-connection-details
+```
+
+You don't need to configure anything else in the Composition.
+
+{{<hint "note">}}
+The XRD must include `spec.writeConnectionSecretToRef` in its schema for users
+to set this field.
+{{</hint>}}
+
+#### Function input
+
+You can also configure the secret's name and namespace directly in the
+Composition's function input using the `writeConnectionSecretToRef` field. This
+field supports both static values and patches.
+
+Use patches to read values from the XR:
+
+```yaml {label="input-patches"}
+apiVersion: pt.fn.crossplane.io/v1beta1
+kind: Resources
+writeConnectionSecretToRef:
+  patches:
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.connection.name
+    toFieldPath: name
+  - type: FromCompositeFieldPath
+    fromFieldPath: spec.team
+    toFieldPath: namespace
+resources:
+  # ... composed resources with connectionDetails
+```
+
+Or use static values:
+
+```yaml {label="input-static"}
+apiVersion: pt.fn.crossplane.io/v1beta1
+kind: Resources
+writeConnectionSecretToRef:
+  name: fixed-secret-name
+  namespace: fixed-namespace
+resources:
+  # ... composed resources with connectionDetails
+```
+
+This approach gives you full control and is useful for Cluster-scoped XRs where
+you need to explicitly set the namespace, or when you want to transform the
+secret name.
+
+#### Automatically generated
+
+If the function can't determine the secret's name from the XR reference or
+function input, it automatically generates a name based on the XR's name using
+the format `<xr-name>-connection`.
+
+For namespaced XRs, the function creates the secret in the same namespace as the XR.
+
+For Cluster-scoped XRs, you must use either the XR reference or function input
+approach to specify a namespace. Automatic generation doesn't work for
+Cluster-scoped XRs because the function can't determine which namespace to use.
+
+### Connection detail types
+
+Function Patch and Transform must define the specific secret keys a composed resource
 creates with the `connectionDetails` object.
 
 {{<table "table table-sm" >}}
@@ -1830,12 +1952,11 @@ myStaticSecret:  18 bytes
 ```
 
 {{<hint "note" >}}
-The CompositeResourceDefinition can also limit which keys Crossplane stores from
-the composite resources.
+The `CompositeResourceDefinition` can also limit which keys Crossplane stores
+for `v1` composite resources.
 
 By default an XRD writes all secret keys listed in the composed resources
 `connectionDetails` to the combined secret object.
-
 
 For more information on connection secrets read about
 [managed resources]({{<ref "../managed-resources/managed-resources">}}).
