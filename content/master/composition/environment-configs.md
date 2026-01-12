@@ -221,7 +221,8 @@ Selecting environments by labels may return more than one environment.
 only uses the first environment in the sorted list.
 
 Set the `selector.mode` to `Multiple` to return all matched EnvironmentConfigs.
-Use `mode: Single` to return a single environment, and error out if Crossplane finds more than one match.
+Use `mode: Single` to return a single environment, and error out if Crossplane
+finds more than one match.
 
 Sorting and the selection mode only applies to a single `Selector`.
 
