@@ -171,6 +171,34 @@ from the tabs below.
 
 {{< tabs >}}
 
+{{< tab "YAML" >}}
+
+Create this composition function to install YAML support:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.10.0
+```
+
+Save the function as `fn.yaml` and apply it:
+
+```shell
+kubectl apply -f fn.yaml
+```
+
+Check that Crossplane installed the function:
+
+```shell {copy-lines="1"}
+kubectl get -f fn.yaml
+NAME                              INSTALLED   HEALTHY   PACKAGE                                                                      AGE
+function-patch-and-transform      True        True      xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.10.0   8s
+```
+{{< /tab >}}
+
 {{< tab "Templated YAML" >}}
 Templated YAML is a good choice if you're used to writing
 [Helm charts](https://helm.sh).
@@ -305,6 +333,124 @@ In this example, the Composition creates two `AccessKey` managed resources and
 exposes their credentials as the composite resource's connection details `Secret`:
 
 {{< tabs >}}
+
+{{< tab "YAML" >}}
+
+```yaml {label="comp-pt"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: useraccesskeys-patch-and-transform
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: UserAccessKey
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      writeConnectionSecretToRef:
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.writeConnectionSecretToRef.name
+          toFieldPath: name
+      resources:
+      - name: user
+        base:
+          apiVersion: iam.aws.m.upbound.io/v1beta1
+          kind: User
+          spec:
+            forProvider: {}
+      - name: accesskey-0
+        base:
+          apiVersion: iam.aws.m.upbound.io/v1beta1
+          kind: AccessKey
+          spec:
+            forProvider:
+              userSelector:
+                matchControllerRef: true
+            writeConnectionSecretToRef:
+              name: accesskey-secret-0
+        connectionDetails:
+        - name: user-0
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: username
+        - name: password-0
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: password
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "%s-accesskey-secret-0"
+      - name: accesskey-1
+        base:
+          apiVersion: iam.aws.m.upbound.io/v1beta1
+          kind: AccessKey
+          spec:
+            forProvider:
+              userSelector:
+                matchControllerRef: true
+            writeConnectionSecretToRef:
+              name: accesskey-secret-1
+        connectionDetails:
+        - name: user-1
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: username
+        - name: password-1
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: password
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "%s-accesskey-secret-1"
+  - step: ready
+    functionRef:
+      name: function-auto-ready
+```
+
+<!-- vale write-good.Passive = NO -->
+<!-- vale Google.WordList = NO -->
+**How this Composition exposes connection details:**
+
+* Each composed {{<hover label="comp-pt" line="32">}}AccessKey{{</hover>}} has
+  {{<hover label="comp-pt" line="37">}}writeConnectionSecretToRef{{</hover>}} set. This
+  tells each `AccessKey` to write its credentials to an individual `Secret`.
+* Each {{<hover label="comp-pt" line="32">}}AccessKey{{</hover>}} defines
+  {{<hover label="comp-pt" line="39">}}connectionDetails{{</hover>}} that specify which
+  keys from its connection secret should be included in the XR's
+  aggregated connection details secret.
+* The {{<hover label="comp-pt" line="40">}}name{{</hover>}} field in each connection
+  detail entry sets the key name in the aggregated secret.
+* The {{<hover label="comp-pt" line="42">}}fromConnectionSecretKey{{</hover>}} field
+  specifies which key to read from the composed resource's individual connection secret.
+* The function's input includes a top-level
+  {{<hover label="comp-pt" line="17">}}writeConnectionSecretToRef{{</hover>}} section
+  that allows you to specify where to create the connection secret.
+* The {{<hover label="comp-pt" line="18">}}patches{{</hover>}} in the
+  `writeConnectionSecretToRef` section read the secret name from the XR's
+  `.spec.writeConnectionSecretToRef.name` field.
+* The function automatically includes a `Secret` object in the XR's composed
+  resources that represents the XR's aggregated connection details.
+* You don't need to create or compose this `Secret` yourself, it's done
+  automatically for you.
+<!-- vale Google.WordList = YES -->
+<!-- vale write-good.Passive = YES -->
+
+{{< /tab >}}
 
 {{< tab "Templated YAML" >}}
 
@@ -754,22 +900,27 @@ kubectl get secret -n default -l crossplane.io/composite=my-keys -o jsonpath='{.
 
 ## Understanding how composing connection details works
 
-The basic steps to expose connection details for a composite resource are:
+You can expose connection details for a composite resource using two approaches:
+
+### Manual composition (most functions)
+
+With functions like `function-go-templating`, `function-python`, `function-kcl`, and others,
+manually compose a `Secret` resource:
 
 1. **Compose resources**: Create composed resources as usual in your
    composition, such as IAM `User` and `AccessKeys`. These resources expose
    their connection details in a `Secret`.
 
 2. **Set `writeConnectionSecretToRef`**: Each composed resource that should have
-   connection details stored in their own individual `Secret` should have their
-   `writeConnectionSecretToRef` set in the composition.
+   connection details stored should have their `writeConnectionSecretToRef` set
+   in the composition.
 
 3. **Observed connection details**: Crossplane observes the actual state of
    each composed resource, including its connection details, and makes this data
-   available when it runs the function.
+   available when the function runs.
 
-4. **Compose the combined `Secret`**: With the observed connection details of
-   your composed resources in hand, compose a `Secret` resource that combines
+4. **Compose the combined `Secret`**: Compose a `Secret` resource that reads
+   from the observed connection details of your composed resources and combines
    the important connection details you want to expose for the XR. Consider
    allowing the consumer of the XR to specify the name they want this secret to
    have.
@@ -779,6 +930,30 @@ The basic steps to expose connection details for a composite resource are:
    Composition should handle these cases by checking if resources and
    their connection details exist before accessing them.
 
+### Automatic aggregation (`function-patch-and-transform`)
+
+`function-patch-and-transform` automatically observes connection details from
+composed resources and creates the aggregated connection secret to
+maintain backward compatibility with v1 behavior.
+
+You don't need to manually compose a `Secret` resource yourself.
+
+1. **Compose resources**: Create composed resources as usual in your
+   composition, such as IAM `User` and `AccessKeys`. These resources expose
+   their connection details in a `Secret`.
+
+2. **Set `writeConnectionSecretToRef`**: Each composed resource that should have
+   connection details stored should have their `writeConnectionSecretToRef` set
+   in the composition.
+
+3. **Define `connectionDetails`**: On each composed resource, define which
+   connection secret keys to include in the aggregated secret using the
+   `connectionDetails` field.
+
+4. **Configure the `Secret`**: Add a `writeConnectionSecretToRef` section in the
+   function's `input` to set the aggregated secret's name and namespace as
+   needed. Use patches to configure these values using data from the XR if
+   needed.
 
 ## Troubleshooting
 
@@ -789,7 +964,8 @@ The basic steps to expose connection details for a composite resource are:
 <!-- vale write-good.Weasel = NO -->
 * Composed resources don't have `writeConnectionSecretToRef` set
 * Composed resources aren't ready/healthy yet
-* Not handling initial nil state correctly in the Composition
+* (`function-patch-and-transform`) Missing `connectionDetails` field on composed resources
+* (Manual composition) Not handling initial nil state correctly in the Composition
 <!-- vale write-good.Weasel = YES -->
 
 <!-- vale write-good.Passive = NO -->
@@ -800,7 +976,10 @@ The basic steps to expose connection details for a composite resource are:
 * Wait for composed resources to become ready (`kubectl get` and check the `READY` column)
 * Verify the composed resource is actually producing connection details:
   `kubectl get secret <composed-resource-secret-name> -o yaml`
-* Add nil/empty checks in your Composition logic to safeguard access to data that may not exist yet
+* (`function-patch-and-transform`) Ensure each composed resource has a
+  `connectionDetails` section that maps the desired secret keys
+* (Manual composition) Add nil/empty checks in your Composition logic to
+  safeguard access to data that may not exist yet
 <!-- vale Google.WordList = YES -->
 <!-- vale write-good.Passive = YES -->
 
@@ -810,11 +989,14 @@ The basic steps to expose connection details for a composite resource are:
 
 **Cause:** Not encoding the combined secret data correctly in your Composition logic
 
-**Solution:** Ensure that your connection details data is correctly encoded for
-the function you're using. For example, `function-python` requires you to
-convert connection details to base64-encoded strings, while connection details
-in `function-go-templating` and `function-kcl` are already encoded this way and
-require no conversion logic.
+**Solution:** This only applies to manual composition approaches. Ensure that
+your connection details data is correctly encoded for the function you're using.
+For example, `function-python` requires you to convert connection details to
+base64-encoded strings, while connection details in `function-go-templating` and
+`function-kcl` are already encoded this way and require no conversion logic.
+
+`function-patch-and-transform` handles encoding when automatically creating the
+composed connection secret.
 <!-- vale write-good.Weasel = YES -->
 <!-- vale Google.Colons = YES -->
 
