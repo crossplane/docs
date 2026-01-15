@@ -283,6 +283,34 @@ kubectl get -f fn.yaml
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                      AGE
 function-kcl                      True        True      xpkg.crossplane.io/crossplane-contrib/function-kcl:v0.11.6   6s
 ```
+{{< /tab>}}
+
+{{< tab "Function Pythonic" >}}
+
+Create this composition function to install [Function Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic) support:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-pythonic
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0
+```
+
+Save the function as `fn.yaml` and apply it:
+
+```shell
+kubectl apply -f fn.yaml
+```
+
+Check that Crossplane installed the function:
+
+```shell {copy-lines="1"}
+kubectl get -f fn.yaml
+NAME               INSTALLED  HEALTHY  PACKAGE                                                      AGE
+function-pythonic  True       True     xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0  1m
+```
 {{< /tab >}}
 
 {{< /tabs >}}
@@ -786,6 +814,67 @@ spec:
 
 {{< /tab >}}
 
+{{< tab "Function Pythonic" >}}
+
+```yaml {label="comp-pythonic"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: useraccesskeys-pythonic
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: UserAccessKey
+  mode: Pipeline
+  pipeline:
+  - step: render-pythonic
+    functionRef:
+      name: function-pythonic
+    input:
+      apiVersion: pythonic.fn.crossplane.io/v1alpha1
+      kind: Composite
+      composite: |
+        class Composite(BaseComposite):
+          def compose(self):
+            self.connectionSecret = self.spec.writeConnectionSecretToRef
+
+            user = self.resources.user('iam.aws.m.upbound.io/v1beta1', 'User')
+            user.spec.forProvider = {}
+
+            for ix in range(2):
+              key = self.resources[f"access-key-{ix}"]('iam.aws.m.upbound.io/v1beta1', 'AccessKey')
+              key.spec.forProvider.user = user.status.atProvider.id
+              key.spec.writeConnectionSecretToRef.name = f"{self.metadata.name}-accesskey-{ix}"
+              self.connection[f"user-{ix}"] = key.connection.username
+              self.connection[f"password-{ix}"] = key.connection.password
+```
+
+<!-- vale write-good.Passive = NO -->
+<!-- vale Google.WordList = NO -->
+**How this Composition exposes connection details:**
+
+* Each composed {{<hover label="comp-pythonic" line="26">}}AccessKey{{</hover>}} has
+  {{<hover label="comp-pythonic" line="28">}}writeConnectionSecretToRef{{</hover>}} set. This
+  tells each AccessKey to write its credentials to an individual Secret.
+* Crossplane observes the connection details from each `AccessKey` and makes them
+  available to the composition when the function runs.
+* The Secret reads `AccessKey`'s connection details via
+  {{<hover label="comp-pythonic" line="29">}}connection.username{{</hover>}} and
+  {{<hover label="comp-pythonic" line="30">}}connection.password{{</hover>}}.
+* The function establishes the connection `Secret` name from the XR
+  {{<hover label="comp-pythonic" line="20">}}spec.writeConnectionSecretToRef{{</hover>}}
+  if it exists.
+* The function automatically includes a `Secret` object in the XR's composed
+  resources that represents the XR's aggregated connection details.
+* You don't need to create or compose this `Secret` yourself, it's done
+  automatically for you.
+* In `function-pythonic`, connection details base64 encoding and decoding is handled
+  automatically for you.
+<!-- vale Google.WordList = YES -->
+<!-- vale write-good.Passive = YES -->
+
+{{< /tab >}}
+
 {{< /tabs >}}
 
 Save the composition as `composition.yaml` and apply it:
@@ -955,6 +1044,29 @@ You don't need to manually compose a `Secret` resource yourself.
    needed. Use patches to configure these values using data from the XR if
    needed.
 
+### Automatic aggregation (`function-pythonic`)
+
+`function-pythonic` automatically observes connection details from
+composed resources and creates the aggregated connection secret to
+maintain backward compatibility with v1 behavior.
+
+You don't need to manually compose a `Secret` resource yourself.
+
+1. **Compose resources**: Create composed resources as usual in your
+   composition, such as IAM `User` and `AccessKeys`. These resources expose
+   their connection details in a `Secret`.
+
+2. **Set `writeConnectionSecretToRef`**: Each composed resource that should have
+   connection details stored should have their `resource.spec.writeConnectionSecretToRef` set
+   in the composition.
+
+3. **Define `connection`**: On each composed resource, define which
+   connection secret keys to include in the aggregated secret using the
+   `resource.connection` field.
+
+4. **Configure the `Secret`**: Set the XR `self.connectionSecret` fields
+   to set override the aggregated secret's default name and namespace.
+
 ## Troubleshooting
 
 ### Composite resource's connection details Secret is empty
@@ -995,8 +1107,8 @@ For example, `function-python` requires you to convert connection details to
 base64-encoded strings, while connection details in `function-go-templating` and
 `function-kcl` are already encoded this way and require no conversion logic.
 
-`function-patch-and-transform` handles encoding when automatically creating the
-composed connection secret.
+`function-patch-and-transform` and `function-pythonic` handle encoding when automatically
+creating the composed connection secret.
 <!-- vale write-good.Weasel = YES -->
 <!-- vale Google.Colons = YES -->
 

@@ -312,6 +312,38 @@ crossplane-contrib-function-kcl   True        True      xpkg.crossplane.io/cross
 ```
 {{< /tab >}}
 
+{{< tab "Function Pythonic" >}}
+[Function Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic)
+is an excellent choice for compositions with dynamic logic. The full flexibility and power of python is
+available using a set of python classes with an elegant and terse syntax that hides the details of the low level
+Crossplane function APIs.
+
+Create this composition function to install Function Pythonic support:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-pythonic
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0
+```
+
+Save the function as `fn.yaml` and apply it:
+
+```shell
+kubectl apply -f fn.yaml
+```
+
+Check that Crossplane installed the function:
+
+```shell {copy-lines="1"}
+kubectl get -f fn.yaml
+NAME               INSTALLED  HEALTHY  PACKAGE                                                      AGE
+function-pythonic  True       True     xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0  1m
+```
+{{< /tab >}}
+
 {{</ tabs >}}
 
 ### Configure the composition
@@ -643,6 +675,52 @@ spec:
           }
 
           items = [_desired_deployment, _desired_service, _desired_xr]
+```
+{{< /tab >}}
+
+{{< tab "Function Pythonic" >}}
+Create this composition to use Function Python to configure Crossplane:
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-pythonic
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: function-pythonic
+    input:
+      apiVersion: pythonic.fn.crossplane.io/v1alpha1
+      kind: Composite
+      composite: |
+        class Composite(BaseComposite):
+          def compose(self):
+            labels = {'example.crossplane.io/app': self.metadata.name}
+
+            d = self.resources.deployment('apps/v1', 'Deployment')
+            d.metadata.labels = labels
+            d.spec.replicas = 2
+            d.spec.selector.matchLabels = labels
+            d.spec.template.metadata.labels = labels
+            d.spec.template.spec.containers[0].name = 'app'
+            d.spec.template.spec.containers[0].image = self.spec.image
+            d.spec.template.spec.containers[0].ports[0].containerPort = 80
+
+            s = self.resources.service('v1', 'Service')
+            s.metadata.labels = labels
+            s.spec.selector = labels
+            s.spec.ports[0].protocol = 'TCP'
+            s.spec.ports[0].port = 8080
+            s.spec.ports[0].targetPort = 80
+
+            self.status.replicas = d.status.availableReplicas
+            self.status.address = s.observed.spec.clusterIP
 ```
 {{< /tab >}}
 
