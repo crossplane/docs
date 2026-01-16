@@ -285,9 +285,9 @@ function-kcl                      True        True      xpkg.crossplane.io/cross
 ```
 {{< /tab>}}
 
-{{< tab "Function Pythonic" >}}
+{{< tab "Pythonic" >}}
 
-Create this composition function to install [Function Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic) support:
+Create this composition function to install [Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic) support:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1
@@ -295,7 +295,7 @@ kind: Function
 metadata:
   name: function-pythonic
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0
+  package: xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0
 ```
 
 Save the function as `fn.yaml` and apply it:
@@ -308,8 +308,8 @@ Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
 kubectl get -f fn.yaml
-NAME               INSTALLED  HEALTHY  PACKAGE                                                      AGE
-function-pythonic  True       True     xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0  1m
+NAME               INSTALLED  HEALTHY  PACKAGE                                                         AGE
+function-pythonic  True       True     xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0  1m
 ```
 {{< /tab >}}
 
@@ -814,7 +814,7 @@ spec:
 
 {{< /tab >}}
 
-{{< tab "Function Pythonic" >}}
+{{< tab "Pythonic" >}}
 
 ```yaml {label="comp-pythonic"}
 apiVersion: apiextensions.crossplane.io/v1
@@ -1060,12 +1060,11 @@ You don't need to manually compose a `Secret` resource yourself.
    connection details stored should have their `resource.spec.writeConnectionSecretToRef` set
    in the composition.
 
-3. **Define `connection`**: On each composed resource, define which
-   connection secret keys to include in the aggregated secret using the
-   `resource.connection` field.
+3. **Define `connection`**: For each composed resource, assign the connection secret
+   values wanted to the aggregated secret using `self.connection[key] = resource.connection[key]`.
 
 4. **Configure the `Secret`**: Set the XR `self.connectionSecret` fields
-   to set override the aggregated secret's default name and namespace.
+   to override the aggregated secret's default name and namespace.
 
 ## Troubleshooting
 

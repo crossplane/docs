@@ -312,13 +312,13 @@ crossplane-contrib-function-kcl   True        True      xpkg.crossplane.io/cross
 ```
 {{< /tab >}}
 
-{{< tab "Function Pythonic" >}}
-[Function Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic)
+{{< tab "Pythonic" >}}
+[Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic)
 is an excellent choice for compositions with dynamic logic. The full flexibility and power of python is
 available using a set of python classes with an elegant and terse syntax that hides the details of the low level
 Crossplane function APIs.
 
-Create this composition function to install Function Pythonic support:
+Create this composition function to install Pythonic support:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1
@@ -326,7 +326,7 @@ kind: Function
 metadata:
   name: function-pythonic
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0
+  package: xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0
 ```
 
 Save the function as `fn.yaml` and apply it:
@@ -339,8 +339,8 @@ Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
 kubectl get -f fn.yaml
-NAME               INSTALLED  HEALTHY  PACKAGE                                                      AGE
-function-pythonic  True       True     xpkg.upbound.io/crossplane-contrib/function-pythonic:v0.3.0  1m
+NAME               INSTALLED  HEALTHY  PACKAGE                                                         AGE
+function-pythonic  True       True     xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0  1m
 ```
 {{< /tab >}}
 
@@ -678,8 +678,8 @@ spec:
 ```
 {{< /tab >}}
 
-{{< tab "Function Pythonic" >}}
-Create this composition to use Function Python to configure Crossplane:
+{{< tab "Pythonic" >}}
+Create this composition to use Pythonic to configure Crossplane:
 
 ```yaml
 apiVersion: apiextensions.crossplane.io/v1
