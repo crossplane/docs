@@ -13,9 +13,20 @@ namespaced resources, the ability to compose any Kubernetes resource, and new
 operational workflows.
 
 {{<hint "important">}}
-Only upgrade to Crossplane v2 from Crossplane v1.20, the final v1.x release.
-If you're running an earlier version, upgrade to v1.20 first.
+Only upgrade to Crossplane v2 from Crossplane `v1.20`, the final `v1.x` release.
+If you're running an earlier version, upgrade to `v1.20` first.
 {{</hint>}}
+
+<!-- vale write-good.Weasel = NO -->
+{{<hint "important" >}}
+Always upgrade Crossplane **one minor version at a time**, using the most recent
+patch version available for each.
+
+For example, if you are on `v1.19` and want to upgrade to `v2.1`, you should
+first upgrade to `v1.20`, then `v2.0`, before finally upgrading to `v2.1`. The
+upgrade path in this example looks like `v1.19` → `v1.20` → `v2.0` → `v2.1`.
+{{</hint>}}
+<!-- vale write-good.Weasel = YES -->
 
 {{<hint "note">}}
 There's no automated tooling yet to migrate existing v1 cluster-scoped XRs and
@@ -42,6 +53,7 @@ Crossplane v2 removes these deprecated features:
 * [Native patch and transform composition](#native-patch-and-transform-composition)
 * [ControllerConfig type](#controllerconfig-type)
 * [External secret stores](#external-secret-stores)
+* [Composite resource connection details](#composite-resource-connection-details)
 * [Default registry flag](#default-registry-flag)
 
 ### Native patch and transform composition
@@ -80,6 +92,12 @@ crossplane beta convert deployment-runtime controller-config.yaml -o deployment-
 
 If you're using external secret stores, migrate to native Kubernetes secrets
 or [External Secrets Operator](https://external-secrets.io/latest/) before upgrading.
+
+### Composite resource connection details
+**Removed**: composite resources no longer have native connection details support.
+
+You can recreate this feature by composing your own connection details `Secret`
+as described in the [connection details composition guide]({{<ref "./connection-details-composition">}}).
 
 ### Default registry flag
 **Removed**: `--registry` flag for default package registry
