@@ -275,7 +275,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
 
-	"github.com/crossplane-contrib/provider-upjet-aws/apis/s3/v1beta1"
+	"github.com/upbound/provider-aws/v2/apis/namespaced/s3/v1beta1"
 
 	"github.com/crossplane/function-sdk-go/errors"
 	"github.com/crossplane/function-sdk-go/logging"
@@ -432,7 +432,7 @@ using the same strongly typed structs Crossplane uses in its providers.
 You must get the AWS Provider Go module to use this type:
 
 ```shell
-go get github.com/crossplane-contrib/provider-upjet-aws@v2.0.0
+go get github.com/upbound/provider-aws/v2@v2.3.0
 ```
 
 Crossplane provides a
@@ -475,7 +475,7 @@ import (
 	"google.golang.org/protobuf/testing/protocmp"
 	"google.golang.org/protobuf/types/known/durationpb"
 
-	"github.com/crossplane/crossplane-runtime/pkg/logging"
+	"github.com/crossplane/crossplane-runtime/v2/pkg/logging"
 
 	fnv1 "github.com/crossplane/function-sdk-go/proto/v1"
 	"github.com/crossplane/function-sdk-go/resource"
