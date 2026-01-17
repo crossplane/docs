@@ -82,6 +82,7 @@ PatchSets
 ProviderConfig
 ProviderConfigs
 ProviderRevision
+Pythonic
 RunFunctionRequest
 RunFunctionRequests
 RunFunctionResponse
