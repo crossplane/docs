@@ -93,6 +93,7 @@ use by Crossplane adopters.
 - [function-kcl](https://github.com/crossplane-contrib/function-kcl)
 - [function-patch-and-transform](https://github.com/crossplane-contrib/function-patch-and-transform)
 - [function-python](https://github.com/crossplane-contrib/function-python)
+- [function-pythonic](https://github.com/crossplane-contrib/function-pythonic)
 - [function-sequencer](https://github.com/crossplane-contrib/function-sequencer)
 - [function-shell](https://github.com/crossplane-contrib/function-shell)
 - [function-status-transformer](https://github.com/crossplane-contrib/function-status-transformer)
