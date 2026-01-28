@@ -100,7 +100,7 @@ spec:
         spec:
           containers:
           - name: package-runtime
-            args: 
+            args:
             - --debug
 ---
 apiVersion: pkg.crossplane.io/v1
@@ -194,6 +194,56 @@ For example, for a `CloudSQLInstance` managed resource (`database.gcp.crossplane
 ```shell
 kubectl patch cloudsqlinstance my-db -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
+
+## Circuit breaker for reconciliation thrashing
+
+Crossplane includes a circuit breaker mechanism to prevent reconciliation thrashing. Thrashing occurs when controllers fight over composed resource state or enter tight reconciliation loops that could impact cluster performance.
+
+### How the circuit breaker works
+
+Each Composite Resource (XR) has its own token bucket-based circuit breaker that monitors reconciliation rates:
+
+- **Burst (capacity)**: Maximum number of events allowed in quick succession (default: 100)
+- **Refill rate**: Sustained event rate after burst is exhausted (default: 1 event per second)
+- **Cooldown**: Duration the circuit stays open before attempting recovery (default: 5 minutes)
+
+When an XR receives too many watch events (exceeding the burst and refill rate), the circuit breaker opens and blocks most reconciliation requests. While the circuit is open, Crossplane allows one request every 30 seconds to probe for recovery.
+
+### Detecting circuit breaker activation
+
+When the circuit breaker opens, the affected XR shows a `Responsive` condition:
+
+```yaml
+conditions:
+- type: Responsive
+  status: "False"
+  reason: WatchCircuitOpen
+  message: "Too many watch events from ConfigMap/my-config (default). Allowing events periodically."
+```
+
+The message identifies which resource is causing excessive watch events, helping you pinpoint the source of thrashing.
+
+### Configuring circuit breaker parameters
+
+The default circuit breaker settings work well for most environments. However, you may need to adjust them based on your composition patterns and cluster size. For example, increase the burst and refill rate for large-scale deployments with many rapidly updating XRs, or decrease them if you want stricter protection against thrashing.
+
+Configure circuit breaker parameters using Crossplane startup arguments via Helm:
+
+```shell
+helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane \
+  --set args='{"--debug","--circuit-breaker-burst=500.0","--circuit-breaker-refill-rate=5.0","--circuit-breaker-cooldown=1m"}'
+```
+
+Available parameters:
+- `--circuit-breaker-burst`: Maximum burst of events (default: 100.0)
+- `--circuit-breaker-refill-rate`: Events per second for sustained rate (default: 1.0)
+- `--circuit-breaker-cooldown`: Duration to keep circuit open (default: 5m0s)
+
+### Monitoring with metrics
+
+Monitor circuit breaker activity using these Prometheus metrics.
+
+See the [Metrics guide]({{< ref "metrics#circuit-breaker-metrics" >}}) for detailed metric information.
 
 ## Tips, tricks, and troubleshooting
 
