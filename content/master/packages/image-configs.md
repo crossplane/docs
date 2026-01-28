@@ -189,6 +189,86 @@ If you can't see this condition on the package revision resource, namely
 `ProviderRevision`, `ConfigurationRevision`, or `FunctionRevision`, ensure that
 you enable the feature.
 
+## Configuring runtime for packages
+
+You can use `ImageConfig` to specify a `DeploymentRuntimeConfig` for packages
+matching a pattern, regardless of how they're installed. This includes packages
+installed directly and packages installed as dependencies.
+
+The `spec.runtime` field allows you to specify a `DeploymentRuntimeConfig` that
+applies to all packages matching the image prefix. This is useful when you want
+to apply consistent runtime configurations across all packages from a particular
+registry or organization, including their dependencies.
+
+### Precedence
+
+When both an `ImageConfig` runtime and a package-level `runtimeConfigRef` are
+specified, the `ImageConfig` runtime takes precedence.
+
+### Example
+
+In the following example, the `ImageConfig` configures the function
+`registry1.com/acme-co/my-function` to use Azure Workload Identity by
+specifying a ServiceAccount with the required annotation and pod labels:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1beta1
+kind: ImageConfig
+metadata:
+  name: function-workload-identity
+spec:
+  matchImages:
+    - prefix: registry1.com/acme-co/my-function
+  runtime:
+    configRef:
+      name: azure-workload-identity
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: azure-workload-identity
+spec:
+  serviceAccountTemplate:
+    metadata:
+      annotations:
+        azure.workload.identity/client-id: "12345678-1234-1234-1234-123456789012"
+  deploymentTemplate:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+    spec:
+      selector: {}
+      template:
+        metadata:
+          labels:
+            azure.workload.identity/use: "true"
+        spec:
+          containers:
+            - name: package-runtime
+              args: []
+```
+
+With this configuration, the function `registry1.com/acme-co/my-function` uses
+the `azure-workload-identity` runtime configuration, whether it's installed
+directly or as a dependency of a Configuration.
+
+### Debugging
+
+When the package manager applies an `ImageConfig` runtime configuration to a
+package, it adds an entry to the `appliedImageConfigRefs` field in the package
+status with the reason `ConfigureRuntime`:
+
+```shell
+kubectl get functionrevisions my-function .. -o yaml
+
+...
+status:
+  appliedImageConfigRefs:
+  - name: function-workload-identity
+    reason: ConfigureRuntime
+...
+```
+
 ## Rewriting image paths
 
 You can use an `ImageConfig` to pull package images from an alternative location
