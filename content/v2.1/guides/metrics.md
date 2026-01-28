@@ -21,7 +21,7 @@ These Prometheus annotations expose the metrics:
 prometheus.io/path: /metrics
 prometheus.io/port: "8080"
 prometheus.io/scrape: "true"
-```    
+```
 
 ## Crossplane core metrics
 
@@ -50,6 +50,113 @@ The Crossplane pod emits these metrics.
 | {{<hover label="engine_watches_started_total" line="18">}}engine_watches_started_total{{</hover>}} | Total number of watches started |
 | {{<hover label="engine_watches_stopped_total" line="19">}}engine_watches_stopped_total{{</hover>}} | Total number of watches stopped |
 {{</table >}}
+
+### Circuit breaker metrics
+
+The circuit breaker prevents reconciliation thrashing by monitoring and rate-limiting watch events per Composite Resource (XR). These metrics help you identify and respond to excessive reconciliation activity.
+
+All circuit breaker metrics include a `controller` label formatted as `composite/<plural>.<group>` (for example, `composite/xpostgresqlinstances.example.com`), providing visibility per XRD without creating high cardinality from individual XR instances.
+
+#### circuit_breaker_opens_total
+
+Tracks when a circuit breaker transitions from closed to open state. An increase indicates an XR is receiving excessive watch events and has triggered throttling.
+
+**Use this metric to:**
+- Alert on XRs experiencing reconciliation thrashing
+- Identify which XRD types are prone to excessive watch events
+- Track the frequency of circuit breaker activations
+
+**Example PromQL queries:**
+```promql
+# Rate of circuit breaker opens over 5 minutes
+rate(circuit_breaker_opens_total[5m])
+
+# Count of circuit breaker opens by controller
+sum by (controller) (circuit_breaker_opens_total)
+```
+
+#### circuit_breaker_closes_total
+
+Tracks when a circuit breaker transitions from open to closed state. This indicates an XR has recovered from excessive watch events and returned to normal operation.
+
+**Use this metric to:**
+- Monitor recovery from reconciliation thrashing
+- Verify circuit breakers are closing after cooldown periods
+- Track overall circuit breaker lifecycle
+
+#### circuit_breaker_events_total
+
+Tracks all watch events processed by the circuit breaker, labeled by `result`:
+- `Allowed`: Normal operation when circuit is closed - events proceed to reconciliation
+- `Dropped`: Events blocked when circuit is fully open - indicates active throttling
+- `Halfopen_allowed`: Limited probe events when circuit is half-open - circuit is testing for recovery
+
+**Use this metric to:**
+- Monitor the volume of watch events per XR type
+- Detect when events are being dropped (active throttling)
+- Alert on high dropped event rates indicating potential issues
+- Understand reconciliation pressure on specific controllers
+
+**Example PromQL queries:**
+```promql
+# Rate of dropped events (active throttling), aggregated per controller
+sum by (controller) (
+  rate(circuit_breaker_events_total{result="Dropped"}[5m])
+)
+
+# Percentage of events being dropped
+sum by (controller) (rate(circuit_breaker_events_total{result="Dropped"}[5m]))
+/
+sum by (controller) (rate(circuit_breaker_events_total[5m])) * 100
+
+# Number of replicas per controller currently dropping events
+count by (controller) (
+  rate(circuit_breaker_events_total{result="Dropped"}[5m]) > 0
+)
+
+# Estimated number of circuit breaker opens over 5 minutes
+sum by (controller) (
+  increase(circuit_breaker_opens_total[5m])
+)
+
+# Alert condition: controllers under high watch pressure (severe overload)
+sum by (controller) (
+  rate(circuit_breaker_events_total{result="Dropped"}[5m])
+) > 1
+```
+
+**Recommended alerts:**
+```yaml
+# Alert when circuit breaker is consistently dropping events
+- alert: CircuitBreakerDropRatioHigh
+  expr: |
+    (
+      sum by (controller)(rate(circuit_breaker_events_total{result="Dropped"}[5m]))
+      /
+      sum by (controller)(rate(circuit_breaker_events_total[5m]))
+    ) > 0.2
+  for: 5m
+  labels:
+    severity: critical
+  annotations:
+    summary: "High circuit breaker drop ratio for {{ $labels.controller }}"
+    description: "More than 20% of events are being dropped by the circuit breaker for {{ $labels.controller }}, indicating sustained overload."
+
+# Alert when circuit breaker opens frequently
+- alert: CircuitBreakerFrequentOpens
+  expr: |
+    sum by (controller) (
+      rate(circuit_breaker_opens_total[5m])
+    ) * 3600 > 6
+  for: 15m
+  labels:
+    severity: warning
+  annotations:
+    summary: "Frequent circuit breaker opens for {{ $labels.controller }}"
+    description: "Circuit breaker for {{ $labels.controller }} is opening more than 6 times per hour, indicating reconciliation thrashing."
+```
+
+For more information on the circuit breaker feature and configuration, see [Troubleshooting - Circuit breaker]({{< ref "troubleshoot-crossplane#circuit-breaker-for-reconciliation-thrashing" >}}).
 
 ## Provider metrics
 
