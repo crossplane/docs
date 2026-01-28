@@ -43,7 +43,7 @@ Server Version: v1.17.0
 ## render
 <!-- vale Google.Headings = YES -->
 
-The `crossplane render` command previews the output of a 
+The `crossplane render` command previews the output of a
 [composite resource]({{<ref "../composition/composite-resources">}}) after applying
 any [composition functions]({{<ref "../composition/compositions">}}).
 
@@ -52,20 +52,20 @@ The `crossplane render` command requires you to use composition functions.
 {{< /hint >}}
 
 The `crossplane render` command connects to the locally running Docker
-Engine to pull and run composition functions. 
+Engine to pull and run composition functions.
 
-{{<hint "important">}} 
+{{<hint "important">}}
 Running `crossplane render` requires [Docker](https://www.docker.com/).
 {{< /hint >}}
 
 Provide a composite resource, composition and composition function YAML
 definition with the command to render the output locally.
 
-For example, 
+For example,
 `crossplane render xr.yaml composition.yaml function.yaml`
 
-The output includes the original composite resource followed by the generated 
-managed resources. 
+The output includes the original composite resource followed by the generated
+managed resources.
 
 {{<expand "An example render output" >}}
 
@@ -125,7 +125,7 @@ to connect to the local Docker Engine and run composition functions.
 ### Provide function context
 
 The `--context-files` and `--context-values` flags can provide data
-to a function's `context`.  
+to a function's `context`.
 The context is JSON formatted data.
 
 ### Include function results
@@ -138,7 +138,7 @@ outputs.
 
 Composition functions can only change the `status` field of a composite
 resource. By default, the `crossplane render` command only prints the
-`status` field with `metadata.name`.  
+`status` field with `metadata.name`.
 
 Use `--include-full-xr` to print the full composite resource,
 including the `spec` and `metadata` fields.
@@ -179,7 +179,7 @@ The schema of the resource isn't validated and may contain any data.
 Extra Resources allow a Composition to request Crossplane Objects on the cluster that aren't
 part of the Composition. The `--extra-resources` option points at a directory containing
 YAML manifests of resources to mock. Use Extra Resources in combination with a function like
-[function-extra-resources](https://github.com/crossplane-contrib/function-extra-resources) or the 
+[function-extra-resources](https://github.com/crossplane-contrib/function-extra-resources) or the
 built-in support in [function-go-templating](https://github.com/crossplane-contrib/function-go-templating?tab=readme-ov-file#extraresources).
 
 <!-- vale Google.Headings = NO -->
@@ -195,15 +195,15 @@ and publishing of Crossplane packages to a Crossplane package registry.
 <!-- vale Google.Headings = YES -->
 
 Using `crossplane xpkg build` provides automation and simplification to build
-Crossplane packages.  
+Crossplane packages.
 
 The Crossplane CLI combines a directory of YAML files and packages them as
-an [OCI container image](https://opencontainers.org/).  
+an [OCI container image](https://opencontainers.org/).
 
 The CLI applies the required annotations and values to meet the
 [Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md).
 
-The `crossplane` CLI supports building 
+The `crossplane` CLI supports building
 [configuration]({{< ref "../packages/configurations" >}}),
 [function]({{<ref "../composition/compositions">}}) and
 [provider]({{<ref "../packages/providers" >}}) package types.
@@ -231,53 +231,53 @@ All YAML files must be valid Kubernetes manifests with `apiVersion`, `kind`,
 
 #### Ignore files
 
-Use `--ignore` to provide a list of files and directories to ignore.  
+Use `--ignore` to provide a list of files and directories to ignore.
 
-For example,  
+For example,
 `crossplane xpkg build --ignore="./test/*,kind-config.yaml"`
 
 #### Set the package name
 
-`crossplane` automatically names the new package a combination of the 
-`metadata.name` and a hash of the package contents and saves the contents 
-in the same location as `--package-root`. Define a specific location and 
-filename with `--package-file` or `-o`.  
+`crossplane` automatically names the new package a combination of the
+`metadata.name` and a hash of the package contents and saves the contents
+in the same location as `--package-root`. Define a specific location and
+filename with `--package-file` or `-o`.
 
-For example,  
+For example,
 `crossplane xpkg build -o /home/crossplane/example.xpkg`.
 
 
 #### Include examples
 
-Include YAML files demonstrating how to use the package with `--examples-root`. 
+Include YAML files demonstrating how to use the package with `--examples-root`.
 
 #### Include a runtime image
 
-Functions and Providers require YAML files describing their dependencies and 
+Functions and Providers require YAML files describing their dependencies and
 settings and a container image for their runtime.
 
-Using `--embed-runtime-image-name` runs a specified image and 
+Using `--embed-runtime-image-name` runs a specified image and
 includes the image inside the function or provider package.
 
 {{<hint "note" >}}
-Images referenced with `--embed-runtime-image-name` must be in the local Docker 
-cache.  
+Images referenced with `--embed-runtime-image-name` must be in the local Docker
+cache.
 
 Use `docker pull` to download a missing image.
 {{< /hint >}}
 
-The `--embed-runtime-image-tarball` flag includes a local OCI image tarball 
+The `--embed-runtime-image-tarball` flag includes a local OCI image tarball
 inside the function or provider package.
 
 <!-- vale Google.Headings = NO -->
 ### xpkg init
 <!-- vale Google.Headings = YES -->
 
-The `crossplane xpkg init` command populates the current directory with 
-files to build a package. 
+The `crossplane xpkg init` command populates the current directory with
+files to build a package.
 
-Provide a name to use for the package and the package template to start from 
-with the command  
+Provide a name to use for the package and the package template to start from
+with the command
 `crossplane xpkg init <name> <template>`
 
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
@@ -289,7 +289,7 @@ The `<template>` value may be one of four well known templates:
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
 * `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
 
-Instead of a well known template the `<template>` value can be a git repository 
+Instead of a well known template the `<template>` value can be a git repository
 URL.
 
 <!-- vale Google.Headings = NO -->
@@ -328,13 +328,13 @@ personalize the template.
 
 Download and install packages into Crossplane with  `crossplane xpkg install`.
 
-By default the `crossplane xpkg install` command uses the Kubernetes 
-configuration defined in `~/.kube/config`.  
+By default the `crossplane xpkg install` command uses the Kubernetes
+configuration defined in `~/.kube/config`.
 
-Define a custom Kubernetes configuration file location with the environmental 
+Define a custom Kubernetes configuration file location with the environmental
 variable `KUBECONFIG`.
 
-Specify the package kind, package file and optionally a name to give the package 
+Specify the package kind, package file and optionally a name to give the package
 inside Crossplane.
 
 `crossplane xpkg install <package-kind> <registry URL package name and tag> [<optional-name>]`
@@ -361,38 +361,38 @@ For example, to install the latest version of the
 #### Wait for package install
 
 When installing a package the `crossplane xpkg install` command doesn't wait for
-the package to download and install. View any download or installation problems 
+the package to download and install. View any download or installation problems
 by inspecting the `configuration` with `kubectl describe configuration`.
 
-Use `--wait` to have the `crossplane xpkg install` command to wait for a 
-package to have the condition `HEALTHY` before continuing. The command 
+Use `--wait` to have the `crossplane xpkg install` command to wait for a
+package to have the condition `HEALTHY` before continuing. The command
 returns an error if the `wait` time expires before the package is `HEALTHY`.
 
 #### Require manual package activation
 
-Set the package to require 
-[manual activation]({{<ref "../packages/configurations#revision-activation-policy" >}}), 
+Set the package to require
+[manual activation]({{<ref "../packages/configurations#revision-activation-policy" >}}),
 preventing an automatic upgrade of a package with `--manual-activation`
 
 #### Authenticate to a private registry
 
-To authenticate to a private package registry use `--package-pull-secrets` and 
-provide a list of Kubernetes Secret objects. 
+To authenticate to a private package registry use `--package-pull-secrets` and
+provide a list of Kubernetes Secret objects.
 
 {{<hint "important" >}}
-The secrets must be in the same namespace as the Crossplane pod. 
+The secrets must be in the same namespace as the Crossplane pod.
 {{< /hint >}}
 
 #### Customize the number of stored package versions
 
 By default Crossplane only stores a single inactive package in the local package
-cache. 
+cache.
 
-Store more inactive copies of a package with `--revision-history-limit`. 
+Store more inactive copies of a package with `--revision-history-limit`.
 
-Read more about 
-[package revisions]({{< ref "../packages/configurations#configuration-revisions" >}}) 
-in the package documentation. 
+Read more about
+[package revisions]({{< ref "../packages/configurations#configuration-revisions" >}})
+in the package documentation.
 
 <!-- vale Google.Headings = NO -->
 ### xpkg login
@@ -405,9 +405,9 @@ Use `xpkg login` to authenticate to registries that host Crossplane packages.
 {{< table "table table-sm table-striped">}}
 | Short flag   | Long flag                            | Description                    |
 | ------------ | -------------                        | ------------------------------ |
-| `-u` | `--username=<username>`    | Username to use for authentication. | 
-| `-p` | `--password=<password>`    | Password to use for authentication. | 
-| `-t` | `--token=<token string>`   | User token string to use for authentication. | 
+| `-u` | `--username=<username>`    | Username to use for authentication. |
+| `-p` | `--password=<password>`    | Password to use for authentication. |
+| `-t` | `--token=<token string>`   | User token string to use for authentication. |
 | `-a` | `--account=<organization>` | Specify an Upbound organization during authentication. |
 {{< /table >}}
 
@@ -417,49 +417,49 @@ Use `xpkg login` to authenticate to registries that host Crossplane packages.
 The `crossplane xpkg login` command can use a username and password or Upbound API token.
 
 By default, `crossplane xpkg login` without arguments, prompts for a username
-and password. 
+and password.
 
 Provide a username and password with the `--username` and `--password` flags or
 set the environmental variable `UP_USER` for a username or `UP_PASSWORD` for the
-password. 
+password.
 
-Use an Upbound user token instead of a username and password with `--token` or 
-the `UP_TOKEN` environmental variable. 
+Use an Upbound user token instead of a username and password with `--token` or
+the `UP_TOKEN` environmental variable.
 
 {{< hint "important" >}}
-The `--token` or `UP_TOKEN` environmental variables take precedence over a 
+The `--token` or `UP_TOKEN` environmental variables take precedence over a
 username and password.
 {{< /hint >}}
 
-Using `-` as the input for `--password` or `--token` reads the input from stdin.  
+Using `-` as the input for `--password` or `--token` reads the input from stdin.
 For example, `crossplane xpkg login --password -`.
 
-After logging in the Crossplane CLI creates a `profile` in 
-`.crossplane/config.json` to cache unprivileged account information. 
+After logging in the Crossplane CLI creates a `profile` in
+`.crossplane/config.json` to cache unprivileged account information.
 
 {{<hint "note" >}}
-The `session` field of `config.json` file is a session cookie identifier. 
+The `session` field of `config.json` file is a session cookie identifier.
 
 The `session` value isn't used for authentication. This isn't a `token`.
 {{< /hint >}}
 
 #### Authenticate with a registered Upbound organization
 
-Authenticate to a registered organization in the Upbound Marketplace with the 
-`--account` option, along with the username and password or token. 
+Authenticate to a registered organization in the Upbound Marketplace with the
+`--account` option, along with the username and password or token.
 
-For example, 
+For example,
 `crossplane xpkg login --account=Upbound --username=my-user --password -`.
 
 <!-- vale Google.Headings = NO -->
 ### xpkg logout
 <!-- vale Google.Headings = YES -->
 
-Use `crossplane xpkg logout` to invalidate the current `crossplane xpkg login` 
+Use `crossplane xpkg logout` to invalidate the current `crossplane xpkg login`
 session.
 
 {{< hint "note" >}}
-Using `crossplane xpkg logout` removes the `session` from the 
+Using `crossplane xpkg logout` removes the `session` from the
 `~/.crossplane/config.json` file, but doesn't delete the configuration file.
 {{< /hint >}}
 
@@ -467,30 +467,30 @@ Using `crossplane xpkg logout` removes the `session` from the
 ### xpkg push
 <!-- vale Google.Headings = YES -->
 
-Push a Crossplane package file to a package registry. 
+Push a Crossplane package file to a package registry.
 
 {{< hint "note" >}}
-Pushing a package may require authentication with 
+Pushing a package may require authentication with
 [`crossplane xpkg login`](#xpkg-login)
 {{< /hint >}}
 
-Specify the organization, package name and tag with  
+Specify the organization, package name and tag with
 `crossplane xpkg push <package>`
 
-By default the command looks in the current directory for a single `.xpkg` file 
-to push. 
+By default the command looks in the current directory for a single `.xpkg` file
+to push.
 
 To push multiple files or to specify a specific `.xpkg` file use the `-f` flag.
 
-For example, to push a local package named `my-package` to 
+For example, to push a local package named `my-package` to
 `crossplane-docs/my-package:v0.14.0` use:
 
 `crossplane xpkg push -f my-package.xpkg crossplane-docs/my-package:v0.14.0`
 
-To push to another package registry, like [DockerHub](https://hub.docker.com/) 
-provide the full URL along with the package name. 
+To push to another package registry, like [DockerHub](https://hub.docker.com/)
+provide the full URL along with the package name.
 
-For example, to push a local package named `my-package` to 
+For example, to push a local package named `my-package` to
 DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
 `crossplane xpkg push -f my-package.xpkg index.docker.io/crossplane-docs/my-package:v0.14.0`.
 
@@ -509,13 +509,13 @@ DockerHub organization `crossplane-docs/my-package:v0.14.0` use:
 
 The `crossplane xpkg update` command downloads and updates an existing package.
 
-By default the `crossplane xpkg update` command uses the Kubernetes 
-configuration defined in `~/.kube/config`.  
+By default the `crossplane xpkg update` command uses the Kubernetes
+configuration defined in `~/.kube/config`.
 
-Define a custom Kubernetes configuration file location with the environmental 
+Define a custom Kubernetes configuration file location with the environmental
 variable `KUBECONFIG`.
 
-Specify the package kind, package file and optionally the name of the package 
+Specify the package kind, package file and optionally the name of the package
 already installed in Crossplane.
 
 `crossplane xpkg update <package-kind> <registry package name and tag> [<optional-name>]`
@@ -530,10 +530,10 @@ For example, to update to the latest version of the
 ## beta
 <!-- vale Google.Headings = YES -->
 
-Crossplane `beta` commands are experimental. These commands may change the 
-flags, options or outputs in future releases. 
+Crossplane `beta` commands are experimental. These commands may change the
+flags, options or outputs in future releases.
 
-Crossplane maintainers may promote or remove commands under `beta` in future 
+Crossplane maintainers may promote or remove commands under `beta` in future
 releases.
 
 
@@ -541,28 +541,35 @@ releases.
 ### beta convert
 <!-- vale Google.Headings = YES -->
 
-As Crossplane evolves, its APIs and resources may change. To help with the 
+As Crossplane evolves, its APIs and resources may change. To help with the
 migration to the new APIs and resources, the `crossplane beta convert` command
 converts a Crossplane resource to a new version or kind.
 
 Use the `crossplane beta convert` command to convert a
-ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration">}}) 
-or a legacy Composition using `mode: Resources` to a 
+ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration">}})
+or a legacy Composition using `mode: Resources` to a
 [Composition pipeline function]({{< ref "../composition/compositions" >}}).
 
 Provide the `crossplane beta convert` command the conversion type, the input
 file and optionally, an output file. By default the command writes the output to
-standard out. 
+standard out.
 
-For example, to convert a ControllerConfig to a DeploymentRuntimeConfig use 
+For example, to convert a ControllerConfig to a DeploymentRuntimeConfig use
 `crossplane beta convert deployment-runtime`. For example,
 
 `crossplane beta convert deployment-runtime controllerConfig.yaml -o deploymentConfig.yaml`
 
-To convert a Composition using patch and transforms to a pipeline function, use
-`crossplane beta convert pipeline-composition`.  
+To convert a legacy Composition using inline patch and transforms to a pipeline
+composition, use `crossplane beta convert pipeline-composition`.
 
-Optionally, use the `-f` flag to provide the name of the function.  
+{{< hint "important" >}}
+The `pipeline-composition` conversion is **only available in CLI version v1.20**.
+This conversion is mandatory when migrating to Crossplane v2, as v2 no longer
+supports inline patch and transform compositions. Users must use the v1.20 CLI
+to perform this conversion during their upgrade process.
+{{< /hint >}}
+
+Optionally, use the `-f` flag to provide the name of the function.
 By default the function name is "function-patch-and-transform."
 
 `crossplane beta convert pipeline-composition oldComposition.yaml -o newComposition.yaml -f patchFunctionName`
@@ -583,10 +590,10 @@ By default the function name is "function-patch-and-transform."
 <!-- vale Google.Headings = YES -->
 
 The command `crossplane beta top` shows CPU and memory usage of Crossplane
-related pods. 
+related pods.
 
 ```shell
-crossplane beta top 
+crossplane beta top
 TYPE         NAMESPACE   NAME                                                                  CPU(cores)   MEMORY
 crossplane   default     crossplane-f98f9ddfd-tnm46                                            4m           32Mi
 crossplane   default     crossplane-rbac-manager-74ff459b88-94p8p                              4m           14Mi
@@ -595,11 +602,11 @@ provider     default     crossplane-contrib-provider-family-aws-48b3b5ccf964-76c
 ```
 
 {{<hint "important" >}}
-Using `crossplane beta top` requires the Kubernetes 
-[metrics server](https://github.com/kubernetes-sigs/metrics-server) enabled on 
-the cluster running Crossplane before using `crossplane beta top`. 
+Using `crossplane beta top` requires the Kubernetes
+[metrics server](https://github.com/kubernetes-sigs/metrics-server) enabled on
+the cluster running Crossplane before using `crossplane beta top`.
 
-Follow the installation instructions on the 
+Follow the installation instructions on the
 [metrics-server GitHub page](https://github.com/kubernetes-sigs/metrics-server#installation).
 {{< /hint >}}
 
@@ -618,7 +625,7 @@ Follow the installation instructions on the
 {{< /table >}}
 
 The Kubernetes metrics server may take some time to collect data for the
-`crossplane beta top` command. Before the metrics server is ready, 
+`crossplane beta top` command. Before the metrics server is ready,
 running the `top` command may produce an error, for example,
 
 `crossplane: error: error adding metrics to pod, check if metrics-server is running or wait until metrics are available for the pod: the server is currently unable to handle the request (get pods.metrics.k8s.io crossplane-contrib-provider-helm-b4cc4c2c8db3-6d787f9686-qzmz2)`
@@ -629,24 +636,24 @@ running the `top` command may produce an error, for example,
 <!-- vale Google.Headings = YES -->
 
 Use the `crossplane beta trace` command to display a visual relationship of
-Crossplane objects. The `trace` command supports XRs, compositions, 
-functions, managed resources or packages. 
+Crossplane objects. The `trace` command supports XRs, compositions,
+functions, managed resources or packages.
 
-The command requires a resource type and a resource name.  
+The command requires a resource type and a resource name.
 
 `crossplane beta trace <resource kind> <resource name>`
 
-For example to view a resource named `my-xr` of type `example.crossplane.io`:  
+For example to view a resource named `my-xr` of type `example.crossplane.io`:
 `crossplane beta trace example.crossplane.io my-xr`
 
-The command also accepts Kubernetes CLI style `<kind>/<name>` input.  
-For example,  
+The command also accepts Kubernetes CLI style `<kind>/<name>` input.
+For example,
 `crossplane beta trace example.crossplane.io/my-xr`
 
-By default the `crossplane beta trace` command uses the Kubernetes 
-configuration defined in `~/.kube/config`.  
+By default the `crossplane beta trace` command uses the Kubernetes
+configuration defined in `~/.kube/config`.
 
-Define a custom Kubernetes configuration file location with the environmental 
+Define a custom Kubernetes configuration file location with the environmental
 variable `KUBECONFIG`.
 
 #### Flags
@@ -670,10 +677,10 @@ By default `crossplane beta trace` prints directly to the terminal, limiting the
 "Ready" condition and "Status" messages to 64 characters.
 
 #### Wide outputs
-Print the entire "Ready" or "Status" message if they're longer than 
-64 characters with `--output=wide`. 
+Print the entire "Ready" or "Status" message if they're longer than
+64 characters with `--output=wide`.
 
-For example, the output truncates the "Status" message that's too long. 
+For example, the output truncates the "Status" message that's too long.
 
 ```shell {copy-lines="1"
 crossplane trace cluster.aws.platformref.upbound.io platform-ref-aws
@@ -691,13 +698,13 @@ Cluster/platform-ref-aws (default)                                True     False
 
 #### Graphviz dot file output
 
-Use the `--output=dot` to print out a textual 
-[Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. 
+Use the `--output=dot` to print out a textual
+[Graphviz dot](https://graphviz.org/docs/layouts/dot/) output.
 
-Save the output and export it or the output directly to Graphviz `dot` to 
-render an image. 
+Save the output and export it or the output directly to Graphviz `dot` to
+render an image.
 
-For example, to save the output as a `graph.png` file use 
+For example, to save the output as a `graph.png` file use
 `dot -Tpng -o graph.png`.
 
 `crossplane beta trace cluster.aws.platformref.upbound.io platform-ref-aws -o dot | dot -Tpng -o graph.png`
@@ -738,7 +745,7 @@ By default `crossplane beta trace` uses `--show-package-dependencies unique` to
 include a required package only once in the output.
 
 Use `--show-package-dependencies all` to see every package requiring the same
-dependency. 
+dependency.
 
 ```shell
 crossplane beta trace configuration platform-ref-aws --show-package-dependencies all
@@ -865,27 +872,27 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 ### beta validate
 <!-- vale Google.Headings = YES -->
 
-The `crossplane beta validate` command validates 
-[compositions]({{<ref "../composition/compositions">}}) against provider or XRD 
+The `crossplane beta validate` command validates
+[compositions]({{<ref "../composition/compositions">}}) against provider or XRD
 schemas using the Kubernetes API server's validation library
 with extra validation such as checking for unknown fields,
 a common source of difficult to debug issues in Crossplane.
 
-The `crossplane beta validate` command supports validating the following 
+The `crossplane beta validate` command supports validating the following
 scenarios:
 
-- Validate a managed resource or composite resource 
-  [against a Provider or XRD schema](#validate-resources-against-a-schema). 
-- Use the output of `crossplane render` as [validation input](#validate-render-command-output). 
-- Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules) 
+- Validate a managed resource or composite resource
+  [against a Provider or XRD schema](#validate-resources-against-a-schema).
+- Use the output of `crossplane render` as [validation input](#validate-render-command-output).
+- Validate an [XRD against Kubernetes Common Expression Language](#validate-common-expression-language-rules)
   (CEL) rules.
 - Validate resources against a [directory of schemas](#validate-against-a-directory-of-schemas).
 
 
 {{< hint "note" >}}
-The `crossplane beta validate` command performs all validation offline. 
+The `crossplane beta validate` command performs all validation offline.
 
-A Kubernetes cluster running Crossplane isn't required. 
+A Kubernetes cluster running Crossplane isn't required.
 {{< /hint >}}
 
 #### Flags
@@ -903,15 +910,15 @@ A Kubernetes cluster running Crossplane isn't required.
 
 #### Validate resources against a schema
 
-The `crossplane beta validate` command can validate an XR and one or more 
-managed resources against a provider's schema. 
+The `crossplane beta validate` command can validate an XR and one or more
+managed resources against a provider's schema.
 
 {{<hint "important" >}}
 When validating against a provider the `crossplane beta validate` command
 downloads the provider package to the `--cache-dir` directory. By default
 Crossplane uses `.crossplane` as the `--cache-dir` location.
 
-Access to a Kubernetes cluster or Crossplane pod isn't required.  
+Access to a Kubernetes cluster or Crossplane pod isn't required.
 Validation requires the ability to download the provider package.
 {{< /hint >}}
 
@@ -923,12 +930,12 @@ To clear the cache and download the CRD files again use the `--clean-cache` flag
 
 To validate a managed resource against a provider,
 first, create a provider manifest file. For example, to validate an IAM role
-from Provider AWS, use the 
-[Provider AWS IAM](https://github.com/crossplane-contrib/provider-upjet-aws) 
+from Provider AWS, use the
+[Provider AWS IAM](https://github.com/crossplane-contrib/provider-upjet-aws)
 manifest.
 
 {{<hint "tip" >}}
-To validate a 
+To validate a
 "[family provider](https://blog.upbound.io/new-provider-families)" use the
 provider manifests of the resources to validate.
 {{< /hint >}}
@@ -944,9 +951,9 @@ spec:
 
 Now include the XR or managed resource to validate.
 
-For example, to validate an 
+For example, to validate an
 {{<hover label="iamAK" line="2">}}AccessKey{{</hover>}} managed resource,
-provide a managed resource YAML file. 
+provide a managed resource YAML file.
 
 ```yaml {label="iamAK"}
 apiVersion: iam.aws.m.upbound.io/v1beta1
@@ -962,7 +969,7 @@ spec:
 ```
 
 Run the `crossplane beta validate` command providing the provider and managed
-resource YAML files as input. 
+resource YAML files as input.
 
 ```shell
 crossplane beta validate provider.yaml managedResource.yaml
@@ -995,11 +1002,11 @@ Total 5 resources: 0 missing schemas, 4 success cases, 1 failure cases
 #### Validate Common Expression Language rules
 <!-- vale Google.Headings = YES -->
 
-XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language 
+XRDs can define [validation rules](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) expressed in the Common Expression Language
 ([CEL](https://kubernetes.io/docs/reference/using-api/cel/)).
 
 
-Apply a CEL rule with the 
+Apply a CEL rule with the
 {{<hover label="celXRD" line="12" >}}x-kubernetes-validations{{</hover>}} key
 inside the schema {{<hover label="celXRD" line="10" >}}spec{{</hover>}} object of an XRD.
 
@@ -1023,7 +1030,7 @@ spec:
                   type: integer
                 maxReplicas:
                   type: integer
-                replicas: 
+                replicas:
                   type: integer
 # Removed for brevity
 ```
