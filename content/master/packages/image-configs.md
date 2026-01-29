@@ -196,13 +196,13 @@ matching a pattern, regardless of how they're installed. This includes packages
 installed directly and packages installed as dependencies.
 
 The `spec.runtime` field allows you to specify a `DeploymentRuntimeConfig` that
-applies to all packages matching the image prefix. This is useful when you want
-to apply consistent runtime configurations across all packages from a particular
-registry or organization, including their dependencies.
+applies to all packages matching the image prefix. It allows you to apply
+consistent runtime configurations across all packages from a particular registry
+or organization, including their dependencies.
 
 ### Precedence
 
-When both an `ImageConfig` runtime and a package-level `runtimeConfigRef` are
+When both an `ImageConfig` runtime and a package level `runtimeConfigRef` are
 specified, the `ImageConfig` runtime takes precedence.
 
 ### Example
