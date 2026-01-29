@@ -100,7 +100,7 @@ spec:
         spec:
           containers:
           - name: package-runtime
-            args: 
+            args:
             - --debug
 ---
 apiVersion: pkg.crossplane.io/v1
@@ -194,6 +194,107 @@ For example, for a `CloudSQLInstance` managed resource (`database.gcp.crossplane
 ```shell
 kubectl patch cloudsqlinstance my-db -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
+
+## Circuit breaker for reconciliation thrashing
+
+<!-- vale alex.ProfanityUnlikely = NO -->
+Crossplane includes a circuit breaker mechanism to prevent reconciliation thrashing. Thrashing occurs when controllers fight over composed resource state or enter tight reconciliation loops that could impact cluster performance.
+<!-- vale alex.ProfanityUnlikely = YES -->
+
+### How the circuit breaker works
+
+<!-- vale Crossplane.Spelling = NO -->
+Each Composite Resource (XR) has its own token bucket-based circuit breaker that monitors reconciliation rates:
+<!-- vale Crossplane.Spelling = YES -->
+
+- **Burst (capacity)**: Maximum number of events allowed in quick succession (default: 100)
+<!-- vale write-good.Passive = NO -->
+- **Refill rate**: Sustained event rate after the burst capacity is exhausted (default: 1 event per second)
+<!-- vale write-good.Passive = YES -->
+<!-- vale Crossplane.Spelling = NO -->
+- **Cooldown**: Duration the circuit stays open before attempting recovery (default: 5 minutes)
+<!-- vale Crossplane.Spelling = YES -->
+
+<!-- vale write-good.Weasel = NO -->
+When an XR receives too many watch events (exceeding the burst and refill rate), the circuit breaker opens and blocks most reconciliation requests. While the circuit is open, Crossplane allows one request every 30 seconds to probe for recovery.
+<!-- vale write-good.Weasel = YES -->
+
+### Detecting circuit breaker activation
+
+XRs have a `Responsive` condition that tracks circuit breaker state. When the circuit breaker opens, this condition changes to `False`:
+
+```yaml
+conditions:
+- type: Responsive
+  status: "False"
+  reason: WatchCircuitOpen
+  message: "Too many watch events from ConfigMap/my-config (default). Allowing events periodically."
+```
+
+The message identifies which resource is causing excessive watch events, helping you pinpoint the source of thrashing.
+
+### Identifying and fixing root causes
+
+<!-- vale write-good.TooWordy = NO -->
+Watch events occur when resources change in your cluster. Excessive watch events typically indicate composition patterns that cause loops, such as resources updating each other in cycles or external systems reverting changes made by Crossplane.
+
+**To identify the source of excessive watch events:**
+
+The XR's `Responsive` condition message identifies the problematic resource. Monitor this resource for modification events:
+<!-- vale write-good.TooWordy = YES -->
+
+```shell
+kubectl get <resource-kind> <resource-name> -n <namespace> --output-watch-events --watch-only
+```
+
+**Common root causes and fixes:**
+
+<!-- vale write-good.TooWordy = NO -->
+- **Feedback loops in patches**: Review Composition patches for logic that creates circular updates where changes trigger more changes
+- **External controller conflicts**: Other controllers or operators might modify the same resources, fighting with Crossplane for control
+- **Frequent connection detail updates**: Consider if all fields need to be in connection details, as updates to connection secrets trigger watch events
+
+Investigate and fix the root cause before adjusting circuit breaker thresholds.
+<!-- vale write-good.TooWordy = YES -->
+
+### Configuring circuit breaker parameters
+
+<!-- vale write-good.Weasel = NO -->
+<!-- vale write-good.TooWordy = NO -->
+The default circuit breaker settings work well for most environments. You may need to adjust them based on your composition patterns and cluster size.
+<!-- vale write-good.Weasel = YES -->
+<!-- vale write-good.TooWordy = YES -->
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale Microsoft.Adverbs = NO -->
+For example, increase the burst and refill rate for large-scale deployments with XRs updating frequently, or decrease them if you want stricter protection against thrashing.
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Microsoft.Adverbs = YES -->
+
+Configure circuit breaker parameters using Crossplane startup arguments via Helm:
+
+```shell
+helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane \
+  --set args='{"--circuit-breaker-burst=500.0","--circuit-breaker-refill-rate=5.0","--circuit-breaker-cooldown=1m"}'
+```
+
+Available parameters:
+- `--circuit-breaker-burst`: Maximum burst of events (default: 100.0)
+- `--circuit-breaker-refill-rate`: Events per second for sustained rate (default: 1.0)
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale Google.Units = NO -->
+<!-- vale gitlab.Units = NO -->
+- `--circuit-breaker-cooldown`: Duration to keep circuit open (default: 5m0s)
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Google.Units = YES -->
+<!-- vale gitlab.Units = YES -->
+
+### Monitoring with metrics
+
+<!-- vale write-good.TooWordy = NO -->
+Track circuit breaker activity using these Prometheus metrics.
+<!-- vale write-good.TooWordy = YES -->
+
+See the [Metrics guide]({{< ref "metrics#circuit-breaker-metrics" >}}) for detailed metric information.
 
 ## Tips, tricks, and troubleshooting
 

@@ -21,7 +21,7 @@ These Prometheus annotations expose the metrics:
 prometheus.io/path: /metrics
 prometheus.io/port: "8080"
 prometheus.io/scrape: "true"
-```    
+```
 
 ## Crossplane core metrics
 
@@ -42,14 +42,154 @@ The Crossplane pod emits these metrics.
 | {{<hover label="function_run_function_response_cache_bytes_deleted_total" line="10">}}function_run_function_response_cache_bytes_deleted_total{{</hover>}} | Total number of RunFunctionResponse bytes deleted from cache |
 | {{<hover label="function_run_function_response_cache_read_seconds" line="11">}}function_run_function_response_cache_read_seconds{{</hover>}} | Histogram of cache read latency (seconds) |
 | {{<hover label="function_run_function_response_cache_write_seconds" line="12">}}function_run_function_response_cache_write_seconds{{</hover>}} | Histogram of cache write latency (seconds) |
-| {{<hover label="circuit_breaker_opens_total" line="13">}}circuit_breaker_opens_total{{</hover>}} | Number of times the XR circuit breaker transitioned from closed to open |
-| {{<hover label="circuit_breaker_closes_total" line="14">}}circuit_breaker_closes_total{{</hover>}} | Number of times the XR circuit breaker transitioned from open to closed |
-| {{<hover label="circuit_breaker_events_total" line="15">}}circuit_breaker_events_total{{</hover>}} | Number of XR watch events handled by the circuit breaker, labeled by outcome |
-| {{<hover label="engine_controllers_started_total" line="16">}}engine_controllers_started_total{{</hover>}} | Total number of controllers started |
-| {{<hover label="engine_controllers_stopped_total" line="17">}}engine_controllers_stopped_total{{</hover>}} | Total number of controllers stopped |
-| {{<hover label="engine_watches_started_total" line="18">}}engine_watches_started_total{{</hover>}} | Total number of watches started |
-| {{<hover label="engine_watches_stopped_total" line="19">}}engine_watches_stopped_total{{</hover>}} | Total number of watches stopped |
+| {{<hover label="engine_controllers_started_total" line="13">}}engine_controllers_started_total{{</hover>}} | Total number of controllers started |
+| {{<hover label="engine_controllers_stopped_total" line="14">}}engine_controllers_stopped_total{{</hover>}} | Total number of controllers stopped |
+| {{<hover label="engine_watches_started_total" line="15">}}engine_watches_started_total{{</hover>}} | Total number of watches started |
+| {{<hover label="engine_watches_stopped_total" line="16">}}engine_watches_stopped_total{{</hover>}} | Total number of watches stopped |
 {{</table >}}
+
+### Circuit breaker metrics
+
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale write-good.Passive = NO -->
+The circuit breaker prevents reconciliation thrashing by monitoring and rate-limiting watch events per Composite Resource (XR). Crossplane core emits these metrics to help you identify and respond to excessive reconciliation activity.
+<!-- vale write-good.Passive = YES -->
+<!-- vale Crossplane.Spelling = YES -->
+
+{{< table "table table-hover table-striped table-sm">}}
+| Metric Name | Description |
+| --- | --- |
+| {{<hover label="circuit_breaker_opens_total" line="1">}}circuit_breaker_opens_total{{</hover>}} | Number of times the XR circuit breaker transitioned from closed to open |
+| {{<hover label="circuit_breaker_closes_total" line="2">}}circuit_breaker_closes_total{{</hover>}} | Number of times the XR circuit breaker transitioned from open to closed |
+| {{<hover label="circuit_breaker_events_total" line="3">}}circuit_breaker_events_total{{</hover>}} | Number of XR watch events handled by the circuit breaker, labeled by outcome |
+{{</table >}}
+
+All circuit breaker metrics include a `controller` label formatted as `composite/<plural>.<group>` (for example, `composite/xpostgresqlinstances.example.com`), providing visibility per XRD without creating high cardinality from individual XR instances.
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Crossplane.Spelling = NO -->
+#### circuit_breaker_opens_total
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Google.Headings = YES -->
+
+Tracks when a circuit breaker transitions from closed to open state. An increase indicates an XR is receiving excessive watch events and has triggered throttling.
+
+**Use this metric to:**
+- Alert on XRs experiencing reconciliation thrashing
+- Identify which XRD types are prone to excessive watch events
+- Track the frequency of circuit breaker activations
+
+<!-- vale Crossplane.Spelling = NO -->
+**Example PromQL queries:**
+<!-- vale Crossplane.Spelling = YES -->
+```promql
+# Rate of circuit breaker opens over 5 minutes
+rate(circuit_breaker_opens_total[5m])
+
+# Count of circuit breaker opens by controller
+sum by (controller) (circuit_breaker_opens_total)
+```
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Crossplane.Spelling = NO -->
+#### circuit_breaker_closes_total
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Google.Headings = YES -->
+
+Tracks when a circuit breaker transitions from open to closed state. This indicates an XR has recovered from excessive watch events and returned to normal operation.
+
+**Use this metric to:**
+<!-- vale write-good.TooWordy = NO -->
+- Monitor recovery from reconciliation thrashing
+<!-- vale write-good.TooWordy = YES -->
+<!-- vale Crossplane.Spelling = NO -->
+- Verify circuit breakers are closing after cooldown periods
+<!-- vale Crossplane.Spelling = YES -->
+- Track circuit breaker lifecycle
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Crossplane.Spelling = NO -->
+#### circuit_breaker_events_total
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Google.Headings = YES -->
+
+Tracks all watch events processed by the circuit breaker, labeled by `result`:
+<!-- vale write-good.Passive = NO -->
+- `Allowed`: Normal operation when circuit is closed - events proceed to reconciliation
+<!-- vale write-good.Passive = YES -->
+- `Dropped`: Events blocked when circuit is fully open - indicates active throttling
+<!-- vale Crossplane.Spelling = NO -->
+- `Halfopen_allowed`: Limited probe events when circuit is half-open - circuit is testing for recovery
+<!-- vale Crossplane.Spelling = YES -->
+
+**Use this metric to:**
+- Track the volume of watch events per XR type
+- Detect when the circuit drops events (active throttling)
+- Alert on high dropped event rates indicating potential issues
+- Understand reconciliation pressure on specific controllers
+
+<!-- vale Crossplane.Spelling = NO -->
+**Example PromQL queries:**
+<!-- vale Crossplane.Spelling = YES -->
+```promql
+# Rate of dropped events (active throttling), aggregated per controller
+sum by (controller) (
+  rate(circuit_breaker_events_total{result="Dropped"}[5m])
+)
+
+# Percentage of events being dropped
+sum by (controller) (rate(circuit_breaker_events_total{result="Dropped"}[5m]))
+/
+sum by (controller) (rate(circuit_breaker_events_total[5m])) * 100
+
+# Number of replicas per controller currently dropping events
+count by (controller) (
+  rate(circuit_breaker_events_total{result="Dropped"}[5m]) > 0
+)
+
+# Estimated number of circuit breaker opens over 5 minutes
+sum by (controller) (
+  increase(circuit_breaker_opens_total[5m])
+)
+
+# Alert condition: controllers under high watch pressure (severe overload)
+sum by (controller) (
+  rate(circuit_breaker_events_total{result="Dropped"}[5m])
+) > 1
+```
+
+**Recommended alerts:**
+```yaml
+# Alert when circuit breaker is consistently dropping events
+- alert: CircuitBreakerDropRatioHigh
+  expr: |
+    (
+      sum by (controller)(rate(circuit_breaker_events_total{result="Dropped"}[5m]))
+      /
+      sum by (controller)(rate(circuit_breaker_events_total[5m]))
+    ) > 0.2
+  for: 5m
+  labels:
+    severity: critical
+  annotations:
+    summary: "High circuit breaker drop ratio for {{ $labels.controller }}"
+    description: "More than 20% of events are being dropped by the circuit breaker for {{ $labels.controller }}, indicating sustained overload."
+
+# Alert when circuit breaker opens frequently
+- alert: CircuitBreakerFrequentOpens
+  expr: |
+    sum by (controller) (
+      rate(circuit_breaker_opens_total[5m])
+    ) * 3600 > 6
+  for: 15m
+  labels:
+    severity: warning
+  annotations:
+    summary: "Frequent circuit breaker opens for {{ $labels.controller }}"
+    description: "Circuit breaker for {{ $labels.controller }} is opening more than 6 times per hour, indicating reconciliation thrashing."
+```
+
+For more information on the circuit breaker feature and configuration, see [Troubleshooting - Circuit breaker]({{< ref "troubleshoot-crossplane#circuit-breaker-for-reconciliation-thrashing" >}}).
 
 ## Provider metrics
 
