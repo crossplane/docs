@@ -9,7 +9,27 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
 <script>
+    {{ $cur_ver := "" }}
+    {{/* Only filter if we have a version parameter, which means the meta tag exists */}}
+    {{ if .Page.Params.version }}
+        {{ if eq .Page.Params.version "master" }}
+            {{ $cur_ver = "0.0.0-master" }}
+        {{ else }}
+            {{ $cur_ver = .Page.Params.version }}
+        {{ end }}
 
+    docsearch({
+    container: '#docSearch',
+    appId: '9UXKYX61NK',
+    indexName: 'crossplane',
+    apiKey: 'e07e181044d561f6a4cb7261931d980a',
+    placeholder: 'Search the docs',
+    searchParameters: {
+      facetFilters: [['version:{{ $cur_ver }}']]
+    }
+    });
+    {{ else }}
+    {{/* No version parameter, don't filter */}}
     docsearch({
     container: '#docSearch',
     appId: '9UXKYX61NK',
@@ -17,5 +37,6 @@
     apiKey: 'e07e181044d561f6a4cb7261931d980a',
     placeholder: 'Search the docs'
     });
+    {{ end }}
 
 </script>
