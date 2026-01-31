@@ -22,6 +22,7 @@ The Maintainers and Reviewers mirror the [crossplane/crossplane OWNERS](https://
 * Philippe Scorsolini <philippe.scorsolini@upbound.io> ([phisco](https://github.com/phisco))
 * Jared Watts <jared@upbound.io> ([jbw976](https://github.com/jbw976))
 * Adam Wolfe Gordon <adam.wolfegordon@upbound.io> ([adamwg](https://github.com/adamwg))
+* Christopher Haar <christopher.haar@upbound.io> ([haarchri](https://github.com/haarchri))
 * Pete Lumbis <pete@upbound.io> ([plumbis](https://github.com/plumbis))
 * Michael Goff <michael@upbound.io> ([thephred](https://github.com/thephred))
 * Jean du Plessis <jean@upbound.io> ([jeanduplessis](https://github.com/jeanduplessis))
