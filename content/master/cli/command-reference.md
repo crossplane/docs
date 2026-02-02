@@ -115,6 +115,9 @@ spec:
 |  `-c`        | `--include-context`          | Include the context in the rendered output as a resource of kind: Context. |
 | `-x`         | `--include-full-xr`          | Include a copy of the input Composite Resource spec and metadata fields in the rendered output.   |
 |              | `--timeout=`                          | Amount of time to wait for a function to finish. (Default 1 minute)       |
+|              | `--extra-resources=PATH`     | A YAML file or directory of YAML files specifying required resources (deprecated, use `--required-resources`). |
+|              | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying credentials to use for Functions to render the XR. |
+|              | `--xrd=PATH`                 | A YAML file specifying the CompositeResourceDefinition (XRD) that defines the XR's schema and properties. |
 
 {{< /table >}}
 
@@ -133,6 +136,11 @@ The context is JSON formatted data.
 If a function produces Kubernetes events with statuses use the
 `--include-function-results` to print them along with the managed resource
 outputs.
+
+### Use a secret in a function
+
+If a function needs a secret, use the `--function-credentials=PATH`
+where `PATH` is the path to a Kubernetes secret manifest.
 
 ### Include the composite resource
 
