@@ -170,7 +170,7 @@ Copy any required parameter values from
 in {{<hover label="fc" line="9">}}spec.forProvider{{</hover>}}.
 
 {{< hint "tip" >}}
-Manually copy the important `spec.atProvider` values to `spec.forProvider`.
+Manually copy the important `status.atProvider` values to `spec.forProvider`.
 {{< /hint >}}
 
 ```yaml {label="fc"}
