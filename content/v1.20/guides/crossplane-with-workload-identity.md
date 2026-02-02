@@ -6,7 +6,7 @@ description: Configure Crossplane to pull packages from cloud provider container
 
 When running Crossplane on managed Kubernetes clusters (EKS, AKS, GKE), you can use Kubernetes Workload Identity to grant Crossplane access to pull packages from private cloud container registries. This allows Crossplane to install providers, functions, and configurations from registries like AWS ECR, Azure ACR, and Google Artifact Registry without managing static credentials.
 
-{{% hint "important" %}}
+{{< hint "important" >}}
 This guide configures the **Crossplane package manager** to pull packages from private registries. Packages reference container images that run as separate pods (providers and functions).
 
 **Two-step image pull process:**
@@ -19,7 +19,7 @@ This guide covers step 1. For step 2, ensure your Kubernetes nodes have permissi
 - **GCP GKE**: Node service account with Artifact Registry reader role
 
 Without node-level access, package installation succeeds but pods fail with `ImagePullBackOff`.
-{{% /hint %}}
+{{< /hint >}}
 
 ## Introduction
 
@@ -33,9 +33,9 @@ To enable Crossplane package manager access to private registries, configure ser
 
 Select your cloud provider below for detailed setup instructions:
 
-{{% tabs %}}
+{{< tabs >}}
 
-{{% tab "AWS EKS" %}}
+{{< tab "AWS EKS" >}}
 
 ### Configure workload identity on AWS
 
@@ -105,9 +105,9 @@ aws iam create-policy \
   --policy-document file://crossplane-ecr-policy.json
 ```
 
-{{% hint "note" %}}
+{{< hint "note" >}}
 Replace `<REGION>` and `<ACCOUNT_ID>` with your AWS region and account ID. You can restrict the `Resource` to specific repositories if needed.
-{{% /hint %}}
+{{< /hint >}}
 
 <!-- vale Microsoft.HeadingAcronyms = NO -->
 #### Create an IAM role with trust policy
@@ -215,10 +215,10 @@ kubectl get provider provider-aws-s3
 kubectl describe provider provider-aws-s3
 ```
 
-##### Troubleshooting
+#### Troubleshooting
 
 <!-- vale alex.Ablist = NO -->
-#### Failed to get authorization token
+##### Failed to get authorization token
 <!-- vale alex.Ablist = YES -->
 
 **Error:**
@@ -232,7 +232,7 @@ failed to get authorization token: AccessDeniedException
 3. Confirm the service account annotation matches the IAM role ARN
 
 <!-- vale alex.Ablist = NO -->
-#### Invalid identity token
+##### Invalid identity token
 <!-- vale alex.Ablist = YES -->
 
 **Error:**
@@ -246,7 +246,7 @@ An error occurred (InvalidIdentityToken) when calling the AssumeRoleWithWebIdent
 3. Verify the service account namespace and name in the condition are correct
 
 <!-- vale Microsoft.HeadingAcronyms = NO -->
-#### Access denied to ECR repository
+##### Access denied to ECR repository
 <!-- vale Microsoft.HeadingAcronyms = YES -->
 
 **Error:**
@@ -259,7 +259,7 @@ denied: User: arn:aws:sts::123456789012:assumed-role/CrossplaneECRRole is not au
 2. Check the policy's `Resource` includes your ECR repository ARN
 3. Confirm the IAM role has the policy attached
 
-#### Service account annotation not applied
+##### Service account annotation not applied
 
 If the service account doesn't have the annotation after installation:
 
@@ -275,7 +275,7 @@ helm upgrade crossplane \
 kubectl rollout restart deployment/crossplane -n crossplane-system
 ```
 
-##### Check Crossplane logs
+#### Check Crossplane logs
 
 View logs for authentication issues:
 
@@ -288,14 +288,14 @@ Look for:
 - ECR authentication failures
 - Image pull errors with specific repository paths
 
-##### Learn more
+#### Learn more
 
 - [Amazon EKS IRSA Documentation](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
 - [Amazon ECR Authentication](https://docs.aws.amazon.com/AmazonECR/latest/userguide/security-iam.html)
 
-{{% /tab %}}
+{{< /tab >}}
 
-{{% tab "Azure AKS" %}}
+{{< tab "Azure AKS" >}}
 
 ## Configure workload identity on Azure
 
@@ -419,13 +419,13 @@ helm upgrade --install crossplane \
   --set-string 'customLabels.azure\.workload\.identity/use=true'
 ```
 
-{{% hint "note" %}}
+{{< hint "note" >}}
 Azure Workload Identity requires:
 - Service account annotations for the client ID and tenant ID
 - Label `azure.workload.identity/use: "true"` on pods (applied via `customLabels`)
 
 The `customLabels` setting applies the label to all Crossplane resources. The Azure Workload Identity webhook uses this label on pods to inject environment variables and token volumes. Use `--set-string` to treat the value as a string rather than a boolean.
-{{% /hint %}}
+{{< /hint >}}
 
 #### Verify the configuration
 
@@ -573,9 +573,9 @@ Look for:
 - [AKS Workload Identity Overview](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview)
 - [Azure Container Registry Authentication](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication)
 
-{{% /tab %}}
+{{< /tab >}}
 
-{{% tab "Google Cloud GKE" %}}
+{{< tab "Google Cloud GKE" >}}
 
 ## Configure workload identity on GCP
 
@@ -812,9 +812,9 @@ Look for:
 - [Artifact Registry Authentication](https://cloud.google.com/artifact-registry/docs/docker/authentication)
 - [IAM Service Account Permissions](https://cloud.google.com/iam/docs/service-accounts)
 
-{{% /tab %}}
+{{< /tab >}}
 
-{{% /tabs %}}
+{{< /tabs >}}
 
 ## Configure after installation
 
