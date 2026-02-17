@@ -175,7 +175,7 @@ data:
           end
 
           if contains({"Ready", "Healthy", "Offered", "Established", "ValidPipeline", "RevisionHealthy"}, condition.type) then
-            if condition.status == "True" then
+            if condition.status == "True" or (condition.type == "Established" and condition.reason == "InactiveManagedResource") then
               health_status.status = "Healthy"
               health_status.message = "Resource is up-to-date."
             end
