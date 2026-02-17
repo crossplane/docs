@@ -4,17 +4,17 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: configurations.pkg.crossplane.io
+  name: providers.pkg.crossplane.io
 spec:
   group: pkg.crossplane.io
   names:
     categories:
     - crossplane
     - pkg
-    kind: Configuration
-    listKind: ConfigurationList
-    plural: configurations
-    singular: configuration
+    kind: Provider
+    listKind: ProviderList
+    plural: providers
+    singular: provider
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,12 +34,11 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          A Configuration installs an OCI compatible Crossplane package, extending
-          Crossplane with support for new kinds of CompositeResourceDefinitions and
-          Compositions.
+          A Provider installs an OCI compatible Crossplane package, extending
+          Crossplane with support for new kinds of managed resources.
 
           Read the Crossplane documentation for
-          [more information about Configuration packages]( https://docs.crossplane.io/latest/packages/configurations/).
+          [more information about Providers](https://docs.crossplane.io/latest/packages/providers/).
         properties:
           apiVersion:
             description: |-
@@ -60,8 +59,8 @@ spec:
             type: object
           spec:
             description: |-
-              ConfigurationSpec specifies details about a request to install a
-              configuration to Crossplane.
+              ProviderSpec specifies details about a request to install a provider to
+              Crossplane.
             properties:
               commonLabels:
                 additionalProperties:
@@ -132,6 +131,27 @@ spec:
                   Defaults to 1. Can be disabled by explicitly setting to 0.
                 format: int64
                 type: integer
+              runtimeConfigRef:
+                default:
+                  name: default
+                description: |-
+                  RuntimeConfigRef references a RuntimeConfig resource that will be used
+                  to configure the package runtime.
+                properties:
+                  apiVersion:
+                    default: pkg.crossplane.io/v1beta1
+                    description: API version of the referent.
+                    type: string
+                  kind:
+                    default: DeploymentRuntimeConfig
+                    description: Kind of the referent.
+                    type: string
+                  name:
+                    description: Name of the RuntimeConfig.
+                    type: string
+                required:
+                - name
+                type: object
               skipDependencyResolution:
                 default: false
                 description: |-
@@ -144,7 +164,7 @@ spec:
             - package
             type: object
           status:
-            description: ConfigurationStatus represents the observed state of a Configuration.
+            description: ProviderStatus represents the observed state of a Provider.
             properties:
               appliedImageConfigRefs:
                 description: |-

@@ -4,24 +4,29 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: locks.pkg.crossplane.io
+  name: managedresourceactivationpolicies.apiextensions.crossplane.io
 spec:
-  group: pkg.crossplane.io
+  group: apiextensions.crossplane.io
   names:
-    kind: Lock
-    listKind: LockList
-    plural: locks
-    singular: lock
+    categories:
+    - crossplane
+    kind: ManagedResourceActivationPolicy
+    listKind: ManagedResourceActivationPolicyList
+    plural: managedresourceactivationpolicies
+    shortNames:
+    - mrap
+    singular: managedresourceactivationpolicy
   scope: Cluster
   versions:
   - additionalPrinterColumns:
     - jsonPath: .metadata.creationTimestamp
       name: AGE
       type: date
-    name: v1beta1
+    name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Lock is the CRD type that tracks package dependencies.
+        description: A ManagedResourceActivationPolicy defines the activation policy
+          for ManagedResourceDefinitions.
         properties:
           apiVersion:
             description: |-
@@ -40,85 +45,33 @@ spec:
             type: string
           metadata:
             type: object
-          packages:
-            items:
-              description: LockPackage is a package that is in the lock.
-              properties:
-                apiVersion:
-                  description: APIVersion of the package.
-                  type: string
-                dependencies:
-                  description: |-
-                    Dependencies are the list of dependencies of this package. The order of
-                    the dependencies will dictate the order in which they are resolved.
-                  items:
-                    description: A Dependency is a dependency of a package in the
-                      lock.
-                    properties:
-                      apiVersion:
-                        description: APIVersion of the package.
-                        type: string
-                      constraints:
-                        description: |-
-                          Constraints is a valid semver range or a digest, which will be used to select a valid
-                          dependency version.
-                        type: string
-                      kind:
-                        description: Kind of the package (not the kind of the package
-                          revision).
-                        type: string
-                      package:
-                        description: Package is the OCI image name without a tag or
-                          digest.
-                        type: string
-                      type:
-                        description: |-
-                          Type is the type of package. Can be either Configuration or Provider.
-
-                          Deprecated: Specify an apiVersion and kind instead.
-                        enum:
-                        - Configuration
-                        - Provider
-                        - Function
-                        type: string
-                    required:
-                    - constraints
-                    - package
-                    type: object
-                  type: array
-                kind:
-                  description: Kind of the package (not the kind of the package revision).
-                  type: string
-                name:
-                  description: Name corresponds to the name of the package revision
-                    for this package.
-                  type: string
-                source:
-                  description: Source is the OCI image name without a tag or digest.
-                  type: string
-                type:
-                  description: |-
-                    Type is the type of package.
-
-                    Deprecated: Specify an apiVersion and kind instead.
-                  enum:
-                  - Configuration
-                  - Provider
-                  - Function
-                  type: string
-                version:
-                  description: Version is the tag or digest of the OCI image.
-                  type: string
-              required:
-              - dependencies
-              - name
-              - source
-              - version
-              type: object
-            type: array
-          status:
-            description: Status of the Lock.
+          spec:
+            description: ManagedResourceActivationPolicySpec specifies the desired
+              activation state of ManagedResourceDefinitions.
             properties:
+              activate:
+                description: |-
+                  Activations is an array of MRD names to activate. Supports wildcard
+                  prefixes (like `*.aws.crossplane.io`) but not full regular expressions.
+                items:
+                  description: ActivationPolicy matches on MRD names with wildcard
+                    prefix support.
+                  type: string
+                minItems: 1
+                type: array
+            required:
+            - activate
+            type: object
+          status:
+            description: ManagedResourceActivationPolicyStatus shows the observed
+              state of the policy.
+            properties:
+              activated:
+                description: Activated names the ManagedResourceDefinitions this policy
+                  has activated.
+                items:
+                  type: string
+                type: array
               conditions:
                 description: Conditions of the resource.
                 items:
