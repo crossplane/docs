@@ -1011,7 +1011,7 @@ Apply a CEL rule with the
 inside the schema {{<hover label="celXRD" line="10" >}}spec{{</hover>}} object of an XRD.
 
 ```yaml {label="celXRD"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: myXR.crossplane.io
