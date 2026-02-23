@@ -599,6 +599,13 @@ things in the RunFunctionRequest.
 1. The function's __input__.
 1. The function pipeline's __context__.
 
+Crossplane also populates __meta.capabilities__ in the request with the set of
+protocol features it supports (for example, required resources, credentials,
+conditions, required schemas). Functions can check for a capability before
+relying on the corresponding feature and fall back gracefully when running with
+an older Crossplane that doesn't support it. See
+[Capability advertisement](#capability-advertisement) below.
+
 A function's main job is to update the __desired state__ and return it to
 Crossplane. It does this by returning a RunFunctionResponse.
 
@@ -943,6 +950,103 @@ Functions can request resources by:
 Crossplane limits dynamic resource requests to 5 iterations to prevent infinite
 loops. The function signals completion by returning the same resource requirements
 two iterations in a row.
+
+### Required schemas
+
+{{<hint "note">}}
+Required schemas are supported in Crossplane v2.2 and later. Functions can check
+for the `CAPABILITY_REQUIRED_SCHEMAS` capability before using this feature.
+{{</hint>}}
+
+Composition functions sometimes need OpenAPI schemas for resource kinds—for
+example to validate resources, generate resources with correct field types, or
+build schema-aware tooling. Per the [function specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/functions.md),
+functions cannot assume network access, so they cannot fetch schemas from the
+API server directly.
+
+Crossplane extends the same pattern used for [required resources](#required-resources)
+to support schema requests:
+
+1. The function returns `requirements.schemas` in its RunFunctionResponse,
+   specifying the API version and kind of each schema it needs (for example,
+   `apps/v1`, `Deployment`).
+2. Crossplane fetches the OpenAPI schema from the cluster and calls the function
+   again with `required_schemas` populated on the RunFunctionRequest.
+3. If a schema is not found (for example, the GVK does not exist), Crossplane
+   sets that map entry to an empty `Schema` message so the function can
+   distinguish "Crossplane tried but found nothing" from "not processed yet."
+
+You can provide required schemas in the Composition pipeline step (bootstrap)
+or request them dynamically in the function response. Bootstrap is more
+efficient.
+
+**Bootstrap required schemas in the Composition:**
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-with-schemas
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: validate-and-compose
+    functionRef:
+      name: my-function
+    requirements:
+      requiredSchemas:
+      - requirementName: deployment-schema
+        apiVersion: apps/v1
+        kind: Deployment
+```
+
+The function receives the schema in `req.required_schemas["deployment-schema"]`
+and can use it for validation or code generation. The map key is the
+`requirementName` you specify in the Composition or in the function's
+`requirements.schemas` response.
+
+### Capability advertisement
+
+Crossplane populates `RequestMeta.capabilities` with all protocol features it
+supports when calling a function. When a function uses a feature (for example,
+required schemas or conditions) with an older Crossplane that doesn't support
+it, Crossplane silently ignores the unknown fields. The function has no way to
+know whether its request was honored.
+
+Capability advertisement fixes this: Crossplane sends the list of supported
+capabilities in every RunFunctionRequest. Functions should check for a
+capability before relying on the corresponding feature and fall back when it
+is absent.
+
+| Capability | Meaning |
+|------------|--------|
+| `CAPABILITY_CAPABILITIES` | Crossplane advertises capabilities; if another capability is absent, Crossplane doesn't support it. |
+| `CAPABILITY_REQUIRED_RESOURCES` | Crossplane supports `requirements.resources` and populates `required_resources`. |
+| `CAPABILITY_CREDENTIALS` | Crossplane supports credentials from the Composition. |
+| `CAPABILITY_CONDITIONS` | Crossplane supports status conditions in the function response. |
+| `CAPABILITY_REQUIRED_SCHEMAS` | Crossplane supports `requirements.schemas` and populates `required_schemas`. |
+
+Example (Python): check for a capability before using the feature:
+
+```python
+from crossplane.function import request, response
+
+if request.has_capability(req, fnv1.CAPABILITY_REQUIRED_SCHEMAS):
+    response.require_schema(rsp, "xr", "example.org/v1", "MyXR")
+    schema = request.get_required_schema(req, "xr")
+    if schema:
+        # Use schema for validation or code generation
+        pass
+else:
+    # Crossplane doesn't support required schemas; skip or use a fallback
+    pass
+```
+
+Function SDKs provide helpers such as `has_capability` and `get_required_schema`;
+see your SDK documentation for the exact API.
 
 ### Function pipeline context
 
