@@ -119,3 +119,9 @@ use by Crossplane adopters.
 - [xp-testing](https://github.com/crossplane-contrib/xp-testing)
 - [xpkg-action](https://github.com/crossplane-contrib/xpkg-action)
 <!-- vale on -->
+
+## Dashboard
+
+<!-- vale off -->
+- [crossview](https://github.com/crossplane-contrib/crossview)
+<!-- vale on -->
