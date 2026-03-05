@@ -17,7 +17,9 @@ resources and exposes them for the XR.
 
 {{<hint "note">}}
 Crossplane v1 included a feature that automatically created connection details
-for XRs.
+for XRs. Crossplane v2 removes this feature **for XRs only**. Managed Resources (MRs)
+aren't affected by this change and still support connection details via their
+`writeConnectionSecretToRef` field.
 
 To learn more about how to specify XR connection details in Crossplane v1, please see the
 [v1 connection details]({{<ref "../../v1.20/concepts/connection-details">}}) docs page.

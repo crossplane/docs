@@ -96,6 +96,13 @@ or [External Secrets Operator](https://external-secrets.io/latest/) before upgra
 ### Composite resource connection details
 **Removed**: composite resources no longer have native connection details support.
 
+{{<hint "tip">}}
+**This only affects XRs, managed resources aren't affected.**
+
+Managed resources (MRs) still support the `writeConnectionSecretToRef` field on any
+MR spec.
+{{</hint>}}
+
 You can recreate this feature by composing your own connection details `Secret`
 as described in the [connection details composition guide]({{<ref "./connection-details-composition">}}).
 
