@@ -91,6 +91,7 @@ use by Crossplane adopters.
 - [function-go-templating](https://github.com/crossplane-contrib/function-go-templating)
 - [function-hcl](https://github.com/crossplane-contrib/function-hcl)
 - [function-kcl](https://github.com/crossplane-contrib/function-kcl)
+- [function-kro](https://github.com/crossplane-contrib/function-kro)
 - [function-patch-and-transform](https://github.com/crossplane-contrib/function-patch-and-transform)
 - [function-python](https://github.com/crossplane-contrib/function-python)
 - [function-pythonic](https://github.com/crossplane-contrib/function-pythonic)

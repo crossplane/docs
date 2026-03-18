@@ -53,6 +53,7 @@ fromFieldPath
 function-environment-configs
 function-extra-resources
 function-go-templating
+function-kro
 function-patch-and-transform
 function-python
 function-template-python
@@ -63,6 +64,7 @@ ImageConfigs
 InactivePackageRevision
 initProvider
 KCL
+kro
 LateInitialize
 ManagedResourceActivationPolicies
 ManagedResourceActivationPolicy
@@ -115,3 +117,4 @@ XRD's
 XRDs
 XR's
 XRs
+YAML+CEL
