@@ -13,8 +13,8 @@ user calls the custom resource API to create an `App`, Crossplane creates a
 
 
 {{<hint "tip">}}
-The guide shows how to configure composition using YAML, templated YAML, Python,
-and KCL. You can pick your preferred language.
+The guide shows how to configure composition using YAML, YAML+CEL, templated
+YAML, Python, and KCL. You can pick your preferred language.
 {{</hint>}}
 
 An `App` custom resource looks like this:
@@ -219,6 +219,37 @@ Check that Crossplane installed the function:
 kubectl get -f fn.yaml
 NAME                                              INSTALLED   HEALTHY   PACKAGE                                                                     AGE
 crossplane-contrib-function-patch-and-transform   True        True      xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2   10s
+```
+{{< /tab >}}
+
+{{< tab "YAML+CEL" >}}
+YAML+CEL is a good choice for defining resources in plain YAML and wiring them
+together with CEL expressions. The function resolves dependencies between
+resources automatically.
+
+Create this composition function to install YAML+CEL support:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: crossplane-contrib-function-kro
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/function-kro:v0.1.0
+```
+
+Save the function as `fn.yaml` and apply it:
+
+```shell
+kubectl apply -f fn.yaml
+```
+
+Check that Crossplane installed the function:
+
+```shell {copy-lines="1"}
+kubectl get -f fn.yaml
+NAME                              INSTALLED   HEALTHY   PACKAGE                                                     AGE
+crossplane-contrib-function-kro   True        True      xpkg.crossplane.io/crossplane-contrib/function-kro:v0.1.0   6s
 ```
 {{< /tab >}}
 
@@ -433,6 +464,81 @@ spec:
         - type: NonEmpty
           fieldPath: spec.clusterIP
 ```
+{{< /tab >}}
+
+{{< tab "YAML+CEL" >}}
+Create this composition to use YAML and CEL to configure Crossplane. Define
+resources in YAML, wire them with CEL expressions, and let Crossplane handle
+the rest.
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-yaml-cel
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: crossplane-contrib-function-kro
+    input:
+      apiVersion: kro.fn.crossplane.io/v1beta1
+      kind: ResourceGraph
+      status:
+        replicas: ${deployment.status.?availableReplicas.orValue(0)}
+        address: ${service.spec.?clusterIP.orValue("")}
+      resources:
+      - id: deployment
+        template:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            labels:
+              example.crossplane.io/app: ${schema.metadata.name}
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                example.crossplane.io/app: ${schema.metadata.name}
+            template:
+              metadata:
+                labels:
+                  example.crossplane.io/app: ${schema.metadata.name}
+              spec:
+                containers:
+                - name: app
+                  image: ${schema.spec.image}
+                  ports:
+                  - containerPort: 80
+        readyWhen:
+        - ${deployment.status.?conditions.orValue([]).exists(c, c.type == "Available" && c.status == "True")}
+      - id: service
+        template:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            labels:
+              example.crossplane.io/app: ${schema.metadata.name}
+          spec:
+            selector:
+              example.crossplane.io/app: ${schema.metadata.name}
+            ports:
+            - protocol: TCP
+              port: 8080
+              targetPort: 80
+        readyWhen:
+        - ${service.spec.?clusterIP.hasValue()}
+```
+
+{{<hint "tip">}}
+This function uses the same resource graph syntax as
+[kro](https://github.com/crossplane-contrib/function-kro), so existing kro
+resource definitions work without changes.
+{{</hint>}}
 {{< /tab >}}
 
 {{< tab "Templated YAML" >}}
@@ -666,7 +772,7 @@ spec:
           observed_service = option("params").ocds["service"]?.Resource
           if observed_service?.spec?.clusterIP:
             _desired_service.metadata.annotations["krm.kcl.dev/ready"] = "True"
-            
+
           _desired_xr = {
             **option("params").dxr
 
@@ -810,7 +916,7 @@ When you delete the `App`, Crossplane deletes the `Deployment` and `Service`.
 
 ## Next steps
 
-Managed resources (MRs) are ready-made Kubernetes custom resources. 
+Managed resources (MRs) are ready-made Kubernetes custom resources.
 
 Crossplane has an extensive library of managed resources you can use to manage
 almost any cloud provider, or cloud native software.
