@@ -660,14 +660,14 @@ variable `KUBECONFIG`.
 {{< table "table table-sm table-striped">}}
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale flags `dot` as an error but only the trailing tick. -->
-| Short flag   | Long flag                   | Description                                                                        |
-| ------------ | -------------               | ------------------------------                                                     |
-| `-n`         | `--namespace`               | The namespace of the resource.                                                     |
-| `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output. |
-|              | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                |
-|              | `--show-package-dependencies <filter>` | Show package dependencies. Options are `all` to show every dependency, `unique` to only print a package once or `none` to not print any dependencies. By default the `trace` command uses `--show-package-dependencies unique`.                |
-|              | `--show-package-revisions <output>`    | Print package revision versions. Options are `active`, showing only the active revisions, `all` showing all revisions or `none` to print not print any revisions.                 |
-|              | `--show-package-runtime-configs` | Print DeploymentRuntimeConfig dependencies.                |
+| Short flag   | Long flag                   | Description                                                                                                                                                                                                                    |
+| ------------ | -------------               |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `-n`         | `--namespace`               | The namespace of the resource.                                                                                                                                                                                                 |
+| `-o`         | `--output=`                 | Change the graph output with `wide`, `json`, `yaml` or `dot` for a [Graphviz dot](https://graphviz.org/docs/layouts/dot/) output.                                                                                              |
+|              | `--show-connection-secrets` | Print any connection secret names. Doesn't print the secret values.                                                                                                                                                            |
+|              | `--show-package-dependencies <filter>` | Show package dependencies. Options are `all` to show every dependency, `unique` to only print a package once or `none` to not print any dependencies. By default the `trace` command uses `--show-package-dependencies unique`. |
+|              | `--show-package-revisions <output>`    | Print package revision versions. Options are `active`, showing only the active revisions, `all` showing all revisions or `none` to print not print any revisions.                                                              |
+|              | `--show-package-runtime-configs` | Print DeploymentRuntimeConfig dependencies.                                                                                                                                                                                    |
 <!-- vale Crossplane.Spelling = YES -->
 {{< /table >}}
 
