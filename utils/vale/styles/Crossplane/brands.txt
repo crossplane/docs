@@ -5,6 +5,7 @@ CC-BY
 CloudNativePG
 CloudSQL
 CNCF
+KEDA
 Commonmark
 DockerHub
 DocSearch

@@ -531,6 +531,13 @@ isolation and follows standard Kubernetes patterns. Use `Cluster` scope only
 for platform level resources like RBAC or cluster configuration.
 {{< /hint >}}
 
+### Scale subresource
+
+XRDs can expose the Kubernetes `scale` subresource on a composite resource,
+enabling `kubectl scale`, the Horizontal Pod Autoscaler, and KEDA to control
+the composite resource. For a full walkthrough see
+[Scalable Composition]({{<ref "../guides/scalable-composition">}}).
+
 ### Set composite resource defaults
 XRDs can set default parameters for composite resources.
 

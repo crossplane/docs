@@ -4,6 +4,7 @@ API's
 APIs
 ARM64
 autoscaler
+autoscalers
 backoff
 backported
 base64
