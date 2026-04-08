@@ -222,3 +222,66 @@ Set the environment variable `ARGOCD_K8S_CLIENT_QPS` to `300` for improved compa
 The default value of `ARGOCD_K8S_CLIENT_QPS` is 50, modifying the value also updates `ARGOCD_K8S_CLIENT_BURST` as it
 is default to `ARGOCD_K8S_CLIENT_QPS` x 2.
 
+#### Cross-namespace resource hierarchy
+
+Argo CD versions before v3.3.0 have a limitation displaying namespaced resources owned by cluster-scoped resources in the application tree. This affects Crossplane deployments where cluster-scoped resources like `ProviderRevision` create namespaced children like `Deployment` and `Service` resources.
+
+##### The issue
+
+When viewing a Crossplane application in Argo CD versions before v3.3.0, cluster-scoped resources and their cluster-scoped children appear correctly, but namespaced children don't appear in the resource tree.
+
+For example:
+- ✅ `ProviderRevision` (cluster-scoped parent) appears
+- ✅ `ClusterRole` (cluster-scoped child) appears  
+- ❌ `Deployment` (namespaced child) is missing from the tree
+
+This occurs because the gitops-engine's hierarchy traversal only processes resources within the same namespace, preventing cross-namespace parent-child relationships from being discovered.
+
+{{<hint "important">}}
+The missing resources are still deployed and managed by Argo CD. They just don't appear in the UI tree visualization.
+{{</hint>}}
+
+##### Example
+
+```yaml
+# This cluster-scoped parent appears in Argo CD
+apiVersion: pkg.crossplane.io/v1
+kind: ProviderRevision
+metadata:
+  name: provider-aws-s3-96df8f51090d
+
+---
+# This namespaced child is missing from the Argo CD tree
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-aws-s3-96df8f51090d
+  namespace: crossplane-system
+  ownerReferences:
+  - apiVersion: pkg.crossplane.io/v1
+    kind: ProviderRevision
+    name: provider-aws-s3-96df8f51090d
+    controller: true
+```
+
+##### Resolution
+
+This issue is fixed in Argo CD v3.3.0 and later. Upgrade to Argo CD v3.3.0 or later for full Crossplane resource visibility in the application tree.
+
+After upgrading, verify the fix by expanding a `Provider` or `ProviderRevision` resource in the Argo CD UI and confirming that namespaced children like `Deployment` and `Service` resources now appear.
+
+##### Workaround for older versions
+
+If you can't upgrade to v3.3.0 immediately, use `kubectl` to verify namespaced resources:
+
+```bash
+# List all resources owned by a ProviderRevision
+kubectl get all -n crossplane-system -l pkg.crossplane.io/revision=provider-aws-s3-96df8f51090d
+
+# Check Deployments created by Providers
+kubectl get deployments -n crossplane-system
+```
+
+GitOps synchronization, health status reporting, and automatic reconciliation continue to work correctly. Only the visual representation in the Argo CD UI is affected.
+
+For more details, see [Argo CD issue #24379](https://github.com/argoproj/argo-cd/issues/24379) and [PR #24847](https://github.com/argoproj/argo-cd/pull/24847).
