@@ -169,7 +169,7 @@ spec:
 
 Apply the example XRD.
 ```yaml
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: myvpcs.aws.example.upbound.io
