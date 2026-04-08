@@ -253,7 +253,7 @@ policy won't be flexible enough. However, because Crossplane brings
 management of external infrastructure to the Kubernetes API, it's well suited
 to integrate with other projects in the cloud native ecosystem. Organizations
 and individuals that need a more robust policy engine, or just prefer a more
-general language for defining policy, often turn to [Open Policy Agent] (OPA).
+general language for defining policy, often turn to [Open Policy Agent].
 OPA allows platform builders to write custom logic in [Rego], a domain specific
 language. Writing policy in this manner allows for not only incorporating the
 information available in the specific resource being evaluated, but also using
