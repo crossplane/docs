@@ -764,51 +764,25 @@ deletes the managed resource object.
 
 ## Conditions
 
-Crossplane has a standard set of `Conditions` for a managed 
-resource. View the `Conditions` of a managed resource with 
-`kubectl describe <managed_resource>`
+<!-- vale Google.Colons = NO -->
+A managed resource has three status conditions: Synced, Ready and UpToDate.
+<!-- vale Google.Colons = YES -->
 
+View the `Conditions` of a managed resource with `kubectl describe <managed_resource>`.
+
+The conditions for a managed resource are controlled by the Provider.
 
 {{<hint "note" >}}
 Providers may define their own custom `Conditions`. 
 {{</hint >}}
 
-
-### Available
-`Reason: Available` indicates the Provider created the managed resource and it's
-ready for use. 
-
-```yaml {copy-lines="none"}
-Conditions:
-  Type:                  Ready
-  Status:                True
-  Reason:                Available
-```
-### Creating
-
-`Reason: Creating` indicates the Provider is attempting to create the managed
-resource. 
-
-```yaml {copy-lines="none"}
-Conditions:
-  Type:                  Ready
-  Status:                False
-  Reason:                Creating
-```
-
-### Deleting
-`Reason: Deleting` indicates the Provider is attempting to delete the managed
-resource. 
-
-```yaml {copy-lines="none"}
-Conditions:
-  Type:                  Ready
-  Status:                False
-  Reason:                Deleting
-```
+### Synced Condition
+The Provider sets the Synced status condition to True when it's able to
+successfully reconcile the managed resource. If Crossplane can't reconcile the
+managed resource it reports an error in the Synced condition.
 
 <!-- vale off -->
-### ReconcilePaused
+#### ReconcilePaused
 <!-- vale on -->
 `Reason: ReconcilePaused` indicates the managed resource has a [Pause](#paused)
 annotation 
@@ -821,7 +795,7 @@ Conditions:
 ```
 
 <!-- vale off -->
-### ReconcileError
+#### ReconcileError
 <!-- vale on -->
 `Reason: ReconcileError` indicates Crossplane encountered an error while
 reconciling the managed resource. The `Message:` value of the `Condition` helps
@@ -835,7 +809,7 @@ Conditions:
 ```
 
 <!-- vale off -->
-### ReconcileSuccess
+#### ReconcileSuccess
 <!-- vale on -->
 `Reason: ReconcileSuccess` indicates the Provider created and is monitoring the 
 managed resource.
@@ -847,7 +821,47 @@ Conditions:
   Reason:                ReconcileSuccess
 ```
 
-### Unavailable
+### Ready Condition
+The Provider sets the Ready status condition to True when it
+determines that the managed resource is available.  If a managed resource isn't ready
+the Crossplane Provider reports it in the Ready condition.
+
+The logic used to determine if a managed resource is Ready is maintained by the Provider.
+
+#### Available
+`Reason: Available` indicates the Provider created the managed resource and it's
+ready for use. 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  Ready
+  Status:                True
+  Reason:                Available
+```
+#### Creating
+
+`Reason: Creating` indicates the Provider is attempting to create the managed
+resource. 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  Ready
+  Status:                False
+  Reason:                Creating
+```
+
+#### Deleting
+`Reason: Deleting` indicates the Provider is attempting to delete the managed
+resource. 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  Ready
+  Status:                False
+  Reason:                Deleting
+```
+
+#### Unavailable
 `Reason: Unavailable` indicates Crossplane expects the managed resource to be 
 available, but the Provider reports the resource is unhealthy.
 
@@ -857,8 +871,86 @@ Conditions:
   Status:                False
   Reason:                Unavailable
 ```
+### UpToDate Condition
+The Provider sets the `UpToDate` status condition to True when the observed resource configuration
+matches the configuration specified in the managed resource.
+If there are differences between the specified configuration and the observed
+configuration the Provider reports them in the UpToDate condition.
 
-### Unknown
+<!-- vale off -->
+#### ReconcilePaused
+<!-- vale on -->
+`Reason: ReconcilePaused` indicates the managed resource has a [Pause](#paused)
+annotation 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  UpToDate
+  Status:                Unknown
+  Reason:                ReconcilePaused
+```
+
+<!-- vale off -->
+#### UpdateRequested
+<!-- vale on -->
+`Reason: UpdateRequested` indicates the provider detected a difference between the
+specified configuration and the observed configuration and requested an update to resolve
+the delta.  The result of the update is still pending, which can happen if the update operation
+is asynchronous. The `Message:` value of the `Condition` displays
+any difference information available to the Provider. 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  UpToDate
+  Status:                False
+  Reason:                UpdateRestricted
+```
+
+<!-- vale off -->
+#### UpdateRestricted
+<!-- vale on -->
+`Reason: UpdateRestricted` indicates the provider detected a difference between the
+specified configuration and the observed configuration but the `Update` operation is
+not permitted by the `managementPolicies` defined for the managed resource.
+The `Message:` value of the `Condition` displays any difference information available to the Provider. 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  UpToDate
+  Status:                False
+  Reason:                UpdateRequested
+```
+
+<!-- vale off -->
+#### UpdateFailed
+<!-- vale on -->
+`Reason: UpdateFailed` indicates the provider detected a difference between the
+specified configuration and the observed configuration. The Provider requested an update of
+the resource to resolve the delta and the update operation failed.  The `Message:` value of the `Condition` displays
+any difference information available to the Provider and the error information. 
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  UpToDate
+  Status:                False
+  Reason:                UpdateFailed
+```
+
+<!-- vale off -->
+#### ObserveMatched
+<!-- vale on -->
+`Reason: ObserveMatched` indicates the observed configuration matches the 
+configuration specified by the managed resource.
+
+```yaml {copy-lines="none"}
+Conditions:
+  Type:                  UpToDate
+  Status:                True
+  Reason:                ObserveMatched
+```
+
+
+### Unknown Condition
 `Reason: Unknown` indicates the Provider has an unexpected error with the
 managed resource. The `conditions.message` provides more information on what
 went wrong. 
