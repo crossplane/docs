@@ -770,13 +770,14 @@ A managed resource has three status conditions: Synced, Ready and UpToDate.
 
 View the `Conditions` of a managed resource with `kubectl describe <managed_resource>`.
 
-The conditions for a managed resource are controlled by the Provider.
+Crossplane Providers manage the conditions for their managed resources.
 
 {{<hint "note" >}}
 Providers may define their own custom `Conditions`. 
 {{</hint >}}
-
+<!-- vale off -->
 ### Synced Condition
+<!-- vale on -->
 The Provider sets the Synced status condition to True when it's able to
 successfully reconcile the managed resource. If Crossplane can't reconcile the
 managed resource it reports an error in the Synced condition.
@@ -820,13 +821,12 @@ Conditions:
   Status:                True
   Reason:                ReconcileSuccess
 ```
-
+<!-- vale off -->
 ### Ready Condition
+<!-- vale on -->
 The Provider sets the Ready status condition to True when it
-determines that the managed resource is available.  If a managed resource isn't ready
+determines that the managed resource is available. If a managed resource isn't ready
 the Crossplane Provider reports it in the Ready condition.
-
-The logic used to determine if a managed resource is Ready is maintained by the Provider.
 
 #### Available
 `Reason: Available` indicates the Provider created the managed resource and it's
@@ -871,7 +871,9 @@ Conditions:
   Status:                False
   Reason:                Unavailable
 ```
+<!-- vale off -->
 ### UpToDate Condition
+<!-- vale on -->
 The Provider sets the `UpToDate` status condition to True when the observed resource configuration
 matches the configuration specified in the managed resource.
 If there are differences between the specified configuration and the observed
@@ -895,7 +897,7 @@ Conditions:
 <!-- vale on -->
 `Reason: UpdateRequested` indicates the provider detected a difference between the
 specified configuration and the observed configuration and requested an update to resolve
-the delta.  The result of the update is still pending, which can happen if the update operation
+the delta. The result of the update is still pending, which can happen if the update operation
 is asynchronous. The `Message:` value of the `Condition` displays
 any difference information available to the Provider. 
 
@@ -926,7 +928,7 @@ Conditions:
 <!-- vale on -->
 `Reason: UpdateFailed` indicates the provider detected a difference between the
 specified configuration and the observed configuration. The Provider requested an update of
-the resource to resolve the delta and the update operation failed.  The `Message:` value of the `Condition` displays
+the resource to resolve the delta and the update operation failed. The `Message:` value of the `Condition` displays
 any difference information available to the Provider and the error information. 
 
 ```yaml {copy-lines="none"}
@@ -949,8 +951,9 @@ Conditions:
   Reason:                ObserveMatched
 ```
 
-
+<!-- vale off -->
 ### Unknown Condition
+<!-- vale on -->
 `Reason: Unknown` indicates the Provider has an unexpected error with the
 managed resource. The `conditions.message` provides more information on what
 went wrong. 
