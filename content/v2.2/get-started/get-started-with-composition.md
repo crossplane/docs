@@ -192,6 +192,37 @@ Pick what language to use to configure how Crossplane turns an `App` XR into a
 
 {{< tabs >}}
 
+
+{{< tab "Templated YAML" >}}
+Templated YAML is a good choice if you're used to writing
+[Helm charts](https://helm.sh).
+
+Create this composition function to install templated YAML support:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: crossplane-contrib-function-go-templating
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.9.2
+```
+
+Save the function as `fn.yaml` and apply it:
+
+```shell
+kubectl apply -f fn.yaml
+```
+
+Check that Crossplane installed the function:
+
+```shell {copy-lines="1"}
+kubectl get -f fn.yaml
+NAME                                        INSTALLED   HEALTHY   PACKAGE                                                               AGE
+crossplane-contrib-function-go-templating   True        True      xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.9.2   9s
+```
+{{< /tab >}}
+
 {{< tab "YAML" >}}
 YAML is a good choice for small, static compositions. It doesn't support loops
 or conditionals.
@@ -250,36 +281,6 @@ Check that Crossplane installed the function:
 kubectl get -f fn.yaml
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                     AGE
 crossplane-contrib-function-kro   True        True      xpkg.crossplane.io/crossplane-contrib/function-kro:v0.1.0   6s
-```
-{{< /tab >}}
-
-{{< tab "Templated YAML" >}}
-Templated YAML is a good choice if you're used to writing
-[Helm charts](https://helm.sh).
-
-Create this composition function to install templated YAML support:
-
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: crossplane-contrib-function-go-templating
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.9.2
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
-
-Check that Crossplane installed the function:
-
-```shell {copy-lines="1"}
-kubectl get -f fn.yaml
-NAME                                        INSTALLED   HEALTHY   PACKAGE                                                               AGE
-crossplane-contrib-function-go-templating   True        True      xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.9.2   9s
 ```
 {{< /tab >}}
 
@@ -386,6 +387,82 @@ Create a composition to tell Crossplane what to do when you create or update an
 `App` XR.
 
 {{< tabs >}}
+
+{{< tab "Templated YAML" >}}
+Create this composition to use templated YAML to configure Crossplane:
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-templated-yaml
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: crossplane-contrib-function-go-templating
+    input:
+      apiVersion: gotemplating.fn.crossplane.io/v1beta1
+      kind: GoTemplate
+      source: Inline
+      inline:
+        template: |
+          ---
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: deployment
+              {{ if eq (.observed.resources.deployment | getResourceCondition "Available").Status "True" }}
+              gotemplating.fn.crossplane.io/ready: "True"
+              {{ end }}
+            labels:
+              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
+            template:
+              metadata:
+                labels:
+                  example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
+              spec:
+                containers:
+                - name: app
+                  image: {{ .observed.composite.resource.spec.image }}
+                  ports:
+                  - containerPort: 80
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: service
+              {{ if (get (getComposedResource . "service").spec "clusterIP") }}
+              gotemplating.fn.crossplane.io/ready: "True"
+              {{ end }}
+            labels:
+              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
+          spec:
+            selector:
+              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
+            ports:
+            - protocol: TCP
+              port: 8080
+              targetPort: 80
+          ---
+          apiVersion: example.crossplane.io/v1
+          kind: App
+          status:
+            replicas: {{ get (getComposedResource . "deployment").status "availableReplicas" | default 0 }}
+            address: {{ get (getComposedResource . "service").spec "clusterIP" | default "" | quote }}
+```
+{{< /tab >}}
 
 {{< tab "YAML" >}}
 Create this composition to use YAML to configure Crossplane:
@@ -539,82 +616,6 @@ This function uses the same resource graph syntax as
 [kro](https://github.com/crossplane-contrib/function-kro), so existing kro
 resource definitions work without changes.
 {{</hint>}}
-{{< /tab >}}
-
-{{< tab "Templated YAML" >}}
-Create this composition to use templated YAML to configure Crossplane:
-
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: app-templated-yaml
-spec:
-  compositeTypeRef:
-    apiVersion: example.crossplane.io/v1
-    kind: App
-  mode: Pipeline
-  pipeline:
-  - step: create-deployment-and-service
-    functionRef:
-      name: crossplane-contrib-function-go-templating
-    input:
-      apiVersion: gotemplating.fn.crossplane.io/v1beta1
-      kind: GoTemplate
-      source: Inline
-      inline:
-        template: |
-          ---
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            annotations:
-              gotemplating.fn.crossplane.io/composition-resource-name: deployment
-              {{ if eq (.observed.resources.deployment | getResourceCondition "Available").Status "True" }}
-              gotemplating.fn.crossplane.io/ready: "True"
-              {{ end }}
-            labels:
-              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-          spec:
-            replicas: 2
-            selector:
-              matchLabels:
-                example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-            template:
-              metadata:
-                labels:
-                  example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-              spec:
-                containers:
-                - name: app
-                  image: {{ .observed.composite.resource.spec.image }}
-                  ports:
-                  - containerPort: 80
-          ---
-          apiVersion: v1
-          kind: Service
-          metadata:
-            annotations:
-              gotemplating.fn.crossplane.io/composition-resource-name: service
-              {{ if (get (getComposedResource . "service").spec "clusterIP") }}
-              gotemplating.fn.crossplane.io/ready: "True"
-              {{ end }}
-            labels:
-              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-          spec:
-            selector:
-              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-            ports:
-            - protocol: TCP
-              port: 8080
-              targetPort: 80
-          ---
-          apiVersion: example.crossplane.io/v1
-          kind: App
-          status:
-            replicas: {{ get (getComposedResource . "deployment").status "availableReplicas" | default 0 }}
-            address: {{ get (getComposedResource . "service").spec "clusterIP" | default "" | quote }}
-```
 {{< /tab >}}
 
 {{< tab "Python" >}}
