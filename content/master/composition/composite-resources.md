@@ -267,6 +267,47 @@ spec:
   # Removed for brevity
 ```
 
+### Per-resource poll interval
+
+The {{<hover label="xr-poll-interval" line="7">}}crossplane.io/poll-interval{{</hover>}}
+annotation overrides the controller-level `--poll-interval` for a specific
+composite resource. The annotation accepts any valid Go duration string.
+
+```yaml {label="xr-poll-interval",copy-lines="none"}
+apiVersion: example.org/v1alpha1
+kind: MyDatabase
+metadata:
+  namespace: default
+  name: my-composite-resource
+  annotations:
+    crossplane.io/poll-interval: "24h"
+spec:
+  # Removed for brevity
+```
+
+Read the [managed resource poll interval annotation]({{<ref "../managed-resources/managed-resources#poll-interval">}}) for more details on behavior and validation.
+
+### Triggering immediate reconciliation
+
+The {{<hover label="xr-reconcile-request" line="7">}}crossplane.io/reconcile-requested-at{{</hover>}}
+annotation triggers an immediate reconciliation when its value changes. Set the
+annotation to any value, such as a timestamp, to trigger a reconciliation.
+
+```yaml {label="xr-reconcile-request",copy-lines="none"}
+apiVersion: example.org/v1alpha1
+kind: MyDatabase
+metadata:
+  namespace: default
+  name: my-composite-resource
+  annotations:
+    crossplane.io/reconcile-requested-at: "2024-01-15T10:30:00Z"
+spec:
+  # Removed for brevity
+```
+
+The reconciler records the handled token in `status.lastHandledReconcileAt`.
+Read the [managed resource reconcile request annotation]({{<ref "../managed-resources/managed-resources#reconcile-request">}}) for more details.
+
 ## Verify composite resources
 Use 
 {{<hover label="getcomposite" line="1">}}kubectl get composite{{</hover>}}
