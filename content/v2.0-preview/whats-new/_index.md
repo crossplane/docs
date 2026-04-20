@@ -127,7 +127,7 @@ Read more about Crossplane v2's [backward compatibility](#backward-compatibility
 
 Crossplane v2 makes all managed resources (MRs) namespaced.
 
-This enables a namespaced XR to by composed entirely of namespaced resources -
+This enables a namespaced XR to be composed entirely of namespaced resources -
 whether they're a Crossplane MR like an `RDSInstance`, a Kubernetes resource
 like a `Deployment`, or a third party custom resource like a
 [Cluster API](https://cluster-api.sigs.k8s.io) `Cluster`.
