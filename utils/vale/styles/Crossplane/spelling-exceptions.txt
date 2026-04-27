@@ -28,12 +28,14 @@ idempotency
 in-depth
 in-memory
 Job.
+language-specific
 least-privilege
 left-hand
 long-running
 Long-running
 low-risk
 low-traffic
+multi-arch
 multi-cluster
 multi-region
 Multi-step
@@ -51,6 +53,7 @@ out-of-sync
 Operation-level
 pattern-based
 Pattern-based
+per-architecture
 per-element
 performant
 per-object

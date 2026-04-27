@@ -14,7 +14,7 @@ cluster.
 {{< hint "important" >}}
 Installing Crossplane from source is an advanced installation path for users who
 require complete control over the build and deployment process. Most users
-should follow the [standard installation instructions]({{<ref "../get-started/install.md">}})
+should follow the [standard installation instructions]({{<ref "../get-started/install.md">}}).
 {{< /hint >}}
 
 This approach is useful when you want to:
@@ -27,13 +27,25 @@ This approach is useful when you want to:
 
 Building Crossplane from source requires:
 
+- [Nix](https://nixos.org/download/) with [flakes enabled](https://wiki.nixos.org/wiki/Flakes#Enable_flakes_permanently_for_the_current_user)
 - [Docker](https://docs.docker.com/get-docker/)
-- [Earthly](https://earthly.dev/get-earthly) version `v0.8.16` or later
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) configured for your target cluster
 - An actively [supported Kubernetes version](https://kubernetes.io/releases/patch-releases/#support-period)
 - [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
 - Access to a container registry (Docker Hub, GHCR, Harbor, or any OCI compliant
   registry)
+
+Crossplane uses [Nix](https://nixos.org/) for its build system. Nix produces
+reproducible, sandboxed builds without requiring a system Go toolchain or other
+language-specific dependencies.
+
+{{< hint "tip" >}}
+If you can't install Nix, the Crossplane repository includes a `./nix.sh`
+wrapper that runs Nix inside a Docker container. Anywhere this guide uses
+`nix <command>`, substitute `./nix.sh <command>`. The wrapper has some
+limitations around credential handling and build artifact persistence, so
+installing Nix natively is the recommended path.
+{{< /hint >}}
 
 ### Clone the Crossplane repository
 
@@ -64,46 +76,93 @@ export REGISTRY="your-registry.com/your-org"; \
   export VERSION="v2.0.0-yourtag"
 ```
 
-### Build the artifacts
+`${VERSION}` should follow the format `vMAJOR.MINOR.PATCH[-suffix]`, for example
+`v2.0.0-yourtag`.
 
-Build Crossplane binaries, container image, and Helm chart for multi-platform architectures:
+The build embeds `${VERSION}` into the Crossplane binary and uses it as the
+container image tag and Helm chart version. Nix's sandboxed builds only read
+from files tracked by git, so you must write `${VERSION}` into `flake.nix`
+before building:
 
 ```shell {copy-lines="all"}
-earthly +multiplatform-build \
-  --CROSSPLANE_REPO=${REGISTRY}/crossplane \
-  --CROSSPLANE_VERSION=${VERSION}
+sed -i "s|buildVersion = null;|buildVersion = \"${VERSION}\";|" flake.nix
 ```
 
-Earthly creates the container image locally and saves the binaries and Helm
-chart under `_output/bin` and `_output/charts/` respectively.
+{{< hint "tip" >}}
+On macOS, use `sed -i ''` instead of `sed -i`:
+
+```shell
+sed -i '' "s|buildVersion = null;|buildVersion = \"${VERSION}\";|" flake.nix
+```
+{{< /hint >}}
+
+### Build the artifacts
+
+Build Crossplane binaries, container images, and Helm chart for all supported
+platforms:
+
+```shell {copy-lines="all"}
+nix build
+```
+
+<!-- vale write-good.Weasel = NO -->
+The first run downloads the build toolchain and takes a few minutes. Later
+runs reuse the Nix store cache and complete in seconds.
+<!-- vale write-good.Weasel = YES -->
+
+The build output is under `./result/`:
+
+- `result/bin/<os>_<arch>/` contains the `crossplane` and `crank` binaries for
+  each supported platform.
+- `result/charts/crossplane-<version>.tgz` is the Helm chart.
+- `result/images/linux_<arch>/image.tar.gz` is the container image tarball for
+  each supported Linux architecture.
+
+The build doesn't load images into your local Docker daemon. The push step
+loads the image tarballs in `result/images/` automatically.
 
 ### Push the image to your registry
 
-<!-- vale write-good.Passive = NO -->
-Log in to your registry of choice and push the Crossplane image that was built
-in the previous steps.
-<!-- vale write-good.Passive = YES -->
-
-{{< hint "tip" >}}
-Ensure you log into your registry before attempting to `push`.
+{{< hint "important" >}}
+If your registry requires authentication, log in with `docker login` before
+pushing.
 {{< /hint >}}
 
+Push the per-architecture images and assemble a multi-arch manifest with a
+single command:
+
 ```shell {copy-lines="all"}
-docker push ${REGISTRY}/crossplane:${VERSION}
+nix run .#push-images -- ${REGISTRY}/crossplane
 ```
+
+{{< hint "note" >}}
+If your host Docker uses a credential helper (for example
+Docker Desktop on macOS), the helper isn't available on the sandboxed
+`PATH` used by `nix run .#push-images`. Bypass the helper for the login
+and push by writing auth directly to a temporary Docker configuration:
+
+```shell
+export DOCKER_CONFIG=$(mktemp -d)
+cat > $DOCKER_CONFIG/config.json <<EOF
+{"credHelpers":{"${REGISTRY%%/*}":""}}
+EOF
+docker login ${REGISTRY%%/*}
+nix run .#push-images -- ${REGISTRY}/crossplane
+unset DOCKER_CONFIG
+```
+{{< /hint >}}
+
+This loads each per-architecture image tarball, tags it with
+`${REGISTRY}/crossplane:${VERSION}-<arch>`, pushes each, and then creates and
+pushes a multi-arch manifest at `${REGISTRY}/crossplane:${VERSION}`.
 
 ### Install Crossplane with the custom image
 
-Locate the built Helm chart in the `_output/charts/` directory.
+Install Crossplane to your cluster using the built Helm chart and your custom
+image:
 
 ```shell {copy-lines="all"}
-CHART_PATH="_output/charts/crossplane-${VERSION#v}.tgz"
-```
-
-Install Crossplane to your cluster using the custom image.
-
-```shell {copy-lines="all"}
-helm install crossplane ${CHART_PATH} \
+helm install crossplane result/charts/crossplane-${VERSION#v}.tgz \
   --namespace crossplane-system \
   --create-namespace \
   --set image.repository=${REGISTRY}/crossplane \
@@ -147,30 +206,22 @@ kubectl get deployment crossplane -n crossplane-system -o jsonpath='{.spec.templ
 your-registry.com/your-org/crossplane:v2.0.0-yourtag
 ```
 
-### Optional: Build the Crossplane CLI
+### Optional: Install the Crossplane CLI
 
-The `crossplane` CLI provides commands for managing Crossplane resources. You
-can optionally build this binary from source code for your local machine and use
-it to manage your control plane.
-
-Build the CLI for your local machine.
-
-```shell {copy-lines="all"}
-earthly +build --CROSSPLANE_VERSION=${VERSION}
-```
-
-Earthly creates the CLI binary in `_output/bin/<OS>_<ARCH>/`. Copy it to your
-system path.
+The `crossplane` CLI provides commands for managing Crossplane resources. The
+build in the previous steps already produced the CLI binary (named `crank`) for
+all supported platforms under `result/bin/`. Copy the binary for your system to
+your path.
 
 For macOS ARM64:
 ```shell {copy-lines="all"}
-sudo cp _output/bin/darwin_arm64/crank /usr/local/bin/crossplane
+sudo cp result/bin/darwin_arm64/crank /usr/local/bin/crossplane
 chmod +x /usr/local/bin/crossplane
 ```
 
 For Linux AMD64:
 ```shell {copy-lines="all"}
-sudo cp _output/bin/linux_amd64/crank /usr/local/bin/crossplane
+sudo cp result/bin/linux_amd64/crank /usr/local/bin/crossplane
 chmod +x /usr/local/bin/crossplane
 ```
 
@@ -180,3 +231,17 @@ Verify the installation.
 crossplane version
 v2.0.0-yourtag
 ```
+
+### Clean up the working tree
+
+The earlier `sed` step modified `flake.nix`, a file that git tracks. After all
+build, push, and install steps are complete, revert the change to keep your
+working tree clean:
+
+```shell {copy-lines="all"}
+git checkout flake.nix
+```
+
+Reverting this file before completing the push or install steps causes Nix to
+rebuild the flake with `buildVersion = null`, which produces a different
+version that doesn't match the artifacts you already built.
