@@ -1,0 +1,49 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: topic-with-bucket
+spec:
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: crossplane-quickstart-bucket
+          base:
+            apiVersion: storage.gcp.upbound.io/v1beta1
+            kind: Bucket
+            spec:
+              forProvider:
+                location: "US"
+          patches:
+            - fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.location"
+              transforms:
+                - type: map
+                  map:
+                    EU: "EU"
+                    US: "US"
+        - name: crossplane-quickstart-topic
+          base:
+            apiVersion: pubsub.gcp.upbound.io/v1beta1
+            kind: Topic
+            spec:
+              forProvider:
+                messageStoragePolicy:
+                  - allowedPersistenceRegions:
+                    - "us-central1"
+          patches:
+            - fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.messageStoragePolicy[0].allowedPersistenceRegions[0]"
+              transforms:
+                - type: map
+                  map:
+                    EU: "europe-central2"
+                    US: "us-central1"
+  compositeTypeRef:
+    apiVersion: queue.example.com/v1alpha1
+    kind: PubSub

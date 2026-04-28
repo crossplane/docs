@@ -30,16 +30,7 @@ This quickstart requires:
 Install the AWS S3 provider into the Kubernetes cluster with a Kubernetes 
 configuration file. 
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-aws-s3
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
-EOF
-```
+{{< manifest path="getting-started/aws/provider.yaml" label="provider" >}}
 
 The Crossplane {{< hover label="provider" line="3" >}}Provider{{</hover>}}
 installs the Kubernetes _Custom Resource Definitions_ (CRDs) representing AWS S3
@@ -145,21 +136,8 @@ customizes the settings of the AWS Provider.
 Apply the 
 {{< hover label="providerconfig" line="3">}}ProviderConfig{{</ hover >}} 
 with the this Kubernetes configuration file:
-```yaml {label="providerconfig",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: aws.upbound.io/v1beta1
-kind: ProviderConfig
-metadata:
-  name: default
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: aws-secret
-      key: creds
-EOF
-```
+
+{{< manifest path="getting-started/aws/providerconfig.yaml" label="providerconfig" >}}
 
 This attaches the AWS credentials, saved as a Kubernetes secret, as a 
 {{< hover label="providerconfig" line="9">}}secretRef{{</ hover>}}.
@@ -183,19 +161,7 @@ AWS S3 bucket names must be globally unique. To generate a unique name the examp
 Any unique name is acceptable.
 {{< /hint >}}
 
-```yaml {label="xr"}
-cat <<EOF | kubectl create -f -
-apiVersion: s3.aws.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  generateName: crossplane-bucket-
-spec:
-  forProvider:
-    region: us-east-2
-  providerConfigRef:
-    name: default
-EOF
-```
+{{< manifest path="getting-started/aws/bucket.yaml" label="xr" command="kubectl create -f" >}}
 
 The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
 {{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.

@@ -1,0 +1,72 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-yaml
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: crossplane-contrib-function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: deployment
+        base:
+          apiVersion: apps/v1
+          kind: Deployment
+          spec:
+            replicas: 2
+            template:
+              spec:
+                containers:
+                - name: app
+                  ports:
+                  - containerPort: 80
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: metadata.labels[example.crossplane.io/app]
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.selector.matchLabels[example.crossplane.io/app]
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.template.metadata.labels[example.crossplane.io/app]
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.image
+          toFieldPath: spec.template.spec.containers[0].image
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.availableReplicas
+          toFieldPath: status.replicas
+        readinessChecks:
+        - type: MatchCondition
+          matchCondition:
+            type: Available
+            status: "True"
+      - name: service
+        base:
+          apiVersion: v1
+          kind: Service
+          spec:
+            ports:
+            - protocol: TCP
+              port: 8080
+              targetPort: 80
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: metadata.labels[example.crossplane.io/app]
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.selector[example.crossplane.io/app]
+        - type: ToCompositeFieldPath
+          fromFieldPath: spec.clusterIP
+          toFieldPath: status.address
+        readinessChecks:
+        - type: NonEmpty
+          fieldPath: spec.clusterIP

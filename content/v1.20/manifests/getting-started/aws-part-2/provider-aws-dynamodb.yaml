@@ -1,0 +1,6 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-dynamodb
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.21.1

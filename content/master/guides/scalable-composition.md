@@ -64,38 +64,12 @@ This guide requires:
 Install `function-patch-and-transform` to compose resources and patch
 fields between the composite resource and its composed resources:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-patch-and-transform
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.10.3
-```
-
-Save the function as `fn-pat.yaml` and apply it:
-
-```shell
-kubectl apply -f fn-pat.yaml
-```
+{{< manifest path="guides/scalable-composition/fn-pat.yaml" >}}
 
 This guide also uses `function-auto-ready`. This function automatically
 marks composed resources as ready when they're healthy:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-auto-ready
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready:v0.6.3
-```
-
-Save this as `fn-auto-ready.yaml` and apply it:
-
-```shell
-kubectl apply -f fn-auto-ready.yaml
-```
+{{< manifest path="guides/scalable-composition/fn-auto-ready.yaml" >}}
 
 Check that Crossplane installed the functions:
 
@@ -111,53 +85,7 @@ function.pkg.crossplane.io/function-patch-and-transform   True        True      
 Configure the `scale` subresource per version in the XRD's
 {{<hover label="xrdscale" line="22">}}subresources{{</hover>}} field.
 
-```yaml {label="xrdscale"}
-apiVersion: apiextensions.crossplane.io/v2
-kind: CompositeResourceDefinition
-metadata:
-  name: myapps.example.org
-spec:
-  group: example.org
-  names:
-    kind: MyApp
-    plural: myapps
-  scope: Namespaced
-  versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.replicas
-      name: DESIRED
-      type: string
-    - jsonPath: .status.replicas
-      name: CURRENT
-      type: string
-    name: v1alpha1
-    served: true
-    referenceable: true
-    subresources:
-      scale:
-        specReplicasPath: .spec.replicas
-        statusReplicasPath: .status.replicas
-        labelSelectorPath: .status.labelSelector
-    schema:
-      openAPIV3Schema:
-        properties:
-          spec:
-            properties:
-              replicas:
-                type: integer
-          status:
-            properties:
-              replicas:
-                type: integer
-              labelSelector:
-                type: string
-```
-
-Save this as `xrd-scale.yaml` and apply it:
-
-```shell
-kubectl apply -f xrd-scale.yaml
-```
+{{< manifest path="guides/scalable-composition/xrd-scale.yaml" label="xrdscale" >}}
 
 Verify the XRD exists:
 
@@ -193,60 +121,7 @@ the composed resources in the Composition. The following example uses
 `function-patch-and-transform` to forward `spec.replicas` from the composite
 resource to a `Deployment`:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: myapp
-spec:
-  compositeTypeRef:
-    apiVersion: example.org/v1alpha1
-    kind: MyApp
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: deployment
-        base:
-          apiVersion: apps/v1
-          kind: Deployment
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: nginx
-            template:
-              metadata:
-                labels:
-                  app: nginx
-              spec:
-                containers:
-                - name: nginx
-                  image: nginx:1.29.7-alpine
-                  ports:
-                  - containerPort: 80
-        patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.replicas
-          toFieldPath: spec.replicas
-        - type: ToCompositeFieldPath
-          fromFieldPath: status.readyReplicas
-          toFieldPath: status.replicas
-  - step: automatically-detect-readiness
-    functionRef:
-      name: function-auto-ready
-```
-
-Save this as `composition-scale.yaml` and apply it:
-
-```shell
-kubectl apply -f composition-scale.yaml
-```
+{{< manifest path="guides/scalable-composition/composition-scale.yaml" >}}
 
 Verify the composition exists:
 

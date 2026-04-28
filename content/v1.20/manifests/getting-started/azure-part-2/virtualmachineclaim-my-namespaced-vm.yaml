@@ -1,0 +1,7 @@
+apiVersion: compute.example.com/v1alpha1
+kind: VirtualMachineClaim
+metadata:
+  name: my-namespaced-vm
+  namespace: crossplane-test
+spec:
+  location: "EU"

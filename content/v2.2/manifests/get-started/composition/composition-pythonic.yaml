@@ -1,0 +1,39 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-pythonic
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: function-pythonic
+    input:
+      apiVersion: pythonic.fn.crossplane.io/v1alpha1
+      kind: Composite
+      composite: |
+        class Composite(BaseComposite):
+          def compose(self):
+            labels = {'example.crossplane.io/app': self.metadata.name}
+
+            d = self.resources.deployment('apps/v1', 'Deployment')
+            d.metadata.labels = labels
+            d.spec.replicas = 2
+            d.spec.selector.matchLabels = labels
+            d.spec.template.metadata.labels = labels
+            d.spec.template.spec.containers[0].name = 'app'
+            d.spec.template.spec.containers[0].image = self.spec.image
+            d.spec.template.spec.containers[0].ports[0].containerPort = 80
+
+            s = self.resources.service('v1', 'Service')
+            s.metadata.labels = labels
+            s.spec.selector = labels
+            s.spec.ports[0].protocol = 'TCP'
+            s.spec.ports[0].port = 8080
+            s.spec.ports[0].targetPort = 80
+
+            self.status.replicas = d.status.availableReplicas
+            self.status.address = s.observed.spec.clusterIP

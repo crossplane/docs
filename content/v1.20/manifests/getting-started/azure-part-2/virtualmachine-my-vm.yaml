@@ -1,0 +1,6 @@
+apiVersion: compute.example.com/v1alpha1
+kind: VirtualMachine
+metadata:
+  name: my-vm
+spec:
+  location: "EU"

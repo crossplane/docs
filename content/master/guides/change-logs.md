@@ -80,38 +80,7 @@ steps:
    container{{</hover>}} and the {{<hover label="drc" line="21">}}sidecar
    container{{</hover>}}.
 
-```yaml {label="drc",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1beta1
-kind: DeploymentRuntimeConfig
-metadata:
-  name: enable-changelogs
-spec:
-  deploymentTemplate:
-    spec:
-      selector: {}
-      template:
-        spec:
-          containers:
-          - name: package-runtime
-            args:
-            - --enable-changelogs
-            volumeMounts:
-            - name: changelogs-vol
-              mountPath: /var/run/changelogs
-          - name: changelogs-sidecar
-            image: xpkg.crossplane.io/crossplane/changelogs-sidecar:v0.0.1
-            volumeMounts:
-            - name: changelogs-vol
-              mountPath: /var/run/changelogs
-          volumes:
-          - name: changelogs-vol
-            emptyDir: {}
-  serviceAccountTemplate:
-    metadata:
-      name: provider-kubernetes
-EOF
-```
+{{< manifest path="guides/change-logs/deploymentruntimeconfig-enable-changelogs.yaml" label="drc" >}}
 
 ### Install the provider
 
@@ -119,20 +88,7 @@ Install the {{<hover label="provider" line="7">}}provider{{</hover>}} and
 instruct it to use the {{<hover label="provider" line="8">}}DeploymentRuntimeConfig{{</hover>}}
 that was just created.
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-kubernetes
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-kubernetes:v0.18.0
-  runtimeConfigRef:
-    apiVersion: pkg.crossplane.io/v1beta1
-    kind: DeploymentRuntimeConfig
-    name: enable-changelogs
-EOF
-```
+{{< manifest path="guides/change-logs/provider-kubernetes.yaml" label="provider" >}}
 
 ### Configure permissions
 
@@ -146,42 +102,7 @@ production environment. See more examples for configuring `provider-kubernetes` 
 [examples directory](https://github.com/crossplane-contrib/provider-kubernetes/tree/main/examples/namespaced/provider).
 {{</hint>}}
 
-```yaml {label="rbac",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: configmap-edit
-rules:
-  - apiGroups:
-      - ""
-    resources:
-      - configmaps
-    verbs:
-      - "*"
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: provider-kubernetes-configmap-edit
-subjects:
-  - kind: ServiceAccount
-    name: provider-kubernetes
-    namespace: crossplane-system
-roleRef:
-  kind: ClusterRole
-  name: configmap-edit
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: kubernetes.crossplane.io/v1alpha1
-kind: ProviderConfig
-metadata:
-  name: default
-spec:
-  credentials:
-    source: InjectedIdentity
-EOF
-```
+{{< manifest path="guides/change-logs/rbac.yaml" >}}
 
 ### Create a resource
 
@@ -189,24 +110,7 @@ After installing and configuring the provider with change logs enabled,
 create a resource that generates change log entries that reflect the actions
 the control plane takes.
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: kubernetes.crossplane.io/v1alpha2
-kind: Object
-metadata:
-  name: configmap-for-changelogs
-spec:
-  forProvider:
-    manifest:
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        namespace: default
-        name: configmap-for-changelogs
-      data:
-        key-1: cool-value-1
-EOF
-```
+{{< manifest path="guides/change-logs/object-configmap-for-changelogs.yaml" >}}
 
 ### Examine the change logs
 

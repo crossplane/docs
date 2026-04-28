@@ -1,0 +1,83 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: useraccesskeys-patch-and-transform
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: UserAccessKey
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      writeConnectionSecretToRef:
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.writeConnectionSecretToRef.name
+          toFieldPath: name
+      resources:
+      - name: user
+        base:
+          apiVersion: iam.aws.m.upbound.io/v1beta1
+          kind: User
+          spec:
+            forProvider: {}
+      - name: accesskey-0
+        base:
+          apiVersion: iam.aws.m.upbound.io/v1beta1
+          kind: AccessKey
+          spec:
+            forProvider:
+              userSelector:
+                matchControllerRef: true
+            writeConnectionSecretToRef:
+              name: accesskey-secret-0
+        connectionDetails:
+        - name: user-0
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: username
+        - name: password-0
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: password
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "%s-accesskey-secret-0"
+      - name: accesskey-1
+        base:
+          apiVersion: iam.aws.m.upbound.io/v1beta1
+          kind: AccessKey
+          spec:
+            forProvider:
+              userSelector:
+                matchControllerRef: true
+            writeConnectionSecretToRef:
+              name: accesskey-secret-1
+        connectionDetails:
+        - name: user-1
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: username
+        - name: password-1
+          type: FromConnectionSecretKey
+          fromConnectionSecretKey: password
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "%s-accesskey-secret-1"
+  - step: ready
+    functionRef:
+      name: function-auto-ready

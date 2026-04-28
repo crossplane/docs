@@ -1,0 +1,6 @@
+apiVersion: queue.example.com/v1alpha1
+kind: PubSub
+metadata:
+  name: my-pubsub-queue
+spec:
+  location: "US"

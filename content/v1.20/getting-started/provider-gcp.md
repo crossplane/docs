@@ -29,16 +29,7 @@ This quickstart requires:
 Install the provider into the Kubernetes cluster with a Kubernetes configuration 
 file. 
 
-```shell {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-gcp-storage
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.12.1
-EOF
-```
+{{< manifest path="getting-started/gcp/provider.yaml" label="provider" >}}
 
 The Crossplane {{< hover label="provider" line="3" >}}Provider{{</hover>}}
 installs the Kubernetes _Custom Resource Definitions_ (CRDs) representing GCP storage
@@ -188,21 +179,7 @@ To generate a unique name use
 
 Create the Bucket with the following command:
 
-```yaml {label="xr",copy-lines="all"}
-cat <<EOF | kubectl create -f -
-apiVersion: storage.gcp.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  generateName: crossplane-bucket-
-  labels:
-    docs.crossplane.io/example: provider-gcp
-spec:
-  forProvider:
-    location: US
-  providerConfigRef:
-    name: default
-EOF
-```
+{{< manifest path="getting-started/gcp/bucket.yaml" label="xr" command="kubectl create -f" >}}
 
 The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
 {{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.

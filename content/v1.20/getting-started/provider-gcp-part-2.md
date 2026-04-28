@@ -40,16 +40,7 @@ crossplane-stable/crossplane \
 2. When the Crossplane pods finish installing and are ready, apply the GCP
 Provider.
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-gcp-storage
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-storage:v1.12.1
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/provider-gcp-storage.yaml" label="provider" >}}
 
 3. Create a file called `gcp-credentials.json` with your GCP service account
 JSON file.
@@ -107,16 +98,7 @@ First install the GCP PubSub Provider.
 
 Add the new Provider to the cluster.
 
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-gcp-pubsub
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-gcp-pubsub:v1.12.1
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/provider-gcp-pubsub.yaml" >}}
 
 View the new PubSub provider with `kubectl get providers`.
 
@@ -254,40 +236,7 @@ must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either
 
 Apply this XRD to create the custom API in your Kubernetes cluster.
 
-```yaml {label="xrd",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: pubsubs.queue.example.com
-spec:
-  group: queue.example.com
-  names:
-    kind: PubSub
-    plural: pubsubs
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              location:
-                type: string
-                oneOf:
-                  - pattern: '^EU$'
-                  - pattern: '^US$'
-            required:
-              - location
-    served: true
-    referenceable: true
-  claimNames:
-    kind: PubSubClaim
-    plural: pubsubclaims
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/pubsubs.queue.example.com.yaml" label="xrd" >}}
 
 Adding the {{<hover label="xrd" line="29">}}claimNames{{</hover>}} allows users
 to access this API either at the cluster level with the
@@ -357,59 +306,7 @@ more information on configuring Compositions and all the available options.
 
 Apply this Composition to your cluster.
 
-```yaml {label="comp",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: topic-with-bucket
-spec:
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-        - name: crossplane-quickstart-bucket
-          base:
-            apiVersion: storage.gcp.upbound.io/v1beta1
-            kind: Bucket
-            spec:
-              forProvider:
-                location: "US"
-          patches:
-            - fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map:
-                    EU: "EU"
-                    US: "US"
-        - name: crossplane-quickstart-topic
-          base:
-            apiVersion: pubsub.gcp.upbound.io/v1beta1
-            kind: Topic
-            spec:
-              forProvider:
-                messageStoragePolicy:
-                  - allowedPersistenceRegions:
-                    - "us-central1"
-          patches:
-            - fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.messageStoragePolicy[0].allowedPersistenceRegions[0]"
-              transforms:
-                - type: map
-                  map:
-                    EU: "europe-central2"
-                    US: "us-central1"
-  compositeTypeRef:
-    apiVersion: queue.example.com/v1alpha1
-    kind: PubSub
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/topic-with-bucket.yaml" label="comp" >}}
 
 The {{<hover label="comp" line="40">}}compositeTypeRef{{</hover >}} defines
 which custom APIs can use this template to create resources.
@@ -421,16 +318,7 @@ You must install the function before you can use it in a Composition.
 
 Apply this Function to install `function-patch-and-transform`:
 
-```yaml {label="install"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-patch-and-transform
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/function-patch-and-transform.yaml" label="install" >}}
 
 {{<hint "tip" >}}
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
@@ -458,16 +346,7 @@ With the custom API (XRD) installed and associated to a resource template
 Create a {{<hover label="xr" line="2">}}PubSub{{</hover>}} object to create the
 cloud resources.
 
-```yaml {copy-lines="all",label="xr"}
-cat <<EOF | kubectl apply -f -
-apiVersion: queue.example.com/v1alpha1
-kind: PubSub
-metadata:
-  name: my-pubsub-queue
-spec:
-  location: "US"
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/pubsub-my-pubsub-queue.yaml" label="xr" >}}
 
 View the resource with `kubectl get pubsub`.
 
@@ -531,17 +410,7 @@ kubectl create namespace crossplane-test
 
 Then create a Claim in the `crossplane-test` namespace.
 
-```yaml {label="claim",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: queue.example.com/v1alpha1
-kind: PubSubClaim
-metadata:
-  name: my-pubsub-queue
-  namespace: crossplane-test
-spec:
-  location: "US"
-EOF
-```
+{{< manifest path="getting-started/gcp-part-2/pubsubclaim-my-pubsub-queue.yaml" label="claim" >}}
 View the Claim with `kubectl get claim -n crossplane-test`.
 
 ```shell {copy-lines="1"}

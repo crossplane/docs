@@ -1,0 +1,7 @@
+apiVersion: queue.example.com/v1alpha1
+kind: PubSubClaim
+metadata:
+  name: my-pubsub-queue
+  namespace: crossplane-test
+spec:
+  location: "US"

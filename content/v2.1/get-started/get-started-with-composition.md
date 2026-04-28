@@ -121,54 +121,12 @@ A composite resource is a kind of custom resource.
 Create this _composite resource definition_ (XRD) to define the schema of the
 new `App` composite resource (XR).
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v2
-kind: CompositeResourceDefinition
-metadata:
-  name: apps.example.crossplane.io
-spec:
-  scope: Namespaced
-  group: example.crossplane.io
-  names:
-    kind: App
-    plural: apps
-  versions:
-  - name: v1
-    served: true
-    referenceable: true
-    schema:
-     openAPIV3Schema:
-       type: object
-       properties:
-        spec:
-          type: object
-          properties:
-            image:
-              description: The app's OCI container image.
-              type: string
-          required:
-          - image
-        status:
-          type: object
-          properties:
-            replicas:
-              description: The number of available app replicas.
-              type: integer
-            address:
-              description: The app's IP address.
-              type: string
-```
-
-Save the XRD as `xrd.yaml` and apply it:
-
-```shell
-kubectl apply -f xrd.yaml
-```
+{{< manifest path="get-started/composition/xrd.yaml" >}}
 
 Check that Crossplane has established the XRD:
 
 ``` shell {copy-lines="1"}
-kubectl get -f xrd.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/xrd.yaml" >}}
 NAME                         ESTABLISHED   OFFERED   AGE
 apps.example.crossplane.io   True                    21s
 ```
@@ -198,25 +156,12 @@ or conditionals.
 
 Create this composition function to install YAML support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: crossplane-contrib-function-patch-and-transform
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="get-started/composition/fn-patch-and-transform.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/fn-patch-and-transform.yaml" >}}
 NAME                                              INSTALLED   HEALTHY   PACKAGE                                                                     AGE
 crossplane-contrib-function-patch-and-transform   True        True      xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2   10s
 ```
@@ -228,25 +173,12 @@ Templated YAML is a good choice if you're used to writing
 
 Create this composition function to install templated YAML support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: crossplane-contrib-function-go-templating
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.9.2
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="get-started/composition/fn-go-templating.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/fn-go-templating.yaml" >}}
 NAME                                        INSTALLED   HEALTHY   PACKAGE                                                               AGE
 crossplane-contrib-function-go-templating   True        True      xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.9.2   9s
 ```
@@ -258,25 +190,12 @@ full [Python standard library](https://docs.python.org/3/library/index.html).
 
 Create this composition function to install Python support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: crossplane-contrib-function-python
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-python:v0.1.0
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="get-started/composition/fn-python.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/fn-python.yaml" >}}
 NAME                                 INSTALLED   HEALTHY   PACKAGE                                                        AGE
 crossplane-contrib-function-python   True        True      xpkg.crossplane.io/crossplane-contrib/function-python:v0.1.0   12s
 ```
@@ -288,25 +207,12 @@ It's fast and sandboxed.
 
 Create this composition function to install KCL support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: crossplane-contrib-function-kcl
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-kcl:v0.11.2
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="get-started/composition/fn-kcl.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/fn-kcl.yaml" >}}
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                      AGE
 crossplane-contrib-function-kcl   True        True      xpkg.crossplane.io/crossplane-contrib/function-kcl:v0.11.2   6s
 ```
@@ -320,25 +226,12 @@ Crossplane function APIs.
 
 Create this composition function to install Pythonic support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-pythonic
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="get-started/composition/fn-pythonic.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/fn-pythonic.yaml" >}}
 NAME               INSTALLED  HEALTHY  PACKAGE                                                         AGE
 function-pythonic  True       True     xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0  1m
 ```
@@ -359,232 +252,19 @@ Create a composition to tell Crossplane what to do when you create or update an
 {{< tab "YAML" >}}
 Create this composition to use YAML to configure Crossplane:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: app-yaml
-spec:
-  compositeTypeRef:
-    apiVersion: example.crossplane.io/v1
-    kind: App
-  mode: Pipeline
-  pipeline:
-  - step: create-deployment-and-service
-    functionRef:
-      name: crossplane-contrib-function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-      - name: deployment
-        base:
-          apiVersion: apps/v1
-          kind: Deployment
-          spec:
-            replicas: 2
-            template:
-              spec:
-                containers:
-                - name: app
-                  ports:
-                  - containerPort: 80
-        patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: metadata.labels[example.crossplane.io/app]
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.selector.matchLabels[example.crossplane.io/app]
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.template.metadata.labels[example.crossplane.io/app]
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.image
-          toFieldPath: spec.template.spec.containers[0].image
-        - type: ToCompositeFieldPath
-          fromFieldPath: status.availableReplicas
-          toFieldPath: status.replicas
-        readinessChecks:
-        - type: MatchCondition
-          matchCondition:
-            type: Available
-            status: "True"
-      - name: service
-        base:
-          apiVersion: v1
-          kind: Service
-          spec:
-            ports:
-            - protocol: TCP
-              port: 8080
-              targetPort: 80
-        patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: metadata.labels[example.crossplane.io/app]
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.selector[example.crossplane.io/app]
-        - type: ToCompositeFieldPath
-          fromFieldPath: spec.clusterIP
-          toFieldPath: status.address
-        readinessChecks:
-        - type: NonEmpty
-          fieldPath: spec.clusterIP
-```
+{{< manifest path="get-started/composition/composition-yaml.yaml" >}}
 {{< /tab >}}
 
 {{< tab "Templated YAML" >}}
 Create this composition to use templated YAML to configure Crossplane:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: app-templated-yaml
-spec:
-  compositeTypeRef:
-    apiVersion: example.crossplane.io/v1
-    kind: App
-  mode: Pipeline
-  pipeline:
-  - step: create-deployment-and-service
-    functionRef:
-      name: crossplane-contrib-function-go-templating
-    input:
-      apiVersion: gotemplating.fn.crossplane.io/v1beta1
-      kind: GoTemplate
-      source: Inline
-      inline:
-        template: |
-          ---
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            annotations:
-              gotemplating.fn.crossplane.io/composition-resource-name: deployment
-              {{ if eq (.observed.resources.deployment | getResourceCondition "Available").Status "True" }}
-              gotemplating.fn.crossplane.io/ready: "True"
-              {{ end }}
-            labels:
-              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-          spec:
-            replicas: 2
-            selector:
-              matchLabels:
-                example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-            template:
-              metadata:
-                labels:
-                  example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-              spec:
-                containers:
-                - name: app
-                  image: {{ .observed.composite.resource.spec.image }}
-                  ports:
-                  - containerPort: 80
-          ---
-          apiVersion: v1
-          kind: Service
-          metadata:
-            annotations:
-              gotemplating.fn.crossplane.io/composition-resource-name: service
-              {{ if (get (getComposedResource . "service").spec "clusterIP") }}
-              gotemplating.fn.crossplane.io/ready: "True"
-              {{ end }}
-            labels:
-              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-          spec:
-            selector:
-              example.crossplane.io/app: {{ .observed.composite.resource.metadata.name }}
-            ports:
-            - protocol: TCP
-              port: 8080
-              targetPort: 80
-          ---
-          apiVersion: example.crossplane.io/v1
-          kind: App
-          status:
-            replicas: {{ get (getComposedResource . "deployment").status "availableReplicas" | default 0 }}
-            address: {{ get (getComposedResource . "service").spec "clusterIP" | default "" | quote }}
-```
+{{< manifest path="get-started/composition/composition-templated-yaml.yaml" >}}
 {{< /tab >}}
 
 {{< tab "Python" >}}
 Create this composition to use Python to configure Crossplane:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: app-python
-spec:
-  compositeTypeRef:
-    apiVersion: example.crossplane.io/v1
-    kind: App
-  mode: Pipeline
-  pipeline:
-  - step: create-deployment-and-service
-    functionRef:
-      name: crossplane-contrib-function-python
-    input:
-      apiVersion: python.fn.crossplane.io/v1beta1
-      kind: Script
-      script: |
-        def compose(req, rsp):
-            observed_xr = req.observed.composite.resource
-
-            rsp.desired.resources["deployment"].resource.update({
-                "apiVersion": "apps/v1",
-                "kind": "Deployment",
-                "metadata": {
-                  "labels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
-                },
-                "spec": {
-                    "replicas": 2,
-                    "selector": {"matchLabels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]}},
-                    "template": {
-                      "metadata": {
-                        "labels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
-                      },
-                      "spec": {
-                        "containers": [{
-                          "name": "app",
-                          "image": observed_xr["spec"]["image"],
-                          "ports": [{"containerPort": 80}]
-                        }],
-                      },
-                    },
-                },
-            })
-
-            observed_deployment = req.observed.resources["deployment"].resource
-            if "status" in observed_deployment:
-              if "availableReplicas" in observed_deployment["status"]:
-                rsp.desired.composite.resource.get_or_create_struct("status")["replicas"] = observed_deployment["status"]["availableReplicas"]
-              if "conditions" in observed_deployment["status"]:
-                for condition in observed_deployment["status"]["conditions"]:
-                  if condition["type"] == "Available" and condition["status"] == "True":
-                    rsp.desired.resources["deployment"].ready = True
-
-            rsp.desired.resources["service"].resource.update({
-                "apiVersion": "v1",
-                "kind": "Service",
-                "metadata": {
-                  "labels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
-                },
-                "spec": {
-                  "selector": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
-                  "ports": [{"protocol": "TCP", "port": 8080, "targetPort": 80}],
-                },
-            })
-
-            observed_service = req.observed.resources["service"].resource
-            if "spec" in observed_service and "clusterIP" in observed_service["spec"]:
-              rsp.desired.composite.resource.get_or_create_struct("status")["address"] = observed_service["spec"]["clusterIP"]
-              rsp.desired.resources["service"].ready = True
-```
+{{< manifest path="get-started/composition/composition-python.yaml" >}}
 
 {{<hint "tip">}}
 You can write your own function in Python.
@@ -600,137 +280,16 @@ Read the [guide to writing a composition function in Python]({{<ref "../guides/w
 {{< tab "KCL" >}}
 Create this composition to use KCL to configure Crossplane:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: app-kcl
-spec:
-  compositeTypeRef:
-    apiVersion: example.crossplane.io/v1
-    kind: App
-  mode: Pipeline
-  pipeline:
-  - step: create-deployment-and-service
-    functionRef:
-      name: crossplane-contrib-function-kcl
-    input:
-      apiVersion: krm.kcl.dev/v1alpha1
-      kind: KCLInput
-      spec:
-        source: |
-          observed_xr = option("params").oxr
-
-          _desired_deployment = {
-            apiVersion = "apps/v1"
-            kind = "Deployment"
-            metadata = {
-              annotations = {
-                "krm.kcl.dev/composition-resource-name" = "deployment"
-              }
-              labels = {"example.crossplane.io/app" = observed_xr.metadata.name}
-            }
-            spec = {
-              replicas = 2
-              selector.matchLabels = {"example.crossplane.io/app" = observed_xr.metadata.name}
-              template = {
-                metadata.labels = {"example.crossplane.io/app" = observed_xr.metadata.name}
-                spec.containers = [{
-                  name = "app"
-                  image = observed_xr.spec.image
-                  ports = [{containerPort = 80}]
-                }]
-              }
-            }
-          }
-
-          observed_deployment = option("params").ocds["deployment"]?.Resource
-          if any_true([c.type == "Available" and c.status == "True" for c in observed_deployment?.status?.conditions or []]):
-            _desired_deployment.metadata.annotations["krm.kcl.dev/ready"] = "True"
-
-          _desired_service = {
-            apiVersion = "v1"
-            kind = "Service"
-            metadata = {
-              annotations = {
-                "krm.kcl.dev/composition-resource-name" = "service"
-              }
-              labels = {"example.crossplane.io/app" = observed_xr.metadata.name}
-            }
-            spec = {
-              selector = {"example.crossplane.io/app" = observed_xr.metadata.name}
-              ports = [{protocol = "TCP", port = 8080, targetPort = 80}]
-            }
-          }
-
-          observed_service = option("params").ocds["service"]?.Resource
-          if observed_service?.spec?.clusterIP:
-            _desired_service.metadata.annotations["krm.kcl.dev/ready"] = "True"
-            
-          _desired_xr = {
-            **option("params").dxr
-
-            status.address = observed_service?.spec?.clusterIP or ""
-            status.replicas = observed_deployment?.status?.availableReplicas or 0
-          }
-
-          items = [_desired_deployment, _desired_service, _desired_xr]
-```
+{{< manifest path="get-started/composition/composition-kcl.yaml" >}}
 {{< /tab >}}
 
 {{< tab "Pythonic" >}}
 Create this composition to use Pythonic to configure Crossplane:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: app-pythonic
-spec:
-  compositeTypeRef:
-    apiVersion: example.crossplane.io/v1
-    kind: App
-  mode: Pipeline
-  pipeline:
-  - step: create-deployment-and-service
-    functionRef:
-      name: function-pythonic
-    input:
-      apiVersion: pythonic.fn.crossplane.io/v1alpha1
-      kind: Composite
-      composite: |
-        class Composite(BaseComposite):
-          def compose(self):
-            labels = {'example.crossplane.io/app': self.metadata.name}
-
-            d = self.resources.deployment('apps/v1', 'Deployment')
-            d.metadata.labels = labels
-            d.spec.replicas = 2
-            d.spec.selector.matchLabels = labels
-            d.spec.template.metadata.labels = labels
-            d.spec.template.spec.containers[0].name = 'app'
-            d.spec.template.spec.containers[0].image = self.spec.image
-            d.spec.template.spec.containers[0].ports[0].containerPort = 80
-
-            s = self.resources.service('v1', 'Service')
-            s.metadata.labels = labels
-            s.spec.selector = labels
-            s.spec.ports[0].protocol = 'TCP'
-            s.spec.ports[0].port = 8080
-            s.spec.ports[0].targetPort = 80
-
-            self.status.replicas = d.status.availableReplicas
-            self.status.address = s.observed.spec.clusterIP
-```
+{{< manifest path="get-started/composition/composition-pythonic.yaml" >}}
 {{< /tab >}}
 
 {{</ tabs >}}
-
-Save the composition as `composition.yaml` and apply it:
-
-```shell
-kubectl apply -f composition.yaml
-```
 
 {{<hint "note">}}
 A composition can include multiple functions.
@@ -752,26 +311,12 @@ Crossplane now understands `App` custom resources.
 
 Create an `App`:
 
-```yaml
-apiVersion: example.crossplane.io/v1
-kind: App
-metadata:
-  namespace: default
-  name: my-app
-spec:
-  image: nginx
-```
-
-Save the `App` as `app.yaml` and apply it:
-
-```shell
-kubectl apply -f app.yaml
-```
+{{< manifest path="get-started/composition/app.yaml" >}}
 
 Check that the `App` is ready:
 
 ```shell {copy-lines="1"}
-kubectl get -f app.yaml
+kubectl get -f {{< manifest-url path="get-started/composition/app.yaml" >}}
 NAME     SYNCED   READY   COMPOSITION   AGE
 my-app   True     True    app-yaml      56s
 ```
@@ -796,14 +341,19 @@ service/my-app-xfkzg   ClusterIP   10.96.148.56   <none>        8080/TCP   11m
 ```
 
 {{<hint "tip">}}
-Use `kubectl edit -f app.yaml` to edit the `App`'s image. Crossplane updates
-the `Deployment`'s image to match.
+Edit the `App`'s image:
+
+```shell
+kubectl edit -f {{< manifest-url path="get-started/composition/app.yaml" >}}
+```
+
+Crossplane updates the `Deployment`'s image to match.
 {{</hint>}}
 
 Delete the `App`.
 
 ```shell {copy-lines="1"}
-kubectl delete -f app.yaml
+kubectl delete -f {{< manifest-url path="get-started/composition/app.yaml" >}}
 ```
 
 When you delete the `App`, Crossplane deletes the `Deployment` and `Service`.
