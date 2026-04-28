@@ -1,0 +1,100 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: useraccesskeys-python
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: UserAccessKey
+  mode: Pipeline
+  pipeline:
+  - step: render-python
+    functionRef:
+      name: function-python
+    input:
+      apiVersion: python.fn.crossplane.io/v1beta1
+      kind: Script
+      script: |
+        def compose(req, rsp):
+            # Get observed composite resource
+            oxr = req.observed.composite.resource
+            oxr_name = oxr["metadata"]["name"]
+
+            # IAM User
+            rsp.desired.resources["user"].resource.update({
+                "apiVersion": "iam.aws.m.upbound.io/v1beta1",
+                "kind": "User",
+                "spec": {
+                    "forProvider": {}
+                }
+            })
+
+            # Access Key 0
+            rsp.desired.resources["accesskey-0"].resource.update({
+                "apiVersion": "iam.aws.m.upbound.io/v1beta1",
+                "kind": "AccessKey",
+                "spec": {
+                    "forProvider": {
+                        "userSelector": {
+                            "matchControllerRef": True
+                        }
+                    },
+                    "writeConnectionSecretToRef": {
+                        "name": f"{oxr_name}-accesskey-secret-0"
+                    }
+                }
+            })
+
+            # Access Key 1
+            rsp.desired.resources["accesskey-1"].resource.update({
+                "apiVersion": "iam.aws.m.upbound.io/v1beta1",
+                "kind": "AccessKey",
+                "spec": {
+                    "forProvider": {
+                        "userSelector": {
+                            "matchControllerRef": True
+                        }
+                    },
+                    "writeConnectionSecretToRef": {
+                        "name": f"{oxr_name}-accesskey-secret-1"
+                    }
+                }
+            })
+
+            # Secret representing the composite resource's connection details
+            secret_resource = {
+                "apiVersion": "v1",
+                "kind": "Secret",
+                "metadata": {}
+            }
+
+            # If a secret name was provided then use it
+            secret_name = ""
+            if "writeConnectionSecretToRef" in oxr["spec"] and "name" in oxr["spec"]["writeConnectionSecretToRef"]:
+              secret_name = oxr["spec"]["writeConnectionSecretToRef"]["name"]
+
+            secret_resource["metadata"]["name"] = secret_name
+
+            # Only add data if we have connection details to populate
+            data = {}
+            if "accesskey-0" in req.observed.resources:
+                accesskey0_conn = req.observed.resources["accesskey-0"].connection_details
+                if "username" in accesskey0_conn:
+                    data["user-0"] = accesskey0_conn["username"].decode("utf-8")
+                if "password" in accesskey0_conn:
+                    data["password-0"] = accesskey0_conn["password"].decode("utf-8")
+
+            if "accesskey-1" in req.observed.resources:
+                accesskey1_conn = req.observed.resources["accesskey-1"].connection_details
+                if "username" in accesskey1_conn:
+                    data["user-1"] = accesskey1_conn["username"].decode("utf-8")
+                if "password" in accesskey1_conn:
+                    data["password-1"] = accesskey1_conn["password"].decode("utf-8")
+
+            if data:
+                secret_resource["stringData"] = data
+
+            rsp.desired.resources["connection-secret"].resource.update(secret_resource)
+  - step: ready
+    functionRef:
+      name: function-auto-ready

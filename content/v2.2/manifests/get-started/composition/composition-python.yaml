@@ -1,0 +1,69 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-python
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: crossplane-contrib-function-python
+    input:
+      apiVersion: python.fn.crossplane.io/v1beta1
+      kind: Script
+      script: |
+        def compose(req, rsp):
+            observed_xr = req.observed.composite.resource
+
+            rsp.desired.resources["deployment"].resource.update({
+                "apiVersion": "apps/v1",
+                "kind": "Deployment",
+                "metadata": {
+                  "labels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
+                },
+                "spec": {
+                    "replicas": 2,
+                    "selector": {"matchLabels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]}},
+                    "template": {
+                      "metadata": {
+                        "labels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
+                      },
+                      "spec": {
+                        "containers": [{
+                          "name": "app",
+                          "image": observed_xr["spec"]["image"],
+                          "ports": [{"containerPort": 80}]
+                        }],
+                      },
+                    },
+                },
+            })
+
+            observed_deployment = req.observed.resources["deployment"].resource
+            if "status" in observed_deployment:
+              if "availableReplicas" in observed_deployment["status"]:
+                rsp.desired.composite.resource.get_or_create_struct("status")["replicas"] = observed_deployment["status"]["availableReplicas"]
+              if "conditions" in observed_deployment["status"]:
+                for condition in observed_deployment["status"]["conditions"]:
+                  if condition["type"] == "Available" and condition["status"] == "True":
+                    rsp.desired.resources["deployment"].ready = True
+
+            rsp.desired.resources["service"].resource.update({
+                "apiVersion": "v1",
+                "kind": "Service",
+                "metadata": {
+                  "labels": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
+                },
+                "spec": {
+                  "selector": {"example.crossplane.io/app": observed_xr["metadata"]["name"]},
+                  "ports": [{"protocol": "TCP", "port": 8080, "targetPort": 80}],
+                },
+            })
+
+            observed_service = req.observed.resources["service"].resource
+            if "spec" in observed_service and "clusterIP" in observed_service["spec"]:
+              rsp.desired.composite.resource.get_or_create_struct("status")["address"] = observed_service["spec"]["clusterIP"]
+              rsp.desired.resources["service"].ready = True

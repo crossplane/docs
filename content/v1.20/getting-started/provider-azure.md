@@ -32,16 +32,7 @@ This quickstart requires:
 Install the Azure Network resource provider into the Kubernetes cluster with a Kubernetes configuration 
 file. 
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-azure-network
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2
-EOF
-```
+{{< manifest path="getting-started/azure/provider.yaml" label="provider" >}}
 
 The Crossplane {{< hover label="provider" line="3" >}}Provider{{</hover>}}
 installs the Kubernetes _Custom Resource Definitions_ (CRDs) representing Azure Networking
@@ -149,21 +140,8 @@ creds:  629 bytes
 A `ProviderConfig` customizes the settings of the Azure Provider.  
 
 Apply the {{< hover label="providerconfig" line="5">}}ProviderConfig{{</ hover >}} with the command:
-```yaml {label="providerconfig",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: azure.upbound.io/v1beta1
-metadata:
-  name: default
-kind: ProviderConfig
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: azure-secret
-      key: creds
-EOF
-```
+
+{{< manifest path="getting-started/azure/providerconfig.yaml" label="providerconfig" >}}
 
 This attaches the Azure credentials, saved as a Kubernetes secret, as a {{< hover label="providerconfig" line="9">}}secretRef{{</ hover>}}.
 
@@ -181,22 +159,7 @@ Add your Azure Resource Group name. Follow the Azure documentation to
 if you don't have one.
 {{< /hint >}}
 
-{{< editCode >}}
-```yaml {label="xr"}
-cat <<EOF | kubectl create -f -
-apiVersion: network.azure.upbound.io/v1beta1
-kind: VirtualNetwork
-metadata:
-  name: crossplane-quickstart-network
-spec:
-  forProvider:
-    addressSpace:
-      - 10.0.0.0/16
-    location: "Sweden Central"
-    resourceGroupName: docs
-EOF
-```
-{{< /editCode >}}
+{{< manifest path="getting-started/azure/virtualnetwork-crossplane-quickstart-network.yaml" label="xr" command="kubectl create -f" >}}
 
 The {{< hover label="xr" line="2">}}apiVersion{{< /hover >}} and 
 {{< hover label="xr" line="3">}}kind{{</hover >}} are from the provider's CRDs.

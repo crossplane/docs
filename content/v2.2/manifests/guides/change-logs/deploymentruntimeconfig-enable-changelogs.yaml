@@ -1,0 +1,28 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: enable-changelogs
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+          - name: package-runtime
+            args:
+            - --enable-changelogs
+            volumeMounts:
+            - name: changelogs-vol
+              mountPath: /var/run/changelogs
+          - name: changelogs-sidecar
+            image: xpkg.crossplane.io/crossplane/changelogs-sidecar:v0.0.1
+            volumeMounts:
+            - name: changelogs-vol
+              mountPath: /var/run/changelogs
+          volumes:
+          - name: changelogs-vol
+            emptyDir: {}
+  serviceAccountTemplate:
+    metadata:
+      name: provider-kubernetes

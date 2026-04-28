@@ -1,0 +1,33 @@
+{{- /*
+  manifest-url shortcode
+
+  Emits the absolute URL of an example manifest. Useful inside code
+  fences where the manifest shortcode itself would render too much
+  (e.g. a `kubectl delete -f <url>` line in a cleanup section).
+
+  Usage (inside a shell code fence):
+    kubectl delete -f {{< manifest-url path="get-started/composition/app.yaml" >}}
+
+  The version segment is auto-derived from the calling page's path,
+  so a page in content/v2.2/... resolves path="foo.yaml" to
+  https://docs.crossplane.io/v2.2/manifests/foo.yaml (or whatever
+  baseURL is configured for the build).
+
+  See: docs/superpowers/specs/2026-04-28-inline-manifests-design.md
+*/ -}}
+
+{{- $rel := .Get "path" -}}
+{{- if not $rel -}}
+  {{- errorf "{{< manifest-url >}} requires a path= named argument at %s" .Position -}}
+{{- end -}}
+
+{{- $segments := split .Page.File.Path "/" -}}
+{{- $version := index $segments 0 -}}
+
+{{- $contentPath := printf "content/%s/manifests/%s" $version $rel -}}
+
+{{- if not (fileExists $contentPath) -}}
+  {{- errorf "{{< manifest-url >}}: file not found at %s (referenced from %s)" $contentPath .Position -}}
+{{- end -}}
+
+{{- printf "%s/manifests/%s" $version $rel | absURL -}}

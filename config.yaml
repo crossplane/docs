@@ -78,6 +78,10 @@ module:
     target: data/crds/
     includeFiles:
       - "**/api/**.yaml"
+  - source: content
+    target: static
+    includeFiles:
+      - "**/manifests/**.yaml"
 
 # Give Hugo access to environmental variables matching a given regex.
 # These give Hugo access to Netlify data to generate proper URLs

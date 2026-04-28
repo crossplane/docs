@@ -1,0 +1,6 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: crossplane-contrib-function-python
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/function-python:v0.2.0

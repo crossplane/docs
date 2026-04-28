@@ -105,55 +105,14 @@ Follow these steps to create your first `Operation`:
 Create an `Ingress` that references a real hostname but doesn't route actual
 traffic:
 
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-app
-  namespace: default
-spec:
-  rules:
-  - host: google.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nonexistent-service
-            port:
-              number: 80
-```
-
-Save as `ingress.yaml` and apply it:
-
-```shell
-kubectl apply -f ingress.yaml
-```
+{{< manifest path="get-started/operations/ingress.yaml" >}}
 
 ### Grant Ingress permissions
 
 `Operations` need permission to access and change `Ingresses`. Create a `ClusterRole`
 that grants Crossplane access to `Ingresses`:
 
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: operations-ingress-access
-  labels:
-    rbac.crossplane.io/aggregate-to-crossplane: "true"
-rules:
-- apiGroups: ["networking.k8s.io"]
-  resources: ["ingresses"]
-  verbs: ["get", "list", "watch", "patch", "update"]
-```
-
-Save as `ingress-rbac.yaml` and apply it:
-
-```shell
-kubectl apply -f ingress-rbac.yaml
-```
+{{< manifest path="get-started/operations/ingress-rbac.yaml" >}}
 
 ### Install the function
 
@@ -162,25 +121,12 @@ function, which supports both composition and operations.
 
 Create this function to install Python support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: crossplane-contrib-function-python
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-python:v0.2.0
-```
-
-Save the function as `function.yaml` and apply it:
-
-```shell
-kubectl apply -f function.yaml
-```
+{{< manifest path="get-started/operations/function.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f function.yaml
+kubectl get -f {{< manifest-url path="get-started/operations/function.yaml" >}}
 NAME                                 INSTALLED   HEALTHY   PACKAGE                                                        AGE
 crossplane-contrib-function-python   True        True      xpkg.crossplane.io/crossplane-contrib/function-python:v0.2.0   12s
 ```
@@ -189,97 +135,14 @@ crossplane-contrib-function-python   True        True      xpkg.crossplane.io/cr
 
 Create this `Operation` that monitors the `Ingress` certificate:
 
-```yaml
-apiVersion: ops.crossplane.io/v1alpha1
-kind: Operation
-metadata:
-  name: ingress-cert-monitor
-spec:
-  mode: Pipeline
-  pipeline:
-  - step: check-ingress-certificate
-    functionRef:
-      name: crossplane-contrib-function-python
-    requirements:
-      requiredResources:
-      - requirementName: ingress
-        apiVersion: networking.k8s.io/v1
-        kind: Ingress
-        name: example-app
-        namespace: default
-    input:
-      apiVersion: python.fn.crossplane.io/v1beta1
-      kind: Script
-      script: |
-        import ssl
-        import socket
-        from datetime import datetime
-
-        from crossplane.function import request, response
-
-        def operate(req, rsp):
-            # Get the Ingress resource
-            ingress = request.get_required_resource(req, "ingress")
-            if not ingress:
-                response.set_output(rsp, {"error": "No ingress resource found"})
-                return
-
-            # Extract hostname from Ingress rules
-            hostname = ingress["spec"]["rules"][0]["host"]
-            port = 443
-
-            # Get SSL certificate info
-            context = ssl.create_default_context()
-            with socket.create_connection((hostname, port)) as sock:
-                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
-                    cert = ssock.getpeercert()
-
-            # Parse expiration date
-            expiry_date = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
-            days_until_expiry = (expiry_date - datetime.now()).days
-
-            # Add warning if certificate expires soon
-            if days_until_expiry < 30:
-                response.warning(rsp, f"Certificate for {hostname} expires in {days_until_expiry} days")
-
-            # Annotate the Ingress with certificate expiry info
-            rsp.desired.resources["ingress"].resource.update({
-                "apiVersion": "networking.k8s.io/v1",
-                "kind": "Ingress",
-                "metadata": {
-                    "name": ingress["metadata"]["name"],
-                    "namespace": ingress["metadata"]["namespace"],
-                    "annotations": {
-                        "cert-monitor.crossplane.io/expires": cert['notAfter'],
-                        "cert-monitor.crossplane.io/days-until-expiry": str(days_until_expiry),
-                        "cert-monitor.crossplane.io/status": "warning" if days_until_expiry < 30 else "ok"
-                    }
-                }
-            })
-
-            # Return results in operation output for monitoring
-            response.set_output(rsp, {
-                "ingressName": ingress["metadata"]["name"],
-                "hostname": hostname,
-                "certificateExpires": cert['notAfter'],
-                "daysUntilExpiry": days_until_expiry,
-                "status": "warning" if days_until_expiry < 30 else "ok"
-            })
-```
-
-
-Save the operation as `operation.yaml` and apply it:
-
-```shell
-kubectl apply -f operation.yaml
-```
+{{< manifest path="get-started/operations/operation.yaml" >}}
 
 ### Check the operation
 
 Check that the `Operation` runs successfully:
 
 ```shell {copy-lines="1"}
-kubectl get -f operation.yaml
+kubectl get -f {{< manifest-url path="get-started/operations/operation.yaml" >}}
 NAME                   SYNCED   SUCCEEDED   AGE
 ingress-cert-monitor   True     True        15s
 ```
@@ -346,10 +209,10 @@ information that other tools can use for monitoring and alerting.
 Delete the resources you created:
 
 ```shell
-kubectl delete -f operation.yaml
-kubectl delete -f ingress.yaml
-kubectl delete -f ingress-rbac.yaml
-kubectl delete -f function.yaml
+kubectl delete -f {{< manifest-url path="get-started/operations/operation.yaml" >}}
+kubectl delete -f {{< manifest-url path="get-started/operations/ingress.yaml" >}}
+kubectl delete -f {{< manifest-url path="get-started/operations/ingress-rbac.yaml" >}}
+kubectl delete -f {{< manifest-url path="get-started/operations/function.yaml" >}}
 ```
 
 ## Next steps

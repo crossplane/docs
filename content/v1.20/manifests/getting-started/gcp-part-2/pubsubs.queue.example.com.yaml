@@ -1,0 +1,30 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: pubsubs.queue.example.com
+spec:
+  group: queue.example.com
+  names:
+    kind: PubSub
+    plural: pubsubs
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              location:
+                type: string
+                oneOf:
+                  - pattern: '^EU$'
+                  - pattern: '^US$'
+            required:
+              - location
+    served: true
+    referenceable: true
+  claimNames:
+    kind: PubSubClaim
+    plural: pubsubclaims

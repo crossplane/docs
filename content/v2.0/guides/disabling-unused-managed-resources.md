@@ -86,20 +86,9 @@ kubectl delete managedresourceactivationpolicy default
 Install your provider as normal. Crossplane automatically converts the
 provider's CRDs to ManagedResourceDefinitions:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-aws-ec2
-spec:
-  package: xpkg.crossplane.io/provider-aws-ec2:v2.0.0
-```
-
-Save this as `provider.yaml` and apply it:
+{{< manifest path="guides/disabling-unused-managed-resources/provider.yaml" >}}
 
 ```shell
-kubectl apply -f provider.yaml
-
 # Wait for provider to be ready
 kubectl wait --for=condition=Healthy provider/provider-aws-ec2 --timeout=5m
 ```
@@ -133,23 +122,7 @@ kubectl get crds | grep ec2.aws.m.crossplane.io
 Create a ManagedResourceActivationPolicy to selectively activate only the
 resources you need:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v1alpha1
-kind: ManagedResourceActivationPolicy
-metadata:
-  name: my-app-resources
-spec:
-  activate:
-  - instances.ec2.aws.m.crossplane.io        # EC2 instances for compute
-  - securitygroups.ec2.aws.m.crossplane.io   # Security groups for networking
-  - vpcs.ec2.aws.m.crossplane.io             # VPCs for isolation
-```
-
-Save this as `activation-policy.yaml` and apply it:
-
-```shell
-kubectl apply -f activation-policy.yaml
-```
+{{< manifest path="guides/disabling-unused-managed-resources/activation-policy.yaml" >}}
 
 ## Step 5: Verify selective activation
 

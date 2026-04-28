@@ -1,0 +1,26 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: useraccesskeys.example.org
+spec:
+  group: example.org
+  names:
+    kind: UserAccessKey
+    plural: useraccesskeys
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              writeConnectionSecretToRef:
+                type: object
+                properties:
+                  name:
+                    type: string

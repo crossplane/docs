@@ -37,16 +37,7 @@ crossplane-stable/crossplane \
 
 2. When the Crossplane pods finish installing and are ready, apply the AWS Provider
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-aws-s3
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v1.21.1
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/provider-aws-s3.yaml" label="provider" >}}
 
 3. Create a file with your AWS keys
 ```ini
@@ -64,21 +55,8 @@ generic aws-secret \
 ```
 
 5. Create a _ProviderConfig_
-```yaml {label="providerconfig",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: aws.upbound.io/v1beta1
-kind: ProviderConfig
-metadata:
-  name: default
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: aws-secret
-      key: creds
-EOF
-```
+
+{{< manifest path="getting-started/aws-part-2/providerconfig.yaml" label="providerconfig" >}}
 {{</expand >}}
 
 ## Install the DynamoDB Provider
@@ -89,16 +67,7 @@ Deploying a DynamoDB Table requires the DynamoDB Provider as well.
 
 Add the new Provider to the cluster.
 
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-aws-dynamodb
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-dynamodb:v1.21.1
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/provider-aws-dynamodb.yaml" >}}
 
 View the new DynamoDB provider with `kubectl get providers`.
 
@@ -236,40 +205,7 @@ must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either
 
 Apply this XRD to create the custom API in your Kubernetes cluster.
 
-```yaml {label="xrd",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: nosqls.database.example.com
-spec:
-  group: database.example.com
-  names:
-    kind: NoSQL
-    plural: nosqls
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              location:
-                type: string
-                oneOf:
-                  - pattern: '^EU$'
-                  - pattern: '^US$'
-            required:
-              - location
-    served: true
-    referenceable: true
-  claimNames:
-    kind: NoSQLClaim
-    plural: nosqlclaim
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/nosqls.database.example.com.yaml" label="xrd" >}}
 
 Adding the {{<hover label="xrd" line="29">}}claimNames{{</hover>}} allows users
 to access this API either at the cluster level with the
@@ -338,67 +274,7 @@ more information on configuring Compositions and all the available options.
 
 Apply this Composition to your cluster.
 
-```yaml {label="comp",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: dynamo-with-bucket
-spec:
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-        - name: s3Bucket
-          base:
-            apiVersion: s3.aws.upbound.io/v1beta1
-            kind: Bucket
-            spec:
-              forProvider:
-                region: us-east-2
-              providerConfigRef:
-                name: default
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.region"
-              transforms:
-                - type: map
-                  map:
-                    EU: "eu-north-1"
-                    US: "us-east-2"
-        - name: dynamoDB
-          base:
-            apiVersion: dynamodb.aws.upbound.io/v1beta1
-            kind: Table
-            spec:
-              forProvider:
-                region: "us-east-2"
-                writeCapacity: 1
-                readCapacity: 1
-                attribute:
-                  - name: S3ID
-                    type: S
-                hashKey: S3ID
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.region"
-              transforms:
-                - type: map
-                  map:
-                    EU: "eu-north-1"
-                    US: "us-east-2"
-  compositeTypeRef:
-    apiVersion: database.example.com/v1alpha1
-    kind: NoSQL
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/dynamo-with-bucket.yaml" label="comp" >}}
 
 The {{<hover label="comp" line="52">}}compositeTypeRef{{</hover >}} defines
 which custom APIs can use this template to create resources.
@@ -410,16 +286,7 @@ You must install the function before you can use it in a Composition.
 
 Apply this Function to install `function-patch-and-transform`:
 
-```yaml {label="install"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-patch-and-transform
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/function-patch-and-transform.yaml" label="install" >}}
 
 {{<hint "tip" >}}
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
@@ -449,16 +316,7 @@ With the custom API (XRD) installed and associated to a resource template
 Create a {{<hover label="xr" line="2">}}NoSQL{{</hover>}} object to create the
 cloud resources.
 
-```yaml {copy-lines="all",label="xr"}
-cat <<EOF | kubectl apply -f -
-apiVersion: database.example.com/v1alpha1
-kind: NoSQL
-metadata:
-  name: my-nosql-database
-spec:
-  location: "US"
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/nosql-my-nosql-database.yaml" label="xr" >}}
 
 View the resource with `kubectl get nosql`.
 
@@ -522,17 +380,7 @@ kubectl create namespace crossplane-test
 
 Then create a Claim in the `crossplane-test` namespace.
 
-```yaml {label="claim",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: database.example.com/v1alpha1
-kind: NoSQLClaim
-metadata:
-  name: my-nosql-database
-  namespace: crossplane-test
-spec:
-  location: "US"
-EOF
-```
+{{< manifest path="getting-started/aws-part-2/nosqlclaim-my-nosql-database.yaml" label="claim" >}}
 View the Claim with `kubectl get claim -n crossplane-test`.
 
 ```shell {copy-lines="1"}

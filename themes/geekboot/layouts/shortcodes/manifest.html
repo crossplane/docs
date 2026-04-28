@@ -1,0 +1,58 @@
+{{- /*
+  manifest shortcode
+
+  Renders an example manifest inline plus a `kubectl apply -f <url>`
+  command block pointing to the same file published at the docs site.
+
+  Usage:
+    {{< manifest path="get-started/managed-resources/provider.yaml" >}}
+    {{< manifest path="get-started/managed-resources/provider.yaml" apply="false" >}}
+
+  Required named args:
+    path=                          - relative path under manifests/
+
+  Optional named args:
+    apply="false"                  - omit the kubectl apply block
+    command="kubectl create -f"    - override the verb (default: kubectl apply -f)
+    label="my-provider"            - wraps the rendered block in <div label="..."> so
+                                     {{< hover label="..." >}} can target lines in this manifest
+
+  See: docs/superpowers/specs/2026-04-28-inline-manifests-design.md
+*/ -}}
+
+{{- $rel := .Get "path" -}}
+{{- if not $rel -}}
+  {{- errorf "{{< manifest >}} requires a path= named argument at %s" .Position -}}
+{{- end -}}
+
+{{- $segments := split .Page.File.Path "/" -}}
+{{- $version := index $segments 0 -}}
+
+{{- $contentPath := printf "content/%s/manifests/%s" $version $rel -}}
+
+{{- if not (fileExists $contentPath) -}}
+  {{- errorf "{{< manifest >}}: file not found at %s (referenced from %s)" $contentPath .Position -}}
+{{- end -}}
+
+{{- $body := readFile $contentPath -}}
+{{- $label := .Get "label" -}}
+{{- $apply := .Get "apply" | default "true" -}}
+{{- $command := .Get "command" | default "kubectl apply -f" -}}
+
+{{- $url := printf "%s/manifests/%s" $version $rel | absURL -}}
+{{- $applyCmd := printf "%s %s" $command $url -}}
+
+{{- $highlightOpts := "linenos=table,linenostart=1" -}}
+
+<div class="gdoc-manifest">
+  {{- if $label -}}
+    <div label="{{ $label }}">
+      {{- highlight $body "yaml" $highlightOpts -}}
+    </div>
+  {{- else -}}
+    {{- highlight $body "yaml" $highlightOpts -}}
+  {{- end -}}
+  {{- if not (eq $apply "false") -}}
+    {{- highlight $applyCmd "shell" "" -}}
+  {{- end -}}
+</div>

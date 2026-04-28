@@ -1,0 +1,123 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: crossplane-quickstart-vm-with-network
+spec:
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: quickstart-vm
+          base:
+            apiVersion: compute.azure.upbound.io/v1beta1
+            kind: LinuxVirtualMachine
+            spec:
+              forProvider:
+                adminUsername: adminuser
+                adminSshKey:
+                  - publicKey: ssh-rsa
+                      AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN
+                      example@docs.crossplane.io
+                    username: adminuser
+                location: "Central US"
+                osDisk:
+                  - caching: ReadWrite
+                    storageAccountType: Standard_LRS
+                resourceGroupNameSelector:
+                  matchControllerRef: true
+                size: Standard_B1ms
+                sourceImageReference:
+                  - offer: debian-11
+                    publisher: Debian
+                    sku: 11-backports-gen2
+                    version: latest
+                networkInterfaceIdsSelector:
+                  matchControllerRef: true
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.location"
+              transforms:
+                - type: map
+                  map:
+                    EU: "Sweden Central"
+                    US: "Central US"
+        - name: quickstart-nic
+          base:
+            apiVersion: network.azure.upbound.io/v1beta1
+            kind: NetworkInterface
+            spec:
+              forProvider:
+                ipConfiguration:
+                  - name: crossplane-quickstart-configuration
+                    privateIpAddressAllocation: Dynamic
+                    subnetIdSelector:
+                      matchControllerRef: true
+                location: "Central US"
+                resourceGroupNameSelector:
+                  matchControllerRef: true
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.location"
+              transforms:
+                - type: map
+                  map:
+                    EU: "Sweden Central"
+                    US: "Central US"
+        - name: quickstart-subnet
+          base:
+            apiVersion: network.azure.upbound.io/v1beta1
+            kind: Subnet
+            spec:
+              forProvider:
+                addressPrefixes:
+                  - 10.0.1.0/24
+                virtualNetworkNameSelector:
+                  matchControllerRef: true
+                resourceGroupNameSelector:
+                  matchControllerRef: true
+        - name: quickstart-network
+          base:
+            apiVersion: network.azure.upbound.io/v1beta1
+            kind: VirtualNetwork
+            spec:
+              forProvider:
+                addressSpace:
+                  - 10.0.0.0/16
+                location: "Central US"
+                resourceGroupNameSelector:
+                  matchControllerRef: true
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.location"
+              transforms:
+                - type: map
+                  map:
+                    EU: "Sweden Central"
+                    US: "Central US"
+        - name: crossplane-resourcegroup
+          base:
+            apiVersion: azure.upbound.io/v1beta1
+            kind: ResourceGroup
+            spec:
+              forProvider:
+                location: Central US
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.location"
+              toFieldPath: "spec.forProvider.location"
+              transforms:
+                - type: map
+                  map:
+                    EU: "Sweden Central"
+                    US: "Central US"
+  compositeTypeRef:
+    apiVersion: compute.example.com/v1alpha1
+    kind: VirtualMachine

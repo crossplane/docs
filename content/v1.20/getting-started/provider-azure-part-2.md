@@ -38,16 +38,7 @@ crossplane-stable/crossplane \
 2. When the Crossplane pods finish installing and are ready, apply the Azure
    Provider
 
-```yaml {label="provider",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-azure-network
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/provider-azure-network.yaml" label="provider" >}}
 
 3. Use the Azure CLI to create a service principal and save the JSON output as
    `azure-crednetials.json`
@@ -69,21 +60,8 @@ generic azure-secret \
 ```
 
 5. Create a _ProviderConfig_
-```yaml {label="providerconfig",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: azure.upbound.io/v1beta1
-metadata:
-  name: default
-kind: ProviderConfig
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: azure-secret
-      key: creds
-EOF
-```
+
+{{< manifest path="getting-started/azure-part-2/providerconfig.yaml" label="providerconfig" >}}
 {{</expand >}}
 
 ## Create a custom API
@@ -211,40 +189,7 @@ must be {{<hover label="xrd" line="22">}}oneOf{{</hover>}} either
 
 Apply this XRD to create the custom API in your Kubernetes cluster.
 
-```yaml {label="xrd",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: virtualmachines.compute.example.com
-spec:
-  group: compute.example.com
-  names:
-    kind: VirtualMachine
-    plural: virtualmachines
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              location:
-                type: string
-                oneOf:
-                  - pattern: '^EU$'
-                  - pattern: '^US$'
-            required:
-              - location
-    served: true
-    referenceable: true
-  claimNames:
-    kind: VirtualMachineClaim
-    plural: virtualmachineclaims
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/virtualmachines.compute.example.com.yaml" label="xrd" >}}
 
 Adding the {{<hover label="xrd" line="29">}}claimNames{{</hover>}} allows users
 to access this API either at the cluster level with the
@@ -315,133 +260,7 @@ more information on configuring Compositions and all the available options.
 
 Apply this Composition to your cluster.
 
-```yaml {label="comp",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: crossplane-quickstart-vm-with-network
-spec:
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      resources:
-        - name: quickstart-vm
-          base:
-            apiVersion: compute.azure.upbound.io/v1beta1
-            kind: LinuxVirtualMachine
-            spec:
-              forProvider:
-                adminUsername: adminuser
-                adminSshKey:
-                  - publicKey: ssh-rsa
-                      AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN
-                      example@docs.crossplane.io
-                    username: adminuser
-                location: "Central US"
-                osDisk:
-                  - caching: ReadWrite
-                    storageAccountType: Standard_LRS
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-                size: Standard_B1ms
-                sourceImageReference:
-                  - offer: debian-11
-                    publisher: Debian
-                    sku: 11-backports-gen2
-                    version: latest
-                networkInterfaceIdsSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map:
-                    EU: "Sweden Central"
-                    US: "Central US"
-        - name: quickstart-nic
-          base:
-            apiVersion: network.azure.upbound.io/v1beta1
-            kind: NetworkInterface
-            spec:
-              forProvider:
-                ipConfiguration:
-                  - name: crossplane-quickstart-configuration
-                    privateIpAddressAllocation: Dynamic
-                    subnetIdSelector:
-                      matchControllerRef: true
-                location: "Central US"
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map:
-                    EU: "Sweden Central"
-                    US: "Central US"
-        - name: quickstart-subnet
-          base:
-            apiVersion: network.azure.upbound.io/v1beta1
-            kind: Subnet
-            spec:
-              forProvider:
-                addressPrefixes:
-                  - 10.0.1.0/24
-                virtualNetworkNameSelector:
-                  matchControllerRef: true
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-        - name: quickstart-network
-          base:
-            apiVersion: network.azure.upbound.io/v1beta1
-            kind: VirtualNetwork
-            spec:
-              forProvider:
-                addressSpace:
-                  - 10.0.0.0/16
-                location: "Central US"
-                resourceGroupNameSelector:
-                  matchControllerRef: true
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map:
-                    EU: "Sweden Central"
-                    US: "Central US"
-        - name: crossplane-resourcegroup
-          base:
-            apiVersion: azure.upbound.io/v1beta1
-            kind: ResourceGroup
-            spec:
-              forProvider:
-                location: Central US
-          patches:
-            - type: FromCompositeFieldPath
-              fromFieldPath: "spec.location"
-              toFieldPath: "spec.forProvider.location"
-              transforms:
-                - type: map
-                  map:
-                    EU: "Sweden Central"
-                    US: "Central US"
-  compositeTypeRef:
-    apiVersion: compute.example.com/v1alpha1
-    kind: VirtualMachine
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/crossplane-quickstart-vm-with-network.yaml" label="comp" >}}
 
 The {{<hover label="comp" line="52">}}compositeTypeRef{{</hover >}} defines
 which custom APIs can use this template to create resources.
@@ -453,16 +272,7 @@ You must install the function before you can use it in a Composition.
 
 Apply this Function to install `function-patch-and-transform`:
 
-```yaml {label="install"}
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-patch-and-transform
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.8.2
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/function-patch-and-transform.yaml" label="install" >}}
 
 {{<hint "tip" >}}
 Read the [Composition documentation]({{<ref "../concepts/compositions">}}) for
@@ -489,16 +299,7 @@ machines requires the Azure Compute provider as well.
 
 Add the new Provider to the cluster.
 
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-azure-compute
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-azure-compute:v1.11.2
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/provider-azure-compute.yaml" >}}
 
 View the new Compute provider with `kubectl get providers`.
 
@@ -519,16 +320,7 @@ With the custom API (XRD) installed and associated to a resource template
 Create a {{<hover label="xr" line="3">}}VirtualMachine{{</hover>}} object to
 create the cloud resources.
 
-```yaml {copy-lines="all",label="xr"}
-cat <<EOF | kubectl apply -f -
-apiVersion: compute.example.com/v1alpha1
-kind: VirtualMachine
-metadata:
-  name: my-vm
-spec:
-  location: "EU"
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/virtualmachine-my-vm.yaml" label="xr" >}}
 
 View the resource with `kubectl get VirtualMachine`.
 
@@ -616,17 +408,7 @@ kubectl create namespace crossplane-test
 
 Then create a Claim in the `crossplane-test` namespace.
 
-```yaml {label="claim",copy-lines="all"}
-cat <<EOF | kubectl apply -f -
-apiVersion: compute.example.com/v1alpha1
-kind: VirtualMachineClaim
-metadata:
-  name: my-namespaced-vm
-  namespace: crossplane-test
-spec:
-  location: "EU"
-EOF
-```
+{{< manifest path="getting-started/azure-part-2/virtualmachineclaim-my-namespaced-vm.yaml" label="claim" >}}
 View the Claim with `kubectl get claim -n crossplane-test`.
 
 ```shell {copy-lines="1"}

@@ -56,20 +56,7 @@ The AWS S3 provider installs support for all the AWS S3 managed resources.
 
 Create this provider to install the AWS S3 provider:
 
-```yaml {label="provider",copy-lines="all"}
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: crossplane-contrib-provider-aws-s3
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
-```
-
-Save this as `provider.yaml` and apply it:
-
-```shell {label="kube-apply-provider",copy-lines="all"}
-kubectl apply -f provider.yaml
-```
+{{< manifest path="get-started/managed-resources/provider.yaml" label="provider" >}}
 
 Check that Crossplane installed the provider:
 
@@ -146,25 +133,7 @@ All providers need a configuration to tell them where to load credentials.
 
 Create this cluster-wide provider configuration:
 
-```yaml {label="providerconfig",copy-lines="all"}
-apiVersion: aws.m.upbound.io/v1beta1
-kind: ClusterProviderConfig
-metadata:
-  name: default
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: aws-secret
-      key: creds
-```
-
-Save the provider configuration as `providerconfig.yaml` and apply it:
-
-```shell {label="kube-apply-providerconfig",copy-lines="all"}
-kubectl apply -f providerconfig.yaml
-```
+{{< manifest path="get-started/managed-resources/providerconfig.yaml" label="providerconfig" >}}
 
 This tells the provider to load credentials from
 [the secret](#save-the-providers-credentials).
@@ -185,22 +154,7 @@ AWS S3 bucket names must be globally unique. This example uses `generateName` to
 generate a random name. Any unique name is acceptable.
 {{</hint>}}
 
-```yaml {label="bucket"}
-apiVersion: s3.aws.m.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  namespace: default
-  generateName: crossplane-bucket-
-spec:
-  forProvider:
-    region: us-east-2
-```
-
-Save the bucket to `bucket.yaml` and apply it:
-
-```shell {label="kube-create-bucket",copy-lines="all"}
-kubectl create -f bucket.yaml
-```
+{{< manifest path="get-started/managed-resources/bucket.yaml" label="bucket" command="kubectl create -f" >}}
 
 Check that Crossplane created the bucket:
 

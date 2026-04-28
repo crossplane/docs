@@ -113,34 +113,7 @@ A CompositeResourceDefinition (XRD) defines composite resources.
 
 For this example, create an XRD for the `UserAccessKey` composite resource:
 
-```yaml
-apiVersion: apiextensions.crossplane.io/v2
-kind: CompositeResourceDefinition
-metadata:
-  name: useraccesskeys.example.org
-spec:
-  group: example.org
-  names:
-    kind: UserAccessKey
-    plural: useraccesskeys
-  scope: Namespaced
-  versions:
-  - name: v1alpha1
-    served: true
-    referenceable: true
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              writeConnectionSecretToRef:
-                type: object
-                properties:
-                  name:
-                    type: string
-```
+{{< manifest path="guides/connection-details-composition/xrd.yaml" >}}
 
 {{<hint "tip">}}
 This XRD schema defines a `.spec.writeConnectionSecretToRef.name` field that
@@ -152,12 +125,6 @@ could also be added to allow the user to specify the namespace of the secret
 too.
 <!-- vale write-good.Passive = YES -->
 {{</hint>}}
-
-Save the XRD as `xrd.yaml` and apply it:
-
-```shell
-kubectl apply -f xrd.yaml
-```
 
 The Kubernetes API is now serving requests for the `UserAccessKey` composite
 resource.
@@ -175,25 +142,12 @@ from the tabs below.
 
 Create this composition function to install YAML support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-patch-and-transform
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.10.0
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="guides/connection-details-composition/fn-patch-and-transform.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="guides/connection-details-composition/fn-patch-and-transform.yaml" >}}
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                                      AGE
 function-patch-and-transform      True        True      xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.10.0   8s
 ```
@@ -205,25 +159,12 @@ Templated YAML is a good choice if you're used to writing
 
 Create this composition function to install templated YAML support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-go-templating
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.11.2
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="guides/connection-details-composition/fn-go-templating.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="guides/connection-details-composition/fn-go-templating.yaml" >}}
 NAME                     INSTALLED   HEALTHY   PACKAGE                                                                AGE
 function-go-templating   True        True      xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.11.2   15s
 ```
@@ -233,25 +174,12 @@ function-go-templating   True        True      xpkg.crossplane.io/crossplane-con
 
 Create this composition function to install Python support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-python
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-python:v0.2.0
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="guides/connection-details-composition/fn-python.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="guides/connection-details-composition/fn-python.yaml" >}}
 NAME                                 INSTALLED   HEALTHY   PACKAGE                                                        AGE
 function-python                      True        True      xpkg.crossplane.io/crossplane-contrib/function-python:v0.2.0   12s
 ```
@@ -261,25 +189,12 @@ function-python                      True        True      xpkg.crossplane.io/cr
 
 Create this composition function to install [KCL](https://kcl-lang.io) support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-kcl
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-kcl:v0.11.6
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="guides/connection-details-composition/fn-kcl.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="guides/connection-details-composition/fn-kcl.yaml" >}}
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                      AGE
 function-kcl                      True        True      xpkg.crossplane.io/crossplane-contrib/function-kcl:v0.11.6   6s
 ```
@@ -289,25 +204,12 @@ function-kcl                      True        True      xpkg.crossplane.io/cross
 
 Create this composition function to install [Pythonic](https://github.com/crossplane-contrib/function-pythonic?tab=readme-ov-file#function-pythonic) support:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-pythonic
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0
-```
-
-Save the function as `fn.yaml` and apply it:
-
-```shell
-kubectl apply -f fn.yaml
-```
+{{< manifest path="guides/connection-details-composition/fn-pythonic.yaml" >}}
 
 Check that Crossplane installed the function:
 
 ```shell {copy-lines="1"}
-kubectl get -f fn.yaml
+kubectl get -f {{< manifest-url path="guides/connection-details-composition/fn-pythonic.yaml" >}}
 NAME               INSTALLED  HEALTHY  PACKAGE                                                         AGE
 function-pythonic  True       True     xpkg.crossplane.io/crossplane-contrib/function-pythonic:v0.3.0  1m
 ```
@@ -318,20 +220,7 @@ function-pythonic  True       True     xpkg.crossplane.io/crossplane-contrib/fun
 This guide also uses `function-auto-ready`. This function automatically
 marks composed resources as ready when they're healthy:
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Function
-metadata:
-  name: function-auto-ready
-spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready:v0.6.0
-```
-
-Save this as `fn-auto-ready.yaml` and apply it:
-
-```shell
-kubectl apply -f fn-auto-ready.yaml
-```
+{{< manifest path="guides/connection-details-composition/fn-auto-ready.yaml" >}}
 
 ### Configure the composition
 
@@ -364,91 +253,7 @@ exposes their credentials as the composite resource's connection details `Secret
 
 {{< tab "YAML" >}}
 
-```yaml {label="comp-pt"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: useraccesskeys-patch-and-transform
-spec:
-  compositeTypeRef:
-    apiVersion: example.org/v1alpha1
-    kind: UserAccessKey
-  mode: Pipeline
-  pipeline:
-  - step: patch-and-transform
-    functionRef:
-      name: function-patch-and-transform
-    input:
-      apiVersion: pt.fn.crossplane.io/v1beta1
-      kind: Resources
-      writeConnectionSecretToRef:
-        patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.writeConnectionSecretToRef.name
-          toFieldPath: name
-      resources:
-      - name: user
-        base:
-          apiVersion: iam.aws.m.upbound.io/v1beta1
-          kind: User
-          spec:
-            forProvider: {}
-      - name: accesskey-0
-        base:
-          apiVersion: iam.aws.m.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              userSelector:
-                matchControllerRef: true
-            writeConnectionSecretToRef:
-              name: accesskey-secret-0
-        connectionDetails:
-        - name: user-0
-          type: FromConnectionSecretKey
-          fromConnectionSecretKey: username
-        - name: password-0
-          type: FromConnectionSecretKey
-          fromConnectionSecretKey: password
-        patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.writeConnectionSecretToRef.name
-          transforms:
-          - type: string
-            string:
-              type: Format
-              fmt: "%s-accesskey-secret-0"
-      - name: accesskey-1
-        base:
-          apiVersion: iam.aws.m.upbound.io/v1beta1
-          kind: AccessKey
-          spec:
-            forProvider:
-              userSelector:
-                matchControllerRef: true
-            writeConnectionSecretToRef:
-              name: accesskey-secret-1
-        connectionDetails:
-        - name: user-1
-          type: FromConnectionSecretKey
-          fromConnectionSecretKey: username
-        - name: password-1
-          type: FromConnectionSecretKey
-          fromConnectionSecretKey: password
-        patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.writeConnectionSecretToRef.name
-          transforms:
-          - type: string
-            string:
-              type: Format
-              fmt: "%s-accesskey-secret-1"
-  - step: ready
-    functionRef:
-      name: function-auto-ready
-```
+{{< manifest path="guides/connection-details-composition/composition-patch-and-transform.yaml" label="comp-pt" >}}
 
 <!-- vale write-good.Passive = NO -->
 <!-- vale Google.WordList = NO -->
@@ -482,78 +287,7 @@ spec:
 
 {{< tab "Templated YAML" >}}
 
-```yaml {label="comp-gotmpl"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: useraccesskeys-go-templating
-spec:
-  compositeTypeRef:
-    apiVersion: example.org/v1alpha1
-    kind: UserAccessKey
-  mode: Pipeline
-  pipeline:
-  - step: render-templates
-    functionRef:
-      name: function-go-templating
-    input:
-      apiVersion: gotemplating.fn.crossplane.io/v1beta1
-      kind: GoTemplate
-      source: Inline
-      inline:
-        template: |
-          ---
-          apiVersion: iam.aws.m.upbound.io/v1beta1
-          kind: User
-          metadata:
-            annotations:
-              {{ setResourceNameAnnotation "user" }}
-          spec:
-            forProvider: {}
-          ---
-          apiVersion: iam.aws.m.upbound.io/v1beta1
-          kind: AccessKey
-          metadata:
-            annotations:
-              {{ setResourceNameAnnotation "accesskey-0" }}
-          spec:
-            forProvider:
-              userSelector:
-                matchControllerRef: true
-            writeConnectionSecretToRef:
-              name: {{ $.observed.composite.resource.metadata.name }}-accesskey-secret-0
-          ---
-          apiVersion: iam.aws.m.upbound.io/v1beta1
-          kind: AccessKey
-          metadata:
-            annotations:
-              {{ setResourceNameAnnotation "accesskey-1" }}
-          spec:
-            forProvider:
-              userSelector:
-                matchControllerRef: true
-            writeConnectionSecretToRef:
-              name: {{ $.observed.composite.resource.metadata.name }}-accesskey-secret-1
-          ---
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: {{ dig "spec" "writeConnectionSecretToRef" "name" "" $.observed.composite.resource}}
-            annotations:
-              {{ setResourceNameAnnotation "connection-secret" }}
-          {{ if eq $.observed.resources nil }}
-          data: {}
-          {{ else }}
-          data:
-            user-0: {{ ( index $.observed.resources "accesskey-0" ).connectionDetails.username }}
-            user-1: {{ ( index $.observed.resources "accesskey-1" ).connectionDetails.username }}
-            password-0: {{ ( index $.observed.resources "accesskey-0" ).connectionDetails.password }}
-            password-1: {{ ( index $.observed.resources "accesskey-1" ).connectionDetails.password }}
-          {{ end }}
-  - step: ready
-    functionRef:
-      name: function-auto-ready
-```
+{{< manifest path="guides/connection-details-composition/composition-go-templating.yaml" label="comp-gotmpl" >}}
 
 <!-- vale write-good.Passive = NO -->
 <!-- vale Google.WordList = NO -->
@@ -584,109 +318,7 @@ spec:
 
 {{< tab "Python" >}}
 
-```yaml {label="comp-python"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: useraccesskeys-python
-spec:
-  compositeTypeRef:
-    apiVersion: example.org/v1alpha1
-    kind: UserAccessKey
-  mode: Pipeline
-  pipeline:
-  - step: render-python
-    functionRef:
-      name: function-python
-    input:
-      apiVersion: python.fn.crossplane.io/v1beta1
-      kind: Script
-      script: |
-        def compose(req, rsp):
-            # Get observed composite resource
-            oxr = req.observed.composite.resource
-            oxr_name = oxr["metadata"]["name"]
-
-            # IAM User
-            rsp.desired.resources["user"].resource.update({
-                "apiVersion": "iam.aws.m.upbound.io/v1beta1",
-                "kind": "User",
-                "spec": {
-                    "forProvider": {}
-                }
-            })
-
-            # Access Key 0
-            rsp.desired.resources["accesskey-0"].resource.update({
-                "apiVersion": "iam.aws.m.upbound.io/v1beta1",
-                "kind": "AccessKey",
-                "spec": {
-                    "forProvider": {
-                        "userSelector": {
-                            "matchControllerRef": True
-                        }
-                    },
-                    "writeConnectionSecretToRef": {
-                        "name": f"{oxr_name}-accesskey-secret-0"
-                    }
-                }
-            })
-
-            # Access Key 1
-            rsp.desired.resources["accesskey-1"].resource.update({
-                "apiVersion": "iam.aws.m.upbound.io/v1beta1",
-                "kind": "AccessKey",
-                "spec": {
-                    "forProvider": {
-                        "userSelector": {
-                            "matchControllerRef": True
-                        }
-                    },
-                    "writeConnectionSecretToRef": {
-                        "name": f"{oxr_name}-accesskey-secret-1"
-                    }
-                }
-            })
-
-            # Secret representing the composite resource's connection details
-            secret_resource = {
-                "apiVersion": "v1",
-                "kind": "Secret",
-                "metadata": {}
-            }
-
-            # If a secret name was provided then use it
-            secret_name = ""
-            if "writeConnectionSecretToRef" in oxr["spec"] and "name" in oxr["spec"]["writeConnectionSecretToRef"]:
-              secret_name = oxr["spec"]["writeConnectionSecretToRef"]["name"]
-
-            secret_resource["metadata"]["name"] = secret_name
-
-            # Only add data if we have connection details to populate
-            data = {}
-            if "accesskey-0" in req.observed.resources:
-                accesskey0_conn = req.observed.resources["accesskey-0"].connection_details
-                if "username" in accesskey0_conn:
-                    data["user-0"] = accesskey0_conn["username"].decode("utf-8")
-                if "password" in accesskey0_conn:
-                    data["password-0"] = accesskey0_conn["password"].decode("utf-8")
-
-            if "accesskey-1" in req.observed.resources:
-                accesskey1_conn = req.observed.resources["accesskey-1"].connection_details
-                if "username" in accesskey1_conn:
-                    data["user-1"] = accesskey1_conn["username"].decode("utf-8")
-                if "password" in accesskey1_conn:
-                    data["password-1"] = accesskey1_conn["password"].decode("utf-8")
-
-            if data:
-                secret_resource["stringData"] = data
-
-            rsp.desired.resources["connection-secret"].resource.update(secret_resource)
-  - step: ready
-    functionRef:
-      name: function-auto-ready
-
-```
+{{< manifest path="guides/connection-details-composition/composition-python.yaml" label="comp-python" >}}
 
 <!-- vale write-good.Passive = NO -->
 <!-- vale Google.WordList = NO -->
@@ -717,77 +349,7 @@ spec:
 
 {{< tab "KCL" >}}
 
-```yaml {label="comp-kcl"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: useraccesskeys-kcl
-spec:
-  compositeTypeRef:
-    apiVersion: example.org/v1alpha1
-    kind: UserAccessKey
-  mode: Pipeline
-  pipeline:
-  - step: render-kcl
-    functionRef:
-      name: function-kcl
-    input:
-      apiVersion: krm.kcl.dev/v1alpha1
-      kind: KCLInput
-      spec:
-        source: |
-          oxr = option("params").oxr
-          ocds = option("params").ocds
-
-          user = {
-              apiVersion = "iam.aws.m.upbound.io/v1beta1"
-              kind = "User"
-              metadata.annotations = {
-                  "krm.kcl.dev/composition-resource-name" = "user"
-              }
-              spec.forProvider = {}
-          }
-
-          accesskey0 = {
-              apiVersion = "iam.aws.m.upbound.io/v1beta1"
-              kind = "AccessKey"
-              metadata.annotations = {
-                  "krm.kcl.dev/composition-resource-name" = "accesskey-0"
-              }
-              spec.forProvider.userSelector.matchControllerRef = True
-              spec.writeConnectionSecretToRef.name = "${oxr.metadata.name}-accesskey-secret-0"
-          }
-
-          accesskey1 = {
-              apiVersion = "iam.aws.m.upbound.io/v1beta1"
-              kind = "AccessKey"
-              metadata.annotations = {
-                  "krm.kcl.dev/composition-resource-name" = "accesskey-1"
-              }
-              spec.forProvider.userSelector.matchControllerRef = True
-              spec.writeConnectionSecretToRef.name = "${oxr.metadata.name}-accesskey-secret-1"
-          }
-
-          secret = {
-              apiVersion = "v1"
-              kind = "Secret"
-              metadata.name = oxr?.spec?.writeConnectionSecretToRef?.name or ""
-              metadata.annotations = {
-                  "krm.kcl.dev/composition-resource-name" = "connection-secret"
-              }
-              data = {
-                  "user-0" = ocds["accesskey-0"]?.ConnectionDetails?.username or ""
-                  "user-1" = ocds["accesskey-1"]?.ConnectionDetails?.username or ""
-                  "password-0" = ocds["accesskey-0"]?.ConnectionDetails?.password or ""
-                  "password-1" = ocds["accesskey-1"]?.ConnectionDetails?.password or ""
-              } if ocds else {}
-          }
-
-          items = [user, accesskey0, accesskey1, secret]
-  - step: ready
-    functionRef:
-      name: function-auto-ready
-```
+{{< manifest path="guides/connection-details-composition/composition-kcl.yaml" label="comp-kcl" >}}
 
 <!-- vale write-good.Passive = NO -->
 **How this Composition exposes connection details:**
@@ -816,38 +378,7 @@ spec:
 
 {{< tab "Pythonic" >}}
 
-```yaml {label="comp-pythonic"}
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: useraccesskeys-pythonic
-spec:
-  compositeTypeRef:
-    apiVersion: example.org/v1alpha1
-    kind: UserAccessKey
-  mode: Pipeline
-  pipeline:
-  - step: render-pythonic
-    functionRef:
-      name: function-pythonic
-    input:
-      apiVersion: pythonic.fn.crossplane.io/v1alpha1
-      kind: Composite
-      composite: |
-        class Composite(BaseComposite):
-          def compose(self):
-            self.connectionSecret = self.spec.writeConnectionSecretToRef
-
-            user = self.resources.user('iam.aws.m.upbound.io/v1beta1', 'User')
-            user.spec.forProvider = {}
-
-            for ix in range(2):
-              key = self.resources[f"access-key-{ix}"]('iam.aws.m.upbound.io/v1beta1', 'AccessKey')
-              key.spec.forProvider.user = user.status.atProvider.id
-              key.spec.writeConnectionSecretToRef.name = f"{self.metadata.name}-accesskey-{ix}"
-              self.connection[f"user-{ix}"] = key.connection.username
-              self.connection[f"password-{ix}"] = key.connection.password
-```
+{{< manifest path="guides/connection-details-composition/composition-pythonic.yaml" label="comp-pythonic" >}}
 
 <!-- vale write-good.Passive = NO -->
 <!-- vale Google.WordList = NO -->
@@ -877,12 +408,6 @@ spec:
 
 {{< /tabs >}}
 
-Save the composition as `composition.yaml` and apply it:
-
-```shell
-kubectl apply -f composition.yaml
-```
-
 ## Use the composite resource
 
 The Composition now specifies how to compose connection details for the
@@ -890,27 +415,12 @@ The Composition now specifies how to compose connection details for the
 
 Create a `UserAccessKey` to see it in action:
 
-```yaml
-apiVersion: example.org/v1alpha1
-kind: UserAccessKey
-metadata:
-  namespace: default
-  name: my-keys
-spec:
-  writeConnectionSecretToRef:
-    name: my-keys-connection-details
-```
-
-Save the composite resource as `my-keys.yaml` and apply it:
-
-```shell
-kubectl apply -f my-keys.yaml
-```
+{{< manifest path="guides/connection-details-composition/my-keys.yaml" >}}
 
 Check that the composite resource is ready:
 
 ```shell {copy-lines="1"}
-kubectl get -f my-keys.yaml
+kubectl get -f {{< manifest-url path="guides/connection-details-composition/my-keys.yaml" >}}
 NAME      SYNCED   READY   COMPOSITION                    AGE
 my-keys   True     True    useraccesskeys-go-templating   45s
 ```
@@ -1128,7 +638,7 @@ namespace to the XR's namespace if left empty.
 Delete the composite resource to clean up:
 
 ```shell
-kubectl delete -f my-keys.yaml
+kubectl delete -f {{< manifest-url path="guides/connection-details-composition/my-keys.yaml" >}}
 ```
 
 When you delete the composite resource, Crossplane deletes:

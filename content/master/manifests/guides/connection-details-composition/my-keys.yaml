@@ -1,0 +1,8 @@
+apiVersion: example.org/v1alpha1
+kind: UserAccessKey
+metadata:
+  namespace: default
+  name: my-keys
+spec:
+  writeConnectionSecretToRef:
+    name: my-keys-connection-details

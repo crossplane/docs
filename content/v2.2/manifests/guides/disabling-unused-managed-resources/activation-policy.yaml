@@ -1,0 +1,9 @@
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: my-app-resources
+spec:
+  activate:
+  - instances.ec2.aws.m.crossplane.io        # EC2 instances for compute
+  - securitygroups.ec2.aws.m.crossplane.io   # Security groups for networking
+  - vpcs.ec2.aws.m.crossplane.io             # VPCs for isolation
