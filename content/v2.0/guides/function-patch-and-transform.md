@@ -533,7 +533,7 @@ spec:
 
 {{<expand "Reference CompositeResourceDefinition" >}}
 ```yaml {copy-lines="all"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: examples.example.org
