@@ -85,6 +85,6 @@ jekyll_files/*
 ######################
 tmp/*
 
-# AI stuff
+# AI stuff - ignore user-specific files, commit shared skills/commands
 CLAUDE.md
-.claude
+/.claude/settings.local.json
