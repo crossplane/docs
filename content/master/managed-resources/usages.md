@@ -11,7 +11,7 @@ A `Usage` indicates a resource is in use. Two main use cases for Usages are
 as follows:
 
 1. Protecting a resource from accidental deletion.
-2. Deletion ordering by ensuring that a resource isn't deleted before the 
+2. Deletion ordering by ensuring that a resource isn't deleted before the
    deletion of its dependent resources.
 
 See the section [Usage for Deletion Protection](#usage-for-deletion-protection) for the
@@ -23,9 +23,9 @@ for the second one.
 Usages are a beta feature. Crossplane enables beta features by default.
 <!-- vale write-good.Passive = YES -->
 
-Disable `Usage` support by 
+Disable `Usage` support by
 [changing the Crossplane pod setting]({{<ref "../guides/pods#change-pod-settings">}})
-and setting  
+and setting
 {{<hover label="deployment" line="12">}}--enable-usages=false{{</hover>}}
 argument.
 
@@ -46,8 +46,8 @@ spec:
 
 {{<hint "tip" >}}
 
-The [Crossplane install guide]({{<ref "../get-started/install#feature-flags">}}) 
-describes enabling feature flags like 
+The [Crossplane install guide]({{<ref "../get-started/install#feature-flags">}})
+describes enabling feature flags like
 {{<hover label="deployment" line="12">}}\-\-enable-usages{{</hover>}}
 with Helm.
 {{< /hint >}}
@@ -60,7 +60,7 @@ with Helm.
 A {{<hover label="protect" line="2">}}Usage{{</hover>}}
 {{<hover label="protect" line="5">}}spec{{</hover>}} has a mandatory
 {{<hover label="protect" line="6">}}of{{</hover>}} field for defining the resource
-in use or protected. The 
+in use or protected. The
 {{<hover label="protect" line="11">}}reason{{</hover>}} field defines the reason
 for protection and the {{<hover label="order" line="11">}}by{{</hover>}} field
 defines the using resource. Both fields are optional, but at least one of them
@@ -69,7 +69,7 @@ must be provided.
 
 ### Usage for deletion protection
 
-The following example prevents the deletion of the 
+The following example prevents the deletion of the
 {{<hover label="protect" line="10">}}my-database{{</hover>}} resource by rejecting
 any deletion request with the
 {{<hover label="protect" line="11">}}reason{{</hover>}} defined.
@@ -93,7 +93,7 @@ spec:
 
 The following example prevents the deletion of
 {{<hover label="order" line="10">}}my-cluster{{</hover>}} resource by rejecting
-any deletion request before the deletion of 
+any deletion request before the deletion of
 {{<hover label="order" line="15">}}my-prometheus-chart{{</hover>}} resource.
 
 ```yaml {label="order"}
@@ -146,7 +146,7 @@ spec:
 ```
 
 After the `Usage` controller resolves the selectors, it persists the resource
-name in the 
+name in the
 {{<hover label="selectors-resolved" line="10">}}resourceRef.name{{</hover>}}
 field. The following example shows the `Usage` resource after the resolution of
 selectors.
@@ -235,7 +235,7 @@ When there are multiple resources of same type in a Composition, the
 uniquely identify the resource in use or the using one. This could be
 accomplished by using extra labels and combining
 {{<hover label="composition" line="24">}}matchControllerRef{{</hover>}}
-with a `matchLabels` selector. 
+with a `matchLabels` selector.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
@@ -289,3 +289,11 @@ spec:
       name: importantresources.example.crossplane.io
   reason: "Very important CRD - should never be deleted!"
 ```
+
+{{<hint "tip" >}}
+Crossplane can automatically create `ClusterUsage` resources to protect
+Providers from accidental deletion when they have active managed resources.
+Enable this with the `--enable-provider-deletion-protection` alpha feature flag.
+See [Provider deletion protection]({{<ref "../packages/providers#provider-deletion-protection">}})
+for details.
+{{< /hint >}}
