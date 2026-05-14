@@ -335,8 +335,8 @@ for further details.
 
 ## Test the function end-to-end
 
-Test your function by adding unit tests, and by using the `crossplane render`
-command.
+Test your function by adding unit tests, and by using the `crossplane
+composition render` command.
 
 When you initialize a function from the
 template it adds some unit tests to `tests/test_fn.py`. These tests use the
@@ -479,8 +479,8 @@ Expand the following block to see example files.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
 
-You can recreate the output below using by running `crossplane render` with
-these files.
+You can recreate the output below using by running `crossplane composition
+render` with these files.
 
 The `xr.yaml` file contains the composite resource to render:
 
@@ -537,11 +537,10 @@ spec:
 ```
 {{</expand>}}
 
-The Function in `functions.yaml` uses the
-{{<hover label="development" line="6">}}Development{{</hover>}}
-runtime. This tells `crossplane render` that your function is running
-locally. It connects to your locally running function instead of using Docker to
-pull and run the function.
+The Function in `functions.yaml` uses the {{<hover label="development"
+line="6">}}Development{{</hover>}} runtime. This tells `crossplane composition
+render` that your function is running locally. It connects to your locally
+running function instead of using Docker to pull and run the function.
 
 ```yaml {label="development"}
 apiVersion: pkg.crossplane.io/v1
@@ -563,10 +562,10 @@ hatch run development
 Only use it during testing and development.
 {{</hint>}}
 
-In a separate terminal, run `crossplane render`. 
+In a separate terminal, run `crossplane composition render`.
 
 ```shell
-crossplane render xr.yaml composition.yaml functions.yaml
+crossplane composition render xr.yaml composition.yaml functions.yaml
 ```
 
 This command calls your function. In the terminal where your function is running
@@ -578,8 +577,8 @@ hatch run development
 2024-01-11T22:12:58.153792Z [info     ] Added desired buckets          count=3 filename=fn.py lineno=68 region=us-east-2 tag=
 ```
 
-The `crossplane render` command prints the desired resources the function
-returns.
+The `crossplane composition render` command prints the desired resources the
+function returns.
 
 ```yaml
 ---

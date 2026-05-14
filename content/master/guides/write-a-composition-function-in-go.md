@@ -449,8 +449,8 @@ for the SDK.
 
 ## Test the function end-to-end
 
-Test your function by adding unit tests, and by using the `crossplane render`
-command.
+Test your function by adding unit tests, and by using the `crossplane
+composition render` command.
 
 Go has rich support for unit testing. When you initialize a function from the
 template it adds some unit tests to `fn_test.go`. These tests follow Go's
@@ -617,8 +617,8 @@ Expand the following block to see example files.
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files">}}
 
-You can recreate the output below using by running `crossplane render` with
-these files.
+You can recreate the output below using by running `crossplane composition
+render` with these files.
 
 The `xr.yaml` file contains the composite resource to render:
 
@@ -677,9 +677,9 @@ spec:
 
 The Function in `functions.yaml` uses the
 {{<hover label="development" line="6">}}Development{{</hover>}}
-runtime. This tells `crossplane render` that your function is running
-locally. It connects to your locally running function instead of using Docker to
-pull and run the function.
+runtime. This tells `crossplane composition render` that your function is
+running locally. It connects to your locally running function instead of using
+Docker to pull and run the function.
 
 ```yaml {label="development"}
 apiVersion: pkg.crossplane.io/v1
@@ -702,10 +702,10 @@ to run without encryption or authentication. Only use it during testing and
 development.
 {{</hint>}}
 
-In a separate terminal, run `crossplane render`. 
+In a separate terminal, run `crossplane composition render`.
 
 ```shell
-crossplane render xr.yaml composition.yaml functions.yaml
+crossplane composition render xr.yaml composition.yaml functions.yaml
 ```
 
 This command calls your function. In the terminal where your function is running
@@ -717,8 +717,8 @@ go run . --insecure --debug
 2023-10-31T16:17:32.159-0700    INFO    function-xbuckets/fn.go:125     Added desired buckets   {"xr-version": "example.crossplane.io/v1", "xr-kind": "XBuckets", "xr-name": "example-buckets", "region": "us-east-2", "count": 3}
 ```
 
-The `crossplane render` command prints the desired resources the function
-returns.
+The `crossplane composition render` command prints the desired resources the
+function returns.
 
 ```yaml
 ---

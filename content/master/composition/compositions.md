@@ -344,19 +344,20 @@ learn how to install and use the Crossplane CLI.
 {{< /hint >}}
 
 {{<hint "important">}}
-Running `crossplane render` requires [Docker](https://www.docker.com).
+Running `crossplane composition render` requires
+[Docker](https://www.docker.com).
 {{< /hint >}}
 
 Provide a composite resource, composition and composition functions to render
 the output locally.
 
 ```shell
-crossplane render xr.yaml composition.yaml functions.yaml
+crossplane composition render xr.yaml composition.yaml functions.yaml
 ```
 
-`crossplane render` prints resources as YAML to stdout. It prints the
-composite resource first, followed by the resources the composition functions
-created.
+`crossplane composition render` prints resources as YAML to stdout. It prints
+the composite resource first, followed by the resources the composition
+functions created.
 
 ```yaml
 ---
@@ -387,8 +388,8 @@ spec:
 
 {{<expand "The xr.yaml, composition.yaml and function.yaml files used in the example">}}
 
-You can recreate the output below by running `crossplane render` with
-these files.
+You can recreate the output below by running `crossplane composition render`
+with these files.
 
 The `xr.yaml` file contains the composite resource to render:
 
@@ -451,7 +452,8 @@ Crossplane CLI runs a function by adding an annotation in `functions.yaml`. Add
 the `render.crossplane.io/runtime` annotation to a Function to change how it's
 run.
 
-`crossplane render` supports two `render.crossplane.io/runtime` values:
+`crossplane composition render` supports two `render.crossplane.io/runtime`
+values:
 
 * `Docker` (the default) connects to Docker Engine. It uses Docker to pull and
   run a function runtime.
@@ -482,8 +484,8 @@ Use the `Development` runtime when you
 function end-to-end.
 {{</hint>}}
 
-`crossplane render` also supports the following Function annotations. These
-annotations affect how it runs Functions:
+`crossplane composition render` also supports the following Function
+annotations. These annotations affect how it runs Functions:
 
 * `render.crossplane.io/runtime-docker-cleanup` - When using the `Docker`
 runtime this annotation specifies whether the CLI should stop the function
@@ -496,6 +498,21 @@ the container, and `Orphan`, to leave it running.
   `Development` runtime this annotation tells the CLI to connect to a Function
   running at the specified target. It uses
   [gRPC target syntax](https://github.com/grpc/grpc/blob/v1.59.1/doc/naming.md).
+
+{{<hint "tip">}}
+The `crossplane composition render` CLI command runs the `crossplane internal
+render` command from the Crossplane controller binary. By default, it runs the
+latest stable version of Crossplane in a Docker container so that you don't need
+to download the controller binary.
+
+You can use the following flags to render using a different Crossplane version:
+
+* `--crossplane-version` to run a different Crossplane version in Docker.
+* `--crossplane-image` to select an arbitrary Crossplane Docker image (for
+  example, from a local mirror).
+* `--crossplane-binary` to provide an arbitrary Crossplane controller binary
+  (for example, to test local changes to Crossplane).
+{{</hint>}}
 
 ## Verify a composition
 
