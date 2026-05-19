@@ -75,11 +75,12 @@ These metrics are only emitted by Upjet-based providers (such as [provider-upjet
 | --- | --- |
 | {{<hover label="upjet_resource_ext_api_duration" line="1">}}upjet_resource_ext_api_duration{{</hover>}} | Measures in seconds how long it takes a Cloud SDK call to complete |
 | {{<hover label="upjet_resource_external_api_calls_total" line="2">}}upjet_resource_external_api_calls_total{{</hover>}} | The number of external API calls to cloud providers, with labels describing the endpoints and resources |
-| {{<hover label="upjet_resource_reconcile_delay_seconds" line="3">}}upjet_resource_reconcile_delay_seconds{{</hover>}} | Measures in seconds how long the reconciles for a resource delay from the configured poll periods |
-| {{<hover label="upjet_resource_ttr" line="4">}}upjet_resource_ttr{{</hover>}} | Measures in seconds the time-to-readiness (TTR) for managed resources |
-| {{<hover label="upjet_resource_cli_duration" line="5">}}upjet_resource_cli_duration{{</hover>}} | Measures in seconds how long it takes a Terraform CLI invocation to complete |
-| {{<hover label="upjet_resource_active_cli_invocations" line="6">}}upjet_resource_active_cli_invocations{{</hover>}} | The number of active (running) Terraform CLI invocations |
-| {{<hover label="upjet_resource_running_processes" line="7">}}upjet_resource_running_processes{{</hover>}} | The number of running Terraform CLI and Terraform provider processes |
+| {{<hover label="upjet_resource_deletion_seconds" line="3">}}upjet_resource_deletion_seconds{{</hover>}} | Measures in seconds how long it takes to delete a resource |
+| {{<hover label="upjet_resource_reconcile_delay_seconds" line="4">}}upjet_resource_reconcile_delay_seconds{{</hover>}} | Measures in seconds how long the reconciles for a resource delay from the configured poll periods |
+| {{<hover label="upjet_resource_ttr" line="5">}}upjet_resource_ttr{{</hover>}} | Measures in seconds the time-to-readiness (TTR) for managed resources |
+| {{<hover label="upjet_terraform_cli_duration" line="6">}}upjet_terraform_cli_duration{{</hover>}} | Measures in seconds how long it takes a Terraform CLI invocation to complete |
+| {{<hover label="upjet_terraform_active_cli_invocations" line="7">}}upjet_terraform_active_cli_invocations{{</hover>}} | The number of active (running) Terraform CLI invocations |
+| {{<hover label="upjet_terraform_running_processes" line="8">}}upjet_terraform_running_processes{{</hover>}} | The number of running Terraform CLI and Terraform provider processes |
 {{</table >}}
 
 ## Controller-runtime and Kubernetes client metrics
