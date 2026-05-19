@@ -467,7 +467,7 @@ Enable Provider deletion protection with the
 `--enable-provider-deletion-protection`
 [feature flag]({{<ref "../get-started/install#feature-flags">}}).
 This feature also requires
-[Usages]({{<ref "../managed-resources/usages">}}) to be enabled (on by default).
+[Usages]({{<ref "../managed-resources/usages">}}) (on by default).
 
 ```shell {label="protection-helm"}
 helm upgrade --install crossplane crossplane-stable/crossplane \
@@ -476,9 +476,9 @@ helm upgrade --install crossplane crossplane-stable/crossplane \
 ```
 {{</hint >}}
 
-When Provider deletion protection is enabled, Crossplane automatically prevents
+With Provider deletion protection, Crossplane prevents
 the deletion of Providers that still have active managed resources. This
-protects against accidentally removing a Provider and orphaning its managed
+protects against removing a Provider and orphaning its managed
 resources.
 
 Crossplane watches for managed resources associated with each Provider. When
@@ -489,16 +489,19 @@ descriptive reason indicating which managed resource type is still active,
 for example `"Provider has active managed resources of type
 VPC.ec2.aws.upbound.io"`.
 
-When all managed resources of a given type are deleted, Crossplane automatically
-removes the corresponding `ClusterUsage`, allowing the Provider to be deleted.
+When you delete all managed resources of a given type, Crossplane automatically
+removes the corresponding `ClusterUsage`, allowing you to delete the Provider.
 
 List all provider protection `ClusterUsages` using the
 `crossplane.io/provider-protection=true` label:
 
 ```shell {copy-lines="1"}
 kubectl get clusterusages -l crossplane.io/provider-protection=true
-NAME                                                        AGE
-provider-protection-a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6   5m
+
+NAME                                                                       DETAILS                                                                            READY   AGE
+provider-protection-0d9403ef4e758ec5ee89d2773d0b356af7635adc37548b0eaabb   Provider has active managed resources of type VPC.ec2.aws.m.upbound.io             True    22s
+provider-protection-3da1709122b36532e8cbdedbcabde45947f99dd33d931eb682ee   Provider has active managed resources of type Subnet.ec2.aws.m.upbound.io          True    7s
+provider-protection-774712aa693d57a5e7ce09a7754d53f3ca5cc59f417083756b2a   Provider has active managed resources of type SecurityGroup.ec2.aws.m.upbound.io   True    7s
 ```
 
 {{<hint "note" >}}
@@ -535,7 +538,7 @@ Attempting to delete a Provider with active managed resources returns an error
 from the Usage admission webhook:
 
 ```shell
-$ kubectl delete provider.pkg.crossplane.io/provider-aws-ec2
+kubectl delete provider.pkg.crossplane.io/provider-aws-ec2
 Error from server (This resource is in-use by 3 usage(s), including the
  *v1beta1.ClusterUsage "provider-protection-774712aa693d57a5e7ce09a7754d53f3
  ca5cc59f417083756b2a" with reason: "Provider has active managed resources of
