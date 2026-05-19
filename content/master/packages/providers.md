@@ -537,7 +537,7 @@ spec:
 Attempting to delete a Provider with active managed resources returns an error
 from the Usage admission webhook:
 
-```shell
+```shell {copy-lines="none"}
 kubectl delete provider.pkg.crossplane.io/provider-aws-ec2
 Error from server (This resource is in-use by 3 usage(s), including the
  *v1beta1.ClusterUsage "provider-protection-774712aa693d57a5e7ce09a7754d53f3
@@ -595,7 +595,7 @@ Crossplane uses a standard set of `Conditions` for Providers.
 View the conditions of a provider under their `Status` with
 `kubectl describe provider`.
 
-```yaml
+```yaml  {copy-lines="none"}
 kubectl describe provider
 Name:         my-provider
 API Version:  pkg.crossplane.io/v1
