@@ -174,6 +174,14 @@ data:
             end
           end
 
+          if condition.type == "Installed" then
+            if condition.status == "False" then
+              health_status.status = "Degraded"
+              health_status.message = condition.message
+              return health_status
+            end
+          end
+
           if contains({"Ready", "Healthy", "Offered", "Established", "ValidPipeline", "RevisionHealthy"}, condition.type) then
             if condition.status == "True" then
               health_status.status = "Healthy"
