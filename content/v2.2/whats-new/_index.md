@@ -283,6 +283,7 @@ remained in alpha for over two years and are now unmaintained.
 Composite resources no longer have native connection details support. You
 can recreate this feature by composing your own connection details `Secret`
 as described in the [connection details composition guide]({{<ref "../guides/connection-details-composition">}}).
+Connection details for managed resources (MRs) aren't affected.
 
 Crossplane v2 drops the `--registry` flag that allowed users to specify a default
 registry value and now requires users to always specify a fully qualified URL when
