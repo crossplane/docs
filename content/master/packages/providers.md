@@ -457,6 +457,102 @@ removing their finalizers.
 For more information on deleting abandoned resources read the [Crossplane troubleshooting guide]({{<ref "../guides/troubleshoot-crossplane#deleting-when-a-resource-hangs" >}}).
 {{< /hint >}}
 
+### Provider deletion protection
+
+{{<hint "important" >}}
+Provider deletion protection is an alpha feature. Crossplane disables alpha
+features by default.
+
+Enable Provider deletion protection with the
+`--enable-provider-deletion-protection`
+[feature flag]({{<ref "../get-started/install#feature-flags">}}).
+This feature also requires
+[Usages]({{<ref "../managed-resources/usages">}}) (on by default).
+
+```shell {label="protection-helm"}
+helm upgrade --install crossplane crossplane-stable/crossplane \
+  --namespace crossplane-system \
+  --set args='{"--enable-provider-deletion-protection"}'
+```
+{{</hint >}}
+
+With Provider deletion protection, Crossplane prevents
+the deletion of Providers that still have active managed resources. This
+protects against removing a Provider and orphaning its managed
+resources.
+
+Crossplane watches for managed resources associated with each Provider. When
+managed resources exist, Crossplane creates a
+[ClusterUsage]({{<ref "../managed-resources/usages#clusterusages">}}) that
+blocks deletion of the owning Provider. The `ClusterUsage` includes a
+descriptive reason indicating which managed resource type is still active,
+for example `"Provider has active managed resources of type
+VPC.ec2.aws.upbound.io"`.
+
+When you delete all managed resources of a given type, Crossplane automatically
+removes the corresponding `ClusterUsage`, allowing you to delete the Provider.
+
+List all provider protection `ClusterUsages` using the
+`crossplane.io/provider-protection=true` label:
+
+```shell {copy-lines="1"}
+kubectl get clusterusages -l crossplane.io/provider-protection=true
+
+NAME                                                                       DETAILS                                                                            READY   AGE
+provider-protection-0d9403ef4e758ec5ee89d2773d0b356af7635adc37548b0eaabb   Provider has active managed resources of type VPC.ec2.aws.m.upbound.io             True    22s
+provider-protection-3da1709122b36532e8cbdedbcabde45947f99dd33d931eb682ee   Provider has active managed resources of type Subnet.ec2.aws.m.upbound.io          True    7s
+provider-protection-774712aa693d57a5e7ce09a7754d53f3ca5cc59f417083756b2a   Provider has active managed resources of type SecurityGroup.ec2.aws.m.upbound.io   True    7s
+```
+
+{{<hint "note" >}}
+Crossplane generates `ClusterUsage` names using a hash of the
+`ManagedResourceDefinition` name. Use the
+`crossplane.io/provider-protection=true` label to find them.
+
+Each `ClusterUsage` also has labels for the Provider name
+(`pkg.crossplane.io/package`) and the MRD name
+(`apiextensions.crossplane.io/mrd`).
+{{< /hint >}}
+
+Inspect a specific `ClusterUsage` to see which Provider it protects and why:
+
+```yaml
+apiVersion: protection.crossplane.io/v1beta1
+kind: ClusterUsage
+metadata:
+  name: provider-protection-a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6
+  labels:
+    crossplane.io/provider-protection: "true"
+    pkg.crossplane.io/package: crossplane-contrib-provider-aws-s3
+    apiextensions.crossplane.io/mrd: buckets.s3.aws.upbound.io
+spec:
+  of:
+    apiVersion: pkg.crossplane.io/v1
+    kind: Provider
+    resourceRef:
+      name: crossplane-contrib-provider-aws-s3
+  reason: "Provider has active managed resources of type Bucket.s3.aws.upbound.io"
+```
+
+Attempting to delete a Provider with active managed resources returns an error
+from the Usage admission webhook:
+
+```shell {copy-lines="none"}
+kubectl delete provider.pkg.crossplane.io/provider-aws-ec2
+Error from server (This resource is in-use by 3 usage(s), including the
+ *v1beta1.ClusterUsage "provider-protection-774712aa693d57a5e7ce09a7754d53f3
+ ca5cc59f417083756b2a" with reason: "Provider has active managed resources of
+ type SecurityGroup.ec2.aws.m.upbound.io".): admission webhook
+ "nousages.protection.crossplane.io" denied the request: This resource is
+ in-use by 3 usage(s), including the *v1beta1.ClusterUsage
+ "provider-protection-774712aa693d57a5e7ce09a7754d53f3ca5cc59f417083756b2a"
+ with reason: "Provider has active managed resources of type
+ SecurityGroup.ec2.aws.m.upbound.io".
+```
+
+To delete a protected Provider, first remove all its managed resources, or
+manually delete the `ClusterUsage` resource protecting it.
+
 ## Verify a Provider
 
 Providers install their own APIs representing the managed resources they support.
@@ -499,7 +595,7 @@ Crossplane uses a standard set of `Conditions` for Providers.
 View the conditions of a provider under their `Status` with
 `kubectl describe provider`.
 
-```yaml
+```yaml  {copy-lines="none"}
 kubectl describe provider
 Name:         my-provider
 API Version:  pkg.crossplane.io/v1

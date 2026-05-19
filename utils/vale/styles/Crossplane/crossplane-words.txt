@@ -4,6 +4,7 @@ apiGroups
 clampMax
 clampMin
 ClusterProviderConfig
+ClusterUsage
 ClusterUsages
 CombineFromComposite
 CombineFromEnvironment

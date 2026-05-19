@@ -110,6 +110,7 @@ at the table below.
 | Beta   | `--enable-realtime-compositions`        | Enable support for real time compositions.                                |
 | Alpha  | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
 | Alpha  | `--enable-function-response-cache`      | Enable caching of composition function responses to improve performance.  |
+| Alpha  | `--enable-provider-deletion-protection` | Enable automatic protection of Providers from deletion when they have active managed resources. Requires `--enable-usages`. |
 | Alpha  | `--enable-signature-verification`       | Enable support for package signature verification via ImageConfig API.    |
 {{< /table >}}
 {{< /expand >}}
