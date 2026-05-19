@@ -64,7 +64,7 @@ creates a custom API endpoint
 {{<hover label="xrd1" line="4">}}mydatabases.example.org{{</hover>}}.
 
 ```yaml {label="xrd1",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata: 
   name: mydatabases.example.org

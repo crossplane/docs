@@ -138,7 +138,7 @@ label="xrdName" line="9">}}plural{{</hover>}} name
 {{<hover label="xrdName" line="6">}}example.org{{</hover>}}.
 
 ```yaml {label="xrdName",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: mydatabases.example.org
@@ -208,7 +208,7 @@ In this example, the key {{<hover label="schema" line="19">}}region{{</hover>}}
 is a {{<hover label="schema" line="20">}}string{{</hover>}}.
 
 ```yaml {label="schema",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -276,7 +276,7 @@ In this example the XRD requires
 {{< hover label="required" line="21">}}size{{</hover>}} but
 {{< hover label="required" line="23">}}name{{</hover>}} is optional.
 ```yaml {label="required",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -374,7 +374,7 @@ and
 {{<hover label="served" line="13" >}}referenceable: true{{</hover>}}.
 
 ```yaml {label="served"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -457,7 +457,7 @@ A second version,
 {{<hover label="ver" line="31">}}size{{</hover>}}.
 
 ```yaml {label="ver",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -549,7 +549,7 @@ Set a
 to set the default Composition.
 
 ```yaml {label="defaultComp",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -580,7 +580,7 @@ to set the default Composition update policy for composite resources and using
 this XRD.
 
 ```yaml {label="compRev",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -606,7 +606,7 @@ set
 {{<hover label="enforceComp" line="6">}}enforcedCompositionRef.name: myComposition{{</hover>}}.
 
 ```yaml {label="defaultComp",copy-lines="none"}
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: xdatabases.custom-api.example.org
@@ -650,7 +650,7 @@ View the conditions of a XRD under their `Status` with
 ```yaml {copy-lines="none"}
 kubectl describe xrd
 Name:         xpostgresqlinstances.database.starter.org
-API Version:  apiextensions.crossplane.io/v1
+API Version:  apiextensions.crossplane.io/v2
 Kind:         CompositeResourceDefinition
 # Removed for brevity
 Status:
