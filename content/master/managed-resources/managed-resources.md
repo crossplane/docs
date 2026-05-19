@@ -516,6 +516,8 @@ resources.
 | `crossplane.io/external-create-succeeded` | The timestamp of when the Provider successfully created the managed resource. | 
 | `crossplane.io/external-create-failed` | The timestamp of when the Provider failed to create the managed resource. | 
 | `crossplane.io/paused` | Indicates Crossplane isn't reconciling this resource. Read the [Pause Annotation](#paused) for more details. |
+| `crossplane.io/poll-interval` | Overrides the default poll interval for this resource. Read the [Poll Interval Annotation](#poll-interval) for more details. |
+| `crossplane.io/reconcile-requested-at` | Triggers an immediate reconciliation when its value changes. Read the [Reconcile Request Annotation](#reconcile-request) for more details. |
 {{</table >}}
 
 ### Naming external resources
@@ -744,6 +746,81 @@ even with `kubectl delete`.
 Read 
 [Crossplane discussion #4839](https://github.com/crossplane/crossplane/issues/4839) 
 for more details.
+{{< /hint >}}
+
+### Poll interval
+
+The {{<hover label="poll-interval" line="7">}}crossplane.io/poll-interval{{</hover>}}
+annotation overrides the default `--poll-interval` for a specific
+managed resource. Use the annotation when some resources need frequent drift
+detection while others are stable and don't need frequent API calls.
+
+The annotation accepts any valid Go duration string, for example `30m`, `1h`,
+or `24h`.
+
+```yaml {label="poll-interval",copy-lines="none"}
+apiVersion: rds.aws.m.upbound.io/v1beta1
+kind: Instance
+metadata:
+  namespace: default
+  name: my-rds-instance
+  annotations:
+    crossplane.io/poll-interval: "24h"
+spec:
+  forProvider:
+    region: us-west-1
+    instanceType: t2.micro
+```
+
+{{< hint "note" >}}
+Crossplane ignores values that aren't valid Go durations and falls back to
+the controller default. The controller raises any value below the
+`--min-poll-interval` flag (defaults to `1s`) to the configured minimum.
+{{< /hint >}}
+
+Remove the annotation to return to the default `--poll-interval`.
+
+### Reconcile request
+
+The {{<hover label="reconcile-request" line="7">}}crossplane.io/reconcile-requested-at{{</hover>}}
+annotation triggers an immediate reconciliation when its value changes. This
+follows the pattern established by
+[Flux CD's `reconcile.fluxcd.io/requestedAt`](https://fluxcd.io/flux/components/source/api/v1/#source.toolkit.fluxcd.io/v1.GitRepository).
+
+Set the annotation to any value, such as a timestamp or unique identifier, to
+trigger a reconciliation.
+
+```yaml {label="reconcile-request",copy-lines="none"}
+apiVersion: rds.aws.m.upbound.io/v1beta1
+kind: Instance
+metadata:
+  namespace: default
+  name: my-rds-instance
+  annotations:
+    crossplane.io/reconcile-requested-at: "2024-01-15T10:30:00Z"
+spec:
+  forProvider:
+    region: us-west-1
+    instanceType: t2.micro
+```
+
+The reconciler records the handled token in `status.lastHandledReconcileAt` so
+operators can confirm the controller handled the request.
+
+```shell
+# Request reconciliation
+kubectl annotate instance my-rds-instance \
+  crossplane.io/reconcile-requested-at="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --overwrite
+
+# Verify it was handled
+kubectl get instance my-rds-instance \
+  -o jsonpath='{.status.lastHandledReconcileAt}'
+```
+
+{{< hint "note" >}}
+If the annotation value matches the last handled value, reconciliation isn't
+triggered again.
 {{< /hint >}}
 
 ## Finalizers

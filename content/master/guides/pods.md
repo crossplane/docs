@@ -106,6 +106,15 @@ their `spec`. Managed resources rely on polling to detect changes in the
 external system.
 {{< /hint >}}
 
+{{< hint "tip" >}}
+To override the poll interval for a specific resource instead of changing the
+global setting, use the `crossplane.io/poll-interval` annotation. To trigger an
+immediate reconciliation, use the `crossplane.io/reconcile-requested-at`
+annotation. Read the
+[managed resource annotations]({{<ref "../managed-resources/managed-resources#poll-interval">}})
+documentation for details.
+{{< /hint >}}
+
 Crossplane double-checks all resources to
 confirm they're in the desired state. Crossplane does this every one hour by
 default. Use the `--sync-interval` Crossplane pod argument to change this
