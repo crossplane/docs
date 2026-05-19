@@ -270,7 +270,7 @@ spec:
 ### Per-resource poll interval
 
 The {{<hover label="xr-poll-interval" line="7">}}crossplane.io/poll-interval{{</hover>}}
-annotation overrides the controller-level `--poll-interval` for a specific
+annotation overrides the default `--poll-interval` for a specific
 composite resource. The annotation accepts any valid Go duration string.
 
 ```yaml {label="xr-poll-interval",copy-lines="none"}

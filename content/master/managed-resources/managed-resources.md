@@ -516,7 +516,7 @@ resources.
 | `crossplane.io/external-create-succeeded` | The timestamp of when the Provider successfully created the managed resource. | 
 | `crossplane.io/external-create-failed` | The timestamp of when the Provider failed to create the managed resource. | 
 | `crossplane.io/paused` | Indicates Crossplane isn't reconciling this resource. Read the [Pause Annotation](#paused) for more details. |
-| `crossplane.io/poll-interval` | Overrides the controller-level poll interval for this resource. Read the [Poll Interval Annotation](#poll-interval) for more details. |
+| `crossplane.io/poll-interval` | Overrides the default poll interval for this resource. Read the [Poll Interval Annotation](#poll-interval) for more details. |
 | `crossplane.io/reconcile-requested-at` | Triggers an immediate reconciliation when its value changes. Read the [Reconcile Request Annotation](#reconcile-request) for more details. |
 {{</table >}}
 
@@ -751,8 +751,8 @@ for more details.
 ### Poll interval
 
 The {{<hover label="poll-interval" line="7">}}crossplane.io/poll-interval{{</hover>}}
-annotation overrides the controller-level `--poll-interval` for a specific
-managed resource. This is useful when some resources need frequent drift
+annotation overrides the default `--poll-interval` for a specific
+managed resource. Use the annotation when some resources need frequent drift
 detection while others are stable and don't need frequent API calls.
 
 The annotation accepts any valid Go duration string, for example `30m`, `1h`,
@@ -773,13 +773,12 @@ spec:
 ```
 
 {{< hint "note" >}}
-Invalid values are silently ignored and the controller default is used.
-Values below the `--min-poll-interval` flag (defaults to `1s`) are clamped to
-the configured minimum.
+Crossplane ignores values that aren't valid Go durations and falls back to
+the controller default. The controller raises any value below the
+`--min-poll-interval` flag (defaults to `1s`) to the configured minimum.
 {{< /hint >}}
 
-Remove the annotation to return to the controller-level `--poll-interval`
-default.
+Remove the annotation to return to the default `--poll-interval`.
 
 ### Reconcile request
 
@@ -788,8 +787,8 @@ annotation triggers an immediate reconciliation when its value changes. This
 follows the pattern established by
 [Flux CD's `reconcile.fluxcd.io/requestedAt`](https://fluxcd.io/flux/components/source/api/v1/#source.toolkit.fluxcd.io/v1.GitRepository).
 
-Set the annotation to any value, such as a timestamp or UUID, to trigger a
-reconciliation.
+Set the annotation to any value, such as a timestamp or unique identifier, to
+trigger a reconciliation.
 
 ```yaml {label="reconcile-request",copy-lines="none"}
 apiVersion: rds.aws.m.upbound.io/v1beta1
@@ -806,7 +805,7 @@ spec:
 ```
 
 The reconciler records the handled token in `status.lastHandledReconcileAt` so
-operators can confirm the request was processed.
+operators can confirm the controller handled the request.
 
 ```shell
 # Request reconciliation
