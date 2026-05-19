@@ -524,17 +524,23 @@ learn how to install and use the Crossplane CLI.
 {{< /hint >}}
 
 {{<hint "important">}}
-Running `crossplane alpha render op` requires [Docker](https://www.docker.com).
+The CLI hides alpha commands, including `crossplane operation render`, by
+default. Run `crossplane config set features.enableAlpha true` to make it
+visible.
+{{< /hint >}}
+
+{{<hint "important">}}
+Running `crossplane operation render` requires [Docker](https://www.docker.com).
 {{< /hint >}}
 
 Provide an operation, composition functions, and any required resources to render
 the output locally.
 
 ```shell
-crossplane alpha render op operation.yaml functions.yaml --required-resources=ingress.yaml
+crossplane operation render operation.yaml functions.yaml --required-resources=ingress.yaml
 ```
 
-`crossplane alpha render op` prints the Operation status and any resources the
+`crossplane operation render` prints the Operation status and any resources the
 operation functions created or modified. It shows what would happen if you
 applied the Operation to a cluster.
 
@@ -578,17 +584,17 @@ need access to. You can specify multiple files or use glob patterns:
 
 ```shell
 # Multiple specific files
-crossplane alpha render op operation.yaml functions.yaml \
+crossplane operation render operation.yaml functions.yaml \
   --required-resources=deployment.yaml,service.yaml,configmap.yaml
 
 # Glob pattern for all YAML files in a directory
-crossplane alpha render op operation.yaml functions.yaml \
+crossplane operation render operation.yaml functions.yaml \
   --required-resources="resources/*.yaml"
 ```
 
 {{<hint "tip">}}
-Use the `crossplane alpha render op` command to test your Operations locally
-before deploying them to a cluster. The command helps validate function logic 
+Use the `crossplane operation render` command to test your Operations locally
+before deploying them to a cluster. The command helps validate function logic
 and required resource access patterns.
 {{</hint>}}
 
