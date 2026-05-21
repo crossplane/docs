@@ -130,9 +130,8 @@ The XRD
 {{<hover label="xrdName" line="9">}}plural{{</hover>}} name, `.` (dot character),
 {{<hover label="xrdName" line="6">}}group{{</hover>}}.
 
-For example, {{<hover label="xrdName"
-line="4">}}mydatabases.example.org{{</hover>}} matches the {{<hover
-label="xrdName" line="9">}}plural{{</hover>}} name
+For example, {{<hover label="xrdName" line="4">}}mydatabases.example.org{{</hover>}} matches the
+{{<hover label="xrdName" line="9">}}plural{{</hover>}} name
 {{<hover label="xrdName" line="9">}}mydatabases{{</hover>}}, `.`
 {{<hover label="xrdName" line="6">}}group{{</hover>}} name,
 {{<hover label="xrdName" line="6">}}example.org{{</hover>}}.
