@@ -1,0 +1,321 @@
+---
+title: Troubleshoot Crossplane
+weight: 306
+description: "Debug common Crossplane issues"
+---
+## Requested resource not found
+
+If you use the Crossplane CLI to install a `Provider` or
+`Configuration` (for example, `crossplane xpkg install provider
+xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0`) and get `the server
+could not find the requested resource` error, more often than not, that's an
+indicator that your Crossplane CLI needs updating. In other words
+Crossplane graduated some API from alpha to beta or stable and the old
+plugin isn't aware of this change.
+
+
+## Resource status and conditions
+
+Most Crossplane resources have a `status` section that can represent the current
+state of that particular resource. Running `kubectl describe` against a
+Crossplane resource frequently gives insightful information about its
+condition. For example, to determine the status of a GCP `CloudSQLInstance`
+managed resource use `kubectl describe` for the resource.
+
+```shell {copy-lines="1"}
+kubectl describe cloudsqlinstance my-db
+Status:
+  Conditions:
+    Last Transition Time:  2019-09-16T13:46:42Z
+    Reason:                Creating
+    Status:                False
+    Type:                  Ready
+```
+
+Most Crossplane resources set the `Ready` condition. `Ready` represents the
+availability of the resource - whether it's creating, deleting, available,
+unavailable, binding, etc.
+
+## Resource events
+
+Most Crossplane resources emit _events_ when something interesting happens. You
+can see the events associated with a resource by running `kubectl describe` -
+for example, `kubectl describe cloudsqlinstance my-db`. You can also see all events in a
+particular namespace by running `kubectl get events`.
+
+```console
+Events:
+  Type     Reason                   Age                From                                                   Message
+  ----     ------                   ----               ----                                                   -------
+  Warning  CannotConnectToProvider  16s (x4 over 46s)  managed/postgresqlserver.database.azure.crossplane.io  cannot get referenced ProviderConfig: ProviderConfig.azure.crossplane.io "default" not found
+```
+
+> Note that Kubernetes namespaces events, while most Crossplane resources (XRs, etc)
+> are cluster scoped. Crossplane emits events for cluster scoped resources to
+> the 'default' namespace.
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+## Crossplane Logs
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+The next place to look to get more information or investigate a failure would be
+in the Crossplane pod logs, which should be running in the `crossplane-system`
+namespace. To get the current Crossplane logs, run the following:
+
+```shell
+kubectl -n crossplane-system logs -lapp=crossplane
+```
+
+> Note that Crossplane emits minimal logs by default - events are typically the best
+> place to look for information about what Crossplane is doing. You may need to
+> restart Crossplane with the `--debug` flag if you can't find what you're
+> looking for.
+
+## Provider logs
+
+Remember that providers provide much of Crossplane's features. You
+can use `kubectl logs` to view provider logs too. By convention, they also emit
+minimal logs by default.
+
+```shell
+kubectl -n crossplane-system logs <name-of-provider-pod>
+```
+
+All providers maintained by the Crossplane community mirror Crossplane's support
+of the `--debug` flag. The easiest way to set flags on a provider is to create a
+`DeploymentRuntimeConfig` and reference it from the `Provider`:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: debug-config
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+          - name: package-runtime
+            args:
+            - --debug
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: crossplane-contrib-provider-aws-s3
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
+    name: debug-config
+```
+
+> Note that you can add a reference to a `DeploymentRuntimeConfig` to an already
+> installed `Provider` and it updates its `Deployment` accordingly.
+
+## Pausing Crossplane
+
+Sometimes, for example when you encounter a bug, it can be useful to pause
+Crossplane if you want to stop it from actively attempting to manage your
+resources. To pause Crossplane without deleting all its resources, run the
+following command to scale down its deployment:
+
+```shell
+kubectl -n crossplane-system scale --replicas=0 deployment/crossplane
+```
+
+After you have been able to rectify the problem or smooth things out, you can
+unpause Crossplane by scaling its deployment back up:
+
+```shell
+kubectl -n crossplane-system scale --replicas=1 deployment/crossplane
+```
+
+## Pausing Providers
+
+You can also pause Providers when troubleshooting an issue or orchestrating a
+complex migration of resources. Creating and referencing a `DeploymentRuntimeConfig` is
+the easiest way to scale down a provider, and you can change the `DeploymentRuntimeConfig` or remove the reference to scale it back up:
+
+```yaml
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: scale-config
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      replicas: 0
+      template: {}
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: crossplane-contrib-provider-aws-s3
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
+    name: scale-config
+```
+
+> Note that you can add a reference to a `DeploymentRuntimeConfig` to an already
+> installed `Provider` and it updates its `Deployment` accordingly.
+
+## Deleting when a resource hangs
+
+The resources that Crossplane manages are automatically cleaned up so as not
+to leave anything running behind. Crossplane accomplishes this by using finalizers, but
+in certain scenarios the finalizer can prevent the Kubernetes object from
+getting deleted.
+
+To deal with this, patch the object to remove its
+finalizer, which then allows Kubernetes to delete it. Note that this
+doesn't necessarily delete the external resource that Crossplane was managing, so
+you want to go to your cloud provider's console and look there for any
+lingering resources to clean up.
+
+In general, you can remove a finalizer from an object with this command:
+
+```shell
+kubectl patch <resource-type> <resource-name> -p '{"metadata":{"finalizers": []}}' --type=merge
+```
+
+For example, for a `CloudSQLInstance` managed resource (`database.gcp.crossplane.io`) named
+`my-db`, you can remove its finalizer with:
+
+```shell
+kubectl patch cloudsqlinstance my-db -p '{"metadata":{"finalizers": []}}' --type=merge
+```
+
+## Circuit breaker for reconciliation thrashing
+
+<!-- vale alex.ProfanityUnlikely = NO -->
+Crossplane includes a circuit breaker mechanism to prevent reconciliation thrashing. Thrashing occurs when controllers fight over composed resource state or enter tight reconciliation loops that could impact cluster performance.
+<!-- vale alex.ProfanityUnlikely = YES -->
+
+### How the circuit breaker works
+
+<!-- vale Crossplane.Spelling = NO -->
+Each Composite Resource (XR) has its own token bucket-based circuit breaker that monitors reconciliation rates:
+<!-- vale Crossplane.Spelling = YES -->
+
+- **Burst (capacity)**: Maximum number of events allowed in quick succession (default: 100)
+<!-- vale write-good.Passive = NO -->
+- **Refill rate**: Sustained event rate after the burst capacity is exhausted (default: 1 event per second)
+<!-- vale write-good.Passive = YES -->
+<!-- vale Crossplane.Spelling = NO -->
+- **Cooldown**: Duration the circuit stays open before attempting recovery (default: 5 minutes)
+<!-- vale Crossplane.Spelling = YES -->
+
+<!-- vale write-good.Weasel = NO -->
+When an XR receives too many watch events (exceeding the burst and refill rate), the circuit breaker opens and blocks most reconciliation requests. While the circuit is open, Crossplane allows one request every 30 seconds to probe for recovery.
+<!-- vale write-good.Weasel = YES -->
+
+### Detecting circuit breaker activation
+
+XRs have a `Responsive` condition that tracks circuit breaker state. When the circuit breaker opens, this condition changes to `False`:
+
+```yaml
+conditions:
+- type: Responsive
+  status: "False"
+  reason: WatchCircuitOpen
+  message: "Too many watch events from ConfigMap/my-config (default). Allowing events periodically."
+```
+
+The message identifies which resource is causing excessive watch events, helping you pinpoint the source of thrashing.
+
+### Identifying and fixing root causes
+
+<!-- vale write-good.TooWordy = NO -->
+Watch events occur when resources change in your cluster. Excessive watch events typically indicate composition patterns that cause loops, such as resources updating each other in cycles or external systems reverting changes made by Crossplane.
+
+**To identify the source of excessive watch events:**
+
+The XR's `Responsive` condition message identifies the problematic resource. Monitor this resource for modification events:
+<!-- vale write-good.TooWordy = YES -->
+
+```shell
+kubectl get <resource-kind> <resource-name> -n <namespace> --output-watch-events --watch-only
+```
+
+**Common root causes and fixes:**
+
+<!-- vale write-good.TooWordy = NO -->
+- **Feedback loops in patches**: Review Composition patches for logic that creates circular updates where changes trigger more changes
+- **External controller conflicts**: Other controllers or operators might modify the same resources, fighting with Crossplane for control
+- **Frequent connection detail updates**: Consider if all fields need to be in connection details, as updates to connection secrets trigger watch events
+
+Investigate and fix the root cause before adjusting circuit breaker thresholds.
+<!-- vale write-good.TooWordy = YES -->
+
+### Configuring circuit breaker parameters
+
+<!-- vale write-good.Weasel = NO -->
+<!-- vale write-good.TooWordy = NO -->
+The default circuit breaker settings work well for most environments. You may need to adjust them based on your composition patterns and cluster size.
+<!-- vale write-good.Weasel = YES -->
+<!-- vale write-good.TooWordy = YES -->
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale Microsoft.Adverbs = NO -->
+For example, increase the burst and refill rate for large-scale deployments with XRs updating frequently, or decrease them if you want stricter protection against thrashing.
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Microsoft.Adverbs = YES -->
+
+Configure circuit breaker parameters using Crossplane startup arguments via Helm:
+
+```shell
+helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane \
+  --set args='{"--circuit-breaker-burst=500.0","--circuit-breaker-refill-rate=5.0","--circuit-breaker-cooldown=1m"}'
+```
+
+Available parameters:
+- `--circuit-breaker-burst`: Maximum burst of events (default: 100.0)
+- `--circuit-breaker-refill-rate`: Events per second for sustained rate (default: 1.0)
+<!-- vale Crossplane.Spelling = NO -->
+<!-- vale Google.Units = NO -->
+<!-- vale gitlab.Units = NO -->
+- `--circuit-breaker-cooldown`: Duration to keep circuit open (default: 5m0s)
+<!-- vale Crossplane.Spelling = YES -->
+<!-- vale Google.Units = YES -->
+<!-- vale gitlab.Units = YES -->
+
+### Monitoring with metrics
+
+<!-- vale write-good.TooWordy = NO -->
+Track circuit breaker activity using these Prometheus metrics.
+<!-- vale write-good.TooWordy = YES -->
+
+See the [Metrics guide]({{< ref "metrics#circuit-breaker-metrics" >}}) for detailed metric information.
+
+## Tips, tricks, and troubleshooting
+
+This section covers some common tips, tricks, and troubleshooting steps
+for working with Composite Resources. If you're trying to track down why your
+Composite Resources aren't working the [Troubleshooting][trouble-ref] page also
+has some useful information.
+
+<!-- Named Links -->
+[Requested Resource Not Found]: #requested-resource-not-found
+[install Crossplane CLI]: "../getting-started/install-configure"
+[Resource Status and Conditions]: #resource-status-and-conditions
+[Resource Events]: #resource-events
+[Crossplane Logs]: #crossplane-logs
+[Provider Logs]: #provider-logs
+[Pausing Crossplane]: #pausing-crossplane
+[Pausing Providers]: #pausing-providers
+[Deleting When a Resource Hangs]: #deleting-when-a-resource-hangs
+[Installing Crossplane Package]: #installing-crossplane-package
+[Crossplane package]: {{<ref "../packages/configurations/">}}
+[Handling Crossplane Package Dependency]: #handling-crossplane-package-dependency
+[semver spec]: https://github.com/Masterminds/semver#basic-comparisons
+
+
