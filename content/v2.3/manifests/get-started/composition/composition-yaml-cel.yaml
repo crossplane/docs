@@ -1,0 +1,60 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: app-yaml-cel
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: create-deployment-and-service
+    functionRef:
+      name: crossplane-contrib-function-kro
+    input:
+      apiVersion: kro.fn.crossplane.io/v1beta1
+      kind: ResourceGraph
+      status:
+        replicas: ${deployment.status.?availableReplicas.orValue(0)}
+        address: ${service.spec.?clusterIP.orValue("")}
+      resources:
+      - id: deployment
+        template:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            labels:
+              example.crossplane.io/app: ${schema.metadata.name}
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                example.crossplane.io/app: ${schema.metadata.name}
+            template:
+              metadata:
+                labels:
+                  example.crossplane.io/app: ${schema.metadata.name}
+              spec:
+                containers:
+                - name: app
+                  image: ${schema.spec.image}
+                  ports:
+                  - containerPort: 80
+        readyWhen:
+        - ${deployment.status.?conditions.orValue([]).exists(c, c.type == "Available" && c.status == "True")}
+      - id: service
+        template:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            labels:
+              example.crossplane.io/app: ${schema.metadata.name}
+          spec:
+            selector:
+              example.crossplane.io/app: ${schema.metadata.name}
+            ports:
+            - protocol: TCP
+              port: 8080
+              targetPort: 80
+        readyWhen:
+        - ${service.spec.?clusterIP.hasValue()}
