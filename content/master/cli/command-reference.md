@@ -527,6 +527,7 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 {{< /table >}}
 
 
+<!-- vale gitlab.SubstitutionWarning["config"] = NO -->
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
 ## crossplane config
@@ -561,7 +562,9 @@ crossplane config set features.enableAlpha true
 ```
 crossplane config <command> [flags]
 ```
+<!-- vale gitlab.SubstitutionWarning["config"] = YES -->
 
+<!-- vale gitlab.SubstitutionWarning["config"] = NO -->
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
 ### crossplane config set
@@ -586,7 +589,9 @@ crossplane config set <key> <value>
 | `<value>` | Value to assign. |
 {{< /table >}}
 
+<!-- vale gitlab.SubstitutionWarning["config"] = YES -->
 
+<!-- vale gitlab.SubstitutionWarning["config"] = NO -->
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
 ### crossplane config view
@@ -602,6 +607,7 @@ Print the current effective configuration as YAML.
 ```
 crossplane config view
 ```
+<!-- vale gitlab.SubstitutionWarning["config"] = YES -->
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
@@ -621,6 +627,9 @@ Beta features may change in a future release.
 crossplane dependency <command> [flags]
 ```
 
+<!-- vale Google.WordList["k8s"] = NO -->
+<!-- vale Google.Units = NO -->
+<!-- vale gitlab.Units = NO -->
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
 ### crossplane dependency add
@@ -718,6 +727,9 @@ crossplane dependency add <package> [flags]
 |  | `--git-path=STRING` | Path to CRDs in the git repository. |
 {{< /table >}}
 
+<!-- vale Google.WordList["k8s"] = YES -->
+<!-- vale Google.Units = YES -->
+<!-- vale gitlab.Units = YES -->
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
@@ -1288,6 +1300,7 @@ crossplane project push [flags]
 {{< /table >}}
 
 
+<!-- vale Google.WordList["admin"] = NO -->
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
 ### crossplane project run
@@ -1376,6 +1389,7 @@ crossplane project run [flags]
 |  | `--extra-resources=EXTRA-RESOURCES` | Resources to apply after installing. |
 {{< /table >}}
 
+<!-- vale Google.WordList["admin"] = YES -->
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
@@ -2033,11 +2047,11 @@ repository as a template.
 
 Specify either a full Git URL or one of the following names as the template:
 
+- `function-template-go` ([https://github.com/crossplane/function-template-go](https://github.com/crossplane/function-template-go))
 - `function-template-python` ([https://github.com/crossplane/function-template-python](https://github.com/crossplane/function-template-python))
 - `configuration-template` ([https://github.com/crossplane/configuration-template](https://github.com/crossplane/configuration-template))
 - `provider-template` ([https://github.com/crossplane/provider-template](https://github.com/crossplane/provider-template))
 - `provider-template-upjet` ([https://github.com/crossplane/upjet-provider-template](https://github.com/crossplane/upjet-provider-template))
-- `function-template-go` ([https://github.com/crossplane/function-template-go](https://github.com/crossplane/function-template-go))
 
 
 #### `NOTES.txt`
