@@ -817,7 +817,7 @@ Beta features may change in a future release.
 
 The `function generate` command creates an embedded function in the specified
 language under the project's `functions/` directory. It optionally idempotently
-adds the new function to end of a Composition's pipeline when given a
+adds the new function to the end of a Composition's pipeline when given a
 Composition path.
 
 #### Supported languages
@@ -1107,10 +1107,10 @@ The `project build` command builds a Crossplane Project into a set of xpkgs. It
 builds each embedded function in the project and a Configuration package that
 ties everything together. The output of the build is a special `.xpkg` file
 containing all the built packages, placed in the project's output directory
-(`_output/` by default). The `project push` command can consume packges from the
-output file and push them to an OCI registry.
+(`_output/` by default). The `project push` command can consume packages from
+the output file and push them to an OCI registry.
 
-The `build `command constructs the repository for the built Configuration from
+The `build` command constructs the repository for the built Configuration from
 `spec.repository` in `crossplane-project.yaml`. Override it for a single build
 with `--repository`.
 
@@ -1396,8 +1396,8 @@ local OCI registry.
 When run from a project directory, the `stop` command tears down the control
 plane whose name matches the project name. When run outside a project directory,
 pass `--control-plane-name` to identify the control plane to tear down. If you
-passed `--registry-dir` to `up project run`, pass it to `up project stop` as
-well to clean up the registry data.
+passed `--registry-dir` to `crossplane project run`, pass it to `crossplane
+project stop` as well to clean up the registry data.
 
 #### Examples
 
@@ -1495,7 +1495,7 @@ they exceed 64 characters, and other kind-specific printer columns.
 ##### Graphviz dot output
 
 Use `--output=dot` to print a textual
-[Graphviz dot](https://graphviz.org/docs/layouts/dot/) graph.Pipe to `dot` to
+[Graphviz dot](https://graphviz.org/docs/layouts/dot/) graph. Pipe to `dot` to
 render an image:
 
 ```shell
@@ -2033,11 +2033,11 @@ repository as a template.
 
 Specify either a full Git URL or one of the following names as the template:
 
+- `function-template-python` ([https://github.com/crossplane/function-template-python](https://github.com/crossplane/function-template-python))
 - `configuration-template` ([https://github.com/crossplane/configuration-template](https://github.com/crossplane/configuration-template))
 - `provider-template` ([https://github.com/crossplane/provider-template](https://github.com/crossplane/provider-template))
 - `provider-template-upjet` ([https://github.com/crossplane/upjet-provider-template](https://github.com/crossplane/upjet-provider-template))
 - `function-template-go` ([https://github.com/crossplane/function-template-go](https://github.com/crossplane/function-template-go))
-- `function-template-python` ([https://github.com/crossplane/function-template-python](https://github.com/crossplane/function-template-python))
 
 
 #### `NOTES.txt`
