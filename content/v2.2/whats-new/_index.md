@@ -271,6 +271,13 @@ Crossplane v2 makes the following breaking changes:
 * It removes composite resource connection details support.
 * It removes the default registry for Crossplane Packages.
 
+{{<hint "tip" >}}
+The Crossplane CLI can find which of these features your control plane uses. Run
+[`crossplane beta upgrade check`]({{<ref "../../v1.20/cli/command-reference#beta-upgrade-check">}})
+with the [`v1.20` CLI]({{<ref "../../v1.20/cli#download-other-cli-versions">}}) against a `v1.x` control plane to scan for these breaking
+changes before upgrading to v2.
+{{</hint>}}
+
 Crossplane deprecated native patch and transform composition in Crossplane
 v1.17. It's replaced by composition functions.
 

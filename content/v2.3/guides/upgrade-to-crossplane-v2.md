@@ -56,6 +56,13 @@ Crossplane v2 removes these deprecated features:
 * [Composite resource connection details](#composite-resource-connection-details)
 * [Default registry flag](#default-registry-flag)
 
+{{<hint "tip" >}}
+The Crossplane CLI can find these features for you. Run
+[`crossplane beta upgrade check`]({{<ref "../../v1.20/cli/command-reference#beta-upgrade-check">}})
+with the [`v1.20` CLI]({{<ref "../../v1.20/cli#download-other-cli-versions">}}) against your control plane to scan for every removed feature
+below and report the resources that need attention before you upgrade to v2.
+{{</hint>}}
+
 ### Native patch and transform composition
 **Deprecated in**: v1.17
 **Replaced by**: [Composition functions]({{<ref "../composition/compositions">}})
