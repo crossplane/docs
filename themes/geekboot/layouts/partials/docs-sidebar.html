@@ -1,18 +1,29 @@
 {{ $current := . }}
 
 <nav class="bd-links-nav w-100" aria-label="Docs navigation">
-  {{ with .Site.GetPage "section" .Section }}
+  {{/* Build the nav from the page's version section. For core pages .Section
+       (the first path segment, e.g. "v2.3") is that section. For nested CLI
+       pages .Section is "cli" (the unversioned parent), so use .CurrentSection —
+       the deepest enclosing section, i.e. the CLI version section the page
+       belongs to (cli/v2.3). The loop below treats $navRoot itself as a flat
+       heading whose pages render as top-level siblings (matching the
+       Contributing Guide), rather than nesting them under a redundant parent. */}}
+  {{ $navRoot := .Site.GetPage "section" .Section }}
+  {{ if eq .Section "cli" }}
+    {{ $navRoot = .CurrentSection }}
+  {{ end }}
+  {{ with $navRoot }}
     {{ $sectionPages := (.Pages | append .) }}
     {{ range $sectionPages.ByWeight }}
       {{ $expand := (eq $current .) }}
-      {{ $expand = (and (eq $current.CurrentSection .) (ne .FirstSection .)) }}
+      {{ $expand = (and (eq $current.CurrentSection .) (ne . $navRoot)) }}
       {{ $id := substr (sha1 .Permalink) 0 8 }}
 
       {{ if not .Page.Params.tocHidden }}
         <div class="section-container container pe-0 pt-1">
           <div class="container nav-container pe-0 d-flex w-100 {{if eq . $current}}active{{ else if $expand }}active-parent{{end}}">
             <a class="d-flex w-100 border-0" href="{{.Permalink}}">{{ .Title }} </a>
-            {{ if and .IsSection (ne .FirstSection .) }}
+            {{ if and .IsSection (ne . $navRoot) }}
               {{/* Don't put an expand icon on pages that aren't sections or the section index */}}
               <div class="d-flex flex-shrink-1 sidebar-control-container align-self-center">
                 <input type="checkbox" class="d-flex sidebar-checkbox" {{if $expand}}checked{{ end }} aria-label="Close or Expand {{.Title}} Section" />
@@ -23,7 +34,7 @@
               </div>
             {{ end }}
           </div>
-          {{ if ne .FirstSection . }}
+          {{ if ne . $navRoot }}
             {{ range .Pages }}
               {{ if not .Page.Params.tocHidden }}
                 <div class="container flex-row collapse {{if $expand}} show {{ end }}" id="collapse-{{$id }}">
@@ -39,12 +50,18 @@
     {{ end }}
   {{ end }}
 
+  <hr />
+
   {{ if not ($.Param "docs") }}
     {{ partialCached "sidebar/user-docs" . }}
   {{ end }}
 
-  {{ if ne .Page.Params.product "Contributing Guide" }}
+  {{ if ne .Page.Params.track "contributing" }}
     {{ partialCached "sidebar/contributing-guide" . }}
+  {{ end }}
+
+  {{ if ne .Page.Params.track "cli" }}
+    {{ partialCached "sidebar/cli" . }}
   {{ end }}
 
   {{ partialCached "sidebar/roadmap" . }}

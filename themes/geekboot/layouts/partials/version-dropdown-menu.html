@@ -1,27 +1,53 @@
+{{/* Which versioned track is this page on? "core" (top-level v* sections) or
+     "cli" (subsections of /cli). The track determines which versions appear in
+     the dropdown, which "latest" badges them, and where the fallback section
+     pages live. */}}
+{{ $track := .Page.Params.track | default "core" }}
+{{ $latest := .Site.Params.latest }}
+{{ $sectionPrefix := "v" }}
+{{ $masterSection := "master" }}
 {{ $sorted_list := partial "utils/sorted-versions" . }}
-{{ $cur_ver := .Page.Params.version | default .Site.Params.latest }}
+{{ if eq $track "cli" }}
+    {{ $latest = .Site.Params.cliLatest }}
+    {{ $sectionPrefix = "/cli/v" }}
+    {{ $masterSection = "/cli/master" }}
+    {{ $sorted_list = partial "utils/sorted-versions" (dict "page" . "sections" (.Site.GetPage "/cli").Sections) }}
+{{ end }}
+{{ $cur_ver := .Page.Params.version | default $latest }}
 
 <div class="dropdown float-end bd-dropdown">
     <a class="btn btn-outline-secondary dropdown-toggle bd-dropdown-item text-reset" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{ if ne .Page.Params.version "master" }}v{{ end }}{{ $cur_ver }}
-        {{ if eq $cur_ver .Site.Params.latest }}
+        {{ if eq $cur_ver $latest }}
         <div class="badge rounded-pill latest">Latest</div>
         {{ end }}
     </a>
 
     <div class="dropdown-menu bd-border-color bd-dropdown" aria-labelledby="dropdownMenuLink">
-        {{ $master_url := replaceRE "v[0-9].[0-9]" "master" .Permalink }}
         {{/*  Iterate over the ordered list of available versions. */}}
         {{ range $sorted_list }}
             {{ $matchingTitle := $.Title }}
             {{ if $.Params.matchTitle }}
                 {{ $matchingTitle = $.Params.matchTitle }}
             {{ end }}
-            {{/*  For a version, see if there is a page with an identical title to the page we're on. If not use the page at /content/v<version>  */}}
-            {{ $versionPage :=  index (where (where $.Site.Pages "Title" $matchingTitle) ".Page.Params.version" .) 0 | default ($.Site.GetPage (printf "v%s" .)) }}
+            {{/*  For a version, see if there is a page with an identical title to
+                  the page we're on, restricted to the current track so a CLI page
+                  can't match a same-titled core page. If none, fall back to the
+                  track's section index at /content/<prefix><version>. */}}
+            {{ $candidates := where (where $.Site.Pages "Title" $matchingTitle) ".Page.Params.version" . }}
+            {{/* Keep only candidates on the current track: CLI pages live under
+                 /cli/, core pages do not. */}}
+            {{ $tracked := slice }}
+            {{ range $candidates }}
+                {{ $isCli := hasPrefix .RelPermalink "/cli/" }}
+                {{ if eq (cond $isCli "cli" "core") $track }}
+                    {{ $tracked = $tracked | append . }}
+                {{ end }}
+            {{ end }}
+            {{ $versionPage := index $tracked 0 | default ($.Site.GetPage (printf "%s%s" $sectionPrefix .)) }}
             {{/*  If the version is master get the master page since "vmaster" doesn't exist  */}}
             {{ if not $versionPage }}
-                {{ $versionPage = $.Site.GetPage "master" }}
+                {{ $versionPage = $.Site.GetPage $masterSection }}
             {{ end }}
                 {{ with $versionPage }}
                     {{ $isLatest := false }}
@@ -33,12 +59,12 @@
                             master
                         {{ else }}
                             {{ if eq .Page.Params.version "" }}
-                                {{ (printf "v%s" .Site.Params.latest) }}
+                                {{ (printf "v%s" $latest) }}
                             {{ else }}
                                 {{ (printf "v%s" .Page.Params.version) }}
                             {{ end }}
                         {{ end }}
-                        {{ if or (eq .Page.Params.version .Site.Params.latest) (eq .Page.Params.version "") }}
+                        {{ if or (eq .Page.Params.version $latest) (eq .Page.Params.version "") }}
                         <div class="badge rounded-pill latest">Latest</div>
                         {{ end }}
                     </a>

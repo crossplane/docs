@@ -58,8 +58,8 @@ Crossplane v2 removes these deprecated features:
 
 {{<hint "tip" >}}
 The Crossplane CLI can find these features for you. Run
-[`crossplane beta upgrade check`]({{<ref "../../v1.20/cli/command-reference#beta-upgrade-check">}})
-with the [`v1.20` CLI]({{<ref "../../v1.20/cli#download-other-cli-versions">}}) against your control plane to scan for every removed feature
+[`crossplane beta upgrade check`]({{<ref "/cli/v1.20/command-reference#beta-upgrade-check">}})
+with the [`v1.20` CLI]({{<ref "/cli/v1.20/#download-other-cli-versions">}}) against your control plane to scan for every removed feature
 below and report the resources that need attention before you upgrade to v2.
 {{</hint>}}
 

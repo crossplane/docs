@@ -2,8 +2,18 @@
 {{ $majorlist := slice }}
 {{ $sorted_list := slice }}
 
+{{/*
+  Accepts either a bare Page (the core track, iterating top-level sections) or a
+  dict {page, sections} where "sections" is the list of version sections to sort
+  (e.g. the CLI track passes (.Site.GetPage "/cli").Sections).
+*/}}
+{{ $sections := .Site.Sections }}
+{{ if reflect.IsMap . }}
+    {{ $sections = .sections }}
+{{ end }}
+
 {{/* Collect all versions and parse semver for sorting */}}
-{{ range .Site.Sections }}
+{{ range $sections }}
     {{/* Skip versions marked as hidden */}}
     {{ if not .Page.Params.hidden }}
         {{ if eq .Page.Params.version "master" }}

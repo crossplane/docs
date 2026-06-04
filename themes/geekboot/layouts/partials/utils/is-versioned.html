@@ -1,0 +1,8 @@
+{{/* Reports whether a page belongs to a versioned docs track (core or CLI) as
+     opposed to unversioned content like the Contributing Guide. Unversioned
+     content uses the explicit "0" sentinel; everything else is versioned —
+     including the build-time /latest and /cli/latest copies, whose `version:`
+     line is stripped (empty), which still default to the track's latest.
+     Use this to gate version UI (the version selector, version alerts, the
+     versioned sidebar title) independently of the core-specific `docs` flag. */}}
+{{ return (ne .Page.Params.version "0") }}

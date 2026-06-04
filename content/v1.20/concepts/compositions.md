@@ -109,7 +109,7 @@ but the feature is no longer maintained. Crossplane doesn't accept new
 `Resources` features, and only accepts security bug fixes.
 <!-- vale write-good.Passive = YES -->
 
-See the [CLI documentation]({{<ref "../cli/command-reference#beta-convert">}})
+See the [CLI documentation]({{<ref "/cli/v1.20/command-reference#beta-convert">}})
 to learn how to use the `crossplane beta convert` command to convert a legacy
 `Resources` Composition to the `Pipeline` mode.
 {{< /hint >}}
@@ -442,7 +442,7 @@ support `mode: Resources` Compositions.
 {{< /hint >}}
 
 {{<hint "tip">}}
-See the [Crossplane CLI docs]({{<ref "../cli">}}) to
+See the [Crossplane CLI docs]({{<ref "/cli/v1.20">}}) to
 learn how to install and use the Crossplane CLI.
 {{< /hint >}}
 

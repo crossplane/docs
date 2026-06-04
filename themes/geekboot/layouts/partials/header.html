@@ -23,6 +23,25 @@
 
 {{/* Don't do the URL processing for KB and Contrib guides */}}
 {{ if not .Page.Params.Product }}
+  {{ if eq (.Page.Params.track | default "core") "cli" }}
+    {{/* CLI track: the version segment is the SECOND path element
+         (/cli/v2.3/...), and the build-time "latest" copy lives at /cli/latest/.
+         Map the version segment in place to /cli/latest/ rather than stripping
+         it. The /cli/latest/ copy itself (empty version) is canonical-to-self. */}}
+    {{ if .Page.Params.version }}
+        {{ $latestPath := .RelPermalink }}
+        {{ if eq .Page.Params.version "master" }}
+            {{ $latestPath = replaceRE "/cli/master/" "/cli/latest/" .RelPermalink }}
+        {{ else }}
+            {{ $latestPath = replaceRE "/cli/v[0-9.]+(-preview)?/" "/cli/latest/" .RelPermalink }}
+        {{ end }}
+        {{ $latestPath = strings.TrimRight "/" $latestPath }}
+        {{ $latestPage := .Site.GetPage $latestPath }}
+        {{ if $latestPage }}
+        <link rel="canonical" href="{{ $latestPage.Permalink }}">
+        {{ end }}
+    {{ end }}
+  {{ else }}
     {{/* Strip out the version from the path to get just the section + page */}}
     {{ $sectionPage := replaceRE (printf "v%s/" .Page.Params.version) "" .RelPermalink }}
 
@@ -46,7 +65,7 @@
     {{ if $latestPage }}
     <link rel="canonical" href="{{$latestPage.Permalink }}">
     {{ end }}
-
+  {{ end }}
 {{ else }}
     <link rel="canonical" href="{{.Permalink}}">
 {{ end }}
