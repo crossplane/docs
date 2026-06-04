@@ -22,8 +22,7 @@ jobs:
           extended: true
 
       - name: Build
-        # Set to env=dev so SCSS isn't required.
-        run: hugo --environment development
+        run: HUGO_ENV=development bash netlify_build.sh
 
       - name: Enable external link checking
         run: "sed -i 's/CheckExternal: false/CheckExternal: true/' utils/htmltest/.htmltest.yml"
