@@ -22,6 +22,9 @@
 # The following are Netlify redirects for moved docs pages
 # https://docs.netlify.com/configure-builds/file-based-configuration/#redirects
 #
+# Note that redirects should be ordered from most specific to least specific
+# match, since Netlify uses the *first* match it finds in this file.
+#
 [[redirects]]
 from = "/docs/*"
 to = "/:splat"
@@ -167,6 +170,14 @@ status = 301
 from = "/knowledge-base/"
 to = "/latest/"
 status = 301
+
+# Redirect requests for EOL version docs to latest. These might return 404 if
+# docs have moved around, but for many docs the redirect will work. This relies
+# on the fact that Netlify will not perform a redirect for a page that exists.
+[[redirects]]
+from = "/:version/*"
+to = "/latest/:splat"
+status = 302
 
 # Use [dev] to set configuration overrides for local
 # development environments run using Netlify Dev - except
