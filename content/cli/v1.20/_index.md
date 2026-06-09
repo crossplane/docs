@@ -77,7 +77,6 @@ source <(crossplane completions)
 
 {{<hint "note" >}}
 The `completions` command generates the autocompletions for your default shell.
-It's not possible to generate autocompletions for a different shell, if you want to
-install the autocompletions for a different shell, you have to configure the Crossplane
-CLI as the completer manually.
+To install the autocompletions for a different shell, you have to configure the
+Crossplane CLI as the completer manually.
 {{< /hint >}}
