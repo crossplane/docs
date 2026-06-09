@@ -171,6 +171,13 @@ from = "/knowledge-base/"
 to = "/latest/"
 status = 301
 
+# Redirect from the old CLI documentation path to the new CLI documentation
+# path.
+[[redirects]]
+from = "/:version/cli/*"
+to = "/cli/:version/:splat"
+status=301
+
 # Redirect requests for EOL version docs to latest. These might return 404 if
 # docs have moved around, but for many docs the redirect will work. This relies
 # on the fact that Netlify will not perform a redirect for a page that exists.
