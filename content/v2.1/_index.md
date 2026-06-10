@@ -35,7 +35,7 @@ Crossplane organizes its documentation into the following sections:
 * [Guides]({{<ref "guides">}}) guide you through common use cases, like
   monitoring Crossplane or extending it by writing a composition function.
 
-* [CLI Reference]({{<ref "cli">}}) documents the `crossplane` command-line
+* [CLI Reference]({{<ref "/cli/v2.1">}}) documents the `crossplane` command-line
   interface that you can use to configure a Crossplane control plane.
 
 * [API Reference]({{<ref "api">}}) documents the APIs that you can use to

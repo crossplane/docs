@@ -1,5 +1,5 @@
 ---
-weight: 50
+weight: 100
 title: Command Reference
 description: "Command reference for the Crossplane CLI"
 ---

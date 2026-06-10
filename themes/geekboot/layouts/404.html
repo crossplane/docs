@@ -54,6 +54,23 @@
           {{ end }}
 
           <br />
+          {{ $cli_sorted := partial "utils/sorted-versions" (dict "page" . "sections" (.Site.GetPage "/cli").Sections) }}
+          <strong>CLI Reference Versions:</strong><br />
+          {{ range $cli_sorted }}
+              {{ $versionPage := $.Site.GetPage (printf "/cli/v%s" .) | default ($.Site.GetPage (printf "/cli/%s" .)) }}
+              {{ with $versionPage }}
+                  <a href="{{ .Permalink }}">{{ if ne .Page.Params.version "master" }}v{{ end }}{{ .Page.Params.version }}</a>
+                  {{ if eq .Page.Params.version $.Site.Params.cliLatest }}
+                      <span class="badge rounded-pill latest">Latest</span>
+                  {{ end }}
+                  {{ if eq .Page.Params.version "master" }}
+                      <small><em>(unreleased upcoming version)</em></small>
+                  {{ end }}
+                  <br />
+              {{ end }}
+          {{ end }}
+
+          <br />
           <p><small>Looking for an older version? Archived versions are available as tags in the <a href="https://github.com/crossplane/docs/tags">GitHub repository</a> (e.g., v1.19-archive, v1.18-archive).</small></p>
 
           <br />

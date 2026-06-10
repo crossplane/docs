@@ -67,8 +67,8 @@ To write a function in Python you need:
 * [Python](https://www.python.org/downloads/) v3.11.
 * [Hatch](https://hatch.pypa.io/), a Python build tool. This guide uses v1.7.
 * [Docker Engine](https://docs.docker.com/engine/). This guide uses Engine v24.
-* The [Crossplane CLI]({{<ref "../cli" >}}) v1.14 or newer. This guide uses Crossplane
-  CLI v1.14.
+* The [Crossplane CLI]({{<ref "/cli/" >}}) v1.14 or newer. This guide uses
+  Crossplane CLI v1.14.
 
 {{<hint "note">}}
 You don't need access to a Kubernetes cluster or a Crossplane control plane to

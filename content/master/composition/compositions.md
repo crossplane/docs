@@ -339,8 +339,8 @@ don't need a Crossplane control plane to do this. The Crossplane CLI uses Docker
 Engine to run functions.
 
 {{<hint "tip">}}
-See the [Crossplane CLI docs]({{<ref "../cli">}}) to
-learn how to install and use the Crossplane CLI.
+See the [Crossplane CLI docs]({{<ref "/cli/">}}) to learn how to install and use
+the Crossplane CLI.
 {{< /hint >}}
 
 {{<hint "important">}}

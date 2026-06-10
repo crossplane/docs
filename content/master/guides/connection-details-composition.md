@@ -441,8 +441,8 @@ View all the composed resources (including the connection details `Secret`)
 together using the `crossplane` CLI.
 
 {{<hint "tip">}}
-See the [Crossplane CLI docs]({{<ref "../cli">}}) to
-learn how to install and use the Crossplane CLI.
+See the [Crossplane CLI docs]({{<ref "/cli/">}}) to learn how to install
+and use the Crossplane CLI.
 {{< /hint >}}
 
 ```shell {copy-lines="1"}

@@ -4,7 +4,7 @@ weight: -1
 cascade:
     version: "0"
     docs: false
-    product: "Contributing Guide"
+    track: contributing
 ---
 
 The Crossplane Contributing Guide is for anyone interested in contributing to

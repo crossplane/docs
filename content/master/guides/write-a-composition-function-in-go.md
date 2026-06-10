@@ -66,8 +66,8 @@ To write a function in Go you need:
 
 * [Go](https://go.dev/dl/) v1.23 or newer. The guide uses Go v1.23.
 * [Docker Engine](https://docs.docker.com/engine/). This guide uses Engine v24.
-* The [Crossplane CLI]({{<ref "../cli" >}}) v1.17 or newer. This guide uses Crossplane
-  CLI v1.17.
+* The [Crossplane CLI]({{<ref "/cli/" >}}) v1.17 or newer. This guide uses
+  Crossplane CLI v1.17.
 
 {{<hint "note">}}
 You don't need access to a Kubernetes cluster or a Crossplane control plane to

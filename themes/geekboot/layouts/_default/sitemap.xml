@@ -7,6 +7,15 @@
     <lastmod>{{ safeHTML ( .Lastmod.Format "2006-01-02T15:04:05-07:00" ) }}</lastmod>{{ end }}
   </url>
   {{ end }}
+  {{/* CLI docs: only the build-time /cli/latest copy is indexed, mirroring core */}}
+  {{ with .Site.GetPage "/cli/latest" }}
+  {{ range where (.Pages | append .) ".Params.searchExclude" "ne" "true" }}
+  <url>
+    <loc>{{ .Permalink }}</loc>{{ if not .Lastmod.IsZero }}
+    <lastmod>{{ safeHTML ( .Lastmod.Format "2006-01-02T15:04:05-07:00" ) }}</lastmod>{{ end }}
+  </url>
+  {{ end }}
+  {{ end }}
   {{/* For KB and Contrib guides */}}
   {{ range where .Site.Pages "Params.version" "0" }}
   <url>

@@ -4,7 +4,7 @@
       <div class="offcanvas-header pb-4 border-bottom">
         <div class="d-flex offcanvas-title fw-bold" id="bdNavbarOffcanvasLabel">
           Crossplane Documentation -
-          {{- if $.Param "docs" -}}
+          {{- if (partial "utils/is-versioned" .) -}}
           {{ if ne .Page.Params.version "master" }} v{{ end}}{{.Page.Params.version}}
           {{- else }}
             {{.Page.Params.product }}
@@ -19,7 +19,7 @@
     <div class="bd-intro pt-2 ps-lg-2">
       <div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
         <div class="mb-3 mb-md-0 d-flex">
-          {{ if $.Param "docs" }}
+          {{ if (partial "utils/is-versioned" .) }}
             {{ partial "version-dropdown-menu" . }}
           {{ end }}
         </div>
@@ -67,15 +67,25 @@
     {{ end }}
 
       <div class="bd-content ps-lg-2 DocSearch-content">
-        {{ if $.Param "docs" }}
-          {{ $pageVer := .Page.Params.version | default .Site.Params.latest }}
+        {{ if (partial "utils/is-versioned" .) }}
+          {{/* Per-track "latest" and product name so the alerts read correctly
+               for both core Crossplane and the CLI track. */}}
+          {{ $track := .Page.Params.track | default "core" }}
+          {{ $latest := .Site.Params.latest }}
+          {{ $productName := "Crossplane" }}
+          {{ if eq $track "cli" }}
+            {{ $latest = .Site.Params.cliLatest }}
+            {{ $productName = "Crossplane CLI" }}
+          {{ end }}
+          {{ $pageVer := .Page.Params.version | default $latest }}
+          {{ $alertCtx := dict "page" . "latest" $latest "productName" $productName }}
 
           {{- if eq .Page.Params.version "master" -}}
-            {{ partialCached "master-version-alert" . }}
+            {{ partial "master-version-alert" $alertCtx }}
           {{- else if strings.HasSuffix $pageVer "-preview" -}}
-            {{ partialCached "preview-version-alert" . .Section }}
-          {{- else if ne $pageVer .Site.Params.latest -}}
-            {{ partialCached "old-version-alert" . .Section }}
+            {{ partial "preview-version-alert" $alertCtx }}
+          {{- else if ne $pageVer $latest -}}
+            {{ partial "old-version-alert" $alertCtx }}
           {{ end }}
         {{ end }}
 

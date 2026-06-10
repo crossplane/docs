@@ -1,5 +1,5 @@
 ---
-weight: 50
+weight: 100
 title: Command Reference
 description: "Command reference for the Crossplane CLI"
 ---
@@ -8,7 +8,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Google.Headings = NO -->
 The `crossplane` CLI provides utilities to make using Crossplane easier.
 
-Read the [Crossplane CLI overview]({{<ref "../cli">}}) page for information on
+Read the [Crossplane CLI overview]({{<ref "/cli/v2.2">}}) page for information on
 installing `crossplane`.
 
 ## Global flags
@@ -44,8 +44,8 @@ Server Version: v1.17.0
 <!-- vale Google.Headings = YES -->
 
 The `crossplane render` command previews the output of a
-[composite resource]({{<ref "../composition/composite-resources">}}) after applying
-any [composition functions]({{<ref "../composition/compositions">}}).
+[composite resource]({{<ref "/v2.2/composition/composite-resources">}}) after applying
+any [composition functions]({{<ref "/v2.2/composition/compositions">}}).
 
 {{< hint "important" >}}
 The `crossplane render` command requires you to use composition functions.
@@ -187,7 +187,7 @@ built-in support in [function-go-templating](https://github.com/crossplane-contr
 <!-- vale Google.Headings = YES -->
 
 The `crossplane xpkg` commands create, install and update Crossplane
-[packages]({{<ref "../packages/configurations">}}) and enable authentication
+[packages]({{<ref "/v2.2/packages/configurations">}}) and enable authentication
 and publishing of Crossplane packages to a Crossplane package registry.
 
 <!-- vale Google.Headings = NO -->
@@ -204,9 +204,9 @@ The CLI applies the required annotations and values to meet the
 [Crossplane XPKG specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md).
 
 The `crossplane` CLI supports building
-[configuration]({{< ref "../packages/configurations" >}}),
-[function]({{<ref "../composition/compositions">}}) and
-[provider]({{<ref "../packages/providers" >}}) package types.
+[configuration]({{< ref "/v2.2/packages/configurations" >}}),
+[function]({{<ref "/v2.2/composition/compositions">}}) and
+[provider]({{<ref "/v2.2/packages/providers" >}}) package types.
 
 #### Flags
 
@@ -283,9 +283,9 @@ with the command
 The `<name>` input isn't used. Crossplane reserves the `<name>` for future releases.
 
 The `<template>` value may be one of four well known templates:
-* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "../packages/configurations">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
-* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
-* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "../composition/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
+* `configuration-template` - A template to build a Crossplane [Configuration]({{<ref "/v2.2/packages/configurations">}}) from the [crossplane/configuration-template](https://github.com/crossplane/configuration-template) repository.
+* `function-template-go` - A template to build Crossplane Go [composition functions]({{<ref "/v2.2/composition/compositions">}}) from the [crossplane/function-template-go](https://github.com/crossplane/function-template-go) repository.
+* `function-template-python` - A template to build Crossplane Python [composition functions]({{<ref "/v2.2/composition/compositions">}}) from the [crossplane/function-template-python](https://github.com/crossplane/function-template-go) repository.
 * `provider-template` - A template to build a basic Crossplane provider from the [Crossplane/provider-template](https://github.com/crossplane/provider-template) repository.
 * `provider-template-upjet` - A template for building [Upjet](https://github.com/crossplane/upjet) based Crossplane providers from existing Terraform providers. Copies from the [upbound/upjet-provider-template](https://github.com/upbound/upjet-provider-template) repository.
 
@@ -371,7 +371,7 @@ returns an error if the `wait` time expires before the package is `HEALTHY`.
 #### Require manual package activation
 
 Set the package to require
-[manual activation]({{<ref "../packages/configurations#revision-activation-policy" >}}),
+[manual activation]({{<ref "/v2.2/packages/configurations#revision-activation-policy" >}}),
 preventing an automatic upgrade of a package with `--manual-activation`
 
 #### Authenticate to a private registry
@@ -391,7 +391,7 @@ cache.
 Store more inactive copies of a package with `--revision-history-limit`.
 
 Read more about
-[package revisions]({{< ref "../packages/configurations#configuration-revisions" >}})
+[package revisions]({{< ref "/v2.2/packages/configurations#configuration-revisions" >}})
 in the package documentation.
 
 <!-- vale Google.Headings = NO -->
@@ -546,9 +546,9 @@ migration to the new APIs and resources, the `crossplane beta convert` command
 converts a Crossplane resource to a new version or kind.
 
 Use the `crossplane beta convert` command to convert a
-ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "../packages/providers#runtime-configuration">}})
+ControllerConfig to a [DeploymentRuntimeConfig]({{<ref "/v2.2/packages/providers#runtime-configuration">}})
 or a legacy Composition using `mode: Resources` to a
-[Composition pipeline function]({{< ref "../composition/compositions" >}}).
+[Composition pipeline function]({{< ref "/v2.2/composition/compositions" >}}).
 
 Provide the `crossplane beta convert` command the conversion type, the input
 file and optionally, an output file. By default the command writes the output to
@@ -873,7 +873,7 @@ Configuration/platform-ref-aws                             v0.9.0    True       
 <!-- vale Google.Headings = YES -->
 
 The `crossplane beta validate` command validates
-[compositions]({{<ref "../composition/compositions">}}) against provider or XRD
+[compositions]({{<ref "/v2.2/composition/compositions">}}) against provider or XRD
 schemas using the Kubernetes API server's validation library
 with extra validation such as checking for unknown fields,
 a common source of difficult to debug issues in Crossplane.

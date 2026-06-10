@@ -1,7 +1,9 @@
 ---
-weight: 200
-title: CLI Reference
+weight: 50
+title: CLI Overview
 description: "Command-line tools for Crossplane development"
+cascade:
+    version: "master"
 ---
 
 The Crossplane CLI helps simplify some development and administration aspects of

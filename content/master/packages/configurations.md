@@ -473,8 +473,7 @@ spec:
 
 ### Build the package
 
-Create the package using the
-[Crossplane CLI]({{<ref "../cli">}}) command
+Create the package using the [Crossplane CLI]({{<ref "/cli/">}}) command
 `crossplane xpkg build --package-root=<directory>`.
 
 Where the `<directory>` is the directory containing the `crossplane.yaml` file

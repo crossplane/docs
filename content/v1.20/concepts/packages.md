@@ -280,24 +280,24 @@ Crossplane can automatically upgrade a package's dependency version to the minim
 valid version that satisfies all the constraints. It's an alpha feature that
 requires enabling with the `--enable-dependency-version-upgrades` flag.
 
-In some cases, dependency version downgrade is required for proceeding with
+Sometimes, Crossplane requires dependency version downgrade for proceeding with
 installations. Suppose configuration A, which depends on package X with the
 constraint`>=v0.0.0`, is installed on the control plane. In this case, the package
 manager installs the latest version of package X, such as `v3.0.0`. Later, you decide
 to install configuration B, which depends on package X with the constraint `<=v2.0.0`.
-Since version `v2.0.0` satisfies both conditions, package X must be downgraded to
-allow the installation of configuration B which is disabled by default.
+Since version `v2.0.0` satisfies both conditions, Crossplane must downgrade package X to
+allow the installation of configuration B, which Crossplane disables by default.
 
-Automatic dependency version downgrades is also an alpha feature that can be
-enabled with the `--enable-dependency-version-downgrades` flag. Downgrading a
-package can cause unexpected behavior, therefore, this option is disabled by
-default. After enabling this option, the package manager will automatically
-downgrade a package's dependency version to the maximum valid version that
-satisfies the constraints.
+For enabling automatic dependency version downgrades, there is a configuration
+option as a helm value `packageManager.enableAutomaticDependencyDowngrade=true`.
+Downgrading a package can cause unexpected behavior, so this
+Crossplane disables this option by default. After enabling this option, the package manager
+automatically downgrades a package's dependency version to the maximum valid version
+that satisfies the constraints.
 
 {{<hint "note" >}}
 This configuration requires the `--enable-dependency-version-upgrades` flag.
-Please check the
+Please see the
 [configuration options]({{<ref "../software/install#customize-the-crossplane-helm-chart">}})
 and
 [feature flags]({{<ref "../software/install#feature-flags">}})
@@ -311,7 +311,7 @@ Enabling automatic dependency downgrades may have unintended consequences, such 
 
 1) CRDs missing in the downgraded version, possibly leaving orphaned MRs without
 controllers to reconcile them.
-2) Loss of data if downgraded CRD versions omit fields that were set before.
+2) Loss of data if downgraded CRD versions omit fields that you set before.
 3) Changes in the CRD storage version, which may prevent package version update.
 {{</hint >}}
 
@@ -475,7 +475,7 @@ spec:
 ### Build the package
 
 Create the package using the
-[Crossplane CLI]({{<ref "../cli">}}) command
+[Crossplane CLI]({{<ref "/cli/v1.20">}}) command
 `crossplane xpkg build --package-root=<directory>`.
 
 Where the `<directory>` is the directory containing the `crossplane.yaml` file
