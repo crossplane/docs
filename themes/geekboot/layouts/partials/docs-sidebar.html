@@ -10,7 +10,18 @@
        Contributing Guide), rather than nesting them under a redundant parent. */}}
   {{ $navRoot := .Site.GetPage "section" .Section }}
   {{ if eq .Section "cli" }}
+    {{/* For CLI pages .Section is "cli" (the unversioned parent). The version
+         root is the ancestor section whose parent is the /cli page (e.g.
+         cli/master), regardless of how deeply the page is nested. Falls back to
+         .CurrentSection for the version index page itself, whose only "cli"
+         ancestor is /cli. */}}
+    {{ $cliRoot := .Site.GetPage "/cli" }}
     {{ $navRoot = .CurrentSection }}
+    {{ range .Ancestors }}
+      {{ if eq .Parent $cliRoot }}
+        {{ $navRoot = . }}
+      {{ end }}
+    {{ end }}
   {{ end }}
   {{ with $navRoot }}
     {{ $sectionPages := (.Pages | append .) }}
