@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI v2.3.0.
+This documentation is for the `crossplane` CLI `v2.4.0-rc.0.72.g818953e`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -2047,9 +2047,9 @@ repository as a template.
 
 Specify either a full Git URL or one of the following names as the template:
 
+- `configuration-template` ([https://github.com/crossplane/configuration-template](https://github.com/crossplane/configuration-template))
 - `function-template-go` ([https://github.com/crossplane/function-template-go](https://github.com/crossplane/function-template-go))
 - `function-template-python` ([https://github.com/crossplane/function-template-python](https://github.com/crossplane/function-template-python))
-- `configuration-template` ([https://github.com/crossplane/configuration-template](https://github.com/crossplane/configuration-template))
 - `provider-template` ([https://github.com/crossplane/provider-template](https://github.com/crossplane/provider-template))
 - `provider-template-upjet` ([https://github.com/crossplane/upjet-provider-template](https://github.com/crossplane/upjet-provider-template))
 
@@ -2333,6 +2333,181 @@ crossplane xpkg update <kind> <package> [<name>]
 | `<kind>` | The kind of package to update. One of 'provider', 'configuration', or 'function'. |
 | `<package>` | The package to update to. Must be fully qualified, including the registry, repository, and tag. |
 | `[<name>]` | *(optional)* The name of the package to update in the Crossplane API. Derived from the package repository and tag by default. |
+{{< /table >}}
+
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+## crossplane xr
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Work with Crossplane Composite Resources (XRs).
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+### Usage
+
+```
+crossplane xr <command> [flags]
+```
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+### crossplane xr generate
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Generate a Composite Resource (XR) from a Claim.
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+The `xr generate` command creates a Composite Resource (XR) from a Claim YAML.
+
+It reads the Claim from a file (or stdin), produces an XR (same spec, derived
+kind, optional Claim reference), and writes the result to stdout or to a file.
+
+#### Examples
+
+Generate an XR from `claim.yaml` and print it to stdout (kind is `X` + Claim's
+kind):
+
+```shell
+crossplane xr generate claim.yaml
+```
+
+Generate an XR from `claim.yaml` and write it to `xr.yaml`:
+
+```shell
+crossplane xr generate claim.yaml -o xr.yaml
+```
+
+Generate an XR with an explicit name (overrides the default suffix or Claim
+name):
+
+```shell
+crossplane xr generate claim.yaml --name my-xr
+```
+
+Generate an XR with a specific kind:
+
+```shell
+crossplane xr generate claim.yaml --kind MyCompositeResource
+```
+
+Generate a directly linked XR (no Claim reference, no name suffix):
+
+```shell
+crossplane xr generate claim.yaml --direct
+```
+
+Generate an XR with a fresh random `metadata.uid`:
+
+```shell
+crossplane xr generate claim.yaml --gen-uid
+```
+
+Use in `crossplane render`:
+
+```shell
+crossplane render <(crossplane xr generate claim.yaml) composition.yaml functions.yaml
+```
+
+Read the Claim from stdin:
+
+```shell
+cat claim.yaml | crossplane xr generate -
+```
+
+#### Usage
+
+```
+crossplane xr generate [<input-file>] [flags]
+```
+#### Arguments
+
+{{< table "table table-sm table-striped" >}}
+| Argument | Description |
+|----------|-------------|
+| `[<input-file>]` | *(optional)* The Claim YAML file to convert, or '-' for stdin. |
+{{< /table >}}
+
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+| `-o` | `--output-file=PATH` | The file to write the generated XR YAML to. Defaults to stdout. |
+|  | `--name=NAME` | The name to use for the XR. If empty, defaults to the Claim's name (direct mode) or the Claim's name with a random suffix (non-direct). |
+|  | `--kind=KIND` | The kind to use for the XR. Defaults to 'X' prepended to the Claim's kind (for example, Infra -> XInfra). |
+|  | `--direct` | Create a direct XR without Claim references and suffix. |
+|  | `--gen-uid` | Set a fresh random metadata.uid on the generated XR. |
+{{< /table >}}
+
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+### crossplane xr patch
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Patch a Composite Resource (XR).
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+The `xr patch` command applies XR-level patches to a Composite Resource (XR).
+
+It reads the XR from a file (or stdin), applies the requested patches, and
+writes the result to stdout or to a file. Pass at least one patching flag;
+today the only one is `--xrd`, which applies default values from an XRD's
+`openAPIV3Schema` to the XR. Future releases add more patching flags.
+
+#### Examples
+
+Apply default values from an XRD to an XR:
+
+```shell
+crossplane xr patch xr.yaml --xrd xrd.yaml
+```
+
+Patch an XR from stdin:
+
+```shell
+cat xr.yaml | crossplane xr patch - --xrd xrd.yaml
+```
+
+Write the patched XR to a file:
+
+```shell
+crossplane xr patch xr.yaml --xrd xrd.yaml -o patched.yaml
+```
+
+#### Usage
+
+```
+crossplane xr patch [<input-file>] [flags]
+```
+#### Arguments
+
+{{< table "table table-sm table-striped" >}}
+| Argument | Description |
+|----------|-------------|
+| `[<input-file>]` | *(optional)* The XR YAML file to patch, or '-' for stdin. |
+{{< /table >}}
+
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+| `-o` | `--output-file=PATH` | The file to write the patched XR YAML to. Defaults to stdout. |
+|  | `--xrd=PATH` | A YAML file specifying the CompositeResourceDefinition (XRD) that provides schema defaults for the XR. |
 {{< /table >}}
 
 
