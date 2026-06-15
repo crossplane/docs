@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.4.0-rc.0.83.g3cbfbf6`.
+This documentation is for the `crossplane` CLI `v2.4.0-rc.0.93.g3df82fc`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -2039,6 +2039,89 @@ crossplane xpkg extract [<package>] [flags]
 |  | `--from-daemon` | Fetch the image from the Docker daemon. |
 |  | `--from-xpkg` | Extract a local xpkg file. If package isn't specified, implies the only one in the current directory. |
 | `-o` | `--output="out.gz"` | Package output file. Extension must be .gz. |
+{{< /table >}}
+
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+### crossplane xpkg get-crds
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+Download CRDs from package dependencies.
+
+The `xpkg get-crds` command downloads CRDs from Crossplane package
+dependencies (providers, functions, configurations) and writes them as YAML
+files to the specified output directory. With `--json-schema`, it extracts the
+OpenAPI v3 schemas from CRDs and writes them as JSON Schema files suitable for
+use with YAML language servers.
+
+By default, the command organizes files by API group and version (for example,
+`<group>/<version>/<kind>.{yaml|json}`). Use `--flat` to write all files
+directly to the output directory without subfolders.
+
+It accepts the same extension sources as the `validate` command:
+`crossplane.yaml` files, directories containing package manifests, or
+Provider/Function/Configuration resources.
+
+#### Examples
+
+- Download CRDs organized by group:
+
+    ```shell
+    crossplane xpkg get-crds crossplane.yaml --output-dir ./crds
+    ```
+
+- Download CRDs as flat files:
+
+    ```shell
+    crossplane xpkg get-crds crossplane.yaml --output-dir ./crds --flat
+    ```
+
+- Download JSON Schemas for YAML language server:
+
+```shell
+crossplane xpkg get-crds crossplane.yaml --output-dir ./schemas --json-schema
+```
+
+- Download CRDs from multiple sources:
+
+    ```shell
+    crossplane xpkg get-crds crossplane.yaml,providers/ --output-dir ./crds
+    ```
+
+- Force re-download of cached schemas:
+
+    ```shell
+    crossplane xpkg get-crds crossplane.yaml --output-dir ./crds --clean-cache
+    ```
+
+#### Usage
+
+```
+crossplane xpkg get-crds <extensions> [flags]
+```
+#### Arguments
+
+{{< table "table table-sm table-striped" >}}
+| Argument | Description |
+|----------|-------------|
+| `<extensions>` | Extension sources as a comma-separated list of files, directories, or '-' for standard input. |
+{{< /table >}}
+
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+|  | `--cache-dir="~/.crossplane/cache"` | Absolute path to the cache directory holding downloaded schemas. |
+|  | `--clean-cache` | Clean the cache directory before downloading package schemas. |
+|  | `--crossplane-image=STRING` | Specify the Crossplane image for fetching the built-in schemas. |
+|  | `--flat` | Write files to a flat directory instead of organizing by group and version. |
+|  | `--json-schema` | Write JSON Schema files instead of CRDs. Useful for YAML language server integration. |
+|  | `--no-cache` | Disable caching entirely. The command downloads schemas every time without storing them. |
+| `-o` | `--output-dir="."` | Directory that receives the CRD or JSON Schema files. Defaults to current directory. |
+|  | `--update-cache` | Update cached schemas by downloading the latest version that satisfies a constraint. |
 {{< /table >}}
 
 
