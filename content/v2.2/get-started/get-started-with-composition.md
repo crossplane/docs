@@ -199,7 +199,7 @@ Check that Crossplane installed the function:
 ```shell {copy-lines="1"}
 kubectl get -f {{< manifest-url path="get-started/composition/fn-kro.yaml" >}}
 NAME                              INSTALLED   HEALTHY   PACKAGE                                                     AGE
-crossplane-contrib-function-kro   True        True      xpkg.crossplane.io/crossplane-contrib/function-kro:v0.1.0   6s
+crossplane-contrib-function-kro   True        True      xpkg.crossplane.io/crossplane-contrib/function-kro:v0.3.0   6s
 ```
 {{< /tab >}}
 
