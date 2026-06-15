@@ -3,4 +3,4 @@ kind: Function
 metadata:
   name: crossplane-contrib-function-kro
 spec:
-  package: xpkg.crossplane.io/crossplane-contrib/function-kro:v0.1.0
+  package: xpkg.crossplane.io/crossplane-contrib/function-kro:v0.3.0

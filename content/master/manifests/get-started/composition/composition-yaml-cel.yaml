@@ -12,7 +12,7 @@ spec:
     functionRef:
       name: crossplane-contrib-function-kro
     input:
-      apiVersion: kro.fn.crossplane.io/v1beta1
+      apiVersion: kro.fn.crossplane.io/v1alpha1
       kind: ResourceGraph
       status:
         replicas: ${deployment.status.?availableReplicas.orValue(0)}
