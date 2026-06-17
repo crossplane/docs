@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.4.0-rc.0.93.g3df82fc`.
+This documentation is for the `crossplane` CLI `v2.4.0-rc.0.126.g62cadf8`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -508,6 +508,7 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 |  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
 |  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be files containing JSON/YAML. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be JSON/YAML. Keys take precedence over --context-files. |
 | `-r` | `--include-function-results` | Include informational and warning messages from Functions in the rendered output as resources of kind: Result. |
@@ -1068,6 +1069,7 @@ crossplane operation render <operation> [<functions>] [flags]
 |  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
 |  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be files containing JSON. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be JSON. Keys take precedence over --context-files. |
 |  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying credentials to use for functions. |
