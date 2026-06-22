@@ -1,5 +1,5 @@
 ---
-weight: 100
+weight: 50
 title: Command Reference
 description: "Command reference for the Crossplane CLI"
 ---
@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI v2.3.0.
+This documentation is for the `crossplane` CLI `v2.3.3`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -2047,11 +2047,11 @@ repository as a template.
 
 Specify either a full Git URL or one of the following names as the template:
 
-- `function-template-go` ([https://github.com/crossplane/function-template-go](https://github.com/crossplane/function-template-go))
-- `function-template-python` ([https://github.com/crossplane/function-template-python](https://github.com/crossplane/function-template-python))
 - `configuration-template` ([https://github.com/crossplane/configuration-template](https://github.com/crossplane/configuration-template))
 - `provider-template` ([https://github.com/crossplane/provider-template](https://github.com/crossplane/provider-template))
 - `provider-template-upjet` ([https://github.com/crossplane/upjet-provider-template](https://github.com/crossplane/upjet-provider-template))
+- `function-template-go` ([https://github.com/crossplane/function-template-go](https://github.com/crossplane/function-template-go))
+- `function-template-python` ([https://github.com/crossplane/function-template-python](https://github.com/crossplane/function-template-python))
 
 
 #### `NOTES.txt`
