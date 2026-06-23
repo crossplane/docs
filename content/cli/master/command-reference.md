@@ -1230,6 +1230,7 @@ crossplane project init <name> [flags]
 | Short flag | Long flag | Description |
 |------------|-----------|-------------|
 | `-d` | `--directory=STRING` | Directory to initialize. Defaults to project name. |
+| `-r` | `--repository=STRING` | Repository name/path to use in the crossplane-project.yaml file.  Defaults to `example.com/my-org` |
 {{< /table >}}
 
 
