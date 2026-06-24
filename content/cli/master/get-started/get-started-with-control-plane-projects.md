@@ -20,7 +20,7 @@ templated YAML. You can pick your preferred language.
 
 A `WebApp` custom resource looks like this:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: platform.example.com/v1alpha1
 kind: WebApp
 metadata:
@@ -38,7 +38,7 @@ workload.**
 When a user creates a `WebApp`, Crossplane creates a `Deployment` and a
 `Service`:
 
-```yaml
+```yaml {copy-lines="none"}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -131,7 +131,7 @@ metadata influences how the Crossplane CLI builds your project into
 [Crossplane packages]({{<ref "/latest/packages">}}). For now, the file sets only
 the project's name and OCI repository:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: dev.crossplane.io/v1alpha1
 kind: Project
 metadata:
@@ -191,7 +191,7 @@ crossplane xrd generate examples/webapp/podinfo.yaml --from xr
 
 The command writes the generated XRD to `apis/webapps/definition.yaml`:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
@@ -264,7 +264,7 @@ crossplane xrd generate apis/webapps/schema.yaml --from simpleschema
 
 The command writes the generated XRD to `apis/webapps/definition.yaml`:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
@@ -334,7 +334,7 @@ crossplane composition generate apis/webapps/definition.yaml
 
 The command writes the composition to `apis/webapps/composition.yaml`:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
@@ -383,7 +383,7 @@ You don't need to add `function-auto-ready` as a dependency. The
 After this step, your project has two dependencies listed in
 `crossplane-project.yaml`:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: dev.crossplane.io/v1alpha1
 kind: Project
 metadata:
@@ -431,7 +431,7 @@ The function scaffold includes the file
 `functions/compose-webapp/00-prelude.yaml.gotmpl`, which reads the observed XR
 into a variable:
 
-```yaml
+```yaml {copy-lines="none"}
 # Get the observed composite resource into a variable. This can be used in any
 # subsequent templates.
 {{ $xr := getCompositeResource . }}
@@ -880,7 +880,7 @@ the type bindings the CLI generated when you added the Kubernetes dependency.
 The composition now has two pipeline steps: your `compose-webapp` function, which
 creates the `Deployment` and `Service`, followed by `function-auto-ready`:
 
-```yaml
+```yaml {copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
