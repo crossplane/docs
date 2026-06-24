@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.4.0-rc.0.126.g62cadf8`.
+This documentation is for the `crossplane` CLI `v2.4.0-rc.0.188.gf0d8480`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -109,6 +109,9 @@ crossplane cluster top [flags]
 |------------|-----------|-------------|
 | `-s` | `--summary` | Adds summary header for all Crossplane pods. |
 | `-n` | `--namespace="crossplane-system"` | Show pods from a specific namespace, defaults to crossplane-system. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
 {{< /table >}}
 
 
@@ -514,8 +517,8 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 | `-r` | `--include-function-results` | Include informational and warning messages from Functions in the rendered output as resources of kind: Result. |
 | `-x` | `--include-full-xr` | Include a direct copy of the input XR's spec and metadata fields in the rendered output. |
 | `-o` | `--observed-resources=PATH` | A YAML file or directory of YAML files specifying the observed state of composed resources. |
-|  | `--extra-resources=PATH` | A YAML file or directory of YAML files specifying required resources (deprecated, use --required-resources). |
-| `-e` | `--required-resources=PATH` | A YAML file or directory of YAML files specifying required resources to pass to the Function pipeline. |
+|  | `--extra-resources=PATH` | A YAML file or directory of YAML files specifying required resources (deprecated, use --required-resources). Provide multiple files by repeating the argument. |
+| `-e` | `--required-resources=PATH` | A YAML file or directory of YAML files specifying required resources to pass to the Function pipeline. Provide multiple files by repeating the argument. |
 | `-s` | `--required-schemas=DIR` | A directory of JSON files specifying OpenAPI v3 schemas (from kubectl get --raw /openapi/v3/<group-version>). |
 | `-c` | `--include-context` | Include the context in the rendered output as a resource of kind: Context. |
 |  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying credentials to use for Functions to render the XR. |
@@ -1077,7 +1080,7 @@ crossplane operation render <operation> [<functions>] [flags]
 | `-c` | `--include-context` | Include the context in the rendered output as a resource of kind: Context. |
 | `-o` | `--include-full-operation` | Include a direct copy of the input Operation's spec and metadata fields in the rendered output. |
 | `-r` | `--include-function-results` | Include informational and warning messages from functions in the rendered output as resources of kind: Result. |
-| `-e` | `--required-resources=PATH` | A YAML file or directory of YAML files specifying required resources to pass to the function pipeline. |
+| `-e` | `--required-resources=PATH` | A YAML file or directory of YAML files specifying required resources to pass to the function pipeline. Provide multiple files by repeating the argument. |
 |  | `--required-schemas=DIR` | A directory of JSON files specifying OpenAPI schemas to pass to the function pipeline. |
 | `-w` | `--watched-resource=PATH` | A YAML file specifying the watched resource for WatchOperation rendering. The resource is also added to required resources. |
 |  | `--cache-dir=STRING` | Directory for cached xpkg package contents. |
@@ -1229,7 +1232,9 @@ crossplane project init <name> [flags]
 {{< table "table table-sm table-striped" >}}
 | Short flag | Long flag | Description |
 |------------|-----------|-------------|
-| `-d` | `--directory=STRING` | Directory to initialize. Defaults to project name. |
+| `-d` | `--directory=STRING` | Directory to initialize. Defaults to project name |
+| `-r` | `--registry="example.com/my-org"` | Override the registry in the project file. |
+|  | `--repository=STRING` | Override the repository name in the project file. Defaults to the project name. |
 {{< /table >}}
 
 
@@ -1619,6 +1624,9 @@ crossplane resource trace <resource> [<name>] [flags]
 |  | `--show-package-runtime-configs` | Show package runtime configs in the output. |
 |  | `--concurrency=5` | load concurrency |
 | `-w` | `--watch` | Watch for changes until resource deletion. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
 {{< /table >}}
 
 
@@ -1843,6 +1851,9 @@ crossplane version [flags]
 | Short flag | Long flag | Description |
 |------------|-----------|-------------|
 |  | `--client` | If true, shows client version only (no server required). |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
 {{< /table >}}
 
 
@@ -2004,7 +2015,7 @@ crossplane xpkg build [flags]
 |  | `--embed-runtime-image=NAME` | An OCI image to embed in the package as its runtime. |
 |  | `--embed-runtime-image-tarball=PATH` | An OCI image tarball to embed in the package as its runtime. |
 | `-e` | `--examples-root="./examples"` | A directory of example YAML files to include in the package. |
-|  | `--ignore=PATH,...` | comma-separated list of globs specifying files to exclude from the build, relative to --package-root. |
+|  | `--ignore=PATH,...` | Comma-separated file paths, specified relative to --package-root, to exclude from the package. Crossplane supports wildcards. You can't exclude directories. |
 | `-o` | `--package-file=PATH` | The file to write the package to. Defaults to a generated filename in --package-root. |
 | `-f` | `--package-root="."` | The directory that contains the package's crossplane.yaml file. |
 {{< /table >}}
@@ -2305,6 +2316,9 @@ crossplane xpkg install <kind> <package> [<name>] [flags]
 |  | `--package-pull-secrets=NAME,...` | A comma-separated list of secrets the package manager should use to pull the package from the registry. |
 | `-r` | `--revision-history-limit=LIMIT` | Number of package revisions that can exist before garbage collection. |
 | `-w` | `--wait=0s` | How long to wait for the package to install before returning. The command doesn't wait by default. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
 {{< /table >}}
 
 
@@ -2370,6 +2384,7 @@ crossplane xpkg push <package> [flags]
 {{< table "table table-sm table-striped" >}}
 | Short flag | Long flag | Description |
 |------------|-----------|-------------|
+| `-a` | `--oci-annotation=KEY=VALUE,...` | An OCI manifest annotation to add to the package in key=value format. Repeatable. |
 |  | `--insecure-skip-tls-verify` | [INSECURE] Skip verifying TLS certificates. |
 | `-f` | `--package-files=PATH` | A comma-separated list of xpkg files to push. |
 {{< /table >}}
@@ -2417,7 +2432,7 @@ crossplane xpkg update provider xpkg.crossplane.io/crossplane-contrib/provider-a
 #### Usage
 
 ```
-crossplane xpkg update <kind> <package> [<name>]
+crossplane xpkg update <kind> <package> [<name>] [flags]
 ```
 #### Arguments
 
@@ -2427,6 +2442,16 @@ crossplane xpkg update <kind> <package> [<name>]
 | `<kind>` | The kind of package to update. One of 'provider', 'configuration', or 'function'. |
 | `<package>` | The package to update to. Must be fully qualified, including the registry, repository, and tag. |
 | `[<name>]` | *(optional)* The name of the package to update in the Crossplane API. Derived from the package repository and tag by default. |
+{{< /table >}}
+
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
 {{< /table >}}
 
 
