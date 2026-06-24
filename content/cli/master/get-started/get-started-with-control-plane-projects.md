@@ -167,7 +167,7 @@ let the CLI generate the XRD.
 
 {{< tab "Example XR" >}}
 
-Create an example XR at `examples/webapp/podinfo.yaml` showing all the fields
+Create an example XR at `examples/webapps/podinfo.yaml` showing all the fields
 the `WebApp` API should include:
 
 ```yaml
@@ -186,7 +186,7 @@ The `crossplane xrd generate` command reads the example XR, infers the field
 types from their contents, and generates an appropriate XRD:
 
 ```shell
-crossplane xrd generate examples/webapp/podinfo.yaml --from xr
+crossplane xrd generate examples/webapps/podinfo.yaml --from xr
 ```
 
 The command writes the generated XRD to `apis/webapps/definition.yaml`:
@@ -908,7 +908,7 @@ If you generated your XRD from SimpleSchema, create an example `WebApp` so you
 can render and run the project against a realistic input. If you generated your
 XRD from an example XR, you already have the example and can skip this step.
 
-Create `examples/webapp/podinfo.yaml`:
+Create `examples/webapps/podinfo.yaml`:
 
 ```yaml
 apiVersion: platform.example.com/v1alpha1
@@ -932,7 +932,7 @@ In a project directory, `render` discovers and builds the composition's
 functions automatically, so you only pass the example XR and the composition:
 
 ```shell
-crossplane composition render examples/webapp/podinfo.yaml apis/webapps/composition.yaml
+crossplane composition render examples/webapps/podinfo.yaml apis/webapps/composition.yaml
 ```
 
 The command prints the rendered `Deployment` and `Service` as well as the
@@ -1058,7 +1058,7 @@ After `run` completes, your `kubectl` context points at the development control
 plane. Create the example `WebApp`:
 
 ```shell
-kubectl apply -f examples/webapp/podinfo.yaml
+kubectl apply -f examples/webapps/podinfo.yaml
 ```
 
 Check that the `WebApp` is ready:
@@ -1091,7 +1091,7 @@ the `Deployment` to match.
 When you're done, delete the `WebApp`:
 
 ```shell
-kubectl delete -f examples/webapp/podinfo.yaml
+kubectl delete -f examples/webapps/podinfo.yaml
 ```
 
 Crossplane deletes the `Deployment` and `Service` along with the `WebApp`.
