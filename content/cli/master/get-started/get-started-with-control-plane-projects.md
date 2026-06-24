@@ -482,6 +482,8 @@ metadata:
     gotemplating.fn.crossplane.io/composition-resource-name: service
   name: {{ $xr.metadata.name }}
   namespace: {{ $xr.metadata.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $xr.metadata.name }}
 spec:
   selector:
     app.kubernetes.io/name: {{ $xr.metadata.name }}
@@ -766,6 +768,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1.RunFunctionRequest) 
 		Metadata: &metav1.ObjectMeta{
 			Name:      xr.Metadata.Name,
 			Namespace: xr.Metadata.Namespace,
+			Labels:    &labels,
 		},
 		Spec: &corev1.ServiceSpec{
 			Selector: &labels,
