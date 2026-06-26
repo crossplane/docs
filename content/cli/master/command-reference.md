@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.4.0-rc.0.188.gf0d8480`.
+This documentation is for the `crossplane` CLI `v2.5.0-rc.0.2.gd0fecff`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -1822,7 +1822,7 @@ crossplane resource validate <extensions> <resources> [flags]
 |------------|-----------|-------------|
 |  | `--cache-dir="~/.crossplane/cache"` | Absolute path to the cache directory for downloaded schemas. |
 |  | `--clean-cache` | Clean the cache directory before downloading package schemas. |
-|  | `--crossplane-image=STRING` | Specify the Crossplane image for validating built-in schemas. |
+|  | `--crossplane-image="xpkg.crossplane.io/crossplane/crossplane:stable"` | Specify the Crossplane image for validating built-in schemas. |
 |  | `--error-on-missing-schemas` | Return non zero exit code if missing schemas. |
 | `-o` | `--output=text` | Output format for validation results (text, json, or yaml). |
 |  | `--skip-success-results` | Skip printing success results. |
