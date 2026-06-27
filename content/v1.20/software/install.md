@@ -125,7 +125,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `customAnnotations` | Add custom `annotations` to the Crossplane pod deployment. | `{}` |
 | `customLabels` | Add custom `labels` to the Crossplane pod deployment. | `{}` |
 | `deploymentStrategy` | The deployment strategy for the Crossplane and RBAC Manager pods. | `"RollingUpdate"` |
-| `dnsPolicy` | Specify the `dnsPolicy` to be used by the Crossplane pod. | `""` |
+| `dnsPolicy` | Specify the `dnsPolicy` for the Crossplane pod. | `""` |
 | `extraEnvVarsCrossplane` | Add custom environmental variables to the Crossplane pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
 | `extraEnvVarsRBACManager` | Add custom environmental variables to the RBAC Manager pod deployment. Replaces any `.` in a variable name with `_`. For example, `SAMPLE.KEY=value1` becomes `SAMPLE_KEY=value1`. | `{}` |
 | `extraObjects` | To add arbitrary Kubernetes Objects during a Helm Install | `[]` |
@@ -158,7 +158,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `rbacManager.leaderElection` | Enable [leader election](https://docs.crossplane.io/latest/concepts/pods/#leader-election) for the RBAC Manager pod. | `true` |
 | `rbacManager.nodeSelector` | Add `nodeSelectors` to the RBAC Manager pod deployment. | `{}` |
 | `rbacManager.replicas` | The number of RBAC Manager pod `replicas` to deploy. | `1` |
-| `rbacManager.revisionHistoryLimit` | The number of RBAC Manager ReplicaSets to retain. | `nil` |
+| `rbacManager.revisionHistoryLimit` | The number of RBAC Manager ReplicaSets to keep. | `nil` |
 | `rbacManager.skipAggregatedClusterRoles` | Don't install aggregated Crossplane ClusterRoles. | `false` |
 | `rbacManager.tolerations` | Add `tolerations` to the RBAC Manager pod deployment. | `[]` |
 | `rbacManager.topologySpreadConstraints` | Add `topologySpreadConstraints` to the RBAC Manager pod deployment. | `[]` |
@@ -174,7 +174,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `resourcesRBACManager.limits.memory` | Memory resource limits for the RBAC Manager pod. | `"512Mi"` |
 | `resourcesRBACManager.requests.cpu` | CPU resource requests for the RBAC Manager pod. | `"100m"` |
 | `resourcesRBACManager.requests.memory` | Memory resource requests for the RBAC Manager pod. | `"256Mi"` |
-| `revisionHistoryLimit` | The number of Crossplane ReplicaSets to retain. | `nil` |
+| `revisionHistoryLimit` | The number of Crossplane ReplicaSets to keep. | `nil` |
 | `runtimeClassName` | The runtimeClassName name to apply to the Crossplane and RBAC Manager pods. | `""` |
 | `securityContextCrossplane.allowPrivilegeEscalation` | Enable `allowPrivilegeEscalation` for the Crossplane pod. | `false` |
 | `securityContextCrossplane.readOnlyRootFilesystem` | Set the Crossplane pod root file system as read-only. | `true` |
@@ -185,7 +185,7 @@ Apply customizations with the command line or with a Helm _values_ file.
 | `securityContextRBACManager.runAsGroup` | The group ID used by the RBAC Manager pod. | `65532` |
 | `securityContextRBACManager.runAsUser` | The user ID used by the RBAC Manager pod. | `65532` |
 | `service.customAnnotations` | Configure annotations on the service object. Only enabled when webhooks.enabled = true | `{}` |
-| `serviceAccount.create` | Specifies whether Crossplane ServiceAccount should be created | `true` |
+| `serviceAccount.create` | Specifies whether to create the Crossplane ServiceAccount | `true` |
 | `serviceAccount.customAnnotations` | Add custom `annotations` to the Crossplane ServiceAccount. | `{}` |
 | `serviceAccount.name` | Provide the name of an already created Crossplane ServiceAccount. Required when `serviceAccount.create` is `false` | `""` |
 | `tolerations` | Add `tolerations` to the Crossplane pod deployment. | `[]` |
@@ -265,14 +265,14 @@ at the table below.
 | --- | --- | --- |
 | Beta | `--enable-composition-webhook-schema-validation` | Enable Composition validation using schemas. |
 | Beta | `--enable-deployment-runtime-configs` | Enable support for DeploymentRuntimeConfigs. |
-| Beta | `--enable-usages` | Enable support for Usages. |
-| Beta | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
 | Beta | `--enable-realtime-compositions` | Enable support for real time compositions. |
-| Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
-| Alpha | `--enable-dependency-version-upgrades` | Enable automatic version upgrades of dependencies when updating packages. |
+| Beta | `--enable-ssa-claims` | Enable support for using server-side apply to sync claims with XRs. |
+| Beta | `--enable-usages` | Enable support for Usages. |
 | Alpha | `--enable-dependency-version-downgrades` | Enable automatic version downgrades of dependencies when updating packages. |
-| Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
+| Alpha | `--enable-dependency-version-upgrades` | Enable automatic version upgrades of dependencies when updating packages. |
+| Alpha | `--enable-external-secret-stores` | Enable support for External Secret Stores. |
 | Alpha | `--enable-function-response-cache` | Enable support for caching composition function responses. |
+| Alpha | `--enable-signature-verification` | Enable support for package signature verification via ImageConfig API. |
 {{< /table >}}
 {{< /expand >}}
 
