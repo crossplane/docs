@@ -51,6 +51,7 @@ finalizers
 FromCompositeFieldPath
 FromEnvironmentFieldPath
 fromFieldPath
+function-auto-ready
 function-environment-configs
 function-extra-resources
 function-go-templating
@@ -91,6 +92,7 @@ RunFunctionRequests
 RunFunctionResponse
 RunFunctionResponses
 Sigstore
+SimpleSchema
 SSL
 StoreConfig
 StoreConfigs
