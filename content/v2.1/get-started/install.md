@@ -103,14 +103,18 @@ at the table below.
 
 {{< expand "Feature flags" >}}
 {{< table caption="Feature flags" >}}
-| Status | Flag                                    | Description                                                               |
-|--------|-----------------------------------------|---------------------------------------------------------------------------|
-| Beta   | `--enable-deployment-runtime-configs`   | Enable support for DeploymentRuntimeConfigs.                              |
-| Beta   | `--enable-usages`                       | Enable support for Usages.                                                |
-| Beta   | `--enable-realtime-compositions`        | Enable support for real time compositions.                                |
-| Alpha  | `--enable-dependency-version-upgrades ` | Enable automatic version upgrades of dependencies when updating packages. |
-| Alpha  | `--enable-function-response-cache`      | Enable caching of composition function responses to improve performance.  |
-| Alpha  | `--enable-signature-verification`       | Enable support for package signature verification via ImageConfig API.    |
+| Status | Flag                                             | Description                                                                 |
+|--------|--------------------------------------------------|-----------------------------------------------------------------------------|
+| Beta   | `--enable-custom-to-managed-resource-conversion` | Enable support for CRD to MRD conversion when installing a package.         |
+| Beta   | `--enable-deployment-runtime-configs`            | Enable support for DeploymentRuntimeConfigs.                                |
+| Beta   | `--enable-realtime-compositions`                 | Enable support for real time compositions.                                  |
+| Beta   | `--enable-ssa-claims`                            | Enable support for using server-side apply to sync claims with XRs.         |
+| Beta   | `--enable-usages`                                | Enable support for Usages.                                                  |
+| Alpha  | `--enable-dependency-version-downgrades`         | Enable automatic version downgrades of dependencies when updating packages. |
+| Alpha  | `--enable-dependency-version-upgrades`           | Enable automatic version upgrades of dependencies when updating packages.   |
+| Alpha  | `--enable-function-response-cache`               | Enable caching of composition function responses to improve performance.    |
+| Alpha  | `--enable-operations`                            | Enable support for Operations.                                              |
+| Alpha  | `--enable-signature-verification`                | Enable support for package signature verification via ImageConfig API.      |
 {{< /table >}}
 {{< /expand >}}
 
