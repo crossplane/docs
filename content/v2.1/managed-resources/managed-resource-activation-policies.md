@@ -275,21 +275,48 @@ spec:
 
 ### Configuration package activation
 
-Configuration packages can include MRAPs to declare their resource dependencies:
+Configuration packages cannot include MRAPs directly — the
+[Crossplane package specification](https://github.com/crossplane/crossplane/blob/main/contributing/specifications/xpkg.md)
+restricts Configuration packages to `Configuration`,
+`CompositeResourceDefinition`, and `Composition` objects only.
+
+To declare resource dependencies for a Configuration package, use the
+`dependsOn` field in `crossplane.yaml` to specify required Providers:
 
 ```yaml
-# In your Configuration package
+# crossplane.yaml
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: my-configuration
+spec:
+  dependsOn:
+    - apiVersion: pkg.crossplane.io/v1
+      kind: Provider
+      package: xpkg.crossplane.io/crossplane-contrib/provider-aws
+      version: ">=v0.50.0"
+```
+
+MRAPs are applied separately by cluster operators or platform teams. A
+Configuration author should document which MRDs their Configuration requires
+so the operator can create matching MRAPs:
+
+```yaml
+# Applied separately by the cluster operator
 apiVersion: apiextensions.crossplane.io/v1alpha1
 kind: ManagedResourceActivationPolicy
 metadata:
-  name: web-platform-dependencies
+  name: my-configuration-dependencies
 spec:
   activate:
-  - buckets.s3.aws.m.crossplane.io       # For static assets
-  - instances.ec2.aws.m.crossplane.io    # For web servers
-  - databases.rds.aws.m.crossplane.io    # For application data
-  - certificates.acm.aws.m.crossplane.io # For HTTPS
+  - buckets.s3.aws.m.crossplane.io       # Required by my-configuration
+  - instances.ec2.aws.m.crossplane.io    # Required by my-configuration
 ```
+
+{{<hint "tip">}}
+Document MRD requirements in your Configuration's README so users know which
+MRAPs to create before installing.
+{{</hint>}}
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.HeadingAcronyms = NO -->
@@ -458,9 +485,10 @@ package dependencies.
    `*.s3.aws.m.crossplane.io` works for future S3 resources)
 3. **Group related resources logically** - Create MRAPs that activate
    resources teams actually use together
-4. **Include activation dependencies in Configuration packages** -
-   Configuration packages should declare what MRDs they need rather than
-   assuming resources are available
+4. **Document MRD requirements in Configuration packages** -
+   Configuration packages cannot include MRAPs, so document required MRDs
+   in the package README so operators can create matching MRAPs before
+   installation
 5. **Use conservative patterns in shared environments** - Avoid overly broad
    wildcards that activate unnecessary resources when multiple teams share
    providers
