@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.5.0-rc.0.2.gd0fecff`.
+This documentation is for the `crossplane` CLI `v2.5.0-rc.0.50.gcf03c1d`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -2699,6 +2699,18 @@ Read the XRD from stdin:
 cat xrd.yaml | crossplane xrd convert -
 ```
 
+Convert an XRD to JSON Schema and print to stdout:
+
+```shell
+crossplane xrd convert xrd.yaml --format=jsonschema
+```
+
+Convert an XRD to JSON Schema files in a directory:
+
+```shell
+crossplane xrd convert xrd.yaml --format=jsonschema --output-dir ./schemas/
+```
+
 #### Usage
 
 ```
@@ -2719,6 +2731,7 @@ crossplane xrd convert [<input-file>] [flags]
 |------------|-----------|-------------|
 | `-o` | `--output-file=PATH` | The file to write the generated CRD YAML to. Legacy XRDs produce a multi-doc YAML stream (XR CRD + Claim CRD). |
 |  | `--output-dir=DIR` | A directory to write the generated CRDs to. Each CRD gets a separate file named after the CRD. |
+|  | `--format="crd"` | Write JSON Schema files instead of CRDs. Useful for YAML language server integration. |
 {{< /table >}}
 
 
