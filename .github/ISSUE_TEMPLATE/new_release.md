@@ -12,4 +12,5 @@ labels: release
 - [ ] Update `version` in the `_index.md` file of `/content/<new latest>` from `master` to the correct version.
 - [ ] Create a [new release/tag](https://github.com/crossplane/docs/releases/new) named `v<EOL version>-archive` to snapshot EOL'd docs.
 - [ ] Remove EOL'd docs version from "/content" directory and run `hugo` locally to check for broken links.
-- [ ] Trigger [Algolia Crawler](https://crawler.algolia.com/) after publishing to reindex results.
+- [ ] Update [Algolia Crawler configuration](https://crawler.algolia.com/) to add new version to `startUrls` (e.g., add `"https://docs.crossplane.io/v<new version>/"`) and remove EOL'd version if applicable.
+- [ ] Trigger [Algolia Crawler](https://crawler.algolia.com/) after publishing to reindex results with the new version.
