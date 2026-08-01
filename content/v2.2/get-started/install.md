@@ -121,7 +121,7 @@ at the table below.
 
 Set these flags either in the `values.yaml` file or at install time using the
 `--set` flag, for example: `--set
-args='{"--enable-composition-functions","--enable-composition-webhook-schema-validation"}'`.
+args='{"--enable-operations","--enable-signature-verification"}'`.
 
 ## Install pre-release Crossplane versions
 
