@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.5.0-rc.0.50.gcf03c1d`.
+This documentation is for the `crossplane` CLI `v2.5.0-rc.0.104.gd267815`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -559,6 +559,21 @@ Enable alpha commands:
 
 ```shell
 crossplane config set features.enableAlpha true
+```
+
+Generate GetX/SetX accessor methods on generated Go models (off by default), so
+you can reach generated resources through interfaces and generics:
+
+```shell
+crossplane config set features.generateGoModelAccessors true
+```
+
+Generate `runtime.Object` methods and per-package `AddToScheme` helpers on
+generated Go models (off by default), so you can register generated types with a
+`runtime.Scheme`:
+
+```shell
+crossplane config set features.generateGoRuntimeObjects true
 ```
 
 ### Usage
@@ -2802,6 +2817,7 @@ crossplane xrd generate <file> [flags]
 |------------|-----------|-------------|
 |  | `--from="xr"` | Input format: xr or simpleschema. |
 |  | `--path=STRING` | Output path. |
+|  | `--replace` | Replaces the existing definition file |
 |  | `--plural=STRING` | Custom plural form for the XRD. |
 | `-f` | `--project-file="crossplane-project.yaml"` | Path to project definition. |
 {{< /table >}}
