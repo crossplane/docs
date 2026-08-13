@@ -9,13 +9,63 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
 <script>
+    {{ $cur_ver := "" }}
+    {{/* Only filter if we have a version parameter and it's not "0" (static pages) */}}
+    {{ if and .Page.Params.version (ne .Page.Params.version "0") }}
+        {{ if eq .Page.Params.version "master" }}
+            {{ $cur_ver = "0.0.0-master" }}
+        {{ else }}
+            {{ $cur_ver = .Page.Params.version }}
+        {{ end }}
+    {{ end }}
 
-    docsearch({
-    container: '#docSearch',
-    appId: '9UXKYX61NK',
-    indexName: 'crossplane',
-    apiKey: 'e07e181044d561f6a4cb7261931d980a',
-    placeholder: 'Search the docs'
+    const docSearchInstance = docsearch({
+        container: '#docSearch',
+        appId: '9UXKYX61NK',
+        indexName: 'crossplane',
+        apiKey: 'e07e181044d561f6a4cb7261931d980a',
+        placeholder: 'Search the docs',
+        searchParameters: {
+            attributesToRetrieve: ['hierarchy.lvl0', 'hierarchy.lvl1', 'hierarchy.lvl2', 'hierarchy.lvl3', 'hierarchy.lvl4', 'hierarchy.lvl5', 'hierarchy.lvl6', 'content', 'type', 'url', 'version']{{ if $cur_ver }},
+            facetFilters: [['version:{{ $cur_ver }}']]{{ end }}
+        },
+        transformItems(items) {
+            // Add version warning banner and badges after DOM renders
+            setTimeout(() => {
+                {{ if and $cur_ver (ne .Page.Params.version "master") (ne .Page.Params.version .Site.Params.latest) }}
+                // Add warning banner for old version
+                const dropdown = document.querySelector('.DocSearch-Dropdown-Container');
+                if (dropdown && !dropdown.hasAttribute('data-version-banner-added')) {
+                    const banner = document.createElement('div');
+                    banner.style.cssText = 'padding: 12px; margin: 0 0 12px 0; background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; font-size: 0.875rem;';
+                    banner.innerHTML = '<strong>Searching in v{{ .Page.Params.version }}</strong><br>You are viewing an older version. Results are filtered to this version only. <a href="/v{{ .Site.Params.latest }}/" style="color: #856404; text-decoration: underline; font-weight: 600;">View v{{ .Site.Params.latest }}</a>';
+                    dropdown.insertBefore(banner, dropdown.firstChild);
+                    dropdown.setAttribute('data-version-banner-added', 'true');
+                }
+                {{ end }}
+
+                // Add version badges to each hit
+                items.forEach(item => {
+                    if (item.version && item.version !== '0') {
+                        const hitLink = document.querySelector(`.DocSearch-Hit a[href="${item.url}"]`);
+                        if (hitLink) {
+                            const container = hitLink.querySelector('.DocSearch-Hit-Container');
+                            if (container && !container.hasAttribute('data-version-set')) {
+                                const versionText = item.version === '0.0.0-master' ? 'master' : `v${item.version}`;
+                                const badge = document.createElement('div');
+                                badge.className = 'DocSearch-Hit-version';
+                                badge.textContent = versionText;
+                                badge.style.cssText = 'position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 0.65rem; font-weight: 600; padding: 2px 6px; background: #5468ff; color: white; border-radius: 3px;';
+                                container.style.position = 'relative';
+                                container.appendChild(badge);
+                                container.setAttribute('data-version-set', 'true');
+                            }
+                        }
+                    }
+                });
+            }, 10);
+            return items;
+        }
     });
 
 </script>
