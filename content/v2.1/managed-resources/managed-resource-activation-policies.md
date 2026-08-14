@@ -291,6 +291,10 @@ spec:
   - certificates.acm.aws.m.crossplane.io # For HTTPS
 ```
 
+The package linter accepts `ManagedResourceActivationPolicy` objects in
+Configuration packages, so an MRAP can ship in the package's `package.yaml`
+([package linter](https://github.com/crossplane/crossplane-runtime/blob/main/pkg/xpkg/lint.go#L75)).
+
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.HeadingAcronyms = NO -->
 ## Working with MRAPs
