@@ -62,7 +62,7 @@ spec:
   scope: Namespaced
   group: example.org
   names:
-    kind: XMyDatabase
+    kind: MyDatabase
     plural: mydatabases
   versions:
   - name: v1alpha1
@@ -119,8 +119,8 @@ The required name fields are:
 
 * `kind` - the `kind` value to use when calling this API. The kind is
   [UpperCamelCased](https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects).
-  Crossplane recommends starting XRD `kinds` with an `X` to show
-  it's a custom Crossplane API definition.
+  An `X` prefix isn't required. That convention distinguished claims
+  from composite resources in v1, and Crossplane v2 no longer uses claims.
 * `plural` - the plural name used for the API URL. The plural name must be
   lowercase.
 
@@ -130,9 +130,8 @@ The XRD
 {{<hover label="xrdName" line="9">}}plural{{</hover>}} name, `.` (dot character),
 {{<hover label="xrdName" line="6">}}group{{</hover>}}.
 
-For example, {{<hover label="xrdName"
-line="4">}}mydatabases.example.org{{</hover>}} matches the {{<hover
-label="xrdName" line="9">}}plural{{</hover>}} name
+For example, {{<hover label="xrdName" line="4">}}mydatabases.example.org{{</hover>}} matches the
+{{<hover label="xrdName" line="9">}}plural{{</hover>}} name
 {{<hover label="xrdName" line="9">}}mydatabases{{</hover>}}, `.`
 {{<hover label="xrdName" line="6">}}group{{</hover>}} name,
 {{<hover label="xrdName" line="6">}}example.org{{</hover>}}.
@@ -145,7 +144,7 @@ metadata:
 spec:
   group: example.org
   names:
-    kind: XMyDatabase
+    kind: MyDatabase
     plural: mydatabases
     # Removed for brevity
 ```
@@ -211,12 +210,12 @@ is a {{<hover label="schema" line="20">}}string{{</hover>}}.
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: MyDatabase
+    plural: mydatabases
   versions:
   - name: v1alpha1
     schema:
@@ -239,7 +238,7 @@ A composite resource using this API references the
 
 ```yaml {label="xr"}
 apiVersion: custom-api.example.org/v1alpha1
-kind: xDatabase
+kind: MyDatabase
 metadata:
   name: my-composite-resource
 spec:
@@ -279,12 +278,12 @@ In this example the XRD requires
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: MyDatabase
+    plural: mydatabases
   versions:
   - name: v1alpha1
     schema:
@@ -377,12 +376,12 @@ and
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: MyDatabase
+    plural: mydatabases
   versions:
   - name: v1alpha1
     served: true
@@ -460,12 +459,12 @@ A second version,
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   group: custom-api.example.org
   names:
-    kind: xDatabase
-    plural: xdatabases
+    kind: MyDatabase
+    plural: mydatabases
   versions:
   - name: v1alpha1
     schema:
@@ -552,7 +551,7 @@ to set the default Composition.
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   defaultCompositionRef:
     name: myComposition
@@ -583,7 +582,7 @@ this XRD.
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   defaultCompositionUpdatePolicy: Manual
   group: custom-api.example.org
@@ -609,7 +608,7 @@ set
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xdatabases.custom-api.example.org
+  name: mydatabases.custom-api.example.org
 spec:
   enforcedCompositionRef:
     name: myComposition
@@ -632,7 +631,7 @@ Verify an XRD with `kubectl get compositeresourcedefinition` or the short form,
 ```yaml {label="getxrd",copy-lines="1"}
 kubectl get xrd
 NAME                                ESTABLISHED   OFFERED   AGE
-xdatabases.custom-api.example.org   True          True      22m
+mydatabases.custom-api.example.org  True          True      22m
 ```
 
 The `ESTABLISHED` field indicates Crossplane installed the Kubernetes custom
