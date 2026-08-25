@@ -97,7 +97,7 @@ params:
   latest: "2.4"
   # The current "latest" version of the CLI docs. Used in the CLI version
   # dropdown.
-  cliLatest: "2.4"
+  cliLatest: "2.5"
   docs: true
   anchors:
     # Generate heading anchors for any heading between min and max
