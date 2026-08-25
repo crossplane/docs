@@ -5,7 +5,7 @@ LATEST_VER="2.4"
 
 # Which CLI docs version is the "Latest"? Tracked separately from core so the
 # two version lines can diverge. Keep in sync with params.cliLatest in config.yaml.
-CLI_LATEST_VER="2.4"
+CLI_LATEST_VER="2.5"
 
 # Make a copy of /content/$LATEST_VER to the directory /latest
 # Search indexing only points to /latest, this prevents broken or out of date
