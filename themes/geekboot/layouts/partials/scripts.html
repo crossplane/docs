@@ -19,6 +19,13 @@
         {{ end }}
     {{ end }}
 
+    {{/* Which track is this page on? Records are tagged "cli" or "core" by the
+         crawler; everything that isn't the CLI track (core, knowledge base,
+         contributing guide) searches the "core" records. */}}
+    {{ $track := cond (eq (.Page.Params.track | default "core") "cli") "cli" "core" }}
+    {{ $trackLatest := cond (eq $track "cli") .Site.Params.cliLatest .Site.Params.latest }}
+    {{ $latestLink := cond (eq $track "cli") (printf "/cli/v%s/" .Site.Params.cliLatest) (printf "/v%s/" .Site.Params.latest) }}
+
     const docSearchInstance = docsearch({
         container: '#docSearch',
         appId: '9UXKYX61NK',
@@ -26,19 +33,19 @@
         apiKey: 'e07e181044d561f6a4cb7261931d980a',
         placeholder: 'Search the docs',
         searchParameters: {
-            attributesToRetrieve: ['hierarchy.lvl0', 'hierarchy.lvl1', 'hierarchy.lvl2', 'hierarchy.lvl3', 'hierarchy.lvl4', 'hierarchy.lvl5', 'hierarchy.lvl6', 'content', 'type', 'url', 'version']{{ if $cur_ver }},
-            facetFilters: [['version:{{ $cur_ver }}']]{{ end }}
+            attributesToRetrieve: ['hierarchy.lvl0', 'hierarchy.lvl1', 'hierarchy.lvl2', 'hierarchy.lvl3', 'hierarchy.lvl4', 'hierarchy.lvl5', 'hierarchy.lvl6', 'content', 'type', 'url', 'version'],
+            facetFilters: [['track:{{ $track }}']{{ if $cur_ver }}, ['version:{{ $cur_ver }}']{{ end }}]
         },
         transformItems(items) {
             // Add version warning banner and badges after DOM renders
             setTimeout(() => {
-                {{ if and $cur_ver (ne .Page.Params.version "master") (ne .Page.Params.version .Site.Params.latest) }}
+                {{ if and $cur_ver (ne .Page.Params.version "master") (ne .Page.Params.version $trackLatest) }}
                 // Add warning banner for old version
                 const dropdown = document.querySelector('.DocSearch-Dropdown-Container');
                 if (dropdown && !dropdown.hasAttribute('data-version-banner-added')) {
                     const banner = document.createElement('div');
                     banner.style.cssText = 'padding: 12px; margin: 0 0 12px 0; background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; font-size: 0.875rem;';
-                    banner.innerHTML = '<strong>Searching in v{{ .Page.Params.version }}</strong><br>You are viewing an older version. Results are filtered to this version only. <a href="/v{{ .Site.Params.latest }}/" style="color: #856404; text-decoration: underline; font-weight: 600;">View v{{ .Site.Params.latest }}</a>';
+                    banner.innerHTML = '<strong>Searching in v{{ .Page.Params.version }}</strong><br>You are viewing an older version. Results are filtered to this version only. <a href="{{ $latestLink }}" style="color: #856404; text-decoration: underline; font-weight: 600;">View v{{ $trackLatest }}</a>';
                     dropdown.insertBefore(banner, dropdown.firstChild);
                     dropdown.setAttribute('data-version-banner-added', 'true');
                 }
