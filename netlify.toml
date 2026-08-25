@@ -14,9 +14,12 @@
     publish = "public/"
     command = "bash netlify_build.sh"
 
-# The version of Hugo to use for the Netlify build.
+# The versions of Hugo and Node to use for the Netlify build.
+# Hugo >= 0.158 runs PostCSS under Node's permission model (node --permission),
+# which requires Node >= 22.13.
 [build.environment]
-  HUGO_VERSION = "0.147.3"
+  HUGO_VERSION = "0.162.1"
+  NODE_VERSION = "22"
 
 #
 # The following are Netlify redirects for moved docs pages
