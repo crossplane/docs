@@ -1,0 +1,129 @@
+name: Sync Docs Search
+
+on:
+  workflow_dispatch:
+    inputs:
+      reindex:
+        description: 'Trigger a full reindex afterwards'
+        type: boolean
+        default: true
+      dry-run:
+        description: 'Resolve and print the patch without pushing'
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      reindex: { type: boolean, required: false, default: true }
+      dry-run: { type: boolean, required: false, default: false }
+    secrets:
+      ALGOLIA_CRAWLER_USER_ID: { required: true }
+      ALGOLIA_CRAWLER_API_KEY: { required: true }
+      ALGOLIA_CRAWLER_ID:      { required: true }
+
+permissions:
+  contents: read
+
+# the config update is read-modify-write — never run two at once
+concurrency:
+  group: docs-search-config
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      CRAWLER: https://crawler.algolia.com/api/1/crawlers
+      ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+      AUTH: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}:${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve versions from content folders
+        run: |
+          set -euo pipefail
+          core=$(find content -mindepth 1 -maxdepth 1 -type d -name 'v[0-9]*' -printf '%f\n' | sort -V)
+          cli=$(find content/cli -mindepth 1 -maxdepth 1 -type d -name 'v[0-9]*' -printf '%f\n' | sort -V)
+          [[ -n "$core" && -n "$cli" ]] || { echo "::error::no version folders under content/ — refusing to sync"; exit 1; }
+
+          # every version we are about to index must already be deployed
+          check() {  # $1 = url
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$1")
+            [[ "$code" == "200" ]] || { echo "::error::$1 -> $code"; exit 1; }
+          }
+          for v in $core; do check "https://docs.crossplane.io/$v/"; done
+          for v in $cli;  do check "https://docs.crossplane.io/cli/$v/"; done
+
+          core_keep=$(printf '%s\n' $core | jq -R . | jq -cs .)
+          cli_keep=$(printf '%s\n' $cli | jq -R . | jq -cs .)
+          computed=$(jq -cn --argjson core "$core_keep" --argjson cli "$cli_keep" '
+            [($core[] | "https://docs.crossplane.io/\(.)/**"),
+             ($cli[]  | "https://docs.crossplane.io/cli/\(.)/**")]')
+
+          {
+            echo "CORE_KEEP=$core_keep"
+            echo "CLI_KEEP=$cli_keep"
+            echo "COMPUTED=$computed"
+          } >> "$GITHUB_ENV"
+          echo "Syncing: core=$core_keep cli=$cli_keep" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build patch
+        run: |
+          set -euo pipefail
+          curl -sf -u "$AUTH" "$CRAWLER/$ID?withConfig=true" > current.json
+
+          jq -e '.config.actions | map(select(.name=="CrossplaneCrawler")) | length == 1' current.json >/dev/null \
+            || { echo "::error::action 'CrossplaneCrawler' not found in crawler config"; exit 1; }
+
+          # versioned patterns (vX.Y) are fully managed: replaced by the set
+          # computed from the content folders. everything else (latest, master,
+          # contribute, knowledge-base, negations) passes through untouched.
+          # negation patterns must stay at the end of pathsToMatch.
+          jq --argjson computed "$COMPUTED" --argjson core "$CORE_KEEP" --argjson cli "$CLI_KEEP" '
+            def versioned: test("^!?https://docs\\.crossplane\\.io/(cli/)?v[0-9]+\\.[0-9]+/");
+            def live:
+              if test("^!?https://docs\\.crossplane\\.io/cli/v")
+              then capture("/cli/(?<v>v[0-9]+\\.[0-9]+)/").v as $v | ($cli | index($v)) != null
+              else capture("\\.io/(?<v>v[0-9]+\\.[0-9]+)/").v as $v | ($core | index($v)) != null
+              end;
+            { actions: (.config.actions | map(
+                if .name == "CrossplaneCrawler" then
+                  .pathsToMatch |= (
+                    ((map(select((startswith("!") | not) and (versioned | not))) + $computed) | unique)
+                    + map(select(startswith("!") and ((versioned | not) or live)))
+                  )
+                else . end
+              ))
+            }
+          ' current.json > patch.json
+
+          jq -r '.config.actions[] | select(.name=="CrossplaneCrawler") | .pathsToMatch[]' current.json | sort > before.txt
+          jq -r '.actions[] | select(.name=="CrossplaneCrawler") | .pathsToMatch[]' patch.json | sort > after.txt
+
+          {
+            echo '### pathsToMatch after sync'
+            echo '```'
+            jq -r '.actions[] | select(.name=="CrossplaneCrawler") | .pathsToMatch[]' patch.json
+            echo '```'
+            if ! cmp -s before.txt after.txt; then
+              echo '### added'
+              echo '```'
+              comm -13 before.txt after.txt || true
+              echo '```'
+              echo '### removed'
+              echo '```'
+              comm -23 before.txt after.txt || true
+              echo '```'
+            else
+              echo '_no changes — crawler already in sync_'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Push config
+        if: ${{ !inputs.dry-run }}
+        run: |
+          curl -sf -X PATCH -u "$AUTH" -H 'Content-Type: application/json' \
+            --data-binary @patch.json "$CRAWLER/$ID/config"
+
+      - name: Reindex
+        if: ${{ inputs.reindex && !inputs.dry-run }}
+        run: curl -sf -X POST -u "$AUTH" "$CRAWLER/$ID/reindex"
