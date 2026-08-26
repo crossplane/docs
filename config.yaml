@@ -1,6 +1,6 @@
 baseURL: "/"
 enableRobotsTXT: True
-languageCode: "en-us"
+locale: "en-us"
 title: "Crossplane"
 
 # directory name in /themes
@@ -69,18 +69,18 @@ module:
     target: assets
   - source: content
     target: assets/content
-    includeFiles:
+    files:
       - "**/**.png"
       - "**/**.jpg"
       - "**/**.jpeg"
       - "**/**.gif"
   - source: content
     target: data/crds/
-    includeFiles:
+    files:
       - "**/api/**.yaml"
   - source: content
     target: static
-    includeFiles:
+    files:
       - "**/manifests/**.yaml"
 
 # Give Hugo access to environmental variables matching a given regex.
@@ -90,6 +90,13 @@ security:
     getenv:
       - ^CONTEXT
       - ^REVIEW_ID
+  # Hugo >= 0.161 runs Node tools under the Node.js permission model, which
+  # blocks loading native addons unless the tool is allowlisted. PostCSS needs
+  # this to load the lightningcss native binary.
+  node:
+    permissions:
+      allowAddons:
+        - postcss
 
 # Global parameters accessible by any Page
 params:

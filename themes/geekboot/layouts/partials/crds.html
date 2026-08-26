@@ -5,10 +5,10 @@
     {{ partialCached "apiBuilder/GKVHeader" . }}
 
     <div id="crd-rows-container">
-        {{/* $.Site.Data is from the hugo config file module.mounts.target. */}}
+        {{/* hugo.Data is from the hugo config file module.mounts.target. */}}
         {{/* Hugo requires YAML to be in the 'data' location for processing */}}
         {{/* https://gohugo.io/methods/site/data/ */}}
-        {{ $crdFiles := index $.Site.Data.crds .Section "api" "crds" }}
+        {{ $crdFiles := index hugo.Data.crds .Section "api" "crds" }}
 
 
         {{/* Iterate over each CRD file */}}
