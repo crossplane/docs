@@ -43,6 +43,19 @@
             facetFilters: [['track:{{ $track }}']{{ if $cur_ver }}, ['version:{{ $cur_ver }}']{{ else }}, ['version:0', 'version:{{ $trackLatest }}']{{ end }}]
         },
         transformItems(items) {
+            // Records store absolute production URLs; point hits at the host
+            // being viewed so deploy previews and local servers stay testable.
+            items.forEach(item => {
+                try {
+                    const itemUrl = new URL(item.url);
+                    if (itemUrl.origin !== window.location.origin) {
+                        item.url = window.location.origin + itemUrl.pathname + itemUrl.search + itemUrl.hash;
+                    }
+                } catch (e) {
+                    // Leave relative or malformed URLs untouched
+                }
+            });
+
             // Add version warning banner and badges after DOM renders
             setTimeout(() => {
                 {{ if and $cur_ver .Page.Params.version (ne .Page.Params.version "master") (ne .Page.Params.version $trackLatest) }}
