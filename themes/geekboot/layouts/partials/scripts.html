@@ -9,22 +9,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
 <script>
-    {{ $cur_ver := "" }}
-    {{/* Only filter if we have a version parameter and it's not "0" (static pages) */}}
-    {{ if and .Page.Params.version (ne .Page.Params.version "0") }}
-        {{ if eq .Page.Params.version "master" }}
-            {{ $cur_ver = "0.0.0-master" }}
-        {{ else }}
-            {{ $cur_ver = .Page.Params.version }}
-        {{ end }}
-    {{ end }}
-
     {{/* Which track is this page on? Records are tagged "cli" or "core" by the
          crawler; everything that isn't the CLI track (core, knowledge base,
          contributing guide) searches the "core" records. */}}
     {{ $track := cond (eq (.Page.Params.track | default "core") "cli") "cli" "core" }}
     {{ $trackLatest := cond (eq $track "cli") .Site.Params.cliLatest .Site.Params.latest }}
     {{ $latestLink := cond (eq $track "cli") (printf "/cli/v%s/" .Site.Params.cliLatest) (printf "/v%s/" .Site.Params.latest) }}
+
+    {{ $cur_ver := "" }}
+    {{/* Every version folder is indexed, so always send a version facet.
+         Pages without a version param (the build-time /latest and /cli/latest
+         copies, the home page) fall back to the track's latest version.
+         Static pages (version "0": contribute guide, knowledge base) are
+         handled separately below so their own records stay searchable. */}}
+    {{ if and .Page.Params.version (ne .Page.Params.version "0") }}
+        {{ if eq .Page.Params.version "master" }}
+            {{ $cur_ver = "0.0.0-master" }}
+        {{ else }}
+            {{ $cur_ver = .Page.Params.version }}
+        {{ end }}
+    {{ else if not .Page.Params.version }}
+        {{ $cur_ver = $trackLatest }}
+    {{ end }}
 
     const docSearchInstance = docsearch({
         container: '#docSearch',
@@ -34,12 +40,12 @@
         placeholder: 'Search the docs',
         searchParameters: {
             attributesToRetrieve: ['hierarchy.lvl0', 'hierarchy.lvl1', 'hierarchy.lvl2', 'hierarchy.lvl3', 'hierarchy.lvl4', 'hierarchy.lvl5', 'hierarchy.lvl6', 'content', 'type', 'url', 'version'],
-            facetFilters: [['track:{{ $track }}']{{ if $cur_ver }}, ['version:{{ $cur_ver }}']{{ end }}]
+            facetFilters: [['track:{{ $track }}']{{ if $cur_ver }}, ['version:{{ $cur_ver }}']{{ else }}, ['version:0', 'version:{{ $trackLatest }}']{{ end }}]
         },
         transformItems(items) {
             // Add version warning banner and badges after DOM renders
             setTimeout(() => {
-                {{ if and $cur_ver (ne .Page.Params.version "master") (ne .Page.Params.version $trackLatest) }}
+                {{ if and $cur_ver .Page.Params.version (ne .Page.Params.version "master") (ne .Page.Params.version $trackLatest) }}
                 // Add warning banner for old version
                 const dropdown = document.querySelector('.DocSearch-Dropdown-Container');
                 if (dropdown && !dropdown.hasAttribute('data-version-banner-added')) {
