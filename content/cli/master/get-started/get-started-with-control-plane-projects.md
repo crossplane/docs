@@ -796,6 +796,131 @@ bindings the CLI generated when you added the Kubernetes dependency, so the
 compiler checks the resources you create.
 {{< /tab >}}
 
+{{< tab "TypeScript" >}}
+TypeScript is a good choice if you want your composition logic type checked
+before it runs. The function is an ordinary Node.js project, so you can use any
+package from [npm](https://www.npmjs.com).
+
+Unlike the other languages, TypeScript model generation is opt in. Add it to
+`crossplane-project.yaml` before generating the function:
+
+```yaml
+spec:
+  schemas:
+    languages:
+    - typescript
+```
+
+Without this the CLI generates no TypeScript models, and the scaffolded function
+would have no `crossplane-models` dependency to import from. Rather than
+scaffold a function that can't compile, `function generate` fails and tells you
+to add the language.
+
+Generate a TypeScript function named `compose-webapp` and add it to the
+composition's pipeline:
+
+```shell
+crossplane function generate compose-webapp apis/webapps/composition.yaml --language typescript
+```
+
+The command scaffolds the function under `functions/compose-webapp/` and adds a
+pipeline step to `apis/webapps/composition.yaml`.
+
+Replace the contents of `functions/compose-webapp/src/function.ts` with the
+following function logic:
+
+```typescript
+import {
+  type ComposeFunction,
+  fatal,
+  fromModel,
+  getObservedCompositeResource,
+  normal,
+} from '@crossplane-org/function-sdk-typescript';
+import { type IWebApp } from 'crossplane-models/platform.example.com/v1alpha1';
+import { Deployment } from 'kubernetes-models/apps/v1';
+import { Service } from 'kubernetes-models/v1';
+
+/**
+ * compose turns a WebApp into a Deployment and a Service.
+ */
+export const compose: ComposeFunction = async (req, rsp, logger) => {
+  try {
+    const observed = getObservedCompositeResource(req);
+    const xr = observed?.resource as IWebApp | undefined;
+
+    const name = xr?.metadata?.name;
+    const image = xr?.spec?.image;
+    if (!name || !image) {
+      fatal(rsp, 'observed composite resource is missing metadata.name or spec.image');
+      return rsp;
+    }
+
+    const namespace = xr?.metadata?.namespace;
+    const ports = xr?.spec?.ports ?? [];
+    const labels = { 'app.kubernetes.io/name': name };
+
+    const deployment = new Deployment({
+      metadata: { ...(namespace && { namespace }), labels },
+      spec: {
+        selector: { matchLabels: labels },
+        ...(xr?.spec?.replicas !== undefined && { replicas: xr.spec.replicas }),
+        template: {
+          metadata: { labels },
+          spec: {
+            containers: [
+              {
+                name: 'app',
+                image,
+                ports: ports.map((p) => ({ containerPort: p })),
+              },
+            ],
+          },
+        },
+      },
+    });
+    rsp.desired.resources['deployment'] = fromModel(deployment);
+
+    const service = new Service({
+      metadata: { ...(namespace && { namespace }), labels },
+      spec: {
+        ports: ports.map((p) => ({ port: p, targetPort: p })),
+        selector: labels,
+      },
+    });
+    rsp.desired.resources['service'] = fromModel(service);
+
+    normal(rsp, 'composed deployment and service');
+    return rsp;
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logger?.error({ error: msg }, 'function invocation failed');
+    fatal(rsp, msg);
+    return rsp;
+  }
+};
+```
+
+The function reads the observed `WebApp` XR, then builds a `Deployment` and a
+`Service` from its `spec`.
+
+Types come from two places. `crossplane-models` holds the bindings the CLI
+generated from your XRD, so `IWebApp` describes the XR you defined. Kubernetes
+built-ins like `Deployment` and `Service` come from the
+[kubernetes-models](https://www.npmjs.com/package/kubernetes-models) package,
+which the function scaffold already depends on. The CLI doesn't generate
+bindings for the Kubernetes API itself.
+
+`fromModel` converts a typed object into the protobuf `Resource` value that
+`rsp.desired.resources` holds. Assigning the model directly doesn't compile.
+
+The scaffold enables TypeScript's `exactOptionalPropertyTypes`, which is why the
+example checks `spec.image` before use and spreads `replicas` conditionally.
+Every field in a generated XR model is optional, because the XRD's schema
+decides what's required, so passing one straight into a field that isn't
+optional fails to compile.
+{{< /tab >}}
+
 {{< tab "KCL" >}}
 [KCL](https://kcl-lang.io) is a good choice for functions with dynamic logic.
 It's fast and sandboxed.
@@ -934,6 +1059,14 @@ functions automatically, so you only pass the example XR and the composition:
 ```shell
 crossplane composition render examples/webapps/podinfo.yaml apis/webapps/composition.yaml
 ```
+
+{{<hint "note">}}
+`render` times out after a minute by default. A first TypeScript build pulls the
+Node.js images, installs the npm dependencies and runs `tsc`, which takes longer
+than that and fails with `context deadline exceeded`. Pass `--timeout 5m` on the
+first render. Later renders reuse the cached images and packages, so they fit
+inside the default.
+{{</hint>}}
 
 The command prints the rendered `Deployment` and `Service` as well as the
 updates Crossplane would make to the `WebApp` XR:

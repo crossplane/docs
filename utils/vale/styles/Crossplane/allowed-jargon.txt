@@ -91,6 +91,8 @@ RPCs
 RSS
 runtimeClassName
 sandboxed
+scaffolded
+scaffolds
 SCSS
 SDK
 SDKs

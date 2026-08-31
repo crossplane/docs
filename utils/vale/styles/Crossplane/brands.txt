@@ -20,8 +20,10 @@ instant.page
 Kubebuilder
 Kustomize
 Netlify
+Node.js
 NodeJS
 NPM
+npm
 OPA
 OpenAPI
 OpenAPIv3
@@ -32,6 +34,7 @@ PostgreSQL
 Protobuf
 PurgeCSS
 Rego
+TypeScript
 Upbound
 Upbound's
 Upjet

@@ -32,6 +32,7 @@ crossplane-browse
 crossplane-edit
 controller-runtime
 Controller-runtime
+crossplane-models
 crossplane-runtime
 Crossplane's
 crossplane-view
@@ -67,6 +68,7 @@ InactivePackageRevision
 initProvider
 KCL
 kro
+kubernetes-models
 LateInitialize
 ManagedResourceActivationPolicies
 ManagedResourceActivationPolicy
