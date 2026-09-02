@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.6.0-rc.0.12.gba5d263`.
+This documentation is for the `crossplane` CLI `v2.6.0-rc.0.61.g9515830`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -1155,6 +1155,17 @@ building and pushing a project.
 The build reuses the dependency cache populated by `crossplane dependency add`
 and `crossplane dependency update-cache`. Override the cache location with
 `--cache-dir` or the `CROSSPLANE_XPKG_CACHE` environment variable.
+
+The CLI builds embedded functions onto a runtime base image from a registry, and
+caches those image layers on disk under `crossplane/base-images` in your user
+cache directory. A build that needs a layer already in the cache reads it
+locally rather than downloading it again, so a build takes longer the first time
+it needs a given base image. Projects share the cache.
+
+Layer filenames are content digests, so a cached layer never goes stale and the
+cache never needs invalidating. Nothing prunes it, though, so it grows as base
+images change. Delete the directory to reclaim the space; the next build refills
+what it needs.
 
 #### Examples
 
