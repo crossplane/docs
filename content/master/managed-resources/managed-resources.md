@@ -197,8 +197,8 @@ doesn't apply the change. Crossplane never deletes a resource based on a
 <!-- vale write-good.Passive = NO -->
 Crossplane behaves differently than other tools like Terraform. Terraform
 deletes and recreates a resource to change an immutable field. Crossplane only
-deletes an external resource if their corresponding managed 
-you delete the resource object from Kubernetes.
+deletes an external resource if you delete its corresponding managed 
+resource object from Kubernetes.
 <!-- vale write-good.Passive = YES -->
 {{< /hint >}}
 
