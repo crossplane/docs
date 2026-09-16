@@ -260,7 +260,7 @@ Inside a Composition's
 define the Composite Resource
 {{<hover label="typeref" line="7">}}apiVersion{{</hover>}} and
 {{<hover label="typeref" line="8">}}kind{{</hover>}}
-that the Composition allows to use this template.
+that this Composition template applies to.
 
 ```yaml {label="typeref",copy-lines="none"}
 apiVersion: apiextensions.crossplane.io/v1
