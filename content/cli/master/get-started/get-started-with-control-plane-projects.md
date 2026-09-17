@@ -14,8 +14,8 @@ runs the project on a local development control plane so you can test it without
 deploying to a shared cluster.
 
 {{<hint "tip">}}
-This guide shows how to write the composition function in Go, Python, KCL, and
-templated YAML. You can pick your preferred language.
+This guide shows how to write the composition function in Go, Python, Rust, KCL,
+and templated YAML. You can pick your preferred language.
 {{</hint>}}
 
 A `WebApp` custom resource looks like this:
@@ -796,6 +796,179 @@ bindings the CLI generated when you added the Kubernetes dependency, so the
 compiler checks the resources you create.
 {{< /tab >}}
 
+{{< tab "Rust" >}}
+Rust is a good choice if you want a statically typed, compiled function and
+access to the [crates.io](https://crates.io) ecosystem.
+
+Generate a Rust function named `compose-webapp` and add it to the composition's
+pipeline:
+
+```shell
+crossplane function generate compose-webapp apis/webapps/composition.yaml --language rust
+```
+
+The command scaffolds the function under `functions/compose-webapp/` and adds a
+pipeline step to `apis/webapps/composition.yaml`.
+
+Replace the contents of `functions/compose-webapp/src/function.rs` with the
+following function logic:
+
+```rust
+//! Composes a Deployment and a Service for a WebApp.
+
+use std::collections::BTreeMap;
+
+use crossplane_models::com::example::platform::v1alpha1::WebApp;
+use crossplane_models::io::k8s::api::apps::v1::{Deployment, DeploymentSpec};
+use crossplane_models::io::k8s::api::core::v1::{
+    Container, ContainerPort, PodSpec, PodTemplateSpec, Service, ServicePort, ServiceSpec,
+};
+use crossplane_models::io::k8s::apimachinery::pkg::apis::meta::v1::{LabelSelector, ObjectMeta};
+use crossplane_models::io::k8s::apimachinery::pkg::util::intstr::IntOrString;
+use function_sdk_rust::proto::v1::function_runner_service_server::FunctionRunnerService;
+use function_sdk_rust::proto::v1::{RunFunctionRequest, RunFunctionResponse};
+use function_sdk_rust::{resource, response};
+use tonic::{Request, Response, Status};
+
+/// The composition function.
+#[derive(Debug, Default)]
+pub struct Function;
+
+#[tonic::async_trait]
+impl FunctionRunnerService for Function {
+    async fn run_function(
+        &self,
+        request: Request<RunFunctionRequest>,
+    ) -> Result<Response<RunFunctionResponse>, Status> {
+        let req = request.into_inner();
+        let tag = req.meta.as_ref().map(|m| m.tag.clone()).unwrap_or_default();
+        tracing::info!(tag, "running function");
+
+        let mut rsp = response::to(&req, response::DEFAULT_TTL);
+
+        let observed = req.observed.as_ref().and_then(|s| s.composite.as_ref());
+        let xr: WebApp = match resource::get(observed) {
+            Ok(xr) => xr,
+            Err(e) => {
+                response::fatal(&mut rsp, format!("cannot get xr: {e}"));
+                return Ok(Response::new(rsp));
+            }
+        };
+
+        let metadata = xr.metadata.unwrap_or_default();
+        let spec = xr.spec.unwrap_or_default();
+        let (Some(name), Some(image)) = (metadata.name, spec.image) else {
+            response::fatal(&mut rsp, "xr is missing metadata.name or spec.image");
+            return Ok(Response::new(rsp));
+        };
+
+        let ports = spec.ports.unwrap_or_default();
+        let labels = BTreeMap::from([("app.kubernetes.io/name".to_string(), name.clone())]);
+
+        // Build each resource from its generated model. Default fills in the
+        // apiVersion and kind, and leaves every field the function doesn't set
+        // out of the desired state.
+        let deployment = Deployment {
+            metadata: Some(ObjectMeta {
+                name: Some(name.clone()),
+                namespace: metadata.namespace.clone(),
+                labels: Some(labels.clone()),
+                ..Default::default()
+            }),
+            spec: Some(DeploymentSpec {
+                replicas: spec.replicas.map(|r| r as i32),
+                selector: Some(LabelSelector {
+                    match_labels: Some(labels.clone()),
+                    ..Default::default()
+                }),
+                template: Some(PodTemplateSpec {
+                    metadata: Some(ObjectMeta {
+                        labels: Some(labels.clone()),
+                        ..Default::default()
+                    }),
+                    spec: Some(PodSpec {
+                        containers: Some(vec![Container {
+                            name: Some(name.clone()),
+                            image: Some(image),
+                            ports: Some(
+                                ports
+                                    .iter()
+                                    .map(|p| ContainerPort {
+                                        container_port: Some(*p as i32),
+                                        ..Default::default()
+                                    })
+                                    .collect(),
+                            ),
+                            ..Default::default()
+                        }]),
+                        ..Default::default()
+                    }),
+                }),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+
+        let service = Service {
+            metadata: Some(ObjectMeta {
+                name: Some(name),
+                namespace: metadata.namespace,
+                ..Default::default()
+            }),
+            spec: Some(ServiceSpec {
+                selector: Some(labels),
+                ports: Some(
+                    ports
+                        .iter()
+                        .map(|p| ServicePort {
+                            protocol: Some("TCP".to_string()),
+                            port: Some(*p as i32),
+                            target_port: Some(IntOrString::Int(*p)),
+                            ..Default::default()
+                        })
+                        .collect(),
+                ),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+
+        let desired = rsp.desired.get_or_insert_default();
+        resource::update(
+            desired
+                .resources
+                .entry("deployment".to_string())
+                .or_default(),
+            &deployment,
+        )
+        .map_err(|e| Status::internal(e.to_string()))?;
+        resource::update(
+            desired.resources.entry("service".to_string()).or_default(),
+            &service,
+        )
+        .map_err(|e| Status::internal(e.to_string()))?;
+
+        Ok(Response::new(rsp))
+    }
+}
+```
+
+The function reads the observed `WebApp` XR, then builds a `Deployment` and a
+`Service` from its `spec`.
+
+The `crossplane_models` crate holds the bindings the CLI generated from your
+XRD and from the Kubernetes dependency, so the compiler checks the resources you
+create. The function's `Cargo.toml` depends on the crate by path. Each API group
+and version is a module named after the reversed group, which is why the
+`WebApp` of `platform.example.com/v1alpha1` is
+`crossplane_models::com::example::platform::v1alpha1::WebApp`.
+
+Every field of a generated model is an `Option`, and a model leaves unset fields
+out when it serializes. `..Default::default()` leaves the rest of a struct
+unset and fills in the `apiVersion` and `kind` of a resource, so the function's
+desired state contains only the fields it sets.
+{{< /tab >}}
+
 {{< tab "KCL" >}}
 [KCL](https://kcl-lang.io) is a good choice for functions with dynamic logic.
 It's fast and sandboxed.
@@ -934,6 +1107,13 @@ functions automatically, so you only pass the example XR and the composition:
 ```shell
 crossplane composition render examples/webapps/podinfo.yaml apis/webapps/composition.yaml
 ```
+
+{{<hint "note">}}
+`render` times out after a minute by default. The CLI compiles a Rust function
+and its dependencies from source for every render, which can take longer than
+that and fails with `context deadline exceeded`. Pass `--timeout 5m` when the
+project has a Rust function.
+{{</hint>}}
 
 The command prints the rendered `Deployment` and `Service` as well as the
 updates Crossplane would make to the `WebApp` XR:
