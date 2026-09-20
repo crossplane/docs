@@ -104,6 +104,7 @@ TrimSuffix
 TTR
 UnhealthyPackageRevision
 UnknownPackageRevisionHealth
+UpToDate
 ValidPipeline
 WatchOperation
 WatchOperations
