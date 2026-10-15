@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.6.0-rc.0.12.gba5d263`.
+This documentation is for the `crossplane` CLI `v2.6.0-rc.0.159.gfc002e8`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -373,6 +373,15 @@ When running `render` in a Crossplane Project (any directory containing a
 file argument in favor of using function dependencies defined in the project
 metadata and embedded functions from the project.
 
+#### Configuration package support
+
+The `--project-file` (`-f`) flag also accepts a Configuration package metadata
+file (`crossplane.yaml`).
+`render` detects the file type automatically from `apiVersion` and `kind`.
+When pointing to a Configuration, `render` extracts function dependencies from
+`spec.dependsOn` and resolves their version constraints to concrete OCI
+references.
+
 #### Function context
 
 The `--context-files` and `--context-values` flags pass data to each Function's
@@ -488,6 +497,13 @@ crossplane composition render xr.yaml composition.yaml functions.yaml \
   -a render.crossplane.io/runtime-development-target=localhost:9444
 ```
 
+Render using functions from a Configuration package metadata file:
+
+```shell
+crossplane composition render xr.yaml composition.yaml \
+  -f crossplane.yaml
+```
+
 #### Usage
 
 ```
@@ -512,6 +528,7 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
 |  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
 |  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
+|  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be files containing JSON/YAML. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be JSON/YAML. Keys take precedence over --context-files. |
 | `-r` | `--include-function-results` | Include informational and warning messages from Functions in the rendered output as resources of kind: Result. |
@@ -525,7 +542,7 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 | `-a` | `--function-annotations=KEY=VALUE,...` | Override function annotations for all functions. Provide multiple annotations by repeating the argument. |
 |  | `--cache-dir=STRING` | Directory for cached xpkg package contents. |
 |  | `--max-concurrency=8` | Maximum concurrency for building embedded functions. |
-| `-f` | `--project-file="crossplane-project.yaml"` | Path to the project file. Optional. |
+| `-f` | `--project-file=STRING` | Path to the project file or package metadata file (crossplane.yaml). Autodetects the file type. |
 |  | `--timeout=1m` | How long to run before timing out. |
 |  | `--xrd=PATH` | A YAML file specifying the CompositeResourceDefinition (XRD) that defines the XR's schema and properties. |
 {{< /table >}}
@@ -1088,6 +1105,7 @@ crossplane operation render <operation> [<functions>] [flags]
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
 |  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
 |  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
+|  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be files containing JSON. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be JSON. Keys take precedence over --context-files. |
 |  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying credentials to use for functions. |
@@ -1155,6 +1173,17 @@ building and pushing a project.
 The build reuses the dependency cache populated by `crossplane dependency add`
 and `crossplane dependency update-cache`. Override the cache location with
 `--cache-dir` or the `CROSSPLANE_XPKG_CACHE` environment variable.
+
+The CLI builds embedded functions onto a runtime base image from a registry, and
+caches those image layers on disk under `crossplane/base-images` in your user
+cache directory. A build that needs a layer already in the cache reads it
+locally rather than downloading it again, so a build takes longer the first time
+it needs a given base image. Projects share the cache.
+
+Layer filenames are content digests, so a cached layer never goes stale and the
+cache never needs invalidating. Nothing prunes it, though, so it grows as base
+images change. Delete the directory to reclaim the space; the next build refills
+what it needs.
 
 #### Examples
 
