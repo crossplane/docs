@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.6.0-rc.0.196.g690477c`.
+This documentation is for the `crossplane` CLI `v2.6.0-rc.0.203.g2ca8fd0`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -1573,6 +1573,20 @@ annotations (`simulate.crossplane.io/runtime-docker-publish-address` and
 `simulate.crossplane.io/runtime-docker-target`) for Docker setups where the
 published port isn't reachable on the address the daemon reports.
 
+A provider manifest can also opt out of Docker with
+`simulate.crossplane.io/runtime: Development`, like render's per-function
+runtime annotation: the CLI connects to a diff server you already run, from
+source or under a debugger, at the gRPC target in
+`simulate.crossplane.io/runtime-development-target` (default `localhost:9099`,
+upjet's default `--address`). No package is fetched for such a provider, so
+its manifest declares the API groups its server serves in
+`simulate.crossplane.io/runtime-development-api-groups`, comma-separated;
+legacy and namespaced (`.m.`) groups are distinct and both need listing.
+Resources in those groups route to it unless another provider's package ships
+a CRD for their exact kind. `spec.package` and the `runtime-docker-*`
+annotations are ignored on a Development provider, and Docker isn't needed
+at all when every provider in the file is one.
+
 Not every provider serves diffs. A provider package declares the capability
 in its metadata, and a resource whose provider serves no diff server (or
 whose diff server can't compute a diff for it) still appears in the preview
@@ -1608,6 +1622,16 @@ crossplane resource simulate -f resources.yaml --providers providers.yaml
 
 Keep diff servers running so later runs start faster, via a provider manifest
 annotated with `simulate.crossplane.io/runtime-docker-cleanup: Orphan`:
+
+```shell
+crossplane resource simulate -f resources.yaml --providers providers.yaml
+```
+
+Iterate on a provider's diff server from source, with no package to build or
+push: run `go run ./cmd/provider internal diff-server` in the provider
+repository, then simulate with a Provider manifest annotated with
+`simulate.crossplane.io/runtime: Development` and
+`simulate.crossplane.io/runtime-development-api-groups: ec2.aws.upbound.io,ec2.aws.m.upbound.io`:
 
 ```shell
 crossplane resource simulate -f resources.yaml --providers providers.yaml
