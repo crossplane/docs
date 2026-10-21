@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.6.0-rc.0.164.g4e20a7c`.
+This documentation is for the `crossplane` CLI `v2.6.0-rc.0.196.g690477c`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -876,6 +876,7 @@ The following are valid arguments to the `--language` / `-l` flag:
 - `go`
 - `kcl`
 - `python`
+- `rust`
 
 #### Examples
 
@@ -890,6 +891,12 @@ Create a Python function in `functions/fn2`:
 
 ```shell
 crossplane function generate fn2 --language python
+```
+
+Create a Rust function in `functions/fn3`:
+
+```shell
+crossplane function generate fn3 --language rust
 ```
 
 Create a Go function in `functions/compose-cluster` and add it as a pipeline
@@ -1529,6 +1536,113 @@ Beta features may change in a future release.
 ```
 crossplane resource <command> [flags]
 ```
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+### crossplane resource simulate
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Preview what applying managed resources would do.
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+This command previews what applying one or more managed resources would do,
+without applying anything: which resources it would create, which fields it
+would change, and, most importantly, which changes the provider could only
+apply by destroying and recreating the external resource.
+
+For each input resource the CLI fetches the live managed resource from the
+cluster, if one exists, and asks the provider itself for the verdict: it runs
+the provider's package image locally as a diff server (a stateless,
+credential-free gRPC service upjet-based providers serve) and sends it the
+desired and live state. The provider computes its own diff, so the preview
+includes replacement detection, values known only after apply, and redacted
+sensitive values. A resource with no live counterpart plans as a create.
+
+Which providers run as diff servers comes from the current kubeconfig context
+by default: the CLI follows each resource's kind to the provider that
+installed it on the cluster, so the preview matches the provider versions
+actually serving those resources. --providers overrides that discovery with
+a file of Provider manifests (like render takes Function manifests), for
+example to preview how a provider version that isn't installed yet would
+treat existing resources. The manifests also carry per-provider runtime
+annotations (`simulate.crossplane.io/runtime-docker-publish-address` and
+`simulate.crossplane.io/runtime-docker-target`) for Docker setups where the
+published port isn't reachable on the address the daemon reports.
+
+Not every provider serves diffs. A provider package declares the capability
+in its metadata, and a resource whose provider serves no diff server (or
+whose diff server can't compute a diff for it) still appears in the preview
+with an approximate client-side comparison, marked [?], rather than failing
+the run or dropping out of the preview.
+
+Nothing simulate does writes to the cluster or the cloud: it reads the
+cluster with your kubeconfig and RBAC, and the diff servers run locally with
+no credentials and no cluster access.
+
+Diff server startup takes seconds per provider image. In an
+edit-simulate-edit loop, annotate a provider manifest with
+`simulate.crossplane.io/runtime-docker-cleanup: Orphan` (like render's
+per-function cleanup annotation) to leave its container running so the next
+run reuses it. The containers have names like `crossplane-diff-server-DIGEST`
+and carry `simulate.crossplane.io/managed-by` and session labels; any later
+run without the annotation cleans them up, or remove them with docker rm.
+
+#### Examples
+
+Preview what applying resources.yaml would do:
+
+```shell
+crossplane resource simulate -f resources.yaml
+```
+
+Preview against specific provider versions instead of the installed ones,
+from a checked-in file of Provider manifests:
+
+```shell
+crossplane resource simulate -f resources.yaml --providers providers.yaml
+```
+
+Keep diff servers running so later runs start faster, via a provider manifest
+annotated with `simulate.crossplane.io/runtime-docker-cleanup: Orphan`:
+
+```shell
+crossplane resource simulate -f resources.yaml --providers providers.yaml
+```
+
+Emit machine-readable results for CI gating:
+
+```shell
+crossplane resource simulate -f resources.yaml -o json
+```
+
+#### Usage
+
+```
+crossplane resource simulate --filename=STRING [flags]
+```
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+| `-f` | `--filename=STRING` | **Required.** YAML files or directory with managed resources, or '-' for stdin (comma-separated). |
+|  | `--providers=STRING` | YAML file or directory with Provider manifests to run as diff servers, overriding discovery from the cluster. Supports per-provider runtime annotations. |
+|  | `--image-configs=STRING` | YAML file with ImageConfig manifests that rewrite provider image paths for local pulls. Defaults to the project's imageConfigs when a project file is present. |
+|  | `--project-file=STRING` | Path to a project definition file to read imageConfigs from. Defaults to crossplane-project.yaml when present. |
+|  | `--session-id=ID` | Session ID to apply as the simulate.crossplane.io/session label on diff server containers. Defaults to a random per-process ID. |
+| `-c` | `--context=""` | Kubernetes context. |
+|  | `--cache-dir="~/.crossplane/cache"` | Cache directory for downloaded provider packages. |
+|  | `--timeout=2m` | Per-resource plan timeout. |
+| `-o` | `--output="plan"` | Output format. One of: plan, json, yaml. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
+{{< /table >}}
+
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
