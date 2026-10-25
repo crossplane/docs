@@ -293,7 +293,7 @@ spec:
 
 `crossplane xpkg build` runs the package linter, which accepts
 `ManagedResourceActivationPolicy` objects in Configuration packages, so an
-MRAP can ship in the package's `package.yaml` ([xpkg build](/cli/master/command-reference#crossplane-xpkg-build)).
+MRAP can ship in the package's `package.yaml` ([xpkg build]({{<ref "/cli/master/command-reference#crossplane-xpkg-build">}})).
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.HeadingAcronyms = NO -->
