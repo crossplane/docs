@@ -115,6 +115,7 @@ at the table below.
 | Alpha  | `--enable-function-response-cache`               | Enable caching of composition function responses to improve performance.                                                    |
 | Alpha  | `--enable-operations`                            | Enable support for Operations.                                                                                              |
 | Alpha  | `--enable-pipeline-inspector`                    | Enable support for emitting data about function pipeline runs to a sidecar.                                                 |
+| Alpha  | `--enable-pipeline-oci-references`               | Enable support for referencing functions by OCI reference in Composition and Operation pipelines.                           |
 | Alpha  | `--enable-provider-deletion-protection`          | Enable automatic protection of Providers from deletion when they have active managed resources. Requires `--enable-usages`. |
 | Alpha  | `--enable-signature-verification`                | Enable support for package signature verification via ImageConfig API.                                                      |
 {{< /table >}}
