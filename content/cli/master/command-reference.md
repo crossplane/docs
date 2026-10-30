@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.6.0-rc.0.196.g690477c`.
+This documentation is for the `crossplane` CLI `v2.6.0-rc.0.255.g3489cd1`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -526,8 +526,8 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 |------------|-----------|-------------|
 |  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
-|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
-|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
 |  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be files containing JSON/YAML. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be JSON/YAML. Keys take precedence over --context-files. |
@@ -585,13 +585,37 @@ you can reach generated resources through interfaces and generics:
 crossplane config set features.generateGoModelAccessors true
 ```
 
-Generate `runtime.Object` methods and per-package `AddToScheme` helpers on
-generated Go models (off by default), so you can register generated types with a
-`runtime.Scheme`:
+Generate `runtime.Object`, `metav1.Object`, and `metav1.ListInterface`
+methods on generated Go models, plus per-package `AddToScheme` helpers (off
+by default). These methods let you register generated types with a
+`runtime.Scheme` and use them with `sigs.k8s.io/controller-runtime` as
+`client.Object` and `client.ObjectList` values, for example with
+`client.Client.Get`, `List`, and `Create`:
 
 ```shell
 crossplane config set features.generateGoRuntimeObjects true
 ```
+
+**Breaking change:** This flag changes two things in the generated models.
+The `Metadata` field's Go type changes from a mirror struct this tool
+generates to the real `k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta` or
+`ListMeta` type. A `<Kind>List` type's `Items` field changes from `*[]Kind`
+to `[]Kind`. Both changes let the generated types implement `client.Object`
+and `client.ObjectList`.
+
+Turning on this flag also stops the CLI from generating the local
+`io/k8s/meta/v1` (or `io/k8s/core/meta/v1`) mirror package. Every reference
+to a `meta/v1` type, including `Time`, `OwnerReference`, `LabelSelector`,
+`Condition`, `DeleteOptions`, and `MicroTime`, now points to the real
+`k8s.io/apimachinery` package instead. Code that imports the mirror package
+directly won't build after you turn this flag on.
+
+This flag is off by default. Before this change, the generated types didn't
+work as `client.Object` values, so we don't provide a migration path.
+Regenerate your models after upgrading. The schema manager skips regeneration when your
+dependency's version hasn't changed, so run
+`crossplane dependency clean-cache` first if regenerating doesn't pick up
+the new output.
 
 ### Usage
 
@@ -1110,8 +1134,8 @@ crossplane operation render <operation> [<functions>] [flags]
 |------------|-----------|-------------|
 |  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
-|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
-|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
 |  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be files containing JSON. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be JSON. Keys take precedence over --context-files. |
@@ -1573,6 +1597,20 @@ annotations (`simulate.crossplane.io/runtime-docker-publish-address` and
 `simulate.crossplane.io/runtime-docker-target`) for Docker setups where the
 published port isn't reachable on the address the daemon reports.
 
+A provider manifest can also opt out of Docker with
+`simulate.crossplane.io/runtime: Development`, like render's per-function
+runtime annotation: the CLI connects to a diff server you already run, from
+source or under a debugger, at the gRPC target in
+`simulate.crossplane.io/runtime-development-target` (default `localhost:9099`,
+upjet's default `--address`). No package is fetched for such a provider, so
+its manifest declares the API groups its server serves in
+`simulate.crossplane.io/runtime-development-api-groups`, comma-separated;
+legacy and namespaced (`.m.`) groups are distinct and both need listing.
+Resources in those groups route to it unless another provider's package ships
+a CRD for their exact kind. `spec.package` and the `runtime-docker-*`
+annotations are ignored on a Development provider, and Docker isn't needed
+at all when every provider in the file is one.
+
 Not every provider serves diffs. A provider package declares the capability
 in its metadata, and a resource whose provider serves no diff server (or
 whose diff server can't compute a diff for it) still appears in the preview
@@ -1608,6 +1646,16 @@ crossplane resource simulate -f resources.yaml --providers providers.yaml
 
 Keep diff servers running so later runs start faster, via a provider manifest
 annotated with `simulate.crossplane.io/runtime-docker-cleanup: Orphan`:
+
+```shell
+crossplane resource simulate -f resources.yaml --providers providers.yaml
+```
+
+Iterate on a provider's diff server from source, with no package to build or
+push: run `go run ./cmd/provider internal diff-server` in the provider
+repository, then simulate with a Provider manifest annotated with
+`simulate.crossplane.io/runtime: Development` and
+`simulate.crossplane.io/runtime-development-api-groups: ec2.aws.upbound.io,ec2.aws.m.upbound.io`:
 
 ```shell
 crossplane resource simulate -f resources.yaml --providers providers.yaml
