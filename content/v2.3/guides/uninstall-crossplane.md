@@ -143,10 +143,11 @@ NAME                   INSTALLED   HEALTHY   PACKAGE                            
 crossplane-contrib-provider-aws-s3   True        True      xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0     8h
 ```
 
-Remove the installed _providers_ with `kubectl delete provider`.
+Remove the installed _providers_ with
+`kubectl delete provider.pkg.crossplane.io`.
 
 ```shell
-kubectl delete provider crossplane-contrib-provider-aws
+kubectl delete provider.pkg.crossplane.io/crossplane-contrib-provider-aws-s3
 ```
 
 <!-- vale Google.Headings = NO -->
