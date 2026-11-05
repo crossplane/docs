@@ -39,6 +39,11 @@ from `pkg.crossplane.io` has already been declared which means there no further 
 Argo CD also enable customising these checks per instance, and that's the mechanism used to provide support
 of Provider's CRDs.
 
+Argo CD v3.1 and later also include built-in health checks for the `*.crossplane.io`
+and `*.upbound.io` API groups. An entry in `resource.customizations`, including a
+wildcard entry like the ones in the following example, takes precedence over the
+built-in health checks for the resources it matches.
+
 To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace`.
 {{<hint "note">}}
 {{<hover label="argocfg" line="22">}} ProviderConfig{{</hover>}} may have no status or a `status.users` field.
@@ -70,17 +75,13 @@ data:
           "ProviderConfigUsage"
         }
 
-        if obj.status == nil or next(obj.status) == nil and contains(has_no_status, obj.kind) then
-          health_status.status = "Healthy"
-          health_status.message = "Resource is up-to-date."
-          return health_status
-        end
-
-        if obj.status == nil or next(obj.status) == nil or obj.status.conditions == nil then
-          if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
+        if obj.status == nil or obj.status.conditions == nil or next(obj.status.conditions) == nil then
+          if contains(has_no_status, obj.kind) then
             health_status.status = "Healthy"
-            health_status.message = "Resource is in use."
-            return health_status
+            health_status.message = "Resource is up-to-date."
+            if obj.status ~= nil and obj.status.users ~= nil then
+              health_status.message = "Resource is in use."
+            end
           end
           return health_status
         end
@@ -132,21 +133,19 @@ data:
           "Composition",
           "CompositionRevision",
           "DeploymentRuntimeConfig",
+          "EnvironmentConfig",
+          "ImageConfig",
           "ControllerConfig",
           "ProviderConfig",
           "ProviderConfigUsage"
         }
-        if obj.status == nil or next(obj.status) == nil and contains(has_no_status, obj.kind) then
+        if obj.status == nil or obj.status.conditions == nil or next(obj.status.conditions) == nil then
+          if contains(has_no_status, obj.kind) then
             health_status.status = "Healthy"
             health_status.message = "Resource is up-to-date."
-          return health_status
-        end
-
-        if obj.status == nil or next(obj.status) == nil or obj.status.conditions == nil then
-          if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
-            health_status.status = "Healthy"
-            health_status.message = "Resource is in use."
-            return health_status
+            if obj.status ~= nil and obj.status.users ~= nil then
+              health_status.message = "Resource is in use."
+            end
           end
           return health_status
         end
