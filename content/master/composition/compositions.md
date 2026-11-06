@@ -791,6 +791,73 @@ Crossplane doesn't validate function input. It's a good idea for a function to
 validate its own input.
 {{</hint>}}
 
+### Function credentials
+
+A pipeline step can pass credentials to its function, for example an API token
+the function needs to call an external system. Each entry in the step's
+`credentials` list names a Kubernetes Secret. Crossplane reads the Secret and
+sends all its data to the function in the RunFunctionRequest, under the
+credential's `name`.
+
+```yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-with-credentials
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: call-external-api
+    functionRef:
+      name: my-function
+    credentials:
+    - name: api-creds
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: api-credentials
+```
+
+By default Crossplane requires every credential. If it can't read the Secret, the
+pipeline step fails and Crossplane doesn't call the function.
+
+#### Optional credentials
+
+{{<hint "note">}}
+Crossplane v2.5 and later support optional credentials.
+{{</hint>}}
+
+Some functions can run with or without a credential, or run before anyone
+creates the Secret, for example while you're still setting up an environment.
+Set `resolvePolicy: Optional` on the credential to let the pipeline continue
+when the Secret doesn't exist:
+
+```yaml
+    credentials:
+    - name: api-creds
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: api-credentials
+      resolvePolicy: Optional
+```
+
+When an optional credential's Secret doesn't exist, Crossplane calls the
+function without that credential and records a `Normal` event on the composite
+resource. The function must handle the credential being absent. When you create
+the Secret, Crossplane passes it to the function on the next reconcile.
+
+`resolvePolicy` accepts `Required` (the default) and `Optional`.
+
+{{<hint "important">}}
+`Optional` only covers a Secret that doesn't exist. Other errors still fail the
+pipeline step, for example when Crossplane doesn't have permission to read the
+Secret.
+{{</hint>}}
+
 ### Required resources
 
 {{<hint "note">}}
