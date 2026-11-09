@@ -332,6 +332,55 @@ The RBAC manager is an optional Crossplane component that's enabled by default.
 _any_ kind of resource you wish to compose - including XRs and MRs.**
 {{< /hint >}}
 
+### Control how Crossplane deletes composite resources
+
+{{<hint "note" >}}
+Composition deletion policies are an alpha feature. Enable them by setting the
+`--enable-function-controlled-deletion` feature flag.
+{{< /hint >}}
+
+A Composition's
+{{<hover label="deletion-policy" line="9">}}deletionPolicy{{</hover>}}
+controls how Crossplane deletes the composite resources that use it.
+
+```yaml {label="deletion-policy",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1
+    kind: XBucket
+  deletionPolicy: Pipeline
+  mode: Pipeline
+  pipeline:
+  # Removed for brevity
+```
+
+The `deletionPolicy` field supports three policies:
+
+* `Background` - The default, and how Crossplane deletes composite resources
+  without the feature flag. Crossplane stops managing the composite resource
+  as soon as you delete it. Kubernetes deletes its composed resources after it
+  removes the composite resource.
+* `Foreground` - Crossplane deletes the composed resources. It keeps the
+  composite resource until they're gone. The function pipeline doesn't run.
+* `Pipeline` - Crossplane keeps running the function pipeline. The functions
+  decide when Crossplane deletes each composed resource, by removing it from
+  their desired state. Crossplane keeps the composite resource until Kubernetes
+  removes its composed resources.
+
+Use `Foreground` when the composite resource must outlive its composed
+resources. Use `Pipeline` when you need to delete composed resources in order,
+or when a function must do some work before Crossplane deletes them. For
+example, a function can delete a database before its network.
+
+Read [composite resource deletion]({{<ref "composite-resources#composite-resource-deletion">}})
+to learn what to expect when you delete a composite resource. Read
+[delete composed resources in order](#delete-composed-resources-in-order) to
+write a function that controls deletion.
+
 ## Test a composition
 
 You can preview the output of any composition using the Crossplane CLI. You
@@ -749,6 +798,57 @@ the fields the function cares about, merging them with the existing Bucket.
 {{<hint "tip">}}
 Composition functions don't actually use YAML for desired and observed
 resources. This example uses YAML for illustration purposes only.
+{{</hint>}}
+
+### Delete composed resources in order
+
+{{<hint "note" >}}
+Composition deletion policies are an alpha feature. Enable them by setting the
+`--enable-function-controlled-deletion` feature flag.
+{{< /hint >}}
+
+When a Composition has the `Pipeline`
+[deletion policy](#control-how-crossplane-deletes-composite-resources),
+Crossplane keeps calling the function pipeline after you delete a composite
+resource. The observed composite resource has a `metadata.deletionTimestamp`,
+so a function can tell Crossplane is deleting it.
+
+The pipeline works the same way as for a composite resource you didn't delete.
+Crossplane deletes a composed resource when the pipeline stops returning it. To
+delete composed resources in order, stop returning them one at a time.
+
+A composed resource stays in the observed state until Kubernetes has deleted
+it. Wait for a composed resource to disappear from the observed state before
+you remove the next one.
+
+For example, this Python function deletes a database before its network.
+
+```python
+def compose(req, rsp):
+    names = ["network", "database"]
+
+    xr = resource.struct_to_dict(req.observed.composite.resource)
+    if "deletionTimestamp" in xr["metadata"]:
+        # Keep the network until the database is gone.
+        names = ["network"] if "database" in req.observed.resources else []
+
+    for name in names:
+        # Add the composed resource to the desired state.
+        ...
+```
+
+Crossplane keeps the composite resource until the pipeline returns no composed
+resources and they're all gone. Not every function in the pipeline needs to
+handle deletion. A function that only changes the composed resources other
+functions return can keep doing so. If no function removes the composed
+resources, Crossplane never finishes deleting the composite resource.
+
+{{<hint "tip">}}
+You can delete composed resources in order without deleting the composite
+resource too. When the feature is on, a composed resource stays in the observed
+state until Kubernetes has deleted it. For example, when a user turns off part
+of a composite resource, a function can stop returning its composed resources
+one at a time.
 {{</hint>}}
 
 ### Function input

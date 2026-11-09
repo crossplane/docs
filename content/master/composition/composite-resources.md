@@ -308,6 +308,67 @@ spec:
 The reconciler records the handled token in `status.lastHandledReconcileAt`.
 Read the [managed resource reconcile request annotation]({{<ref "../managed-resources/managed-resources#reconcile-request">}}) for more details.
 
+### Composite resource deletion
+
+{{<hint "note" >}}
+Composition deletion policies are an alpha feature. Enable them by setting the
+`--enable-function-controlled-deletion` feature flag.
+{{< /hint >}}
+
+A Composition's
+[deletion policy]({{<ref "compositions#control-how-crossplane-deletes-composite-resources">}})
+controls how Crossplane deletes the composite resources that use it:
+
+* `Background` - Crossplane stops managing the composite resource right away.
+  Kubernetes deletes its composed resources.
+* `Foreground` - Crossplane deletes the composed resources, and keeps the
+  composite resource until they're gone.
+* `Pipeline` - The function pipeline decides when Crossplane deletes each
+  composed resource. Crossplane keeps the composite resource until they're
+  gone.
+
+A composite resource uses its Composition's deletion policy. Crossplane records
+the policy in the composite resource's
+{{<hover label="xr-deletion-policy" line="3">}}status{{</hover>}}.
+
+```yaml {label="xr-deletion-policy",copy-lines="none"}
+status:
+  crossplane:
+    deletionPolicy: Pipeline
+```
+
+Crossplane updates the recorded policy when the composite resource's
+Composition changes. When you delete the composite resource Crossplane uses the
+policy it recorded. If it recorded none, for example because you enabled the
+feature after you deleted the composite resource, Crossplane uses `Background`.
+
+While Crossplane deletes the composite resource, its `Ready` condition has the
+reason `Deleting`. The condition's message says what Crossplane is waiting for.
+
+```shell {copy-lines="1"}
+kubectl get mydatabase my-composite-resource -o jsonpath='{.status.conditions[?(@.type=="Ready")].message}'
+Waiting for the function pipeline to delete composed resources
+```
+
+Some composite resources don't use the deletion policy:
+
+* Crossplane always deletes legacy cluster scoped composite resources with the
+  `Background` policy.
+* When you delete a composite resource with `kubectl delete --cascade=orphan`
+  or `kubectl delete --cascade=foreground`, Kubernetes decides what happens to
+  the composed resources. Crossplane doesn't use the deletion policy.
+
+With the `Foreground` and `Pipeline` policies, a composite resource stays in
+`Deleting` until Kubernetes removes its composed resources. With `Pipeline`,
+that also needs its functions to stop returning them. If that never happens,
+for example because a function fails or Kubernetes can't delete a composed
+resource, Crossplane keeps the composite resource. To delete it anyway, remove
+the `composite.apiextensions.crossplane.io` finalizer. Kubernetes then deletes
+the composed resources.
+
+A composite resource can compose other composite resources. Each composed
+composite resource uses its own deletion policy when Crossplane deletes it.
+
 ## Verify composite resources
 Use 
 {{<hover label="getcomposite" line="1">}}kubectl get composite{{</hover>}}
