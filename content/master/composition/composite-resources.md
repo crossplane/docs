@@ -359,12 +359,12 @@ Some composite resources don't use the deletion policy:
   the composed resources. Crossplane doesn't use the deletion policy.
 
 With the `Foreground` and `Pipeline` policies, a composite resource stays in
-`Deleting` until its composed resources are gone. With `Pipeline`, that also
-needs its functions to stop returning them. If that never happens, for example
-because a function fails or a composed resource can't be deleted, Crossplane
-keeps the composite resource. To delete it anyway, remove the
-`composite.apiextensions.crossplane.io` finalizer. Kubernetes then deletes the
-composed resources.
+`Deleting` until Kubernetes removes its composed resources. With `Pipeline`,
+that also needs its functions to stop returning them. If that never happens,
+for example because a function fails or Kubernetes can't delete a composed
+resource, Crossplane keeps the composite resource. To delete it anyway, remove
+the `composite.apiextensions.crossplane.io` finalizer. Kubernetes then deletes
+the composed resources.
 
 A composite resource can compose other composite resources. Each composed
 composite resource uses its own deletion policy when Crossplane deletes it.

@@ -813,7 +813,7 @@ Crossplane keeps calling the function pipeline after you delete a composite
 resource. The observed composite resource has a `metadata.deletionTimestamp`,
 so a function can tell Crossplane is deleting it.
 
-The pipeline works the same way as for a composite resource you didn't delete:
+The pipeline works the same way as for a composite resource you didn't delete.
 Crossplane deletes a composed resource when the pipeline stops returning it. To
 delete composed resources in order, stop returning them one at a time.
 
