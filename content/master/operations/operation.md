@@ -259,6 +259,53 @@ spec:
       healthEndpoint: /health
 ```
 
+<!-- vale Microsoft.HeadingAcronyms = NO -->
+### Reference a function by OCI reference
+<!-- vale Microsoft.HeadingAcronyms = YES -->
+
+{{<hint "important">}}
+Referencing functions by OCI reference is an alpha feature. Enable it by
+setting the `--enable-pipeline-oci-references` feature flag.
+{{</hint>}}
+
+Instead of a `functionRef`, a step can use the
+{{<hover label="ociref" line="9">}}function{{</hover>}} field to name a function
+package directly. The reference must include the registry, the repository and
+a digest.
+
+```yaml {label="op-ociref"}
+apiVersion: ops.crossplane.io/v1alpha1
+kind: Operation
+metadata:
+  name: create-configmap
+spec:
+  mode: Pipeline
+  pipeline:
+  - step: create-a-configmap
+    function: xpkg.crossplane.io/crossplane-contrib/function-dummy@sha256:b8a8590f61fb002115313d8f5f756675aa6b55ef6c31568ebcbcf65d1f17a727
+    input:
+      apiVersion: dummy.fn.crossplane.io/v1beta1
+      kind: Response
+      response:
+        desired:
+          resources:
+            configmap:
+              resource:
+                apiVersion: v1
+                kind: ConfigMap
+                metadata:
+                  namespace: default
+                  name: example
+                data:
+                  key: value
+```
+
+You don't need to install the function first. Crossplane installs it before it
+runs the Operation, and waits for it to be healthy.
+
+Each pipeline step uses either `function` or `functionRef`, not both. A pipeline
+can contain a mix of steps using the two fields.
+
 ### RBAC permissions
 
 If your Operation needs to access resources that Crossplane doesn't have 

@@ -123,6 +123,158 @@ spec:
       name: example-18pdg
 ```
 
+## Roll out function changes
+
+{{<hint "important">}}
+Referencing functions by OCI reference is an alpha feature. Enable it by
+setting the `--enable-pipeline-oci-references` feature flag.
+{{</hint>}}
+
+A `CompositionRevision` only captures what's in the `Composition`. A pipeline
+step that uses `functionRef` calls whatever version of that Function is active
+in the cluster. When you upgrade a Function every `CompositionRevision` that
+references it starts calling the new version, including revisions you've pinned
+XRs to with the `Manual` update policy.
+
+To make the function version part of the revision, reference the function
+package directly with the {{<hover label="ociref" line="12">}}function{{</hover>}}
+field instead of using `functionRef`:
+
+```yaml {label="ociref",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: PlatformDB
+  mode: Pipeline
+  pipeline:
+  - step: render-templates
+    function: xpkg.crossplane.io/crossplane-contrib/function-go-templating@sha256:2edec9149ed78cfc109fdda53fef847055e4789f1d5984ffc2f9ce2b54241abc
+    input:
+      apiVersion: gotemplating.fn.crossplane.io/v1beta1
+      kind: GoTemplate
+      source: Inline
+      # Removed for brevity
+```
+
+The `function` field must be a fully qualified OCI reference that includes the
+registry, the repository and a digest. A digest provides an immutable reference
+to a specific version of a package, so a `CompositionRevision` that references a
+function this way always runs the same function code.
+
+Each pipeline step uses either `function` or `functionRef`, not both. A pipeline
+can contain a mix of steps using the two fields.
+
+You don't need to install a function before you reference it with `function`.
+When Crossplane creates a `CompositionRevision`, it creates a `FunctionRevision`
+for each function package the pipeline references. `CompositionRevisions` that
+reference the same digest share a `FunctionRevision`. Different digests of the
+same function run side by side, each with its own function pod.
+
+The `CompositionRevisions` that reference a `FunctionRevision` own it. The
+`FunctionRevision` is garbage collected by Kubernetes when you delete the last
+`CompositionRevision` that references it.
+
+Read the [Functions]({{<ref "../packages/functions#functions-managed-by-crossplane">}})
+documentation for more details on how Crossplane manages these functions.
+
+### Canary a function upgrade
+
+Combine `function` with a `compositionRevisionSelector` to roll a new function
+version out to some XRs before others.
+
+Start with a `Composition` that calls version `v0.13.1` of
+function-go-templating and has a
+{{<hover label="canary1" line="5">}}channel: stable{{</hover>}} label:
+
+```yaml {label="canary1",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  labels:
+    channel: stable
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: PlatformDB
+  mode: Pipeline
+  pipeline:
+  - step: render-templates
+    function: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.13.1@sha256:2edec9149ed78cfc109fdda53fef847055e4789f1d5984ffc2f9ce2b54241abc
+    input:
+      # Removed for brevity
+```
+
+Most of your XRs select the `stable` channel. XRs that should use the new
+version first select `canary`:
+
+```yaml {copy-lines="none"}
+apiVersion: example.org/v1alpha1
+kind: PlatformDB
+metadata:
+  namespace: default
+  name: canary-db
+spec:
+  storageGB: 20
+  crossplane:
+    compositionRevisionSelector:
+      matchLabels:
+        channel: canary
+```
+
+To try function-go-templating `v0.13.2`, update the `function` reference
+and change the label to
+{{<hover label="canary2" line="5">}}channel: canary{{</hover>}} in the same
+edit:
+
+```yaml {label="canary2",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  labels:
+    channel: canary
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: PlatformDB
+  mode: Pipeline
+  pipeline:
+  - step: render-templates
+    function: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.13.2@sha256:20198cb6ea5b4b8a48042343410ec9031e5ec43431d874364ecd3eac8e861290
+    input:
+      # Removed for brevity
+```
+
+Crossplane creates a new `CompositionRevision` and a new `FunctionRevision`
+for `v0.13.2`. Both versions of the function are now running:
+
+```shell {copy-lines="1"}
+kubectl get functionrevisions -o="custom-columns=NAME:.metadata.name,PACKAGE:.spec.package,STATE:.spec.desiredState"
+NAME                                                     PACKAGE                                                                                                                                STATE
+crossplane-contrib-function-go-templating-91622b9260e8   xpkg.crossplane.io/crossplane-contrib/function-go-templating@sha256:20198cb6ea5b4b8a48042343410ec9031e5ec43431d874364ecd3eac8e861290   Active
+crossplane-contrib-function-go-templating-d66b8d13aa14   xpkg.crossplane.io/crossplane-contrib/function-go-templating@sha256:2edec9149ed78cfc109fdda53fef847055e4789f1d5984ffc2f9ce2b54241abc   Active
+```
+
+XRs that select `canary` use the new `CompositionRevision` and call `v0.13.2` of
+the function, while XRs that select `stable` stay on the previous
+`CompositionRevision` that uses `v0.13.1`.
+
+When you're happy with `v0.13.2`, change the `Composition` label back to
+`channel: stable`. Crossplane creates another `CompositionRevision` with the
+same `v0.13.2` reference and the `stable` label, and the rest of your XRs use
+it.
+
+{{<hint "tip" >}}
+Use the `Manual` update policy for tighter control. Each XR stays on the
+`CompositionRevision` that last composed it, and the pinned function version,
+until you change its `compositionRevisionRef`.
+{{< /hint >}}
+
 ## Complete example
 
 This tutorial discusses how CompositionRevisions work and how they manage Composite Resource

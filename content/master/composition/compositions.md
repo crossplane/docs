@@ -202,6 +202,59 @@ spec:
               region: "us-east-2"
 ```
 
+<!-- vale Microsoft.HeadingAcronyms = NO -->
+### Reference a function by OCI reference
+<!-- vale Microsoft.HeadingAcronyms = YES -->
+
+{{<hint "important">}}
+Referencing functions by OCI reference is an alpha feature. Enable it by
+setting the `--enable-pipeline-oci-references` feature flag.
+{{</hint>}}
+
+Instead of a `functionRef`, a step can use the
+{{<hover label="ociref" line="9">}}function{{</hover>}} field to name a function
+package directly. The reference must include the registry, the repository and
+a digest.
+
+```yaml {label="ociref",copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for Brevity
+spec:
+  # Removed for Brevity
+  mode: Pipeline
+  pipeline:
+  - step: create-bucket
+    function: xpkg.crossplane.io/crossplane-contrib/function-go-templating@sha256:2edec9149ed78cfc109fdda53fef847055e4789f1d5984ffc2f9ce2b54241abc
+    input:
+      apiVersion: gotemplating.fn.crossplane.io/v1beta1
+      kind: GoTemplate
+      source: Inline
+      inline:
+        template: |
+          apiVersion: s3.aws.m.upbound.io/v1beta1
+          kind: Bucket
+          metadata:
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: storage-bucket
+          spec:
+            forProvider:
+              region: "us-east-2"
+```
+
+You don't need to install the function first. Crossplane installs it when it
+creates the Composition's
+[revision]({{<ref "./composition-revisions">}}).
+
+Because the digest is part of the Composition, each Composition revision always
+calls the same version of the function. This lets you roll out a new function
+version to some composite resources before others. Read
+[Roll out function changes]({{<ref "./composition-revisions#roll-out-function-changes">}})
+for an example.
+
+Each pipeline step uses either `function` or `functionRef`, not both. A pipeline
+can contain a mix of steps using the two fields.
+
 ### Use a pipeline of functions in a composition
 
 Crossplane can ask more than one Function what to do when a composite resource

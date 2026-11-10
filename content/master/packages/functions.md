@@ -69,3 +69,73 @@ spec:
 # Removed for brevity
 ```
 {{</hint >}}
+
+## Functions managed by Crossplane
+
+{{<hint "important">}}
+Referencing functions by OCI reference is an alpha feature. Enable it by
+setting the `--enable-pipeline-oci-references` feature flag.
+{{</hint>}}
+
+A Composition or Operation pipeline step can reference a function package by
+digest with the `function` field instead of naming an installed Function with
+`functionRef`. Read
+[Roll out function changes]({{<ref "../composition/composition-revisions#roll-out-function-changes">}})
+to learn why you might want to use this feature.
+
+You don't install these functions yourself. For each digest a pipeline
+references, Crossplane creates a `FunctionRevision`. Crossplane groups the
+revisions under a Function named after the package repository. For example,
+`xpkg.crossplane.io/crossplane-contrib/function-go-templating` becomes
+`crossplane-contrib-function-go-templating`, the same name Crossplane uses when
+it installs the function as a
+[dependency]({{<ref "./configurations#manage-dependencies">}}).
+
+The `CompositionRevisions` and `Operations` that reference a function by OCI
+reference own its `FunctionRevision`. The `FunctionRevision` is garbage
+collected by Kubernetes when you delete the last `CompositionRevision` or
+`Operation` that references it.
+
+### External revisions
+
+For Functions installed by users or as dependencies, Crossplane's package
+manager sets one active revision. The revisions created for `function`
+references in the `CompositionRevisions` and `Operations` are
+different. Controllers outside the package manager manage these "external"
+revisions. The package manager pulls the package, runs a function pod for each
+one, and records their names in the parent `Function`'s
+`status.externalFunctionRefs` field. Multiple external revisions of the same
+Function can be active at once and the package manager doesn't determine which
+should be active.
+
+A Function that only has external revisions has no `spec.package`. Its
+{{<hover label="ext" line="11">}}status.externalRevisionRefs{{</hover>}} lists
+its revisions:
+
+```yaml {label="ext",copy-lines="none"}
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: crossplane-contrib-function-go-templating
+spec:
+  # No package
+  # Removed for brevity
+status:
+  conditions:
+  # Removed for brevity
+  externalRevisionRefs:
+  - name: crossplane-contrib-function-go-templating-91622b9260e8
+  - name: crossplane-contrib-function-go-templating-d66b8d13aa14
+```
+
+This Function reports `HEALTHY` as `True` only when all its external revisions
+are healthy. It has no current revision.
+
+A Function can have both a `spec.package` and external revisions. This happens
+when you install a function and also reference it by digest in a pipeline. The
+package manager manages the revisions for `spec.package` as usual and lists the
+others in `status.externalRevisionRefs`. Pipeline steps that use `functionRef`
+call only the revision the package manager manages.
+
+If another package depends on a function that has only external revisions, the
+package manager takes over the Function and sets its `spec.package`.
