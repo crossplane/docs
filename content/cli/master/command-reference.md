@@ -11,7 +11,7 @@ description: "Command reference for the Crossplane CLI"
 <!-- vale Crossplane.Spelling = NO -->
 <!-- vale cli-docs = YES -->
 
-This documentation is for the `crossplane` CLI `v2.6.0-rc.0.196.g690477c`.
+This documentation is for the `crossplane` CLI `v2.6.0-rc.0.634.g6389c1c`.
 
 
 <!-- vale Google.Headings = NO -->
@@ -354,7 +354,7 @@ they're run:
 | `render.crossplane.io/runtime: "Development"` | Connect to a Function running locally, instead of using Docker, for example when developing or debugging a new Function. The Function must be listening at `localhost:9443` and running with the `--insecure` flag. |
 | `render.crossplane.io/runtime-development-target: "dns:///example.org:7443"` | Connect to a Function running somewhere other than `localhost:9443`. The target uses gRPC target syntax (for example, `dns:///example.org:7443` or `example.org:7443`). |
 | `render.crossplane.io/runtime-docker-cleanup: "Orphan"` | Don't stop the Function's Docker container after rendering. |
-| `render.crossplane.io/runtime-docker-name: "<name>"` | Create or reuse a container with the given name. Restart the container if needed. |
+| `render.crossplane.io/runtime-docker-name: "<name>"` | Create or reuse a container with the given name. Restart the container if needed. See below for when a running container is reused. |
 | `render.crossplane.io/runtime-docker-pull-policy: "Always"` | Always pull the Function's package, even if it already exists locally. Other supported values are `Never` or `IfNotPresent`. |
 | `render.crossplane.io/runtime-docker-publish-address: "0.0.0.0"` | Host address that Docker should publish the Function's container port to. Defaults to `127.0.0.1` (localhost only). Use `0.0.0.0` to publish to all host network interfaces, enabling access from remote machines. |
 | `render.crossplane.io/runtime-docker-target: "docker-host"` | Address that the render CLI should use to connect to the Function's Docker container. If not specified, uses the publish address. |
@@ -365,6 +365,26 @@ Use the standard `DOCKER_HOST`, `DOCKER_API_VERSION`, `DOCKER_CERT_PATH`, and
 to the Docker daemon. See the
 [Docker environment variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables)
 reference.
+
+#### Cleaning up after a crashed run
+
+If a run is killed before it cleans up (for example by `kill -9`), the next
+`composition render` or `operation render` run, or `resource simulate` run
+that starts a diff server container, cleans up what it left behind, following
+each container's `runtime-docker-cleanup` policy. This doesn't apply to runs
+started with `--session-id`, to runs on Windows, or to a different
+`DOCKER_HOST`.
+
+If a container named by `runtime-docker-name` already exists:
+
+{{<table "table table-sm table-striped" >}}
+| Container | What this run does |
+|---|---|
+| Stopped | Restarts it. On exit it keeps it as long as either run's policy asks (`Orphan` > `Stop` > `Remove`). |
+| Running, `Orphan` | Shares it and leaves it running. |
+| Running, started by this run | Shares it. |
+| Running, `Stop` or `Remove`, started by another run | Fails, because that run will stop or remove it. Use `Orphan` to share a container between runs. |
+{{< /table >}}
 
 #### Project support
 
@@ -526,9 +546,9 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 |------------|-----------|-------------|
 |  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
-|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
-|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
-|  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
+|  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. A supplied ID isn't leased, so its resources aren't reclaimed after a crash. |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be files containing JSON/YAML. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the Function pipeline. Values must be JSON/YAML. Keys take precedence over --context-files. |
 | `-r` | `--include-function-results` | Include informational and warning messages from Functions in the rendered output as resources of kind: Result. |
@@ -545,6 +565,253 @@ crossplane composition render <composite-resource> <composition> [<functions>] [
 | `-f` | `--project-file=STRING` | Path to the project file or package metadata file (crossplane.yaml). Autodetects the file type. |
 |  | `--timeout=1m` | How long to run before timing out. |
 |  | `--xrd=PATH` | A YAML file specifying the CompositeResourceDefinition (XRD) that defines the XR's schema and properties. |
+{{< /table >}}
+
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+### crossplane composition simulate
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Preview what applying changed Compositions would do.
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+The `composition simulate` command previews how applying changed Compositions
+would change the composite resources in a cluster. It renders each composite
+resource that uses one of the Compositions with the changed version, and shows
+the difference from what's in the cluster. It doesn't change the cluster.
+
+{{<hint "important" >}}
+Although it doesn't change the cluster, this command needs
+`create` and `patch` permission on the resources it renders. It checks each
+rendered resource with a server-side dry-run request, and Kubernetes
+authorizes a dry-run request like a real one. It also needs read access to
+the cluster's Crossplane resources, and Docker to run functions. Use `--as`,
+`--as-group`, and `--as-uid` to simulate as another user.
+{{< /hint >}}
+
+The command connects to the cluster in your current Kubernetes context, or the
+one `--context` names.
+
+`-f` (`--input`) names a file, or a directory of YAML files, of Compositions to
+simulate, and is required. Give a comma-separated list, or repeat it, for more; `-f -` reads standard input.
+Every resource in them must be a Composition; to simulate a project, use
+`crossplane project simulate`, to simulate composite resources or claims, use
+`crossplane xr simulate`, and to simulate managed resources directly, use
+`crossplane resource simulate`.
+Functions come from the cluster. `--cache-dir` sets where provider package
+contents are cached.
+
+The `-o` flag picks the output format:
+
+- `plan`, the default, prints each change as a field-level plan, grouped under
+  the composite resource it belongs to. When the run simulates a changed
+  Composition, the Composition prints first, with whether applying it creates
+  a new Composition revision.
+- `json` and `yaml` print the same plan as a structured result, for CI and
+  other tools. Each plan carries the objects it compares, as `before` (the
+  live object, absent for a create) and `after` (the rendered object, absent
+  for a delete), and neither when the cluster diff found the resource
+  unchanged, such as drift only the provider plan found. Both are without
+  status, server-managed metadata and ignored paths, and with Secret values
+  redacted. For a resource the provider planned,
+  `after` is the manifest sent to it; values the provider computes appear only
+  in the changes.
+  Each composite has a `status`: `changed`, `unchanged`, `error`, `deferred`,
+  `skipped`, or `unknown` when the engine reports a status this version
+  doesn't recognize.
+- `diff` prints a line diff of each changed resource's manifest. Every
+  Secret value, and any value a provider marks sensitive, reads
+  `(sensitive value)`; a value the provider computes on apply reads
+  `(known after apply)`; and a field that forces replacement ends
+  `# forces replacement`.
+
+The `--timeout` flag, 2m by default, bounds the time spent simulating one
+composite resource.
+
+`simulate` first computes the cluster diff: it renders each composite resource
+and compares the result with the cluster through a server-side dry run, like
+`kubectl diff`.
+
+By default `simulate` also runs provider plans: it asks each provider's diff
+server to plan the managed resources, so the plan shows changes the cluster
+can't see. The diff servers come from `--providers` when set, otherwise from
+the project's provider dependencies when simulating a project, otherwise from
+the providers installed on the cluster that own the rendered resources, started
+on demand. A resource no diff server serves keeps its cluster diff. In `json`
+and `yaml` output, `approximate: true` on a plan means it was computed
+client-side, without a provider diff, because the provider couldn't diff that
+resource. The result's `notes` say when provider plans were skipped or no diff
+server served the resources; `-o diff` prints the no-diff-server note to
+stderr.
+
+Provider plans are controlled by these flags:
+
+- `--skip-plan` doesn't run provider diff servers and shows only the
+  cluster diff. `--providers` and `--session-id` do nothing with it, so
+  they print a warning and are ignored.
+- `--providers` takes a YAML file or directory of Provider manifests to run as
+  diff servers, instead of discovering providers from the cluster. The manifests
+  can carry per-provider runtime annotations.
+- `--session-id` sets the `simulate.crossplane.io/session` label on diff server
+  containers. It defaults to a random per-process ID.
+
+The render takes the same render engine flags as `crossplane render`:
+`--crossplane-version` and `--crossplane-image`, v2.3.4 or later, or
+`--crossplane-binary`, pick what renders, and `--crossplane-docker-network`
+names the Docker network the render and function containers join. The network
+comes from `--crossplane-docker-network`, then the `CROSSPLANE_DOCKER_NETWORK`
+environment variable, then, when simulating a project, the first project
+function with a `render.crossplane.io/runtime-docker-network` annotation. The
+annotation fallback reads the project's functions only. `--crossplane-binary`
+runs no render container and ignores the network; passing
+`--crossplane-docker-network` with it prints a warning.
+
+`--image-configs` takes a YAML file of ImageConfig manifests that rewrite
+package paths for pulls, for both the render and the provider plans: the images
+of the functions the render runs, except a project's embedded functions,
+provider images, and a project's function and provider dependencies. When
+simulating a project, it replaces the project's imageConfigs for those pulls
+rather than adding to them; schema generation images still use the project's
+imageConfigs, and without the flag the project's imageConfigs apply. A command
+that takes files rather than a project uses only the flag's ImageConfigs, and
+none without it; it never reads a project file in the current directory.
+
+These flags tune the diff:
+
+- `--ignore-paths` leaves paths out of the diff.
+- `--function-credentials` passes credentials to the functions the render runs:
+  a YAML file, or the top-level YAML files of a directory, that must contain
+  only Secrets.
+- `--max-nested-depth` limits nested composite resource recursion.
+- `--max-iterations` caps the render passes per composite resource that
+  resolve the resources its functions require.
+- `--dry-run-on` picks which resources the server-side dry run verifies:
+  `existing` only checks resources already in the cluster; `all`, the default,
+  also dry-run creates added resources, so their diffs include server-side
+  defaulting and admission. `all` needs the `create` verb and falls back per
+  resource without it.
+- `--eventual-state` shows the state after all reconciliation cycles complete.
+- `--max-recv-message-size` raises the function gRPC message limit, in MB.
+- `--no-color` and `--compact` change how `-o diff` prints.
+
+These flags choose which composite resources a Composition change reaches, and
+how the change prints:
+
+- `--namespace` (`-n`) simulates only composite resources in one namespace.
+- `--name` takes `[namespace/]name` and simulates only that composite
+  resource. It's repeatable or comma-separated. A bare name pairs with
+  `--namespace`, or is cluster scoped without it.
+- `--include-pinned` renders every pinned composite resource against the new
+  Composition. By default `simulate` skips composite resources with a `Manual`
+  composition update policy, because they don't adopt a new Composition
+  revision on their own. A pinned composite whose revision calls a function
+  the run changes is still simulated, rendered against the revision it's
+  pinned to.
+- `--analyze-on` sets the smallest Composition change that triggers impact
+  analysis: `spec-change` only when the Composition spec changes;
+  `any-change`, the default, also when only its metadata changes, which still
+  creates a new CompositionRevision that composites re-point to; `always` even
+  when the Composition is identical, for a pre-edit convergence baseline.
+- `--minimize-composition` collapses each changed Composition to one line in
+  `-o diff` output. Errors and Compositions with no changes still print in
+  full.
+
+When a run reaches both a claim and its composite resource, the change is
+reported under the claim. If the claim is skipped because it uses the Manual
+update policy but its composite resource is pinned to a revision that calls a
+changed function, the change is reported under the composite resource.
+
+The command exits with one of these statuses, so a CI pipeline can gate on
+the result:
+
+- 0: the simulation succeeded and found no changes.
+- 1: the simulation failed, including when its inputs can't be read. If a
+  provider plan fails, so does its whole composite resource, which then
+  reports an error entry and none of its resources' plans. A run also fails,
+  with or without `--skip-plan`, when two composite resources it renders would
+  both control one resource, even if one of them leaves it unchanged, or
+  render it differently, since no one diff or provider plan is correct for
+  both.
+- 2: only schema validation failed.
+- 3: the simulation succeeded and found changes, including drift a provider
+  plan found that the cluster diff didn't.
+- 80: a flag was unknown or had an invalid value, so nothing was simulated.
+- 130: the simulation was interrupted.
+
+When more than one applies, the lowest of 1, 2 and 3 wins.
+
+#### Examples
+
+Simulate a changed Composition against the current context:
+
+```shell
+crossplane composition simulate -f composition.yaml
+```
+
+Simulate two Compositions, only for composite resources in one namespace:
+
+```shell
+crossplane composition simulate -f network.yaml -f database.yaml -n team-a
+```
+
+Simulate a Composition read from standard input, for a single composite
+resource:
+
+```shell
+cat composition.yaml | crossplane composition simulate -f - --name=team-a/my-database
+```
+
+Print the plan as JSON, without provider plans:
+
+```shell
+crossplane composition simulate -f composition.yaml -o json --skip-plan
+```
+
+#### Usage
+
+```
+crossplane composition simulate --input=PATH,... [flags]
+```
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+|  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
+|  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
+|  | `--session-id=ID` | Session ID to apply as the simulate.crossplane.io/session label on diff server containers. Defaults to a random per-process ID. Ignored with --skip-plan. |
+|  | `--cache-dir=STRING` | Directory for cached xpkg package contents (functions and providers). |
+| `-c` | `--context=STRING` | Kubernetes context to simulate against. Defaults to the current context. |
+|  | `--max-iterations=20` | Max render iterations per composite resource to resolve requirements. |
+|  | `--timeout=2m` | Max time to simulate one composite resource. |
+| `-o` | `--output="plan"` | Output format. One of: plan, diff, json, yaml. |
+|  | `--no-color` | Disable colorized output. |
+|  | `--compact` | Show compact diffs with minimal context. |
+|  | `--max-nested-depth=10` | Maximum depth for nested XR recursion. |
+|  | `--ignore-paths=IGNORE-PATHS,...` | Paths to ignore in diffs (e.g., 'metadata.annotations[argocd.argoproj.io/tracking-id]'). |
+|  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying Secret credentials to pass to Functions. |
+|  | `--eventual-state` | Show eventual state after all reconciliation cycles complete (useful with function-sequencer). |
+|  | `--max-recv-message-size=INT` | Max gRPC message size (MB) for render function containers (4 MB if undefined). |
+|  | `--dry-run-on="all"` | Which resources to verify with a server-side dry run: existing or all (default). |
+|  | `--skip-plan` | Don't run provider diff servers; show only the cluster diff. |
+|  | `--providers=STRING` | YAML file or directory of Provider manifests to run as diff servers, instead of discovering them from the cluster. |
+|  | `--image-configs=STRING` | YAML file of ImageConfig manifests that rewrite package paths for pulls, replacing a project's imageConfigs; without a project, only these apply. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
+| `-n` | `--namespace=STRING` | Only simulate composite resources in this namespace. Defaults to all namespaces. |
+|  | `--name=NAME,...` | Only simulate the composite resource with this [namespace/]name. Repeatable or comma-separated. A bare name pairs with --namespace, or is cluster scoped without it. |
+|  | `--include-pinned` | Render every composite resource pinned by a Manual update policy against the new Composition. |
+|  | `--minimize-composition` | Collapse each changed Composition to one line in -o diff output. |
+|  | `--analyze-on="any-change"` | Smallest Composition change that triggers impact analysis: spec-change, any-change (default) or always. |
+| `-f` | `--input=PATH,...` | **Required.** Composition file or directory to simulate. Takes a comma-separated list of paths, and can be repeated. - reads standard input. |
 {{< /table >}}
 
 
@@ -585,13 +852,37 @@ you can reach generated resources through interfaces and generics:
 crossplane config set features.generateGoModelAccessors true
 ```
 
-Generate `runtime.Object` methods and per-package `AddToScheme` helpers on
-generated Go models (off by default), so you can register generated types with a
-`runtime.Scheme`:
+Generate `runtime.Object`, `metav1.Object`, and `metav1.ListInterface`
+methods on generated Go models, plus per-package `AddToScheme` helpers (off
+by default). These methods let you register generated types with a
+`runtime.Scheme` and use them with `sigs.k8s.io/controller-runtime` as
+`client.Object` and `client.ObjectList` values, for example with
+`client.Client.Get`, `List`, and `Create`:
 
 ```shell
 crossplane config set features.generateGoRuntimeObjects true
 ```
+
+**Breaking change:** This flag changes two things in the generated models.
+The `Metadata` field's Go type changes from a mirror struct this tool
+generates to the real `k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta` or
+`ListMeta` type. A `<Kind>List` type's `Items` field changes from `*[]Kind`
+to `[]Kind`. Both changes let the generated types implement `client.Object`
+and `client.ObjectList`.
+
+Turning on this flag also stops the CLI from generating the local
+`io/k8s/meta/v1` (or `io/k8s/core/meta/v1`) mirror package. Every reference
+to a `meta/v1` type, including `Time`, `OwnerReference`, `LabelSelector`,
+`Condition`, `DeleteOptions`, and `MicroTime`, now points to the real
+`k8s.io/apimachinery` package instead. Code that imports the mirror package
+directly won't build after you turn this flag on.
+
+This flag is off by default. Before this change, the generated types didn't
+work as `client.Object` values, so we don't provide a migration path.
+Regenerate your models after upgrading. The schema manager skips regeneration when your
+dependency's version hasn't changed, so run
+`crossplane dependency clean-cache` first if regenerating doesn't pick up
+the new output.
 
 ### Usage
 
@@ -699,6 +990,12 @@ dependencies. Use the `--api-only` flag to add a build-time xpkg dependency.
 
 Non-xpkg dependencies are always build-time dependencies.
 
+Git dependencies fetched over HTTPS can authenticate using `--git-token` and
+`--git-username`. Prefer the `CROSSPLANE_GIT_TOKEN` and
+`CROSSPLANE_GIT_USERNAME` environment variables to avoid exposing credentials
+in shell history. The username defaults to `x-access-token`. Credentials aren't
+saved in the project file.
+
 #### Examples
 
 Retrieve the latest available semantic version of `provider-aws-eks`, generate
@@ -758,6 +1055,8 @@ crossplane dependency add <package> [flags]
 |------------|-----------|-------------|
 | `-f` | `--project-file="crossplane-project.yaml"` | Path to project definition file. |
 |  | `--cache-dir=STRING` | Directory for cached xpkg package contents. |
+|  | `--git-token=STRING` | Token for git HTTPS authentication. |
+|  | `--git-username="x-access-token"` | Username for git HTTPS authentication. |
 |  | `--api-only` | Mark an xpkg dependency as API-only (not a runtime dependency). |
 |  | `--git-ref=STRING` | Git ref for CRD dependencies (branch, tag, or commit SHA). |
 |  | `--git-path=STRING` | Path to CRDs in the git repository. |
@@ -985,7 +1284,7 @@ they're run:
 | `render.crossplane.io/runtime: "Development"` | Connect to a Function running locally, instead of using Docker, for example when developing or debugging a new Function. The Function must be listening at `localhost:9443` and running with the `--insecure` flag. |
 | `render.crossplane.io/runtime-development-target: "dns:///example.org:7443"` | Connect to a Function running somewhere other than `localhost:9443`. The target uses gRPC target syntax (for example, `dns:///example.org:7443` or `example.org:7443`). |
 | `render.crossplane.io/runtime-docker-cleanup: "Orphan"` | Don't stop the Function's Docker container after rendering. |
-| `render.crossplane.io/runtime-docker-name: "<name>"` | Create or reuse a container with the given name. Restart the container if needed. |
+| `render.crossplane.io/runtime-docker-name: "<name>"` | Create or reuse a container with the given name. Restart the container if needed. See below for when a running container is reused. |
 | `render.crossplane.io/runtime-docker-pull-policy: "Always"` | Always pull the Function's package, even if it already exists locally. Other supported values are `Never` or `IfNotPresent`. |
 | `render.crossplane.io/runtime-docker-publish-address: "0.0.0.0"` | Host address that Docker should publish the Function's container port to. Defaults to `127.0.0.1` (localhost only). Use `0.0.0.0` to publish to all host network interfaces, enabling access from remote machines. |
 | `render.crossplane.io/runtime-docker-target: "docker-host"` | Address that the render CLI should use to connect to the Function's Docker container. If not specified, uses the publish address. |
@@ -996,6 +1295,26 @@ Use the standard `DOCKER_HOST`, `DOCKER_API_VERSION`, `DOCKER_CERT_PATH`, and
 to the Docker daemon. See the
 [Docker environment variables](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables)
 reference.
+
+#### Cleaning up after a crashed run
+
+If a run is killed before it cleans up (for example by `kill -9`), the next
+`composition render` or `operation render` run, or `resource simulate` run
+that starts a diff server container, cleans up what it left behind, following
+each container's `runtime-docker-cleanup` policy. This doesn't apply to runs
+started with `--session-id`, to runs on Windows, or to a different
+`DOCKER_HOST`.
+
+If a container named by `runtime-docker-name` already exists:
+
+{{<table "table table-sm table-striped" >}}
+| Container | What this run does |
+|---|---|
+| Stopped | Restarts it. On exit it keeps it as long as either run's policy asks (`Orphan` > `Stop` > `Remove`). |
+| Running, `Orphan` | Shares it and leaves it running. |
+| Running, started by this run | Shares it. |
+| Running, `Stop` or `Remove`, started by another run | Fails, because that run will stop or remove it. Use `Orphan` to share a container between runs. |
+{{< /table >}}
 
 #### Project support
 
@@ -1110,9 +1429,9 @@ crossplane operation render <operation> [<functions>] [flags]
 |------------|-----------|-------------|
 |  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
 |  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
-|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. |
-|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in |
-|  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
+|  | `--session-id=ID` | Session ID to apply as the render.crossplane.io/session label on Docker containers and networks that render creates. Defaults to a random per-process ID. A supplied ID isn't leased, so its resources aren't reclaimed after a crash. |
 |  | `--context-files=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be files containing JSON. |
 |  | `--context-values=KEY=VALUE;...` | Comma-separated context key-value pairs to pass to the function pipeline. Values must be JSON. Keys take precedence over --context-files. |
 |  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying credentials to use for functions. |
@@ -1181,6 +1500,12 @@ The build reuses the dependency cache populated by `crossplane dependency add`
 and `crossplane dependency update-cache`. Override the cache location with
 `--cache-dir` or the `CROSSPLANE_XPKG_CACHE` environment variable.
 
+Git dependencies fetched over HTTPS can authenticate using `--git-token` and
+`--git-username`. Prefer the `CROSSPLANE_GIT_TOKEN` and
+`CROSSPLANE_GIT_USERNAME` environment variables to avoid exposing credentials
+in shell history. The username defaults to `x-access-token`. Credentials aren't
+saved in the project file.
+
 The CLI builds embedded functions onto a runtime base image from a registry, and
 caches those image layers on disk under `crossplane/base-images` in your user
 cache directory. A build that needs a layer already in the cache reads it
@@ -1227,6 +1552,8 @@ crossplane project build [flags]
 | `-o` | `--output-dir="_output"` | Output directory for packages. |
 |  | `--max-concurrency=8` | Max concurrent function builds. |
 |  | `--cache-dir=STRING` | Directory for cached xpkg package contents. |
+|  | `--git-token=STRING` | Token for git HTTPS authentication. |
+|  | `--git-username="x-access-token"` | Username for git HTTPS authentication. |
 {{< /table >}}
 
 
@@ -1468,6 +1795,297 @@ crossplane project run [flags]
 
 <!-- vale Google.Headings = NO -->
 <!-- vale Microsoft.Headings = NO -->
+### crossplane project simulate
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Preview how a project's Compositions would change a cluster's composite resources.
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+The `project simulate` command previews how applying a project's Compositions
+would change the composite resources in a cluster. It renders each affected
+composite resource and shows the difference from what's in the cluster. It
+doesn't change the cluster. To simulate Composition files against a cluster
+without a project, use `crossplane composition simulate`; to simulate composite
+resource or claim files, use `crossplane xr simulate`; to simulate managed
+resources directly, use `crossplane resource simulate`.
+
+{{<hint "important" >}}
+Although it doesn't change the cluster, this command needs
+`create` and `patch` permission on the resources it renders. It checks each
+rendered resource with a server-side dry-run request, and Kubernetes
+authorizes a dry-run request like a real one. It also needs read access to
+the cluster's Crossplane resources, and Docker to build and run functions.
+Use `--as`, `--as-group`, and `--as-uid` to simulate as another user.
+{{< /hint >}}
+
+The command connects to the cluster in your current Kubernetes context, or the
+one `--context` names.
+
+The `-f` flag names the project file, `crossplane-project.yaml` by default. The
+command builds the project's embedded functions and loads them into the local
+Docker daemon, resolves its function dependencies, and collects the
+Compositions under its APIs path. It renders each composite resource that uses
+one of those Compositions with the project's version of the Composition, using
+the project's functions in place of the cluster's functions of the same name.
+`--max-concurrency` caps the concurrent function builds, and `--cache-dir` sets
+where package contents are cached.
+
+For example, a run with `--skip-plan` whose project changes a Composition
+prints a plan like this:
+
+```
+[~] Composition.apiextensions.crossplane.io xnetworks.example.org (update)
+    Applying this creates a new CompositionRevision, which 1 composite would adopt.
+    spec:
+      pipeline[0]:
+        input:
+          ~ region: "us-west-1" -> "us-east-1"
+
+XR: XNetwork.example.org team-a/prod-network
+  [~] VPC.ec2.aws.upbound.io prod-network (update)
+      spec:
+        forProvider:
+          ~ region: "us-west-1" -> "us-east-1"
+
+Plan: 0 to add, 2 to change, 0 to destroy.
+
+Note: Provider plan skipped (--skip-plan).
+```
+
+The `-o` flag picks the output format:
+
+- `plan`, the default, prints each change as a field-level plan, grouped under
+  the composite resource it belongs to. When the run simulates a changed
+  Composition, the Composition prints first, with whether applying it creates
+  a new Composition revision.
+- `json` and `yaml` print the same plan as a structured result, for CI and
+  other tools. Each plan carries the objects it compares, as `before` (the
+  live object, absent for a create) and `after` (the rendered object, absent
+  for a delete), and neither when the cluster diff found the resource
+  unchanged, such as drift only the provider plan found. Both are without
+  status, server-managed metadata and ignored paths, and with Secret values
+  redacted. For a resource the provider planned,
+  `after` is the manifest sent to it; values the provider computes appear only
+  in the changes.
+  Each composite has a `status`: `changed`, `unchanged`, `error`, `deferred`,
+  `skipped`, or `unknown` when the engine reports a status this version
+  doesn't recognize.
+- `diff` prints a line diff of each changed resource's manifest. Every
+  Secret value, and any value a provider marks sensitive, reads
+  `(sensitive value)`; a value the provider computes on apply reads
+  `(known after apply)`; and a field that forces replacement ends
+  `# forces replacement`.
+
+The `--timeout` flag, 2m by default, bounds the time spent simulating one
+composite resource.
+
+`simulate` first computes the cluster diff: it renders each composite resource
+and compares the result with the cluster through a server-side dry run, like
+`kubectl diff`.
+
+By default `simulate` also runs provider plans: it asks each provider's diff
+server to plan the managed resources, so the plan shows changes the cluster
+can't see. The diff servers come from `--providers` when set, otherwise from
+the project's provider dependencies when simulating a project, otherwise from
+the providers installed on the cluster that own the rendered resources, started
+on demand. A resource no diff server serves keeps its cluster diff. In `json`
+and `yaml` output, `approximate: true` on a plan means it was computed
+client-side, without a provider diff, because the provider couldn't diff that
+resource. The result's `notes` say when provider plans were skipped or no diff
+server served the resources; `-o diff` prints the no-diff-server note to
+stderr.
+
+Provider plans are controlled by these flags:
+
+- `--skip-plan` doesn't run provider diff servers and shows only the
+  cluster diff. `--providers` and `--session-id` do nothing with it, so
+  they print a warning and are ignored.
+- `--providers` takes a YAML file or directory of Provider manifests to run as
+  diff servers, instead of discovering providers from the cluster. The manifests
+  can carry per-provider runtime annotations.
+- `--session-id` sets the `simulate.crossplane.io/session` label on diff server
+  containers. It defaults to a random per-process ID.
+
+The render takes the same render engine flags as `crossplane render`:
+`--crossplane-version` and `--crossplane-image`, v2.3.4 or later, or
+`--crossplane-binary`, pick what renders, and `--crossplane-docker-network`
+names the Docker network the render and function containers join. The network
+comes from `--crossplane-docker-network`, then the `CROSSPLANE_DOCKER_NETWORK`
+environment variable, then, when simulating a project, the first project
+function with a `render.crossplane.io/runtime-docker-network` annotation. The
+annotation fallback reads the project's functions only. `--crossplane-binary`
+runs no render container and ignores the network; passing
+`--crossplane-docker-network` with it prints a warning.
+
+`--image-configs` takes a YAML file of ImageConfig manifests that rewrite
+package paths for pulls, for both the render and the provider plans: the images
+of the functions the render runs, except a project's embedded functions,
+provider images, and a project's function and provider dependencies. When
+simulating a project, it replaces the project's imageConfigs for those pulls
+rather than adding to them; schema generation images still use the project's
+imageConfigs, and without the flag the project's imageConfigs apply. A command
+that takes files rather than a project uses only the flag's ImageConfigs, and
+none without it; it never reads a project file in the current directory.
+
+These flags tune the diff:
+
+- `--ignore-paths` leaves paths out of the diff.
+- `--function-credentials` passes credentials to the functions the render runs:
+  a YAML file, or the top-level YAML files of a directory, that must contain
+  only Secrets.
+- `--max-nested-depth` limits nested composite resource recursion.
+- `--max-iterations` caps the render passes per composite resource that
+  resolve the resources its functions require.
+- `--dry-run-on` picks which resources the server-side dry run verifies:
+  `existing` only checks resources already in the cluster; `all`, the default,
+  also dry-run creates added resources, so their diffs include server-side
+  defaulting and admission. `all` needs the `create` verb and falls back per
+  resource without it.
+- `--eventual-state` shows the state after all reconciliation cycles complete.
+- `--max-recv-message-size` raises the function gRPC message limit, in MB.
+- `--no-color` and `--compact` change how `-o diff` prints.
+
+These flags choose which composite resources a Composition change reaches, and
+how the change prints:
+
+- `--namespace` (`-n`) simulates only composite resources in one namespace.
+- `--name` takes `[namespace/]name` and simulates only that composite
+  resource. It's repeatable or comma-separated. A bare name pairs with
+  `--namespace`, or is cluster scoped without it.
+- `--include-pinned` renders every pinned composite resource against the new
+  Composition. By default `simulate` skips composite resources with a `Manual`
+  composition update policy, because they don't adopt a new Composition
+  revision on their own. A pinned composite whose revision calls a function
+  the run changes is still simulated, rendered against the revision it's
+  pinned to.
+- `--analyze-on` sets the smallest Composition change that triggers impact
+  analysis: `spec-change` only when the Composition spec changes;
+  `any-change`, the default, also when only its metadata changes, which still
+  creates a new CompositionRevision that composites re-point to; `always` even
+  when the Composition is identical, for a pre-edit convergence baseline.
+- `--minimize-composition` collapses each changed Composition to one line in
+  `-o diff` output. Errors and Compositions with no changes still print in
+  full.
+
+When a run reaches both a claim and its composite resource, the change is
+reported under the claim. If the claim is skipped because it uses the Manual
+update policy but its composite resource is pinned to a revision that calls a
+changed function, the change is reported under the composite resource.
+
+The command exits with one of these statuses, so a CI pipeline can gate on
+the result:
+
+- 0: the simulation succeeded and found no changes.
+- 1: the simulation failed, including when its inputs can't be read. If a
+  provider plan fails, so does its whole composite resource, which then
+  reports an error entry and none of its resources' plans. A run also fails,
+  with or without `--skip-plan`, when two composite resources it renders would
+  both control one resource, even if one of them leaves it unchanged, or
+  render it differently, since no one diff or provider plan is correct for
+  both.
+- 2: only schema validation failed.
+- 3: the simulation succeeded and found changes, including drift a provider
+  plan found that the cluster diff didn't.
+- 80: a flag was unknown or had an invalid value, so nothing was simulated.
+- 130: the simulation was interrupted.
+
+When more than one applies, the lowest of 1, 2 and 3 wins.
+
+#### Examples
+
+Simulate the project in the current directory against the current context:
+
+```shell
+crossplane project simulate
+```
+
+Simulate the project in another directory:
+
+```shell
+crossplane project simulate -f path/to/crossplane-project.yaml
+```
+
+Simulate against another context, only for composite resources in one
+namespace:
+
+```shell
+crossplane project simulate --context=staging -n team-a
+```
+
+Simulate a single namespaced composite resource:
+
+```shell
+crossplane project simulate -n team-a --name=my-database
+```
+
+Simulate two composite resources in different namespaces:
+
+```shell
+crossplane project simulate --name=team-a/my-database --name=team-b/my-database
+```
+
+Print the plan as JSON:
+
+```shell
+crossplane project simulate -o json
+```
+
+Print a line diff of each changed resource:
+
+```shell
+crossplane project simulate -o diff
+```
+
+#### Usage
+
+```
+crossplane project simulate [flags]
+```
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+|  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
+|  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
+|  | `--session-id=ID` | Session ID to apply as the simulate.crossplane.io/session label on diff server containers. Defaults to a random per-process ID. Ignored with --skip-plan. |
+|  | `--cache-dir=STRING` | Directory for cached xpkg package contents (functions and providers). |
+| `-c` | `--context=STRING` | Kubernetes context to simulate against. Defaults to the current context. |
+|  | `--max-iterations=20` | Max render iterations per composite resource to resolve requirements. |
+|  | `--timeout=2m` | Max time to simulate one composite resource. |
+| `-o` | `--output="plan"` | Output format. One of: plan, diff, json, yaml. |
+|  | `--no-color` | Disable colorized output. |
+|  | `--compact` | Show compact diffs with minimal context. |
+|  | `--max-nested-depth=10` | Maximum depth for nested XR recursion. |
+|  | `--ignore-paths=IGNORE-PATHS,...` | Paths to ignore in diffs (e.g., 'metadata.annotations[argocd.argoproj.io/tracking-id]'). |
+|  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying Secret credentials to pass to Functions. |
+|  | `--eventual-state` | Show eventual state after all reconciliation cycles complete (useful with function-sequencer). |
+|  | `--max-recv-message-size=INT` | Max gRPC message size (MB) for render function containers (4 MB if undefined). |
+|  | `--dry-run-on="all"` | Which resources to verify with a server-side dry run: existing or all (default). |
+|  | `--skip-plan` | Don't run provider diff servers; show only the cluster diff. |
+|  | `--providers=STRING` | YAML file or directory of Provider manifests to run as diff servers, instead of discovering them from the cluster. |
+|  | `--image-configs=STRING` | YAML file of ImageConfig manifests that rewrite package paths for pulls, replacing a project's imageConfigs; without a project, only these apply. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
+| `-n` | `--namespace=STRING` | Only simulate composite resources in this namespace. Defaults to all namespaces. |
+|  | `--name=NAME,...` | Only simulate the composite resource with this [namespace/]name. Repeatable or comma-separated. A bare name pairs with --namespace, or is cluster scoped without it. |
+|  | `--include-pinned` | Render every composite resource pinned by a Manual update policy against the new Composition. |
+|  | `--minimize-composition` | Collapse each changed Composition to one line in -o diff output. |
+|  | `--analyze-on="any-change"` | Smallest Composition change that triggers impact analysis: spec-change, any-change (default) or always. |
+|  | `--max-concurrency=8` | Max concurrent function builds. |
+| `-f` | `--project-file="crossplane-project.yaml"` | Path to project definition. |
+{{< /table >}}
+
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ### crossplane project stop
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.Headings = YES -->
@@ -1562,6 +2180,19 @@ desired and live state. The provider computes its own diff, so the preview
 includes replacement detection, values known only after apply, and redacted
 sensitive values. A resource with no live counterpart plans as a create.
 
+This command takes managed resources. To simulate composite resources or
+claims, use `crossplane xr simulate`; to simulate Compositions, use
+`crossplane composition simulate`; to simulate a project, use
+`crossplane project simulate`.
+
+The command connects to the cluster in your current Kubernetes context, or the
+one `--context` names. Use `--as`, `--as-group`, and `--as-uid` to simulate as
+another user.
+
+`-f` (`--filename`) names a file, or a directory of YAML files, of managed
+resources to simulate, and is required. Give a comma-separated list for more;
+`-f -` reads standard input.
+
 Which providers run as diff servers comes from the current kubeconfig context
 by default: the CLI follows each resource's kind to the provider that
 installed it on the cluster, so the preview matches the provider versions
@@ -1573,6 +2204,20 @@ annotations (`simulate.crossplane.io/runtime-docker-publish-address` and
 `simulate.crossplane.io/runtime-docker-target`) for Docker setups where the
 published port isn't reachable on the address the daemon reports.
 
+A provider manifest can also opt out of Docker with
+`simulate.crossplane.io/runtime: Development`, like render's per-function
+runtime annotation: the CLI connects to a diff server you already run, from
+source or under a debugger, at the gRPC target in
+`simulate.crossplane.io/runtime-development-target` (default `localhost:9099`,
+upjet's default `--address`). No package is fetched for such a provider, so
+its manifest declares the API groups its server serves in
+`simulate.crossplane.io/runtime-development-api-groups`, comma-separated;
+legacy and namespaced (`.m.`) groups are distinct and both need listing.
+Resources in those groups route to it unless another provider's package ships
+a CRD for their exact kind. `spec.package` and the `runtime-docker-*`
+annotations are ignored on a Development provider, and Docker isn't needed
+at all when every provider in the file is one.
+
 Not every provider serves diffs. A provider package declares the capability
 in its metadata, and a resource whose provider serves no diff server (or
 whose diff server can't compute a diff for it) still appears in the preview
@@ -1583,13 +2228,43 @@ Nothing simulate does writes to the cluster or the cloud: it reads the
 cluster with your kubeconfig and RBAC, and the diff servers run locally with
 no credentials and no cluster access.
 
+Each run starts its own diff servers, named
+`crossplane-diff-server-DIGEST-SUFFIX`, and removes them when it exits.
+
 Diff server startup takes seconds per provider image. In an
 edit-simulate-edit loop, annotate a provider manifest with
-`simulate.crossplane.io/runtime-docker-cleanup: Orphan` (like render's
-per-function cleanup annotation) to leave its container running so the next
-run reuses it. The containers have names like `crossplane-diff-server-DIGEST`
-and carry `simulate.crossplane.io/managed-by` and session labels; any later
-run without the annotation cleans them up, or remove them with docker rm.
+`simulate.crossplane.io/runtime-docker-cleanup: Orphan` to leave its
+container, named `crossplane-diff-server-DIGEST`, running for every later run
+with the annotation to share. No run removes it, including a later run without
+the annotation, which starts its own server instead. Remove kept containers
+with:
+
+```shell
+docker rm -f $(docker ps -aq --filter label=simulate.crossplane.io/cleanup=Orphan)
+```
+
+If a run is killed before it cleans up (for example by `kill -9`), the next
+`crossplane resource simulate` run that starts a diff server container, or
+`crossplane composition render` or `crossplane operation render` run, removes
+what it left, except kept containers. A run whose providers are all
+Development starts no containers, so it doesn't. This doesn't apply to runs
+started with `--session-id`, to runs on Windows, or to a different
+`DOCKER_HOST`.
+
+Provider packages are cached in `--cache-dir`, which defaults to
+`$CROSSPLANE_XPKG_CACHE` or the same xpkg cache directory as
+`project simulate` and `render`.
+
+The command exits with one of these statuses, so a CI pipeline can gate on
+the result:
+
+- 0: the simulation found no changes.
+- 1: the simulation failed, including when any resource couldn't be planned
+  (its error is in the output).
+- 3: the simulation found changes: a plan would create, update, destroy or
+  replace a resource.
+- 80: the flags were invalid, so nothing was simulated.
+- 130: the simulation was interrupted.
 
 #### Examples
 
@@ -1613,7 +2288,20 @@ annotated with `simulate.crossplane.io/runtime-docker-cleanup: Orphan`:
 crossplane resource simulate -f resources.yaml --providers providers.yaml
 ```
 
-Emit machine-readable results for CI gating:
+Iterate on a provider's diff server from source, with no package to build or
+push: run `go run ./cmd/provider internal diff-server` in the provider
+repository, then simulate with a Provider manifest annotated with
+`simulate.crossplane.io/runtime: Development` and
+`simulate.crossplane.io/runtime-development-api-groups: ec2.aws.upbound.io,ec2.aws.m.upbound.io`:
+
+```shell
+crossplane resource simulate -f resources.yaml --providers providers.yaml
+```
+
+Emit machine-readable results for CI gating. Each plan carries the live
+object as `before` (absent for a create) and the desired manifest as `after`,
+both without status and server-managed metadata, and with Secret values
+redacted:
 
 ```shell
 crossplane resource simulate -f resources.yaml -o json
@@ -1629,14 +2317,14 @@ crossplane resource simulate --filename=STRING [flags]
 {{< table "table table-sm table-striped" >}}
 | Short flag | Long flag | Description |
 |------------|-----------|-------------|
-| `-f` | `--filename=STRING` | **Required.** YAML files or directory with managed resources, or '-' for stdin (comma-separated). |
-|  | `--providers=STRING` | YAML file or directory with Provider manifests to run as diff servers, overriding discovery from the cluster. Supports per-provider runtime annotations. |
-|  | `--image-configs=STRING` | YAML file with ImageConfig manifests that rewrite provider image paths for local pulls. Defaults to the project's imageConfigs when a project file is present. |
-|  | `--project-file=STRING` | Path to a project definition file to read imageConfigs from. Defaults to crossplane-project.yaml when present. |
-|  | `--session-id=ID` | Session ID to apply as the simulate.crossplane.io/session label on diff server containers. Defaults to a random per-process ID. |
-| `-c` | `--context=""` | Kubernetes context. |
-|  | `--cache-dir="~/.crossplane/cache"` | Cache directory for downloaded provider packages. |
-|  | `--timeout=2m` | Per-resource plan timeout. |
+| `-f` | `--filename=STRING` | **Required.** File or directory of managed resources to simulate. Takes a comma-separated list of paths. - reads standard input. |
+|  | `--providers=STRING` | YAML file or directory of Provider manifests to run as diff servers, instead of discovering them from the cluster. |
+|  | `--image-configs=STRING` | YAML file of ImageConfig manifests that rewrite package paths for pulls. Defaults to the project's imageConfigs when a project file is present. |
+|  | `--project-file=STRING` | Project file to read imageConfigs from. Defaults to crossplane-project.yaml when present. |
+|  | `--session-id=ID` | Session ID to apply as the simulate.crossplane.io/session label on diff server containers. Defaults to a random per-process ID. A supplied ID isn't leased, so its containers aren't reclaimed after a crash. |
+| `-c` | `--context=""` | Kubernetes context to simulate against. Defaults to the current context. |
+|  | `--cache-dir=STRING` | Directory for cached xpkg package contents (providers). |
+|  | `--timeout=2m` | Max time to plan one managed resource. |
 | `-o` | `--output="plan"` | Output format. One of: plan, json, yaml. |
 |  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
 |  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
@@ -2802,6 +3490,224 @@ crossplane xr patch [<input-file>] [flags]
 |------------|-----------|-------------|
 | `-o` | `--output-file=PATH` | The file to write the patched XR YAML to. Defaults to stdout. |
 |  | `--xrd=PATH` | A YAML file specifying the CompositeResourceDefinition (XRD) that provides schema defaults for the XR. |
+{{< /table >}}
+
+
+<!-- vale Google.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
+### crossplane xr simulate
+<!-- vale Google.Headings = YES -->
+<!-- vale Microsoft.Headings = YES -->
+
+[ALPHA] Preview what applying changed Composite Resources (XRs) or claims would do.
+
+{{<hint "note" >}}
+Alpha features are experimental and may change or disappear in a future release.
+{{< /hint >}}
+
+The `xr simulate` command previews how applying changed composite resources or
+claims would change a cluster. It renders each one with the Composition the
+cluster selects for it and the functions installed in the cluster, and shows
+the difference from what's in the cluster. It doesn't change the cluster.
+
+{{<hint "important" >}}
+Although it doesn't change the cluster, this command needs
+`create` and `patch` permission on the resources it renders. It checks each
+rendered resource with a server-side dry-run request, and Kubernetes
+authorizes a dry-run request like a real one. It also needs read access to
+the cluster's Crossplane resources, and Docker to run functions. Use `--as`,
+`--as-group`, and `--as-uid` to simulate as another user.
+{{< /hint >}}
+
+The command connects to the cluster in your current Kubernetes context, or the
+one `--context` names.
+
+`-f` (`--input`) names a file, or a directory of YAML files, of composite
+resources or claims to simulate, and is required. Give a comma-separated list,
+or repeat it, for more; `-f -` reads standard input. Every resource in them
+must be a kind an XRD in the cluster defines as a composite resource or claim;
+to simulate a Composition, use `crossplane composition simulate`, to simulate a
+project, use `crossplane project simulate`, and to simulate managed resources
+directly, use `crossplane resource simulate`. A claim is simulated as its
+composite resource, and its result is listed under the claim's name. A claim or
+namespaced composite resource with no `metadata.namespace` is simulated in the
+current context's namespace, as `kubectl apply` would.
+Functions come from the cluster. `--cache-dir` sets where provider package
+contents are cached.
+
+The `-o` flag picks the output format:
+
+- `plan`, the default, prints each change as a field-level plan, grouped under
+  the composite resource it belongs to. When the run simulates a changed
+  Composition, the Composition prints first, with whether applying it creates
+  a new Composition revision.
+- `json` and `yaml` print the same plan as a structured result, for CI and
+  other tools. Each plan carries the objects it compares, as `before` (the
+  live object, absent for a create) and `after` (the rendered object, absent
+  for a delete), and neither when the cluster diff found the resource
+  unchanged, such as drift only the provider plan found. Both are without
+  status, server-managed metadata and ignored paths, and with Secret values
+  redacted. For a resource the provider planned,
+  `after` is the manifest sent to it; values the provider computes appear only
+  in the changes.
+  Each composite has a `status`: `changed`, `unchanged`, `error`, `deferred`,
+  `skipped`, or `unknown` when the engine reports a status this version
+  doesn't recognize.
+- `diff` prints a line diff of each changed resource's manifest. Every
+  Secret value, and any value a provider marks sensitive, reads
+  `(sensitive value)`; a value the provider computes on apply reads
+  `(known after apply)`; and a field that forces replacement ends
+  `# forces replacement`.
+
+The `--timeout` flag, 2m by default, bounds the time spent simulating one
+composite resource.
+
+`simulate` first computes the cluster diff: it renders each composite resource
+and compares the result with the cluster through a server-side dry run, like
+`kubectl diff`.
+
+By default `simulate` also runs provider plans: it asks each provider's diff
+server to plan the managed resources, so the plan shows changes the cluster
+can't see. The diff servers come from `--providers` when set, otherwise from
+the project's provider dependencies when simulating a project, otherwise from
+the providers installed on the cluster that own the rendered resources, started
+on demand. A resource no diff server serves keeps its cluster diff. In `json`
+and `yaml` output, `approximate: true` on a plan means it was computed
+client-side, without a provider diff, because the provider couldn't diff that
+resource. The result's `notes` say when provider plans were skipped or no diff
+server served the resources; `-o diff` prints the no-diff-server note to
+stderr.
+
+Provider plans are controlled by these flags:
+
+- `--skip-plan` doesn't run provider diff servers and shows only the
+  cluster diff. `--providers` and `--session-id` do nothing with it, so
+  they print a warning and are ignored.
+- `--providers` takes a YAML file or directory of Provider manifests to run as
+  diff servers, instead of discovering providers from the cluster. The manifests
+  can carry per-provider runtime annotations.
+- `--session-id` sets the `simulate.crossplane.io/session` label on diff server
+  containers. It defaults to a random per-process ID.
+
+The render takes the same render engine flags as `crossplane render`:
+`--crossplane-version` and `--crossplane-image`, v2.3.4 or later, or
+`--crossplane-binary`, pick what renders, and `--crossplane-docker-network`
+names the Docker network the render and function containers join. The network
+comes from `--crossplane-docker-network`, then the `CROSSPLANE_DOCKER_NETWORK`
+environment variable, then, when simulating a project, the first project
+function with a `render.crossplane.io/runtime-docker-network` annotation. The
+annotation fallback reads the project's functions only. `--crossplane-binary`
+runs no render container and ignores the network; passing
+`--crossplane-docker-network` with it prints a warning.
+
+`--image-configs` takes a YAML file of ImageConfig manifests that rewrite
+package paths for pulls, for both the render and the provider plans: the images
+of the functions the render runs, except a project's embedded functions,
+provider images, and a project's function and provider dependencies. When
+simulating a project, it replaces the project's imageConfigs for those pulls
+rather than adding to them; schema generation images still use the project's
+imageConfigs, and without the flag the project's imageConfigs apply. A command
+that takes files rather than a project uses only the flag's ImageConfigs, and
+none without it; it never reads a project file in the current directory.
+
+These flags tune the diff:
+
+- `--ignore-paths` leaves paths out of the diff.
+- `--function-credentials` passes credentials to the functions the render runs:
+  a YAML file, or the top-level YAML files of a directory, that must contain
+  only Secrets.
+- `--max-nested-depth` limits nested composite resource recursion.
+- `--max-iterations` caps the render passes per composite resource that
+  resolve the resources its functions require.
+- `--dry-run-on` picks which resources the server-side dry run verifies:
+  `existing` only checks resources already in the cluster; `all`, the default,
+  also dry-run creates added resources, so their diffs include server-side
+  defaulting and admission. `all` needs the `create` verb and falls back per
+  resource without it.
+- `--eventual-state` shows the state after all reconciliation cycles complete.
+- `--max-recv-message-size` raises the function gRPC message limit, in MB.
+- `--no-color` and `--compact` change how `-o diff` prints.
+
+The command exits with one of these statuses, so a CI pipeline can gate on
+the result:
+
+- 0: the simulation succeeded and found no changes.
+- 1: the simulation failed, including when its inputs can't be read. If a
+  provider plan fails, so does its whole composite resource, which then
+  reports an error entry and none of its resources' plans. A run also fails,
+  with or without `--skip-plan`, when two composite resources it renders would
+  both control one resource, even if one of them leaves it unchanged, or
+  render it differently, since no one diff or provider plan is correct for
+  both.
+- 2: only schema validation failed.
+- 3: the simulation succeeded and found changes, including drift a provider
+  plan found that the cluster diff didn't.
+- 80: a flag was unknown or had an invalid value, so nothing was simulated.
+- 130: the simulation was interrupted.
+
+When more than one applies, the lowest of 1, 2 and 3 wins.
+
+#### Examples
+
+Simulate a changed composite resource against the current context:
+
+```shell
+crossplane xr simulate -f xr.yaml
+```
+
+Simulate a composite resource and a claim:
+
+```shell
+crossplane xr simulate -f network.yaml -f database-claim.yaml
+```
+
+Simulate a composite resource read from standard input:
+
+```shell
+cat xr.yaml | crossplane xr simulate -f -
+```
+
+Print the plan as JSON, without provider plans:
+
+```shell
+crossplane xr simulate -f xr.yaml -o json --skip-plan
+```
+
+#### Usage
+
+```
+crossplane xr simulate --input=PATH,... [flags]
+```
+#### Flags
+
+{{< table "table table-sm table-striped" >}}
+| Short flag | Long flag | Description |
+|------------|-----------|-------------|
+|  | `--crossplane-version=VERSION` | Version of the Crossplane image to use for rendering. Defaults to the latest stable version. |
+|  | `--crossplane-image=IMAGE` | Override the full Crossplane Docker image reference for rendering. |
+|  | `--crossplane-binary=PATH` | Path to a local crossplane binary to use instead of Docker. Ignores --crossplane-docker-network. |
+|  | `--crossplane-docker-network=STRING` | The docker network to start the crossplane container in (also $CROSSPLANE_DOCKER_NETWORK). Ignored with --crossplane-binary. |
+|  | `--session-id=ID` | Session ID to apply as the simulate.crossplane.io/session label on diff server containers. Defaults to a random per-process ID. Ignored with --skip-plan. |
+|  | `--cache-dir=STRING` | Directory for cached xpkg package contents (functions and providers). |
+| `-c` | `--context=STRING` | Kubernetes context to simulate against. Defaults to the current context. |
+|  | `--max-iterations=20` | Max render iterations per composite resource to resolve requirements. |
+|  | `--timeout=2m` | Max time to simulate one composite resource. |
+| `-o` | `--output="plan"` | Output format. One of: plan, diff, json, yaml. |
+|  | `--no-color` | Disable colorized output. |
+|  | `--compact` | Show compact diffs with minimal context. |
+|  | `--max-nested-depth=10` | Maximum depth for nested XR recursion. |
+|  | `--ignore-paths=IGNORE-PATHS,...` | Paths to ignore in diffs (e.g., 'metadata.annotations[argocd.argoproj.io/tracking-id]'). |
+|  | `--function-credentials=PATH` | A YAML file or directory of YAML files specifying Secret credentials to pass to Functions. |
+|  | `--eventual-state` | Show eventual state after all reconciliation cycles complete (useful with function-sequencer). |
+|  | `--max-recv-message-size=INT` | Max gRPC message size (MB) for render function containers (4 MB if undefined). |
+|  | `--dry-run-on="all"` | Which resources to verify with a server-side dry run: existing or all (default). |
+|  | `--skip-plan` | Don't run provider diff servers; show only the cluster diff. |
+|  | `--providers=STRING` | YAML file or directory of Provider manifests to run as diff servers, instead of discovering them from the cluster. |
+|  | `--image-configs=STRING` | YAML file of ImageConfig manifests that rewrite package paths for pulls, replacing a project's imageConfigs; without a project, only these apply. |
+|  | `--as=STRING` | Username to impersonate for the operation. User could be a regular user or a service account in a namespace. |
+|  | `--as-group=AS-GROUP` | Group to impersonate for the operation. Repeat to specify multiple groups. |
+|  | `--as-uid=STRING` | UID to impersonate for the operation. |
+| `-f` | `--input=PATH,...` | **Required.** Composite resource or claim file or directory to simulate. Takes a comma-separated list of paths, and can be repeated. - reads standard input. |
 {{< /table >}}
 
 
