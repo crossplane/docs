@@ -303,6 +303,14 @@ spec:
 You don't need to install the function first. Crossplane installs it before it
 runs the Operation, and waits for it to be healthy.
 
+{{<hint "important">}}
+Because it's normal for functions to take some time to start, Crossplane retries
+an `Operation` until all functions specified by OCI reference become
+ready. These retries aren't counted toward the Operation's failure limit. This
+means an incorrect reference can cause the `Operation` to retry forever, so be
+careful that all references are valid and correct.
+{{</hint>}}
+
 Each pipeline step uses either `function` or `functionRef`, not both. A pipeline
 can contain a mix of steps using the two fields.
 

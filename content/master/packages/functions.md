@@ -91,6 +91,15 @@ revisions under a Function named after the package repository. For example,
 it installs the function as a
 [dependency]({{<ref "./configurations#manage-dependencies">}}).
 
+{{<hint "important">}}
+When Crossplane creates a `Function` and `FunctionRevision` for pipeline steps,
+it sets an owner reference to the relevant pipeline resource
+(`CompositionRevision` or `Operation`). If you later want to manually install
+the function by setting `spec.package`, you should remove the owner references;
+otherwise, Kubernetes garbage collection can delete the Function when you delete
+the pipeline resource.
+{{</hint>}}
+
 The `CompositionRevisions` and `Operations` that reference a function by OCI
 reference own its `FunctionRevision`. The `FunctionRevision` is garbage
 collected by Kubernetes when you delete the last `CompositionRevision` or
