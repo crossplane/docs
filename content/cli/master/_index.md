@@ -12,11 +12,24 @@ Crossplane.
 The Crossplane CLI includes commands for:
 
 * building, installing, updating and pushing Crossplane Packages
-* building platforms using Crossplane Projects
+* building platforms using [Crossplane Projects]({{<ref "get-started/get-started-with-control-plane-projects">}})
 * testing and rendering standalone Composition Functions without the need to
   access a Kubernetes cluster running Crossplane
 * troubleshooting Crossplane Compositions, Composite Resources and Managed
   Resources
+
+## Crossplane Projects (DevEx)
+
+The Crossplane CLI includes a suite of developer experience commands for
+building, testing, and managing Crossplane Projects. Use `crossplane project
+init` to scaffold a new project, `crossplane xrd generate` and `crossplane
+composition generate` to create API definitions and compositions, and
+`crossplane function generate` to add composition functions in Go, Python,
+KCL, or templated YAML.
+
+See the [Get Started with Control Plane Projects]({{<ref
+"get-started/get-started-with-control-plane-projects">}}) guide for a complete
+tutorial.
 
 ## Installing the CLI
 
