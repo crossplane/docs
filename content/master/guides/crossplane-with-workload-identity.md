@@ -697,9 +697,30 @@ metadata:
   namespace: crossplane-system
 ```
 
+### Configure provider authentication with Workload Identity
+
+By default, each provider creates its own ServiceAccount with a random name. To use Workload Identity for providers, create a `DeploymentRuntimeConfig` to assign a specific ServiceAccount.
+
+Create a `DeploymentRuntimeConfig` to force providers to use this ServiceAccount:
+
+```shell
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: gcp-runtime-config
+spec:
+  deploymentTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: crossplane
+EOF
+```
+
 ### Test package installation from artifact registry
 
-Once configured, you can install Crossplane packages (Providers, Functions, Configurations) from your Artifact Registry. Here's an example using a Provider:
+Once configured, you can install Crossplane packages (Providers, Functions, Configurations) from your Artifact Registry. Reference the `DeploymentRuntimeConfig` in the Provider:
 
 ```shell
 kubectl apply -f - <<EOF
@@ -709,6 +730,8 @@ metadata:
   name: provider-gcp-storage
 spec:
   package: us-docker.pkg.dev/${PROJECT_ID}/crossplane/provider-gcp-storage:v1.2.0
+  runtimeConfigRef:
+    name: gcp-runtime-config
 EOF
 ```
 
