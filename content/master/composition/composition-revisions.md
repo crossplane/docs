@@ -273,6 +273,69 @@ it.
 Use the `Manual` update policy for tighter control. Each XR stays on the
 `CompositionRevision` that last composed it, and the pinned function version,
 until you change its `compositionRevisionRef`.
+{{</hint>}}
+
+## Garbage collect unused revisions
+
+{{<hint "note" >}}
+Composition revision garbage collection is an alpha feature. Enable it by
+setting the `--enable-composition-revision-gc` feature flag.
+{{< /hint >}}
+
+Crossplane creates a new `CompositionRevision` every time you edit a
+`Composition`, and by default never deletes them. A `Composition` that changes
+often can build up a long list of revisions that no XR uses.
+
+With garbage collection enabled, Crossplane deletes unused revisions each time
+it reconciles a `Composition`. The `unusedRevisionHistoryLimit` field in the
+`Composition` spec sets the number of unused revisions to keep. The default is
+`1`. Set it to `0` to keep every revision.
+
+```yaml {copy-lines="none"}
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: PlatformDB
+  # Keep up to 3 unused revisions.
+  unusedRevisionHistoryLimit: 3
+  mode: Pipeline
+  pipeline:
+  # Removed for brevity
+```
+
+Crossplane never deletes:
+
+* The latest revision of the `Composition`.
+* Any revision an XR references in its `compositionRevisionRef`.
+* The newest revision that matches any XR's `compositionRevisionSelector`.
+* The newest revision that matches the XRD's
+  `defaultCompositionRevisionSelector`.
+
+These revisions don't count toward the `unusedRevisionHistoryLimit`. With the
+default limit of `1`, Crossplane keeps the latest revision, every revision in
+use, and the newest unused revision.
+
+From among the other, unused, revisions, Crossplane deletes the oldest ones
+until at most `revisionHistoryLimit` unused revisions exist. Because in use
+revisions are never deleted, Crossplane may delete a newer revision while an
+older one remains in use. For example, consider a `Composition` with revisions
+`1` through `5` and a `Manual` XR using revision `1`. With the default limit of
+`1`, Crossplane keeps revision `1` because the XR uses it, revision `5` because
+it's the latest, and revision `4` because it's the newest unused
+revision. Crossplane deletes revisions `2` and `3`.
+
+Changing a Composition's `unusedRevisionHistoryLimit` doesn't create a new
+`CompositionRevision`.
+
+{{<hint "important" >}}
+After you upgrade Crossplane, every existing `Composition` gets the default
+`unusedRevisionHistoryLimit` of `1`. If you want to keep more revisions, set
+`unusedRevisionHistoryLimit` on your compositions before you enable the
+`--enable-composition-revision-gc` flag.
 {{< /hint >}}
 
 ## Complete example
