@@ -112,8 +112,8 @@ runs reuse the Nix store cache and complete in seconds.
 
 The build output is under `./result/`:
 
-- `result/bin/<os>_<arch>/` contains the `crossplane` and `crank` binaries for
-  each supported platform.
+- `result/bin/<os>_<arch>/` contains the `crossplane` binary for each supported
+  platform.
 - `result/charts/crossplane-<version>.tgz` is the Helm chart.
 - `result/images/linux_<arch>/image.tar.gz` is the container image tarball for
   each supported Linux architecture.
@@ -209,27 +209,37 @@ your-registry.com/your-org/crossplane:v2.0.0-yourtag
 ### Optional: Install the Crossplane CLI
 
 The `crossplane` CLI provides commands for managing Crossplane resources. The
-build in the previous steps already produced the CLI binary (named `crank`) for
-all supported platforms under `result/bin/`. Copy the binary for your system to
-your path.
+CLI is maintained in its own repository at
+[crossplane/cli](https://github.com/crossplane/cli) and uses Nix for its build
+system.
 
-For macOS ARM64:
+Clone the Crossplane CLI repository and build the binary for your host
+platform:
+
 ```shell {copy-lines="all"}
-sudo cp result/bin/darwin_arm64/crank /usr/local/bin/crossplane
+git clone https://github.com/crossplane/cli.git
+cd cli
+nix build
+```
+
+{{< hint "tip" >}}
+To build binaries for all supported platforms instead of your host platform,
+run `nix build .#release`. The binaries appear under
+`result/bin/<os>_<arch>/crossplane`.
+{{< /hint >}}
+
+Copy the built binary to a directory in your `PATH`:
+
+```shell {copy-lines="all"}
+sudo cp result/bin/crossplane /usr/local/bin/crossplane
 chmod +x /usr/local/bin/crossplane
 ```
 
-For Linux AMD64:
-```shell {copy-lines="all"}
-sudo cp result/bin/linux_amd64/crank /usr/local/bin/crossplane
-chmod +x /usr/local/bin/crossplane
-```
-
-Verify the installation.
+Verify the installation:
 
 ```shell {copy-lines="1"}
 crossplane version
-v2.0.0-yourtag
+Client Version: v0.0.0-1776000000-abcdef1
 ```
 
 ### Clean up the working tree
