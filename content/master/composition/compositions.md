@@ -426,7 +426,7 @@ wait for the composed resource to finish deleting before it does more work.
 
 With the feature flag off, a composed resource disappears from the observed
 state as soon as the function stops returning it, even while Kubernetes is still
-in the process of deleting it.
+deleting it.
 {{</hint>}}
 
 ## Test a composition
