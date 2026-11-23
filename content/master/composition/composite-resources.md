@@ -358,6 +358,17 @@ Some composite resources don't use the deletion policy:
   or `kubectl delete --cascade=foreground`, Kubernetes decides what happens to
   the composed resources. Crossplane doesn't use the deletion policy.
 
+{{<hint "warning" >}}
+Argo CD deletes resources with foreground propagation by default, both when it
+prunes a resource and when it deletes an Application. Crossplane then ignores
+the deletion policy, and emits a warning event on the composite resource.
+
+To make Argo CD use background propagation, set the
+`PrunePropagationPolicy=background` sync option, and use the
+`resources-finalizer.argocd.argoproj.io/background` finalizer on the
+Application.
+{{< /hint >}}
+
 With the `Foreground` and `Pipeline` policies, a composite resource stays in
 `Deleting` until Kubernetes removes its composed resources. With `Pipeline`,
 that also needs its functions to stop returning them. If that never happens,
@@ -366,8 +377,9 @@ resource, Crossplane keeps the composite resource. To delete it anyway, remove
 the `composite.apiextensions.crossplane.io` finalizer. Kubernetes then deletes
 the composed resources.
 
-A composite resource can compose other composite resources. Each composed
-composite resource uses its own deletion policy when Crossplane deletes it.
+A composite resource can compose other composite resources. When you delete a
+parent composite resource, a child composite resource with the `Foreground` or
+`Pipeline` policy uses its own policy to delete its composed resources.
 
 ## Verify composite resources
 Use 
