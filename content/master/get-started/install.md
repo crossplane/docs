@@ -113,6 +113,7 @@ at the table below.
 | Alpha  | `--enable-composition-revision-gc`               | Enable garbage collection of unused CompositionRevisions.                                                                   |
 | Alpha  | `--enable-dependency-version-downgrades`         | Enable automatic version downgrades of dependencies when updating packages.                                                 |
 | Alpha  | `--enable-dependency-version-upgrades`           | Enable automatic version upgrades of dependencies when updating packages.                                                   |
+| Alpha  | `--enable-function-controlled-deletion`          | Enable Composition deletion policies, which control how Crossplane deletes composite resources.                             |
 | Alpha  | `--enable-function-response-cache`               | Enable caching of composition function responses to improve performance.                                                    |
 | Alpha  | `--enable-operations`                            | Enable support for Operations.                                                                                              |
 | Alpha  | `--enable-pipeline-inspector`                    | Enable support for emitting data about function pipeline runs to a sidecar.                                                 |
