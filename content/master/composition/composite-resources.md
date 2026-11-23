@@ -319,13 +319,13 @@ A Composition's
 [deletion policy]({{<ref "compositions#control-how-crossplane-deletes-composite-resources">}})
 controls how Crossplane deletes the composite resources that use it:
 
-* `Background` - Crossplane stops managing the composite resource right away.
-  Kubernetes deletes its composed resources.
-* `Foreground` - Crossplane deletes the composed resources, and keeps the
-  composite resource until they're gone.
-* `Pipeline` - The function pipeline decides when Crossplane deletes each
-  composed resource. Crossplane keeps the composite resource until they're
-  gone.
+* `Background` - Crossplane stops managing the parent composite resource right
+  away. Kubernetes deletes its child composed resources.
+* `Foreground` - Crossplane deletes the child composed resources, and keeps the
+  parent composite resource until they're gone.
+* `Pipeline` - The function pipeline decides when Crossplane deletes each child
+  composed resource. Crossplane keeps the parent composite resource until
+  they're gone.
 
 A composite resource uses its Composition's deletion policy. Crossplane records
 the policy in the composite resource's
@@ -369,11 +369,11 @@ To make Argo CD use background propagation, set the
 Application.
 {{< /hint >}}
 
-With the `Foreground` and `Pipeline` policies, a composite resource stays in
-`Deleting` until Kubernetes removes its composed resources. With `Pipeline`,
-that also needs its functions to stop returning them. If that never happens,
-for example because a function fails or Kubernetes can't delete a composed
-resource, Crossplane keeps the composite resource. To delete it anyway, remove
+With the `Foreground` and `Pipeline` policies, a parent composite resource stays
+in `Deleting` until Kubernetes removes its child composed resources. With
+`Pipeline`, that also needs its functions to stop returning them. If that never
+happens, for example because a function fails or Kubernetes can't delete a
+composed resource, Crossplane keeps the composite resource. To delete it anyway, remove
 the `composite.apiextensions.crossplane.io` finalizer. Kubernetes then deletes
 the composed resources.
 

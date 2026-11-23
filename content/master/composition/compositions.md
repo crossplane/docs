@@ -361,18 +361,19 @@ spec:
 The `deletionPolicy` field supports three policies:
 
 * `Background` - The default, and how Crossplane deletes composite resources
-  without the feature flag. Crossplane stops managing the composite resource
-  as soon as you delete it. Kubernetes deletes its composed resources after it
-  removes the composite resource.
-* `Foreground` - Crossplane deletes the composed resources. It keeps the
-  composite resource until they're gone. The function pipeline doesn't run.
+  without the feature flag. Crossplane stops managing the parent composite
+  resource as soon as you delete it. Kubernetes deletes its child composed
+  resources after it removes the parent composite resource.
+* `Foreground` - Crossplane deletes the child composed resources. It keeps the
+  parent composite resource until they're gone. The function pipeline doesn't
+  run.
 * `Pipeline` - Crossplane keeps running the function pipeline. The functions
-  decide when Crossplane deletes each composed resource, by removing it from
-  their desired state. Crossplane keeps the composite resource until Kubernetes
-  removes its composed resources.
+  decide when Crossplane deletes each child composed resource, by removing it
+  from their desired state. Crossplane keeps the parent composite resource
+  until Kubernetes removes its child composed resources.
 
-Use `Foreground` when the composite resource must outlive its composed
-resources. Use `Pipeline` when you need to delete composed resources in order,
+Use `Foreground` when the parent composite resource must outlive its child
+composed resources. Use `Pipeline` when you need to delete composed resources in order,
 or when a function must do some work before Crossplane deletes them. For
 example, a function can delete a database before its network.
 
