@@ -1,0 +1,46 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: myapp
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: MyApp
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - name: deployment
+        base:
+          apiVersion: apps/v1
+          kind: Deployment
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: nginx
+            template:
+              metadata:
+                labels:
+                  app: nginx
+              spec:
+                containers:
+                - name: nginx
+                  image: nginx:1.29.7-alpine
+                  ports:
+                  - containerPort: 80
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.replicas
+          toFieldPath: spec.replicas
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.readyReplicas
+          toFieldPath: status.replicas
+  - step: automatically-detect-readiness
+    functionRef:
+      name: function-auto-ready
