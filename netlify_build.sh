@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Which which version is the "Latest"?
-LATEST_VER="2.4"
+LATEST_VER="2.5"
 
 # Which CLI docs version is the "Latest"? Tracked separately from core so the
 # two version lines can diverge. Keep in sync with params.cliLatest in config.yaml.
