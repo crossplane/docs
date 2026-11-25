@@ -230,15 +230,38 @@ Skip operations for:
 - **Resource protection** - Prevent backup Operations piling up during outages
 - **SLA compliance** - Ensure operations run in acceptable time windows
 
-### Time zone considerations
+### Time zones
+
+By default a CronOperation evaluates its schedule in the time zone of the
+Crossplane pod, which is UTC in most clusters. Set `timeZone` to an
+[IANA time zone](https://www.iana.org/time-zones) name to evaluate the schedule
+in that zone instead, the same way `timeZone` works on a Kubernetes CronJob.
+
+```yaml
+apiVersion: ops.crossplane.io/v1alpha1
+kind: CronOperation
+metadata:
+  name: nightly-report
+spec:
+  schedule: "0 18 * * *"  # 6 PM in Berlin, all year round
+  timeZone: "Europe/Berlin"
+  operationTemplate:
+    spec:
+      mode: Pipeline
+      pipeline:
+      - step: report
+        functionRef:
+          name: function-report
+```
+
+Daylight saving time transitions in the configured zone are handled for you:
+the schedule keeps firing at the same wall-clock time without edits to the
+manifest.
 
 {{<hint "important">}}
-CronOperations use the cluster's local time zone, same as Kubernetes CronJobs.
-To ensure consistent scheduling across different environments, consider:
-
-1. **Standardize cluster time zones** - Use UTC in production clusters
-2. **Document time zone assumptions** - Note expected time zone in comments
-3. **Account for DST changes** - Be aware that some schedules may skip or repeat during transitions
+When `timeZone` is set the schedule can't carry a `TZ=` or `CRON_TZ=` prefix,
+and `Local` isn't accepted as a zone name. A zone the controller can't load
+sets the `ScheduleInvalid` condition on the CronOperation.
 {{</hint>}}
 
 ## Status and monitoring
